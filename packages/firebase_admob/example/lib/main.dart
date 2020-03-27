@@ -30,6 +30,8 @@ class _MyAppState extends State<MyApp> {
   BannerAd _bannerAd;
   NativeAd _nativeAd;
   InterstitialAd _interstitialAd;
+  BannerAd _inlineBannerAd;
+  NativeAd _inlineNativeAd;
   int _coins = 0;
 
   BannerAd createBannerAd() {
@@ -124,6 +126,36 @@ class _MyAppState extends State<MyApp> {
                       _bannerAd = null;
                     }),
                 RaisedButton(
+                  child: const Text('SHOW INLINE BANNER'),
+                  onPressed: () {
+                    setState(() {
+                      _inlineBannerAd ??= createBannerAd();
+                      _inlineBannerAd.load();
+                    });
+                  },
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  child: _inlineBannerAd != null
+                      ? AdWidget(ad: _inlineBannerAd)
+                      : Container(),
+                  width: _inlineBannerAd != null
+                      ? _inlineBannerAd.size.width.toDouble()
+                      : 0,
+                  height: _inlineBannerAd != null
+                      ? _inlineBannerAd.size.height.toDouble()
+                      : 0,
+                ),
+                RaisedButton(
+                  child: const Text('REMOVE INLINE BANNER'),
+                  onPressed: () {
+                    _inlineBannerAd?.dispose();
+                    setState(() {
+                      _inlineBannerAd = null;
+                    });
+                  },
+                ),
+                RaisedButton(
                   child: const Text('LOAD INTERSTITIAL'),
                   onPressed: () {
                     _interstitialAd?.dispose();
@@ -154,6 +186,32 @@ class _MyAppState extends State<MyApp> {
                   onPressed: () {
                     _nativeAd?.dispose();
                     _nativeAd = null;
+                  },
+                ),
+                RaisedButton(
+                  child: const Text('SHOW INLINE NATIVE'),
+                  onPressed: () {
+                    setState(() {
+                      _inlineNativeAd ??= createNativeAd();
+                      _inlineNativeAd.load();
+                    });
+                  },
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  child: _inlineNativeAd != null
+                      ? AdWidget(ad: _inlineNativeAd)
+                      : Container(),
+                  width: _inlineNativeAd != null ? 250 : 0,
+                  height: _inlineNativeAd != null ? 350 : 0,
+                ),
+                RaisedButton(
+                  child: const Text('REMOVE INLINE NATIVE'),
+                  onPressed: () {
+                    _inlineNativeAd?.dispose();
+                    setState(() {
+                      _inlineNativeAd = null;
+                    });
                   },
                 ),
                 RaisedButton(

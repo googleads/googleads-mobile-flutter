@@ -1,216 +1,162 @@
 # firebase_admob
 
-A plugin for [Flutter](https://flutter.io) that supports loading and
-displaying banner, interstitial (full-screen), and rewarded video ads using the
+A plugin for [Flutter](https://flutter.dev) that supports loading and
+displaying banner, interstitial (full-screen), native, and rewarded video ads using the
 [Firebase AdMob API](https://firebase.google.com/docs/admob/).
 
 For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
-## AndroidManifest changes
+## Platform Specific Setup
 
-AdMob 17 requires the App ID to be included in the `AndroidManifest.xml`. Failure
-to do so will result in a crash on launch of your app.  The line should look like:
+This plugin supports Android and iOS and requires additional setup on both platforms before it can
+be used in your app. The sections below explain the setup for each platform.
 
-```xml
-<meta-data
-    android:name="com.google.android.gms.ads.APPLICATION_ID"
-    android:value="[ADMOB_APP_ID]"/>
-```
-
-where `[ADMOB_APP_ID]` is your App ID.  You must pass the same value when you 
-initialize the plugin in your Dart code.
-
-See https://goo.gl/fQ2neu for more information about configuring `AndroidManifest.xml`
-and setting up your App ID.
-
-## Info.plist changes
-
-Admob 7.42.0 requires the App ID to be included in `Info.plist`. Failure to do so will result in a crash on launch of your app. The lines should look like:
-
-```xml
-<key>GADApplicationIdentifier</key>
-<string>[ADMOB_APP_ID]</string>
-```
-
-where `[ADMOB_APP_ID]` is your App ID.  You must pass the same value when you initialize the plugin in your Dart code.
-
-See https://developers.google.com/admob/ios/quick-start#update_your_infoplist for more information about configuring `Info.plist` and setting up your App ID.
-
-## Initializing the plugin
-The AdMob plugin must be initialized with an AdMob App ID.
-
-```dart
-FirebaseAdMob.instance.initialize(appId: appId);
-```
 ### Android
-Starting in version 17.0.0, if you are an AdMob publisher you are now required to add your AdMob app ID in your **AndroidManifest.xml** file. Once you find your AdMob app ID in the AdMob UI, add it to your manifest adding the following tag:
+
+#### Setting up a Firebase Project
+
+This plugin requires using Admob through the Firebase SDK and requires that you have a
+Google Service file from Firebase inside your project. For Android, you will need to:
+
+1. Create a Firebase **App**.
+1. Generate a `google-service.json` file for this project.
+3. Add the `google-service.json` file to your project's `android/app` folder.
+
+You can follow the steps
+[here](https://firebase.google.com/docs/android/setup#create-firebase-project) to see how to setup
+a firebase project. You should only need to follow steps 1 -> 3.1.
+
+#### Update your AndroidManifest.xml
+
+AdMob 18 requires the App ID to be included in the `AndroidManifest.xml`. Failure
+to do so will result in a crash on launch of your app.
+
+Add your AdMob App ID to your app's `android/app/src/main/AndroidManifest.xml` file by adding a
+`<meta-data>` tag with name `com.google.android.gms.ads.APPLICATION_ID`, as shown below. You can
+find your App ID in the AdMob UI. For `android:value` insert your own AdMob App ID in quotes,
+as shown below.
 
 ```xml
 <manifest>
     <application>
-        <!-- TODO: Replace with your real AdMob app ID -->
+        <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-################~##########"/>
+            android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"/>
     </application>
 </manifest>
 ```
 
-Failure to add this tag will result in the app crashing at app launch with a message starting with *"The Google Mobile Ads SDK was initialized incorrectly."*
+You must pass the same value when you initialize the plugin in your Dart code.
 
-On Android, this value must be the same as the App ID value set in your 
-`AndroidManifest.xml`.
+See https://goo.gl/fQ2neu for more information about configuring `AndroidManifest.xml`
+and setting up your App ID.
 
 ### iOS
-Starting in version 7.42.0, you are required to add your AdMob app ID in your **Info.plist** file under the Runner directory. You can add it using Xcode or edit the file manually:
+
+#### Setting up a Firebase Project
+
+This plugin requires using Admob through the Firebase SDK and requires that you have a
+Google Service file from Firebase inside your project. For iOS, you will need to:
+
+1. Create a Firebase **App**.
+1. Generate a `GoogleService-info.plist` file for this project.
+3. Add the `GoogleService-info.plist` file to your project's `ios/Runner` folder.
+
+You can follow the steps
+[here](https://firebase.google.com/docs/ios/setup#create-firebase-project) to see how to setup
+a firebase project. You should only need to follow steps 1 -> 3.
+
+### Update your Info.plist
+
+In your app's `ios/Runner/Info.plist` file, add a `GADApplicationIdentifier` key with a string value
+of your AdMob app ID as shown below:
 
 ```xml
-<dict>
-	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-################~##########</string>
-</dict>
+<key>GADApplicationIdentifier</key>
+<string>ca-app-pub-################~##########</string>
 ```
 
-Failure to add this tag will result in the app crashing at app launch with a message including *"GADVerifyApplicationID."*
+You must pass the same value when you initialize the plugin in your Dart code.
 
-## Firebase related changes
+See https://developers.google.com/admob/ios/quick-start#update_your_infoplist for more information
+about configuring `Info.plist` and setting up your App ID.
 
-You are also required to ensure that you have Google Service file from Firebase inside your project.
-
-### iOS
-
-Create an "App" in firebase and generate a GoogleService-info.plist file. This file needs to be embedded in the projects "Runner/Runner" folder using Xcode. 
-
-https://firebase.google.com/docs/ios/setup#create-firebase-project -> Steps 1-3
-
-### Android
-
-Create an "App" in firebase and generate a google-service.json file. This file needs to be embedded in you projects "android/app" folder. 
-
-https://firebase.google.com/docs/android/setup#create-firebase-project -> Steps 1-3.1
-
-## Using banners and interstitials
-Banner and interstitial ads can be configured with target information.
-And in the example below, the ads are given test ad unit IDs for a quick start.
+## Initializing the plugin
+The AdMob plugin must be initialized with the AdMob App ID used in your
+`AndroidManifest.xml`/`GoogleService-info.plist`.
 
 ```dart
-MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-  keywords: <String>['flutterio', 'beautiful apps'],
-  contentUrl: 'https://flutter.io',
-  birthday: DateTime.now(),
-  childDirected: false,
-  designedForFamilies: false,
-  gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
-  testDevices: <String>[], // Android emulators are considered test devices
-);
+FirebaseAdMob.instance.initialize(appId: appId);
+```
 
-BannerAd myBanner = BannerAd(
+## Creating and Loading an Ad
+
+Instantiating each ad is slightly different and each supported format is explained in this section.
+To see how to display an Ad after loading one, see section **Displaying an Ad**.
+
+### Banner
+
+Instantiating a `BannerAd` requires at least an `adUnitId` and an `AdSize` as shown below. When
+testing, you should always use `BannerAd.testAdUnitId` and switch to an ad unit id from your AdMob
+account when releasing.
+
+```dart
+final BannerAd myBanner = BannerAd(
   // Replace the testAdUnitId with an ad unit id from the AdMob dash.
   // https://developers.google.com/admob/android/test-ads
   // https://developers.google.com/admob/ios/test-ads
   adUnitId: BannerAd.testAdUnitId,
-  size: AdSize.smartBanner,
-  targetingInfo: targetingInfo,
-  listener: (MobileAdEvent event) {
-    print("BannerAd event is $event");
-  },
+  size: AdSize.banner,
 );
+```
 
-InterstitialAd myInterstitial = InterstitialAd(
+After a `BannerAd` is instantiated, you must call `load()` before it can be shown on the screen.
+
+```dart
+final bool adBeganLoading = await myBanner.load();
+```
+
+See section **Displaying an Ad** to see how to show the ad in your app and section
+**Targeting Info and Ad Event Listeners** to see additional parameters.
+
+### Interstitial
+
+Instantiating an `InterstitialAd` requires at least an `adUnitId` as shown below. When testing, you
+should always use `InterstitialAd.testAdUnitId` and switch to an ad unit id from your AdMob
+account when releasing. 
+
+```dart
+final InterstitialAd myInterstitial = myInterstitial(
   // Replace the testAdUnitId with an ad unit id from the AdMob dash.
   // https://developers.google.com/admob/android/test-ads
   // https://developers.google.com/admob/ios/test-ads
   adUnitId: InterstitialAd.testAdUnitId,
-  targetingInfo: targetingInfo,
-  listener: (MobileAdEvent event) {
-    print("InterstitialAd event is $event");
-  },
 );
 ```
 
-Ads must be loaded before they're shown.
-```dart
-myBanner
-  // typically this happens well before the ad is shown
-  ..load()
-  ..show(
-    // Positions the banner ad 60 pixels from the bottom of the screen
-    anchorOffset: 60.0,
-    // Positions the banner ad 10 pixels from the center of the screen to the right
-    horizontalCenterOffset: 10.0,
-    // Banner Position
-    anchorType: AnchorType.bottom,
-  );
-```
+After a `InterstitialAd` is instantiated, you must call `load()` before it can be shown on the
+screen.
 
 ```dart
-myInterstitial
-  ..load()
-  ..show(
-    anchorType: AnchorType.bottom,
-    anchorOffset: 0.0,
-    horizontalCenterOffset: 0.0,
-  );
+final bool adBeganLoading = await myInterstitial.load();
 ```
 
-`BannerAd` and `InterstitialAd` objects can be disposed to free up plugin
-resources. Disposing a banner ad that's been shown removes it from the screen.
-Interstitial ads, however, can't be programmatically removed from view.
+See section **Displaying an Ad** to see how to show the ad in your app and section
+**Targeting Info and Ad Event Listeners** to see additional parameters.
 
-Banner and interstitial ads can be created with a `MobileAdEvent` listener. The
-listener can be used to detect when the ad has actually finished loading
-(or failed to load at all).
-
-## Using rewarded video ads
-
-Unlike banners and interstitials, rewarded video ads are loaded one at a time
-via a singleton object, `RewardedVideoAd.instance`. Its `load` method takes an
-AdMob ad unit ID and an instance of `MobileAdTargetingInfo`:
-```dart
-RewardedVideoAd.instance.load(myAdMobAdUnitId, targetingInfo);
-```
-
-To listen for events in the rewarded video ad lifecycle, apps can define a
-function matching the `RewardedVideoAdListener` typedef, and assign it to the
-`listener` instance variable in `RewardedVideoAd`. If set, the `listener`
-function will be invoked whenever one of the events in the `RewardedVideAdEvent`
-enum occurs. After a rewarded video ad loads, for example, the
-`RewardedVideoAdEvent.loaded` is sent. Any time after that, apps can show the ad
-by calling `show`:
-```dart
-RewardedVideoAd.instance.show();
-```
-
-When the AdMob SDK decides it's time to grant an in-app reward, it does so via
-the `RewardedVideoAdEvent.rewarded` event:
-```dart
-RewardedVideoAd.instance.listener =
-    (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
-  if (event == RewardedVideoAdEvent.rewarded) {
-    setState(() {
-      // Here, apps should update state to reflect the reward.
-      _goldCoins += rewardAmount;
-    });
-  }
-};
-```
-
-Because `RewardedVideoAd` is a singleton object, it does not offer a `dispose`
-method.
-
-## Using native ads
+### Native
 
 Native Ads are presented to users via UI components that
 are native to the platform. (e.g. A
 [View](https://developer.android.com/reference/android/view/View) on Android or a
 [UIView](https://developer.apple.com/documentation/uikit/uiview?language=objc)
-on iOS). Using Flutter widgets to create native ads is NOT supported by
-this.
+on iOS).
 
 Since Native Ads require UI components native to a platform, this feature requires additional setup
 for Android and iOS:
 
-### Android
+#### Android
 The Android Admob Plugin requires a class that implements `NativeAdFactory` which contains a method
 that takes a
 [UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd)
@@ -238,10 +184,10 @@ class NativeAdFactoryExample implements NativeAdFactory {
 ```
 
 An instance of a `NativeAdFactory` should also be added to the `FirebaseAdMobPlugin`. This is done
-slightly differently depending on whether you are using Embedding V1 or Embedding V2.
+slightly differently depending on whether you are using **Embedding V1** or **Embedding V2**. 
 
-If you're using the Embedding V1, you need to register your `NativeAdFactory` with a unique `String`
-identifier after calling `GeneratedPluginRegistrant.registerWith(this);`.
+If you're using the **Embedding V1**, you need to register your `NativeAdFactory` with a unique
+`String` identifier after calling `GeneratedPluginRegistrant.registerWith(this);`.
 
 You're `MainActivity.java` should look similar to:
 
@@ -264,7 +210,7 @@ public class MainActivity extends FlutterActivity {
 }
 ```
 
-If you're using Embedding V2, you need to register your `NativeAdFactory` with a unique `String`
+If you're using **Embedding V2**, you need to register your `NativeAdFactory` with a unique `String`
 identifier after adding the `FirebaseAdMobPlugin` to the `FlutterEngine`. (Adding the
 `FirebaseAdMobPlugin` to `FlutterEngine` should be done in a `GeneratedPluginRegistrant` in the near
 future, so you may not see it being added here). You should also unregister the factory in
@@ -301,7 +247,7 @@ An example of displaying a `UnifiedNativeAd` with a `UnifiedNativeAdView` can be
 [here](https://developers.google.com/admob/android/native/advanced). The example app also inflates
 a custom layout and displays the test Native ad.
 
-### iOS
+#### iOS
 Native Ads for iOS require a class that implements the protocol `FLTNativeAdFactory` which has a
 single method `createNativeAd:customOptions:`.
 
@@ -350,15 +296,133 @@ If this is done in `AppDelegate.m`, it should look similar to:
 @end
 ```
 
-### Dart Example
+#### Dart Example
 
-When creating a Native Ad in Dart, setup is similar to Banners and Interstitials. You can use
-`MobileAdTargetingInfo` to target ads, create a listener to respond to `MobileAdEvent`s, and test
-with a test ad unit id. Your `factoryId` should match the id used to register the `NativeAdFactory`
-in Java/Kotlin/Obj-C/Swift. An example of this implementation is seen below:
+When creating a `NativeAd` in Dart, setup is similar to Banners and Interstitials. You need at least
+an ad unit id and the `factoryId` that matches the id used to register the `NativeAdFactory`
+in Java/Kotlin/Obj-C/Swift. An example of this implementation is seen below. Also, remember that
+testing should always be done with the `NativeAd.testAdUnitId`.
 
 ```dart
-MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+
+final NativeAd nativeAd = NativeAd(
+  adUnitId: NativeAd.testAdUnitId,
+  factoryId: 'adFactoryExample',
+);
+```
+
+Once created you can call `load()`.
+
+```dart
+final bool adBeganLoading = await nativeAd.load();
+```
+
+See section **Displaying an Ad** to see how to show the ad in your app and section
+**Targeting Info and Ad Event Listeners** to see additional parameters.
+
+### Rewarded Video Ads
+
+Unlike `BannerAd`s and `InterstitialAd`s, rewarded video ads are loaded one at a time
+via a singleton object, `RewardedVideoAd.instance`. Its `load` method takes an
+AdMob ad unit ID and an instance of `MobileAdTargetingInfo`:
+
+```dart
+RewardedVideoAd.instance.load(myAdMobAdUnitId, targetingInfo);
+```
+
+To listen for events in the rewarded video ad lifecycle, apps can define a
+function matching the `RewardedVideoAdListener` typedef, and assign it to the
+`listener` instance variable in `RewardedVideoAd`. If set, the `listener`
+function will be invoked whenever one of the events in the `RewardedVideAdEvent`
+enum occurs. After a rewarded video ad loads, for example, the
+`RewardedVideoAdEvent.loaded` is sent. Any time after that, apps can show the ad.
+
+When the AdMob SDK decides it's time to grant an in-app reward, it does so via
+the `RewardedVideoAdEvent.rewarded` event:
+
+```dart
+RewardedVideoAd.instance.listener =
+    (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
+  if (event == RewardedVideoAdEvent.rewarded) {
+    setState(() {
+      // Here, apps should update state to reflect the reward.
+      _goldCoins += rewardAmount;
+    });
+  }
+};
+```
+
+Because `RewardedVideoAd` is a singleton object, it does not offer a `dispose`
+method.
+
+## Displaying an Ad
+
+Each ad format can be displayed using at least one of two methods. **Overlay** and **Widget**. This
+section explain the difference between using both.
+
+### Overlay
+
+An ad that is displayed as an **Overlay** is displayed on top of all app content and is statically
+placed. Ad displayed this way can't be added to the Flutter widget tree.
+`BannerAd`s, `InterstitialAd`s, `NativeAd`s, and `RewardedVideoAd`s can all be displayed this way.
+You can display and remove an ad by calling `show()` and `dispose` respectively. This method must
+only be called after `load()`.
+
+```dart
+mybanner.show();
+```
+
+For `BannerAd`s and `NativeAd`s you can also change the position on the screen.
+
+```dart
+mybanner.show(
+    // Positions the banner ad 60 pixels from the bottom of the screen
+    anchorOffset: 60.0,
+    // Positions the banner ad 10 pixels from the center of the screen to the right
+    horizontalCenterOffset: 10.0,
+    // Banner Position
+    anchorType: AnchorType.bottom,
+);
+```
+
+It is also worth noting that `InterstitialAds`s and `RewardedVideoAd`s can't be programmatically
+removed from view. They require user input to be dismissed from the screen.
+
+### Widget
+
+An ad that is displayed as a **Widget** is displayed as a typical Flutter `Widget` and can be added
+to the Flutter widget tree. This is only supported by ads that don't cover an entire screen, such as
+`BannerAd` and `NativeAd`. To display one of these ads as a widget, you must instantiate an
+`AdWidget` with a supported ad after calling. You can create the widget before calling `load()`, but
+`load()` must be called before adding it to the widget tree.
+
+```dart
+final AdWidget adWidget = AdWidget(ad: myBanner);
+```
+
+`AdWidget` inherits from Flutter's `Widget` class and can be used as any other widget. On iOS, make
+sure you place the widget in a widget with a specified width and height. Otherwise, you may see
+your app crash. For a `BannerAd`, you can place the ad in a container with a size that matches the
+ad.
+
+```dart
+final Container adContainer = Container(
+  alignment: Alignment.center,
+  child: adWidget,
+  width: myBanner.size.width.toDouble(),
+  height: myBanner.size.height.toDouble(),
+);
+```
+
+When the ad is no longer needed, call `dispose()` to release resources used by the add.
+
+## Targeting Info and Ad Event Listeners
+
+`BannerAd`s, `InterstitialAd`s, and `NativeAd`s can also be configured with targeting information
+and a `MobileAdEvent` listener as shown in a `BannerAd` below.
+
+```dart
+final MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
   keywords: <String>['flutterio', 'beautiful apps'],
   contentUrl: 'https://flutter.io',
   birthday: DateTime.now(),
@@ -368,12 +432,15 @@ MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
   testDevices: <String>[], // Android emulators are considered test devices
 );
 
-final NativeAd nativeAd = NativeAd(
-  adUnitId: NativeAd.testAdUnitId,
-  factoryId: 'adFactoryExample',
+BannerAd myBanner = BannerAd(
+  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+  // https://developers.google.com/admob/android/test-ads
+  // https://developers.google.com/admob/ios/test-ads
+  adUnitId: BannerAd.testAdUnitId,
   targetingInfo: targetingInfo,
+  size: AdSize.smartBanner,
   listener: (MobileAdEvent event) {
-    print("$NativeAd event $event");
+    print("BannerAd event is $event");
   },
 );
 ```
@@ -382,12 +449,11 @@ final NativeAd nativeAd = NativeAd(
 
 This plugin currently has some limitations:
 
-- Banner ads cannot be animated into view.
 - It's not possible to specify a banner ad's size.
 - The existing tests are fairly rudimentary.
 - There is no API doc.
 - The example should demonstrate how to show gate a route push with an
-  interstitial ad
+  interstitial ad.
 
 ## Issues and feedback
 

@@ -17,6 +17,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
 /// [MobileAd] status changes reported to [MobileAdListener]s.
@@ -79,7 +80,7 @@ class MobileAdTargetingInfo {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = <String, dynamic>{
-      'requestAgent': 'flutter-alpha',
+      'requestAgent': 'Flutter',
     };
 
     if (keywords != null && keywords.isNotEmpty) {
@@ -182,8 +183,6 @@ class AdSize {
 
 /// A mobile [BannerAd] or [InterstitialAd] for the [FirebaseAdMobPlugin].
 ///
-/// A [MobileAd] must be loaded with [load] before it is shown with [show].
-///
 /// A valid [adUnitId] is required.
 abstract class MobileAd {
   /// Default constructor, used by subclasses.
@@ -219,7 +218,7 @@ abstract class MobileAd {
   /// Start loading this ad.
   Future<bool> load();
 
-  /// Show this ad.
+  /// Show this ad by overlaying it on a platform's root view.
   ///
   /// The ad must have been loaded with [load] first. If loading hasn't finished
   /// the ad will not actually appear until the ad has finished loading.
@@ -233,7 +232,7 @@ abstract class MobileAd {
       {double anchorOffset = 0.0,
       double horizontalCenterOffset = 0.0,
       AnchorType anchorType = AnchorType.bottom}) {
-    return _invokeBooleanMethod("showAd", <String, dynamic>{
+    return _invokeBooleanMethod('showAd', <String, dynamic>{
       'id': id,
       'anchorOffset': anchorOffset.toString(),
       'horizontalCenterOffset': horizontalCenterOffset.toString(),
@@ -248,18 +247,69 @@ abstract class MobileAd {
   Future<bool> dispose() {
     assert(_allAds[id] != null);
     _allAds[id] = null;
-    return _invokeBooleanMethod("disposeAd", <String, dynamic>{'id': id});
+    return _invokeBooleanMethod('disposeAd', <String, dynamic>{'id': id});
   }
 
   Future<bool> isLoaded() {
-    return _invokeBooleanMethod("isAdLoaded", <String, dynamic>{
+    return _invokeBooleanMethod('isAdLoaded', <String, dynamic>{
       'id': id,
     });
   }
 }
 
+/// Abstract class for ads that are capable of being added to the Flutter widget tree.
+///
+/// Any ad that inherits from this can be used as a widget by instantiating
+/// [AdWidget] with it (e.g. [BannerAd], [NativeAd]).
+abstract class PlatformViewMobileAd extends MobileAd {
+  /// Creates a [MobileAd] that is capable of being used as a widget.
+  PlatformViewMobileAd({
+    @required String adUnitId,
+    MobileAdTargetingInfo targetingInfo,
+    MobileAdListener listener,
+  }) : super(
+          adUnitId: adUnitId,
+          targetingInfo: targetingInfo,
+          listener: listener,
+        );
+}
+
+/// Displays a [MobileAd] as a Flutter widget.
+///
+/// This widget takes ads inheriting from [PlatformViewMobileAd]
+/// (e.g. [BannerAd] and [NativeAd]) and allows them to be added to the Flutter
+/// widget tree.
+///
+/// Must call `load()` first before showing the widget. Otherwise, a
+/// [PlatformException] will be thrown.
+///
+/// Currently only supported on iOS.
+class AdWidget extends StatelessWidget {
+  const AdWidget({Key key, @required this.ad})
+      : assert(ad != null),
+        super(key: key);
+
+  /// Ad to be displayed as a widget.
+  final PlatformViewMobileAd ad;
+
+  @override
+  Widget build(BuildContext context) {
+    assert(Platform.isIOS);
+    return UiKitView(
+      viewType: '${FirebaseAdMob.instance._channel.name}/ad_widget',
+      creationParams: ad.id,
+      creationParamsCodec: StandardMessageCodec(),
+    );
+  }
+}
+
 /// A banner ad for the [FirebaseAdMobPlugin].
-class BannerAd extends MobileAd {
+///
+/// This ad can either be overlaid on top of all flutter widgets as a static
+/// view or displayed as a typical Flutter widget. To use as an overlay, use
+/// `show()`. To use as a widget, instantiate an [AdWidget] with this as a
+/// parameter.
+class BannerAd extends PlatformViewMobileAd {
   /// Create a BannerAd.
   ///
   /// A valid [adUnitId] is required.
@@ -287,7 +337,7 @@ class BannerAd extends MobileAd {
 
   @override
   Future<bool> load() {
-    return _invokeBooleanMethod("loadBannerAd", <String, dynamic>{
+    return _invokeBooleanMethod('loadBannerAd', <String, dynamic>{
       'id': id,
       'adUnitId': adUnitId,
       'targetingInfo': targetingInfo?.toJson(),
@@ -315,7 +365,12 @@ class BannerAd extends MobileAd {
 /// Ads SDK) is then responsible for displaying them.
 ///
 /// See the README for more details on using Native Ads.
-class NativeAd extends MobileAd {
+///
+/// This ad can either be overlaid on top of all flutter widgets as a static
+/// view or displayed as a typical Flutter widget. To use as an overlay, use
+/// `show()`. To use as a widget, instantiate an [AdWidget] with this as a
+/// parameter.
+class NativeAd extends PlatformViewMobileAd {
   NativeAd({
     @required String adUnitId,
     @required this.factoryId,
@@ -343,7 +398,7 @@ class NativeAd extends MobileAd {
 
   @override
   Future<bool> load() {
-    return _invokeBooleanMethod("loadNativeAd", <String, dynamic>{
+    return _invokeBooleanMethod('loadNativeAd', <String, dynamic>{
       'id': id,
       'factoryId': factoryId,
       'targetingInfo': targetingInfo?.toJson(),
@@ -374,7 +429,7 @@ class InterstitialAd extends MobileAd {
 
   @override
   Future<bool> load() {
-    return _invokeBooleanMethod("loadInterstitialAd", <String, dynamic>{
+    return _invokeBooleanMethod('loadInterstitialAd', <String, dynamic>{
       'id': id,
       'adUnitId': adUnitId,
       'targetingInfo': targetingInfo?.toJson(),
@@ -417,7 +472,7 @@ typedef void RewardedVideoAdListener(RewardedVideoAdEvent event,
 /// ```
 /// RewardedVideoAd.instance.listener = (RewardedVideoAdEvent event,
 ///     [String rewardType, int rewardAmount]) {
-///     print("You were rewarded with $rewardAmount $rewardType!");
+///     print('You were rewarded with $rewardAmount $rewardType!');
 ///   }
 /// };
 /// ```
@@ -468,7 +523,7 @@ class RewardedVideoAd {
 
   /// Sets the user id to be used in server-to-server reward callbacks.
   set userId(String userId) {
-    _invokeBooleanMethod("setRewardedVideoAdUserId", <String, dynamic>{
+    _invokeBooleanMethod('setRewardedVideoAdUserId', <String, dynamic>{
       'userId': userId,
     });
     _userId = userId;
@@ -476,7 +531,7 @@ class RewardedVideoAd {
 
   /// Sets custom data to be included in server-to-server reward callbacks.
   set customData(String customData) {
-    _invokeBooleanMethod("setRewardedVideoAdCustomData", <String, dynamic>{
+    _invokeBooleanMethod('setRewardedVideoAdCustomData', <String, dynamic>{
       'customData': customData,
     });
     _customData = customData;
@@ -484,14 +539,14 @@ class RewardedVideoAd {
 
   /// Shows a rewarded video ad if one has been loaded.
   Future<bool> show() {
-    return _invokeBooleanMethod("showRewardedVideoAd");
+    return _invokeBooleanMethod('showRewardedVideoAd');
   }
 
   /// Loads a rewarded video ad using the provided ad unit ID.
   Future<bool> load(
       {@required String adUnitId, MobileAdTargetingInfo targetingInfo}) {
     assert(adUnitId.isNotEmpty);
-    return _invokeBooleanMethod("loadRewardedVideoAd", <String, dynamic>{
+    return _invokeBooleanMethod('loadRewardedVideoAd', <String, dynamic>{
       'adUnitId': adUnitId,
       'targetingInfo': targetingInfo?.toJson(),
     });
@@ -570,7 +625,7 @@ class FirebaseAdMob {
       bool analyticsEnabled = false}) {
     assert(appId != null && appId.isNotEmpty);
     assert(analyticsEnabled != null);
-    return _invokeBooleanMethod("initialize", <String, dynamic>{
+    return _invokeBooleanMethod('initialize', <String, dynamic>{
       'appId': appId,
       'trackingId': trackingId,
       'analyticsEnabled': analyticsEnabled,

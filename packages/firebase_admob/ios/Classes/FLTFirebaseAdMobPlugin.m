@@ -26,6 +26,9 @@
   instance.rewardedWrapper = [[FLTRewardedVideoAdWrapper alloc] initWithChannel:instance.channel];
 
   [registrar addMethodCallDelegate:instance channel:instance.channel];
+
+  FLTFirebaseAdmobViewFactory *viewFactory = [[FLTFirebaseAdmobViewFactory alloc] init];
+  [registrar registerViewFactory:viewFactory withId:@"plugins.flutter.io/firebase_admob/ad_widget"];
 }
 
 - (instancetype)init {

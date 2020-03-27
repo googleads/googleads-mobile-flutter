@@ -14,6 +14,9 @@ typedef enum : NSUInteger {
   LOADED,
 } FLTMobileAdStatus;
 
+@interface FLTFirebaseAdmobViewFactory : NSObject <FlutterPlatformViewFactory>
+@end
+
 @interface FLTMobileAd : NSObject
 + (void)configureWithAppId:(NSString *)appId;
 + (FLTMobileAd *)getAdForId:(NSNumber *)mobileAdId;
@@ -26,8 +29,8 @@ typedef enum : NSUInteger {
 - (void)dispose;
 @end
 
-@interface FLTMobileAdWithView : FLTMobileAd
-- (UIView *)adView;
+@interface FLTMobileAdWithView : FLTMobileAd <FlutterPlatformView>
+- (void)setFrameForPlatformView:(CGRect)frame;
 @end
 
 @interface FLTBannerAd : FLTMobileAdWithView <GADBannerViewDelegate>

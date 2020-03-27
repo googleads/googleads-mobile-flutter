@@ -9,6 +9,28 @@
 static NSMutableDictionary *allAds = nil;
 static NSDictionary *statusToString = nil;
 
+@implementation FLTFirebaseAdmobViewFactory
+- (nonnull NSObject<FlutterPlatformView> *)createWithFrame:(CGRect)frame
+                                            viewIdentifier:(int64_t)viewId
+                                                 arguments:(id _Nullable)args {
+  NSNumber *adId = args;
+  FLTMobileAdWithView *view = allAds[adId];
+
+  if (!view) {
+    NSString *reason = [NSString
+        stringWithFormat:@"Could not find an ad with id: %@. Was this ad already disposed?", adId];
+    @throw [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
+  }
+
+  [view setFrameForPlatformView:frame];
+  return view;
+}
+
+- (NSObject<FlutterMessageCodec> *)createArgsCodec {
+  return [FlutterStandardMessageCodec sharedInstance];
+}
+@end
+
 @implementation FLTMobileAd
 NSNumber *_mobileAdId;
 FlutterMethodChannel *_channel;
@@ -102,12 +124,6 @@ int _anchorType;
 @end
 
 @implementation FLTMobileAdWithView
-- (UIView *)adView {
-  // We cause a crash if this method is not overriden by subclasses.
-  [self doesNotRecognizeSelector:_cmd];
-  return nil;
-}
-
 - (void)show {
   if (_status == LOADING) {
     _status = PENDING;
@@ -117,30 +133,29 @@ int _anchorType;
   if (_status != LOADED) return;
 
   UIView *screen = [FLTMobileAd rootViewController].view;
-  [screen addSubview:self.adView];
+  [screen addSubview:self.view];
 
 // UIView.safeAreaLayoutGuide is only available on iOS 11.0+
 #if defined(__IPHONE_11_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0)
   if (@available(ios 11.0, *)) {
-    self.adView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.view.translatesAutoresizingMaskIntoConstraints = NO;
 
     UILayoutGuide *guide = screen.safeAreaLayoutGuide;
     [NSLayoutConstraint activateConstraints:@[
-      [self.adView.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor
-                                                constant:_horizontalCenterOffset],
+      [self.view.centerXAnchor constraintEqualToAnchor:guide.centerXAnchor
+                                              constant:_horizontalCenterOffset],
 
-      [self.adView.leftAnchor constraintGreaterThanOrEqualToAnchor:guide.leftAnchor],
-      [self.adView.rightAnchor constraintLessThanOrEqualToAnchor:guide.rightAnchor],
+      [self.view.leftAnchor constraintGreaterThanOrEqualToAnchor:guide.leftAnchor],
+      [self.view.rightAnchor constraintLessThanOrEqualToAnchor:guide.rightAnchor],
     ]];
 
     if (_anchorType == 0) {
       [NSLayoutConstraint activateConstraints:@[
-        [self.adView.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor
-                                                 constant:_anchorOffset],
+        [self.view.bottomAnchor constraintEqualToAnchor:guide.bottomAnchor constant:_anchorOffset],
       ]];
     } else {
       [NSLayoutConstraint activateConstraints:@[
-        [self.adView.topAnchor constraintEqualToAnchor:guide.topAnchor constant:_anchorOffset],
+        [self.view.topAnchor constraintEqualToAnchor:guide.topAnchor constant:_anchorOffset],
       ]];
     }
   }
@@ -148,24 +163,34 @@ int _anchorType;
 
   // We find the left most point that aligns the view to the horizontal center.
   CGFloat x =
-      screen.frame.size.width / 2 - self.adView.frame.size.width / 2 + _horizontalCenterOffset;
+      screen.frame.size.width / 2 - self.view.frame.size.width / 2 + _horizontalCenterOffset;
   // We find the top point that anchors the view to the top/bottom depending on anchorType.
   CGFloat y;
   if (_anchorType == 0) {
-    y = screen.frame.size.height - self.adView.frame.size.height + _anchorOffset;
+    y = screen.frame.size.height - self.view.frame.size.height + _anchorOffset;
   } else {
     y = _anchorOffset;
   }
-  self.adView.frame = (CGRect){{x, self.adView.frame.origin.y}, self.adView.frame.size};
+  self.view.frame = (CGRect){{x, self.view.frame.origin.y}, self.view.frame.size};
 }
 
 - (void)dispose {
-  if (self.adView.superview) [self.adView removeFromSuperview];
+  if (self.view.superview) [self.view removeFromSuperview];
   [super dispose];
 }
 
 - (NSString *)description {
-  return [NSString stringWithFormat:@"%@ for: %@", super.description, self.adView];
+  return [NSString stringWithFormat:@"%@ for: %@", super.description, self.view];
+}
+
+// To be overriden by subclasses.
+- (void)setFrameForPlatformView:(CGRect)frame {
+  // Do nothing
+}
+
+// To be overriden by subclasses.
+- (UIView *)view {
+  return nil;
 }
 @end
 
@@ -193,7 +218,7 @@ GADAdSize _adSize;
   return nil;
 }
 
-- (UIView *)adView {
+- (UIView *)view {
   return _banner;
 }
 
@@ -312,6 +337,8 @@ GADInterstitial *_interstitial;
   GADUnifiedNativeAdView *_nativeAd;
   id<FLTNativeAdFactory> _nativeAdFactory;
   NSDictionary *_customOptions;
+  UIView *_containerView;
+  BOOL _showAsPlatformView;
 }
 
 + (instancetype)withId:(NSNumber *)mobileAdId
@@ -334,12 +361,22 @@ GADInterstitial *_interstitial;
   if (self) {
     _nativeAdFactory = nativeAdFactory;
     _customOptions = customOptions;
+    _containerView = [[UIView alloc] init];
+    _showAsPlatformView = NO;
   }
   return self;
 }
 
-- (UIView *)adView {
-  return _nativeAd;
+- (UIView *)view {
+  _showAsPlatformView = YES;
+  return _containerView;
+}
+
+- (void)setFrameForPlatformView:(CGRect)frame {
+  _containerView.frame = frame;
+  for (UIView *view in _containerView.subviews) {
+    view.frame = _containerView.frame;
+  }
 }
 
 - (void)loadWithAdUnitId:(NSString *)adUnitId targetingInfo:(NSDictionary *)targetingInfo {
@@ -367,6 +404,13 @@ GADInterstitial *_interstitial;
     didReceiveUnifiedNativeAd:(nonnull GADUnifiedNativeAd *)nativeAd {
   nativeAd.delegate = self;
   _nativeAd = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
+
+  if (!_showAsPlatformView) {
+    _containerView.frame = _nativeAd.frame;
+  }
+
+  _nativeAd.frame = _containerView.frame;
+  [_containerView addSubview:_nativeAd];
 
   bool statusWasPending = _status == PENDING;
   _status = LOADED;
