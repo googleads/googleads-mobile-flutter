@@ -26,7 +26,7 @@ import java.util.Map;
 
 abstract class MobileAd extends AdListener {
   private static final String TAG = "flutter";
-  private static SparseArray<MobileAd> allAds = new SparseArray<>();
+  private static final SparseArray<MobileAd> allAds = new SparseArray<>();
 
   final Activity activity;
   final MethodChannel channel;
@@ -77,7 +77,7 @@ abstract class MobileAd extends AdListener {
         : new Native(id, activity, channel, nativeAdFactory, customOptions);
   }
 
-  static MobileAd getAdForId(Integer id) {
+  static MobileAd getAdForId(int id) {
     return allAds.get(id);
   }
 
@@ -193,16 +193,16 @@ abstract class MobileAd extends AdListener {
       View contentView = activity.findViewById(id);
       if (contentView == null || !(contentView.getParent() instanceof ViewGroup)) return;
 
-      ViewGroup contentParent = (ViewGroup) (contentView.getParent());
+      final ViewGroup contentParent = (ViewGroup) contentView.getParent();
       contentParent.removeView(contentView);
     }
   }
 
   static class Banner extends MobileAdWithView {
     private AdView adView;
-    private AdSize adSize;
+    private final AdSize adSize;
 
-    private Banner(Integer id, AdSize adSize, Activity activity, MethodChannel channel) {
+    private Banner(int id, AdSize adSize, Activity activity, MethodChannel channel) {
       super(id, activity, channel);
       this.adSize = adSize;
     }

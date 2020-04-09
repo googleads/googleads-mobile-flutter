@@ -6,6 +6,7 @@ package io.flutter.plugins.firebaseadmob;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import com.google.android.gms.ads.AdSize;
@@ -211,8 +212,8 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   }
 
   private void callInitialize(MethodCall call, Result result) {
-    String appId = call.argument("appId");
-    if (appId == null || appId.isEmpty()) {
+    final String appId = call.argument("appId");
+    if (TextUtils.isEmpty(appId)) {
       result.error("no_app_id", "a null or empty AdMob appId was provided", null);
       return;
     }
@@ -226,7 +227,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
 
     final NativeAdFactory nativeAdFactory = nativeAdFactories.get(factoryId);
 
-    if (adUnitId == null || adUnitId.isEmpty()) {
+    if (TextUtils.isEmpty(adUnitId)) {
       result.error("no_unit_id", "a null or empty adUnitId was provided for ad id=" + id, null);
       return;
     } else if (nativeAdFactory == null) {
@@ -256,8 +257,8 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   }
 
   private void callLoadBannerAd(Integer id, Activity activity, MethodCall call, Result result) {
-    String adUnitId = call.argument("adUnitId");
-    if (adUnitId == null || adUnitId.isEmpty()) {
+    final String adUnitId = call.argument("adUnitId");
+    if (TextUtils.isEmpty(adUnitId)) {
       result.error("no_unit_id", "a null or empty adUnitId was provided for ad id=" + id, null);
       return;
     }
@@ -309,7 +310,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     result.success(Boolean.TRUE);
   }
 
-  private void callLoadInterstitialAd(MobileAd ad, MethodCall call, Result result) {
+  private static void callLoadInterstitialAd(MobileAd ad, MethodCall call, Result result) {
     if (ad.status != MobileAd.Status.CREATED) {
       if (ad.status == MobileAd.Status.FAILED)
         result.error("load_failed_ad", "cannot reload a failed ad, id=" + ad.id, null);
@@ -317,8 +318,8 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
       return;
     }
 
-    String adUnitId = call.argument("adUnitId");
-    if (adUnitId == null || adUnitId.isEmpty()) {
+    final String adUnitId = call.argument("adUnitId");
+    if (TextUtils.isEmpty(adUnitId)) {
       result.error(
           "no_adunit_id", "a null or empty adUnitId was provided for ad id=" + ad.id, null);
       return;
@@ -335,8 +336,8 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
       return;
     }
 
-    String adUnitId = call.argument("adUnitId");
-    if (adUnitId == null || adUnitId.isEmpty()) {
+    final String adUnitId = call.argument("adUnitId");
+    if (TextUtils.isEmpty(adUnitId)) {
       result.error(
           "no_ad_unit_id", "a non-empty adUnitId was not provided for rewarded video", null);
       return;
@@ -353,7 +354,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     result.success(Boolean.TRUE);
   }
 
-  private void callShowAd(Integer id, MethodCall call, Result result) {
+  private static void callShowAd(Integer id, MethodCall call, Result result) {
     MobileAd ad = MobileAd.getAdForId(id);
     if (ad == null) {
       result.error("ad_not_loaded", "show failed, the specified ad was not loaded id=" + id, null);
@@ -376,13 +377,14 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     result.success(Boolean.TRUE);
   }
 
-  private void callIsAdLoaded(Integer id, Result result) {
+  private static void callIsAdLoaded(Integer id, Result result) {
     MobileAd ad = MobileAd.getAdForId(id);
     if (ad == null) {
       result.error("no_ad_for_id", "isAdLoaded failed, no add exists for id=" + id, null);
       return;
     }
-    result.success(ad.status == MobileAd.Status.LOADED ? Boolean.TRUE : Boolean.FALSE);
+    final Boolean isLoaded = ad.status == MobileAd.Status.LOADED;
+    result.success(isLoaded);
   }
 
   private void callShowRewardedVideoAd(Result result) {
@@ -408,7 +410,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     result.success(Boolean.TRUE);
   }
 
-  private void callDisposeAd(Integer id, Result result) {
+  private static void callDisposeAd(Integer id, Result result) {
     MobileAd ad = MobileAd.getAdForId(id);
     if (ad == null) {
       result.error("no_ad_for_id", "dispose failed, no add exists for id=" + id, null);

@@ -69,7 +69,7 @@ void main() {
         isMethodCall('loadBannerAd', arguments: <String, dynamic>{
           'id': id,
           'adUnitId': BannerAd.testAdUnitId,
-          'targetingInfo': <String, String>{'requestAgent': 'flutter-alpha'},
+          'targetingInfo': <String, String>{'requestAgent': 'Flutter'},
           'width': 320,
           'height': 50,
           'adSizeType': 'AdSizeType.WidthAndHeight',
@@ -107,7 +107,7 @@ void main() {
         isMethodCall('loadInterstitialAd', arguments: <String, dynamic>{
           'id': id,
           'adUnitId': InterstitialAd.testAdUnitId,
-          'targetingInfo': <String, String>{'requestAgent': 'flutter-alpha'},
+          'targetingInfo': <String, String>{'requestAgent': 'Flutter'},
         }),
         isMethodCall('showAd', arguments: <String, dynamic>{
           'id': id,
@@ -138,7 +138,7 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('loadRewardedVideoAd', arguments: <String, dynamic>{
           'adUnitId': RewardedVideoAd.testAdUnitId,
-          'targetingInfo': <String, String>{'requestAgent': 'flutter-alpha'},
+          'targetingInfo': <String, String>{'requestAgent': 'Flutter'},
         }),
         isMethodCall('setRewardedVideoAdUserId', arguments: <String, dynamic>{
           'userId': "user-id",

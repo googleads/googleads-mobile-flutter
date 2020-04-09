@@ -4,10 +4,12 @@
 
 package io.flutter.plugins.firebaseadmob;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +24,7 @@ class AdRequestBuilderFactory {
     this.targetingInfo = targetingInfo;
   }
 
-  private String getTargetingInfoString(String key, Object value) {
+  private static String getTargetingInfoString(String key, Object value) {
     if (value == null) return null;
     if (!(value instanceof String)) {
       Log.w(TAG, "targeting info " + key + ": expected a String");
@@ -36,7 +38,7 @@ class AdRequestBuilderFactory {
     return stringValue;
   }
 
-  private Boolean getTargetingInfoBoolean(String key, Object value) {
+  private static Boolean getTargetingInfoBoolean(String key, Object value) {
     if (value == null) return null;
     if (!(value instanceof Boolean)) {
       Log.w(TAG, "targeting info " + key + ": expected a boolean");
@@ -45,7 +47,7 @@ class AdRequestBuilderFactory {
     return (Boolean) value;
   }
 
-  private Integer getTargetingInfoInteger(String key, Object value) {
+  private static Integer getTargetingInfoInteger(String key, Object value) {
     if (value == null) return null;
     if (!(value instanceof Integer)) {
       Log.w(TAG, "targeting info " + key + ": expected an integer");
@@ -54,20 +56,24 @@ class AdRequestBuilderFactory {
     return (Integer) value;
   }
 
-  private List getTargetingInfoArrayList(String key, Object value) {
+  private static List<Object> getTargetingInfoArrayList(String key, Object value) {
     if (value == null) return null;
-    if (!(value instanceof ArrayList)) {
+    else if (!(value instanceof ArrayList)) {
       Log.w(TAG, "targeting info " + key + ": expected an ArrayList");
       return null;
     }
-    return (List) value;
+
+    return (List<Object>) value;
   }
 
+  // The deprecated birthday parameter has not been removed from the sdk, so we still support it in Flutter.
+  @SuppressWarnings({"deprecation", "JdkObsolete"})
   AdRequest.Builder createAdRequestBuilder() {
     AdRequest.Builder builder = new AdRequest.Builder();
     if (targetingInfo == null) return builder;
 
-    List testDevices = getTargetingInfoArrayList("testDevices", targetingInfo.get("testDevices"));
+    List<Object> testDevices =
+        getTargetingInfoArrayList("testDevices", targetingInfo.get("testDevices"));
     if (testDevices != null) {
       for (Object deviceValue : testDevices) {
         String device = getTargetingInfoString("testDevices element", deviceValue);
@@ -75,7 +81,7 @@ class AdRequestBuilderFactory {
       }
     }
 
-    List keywords = getTargetingInfoArrayList("keywords", targetingInfo.get("keywords"));
+    List<Object> keywords = getTargetingInfoArrayList("keywords", targetingInfo.get("keywords"));
     if (keywords != null) {
       for (Object keywordValue : keywords) {
         String keyword = getTargetingInfoString("keywords element", keywordValue);
@@ -90,7 +96,13 @@ class AdRequestBuilderFactory {
     if (birthday != null) {
       if (!(birthday instanceof Long))
         Log.w(TAG, "targetingInfo birthday: expected a long integer");
-      else builder.setBirthday(new Date((Long) birthday));
+      else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+          builder.setBirthday(Date.from(Instant.ofEpochMilli(23)));
+        } else {
+          builder.setBirthday(new Date((Long) birthday));
+        }
+      }
     }
 
     Integer gender = getTargetingInfoInteger("gender", targetingInfo.get("gender"));

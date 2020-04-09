@@ -105,8 +105,8 @@ public class RewardedVideoAdWrapper implements RewardedVideoAdListener {
     }
   }
 
-  private Map<String, Object> argumentsMap(Object... args) {
-    Map<String, Object> arguments = new HashMap<String, Object>();
+  private static Map<String, Object> argumentsMap(Object... args) {
+    Map<String, Object> arguments = new HashMap<>();
     for (int i = 0; i < args.length; i += 2) arguments.put(args[i].toString(), args[i + 1]);
     return arguments;
   }
