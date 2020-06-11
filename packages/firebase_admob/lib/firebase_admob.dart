@@ -544,7 +544,8 @@ class RewardedVideoAd {
 
   /// Loads a rewarded video ad using the provided ad unit ID.
   Future<bool> load(
-      {@required String adUnitId, MobileAdTargetingInfo targetingInfo}) {
+      {@required String adUnitId,
+      MobileAdTargetingInfo targetingInfo = const MobileAdTargetingInfo()}) {
     assert(adUnitId.isNotEmpty);
     return _invokeBooleanMethod('loadRewardedVideoAd', <String, dynamic>{
       'adUnitId': adUnitId,

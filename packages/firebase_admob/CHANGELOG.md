@@ -1,3 +1,12 @@
+## 0.9.3+4
+
+* Bump Dart version requirement.
+
+## 0.9.3+3
+
+* Provide a default `MobileAdTargetingInfo` for `RewardedVideoAd.load()`. `RewardedVideoAd.load()`
+would inadvertently cause a crash if `MobileAdTargetingInfo` was excluded.
+
 ## 0.9.3+2
 
 * Fixed bug related to simultaneous ad loading behavior on iOS.
