@@ -9,6 +9,8 @@ task:
   upgrade_script:
     - flutter channel stable
     - flutter upgrade
+    - flutter channel beta
+    - flutter upgrade
     - flutter channel master
     - flutter upgrade
     - git fetch origin master
@@ -29,6 +31,7 @@ task:
       env:
         matrix:
           CHANNEL: "master"
+          CHANNEL: "beta"
           CHANNEL: "stable"
       test_script:
         # TODO(jackson): Allow web plugins once supported on stable
@@ -45,6 +48,7 @@ task:
           PLUGIN_SHARDING: "--shardIndex 1 --shardCount 2"
         matrix:
           CHANNEL: "master"
+          CHANNEL: "beta"
           CHANNEL: "stable"
         GCLOUD_FIREBASE_TESTLAB_KEY: ENCRYPTED[fd81ffb7c44af2f8a1ae55e470c69690c1ec7e90aba49d18635fa4f3c72b6807034287e9e697f64e37ab836a66ba9eab]
       script:
@@ -84,6 +88,8 @@ task:
   upgrade_script:
     - flutter channel stable
     - flutter upgrade
+    - flutter channel beta
+    - flutter upgrade
     - flutter channel master
     - flutter upgrade
     - git fetch origin master
@@ -102,6 +108,7 @@ task:
           PLUGIN_SHARDING: "--shardIndex 3 --shardCount 4"
         matrix:
           CHANNEL: "master"
+          CHANNEL: "beta"
           CHANNEL: "stable"
       build_script:
         # TODO(jackson): Allow web plugins once supported on stable
