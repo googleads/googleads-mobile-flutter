@@ -16,6 +16,8 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
@@ -107,7 +109,7 @@ class MobileAdTargetingInfo {
 
 enum AnchorType { bottom, top }
 
-// The types of ad sizes supported for banners. The names of the values are used
+//  for banners. The names of the values are used
 // in MethodChannel calls to iOS and Android, and should not be changed.
 enum AdSizeType {
   WidthAndHeight,
@@ -294,7 +296,30 @@ class AdWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    assert(Platform.isIOS);
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return PlatformViewLink(
+        viewType: '${FirebaseAdMob.instance._channel.name}/ad_widget',
+        surfaceFactory:
+            (BuildContext context, PlatformViewController controller) {
+          return AndroidViewSurface(
+            controller: controller,
+            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+          );
+        },
+        onCreatePlatformView: (PlatformViewCreationParams params) {
+          return PlatformViewsService.initSurfaceAndroidView(
+            id: params.id,
+            viewType: '${FirebaseAdMob.instance._channel.name}/ad_widget',
+            layoutDirection: TextDirection.ltr,
+            creationParams: ad.id,
+            creationParamsCodec: StandardMessageCodec(),
+          )
+            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+            ..create();
+        },
+      );
+    }
     return UiKitView(
       viewType: '${FirebaseAdMob.instance._channel.name}/ad_widget',
       creationParams: ad.id,

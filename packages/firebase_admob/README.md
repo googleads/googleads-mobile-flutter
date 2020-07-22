@@ -390,8 +390,10 @@ removed from view. They require user input to be dismissed from the screen.
 
 ### Widget
 
-If you plan on using this method on iOS you need to take an extra step by opting-in to the embedded
-views preview. You can do this by adding a boolean property to the app's `ios/Runner/Info.plist`
+If you would like to display an ad as a Flutter `Widget`, you need to take an extra step by
+opting-in to the embedded views preview. On Android, this is already done for you.
+
+On iOS, you must do this by adding a boolean property to the app's `ios/Runner/Info.plist`
 file with the key `io.flutter.embedded_views_preview` and the value `true`. Your `Info.plist` should
 look similar to:
 

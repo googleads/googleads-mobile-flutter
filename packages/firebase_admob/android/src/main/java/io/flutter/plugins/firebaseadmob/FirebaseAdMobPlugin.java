@@ -25,6 +25,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.plugin.platform.PlatformViewRegistry;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -88,7 +89,11 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
 
     final FirebaseAdMobPlugin plugin = new FirebaseAdMobPlugin();
     registrar.publish(plugin);
-    plugin.initializePlugin(registrar.context(), registrar.activity(), registrar.messenger());
+    plugin.initializePlugin(
+        registrar.context(),
+        registrar.activity(),
+        registrar.messenger(),
+        registrar.platformViewRegistry());
   }
 
   /**
@@ -200,13 +205,19 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   }
 
   private void initializePlugin(
-      Context applicationContext, Activity activity, BinaryMessenger messenger) {
+      Context applicationContext,
+      Activity activity,
+      BinaryMessenger messenger,
+      PlatformViewRegistry viewRegistry) {
     this.activity = activity;
     this.applicationContext = applicationContext;
     FirebaseApp.initializeApp(applicationContext);
 
     this.channel = new MethodChannel(messenger, "plugins.flutter.io/firebase_admob");
     channel.setMethodCallHandler(this);
+
+    viewRegistry.registerViewFactory(
+        "plugins.flutter.io/firebase_admob/ad_widget", new MobileAd.FirebaseAdMobViewFactory());
 
     rewardedWrapper = new RewardedVideoAdWrapper(activity, channel);
   }
@@ -436,7 +447,8 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     initializePlugin(
         pluginBinding.getApplicationContext(),
         binding.getActivity(),
-        pluginBinding.getBinaryMessenger());
+        pluginBinding.getBinaryMessenger(),
+        pluginBinding.getPlatformViewRegistry());
   }
 
   @Override
@@ -450,7 +462,8 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     initializePlugin(
         pluginBinding.getApplicationContext(),
         binding.getActivity(),
-        pluginBinding.getBinaryMessenger());
+        pluginBinding.getBinaryMessenger(),
+        pluginBinding.getPlatformViewRegistry());
   }
 
   @Override

@@ -15,10 +15,14 @@ Firebase Admob plugin for Flutter.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'Firebase/Core'
-  s.dependency 'Firebase/AdMob'
-
+  s.dependency 'Firebase/Analytics'
+  s.dependency 'Google-Mobile-Ads-SDK'
   s.ios.deployment_target = '8.0'
-
+  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS' => 'armv7 arm64 x86_64' }
   s.static_framework = true
+
+  s.test_spec 'Tests' do |test_spec|
+    test_spec.source_files = 'Tests/**/*'
+    test_spec.dependency 'OCMock','3.5'
+  end
 end

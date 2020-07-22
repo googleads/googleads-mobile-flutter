@@ -32,13 +32,13 @@ class _MyAppState extends State<MyApp> {
   InterstitialAd _interstitialAd;
   BannerAd _inlineBannerAd;
   NativeAd _inlineNativeAd;
+  bool _inlineNativeAdLoaded = false;
   int _coins = 0;
 
   BannerAd createBannerAd() {
     return BannerAd(
       adUnitId: BannerAd.testAdUnitId,
       size: AdSize.banner,
-      targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
         print("BannerAd event $event");
       },
@@ -55,14 +55,12 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  NativeAd createNativeAd() {
+  NativeAd createNativeAd(MobileAdListener listener) {
     return NativeAd(
       adUnitId: NativeAd.testAdUnitId,
       factoryId: 'adFactoryExample',
       targetingInfo: targetingInfo,
-      listener: (MobileAdEvent event) {
-        print("$NativeAd event $event");
-      },
+      listener: listener,
     );
   }
 
@@ -171,7 +169,9 @@ class _MyAppState extends State<MyApp> {
                 RaisedButton(
                   child: const Text('SHOW NATIVE'),
                   onPressed: () {
-                    _nativeAd ??= createNativeAd();
+                    _nativeAd ??= createNativeAd((MobileAdEvent event) {
+                      print("$NativeAd event $event");
+                    });
                     _nativeAd
                       ..load()
                       ..show(
@@ -192,14 +192,21 @@ class _MyAppState extends State<MyApp> {
                   child: const Text('SHOW INLINE NATIVE'),
                   onPressed: () {
                     setState(() {
-                      _inlineNativeAd ??= createNativeAd();
+                      _inlineNativeAd ??= createNativeAd((MobileAdEvent event) {
+                        setState(() {
+                          print("$NativeAd event $event");
+                          if (event == MobileAdEvent.loaded) {
+                            _inlineNativeAdLoaded = true;
+                          }
+                        });
+                      });
                       _inlineNativeAd.load();
                     });
                   },
                 ),
                 Container(
                   alignment: Alignment.center,
-                  child: _inlineNativeAd != null
+                  child: _inlineNativeAdLoaded
                       ? AdWidget(ad: _inlineNativeAd)
                       : Container(),
                   width: _inlineNativeAd != null ? 250 : 0,
@@ -211,6 +218,7 @@ class _MyAppState extends State<MyApp> {
                     _inlineNativeAd?.dispose();
                     setState(() {
                       _inlineNativeAd = null;
+                      _inlineNativeAdLoaded = false;
                     });
                   },
                 ),

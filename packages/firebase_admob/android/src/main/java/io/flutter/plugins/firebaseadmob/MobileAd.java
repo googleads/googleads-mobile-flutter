@@ -5,12 +5,15 @@
 package io.flutter.plugins.firebaseadmob;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdSize;
@@ -20,8 +23,12 @@ import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugin.common.StandardMessageCodec;
+import io.flutter.plugin.platform.PlatformView;
+import io.flutter.plugin.platform.PlatformViewFactory;
 import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 abstract class MobileAd extends AdListener {
@@ -42,6 +49,48 @@ abstract class MobileAd extends AdListener {
     FAILED,
     PENDING, // The ad will be shown when status is changed to LOADED.
     LOADED,
+  }
+
+  static class FirebaseAdMobViewFactory extends PlatformViewFactory {
+    public FirebaseAdMobViewFactory() {
+      super(StandardMessageCodec.INSTANCE);
+    }
+
+    @Override
+    public PlatformView create(Context context, int viewId, Object args) {
+      final Integer adId = (Integer) args;
+      final MobileAdWithView adView = (MobileAdWithView) allAds.get(adId);
+
+      if (adView == null) {
+        final String message =
+            String.format(
+                Locale.getDefault(),
+                "This ad may have not been loaded or has been disposed. Ad with the following id could not be found: %d.",
+                adId);
+        return new ErrorTextView(context, message);
+      }
+
+      return adView;
+    }
+  }
+
+  private static class ErrorTextView implements PlatformView {
+    private final TextView textView;
+
+    private ErrorTextView(Context context, String message) {
+      textView = new TextView(context);
+      textView.setText(message);
+      textView.setBackgroundColor(Color.RED);
+      textView.setTextColor(Color.YELLOW);
+    }
+
+    @Override
+    public View getView() {
+      return textView;
+    }
+
+    @Override
+    public void dispose() {}
   }
 
   private MobileAd(int id, Activity activity, MethodChannel channel) {
@@ -147,12 +196,10 @@ abstract class MobileAd extends AdListener {
     channel.invokeMethod("onAdClosed", argumentsMap());
   }
 
-  abstract static class MobileAdWithView extends MobileAd {
+  abstract static class MobileAdWithView extends MobileAd implements PlatformView {
     private MobileAdWithView(int id, Activity activity, MethodChannel channel) {
       super(id, activity, channel);
     }
-
-    abstract View getAdView();
 
     @Override
     void show() {
@@ -167,7 +214,7 @@ abstract class MobileAd extends AdListener {
         content.setId(id);
         content.setOrientation(LinearLayout.VERTICAL);
         content.setGravity(anchorType);
-        content.addView(getAdView());
+        content.addView(getView());
         final float scale = activity.getResources().getDisplayMetrics().density;
 
         int left = horizontalCenterOffset > 0 ? (int) (horizontalCenterOffset * scale) : 0;
@@ -187,7 +234,7 @@ abstract class MobileAd extends AdListener {
     }
 
     @Override
-    void dispose() {
+    public void dispose() {
       super.dispose();
 
       View contentView = activity.findViewById(id);
@@ -222,12 +269,12 @@ abstract class MobileAd extends AdListener {
     }
 
     @Override
-    View getAdView() {
+    public View getView() {
       return adView;
     }
 
     @Override
-    void dispose() {
+    public void dispose() {
       // TODO(bmparr): Remove or move to an Activity lifecycle handler once we better understand whether we should be calling this. https://github.com/FirebaseExtended/flutterfire/issues/2124
       adView.destroy();
       super.dispose();
@@ -303,7 +350,7 @@ abstract class MobileAd extends AdListener {
     }
 
     @Override
-    View getAdView() {
+    public View getView() {
       return adView;
     }
   }
