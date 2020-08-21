@@ -8,6 +8,9 @@
 
 #import <Firebase/Firebase.h>
 
+#import "FLTAdInstanceManager_Internal.h"
+#import "FLTAd_Internal.h"
+
 #define FLTLogWarning(format, ...) NSLog((@"FirebaseAdMobPlugin <warning> " format), ##__VA_ARGS__)
 
 /**

@@ -4,8 +4,6 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 
@@ -19,7 +17,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static const MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+  static final AdRequest request = AdRequest(
     testDevices: testDevice != null ? <String>[testDevice] : null,
     keywords: <String>['foo', 'bar'],
     contentUrl: 'http://foo.com/bar.html',
@@ -28,63 +26,143 @@ class _MyAppState extends State<MyApp> {
   );
 
   BannerAd _bannerAd;
+  bool _bannerReady = false;
+
   NativeAd _nativeAd;
+  bool _nativeReady = false;
+
   InterstitialAd _interstitialAd;
-  BannerAd _inlineBannerAd;
-  NativeAd _inlineNativeAd;
-  bool _inlineNativeAdLoaded = false;
-  int _coins = 0;
+  bool _interstitialReady = false;
 
-  BannerAd createBannerAd() {
-    return BannerAd(
+  RewardedAd _rewardedAd;
+  bool _rewardedReady = false;
+
+  void createBannerAd() {
+    _bannerAd ??= BannerAd(
       adUnitId: BannerAd.testAdUnitId,
+      request: request,
       size: AdSize.banner,
-      listener: (MobileAdEvent event) {
-        print("BannerAd event $event");
-      },
-    );
+      listener: AdListener(
+        onAdLoaded: (Ad ad) {
+          print('${ad.runtimeType} loaded.');
+          setState(() => _bannerReady = true);
+        },
+        onAdFailedToLoad: (Ad ad) {
+          print('${ad.runtimeType} failed to load.');
+          setState(() {
+            _bannerAd.dispose();
+            _bannerAd = null;
+          });
+        },
+        onAdOpened: onAdOpened,
+        onAdClosed: onAdClosed,
+        onApplicationExit: onApplicationExit,
+      ),
+    )..load();
   }
 
-  InterstitialAd createInterstitialAd() {
-    return InterstitialAd(
+  void createInterstitialAd() {
+    _interstitialAd ??= InterstitialAd(
       adUnitId: InterstitialAd.testAdUnitId,
-      targetingInfo: targetingInfo,
-      listener: (MobileAdEvent event) {
-        print("InterstitialAd event $event");
-      },
-    );
+      request: request,
+      listener: AdListener(
+        onAdLoaded: (Ad ad) {
+          print('${ad.runtimeType} loaded.');
+          setState(() => _interstitialReady = true);
+        },
+        onAdFailedToLoad: (Ad ad) => setState(() {
+          print('${ad.runtimeType} failed to load.');
+          _interstitialAd.dispose();
+          _interstitialAd = null;
+        }),
+        onAdOpened: onAdOpened,
+        onAdClosed: (Ad ad) {
+          print('${ad.runtimeType} closed.');
+          setState(() {
+            _interstitialAd.dispose();
+            _interstitialAd = null;
+          });
+        },
+        onApplicationExit: onApplicationExit,
+      ),
+    )..load();
   }
 
-  NativeAd createNativeAd(MobileAdListener listener) {
-    return NativeAd(
+  void createNativeAd() {
+    _nativeAd ??= NativeAd(
       adUnitId: NativeAd.testAdUnitId,
+      request: request,
       factoryId: 'adFactoryExample',
-      targetingInfo: targetingInfo,
-      listener: listener,
-    );
+      listener: AdListener(
+        onAdLoaded: (Ad ad) {
+          print('${ad.runtimeType} loaded.');
+          setState(() => _nativeReady = true);
+        },
+        onAdFailedToLoad: (Ad ad) => setState(() {
+          print('${ad.runtimeType} failed to load.');
+          _nativeAd.dispose();
+          _nativeAd = null;
+        }),
+        onAdOpened: onAdOpened,
+        onAdClosed: onAdClosed,
+        onApplicationExit: onApplicationExit,
+        onNativeAdClicked: onNativeAdClicked,
+        onNativeAdImpression: onNativeAdImpression,
+      ),
+    )..load();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    FirebaseAdMob.instance.initialize(appId: FirebaseAdMob.testAppId);
-    _bannerAd = createBannerAd()..load();
-    RewardedVideoAd.instance.listener =
-        (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
-      print("RewardedVideoAd event $event");
-      if (event == RewardedVideoAdEvent.rewarded) {
-        setState(() {
-          _coins += rewardAmount;
-        });
-      }
-    };
+  void createRewardedAd() {
+    _rewardedAd ??= RewardedAd(
+      adUnitId: RewardedAd.testAdUnitId,
+      request: request,
+      listener: AdListener(
+        onAdLoaded: (Ad ad) {
+          print('${ad.runtimeType} loaded.');
+          setState(() => _rewardedReady = true);
+        },
+        onAdFailedToLoad: (Ad ad) => setState(() {
+          print('${ad.runtimeType} failed to load.');
+          _rewardedAd.dispose();
+          _rewardedAd = null;
+        }),
+        onAdOpened: onAdOpened,
+        onAdClosed: (Ad ad) {
+          print('${ad.runtimeType} closed.');
+          setState(() {
+            _rewardedAd.dispose();
+            _rewardedAd = null;
+          });
+        },
+        onApplicationExit: onApplicationExit,
+        onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) =>
+            onRewardedAdUserEarnedReward(ad, reward),
+      ),
+    )..load();
   }
+
+  void onAdOpened(Ad ad) => print('${ad.runtimeType} opened.');
+
+  void onAdClosed(Ad ad) => print('${ad.runtimeType} closed.');
+
+  void onApplicationExit(Ad ad) =>
+      print('${ad.runtimeType} leaving application.');
+
+  void onNativeAdClicked(NativeAd ad) => print('${ad.runtimeType} clicked.');
+
+  void onNativeAdImpression(NativeAd ad) =>
+      print('${ad.runtimeType} impression.');
+
+  void onRewardedAdUserEarnedReward(RewardedAd ad, RewardItem reward) => print(
+        '${ad.runtimeType} with reward: $RewardItem(${reward.amount}, ${reward.type})',
+      );
 
   @override
   void dispose() {
     _bannerAd?.dispose();
     _nativeAd?.dispose();
     _interstitialAd?.dispose();
+    _rewardedAd?.dispose();
     super.dispose();
   }
 
@@ -102,141 +180,59 @@ class _MyAppState extends State<MyApp> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 RaisedButton(
-                    child: const Text('SHOW BANNER'),
-                    onPressed: () {
-                      _bannerAd ??= createBannerAd();
-                      _bannerAd
-                        ..load()
-                        ..show();
-                    }),
-                RaisedButton(
-                    child: const Text('SHOW BANNER WITH OFFSET'),
-                    onPressed: () {
-                      _bannerAd ??= createBannerAd();
-                      _bannerAd
-                        ..load()
-                        ..show(horizontalCenterOffset: -50, anchorOffset: 100);
-                    }),
-                RaisedButton(
-                    child: const Text('REMOVE BANNER'),
-                    onPressed: () {
-                      _bannerAd?.dispose();
-                      _bannerAd = null;
-                    }),
-                RaisedButton(
-                  child: const Text('SHOW INLINE BANNER'),
-                  onPressed: () {
-                    setState(() {
-                      _inlineBannerAd ??= createBannerAd();
-                      _inlineBannerAd.load();
-                    });
-                  },
+                  child: Text('Load $BannerAd'),
+                  onPressed: _bannerAd == null ? createBannerAd : null,
                 ),
                 Container(
                   alignment: Alignment.center,
-                  child: _inlineBannerAd != null
-                      ? AdWidget(ad: _inlineBannerAd)
-                      : Container(),
-                  width: _inlineBannerAd != null
-                      ? _inlineBannerAd.size.width.toDouble()
-                      : 0,
-                  height: _inlineBannerAd != null
-                      ? _inlineBannerAd.size.height.toDouble()
-                      : 0,
+                  child: _bannerReady ? AdWidget(ad: _bannerAd) : Container(),
+                  width: _bannerReady ? _bannerAd.size.width.toDouble() : 0,
+                  height: _bannerReady ? _bannerAd.size.height.toDouble() : 0,
                 ),
                 RaisedButton(
-                  child: const Text('REMOVE INLINE BANNER'),
-                  onPressed: () {
-                    _inlineBannerAd?.dispose();
-                    setState(() {
-                      _inlineBannerAd = null;
-                    });
-                  },
-                ),
-                RaisedButton(
-                  child: const Text('LOAD INTERSTITIAL'),
-                  onPressed: () {
-                    _interstitialAd?.dispose();
-                    _interstitialAd = createInterstitialAd()..load();
-                  },
-                ),
-                RaisedButton(
-                  child: const Text('SHOW INTERSTITIAL'),
-                  onPressed: () {
-                    _interstitialAd?.show();
-                  },
-                ),
-                RaisedButton(
-                  child: const Text('SHOW NATIVE'),
-                  onPressed: () {
-                    _nativeAd ??= createNativeAd((MobileAdEvent event) {
-                      print("$NativeAd event $event");
-                    });
-                    _nativeAd
-                      ..load()
-                      ..show(
-                        anchorType: Platform.isAndroid
-                            ? AnchorType.bottom
-                            : AnchorType.top,
-                      );
-                  },
-                ),
-                RaisedButton(
-                  child: const Text('REMOVE NATIVE'),
-                  onPressed: () {
-                    _nativeAd?.dispose();
-                    _nativeAd = null;
-                  },
-                ),
-                RaisedButton(
-                  child: const Text('SHOW INLINE NATIVE'),
-                  onPressed: () {
-                    setState(() {
-                      _inlineNativeAd ??= createNativeAd((MobileAdEvent event) {
-                        setState(() {
-                          print("$NativeAd event $event");
-                          if (event == MobileAdEvent.loaded) {
-                            _inlineNativeAdLoaded = true;
-                          }
-                        });
-                      });
-                      _inlineNativeAd.load();
-                    });
-                  },
+                  child: Text('Load $NativeAd'),
+                  onPressed: _nativeAd == null ? createNativeAd : null,
                 ),
                 Container(
                   alignment: Alignment.center,
-                  child: _inlineNativeAdLoaded
-                      ? AdWidget(ad: _inlineNativeAd)
-                      : Container(),
-                  width: _inlineNativeAd != null ? 250 : 0,
-                  height: _inlineNativeAd != null ? 350 : 0,
+                  child: _nativeReady ? AdWidget(ad: _nativeAd) : Container(),
+                  width: _nativeReady ? 300 : 0,
+                  height: _nativeReady ? 300 : 0,
                 ),
                 RaisedButton(
-                  child: const Text('REMOVE INLINE NATIVE'),
-                  onPressed: () {
-                    _inlineNativeAd?.dispose();
-                    setState(() {
-                      _inlineNativeAd = null;
-                      _inlineNativeAdLoaded = false;
-                    });
-                  },
+                  child: Text('Load $InterstitialAd'),
+                  onPressed: _interstitialAd == null
+                      ? () => setState(() => createInterstitialAd())
+                      : null,
                 ),
                 RaisedButton(
-                  child: const Text('LOAD REWARDED VIDEO'),
-                  onPressed: () {
-                    RewardedVideoAd.instance.load(
-                        adUnitId: RewardedVideoAd.testAdUnitId,
-                        targetingInfo: targetingInfo);
-                  },
+                  child: Text('Show $InterstitialAd'),
+                  onPressed: _interstitialReady
+                      ? () {
+                          setState(() {
+                            _interstitialAd.show();
+                            _interstitialReady = false;
+                          });
+                        }
+                      : null,
                 ),
                 RaisedButton(
-                  child: const Text('SHOW REWARDED VIDEO'),
-                  onPressed: () {
-                    RewardedVideoAd.instance.show();
-                  },
+                  child: Text('Load $RewardedAd'),
+                  onPressed: _rewardedAd == null
+                      ? () => setState(() => createRewardedAd())
+                      : null,
                 ),
-                Text("You have $_coins coins."),
+                RaisedButton(
+                  child: Text('Show $RewardedAd'),
+                  onPressed: _rewardedReady
+                      ? () {
+                          setState(() {
+                            _rewardedAd.show();
+                            _rewardedReady = false;
+                          });
+                        }
+                      : null,
+                ),
               ].map((Widget button) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),

@@ -55,4 +55,13 @@
   XCTAssertTrue([decodedRequest.testDevices isEqualToArray:@[ @"orange" ]]);
   XCTAssertTrue(decodedRequest.nonPersonalizedAds);
 }
+
+- (void)testEncodeDecodeRewardItem {
+  FLTRewardItem *item = [[FLTRewardItem alloc] initWithAmount:@(1) type:@"apple"];
+  NSData *encodedMessage = [_messageCodec encode:item];
+
+  FLTRewardItem *decodedItem = [_messageCodec decode:encodedMessage];
+  XCTAssertEqualObjects(decodedItem.amount, @(1));
+  XCTAssertEqualObjects(decodedItem.type, @"apple");
+}
 @end

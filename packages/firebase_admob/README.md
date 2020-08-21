@@ -97,9 +97,9 @@ To see how to display an Ad after loading one, see section **Displaying an Ad**.
 
 ### Banner
 
-Instantiating a `BannerAd` requires at least an `adUnitId` and an `AdSize` as shown below. When
-testing, you should always use `BannerAd.testAdUnitId` and switch to an ad unit id from your AdMob
-account when releasing.
+Instantiating a `BannerAd` requires at least an `adUnitId`, an `AdSize`, an `AdRequest`, and an
+`AdListener` as seen below. When testing, you should always use `BannerAd.testAdUnitId` and switch
+to an ad unit id from your AdMob account when releasing.
 
 ```dart
 final BannerAd myBanner = BannerAd(
@@ -108,17 +108,19 @@ final BannerAd myBanner = BannerAd(
   // https://developers.google.com/admob/ios/test-ads
   adUnitId: BannerAd.testAdUnitId,
   size: AdSize.banner,
+  request: AdRequest(),
+  listener: AdListener(),
 );
 ```
 
 After a `BannerAd` is instantiated, you must call `load()` before it can be shown on the screen.
 
 ```dart
-final bool adBeganLoading = await myBanner.load();
+myBanner.load();
 ```
 
 See section **Displaying an Ad** to see how to show the ad in your app and section
-**Targeting Info and Ad Event Listeners** to see additional parameters.
+**AdRequest Info and Ad Event Listeners** to see additional parameters.
 
 ### Interstitial
 
@@ -132,6 +134,8 @@ final InterstitialAd myInterstitial = myInterstitial(
   // https://developers.google.com/admob/android/test-ads
   // https://developers.google.com/admob/ios/test-ads
   adUnitId: InterstitialAd.testAdUnitId,
+  request: AdRequest(),
+  listener: AdListener(),
 );
 ```
 
@@ -139,11 +143,11 @@ After a `InterstitialAd` is instantiated, you must call `load()` before it can b
 screen.
 
 ```dart
-final bool adBeganLoading = await myInterstitial.load();
+myInterstitial.load();
 ```
 
 See section **Displaying an Ad** to see how to show the ad in your app and section
-**Targeting Info and Ad Event Listeners** to see additional parameters.
+**AdRequest Info and Ad Event Listeners** to see additional parameters.
 
 ### Native
 
@@ -298,9 +302,9 @@ If this is done in `AppDelegate.m`, it should look similar to:
 
 #### Dart Example
 
-When creating a `NativeAd` in Dart, setup is similar to Banners and Interstitials. You need at least
-an ad unit id and the `factoryId` that matches the id used to register the `NativeAdFactory`
-in Java/Kotlin/Obj-C/Swift. An example of this implementation is seen below. Also, remember that
+When creating a `NativeAd` in Dart, setup is similar to `BannerAd` or `InterstitialAd` with an additional
+requirement of a `factoryId` that matches the id used to register the `NativeAdFactory` in
+Java/Kotlin/Obj-C/Swift. An example of this implementation is seen below. Also, remember that
 testing should always be done with the `NativeAd.testAdUnitId`.
 
 ```dart
@@ -308,85 +312,69 @@ testing should always be done with the `NativeAd.testAdUnitId`.
 final NativeAd nativeAd = NativeAd(
   adUnitId: NativeAd.testAdUnitId,
   factoryId: 'adFactoryExample',
+  request: AdRequest(),
+  listener: AdListener(),
 );
 ```
 
 Once created you can call `load()`.
 
 ```dart
-final bool adBeganLoading = await nativeAd.load();
+nativeAd.load();
 ```
 
 See section **Displaying an Ad** to see how to show the ad in your app and section
-**Targeting Info and Ad Event Listeners** to see additional parameters.
+**AdRequest Info and Ad Event Listeners** to see additional parameters.
 
-### Rewarded Video Ads
+### Rewarded Ads
 
-Unlike `BannerAd`s and `InterstitialAd`s, rewarded video ads are loaded one at a time
-via a singleton object, `RewardedVideoAd.instance`. Its `load` method takes an
-AdMob ad unit ID and an instance of `MobileAdTargetingInfo`:
-
-```dart
-RewardedVideoAd.instance.load(myAdMobAdUnitId, targetingInfo);
-```
-
-To listen for events in the rewarded video ad lifecycle, apps can define a
-function matching the `RewardedVideoAdListener` typedef, and assign it to the
-`listener` instance variable in `RewardedVideoAd`. If set, the `listener`
-function will be invoked whenever one of the events in the `RewardedVideAdEvent`
-enum occurs. After a rewarded video ad loads, for example, the
-`RewardedVideoAdEvent.loaded` is sent. Any time after that, apps can show the ad.
-
-When the AdMob SDK decides it's time to grant an in-app reward, it does so via
-the `RewardedVideoAdEvent.rewarded` event:
+Instantiating a `Rewarded` requires at least an `adUnitId`, an `AdRequest`, and an `AdListener`
+as seen below. When testing, you should always use `RewardedAd.testAdUnitId` and switch
+to an ad unit id from your AdMob account when releasing.
 
 ```dart
-RewardedVideoAd.instance.listener =
-    (RewardedVideoAdEvent event, {String rewardType, int rewardAmount}) {
-  if (event == RewardedVideoAdEvent.rewarded) {
-    setState(() {
-      // Here, apps should update state to reflect the reward.
-      _goldCoins += rewardAmount;
-    });
-  }
-};
+final RewardedAd myRewardedAd = RewardedAd(
+  // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+  // https://developers.google.com/admob/android/test-ads
+  // https://developers.google.com/admob/ios/test-ads
+  adUnitId: RewardedAd.testAdUnitId,
+  request: AdRequest(),
+  listener: AdListener(),
+);
 ```
 
-Because `RewardedVideoAd` is a singleton object, it does not offer a `dispose`
-method.
+After a `RewardedAd` is instantiated, you must call `load()` before it can be shown on the screen.
+
+```dart
+myRewardedAd.load();
+```
+
+See section **Displaying an Ad** to see how to show the ad in your app and section
+**AdRequest Info and Ad Event Listeners** to see additional parameters.
 
 ## Displaying an Ad
 
 Each ad format can be displayed using at least one of two methods. **Overlay** and **Widget**. This
-section explain the difference between using both.
+section explains the difference between them.
 
 ### Overlay
 
 An ad that is displayed as an **Overlay** is displayed on top of all app content and is statically
-placed. Ad displayed this way can't be added to the Flutter widget tree.
-`BannerAd`s, `InterstitialAd`s, `NativeAd`s, and `RewardedVideoAd`s can all be displayed this way.
-You can display and remove an ad by calling `show()` and `dispose` respectively. This method must
-only be called after `load()`.
+placed. Ad displayed this way can't be added to the Flutter widget tree. Only `InterstitialAd`s and
+`NativeAd`s can be displayed this way. You can display an ad by calling `show()` after the `Ad` is
+loaded.
 
 ```dart
-mybanner.show();
+myInterstitial.show();
 ```
 
-For `BannerAd`s and `NativeAd`s you can also change the position on the screen.
+This method should only be called after `load()` and the `AdListener.onAdLoaded` method has been
+triggered. Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and
+require user input.
 
-```dart
-mybanner.show(
-    // Positions the banner ad 60 pixels from the bottom of the screen
-    anchorOffset: 60.0,
-    // Positions the banner ad 10 pixels from the center of the screen to the right
-    horizontalCenterOffset: 10.0,
-    // Banner Position
-    anchorType: AnchorType.bottom,
-);
-```
-
-It is also worth noting that `InterstitialAds`s and `RewardedVideoAd`s can't be programmatically
-removed from view. They require user input to be dismissed from the screen.
+Once an `Ad` has called `load()`, it must call `dispose()` when access to it is no longer needed.
+The best practice for when to call `dispose()` is either after calling `show()` or in the
+`AdListener.onAdFailedToLoad`/`AdListener.onAdClosed` callbacks.
 
 ### Widget
 
@@ -430,15 +418,17 @@ final Container adContainer = Container(
 );
 ```
 
-When the ad is no longer needed, call `dispose()` to release resources used by the add.
+Once an `Ad` has called `load()`, it must call `dispose()` when access to it is no longer needed.
+The best practice for when to call `dispose()` is either after the `AdWidget` is removed from the
+widget tree or in the `AdListener.onAdFailedToLoad` callback.
 
-## Targeting Info and Ad Event Listeners
+## AdRequest Info and Ad Event Listeners
 
-`BannerAd`s, `InterstitialAd`s, and `NativeAd`s can also be configured with targeting information
-and a `MobileAdEvent` listener as shown in a `BannerAd` below.
+`BannerAd`s, `InterstitialAd`s, `RewardedAd`s and `NativeAd`s can also be configured with targeting
+information a an `AdListener` below.
 
 ```dart
-final MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+final AdRequest request = AdRequest(
   keywords: <String>['flutterio', 'beautiful apps'],
   contentUrl: 'https://flutter.io',
   birthday: DateTime.now(),
@@ -453,23 +443,15 @@ BannerAd myBanner = BannerAd(
   // https://developers.google.com/admob/android/test-ads
   // https://developers.google.com/admob/ios/test-ads
   adUnitId: BannerAd.testAdUnitId,
-  targetingInfo: targetingInfo,
+  request: request,
   size: AdSize.smartBanner,
-  listener: (MobileAdEvent event) {
-    print("BannerAd event is $event");
-  },
+  listener: AdListener(
+    onAdLoaded: (Ad ad) {
+      print("$BannerAd loaded.");
+    },
+  ),
 );
 ```
-
-## Limitations
-
-This plugin currently has some limitations:
-
-- It's not possible to specify a banner ad's size.
-- The existing tests are fairly rudimentary.
-- There is no API doc.
-- The example should demonstrate how to show gate a route push with an
-  interstitial ad.
 
 ## Issues and feedback
 

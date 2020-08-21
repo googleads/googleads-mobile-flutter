@@ -1,3 +1,85 @@
+## 0.10.0
+
+* Old Plugin API has been moved to `lib/firebase_admob_legacy.dart`. To keep using the old API change
+`import 'package:firebase_admob/firebase_admob.dart';` to
+`import 'package:firebase_admob/firebase_admob_legacy.dart';`.
+
+* Updated `RewardedAd` to the latest API. Instantiating and displaying a `RewardedAd` is now similar
+to`InterstitialAd`. See README for more info. A simple example is shown below.
+```dart
+final RewardedAd myRewardedAd = RewardedAd(
+  adUnitId: RewardedAd.testAdUnitId,
+  request: AdRequest(),
+  listener: AdListener(
+    onAdLoaded: (Ad ad) => (ad as RewardedAd).show(),
+  ),
+);
+myRewardedAd.load();
+```
+
+* Replacement of `MobileAdEvent` callbacks with improved `AdListener`.
+```dart
+BannerAd(
+ listener: (MobileAdEvent event) {
+   print("BannerAd event $event");
+ },
+);
+```
+
+can be replaced by:
+
+```dart
+BannerAd(
+  listener: AdListener(
+    onAdLoaded: (Ad ad) => print('$BannerAd loaded.'),
+    onAdFailedToLoad: (Ad ad) => print('$BannerAd failed to load.'),
+  ),
+);
+```
+
+* `MobileAdTargeting` has been renamed to `AdRequest` to keep consistent with SDK.
+* `MobileAd` has been renamed to `Ad`.
+
+* Fix smart banners on iOS.
+  - `AdSize.smartBanner` is for Android only.
+  - `AdSize.smartBannerPortrait` and `AdSize.smartBannerPortrait` are only for iOS. 
+  - Use `Adsize.getSmartBanner(Orientation)` to get the correct value depending on platform. The
+  orientation can be retrieved using a `BuildContext`:
+```dart
+Orientation currentOrientation = MediaQuery.of(context).orientation;
+```
+
+* Removal of `show()` for `BannerAd` and `NativeAd` since they can now be displayed within a widget
+tree.
+* Showing of `InterstitialAd` and `RewardedAd` should now wait for `AdListener.onAdLoaded` callback
+before calling `show()` as best practice:
+
+```dart
+InterstitialAd(
+  adUnitId: InterstitialAd.testAdUnitId,
+  targetingInfo: targetingInfo,
+  listener: (MobileAdEvent event) {
+    print("InterstitialAd event $event");
+  },
+)
+  ..load()
+  ..show();
+```
+
+can be replaced by:
+
+```dart
+final InterstatialAd interstitial = InterstatialAd(
+  adUnitId: InterstatialAd.testAdUnitId,
+  request: AdRequest(),
+  listener: AdListener(
+    onAdLoaded: (Ad ad) => (ad as InterstatialAd).show(),
+  ),
+)..load();
+```
+
+* `Ad.load()` no longer returns a boolean that only confirms the method was called successfully.
+
 ## 0.9.3+4
 
 * Bump Dart version requirement.

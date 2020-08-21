@@ -40,11 +40,23 @@
 
 - (void)loadAd:(id<FLTAd> _Nonnull)ad adId:(NSNumber *_Nonnull)adId {
   [_ads setObject:ad forKey:adId];
+  ad.manager = self;
   [ad load];
 }
 
 - (void)dispose:(id<FLTAd> _Nonnull)ad {
   [_ads removeObjectForKey:[self adIdFor:ad]];
+}
+
+- (void)showAdWithID:(NSNumber *_Nonnull)adId {
+  id<FLTAdWithoutView> ad = (id<FLTAdWithoutView>)[self adFor:adId];
+
+  if (!ad) {
+    NSLog(@"Can't find ad with id: %@", adId);
+    return;
+  }
+
+  [ad show];
 }
 
 - (void)onAdLoaded:(id<FLTAd> _Nonnull)ad {
@@ -57,12 +69,12 @@
                arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdFailedToLoad"}];
 }
 
-- (void)onNativeAdClicked:(id<FLTAd> _Nonnull)ad {
+- (void)onNativeAdClicked:(FLTNewNativeAd *_Nonnull)ad {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdClicked"}];
 }
 
-- (void)onNativeAdImpression:(id<FLTAd> _Nonnull)ad {
+- (void)onNativeAdImpression:(FLTNewNativeAd *_Nonnull)ad {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdImpression"}];
 }
@@ -80,5 +92,44 @@
 - (void)onAdClosed:(id<FLTAd> _Nonnull)ad {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdClosed"}];
+}
+
+- (void)onRewardedAdUserEarnedReward:(FLTNewRewardedAd *_Nonnull)ad
+                              reward:(FLTRewardItem *_Nonnull)reward {
+  [_channel invokeMethod:@"onAdEvent"
+               arguments:@{
+                 @"adId" : [self adIdFor:ad],
+                 @"eventName" : @"onRewardedAdUserEarnedReward",
+                 @"rewardItem" : reward,
+               }];
+}
+@end
+
+@implementation FLTNewFirebaseAdmobViewFactory
+- (instancetype)initWithManager:(FLTAdInstanceManager *_Nonnull)manager {
+  self = [super init];
+  if (self) {
+    _manager = manager;
+  }
+  return self;
+}
+
+- (nonnull NSObject<FlutterPlatformView> *)createWithFrame:(CGRect)frame
+                                            viewIdentifier:(int64_t)viewId
+                                                 arguments:(id _Nullable)args {
+  NSNumber *adId = args;
+  NSObject<FlutterPlatformView> *view = (NSObject<FlutterPlatformView> *)[_manager adFor:adId];
+
+  if (!view) {
+    NSString *reason = [NSString
+        stringWithFormat:@"Could not find an ad with id: %@. Was this ad already disposed?", adId];
+    @throw [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
+  }
+
+  return view;
+}
+
+- (NSObject<FlutterMessageCodec> *)createArgsCodec {
+  return [FlutterStandardMessageCodec sharedInstance];
 }
 @end

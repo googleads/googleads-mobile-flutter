@@ -16,12 +16,14 @@ import 'ad_instance_manager.dart';
 
 /// Loads and disposes [BannerAds] and [InterstitialAds].
 @visibleForTesting
-final AdInstanceManager instanceManager =
-    AdInstanceManager('plugins.flutter.io/firebase_admob');
+AdInstanceManager instanceManager = AdInstanceManager(
+  'plugins.flutter.io/firebase_admob',
+);
 
 /// The user's gender for the sake of ad targeting using [AdRequest].
 // Warning: the index values of the enums must match the values of the corresponding
 // AdMob constants. For example MobileAdGender.female.index == kGADGenderFemale.
+// TODO(bparrishMines): Unit tests should be added to the iOS and Android platform code to verify the above warning.
 @Deprecated('This functionality is deprecated in AdMob without replacement.')
 enum MobileAdGender {
   unknown,
@@ -34,18 +36,18 @@ enum MobileAdGender {
 /// This class's properties mirror the native AdRequest API. See for example:
 /// [AdRequest.Builder for Android](https://firebase.google.com/docs/reference/android/com/google/android/gms/ads/AdRequest.Builder).
 class AdRequest {
-  const AdRequest(
-      {this.keywords,
-      this.contentUrl,
-      @Deprecated('This functionality is deprecated in AdMob without replacement.')
-          this.birthday,
-      @Deprecated('This functionality is deprecated in AdMob without replacement.')
-          this.gender,
-      @Deprecated('Use `childDirected` instead.')
-          this.designedForFamilies,
-      this.childDirected,
-      this.testDevices,
-      this.nonPersonalizedAds});
+  const AdRequest({
+    this.keywords,
+    this.contentUrl,
+    @Deprecated('This functionality is deprecated in AdMob without replacement.')
+        this.birthday,
+    @Deprecated('This functionality is deprecated in AdMob without replacement.')
+        this.gender,
+    @Deprecated('Use `childDirected` instead.') this.designedForFamilies,
+    this.childDirected,
+    this.testDevices,
+    this.nonPersonalizedAds,
+  });
 
   final List<String> keywords;
   final String contentUrl;
@@ -72,17 +74,6 @@ class AdRequest {
   }
 }
 
-/// The types of ad sizes supported for banners.
-///
-/// The names of the values are used in MethodChannel calls to iOS and Android, and should not be changed.
-enum AdSizeType {
-  /// Ads that are sized according to the set width and height.
-  WidthAndHeight,
-
-  /// Ads that don't use declared width and height values.
-  SmartBanner,
-}
-
 /// [AdSize] represents the size of a banner ad.
 ///
 /// There are six sizes available, which are the same for both iOS and Android.
@@ -90,79 +81,68 @@ enum AdSizeType {
 /// and [iOS](https://developers.google.com/admob/ios/banner#banner_sizes) for
 /// additional details.
 class AdSize {
-  // Apps should use the static constants rather than
-  // create their own instances of [AdSize].
-  const AdSize._({
+  const AdSize({
     @required this.width,
     @required this.height,
-    this.adSizeType,
   })  : assert(width != null),
         assert(height != null);
 
   /// The vertical span of an ad.
-  ///
-  /// [SmartBanner] ad heights are 0 by default.
   final int height;
 
   /// The horizontal span of an ad.
-  ///
-  /// [SmartBanner] ad widths are 0 by default.
   final int width;
 
-  /// The type of ad size for an ad.
-  ///
-  /// [WidthAndHeight] sets size based on height and width,
-  /// whereas [SmartBanner] ignores these values.
-  final AdSizeType adSizeType;
-
   /// The standard banner (320x50) size.
-  static const AdSize banner = AdSize._(
-    width: 320,
-    height: 50,
-    adSizeType: AdSizeType.WidthAndHeight,
-  );
+  static const AdSize banner = AdSize(width: 320, height: 50);
 
   /// The large banner (320x100) size.
-  static const AdSize largeBanner = AdSize._(
-    width: 320,
-    height: 100,
-    adSizeType: AdSizeType.WidthAndHeight,
-  );
+  static const AdSize largeBanner = AdSize(width: 320, height: 100);
 
   /// The medium rectangle (300x250) size.
-  static const AdSize mediumRectangle = AdSize._(
-    width: 300,
-    height: 250,
-    adSizeType: AdSizeType.WidthAndHeight,
-  );
+  static const AdSize mediumRectangle = AdSize(width: 300, height: 250);
 
   /// The full banner (468x60) size.
-  static const AdSize fullBanner = AdSize._(
-    width: 468,
-    height: 60,
-    adSizeType: AdSizeType.WidthAndHeight,
-  );
+  static const AdSize fullBanner = AdSize(width: 468, height: 60);
 
   /// The leaderboard (728x90) size.
-  static const AdSize leaderboard = AdSize._(
-    width: 728,
-    height: 90,
-    adSizeType: AdSizeType.WidthAndHeight,
-  );
+  static const AdSize leaderboard = AdSize(width: 728, height: 90);
 
-  /// The smart banner size.
-  ///
-  /// Smart banners are unique in that the width and height values declared here
-  /// aren't used. At runtime, the Mobile Ads SDK will automatically adjust the banner's
-  /// width to match the width of the displaying device's screen. It will also set the
-  /// banner's height using a calculation based on the displaying device's height.
-  /// For more info see the [Android](https://developers.google.com/admob/android/banner)
-  /// and [iOS](https://developers.google.com/admob/ios/banner) banner ad guides.
-  static const AdSize smartBanner = AdSize._(
-    width: 0,
-    height: 0,
-    adSizeType: AdSizeType.SmartBanner,
-  );
+  /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
+  static AdSize getSmartBanner(Orientation orientation) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return smartBanner;
+    } else if (defaultTargetPlatform == TargetPlatform.iOS &&
+        orientation == Orientation.portrait) {
+      return smartBannerPortrait;
+    } else if (defaultTargetPlatform == TargetPlatform.iOS &&
+        orientation == Orientation.landscape) {
+      return smartBannerLandscape;
+    }
+
+    throw AssertionError('Only supported on Android and iOS.');
+  }
+
+  /// Ad units that render screen-width banner ads on any screen size across different devices in either orientation on Android.
+  // Android expects a width and height of -1 represents a smart banner.
+  static AdSize get smartBanner {
+    assert(defaultTargetPlatform == TargetPlatform.android);
+    return AdSize(width: -1, height: -1);
+  }
+
+  /// Ad units that render screen-width banner ads on any screen size across different devices in portrait on iOS.
+  // iOS expects a width of -1 and a height of -2 represents a portrait smart banner.
+  static AdSize get smartBannerPortrait {
+    assert(defaultTargetPlatform == TargetPlatform.iOS);
+    return AdSize(width: -1, height: -2);
+  }
+
+  /// Ad units that render screen-width banner ads on any screen size across different devices in landscape on iOS.
+  // iOS expects a width of -1 and a height of -2 represents a landscape smart banner.
+  static AdSize get smartBannerLandscape {
+    assert(defaultTargetPlatform == TargetPlatform.android);
+    return AdSize(width: -1, height: -3);
+  }
 
   @override
   bool operator ==(other) {
@@ -170,7 +150,7 @@ class AdSize {
   }
 }
 
-/// TODO(cg021: Add documentation
+/// A listener for receiving notifications during the lifecycle of an ad.
 class AdListener {
   const AdListener({
     this.onAdLoaded,
@@ -180,18 +160,38 @@ class AdListener {
     this.onAdOpened,
     this.onApplicationExit,
     this.onAdClosed,
+    this.onRewardedAdUserEarnedReward,
   });
 
+  /// Called when an ad is successfully received.
   final void Function(Ad ad) onAdLoaded;
+
+  /// Called when an ad request failed.
   final void Function(Ad ad) onAdFailedToLoad;
-  final void Function(Ad ad) onNativeAdClicked;
-  final void Function(Ad ad) onNativeAdImpression;
+
+  /// Called when a click is recorded for a [NativeAd].
+  final void Function(NativeAd ad) onNativeAdClicked;
+
+  /// Called when an impression is recorded for a [NativeAd].
+  final void Function(NativeAd ad) onNativeAdImpression;
+
+  /// Called when an ad opens an overlay that covers the screen.
   final void Function(Ad ad) onAdOpened;
+
+  /// Called when an ad is in the process of leaving the application.
   final void Function(Ad ad) onApplicationExit;
+
+  /// Called when the user is about to return to the application after clicking on an ad.
   final void Function(Ad ad) onAdClosed;
+
+  /// Called when a [RewardedAd] triggers a reward.
+  final void Function(
+    RewardedAd ad,
+    RewardItem reward,
+  ) onRewardedAdUserEarnedReward;
 }
 
-/// A mobile [BannerAd] or [InterstitialAd] for the [FirebaseAdMobPlugin].
+/// A base ad for the [FirebaseAdMobPlugin].
 ///
 /// A valid [adUnitId] is required.
 abstract class Ad {
@@ -204,22 +204,32 @@ abstract class Ad {
         assert(listener != null),
         assert(request != null);
 
-  /// Called when the status of the ad changes.
+  /// Receive callbacks from [Ad] lifecycle events.
   final AdListener listener;
 
-  /// TODO(cg021): Add documentation
+  /// Targeting information used to fetch an [Ad].
   final AdRequest request;
 
-  /// Identifies the source of ads for your application.
+  /// Identifies the source of [Ad]s for your application.
   ///
   /// For testing use a [sample ad unit](https://developers.google.com/admob/ios/test-ads#sample_ad_units).
   final String adUnitId;
 
   /// Free the plugin resources associated with this ad.
-  Future<void> dispose();
+  Future<void> dispose() {
+    return instanceManager.disposeAd(this);
+  }
 
   /// Start loading this ad.
+  ///
+  /// Loading callbacks are sent to this [Ad]'s [listener].
   Future<void> load();
+
+  /// Whether this [Ad.load] has been called for this [Ad] and [AdListener.onAdLoaded] callback has been called.
+  Future<bool> isLoaded() async {
+    return instanceManager.adIdFor(this) != null &&
+        instanceManager.onAdLoadedCalled(this);
+  }
 }
 
 /// A mobile [Ad] for the [FirebaseAdMobPlugin] that can be loaded or disposed.
@@ -236,9 +246,25 @@ abstract class AdWithView extends Ad {
           listener: listener,
           request: request,
         );
+}
 
-  /// Free the plugin resources associated with this ad.
-  Future<void> dispose();
+/// An [Ad] that is overlaid on top of the UI.
+abstract class AdWithoutView extends Ad {
+  /// Default constructor used by subclasses.
+  const AdWithoutView({
+    @required String adUnitId,
+    @required AdListener listener,
+    @required AdRequest request,
+  }) : super(
+          adUnitId: adUnitId,
+          listener: listener,
+          request: request,
+        );
+
+  /// Display this on top of the application.
+  Future<void> show() {
+    return instanceManager.showAdWithoutView(this);
+  }
 }
 
 /// Displays an [Ad] as a Flutter widget.
@@ -249,8 +275,6 @@ abstract class AdWithView extends Ad {
 ///
 /// Must call `load()` first before showing the widget. Otherwise, a
 /// [PlatformException] will be thrown.
-///
-/// Currently only supported on iOS.
 class AdWidget extends StatelessWidget {
   const AdWidget({Key key, @required this.ad})
       : assert(ad != null),
@@ -285,6 +309,7 @@ class AdWidget extends StatelessWidget {
         },
       );
     }
+
     return UiKitView(
       viewType: '${instanceManager.channel.name}/ad_widget',
       creationParams: instanceManager.adIdFor(ad),
@@ -296,13 +321,12 @@ class AdWidget extends StatelessWidget {
 /// A banner ad for the [FirebaseAdMobPlugin].
 ///
 /// This ad can either be overlaid on top of all flutter widgets as a static
-/// view or displayed as a typical Flutter widget. To use as an overlay, use
-/// `show()`. To use as a widget, instantiate an [AdWidget] with this as a
-/// parameter.
+/// view or displayed as a typical Flutter widget. To display as a widget,
+/// instantiate an [AdWidget] with this as a parameter.
 class BannerAd extends AdWithView {
-  /// Create a BannerAd.
+  /// Creates a [BannerAd].
   ///
-  /// A valid [adUnitId] is required.
+  /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
   BannerAd({
     @required this.size,
     @required String adUnitId,
@@ -316,7 +340,7 @@ class BannerAd extends AdWithView {
           request: request,
         );
 
-  /// [AdSize] represents the size of a banner ad.
+  /// Represents the size of a banner ad.
   ///
   /// There are six sizes available, which are the same for both iOS and Android.
   /// See the guides for banners on Android](https://developers.google.com/admob/android/banner#banner_sizes)
@@ -333,11 +357,6 @@ class BannerAd extends AdWithView {
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/6300978111'
       : 'ca-app-pub-3940256099942544/2934735716';
-
-  @override
-  Future<void> dispose() async {
-    await instanceManager.disposeAd(this);
-  }
 
   @override
   Future<void> load() async {
@@ -363,20 +382,19 @@ class BannerAd extends AdWithView {
 ///
 /// See the README for more details on using Native Ads.
 ///
-/// This ad can either be overlaid on top of all flutter widgets as a static
-/// view or displayed as a typical Flutter widget. To use as an overlay, use
-/// `show()`. To use as a widget, instantiate an [AdWidget] with this as a
-/// parameter.
+/// To display this ad, instantiate an [AdWidget] with this as a parameter after
+/// calling [load].
 class NativeAd extends AdWithView {
-  /// Create a NativeAd.
+  /// Creates a [NativeAd].
   ///
-  /// A valid [adUnitId] is required.
+  /// A valid [adUnitId], nonnull [listener], nonnull [request], and nonnull
+  /// [factoryId] is required.
   NativeAd({
     @required String adUnitId,
     @required this.factoryId,
-    this.customOptions,
     @required AdListener listener,
     @required AdRequest request,
+    this.customOptions,
   })  : assert(factoryId != null),
         super(
           adUnitId: adUnitId,
@@ -384,8 +402,12 @@ class NativeAd extends AdWithView {
           request: request,
         );
 
+  /// An identifier for the factory that creates the Platform view.
   final String factoryId;
 
+  /// Optional options used to create the [NativeAd].
+  ///
+  /// These options are passed to the platform's `NativeAdFactory`.
   Map<String, Object> customOptions;
 
   /// {@template firebase_admob.testAdUnitId}
@@ -396,13 +418,8 @@ class NativeAd extends AdWithView {
   /// {@endtemplate}
   /// {@macro firebase_admob.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/6300978111'
-      : 'ca-app-pub-3940256099942544/2934735716';
-
-  @override
-  Future<void> dispose() async {
-    await instanceManager.disposeAd(this);
-  }
+      ? 'ca-app-pub-3940256099942544/2247696110'
+      : 'ca-app-pub-3940256099942544/3986624511';
 
   @override
   Future<void> load() async {
@@ -410,15 +427,14 @@ class NativeAd extends AdWithView {
   }
 }
 
-/// A full-screen interstitial ad for the [FirebaseAdMobPlugin].
-class InterstitialAd extends Ad {
-  /// Create an Interstitial.
+/// A full-screen interstitial ad for the Firebase AdMob Plugin.
+class InterstitialAd extends AdWithoutView {
+  /// Creates an [InterstitialAd].
   ///
-  /// A valid [adUnitId] is required.
+  /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
   InterstitialAd({
     @required String adUnitId,
-    AdRequest adRequest,
-    AdListener listener,
+    @required AdListener listener,
     @required AdRequest request,
   }) : super(adUnitId: adUnitId, listener: listener, request: request);
 
@@ -428,25 +444,19 @@ class InterstitialAd extends Ad {
       : 'ca-app-pub-3940256099942544/4411468910';
 
   @override
-  Future<void> dispose() async {
-    await instanceManager.disposeAd(this);
-  }
-
-  @override
   Future<void> load() async {
     await instanceManager.loadInterstitialAd(this);
   }
 }
 
-/// An AdMob rewarded video ad.
+/// An [Ad] where a user has the option of interacting with in exchange for in-app rewards.
 ///
-/// Only one rewarded video ad can be loaded at a time. Because the video assets
-/// are so large, it's a good idea to start loading an ad well in advance of
-/// when it's likely to be needed.
-class RewardedAd extends Ad {
-  /// Create a RewardedAd.
+/// Because the video assets are so large, it's a good idea to start loading an
+/// ad well in advance of when it's likely to be needed.
+class RewardedAd extends AdWithoutView {
+  /// Creates a [RewardedAd].
   ///
-  /// A valid [adUnitId] is required.
+  /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
   RewardedAd({
     @required String adUnitId,
     @required AdListener listener,
@@ -465,91 +475,24 @@ class RewardedAd extends Ad {
   /// {@endtemplate}
   /// {@macro firebase_admob.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/6300978111'
-      : 'ca-app-pub-3940256099942544/2934735716';
+      ? 'ca-app-pub-3940256099942544/5224354917'
+      : 'ca-app-pub-3940256099942544/1712485313';
 
-  /// Disposes a rewarded video ad with the provided ad unit ID.
-  @override
-  Future<void> dispose() async {
-    await instanceManager.disposeAd(this);
-  }
-
-  /// Loads a rewarded video ad using the provided ad unit ID.
   @override
   Future<void> load() async {
     await instanceManager.loadRewardedAd(this);
   }
 }
 
-class AdMessageCodec extends StandardMessageCodec {
-  const AdMessageCodec();
+/// Credit information about a reward received from a [RewardedAd].
+class RewardItem {
+  RewardItem(this.amount, this.type)
+      : assert(amount != null),
+        assert(type != null);
 
-  static const int _valueAdSize = 128;
-  static const int _valueAdRequest = 129;
-  static const int _valueDateTime = 130;
-  static const int _valueMobileAdGender = 131;
+  /// Credit amount rewarded from a [RewardedAd].
+  final num amount;
 
-  @override
-  void writeValue(WriteBuffer buffer, dynamic value) {
-    if (value is AdSize) {
-      buffer.putUint8(_valueAdSize);
-      writeValue(buffer, value.width);
-      writeValue(buffer, value.height);
-    } else if (value is AdRequest) {
-      buffer.putUint8(_valueAdRequest);
-      writeValue(buffer, value.keywords);
-      writeValue(buffer, value.contentUrl);
-      writeValue(buffer, value.birthday);
-      writeValue(buffer, value.gender);
-      writeValue(buffer, value.designedForFamilies);
-      writeValue(buffer, value.childDirected);
-      writeValue(buffer, value.testDevices);
-      writeValue(buffer, value.nonPersonalizedAds);
-    } else if (value is DateTime) {
-      buffer.putUint8(_valueDateTime);
-      writeValue(buffer, value.millisecondsSinceEpoch);
-    } else if (value is MobileAdGender) {
-      buffer.putUint8(_valueMobileAdGender);
-      writeValue(buffer, value.index);
-    } else {
-      super.writeValue(buffer, value);
-    }
-  }
-
-  @override
-  dynamic readValueOfType(dynamic type, ReadBuffer buffer) {
-    switch (type) {
-      case _valueAdSize:
-        return AdSize._(
-          width: readValueOfType(buffer.getUint8(), buffer),
-          height: readValueOfType(buffer.getUint8(), buffer),
-        );
-      case _valueAdRequest:
-        return AdRequest(
-          keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
-          contentUrl: readValueOfType(buffer.getUint8(), buffer),
-          birthday: readValueOfType(buffer.getUint8(), buffer),
-          gender: readValueOfType(buffer.getUint8(), buffer),
-          designedForFamilies: readValueOfType(buffer.getUint8(), buffer),
-          childDirected: readValueOfType(buffer.getUint8(), buffer),
-          testDevices:
-              readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
-          nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
-        );
-      case _valueDateTime:
-        return DateTime.fromMillisecondsSinceEpoch(
-            readValueOfType(buffer.getUint8(), buffer));
-      case _valueMobileAdGender:
-        int gender = readValueOfType(buffer.getUint8(), buffer);
-        switch (gender) {
-          case 1:
-            return MobileAdGender.male;
-          case 2:
-            return MobileAdGender.female;
-        }
-        return MobileAdGender.unknown;
-      default:
-        return super.readValueOfType(type, buffer);
-    }
-  }
+  /// Type of credit rewarded.
+  final String type;
 }

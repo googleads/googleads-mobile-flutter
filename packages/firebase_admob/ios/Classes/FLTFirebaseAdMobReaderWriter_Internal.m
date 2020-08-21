@@ -1,10 +1,12 @@
 #import "FLTFirebaseAdMobReaderWriter_Internal.h"
 
+// The type values below must be consistent for each platform.
 typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdMobFieldAdSize = 128,
   FLTAdMobFieldAdRequest = 129,
   FLTAdMobFieldDateTime = 130,
   FLTAdMobFieldAdGender = 131,
+  FLTADMobFieldRewardItem = 132,
 };
 
 @interface FLTFirebaseAdMobReader : FlutterStandardReader
@@ -60,6 +62,10 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     case FLTAdMobFieldAdGender: {
       return [self readValueOfType:[self readByte]];
     }
+    case FLTADMobFieldRewardItem: {
+      return [[FLTRewardItem alloc] initWithAmount:[self readValueOfType:[self readByte]]
+                                              type:[self readValueOfType:[self readByte]]];
+    }
   }
   return [super readValueOfType:type];
 }
@@ -90,6 +96,11 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeByte:FLTAdMobFieldDateTime];
     NSDate *date = value;
     [self writeValue:@([date timeIntervalSince1970] * 1000)];
+  } else if ([value isKindOfClass:[FLTRewardItem class]]) {
+    [self writeByte:FLTADMobFieldRewardItem];
+    FLTRewardItem *item = value;
+    [self writeValue:item.amount];
+    [self writeValue:item.type];
   } else {
     [super writeValue:value];
   }
