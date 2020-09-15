@@ -42,7 +42,7 @@ BannerAd(
 
 * Fix smart banners on iOS.
   - `AdSize.smartBanner` is for Android only.
-  - `AdSize.smartBannerPortrait` and `AdSize.smartBannerPortrait` are only for iOS. 
+  - `AdSize.smartBannerPortrait` and `AdSize.smartBannerLandscape` are only for iOS. 
   - Use `Adsize.getSmartBanner(Orientation)` to get the correct value depending on platform. The
   orientation can be retrieved using a `BuildContext`:
 ```dart

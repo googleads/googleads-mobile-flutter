@@ -30,6 +30,15 @@ typedef NS_ENUM(NSInteger, FLTAdGender) {
 - (GADRequest *_Nonnull)asGADRequest;
 @end
 
+/**
+ * Wrapper around `DFPRequest` for the Firebase AdMob Plugin.
+ */
+@interface FLTPublisherAdRequest : FLTAdRequest
+@property NSDictionary<NSString *, NSString *> *_Nullable customTargeting;
+@property NSDictionary<NSString *, NSArray<NSString *> *> *_Nullable customTargetingLists;
+- (DFPRequest *_Nonnull)asDFPRequest;
+@end
+
 @protocol FLTAd <NSObject>
 @property(weak) FLTAdInstanceManager *_Nullable manager;
 - (void)load;
@@ -45,6 +54,16 @@ typedef NS_ENUM(NSInteger, FLTAdGender) {
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                      size:(FLTAdSize *_Nonnull)size
                                   request:(FLTAdRequest *_Nonnull)request
+                       rootViewController:(UIViewController *_Nonnull)rootViewController;
+@end
+
+/**
+ * Wrapper around `DFPBannerAd` for the Firebase AdMob Plugin.
+ */
+@interface FLTPublisherBannerAd : FLTNewBannerAd <DFPBannerAdLoaderDelegate>
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                                    sizes:(NSArray<FLTAdSize *> *_Nonnull)sizes
+                                  request:(FLTPublisherAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
 @end
 

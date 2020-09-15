@@ -2,56 +2,62 @@ package io.flutter.plugins.firebaseadmob;
 
 import android.view.View;
 import androidx.annotation.NonNull;
-import com.google.android.gms.ads.AdSize;
+import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdView;
 import io.flutter.plugin.platform.PlatformView;
 
 class FlutterBannerAd extends FlutterAd implements PlatformView {
-  private final FlutterAdSize size;
-  private AdView view;
+  @NonNull private final AdInstanceManager manager;
+  @NonNull private final String adUnitId;
+  @NonNull private final FlutterAdSize size;
+  @Nullable private FlutterAdRequest request;
+  @Nullable private AdView view;
 
-  static class FlutterAdSize {
-    @NonNull final AdSize size;
-    final int width;
-    final int height;
+  static class Builder {
+    @Nullable private AdInstanceManager manager;
+    @Nullable private String adUnitId;
+    @Nullable private FlutterAdSize size;
+    @Nullable private FlutterAdRequest request;
 
-    public FlutterAdSize(int width, int height) {
-      this.width = width;
-      this.height = height;
+    public Builder setManager(@NonNull AdInstanceManager manager) {
+      this.manager = manager;
+      return this;
+    }
 
-      // These values must remain consistent with `AdSize.smartBanner` in Dart.
-      if (width == -1 && height == -1) {
-        this.size = AdSize.SMART_BANNER;
-      } else {
-        this.size = new AdSize(width, height);
+    public Builder setAdUnitId(@NonNull String adUnitId) {
+      this.adUnitId = adUnitId;
+      return this;
+    }
+
+    public Builder setSize(@NonNull FlutterAdSize size) {
+      this.size = size;
+      return this;
+    }
+
+    public Builder setRequest(@Nullable FlutterAdRequest request) {
+      this.request = request;
+      return this;
+    }
+
+    FlutterBannerAd build() {
+      if (manager == null) {
+        throw new IllegalStateException("AdInstanceManager cannot not be null.");
+      } else if (adUnitId == null) {
+        throw new IllegalStateException("AdUnitId cannot not be null.");
+      } else if (size == null) {
+        throw new IllegalStateException("Size cannot not be null.");
       }
-    }
 
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-      if (!(o instanceof FlutterAdSize)) return false;
-
-      final FlutterAdSize that = (FlutterAdSize) o;
-
-      if (width != that.width) return false;
-      return height == that.height;
-    }
-
-    @Override
-    public int hashCode() {
-      int result = width;
-      result = 31 * result + height;
-      return result;
+      final FlutterBannerAd bannerAd = new FlutterBannerAd(manager, adUnitId, size);
+      bannerAd.request = request;
+      return bannerAd;
     }
   }
 
-  FlutterBannerAd(
-      @NonNull AdInstanceManager manager,
-      @NonNull String adUnitId,
-      @NonNull FlutterAdSize size,
-      @NonNull FlutterAdRequest request) {
-    super(manager, adUnitId, request);
+  private FlutterBannerAd(
+      @NonNull AdInstanceManager manager, @NonNull String adUnitId, @NonNull FlutterAdSize size) {
+    this.manager = manager;
+    this.adUnitId = adUnitId;
     this.size = size;
   }
 
@@ -61,10 +67,16 @@ class FlutterBannerAd extends FlutterAd implements PlatformView {
     view.setAdUnitId(adUnitId);
     view.setAdSize(size.size);
     view.setAdListener(new FlutterAdListener(manager, this));
-    view.loadAd(request.asAdRequest());
+
+    if (request != null) {
+      view.loadAd(request.asAdRequest());
+    } else {
+      view.loadAd(new FlutterAdRequest.Builder().build().asAdRequest());
+    }
   }
 
   @Override
+  @Nullable
   public View getView() {
     return view;
   }

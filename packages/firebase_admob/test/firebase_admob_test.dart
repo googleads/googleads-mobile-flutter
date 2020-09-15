@@ -31,6 +31,7 @@ void main() {
           case 'disposeAd':
           case 'loadRewardedAd':
           case 'loadInterstitialAd':
+          case 'loadPublisherBannerAd':
             return Future<void>.value();
           default:
             assert(false);
@@ -177,6 +178,28 @@ void main() {
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
+    });
+
+    test('load publisher banner', () async {
+      final PublisherBannerAd banner = PublisherBannerAd(
+        adUnitId: 'testId',
+        sizes: <AdSize>[AdSize.largeBanner],
+        listener: AdListener(),
+        request: PublisherAdRequest(),
+      );
+
+      await banner.load();
+      expect(log, <Matcher>[
+        isMethodCall('loadPublisherBannerAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'adUnitId': 'testId',
+          'sizes': <AdSize>[AdSize.largeBanner],
+          'request': PublisherAdRequest(),
+        })
+      ]);
+
+      expect(instanceManager.adFor(0), banner);
+      expect(instanceManager.adIdFor(banner), 0);
     });
 
     test('onAdLoaded', () async {
@@ -477,6 +500,29 @@ void main() {
       final RewardItem result = codec.decodeMessage(byteData);
       expect(result.amount, 1);
       expect(result.type, 'type');
+    });
+
+    test('encode/decode $PublisherAdRequest', () async {
+      final ByteData byteData = codec.encodeMessage(PublisherAdRequest(
+        keywords: <String>['who'],
+        contentUrl: 'dat',
+        customTargeting: <String, String>{'boy': 'who'},
+        customTargetingLists: <String, List<String>>{
+          'him': <String>['is']
+        },
+      ));
+
+      expect(
+        codec.decodeMessage(byteData),
+        PublisherAdRequest(
+          keywords: <String>['who'],
+          contentUrl: 'dat',
+          customTargeting: <String, String>{'boy': 'who'},
+          customTargetingLists: <String, List<String>>{
+            'him': <String>['is'],
+          },
+        ),
+      );
     });
 
     test('isLoaded', () async {

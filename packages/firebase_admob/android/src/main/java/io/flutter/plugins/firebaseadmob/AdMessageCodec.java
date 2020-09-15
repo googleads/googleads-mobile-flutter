@@ -4,9 +4,9 @@ import androidx.annotation.Nullable;
 import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Encodes and decodes values by reading from a ByteBuffer and writing to a ByteArrayOutputStream.
@@ -18,25 +18,26 @@ final class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_DATE_TIME = (byte) 130;
   private static final byte VALUE_MOBILE_AD_GENDER = (byte) 131;
   private static final byte VALUE_REWARD_ITEM = (byte) 132;
+  private static final byte VALUE_PUBLISHER_AD_REQUEST = (byte) 133;
 
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
-    if (value instanceof FlutterBannerAd.FlutterAdSize) {
+    if (value instanceof FlutterAdSize) {
       stream.write(VALUE_AD_SIZE);
-      final FlutterBannerAd.FlutterAdSize size = (FlutterBannerAd.FlutterAdSize) value;
+      final FlutterAdSize size = (FlutterAdSize) value;
       writeValue(stream, size.width);
       writeValue(stream, size.height);
     } else if (value instanceof FlutterAdRequest) {
       stream.write(VALUE_AD_REQUEST);
       final FlutterAdRequest request = (FlutterAdRequest) value;
-      writeValue(stream, request.keywords);
-      writeValue(stream, request.contentUrl);
-      writeValue(stream, request.birthday);
-      writeValue(stream, request.gender);
-      writeValue(stream, request.designedForFamilies);
-      writeValue(stream, request.childDirected);
-      writeValue(stream, request.testDevices);
-      writeValue(stream, request.nonPersonalizedAds);
+      writeValue(stream, request.getKeywords());
+      writeValue(stream, request.getContentUrl());
+      writeValue(stream, request.getBirthday());
+      writeValue(stream, request.getGender());
+      writeValue(stream, request.getDesignedForFamilies());
+      writeValue(stream, request.getChildDirected());
+      writeValue(stream, request.getTestDevices());
+      writeValue(stream, request.getNonPersonalizedAds());
     } else if (value instanceof Date) {
       stream.write(VALUE_DATE_TIME);
       writeValue(stream, ((Date) value).getTime());
@@ -48,6 +49,13 @@ final class AdMessageCodec extends StandardMessageCodec {
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;
       writeValue(stream, item.amount);
       writeValue(stream, item.type);
+    } else if (value instanceof FlutterPublisherAdRequest) {
+      stream.write(VALUE_PUBLISHER_AD_REQUEST);
+      final FlutterPublisherAdRequest request = (FlutterPublisherAdRequest) value;
+      writeValue(stream, request.getKeywords());
+      writeValue(stream, request.getContentUrl());
+      writeValue(stream, request.getCustomTargeting());
+      writeValue(stream, request.getCustomTargetingLists());
     } else {
       super.writeValue(stream, value);
     }
@@ -57,19 +65,20 @@ final class AdMessageCodec extends StandardMessageCodec {
   protected Object readValueOfType(byte type, ByteBuffer buffer) {
     switch (type) {
       case VALUE_AD_SIZE:
-        return new FlutterBannerAd.FlutterAdSize(
+        return new FlutterAdSize(
             (Integer) readValueOfType(buffer.get(), buffer),
             (Integer) readValueOfType(buffer.get(), buffer));
       case VALUE_AD_REQUEST:
-        return new FlutterAdRequest(
-            convertToListOfStrings((List<Object>) readValueOfType(buffer.get(), buffer)),
-            (String) readValueOfType(buffer.get(), buffer),
-            (Date) readValueOfType(buffer.get(), buffer),
-            (FlutterAdRequest.MobileAdGender) readValueOfType(buffer.get(), buffer),
-            booleanValueOf(readValueOfType(buffer.get(), buffer)),
-            booleanValueOf(readValueOfType(buffer.get(), buffer)),
-            convertToListOfStrings((List<Object>) readValueOfType(buffer.get(), buffer)),
-            booleanValueOf(readValueOfType(buffer.get(), buffer)));
+        return new FlutterAdRequest.Builder()
+            .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))
+            .setContentUrl((String) readValueOfType(buffer.get(), buffer))
+            .setBirthday((Date) readValueOfType(buffer.get(), buffer))
+            .setGender((FlutterAdRequest.MobileAdGender) readValueOfType(buffer.get(), buffer))
+            .setDesignedForFamilies(booleanValueOf(readValueOfType(buffer.get(), buffer)))
+            .setChildDirected(booleanValueOf(readValueOfType(buffer.get(), buffer)))
+            .setTestDevices((List<String>) readValueOfType(buffer.get(), buffer))
+            .setNonPersonalizedAds(booleanValueOf(readValueOfType(buffer.get(), buffer)))
+            .build();
       case VALUE_DATE_TIME:
         return new Date((Long) readValueOfType(buffer.get(), buffer));
       case VALUE_MOBILE_AD_GENDER:
@@ -79,6 +88,14 @@ final class AdMessageCodec extends StandardMessageCodec {
         return new FlutterRewardedAd.FlutterRewardItem(
             (Integer) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer));
+      case VALUE_PUBLISHER_AD_REQUEST:
+        return new FlutterPublisherAdRequest.Builder()
+            .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))
+            .setContentUrl((String) readValueOfType(buffer.get(), buffer))
+            .setCustomTargeting((Map<String, String>) readValueOfType(buffer.get(), buffer))
+            .setCustomTargetingLists(
+                (Map<String, List<String>>) readValueOfType(buffer.get(), buffer))
+            .build();
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -88,28 +105,5 @@ final class AdMessageCodec extends StandardMessageCodec {
   private Boolean booleanValueOf(@Nullable Object object) {
     if (object == null) return null;
     return (Boolean) object;
-  }
-
-  private List<String> convertToListOfStrings(List<Object> source) {
-    if (source == null) {
-      return new ArrayList<>();
-    }
-
-    final List<String> newList = new ArrayList<>(source.size());
-    for (final Object value : source) {
-      newList.add(convertToString(value));
-    }
-
-    return newList;
-  }
-
-  private String convertToString(Object source) {
-    if (source instanceof String) {
-      return (String) source;
-    }
-
-    final String sourceType = source.getClass().getCanonicalName();
-    final String message = "java.util.List was expected, unable to convert '%s' to a string.";
-    throw new IllegalArgumentException(String.format(message, sourceType));
   }
 }

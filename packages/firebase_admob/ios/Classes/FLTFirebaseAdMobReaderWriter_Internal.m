@@ -7,6 +7,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdMobFieldDateTime = 130,
   FLTAdMobFieldAdGender = 131,
   FLTADMobFieldRewardItem = 132,
+  FLTADMobFieldPublisherAdRequest = 133,
 };
 
 @interface FLTFirebaseAdMobReader : FlutterStandardReader
@@ -66,6 +67,16 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       return [[FLTRewardItem alloc] initWithAmount:[self readValueOfType:[self readByte]]
                                               type:[self readValueOfType:[self readByte]]];
     }
+    case FLTADMobFieldPublisherAdRequest: {
+      FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+
+      request.keywords = [self readValueOfType:[self readByte]];
+      request.contentURL = [self readValueOfType:[self readByte]];
+      request.customTargeting = [self readValueOfType:[self readByte]];
+      request.customTargetingLists = [self readValueOfType:[self readByte]];
+
+      return request;
+    }
   }
   return [super readValueOfType:type];
 }
@@ -78,6 +89,13 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     FLTAdSize *size = value;
     [self writeValue:size.width];
     [self writeValue:size.height];
+  } else if ([value isKindOfClass:[FLTPublisherAdRequest class]]) {
+    [self writeByte:FLTADMobFieldPublisherAdRequest];
+    FLTPublisherAdRequest *request = value;
+    [self writeValue:request.keywords];
+    [self writeValue:request.contentURL];
+    [self writeValue:request.customTargeting];
+    [self writeValue:request.customTargetingLists];
   } else if ([value isKindOfClass:[FLTAdRequest class]]) {
     [self writeByte:FLTAdMobFieldAdRequest];
     FLTAdRequest *request = value;

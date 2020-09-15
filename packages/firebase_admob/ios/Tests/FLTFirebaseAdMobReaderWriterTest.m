@@ -56,6 +56,23 @@
   XCTAssertTrue(decodedRequest.nonPersonalizedAds);
 }
 
+- (void)testEncodeDecodePublisherAdRequest {
+  FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+  request.keywords = @[ @"apple" ];
+  request.contentURL = @"banana";
+  request.customTargeting = @{@"table" : @"linen"};
+  request.customTargetingLists = @{@"go" : @[ @"lakers" ]};
+
+  NSData *encodedMessage = [_messageCodec encode:request];
+
+  FLTPublisherAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
+  XCTAssertTrue([decodedRequest.keywords isEqualToArray:@[ @"apple" ]]);
+  XCTAssertEqualObjects(decodedRequest.contentURL, @"banana");
+  XCTAssertTrue([decodedRequest.customTargeting isEqualToDictionary:@{@"table" : @"linen"}]);
+  XCTAssertTrue(
+      [decodedRequest.customTargetingLists isEqualToDictionary:@{@"go" : @[ @"lakers" ]}]);
+}
+
 - (void)testEncodeDecodeRewardItem {
   FLTRewardItem *item = [[FLTRewardItem alloc] initWithAmount:@(1) type:@"apple"];
   NSData *encodedMessage = [_messageCodec encode:item];

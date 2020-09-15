@@ -98,6 +98,14 @@
                                                rootViewController:rootController];
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
+  } else if ([call.method isEqualToString:@"loadPublisherBannerAd"]) {
+    FLTPublisherBannerAd *ad =
+        [[FLTPublisherBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                                 sizes:call.arguments[@"sizes"]
+                                               request:call.arguments[@"request"]
+                                    rootViewController:rootController];
+    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+    result(nil);
   } else if ([call.method isEqualToString:@"loadNativeAd"]) {
     NSString *factoryId = call.arguments[@"factoryId"];
     id<FLTNativeAdFactory> factory = _nativeAdFactories[factoryId];

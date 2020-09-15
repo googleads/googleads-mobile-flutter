@@ -11,6 +11,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
+import 'package:collection/collection.dart';
 
 import 'ad_instance_manager.dart';
 
@@ -71,6 +72,29 @@ class AdRequest {
         this.designedForFamilies == other.designedForFamilies &&
         this.testDevices.toString() == other.testDevices.toString() &&
         this.nonPersonalizedAds == other.nonPersonalizedAds;
+  }
+}
+
+class PublisherAdRequest {
+  const PublisherAdRequest({
+    this.keywords,
+    this.contentUrl,
+    this.customTargeting,
+    this.customTargetingLists,
+  });
+
+  final List<String> keywords;
+  final String contentUrl;
+  final Map<String, String> customTargeting;
+  final Map<String, List<String>> customTargetingLists;
+
+  @override
+  bool operator ==(other) {
+    return ListEquality().equals(keywords, other.keywords) &&
+        contentUrl == other.contentUrl &&
+        MapEquality().equals(customTargeting, other.customTargeting) &&
+        DeepCollectionEquality()
+            .equals(customTargetingLists, other.customTargetingLists);
   }
 }
 
@@ -196,19 +220,12 @@ class AdListener {
 /// A valid [adUnitId] is required.
 abstract class Ad {
   /// Default constructor, used by subclasses.
-  const Ad({
-    @required this.adUnitId,
-    @required this.listener,
-    @required this.request,
-  })  : assert(adUnitId != null),
-        assert(listener != null),
-        assert(request != null);
+  const Ad({@required this.adUnitId, @required this.listener})
+      : assert(adUnitId != null),
+        assert(listener != null);
 
   /// Receive callbacks from [Ad] lifecycle events.
   final AdListener listener;
-
-  /// Targeting information used to fetch an [Ad].
-  final AdRequest request;
 
   /// Identifies the source of [Ad]s for your application.
   ///
@@ -237,29 +254,16 @@ abstract class Ad {
 /// A valid [adUnitId] and [size] are required.
 abstract class AdWithView extends Ad {
   /// Default constructor, used by subclasses.
-  const AdWithView({
-    @required String adUnitId,
-    @required AdListener listener,
-    @required AdRequest request,
-  }) : super(
-          adUnitId: adUnitId,
-          listener: listener,
-          request: request,
-        );
+  const AdWithView({@required String adUnitId, @required AdListener listener})
+      : super(adUnitId: adUnitId, listener: listener);
 }
 
 /// An [Ad] that is overlaid on top of the UI.
 abstract class AdWithoutView extends Ad {
   /// Default constructor used by subclasses.
-  const AdWithoutView({
-    @required String adUnitId,
-    @required AdListener listener,
-    @required AdRequest request,
-  }) : super(
-          adUnitId: adUnitId,
-          listener: listener,
-          request: request,
-        );
+  const AdWithoutView(
+      {@required String adUnitId, @required AdListener listener})
+      : super(adUnitId: adUnitId, listener: listener);
 
   /// Display this on top of the application.
   Future<void> show() {
@@ -331,14 +335,13 @@ class BannerAd extends AdWithView {
     @required this.size,
     @required String adUnitId,
     @required AdListener listener,
-    @required AdRequest request,
+    @required this.request,
   })  : assert(size != null),
         assert(request != null),
-        super(
-          adUnitId: adUnitId,
-          listener: listener,
-          request: request,
-        );
+        super(adUnitId: adUnitId, listener: listener);
+
+  /// Targeting information used to fetch an [Ad].
+  final AdRequest request;
 
   /// Represents the size of a banner ad.
   ///
@@ -361,6 +364,38 @@ class BannerAd extends AdWithView {
   @override
   Future<void> load() async {
     await instanceManager.loadBannerAd(this);
+  }
+}
+
+/// A banner ad displayed with DoubleClick for Publishers (DFP).
+///
+/// This ad can either be overlaid on top of all flutter widgets by passing this
+/// to an [AdWidget] after calling [load].
+class PublisherBannerAd extends AdWithView {
+  PublisherBannerAd({
+    @required this.sizes,
+    @required String adUnitId,
+    @required AdListener listener,
+    @required this.request,
+  })  : assert(sizes != null),
+        assert(sizes.isNotEmpty),
+        assert(request != null),
+        super(adUnitId: adUnitId, listener: listener);
+
+  /// Targeting information used to fetch an [Ad].
+  final PublisherAdRequest request;
+
+  /// Ad sizes supported by this [PublisherBannerAd].
+  ///
+  /// In most cases, only one ad size will be specified. Multiple ad sizes can
+  /// be specified if your application can appropriately handle multiple ad
+  /// sizes. If multiple ad sizes are specified, the [PublisherBannerAd] will
+  /// assume the size of the first ad size until an ad is loaded.
+  final List<AdSize> sizes;
+
+  @override
+  Future<void> load() async {
+    await instanceManager.loadPublisherBannerAd(this);
   }
 }
 
@@ -393,14 +428,11 @@ class NativeAd extends AdWithView {
     @required String adUnitId,
     @required this.factoryId,
     @required AdListener listener,
-    @required AdRequest request,
+    @required this.request,
     this.customOptions,
   })  : assert(factoryId != null),
-        super(
-          adUnitId: adUnitId,
-          listener: listener,
-          request: request,
-        );
+        assert(request != null),
+        super(adUnitId: adUnitId, listener: listener);
 
   /// An identifier for the factory that creates the Platform view.
   final String factoryId;
@@ -409,6 +441,9 @@ class NativeAd extends AdWithView {
   ///
   /// These options are passed to the platform's `NativeAdFactory`.
   Map<String, Object> customOptions;
+
+  /// Targeting information used to fetch an [Ad].
+  final AdRequest request;
 
   /// {@template firebase_admob.testAdUnitId}
   /// A platform-specific AdMob test ad unit ID.
@@ -435,8 +470,12 @@ class InterstitialAd extends AdWithoutView {
   InterstitialAd({
     @required String adUnitId,
     @required AdListener listener,
-    @required AdRequest request,
-  }) : super(adUnitId: adUnitId, listener: listener, request: request);
+    @required this.request,
+  })  : assert(request != null),
+        super(adUnitId: adUnitId, listener: listener);
+
+  /// Targeting information used to fetch an [Ad].
+  final AdRequest request;
 
   /// {@macro firebase_admob.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
@@ -460,12 +499,11 @@ class RewardedAd extends AdWithoutView {
   RewardedAd({
     @required String adUnitId,
     @required AdListener listener,
-    @required AdRequest request,
-  }) : super(
-          adUnitId: adUnitId,
-          listener: listener,
-          request: request,
-        );
+    @required this.request,
+  }) : super(adUnitId: adUnitId, listener: listener);
+
+  /// Targeting information used to fetch an [Ad].
+  final AdRequest request;
 
   /// {@template firebase_admob.testAdUnitId}
   /// A platform-specific AdMob test ad unit ID.

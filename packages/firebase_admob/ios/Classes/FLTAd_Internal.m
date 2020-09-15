@@ -8,7 +8,7 @@
     _height = height;
 
     // These values must remain consistent with `AdSize.smartBannerPortrait` and
-    // `dSize.smartBannerLandscape` in Dart.
+    // `adSize.smartBannerLandscape` in Dart.
     if ([_width isEqual:@(-1)] && [_height isEqual:@(-2)]) {
       _size = kGADAdSizeSmartBannerPortrait;
     } else if ([_width isEqual:@(-1)] && [_height isEqual:@(-3)]) {
@@ -35,6 +35,22 @@
     extras.additionalParameters = @{@"npa" : @"1"};
     [request registerAdNetworkExtras:extras];
   }
+
+  request.requestAgent = @"Flutter";
+  return request;
+}
+@end
+
+@implementation FLTPublisherAdRequest
+- (GADRequest *_Nonnull)asDFPRequest {
+  DFPRequest *request = [DFPRequest request];
+  request.keywords = self.keywords;
+  request.contentURL = self.contentURL;
+
+  NSMutableDictionary<NSString *, id> *targetingDictionary =
+      [NSMutableDictionary dictionaryWithDictionary:self.customTargeting];
+  [targetingDictionary addEntriesFromDictionary:self.customTargetingLists];
+  request.customTargeting = targetingDictionary;
 
   request.requestAgent = @"Flutter";
   return request;
@@ -87,6 +103,55 @@
 
 - (nonnull UIView *)view {
   return _bannerView;
+}
+@end
+
+@implementation FLTPublisherBannerAd {
+  DFPBannerView *_bannerView;
+  FLTPublisherAdRequest *_adRequest;
+}
+
+- (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                           sizes:(NSArray<FLTAdSize *> *_Nonnull)sizes
+                         request:(FLTPublisherAdRequest *_Nonnull)request
+              rootViewController:(UIViewController *_Nonnull)rootViewController {
+  self = [super init];
+  if (self) {
+    _adRequest = request;
+    _bannerView = [[DFPBannerView alloc] initWithAdSize:sizes[0].size];
+    _bannerView.adUnitID = adUnitId;
+    _bannerView.rootViewController = rootViewController;
+    _bannerView.delegate = self;
+
+    NSMutableArray<NSValue *> *validAdSizes = [NSMutableArray arrayWithCapacity:sizes.count];
+    for (FLTAdSize *size in sizes) {
+      [validAdSizes addObject:NSValueFromGADAdSize(size.size)];
+    }
+    _bannerView.validAdSizes = validAdSizes;
+  }
+  return self;
+}
+
+- (void)load {
+  [_bannerView loadRequest:[_adRequest asDFPRequest]];
+}
+
+- (nonnull UIView *)view {
+  return _bannerView;
+}
+
+- (void)adLoader:(nonnull GADAdLoader *)adLoader
+    didFailToReceiveAdWithError:(nonnull GADRequestError *)error {
+  [self.manager onAdFailedToLoad:self];
+}
+
+- (void)adLoader:(nonnull GADAdLoader *)adLoader
+    didReceiveDFPBannerView:(nonnull DFPBannerView *)bannerView {
+  [self.manager onAdLoaded:self];
+}
+
+- (nonnull NSArray<NSValue *> *)validBannerSizesForAdLoader:(nonnull GADAdLoader *)adLoader {
+  return _bannerView.validAdSizes;
 }
 @end
 

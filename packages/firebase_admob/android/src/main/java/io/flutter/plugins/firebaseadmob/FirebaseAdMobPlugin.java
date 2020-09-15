@@ -23,6 +23,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugin.platform.PlatformViewRegistry;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -246,11 +247,12 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     switch (call.method) {
       case "loadBannerAd":
         final FlutterBannerAd bannerAd =
-            new FlutterBannerAd(
-                instanceManager,
-                call.<String>argument("adUnitId"),
-                call.<FlutterBannerAd.FlutterAdSize>argument("size"),
-                call.<FlutterAdRequest>argument("request"));
+            new FlutterBannerAd.Builder()
+                .setManager(instanceManager)
+                .setAdUnitId(call.<String>argument("adUnitId"))
+                .setRequest(call.<FlutterAdRequest>argument("request"))
+                .setSize(call.<FlutterAdSize>argument("size"))
+                .build();
         instanceManager.loadAd(bannerAd, call.<Integer>argument("adId"));
         bannerAd.load();
         result.success(null);
@@ -266,34 +268,49 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
         }
 
         final FlutterNativeAd nativeAd =
-            new FlutterNativeAd(
-                instanceManager,
-                call.<String>argument("adUnitId"),
-                call.<FlutterAdRequest>argument("request"),
-                factory,
-                call.<Map<String, Object>>argument("customOptions"));
+            new FlutterNativeAd.Builder()
+                .setManager(instanceManager)
+                .setAdUnitId(call.<String>argument("adUnitId"))
+                .setAdFactory(factory)
+                .setRequest(call.<FlutterAdRequest>argument("request"))
+                .setCustomOptions(call.<Map<String, Object>>argument("customOptions"))
+                .build();
         instanceManager.loadAd(nativeAd, call.<Integer>argument("adId"));
         nativeAd.load();
         result.success(null);
         break;
       case "loadInterstitialAd":
         final FlutterInterstitialAd interstitial =
-            new FlutterInterstitialAd(
-                instanceManager,
-                call.<String>argument("adUnitId"),
-                call.<FlutterAdRequest>argument("request"));
+            new FlutterInterstitialAd.Builder()
+                .setManager(instanceManager)
+                .setAdUnitId(call.<String>argument("adUnitId"))
+                .setRequest(call.<FlutterAdRequest>argument("request"))
+                .build();
         instanceManager.loadAd(interstitial, call.<Integer>argument("adId"));
         interstitial.load();
         result.success(null);
         break;
       case "loadRewardedAd":
         final FlutterRewardedAd rewardedAd =
-            new FlutterRewardedAd(
-                instanceManager,
-                call.<String>argument("adUnitId"),
-                call.<FlutterAdRequest>argument("request"));
+            new FlutterRewardedAd.Builder()
+                .setManager(instanceManager)
+                .setAdUnitId(call.<String>argument("adUnitId"))
+                .setRequest(call.<FlutterAdRequest>argument("request"))
+                .build();
         instanceManager.loadAd(rewardedAd, call.<Integer>argument("adId"));
         rewardedAd.load();
+        result.success(null);
+        break;
+      case "loadPublisherBannerAd":
+        final FlutterPublisherBannerAd publisherBannerAd =
+            new FlutterPublisherBannerAd.Builder()
+                .setManager(instanceManager)
+                .setAdUnitId(call.<String>argument("adUnitId"))
+                .setSizes(call.<List<FlutterAdSize>>argument("sizes"))
+                .setRequest(call.<FlutterPublisherAdRequest>argument("request"))
+                .build();
+        instanceManager.loadAd(publisherBannerAd, call.<Integer>argument("adId"));
+        publisherBannerAd.load();
         result.success(null);
         break;
       case "disposeAd":
@@ -308,6 +325,8 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
         }
         result.success(null);
         break;
+      default:
+        result.notImplemented();
     }
   }
 }

@@ -25,16 +25,7 @@ import org.mockito.ArgumentCaptor;
 
 public class FirebaseFlutterAdMobTest {
   private AdInstanceManager testManager;
-  private final FlutterAdRequest request =
-      new FlutterAdRequest(
-          Collections.<String>emptyList(),
-          null,
-          null,
-          null,
-          null,
-          null,
-          Collections.<String>emptyList(),
-          null);
+  private final FlutterAdRequest request = new FlutterAdRequest.Builder().build();
   private static BinaryMessenger mockMessenger;
 
   private static MethodCall getLastMethodCall() {
@@ -58,8 +49,12 @@ public class FirebaseFlutterAdMobTest {
   @Test
   public void loadAd() {
     final FlutterBannerAd bannerAd =
-        new FlutterBannerAd(
-            testManager, "testId", new FlutterBannerAd.FlutterAdSize(1, 2), request);
+        new FlutterBannerAd.Builder()
+            .setManager(testManager)
+            .setAdUnitId("testId")
+            .setSize(new FlutterAdSize(1, 2))
+            .setRequest(request)
+            .build();
     testManager.loadAd(bannerAd, 0);
 
     assertNotNull(testManager.adForId(0));
@@ -70,8 +65,12 @@ public class FirebaseFlutterAdMobTest {
   @Test
   public void disposeAd() {
     final FlutterBannerAd bannerAd =
-        new FlutterBannerAd(
-            testManager, "testId", new FlutterBannerAd.FlutterAdSize(1, 2), request);
+        new FlutterBannerAd.Builder()
+            .setManager(testManager)
+            .setAdUnitId("testId")
+            .setSize(new FlutterAdSize(1, 2))
+            .setRequest(request)
+            .build();
     testManager.loadAd(bannerAd, 2);
     assertNotNull(testManager.adForId(2));
     assertNotNull(testManager.adIdFor(bannerAd));
@@ -83,11 +82,9 @@ public class FirebaseFlutterAdMobTest {
   @Test
   public void adMessageCodec_encodeFlutterAdSize() {
     final AdMessageCodec codec = new AdMessageCodec();
-    final ByteBuffer message = codec.encodeMessage(new FlutterBannerAd.FlutterAdSize(1, 2));
+    final ByteBuffer message = codec.encodeMessage(new FlutterAdSize(1, 2));
 
-    assertEquals(
-        codec.decodeMessage((ByteBuffer) message.position(0)),
-        new FlutterBannerAd.FlutterAdSize(1, 2));
+    assertEquals(codec.decodeMessage((ByteBuffer) message.position(0)), new FlutterAdSize(1, 2));
   }
 
   @Test
@@ -95,27 +92,53 @@ public class FirebaseFlutterAdMobTest {
     final AdMessageCodec codec = new AdMessageCodec();
     final ByteBuffer message =
         codec.encodeMessage(
-            new FlutterAdRequest(
-                Arrays.asList("1", "2", "3"),
-                "contentUrl",
-                new Date(23),
-                FlutterAdRequest.MobileAdGender.UNKNOWN,
-                false,
-                true,
-                Arrays.asList("Android", "iOS"),
-                false));
+            new FlutterAdRequest.Builder()
+                .setKeywords(Arrays.asList("1", "2", "3"))
+                .setContentUrl("contentUrl")
+                .setBirthday(new Date(23))
+                .setGender(FlutterAdRequest.MobileAdGender.UNKNOWN)
+                .setDesignedForFamilies(false)
+                .setChildDirected(true)
+                .setTestDevices(Arrays.asList("Android", "iOS"))
+                .setNonPersonalizedAds(false)
+                .build());
 
     assertEquals(
         codec.decodeMessage((ByteBuffer) message.position(0)),
-        new FlutterAdRequest(
-            Arrays.asList("1", "2", "3"),
-            "contentUrl",
-            new Date(23),
-            FlutterAdRequest.MobileAdGender.UNKNOWN,
-            false,
-            true,
-            Arrays.asList("Android", "iOS"),
-            false));
+        new FlutterAdRequest.Builder()
+            .setKeywords(Arrays.asList("1", "2", "3"))
+            .setContentUrl("contentUrl")
+            .setBirthday(new Date(23))
+            .setGender(FlutterAdRequest.MobileAdGender.UNKNOWN)
+            .setDesignedForFamilies(false)
+            .setChildDirected(true)
+            .setTestDevices(Arrays.asList("Android", "iOS"))
+            .setNonPersonalizedAds(false)
+            .build());
+  }
+
+  @Test
+  public void adMessageCodec_encodeFlutterPublisherAdRequest() {
+    final AdMessageCodec codec = new AdMessageCodec();
+    final ByteBuffer message =
+        codec.encodeMessage(
+            new FlutterPublisherAdRequest.Builder()
+                .setKeywords(Arrays.asList("1", "2", "3"))
+                .setContentUrl("contentUrl")
+                .setCustomTargeting(Collections.singletonMap("apple", "banana"))
+                .setCustomTargetingLists(
+                    Collections.singletonMap("cherry", Collections.singletonList("pie")))
+                .build());
+
+    assertEquals(
+        codec.decodeMessage((ByteBuffer) message.position(0)),
+        new FlutterPublisherAdRequest.Builder()
+            .setKeywords(Arrays.asList("1", "2", "3"))
+            .setContentUrl("contentUrl")
+            .setCustomTargeting(Collections.singletonMap("apple", "banana"))
+            .setCustomTargetingLists(
+                Collections.singletonMap("cherry", Collections.singletonList("pie")))
+            .build());
   }
 
   @Test
@@ -139,8 +162,12 @@ public class FirebaseFlutterAdMobTest {
   @Test
   public void flutterAdListener_onAdLoaded() {
     final FlutterBannerAd bannerAd =
-        new FlutterBannerAd(
-            testManager, "testId", new FlutterBannerAd.FlutterAdSize(1, 2), request);
+        new FlutterBannerAd.Builder()
+            .setManager(testManager)
+            .setAdUnitId("testId")
+            .setSize(new FlutterAdSize(1, 2))
+            .setRequest(request)
+            .build();
     testManager.loadAd(bannerAd, 0);
 
     testManager.onAdLoaded(bannerAd);
@@ -156,8 +183,12 @@ public class FirebaseFlutterAdMobTest {
   @Test
   public void flutterAdListener_onAdFailedToLoad() {
     final FlutterBannerAd bannerAd =
-        new FlutterBannerAd(
-            testManager, "testId", new FlutterBannerAd.FlutterAdSize(1, 2), request);
+        new FlutterBannerAd.Builder()
+            .setManager(testManager)
+            .setAdUnitId("testId")
+            .setSize(new FlutterAdSize(1, 2))
+            .setRequest(request)
+            .build();
     testManager.loadAd(bannerAd, 0);
 
     testManager.onAdFailedToLoad(bannerAd);
@@ -173,8 +204,12 @@ public class FirebaseFlutterAdMobTest {
   @Test
   public void flutterAdListener_onApplicationExit() {
     final FlutterBannerAd bannerAd =
-        new FlutterBannerAd(
-            testManager, "testId", new FlutterBannerAd.FlutterAdSize(1, 2), request);
+        new FlutterBannerAd.Builder()
+            .setManager(testManager)
+            .setAdUnitId("testId")
+            .setSize(new FlutterAdSize(1, 2))
+            .setRequest(request)
+            .build();
     testManager.loadAd(bannerAd, 0);
 
     testManager.onApplicationExit(bannerAd);
@@ -190,8 +225,12 @@ public class FirebaseFlutterAdMobTest {
   @Test
   public void flutterAdListener_onAdOpened() {
     final FlutterBannerAd bannerAd =
-        new FlutterBannerAd(
-            testManager, "testId", new FlutterBannerAd.FlutterAdSize(1, 2), request);
+        new FlutterBannerAd.Builder()
+            .setManager(testManager)
+            .setAdUnitId("testId")
+            .setSize(new FlutterAdSize(1, 2))
+            .setRequest(request)
+            .build();
     testManager.loadAd(bannerAd, 0);
 
     testManager.onAdOpened(bannerAd);
@@ -207,18 +246,19 @@ public class FirebaseFlutterAdMobTest {
   @Test
   public void flutterAdListener_onNativeAdClicked() {
     final FlutterNativeAd nativeAd =
-        new FlutterNativeAd(
-            testManager,
-            "testId",
-            request,
-            new FirebaseAdMobPlugin.NativeAdFactory() {
-              @Override
-              public UnifiedNativeAdView createNativeAd(
-                  UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
-                return null;
-              }
-            },
-            null);
+        new FlutterNativeAd.Builder()
+            .setManager(testManager)
+            .setAdUnitId("testId")
+            .setRequest(request)
+            .setAdFactory(
+                new FirebaseAdMobPlugin.NativeAdFactory() {
+                  @Override
+                  public UnifiedNativeAdView createNativeAd(
+                      UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
+                    return null;
+                  }
+                })
+            .build();
     testManager.loadAd(nativeAd, 0);
 
     testManager.onNativeAdClicked(nativeAd);
@@ -234,18 +274,19 @@ public class FirebaseFlutterAdMobTest {
   @Test
   public void flutterAdListener_onNativeAdImpression() {
     final FlutterNativeAd nativeAd =
-        new FlutterNativeAd(
-            testManager,
-            "testId",
-            request,
-            new FirebaseAdMobPlugin.NativeAdFactory() {
-              @Override
-              public UnifiedNativeAdView createNativeAd(
-                  UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
-                return null;
-              }
-            },
-            null);
+        new FlutterNativeAd.Builder()
+            .setManager(testManager)
+            .setAdUnitId("testId")
+            .setRequest(request)
+            .setAdFactory(
+                new FirebaseAdMobPlugin.NativeAdFactory() {
+                  @Override
+                  public UnifiedNativeAdView createNativeAd(
+                      UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
+                    return null;
+                  }
+                })
+            .build();
     testManager.loadAd(nativeAd, 0);
 
     testManager.onNativeAdImpression(nativeAd);
@@ -261,8 +302,12 @@ public class FirebaseFlutterAdMobTest {
   @Test
   public void flutterAdListener_onAdClosed() {
     final FlutterBannerAd bannerAd =
-        new FlutterBannerAd(
-            testManager, "testId", new FlutterBannerAd.FlutterAdSize(1, 2), request);
+        new FlutterBannerAd.Builder()
+            .setManager(testManager)
+            .setAdUnitId("testId")
+            .setSize(new FlutterAdSize(1, 2))
+            .setRequest(request)
+            .build();
     testManager.loadAd(bannerAd, 0);
 
     testManager.onAdClosed(bannerAd);
@@ -277,7 +322,8 @@ public class FirebaseFlutterAdMobTest {
 
   @Test
   public void flutterAdListener_onRewardedAdUserEarnedReward() {
-    final FlutterRewardedAd ad = new FlutterRewardedAd(testManager, "testId", request);
+    final FlutterRewardedAd ad =
+        new FlutterRewardedAd.Builder().setManager(testManager).setAdUnitId("testId").build();
     testManager.loadAd(ad, 0);
 
     testManager.onRewardedAdUserEarnedReward(

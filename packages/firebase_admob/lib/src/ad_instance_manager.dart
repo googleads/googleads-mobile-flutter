@@ -116,7 +116,7 @@ class AdInstanceManager {
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    final Ad interstitialAd = adFor(adId);
+    final InterstitialAd interstitialAd = adFor(adId);
     return channel.invokeMethod<void>(
       'loadInterstitialAd',
       <dynamic, dynamic>{
@@ -160,13 +160,34 @@ class AdInstanceManager {
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    final Ad rewardedAd = adFor(adId);
+    final RewardedAd rewardedAd = adFor(adId);
     return channel.invokeMethod<void>(
       'loadRewardedAd',
       <dynamic, dynamic>{
         'adId': adId,
         'adUnitId': rewardedAd.adUnitId,
         'request': rewardedAd.request,
+      },
+    );
+  }
+
+  /// Starts loading the ad if not previously loaded.
+  ///
+  /// Loading also terminates if ad is already in the process of loading.
+  Future<void> loadPublisherBannerAd(PublisherBannerAd ad) {
+    if (adIdFor(ad) != null) {
+      return null;
+    }
+
+    final int adId = _nextAdId++;
+    _loadedAds[adId] = ad;
+    return channel.invokeMethod<void>(
+      'loadPublisherBannerAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'sizes': ad.sizes,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
       },
     );
   }
@@ -216,6 +237,7 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueDateTime = 130;
   static const int _valueMobileAdGender = 131;
   static const int _valueRewardItem = 132;
+  static const int _valuePublisherAdRequest = 133;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -243,6 +265,12 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
       writeValue(buffer, value.type);
+    } else if (value is PublisherAdRequest) {
+      buffer.putUint8(_valuePublisherAdRequest);
+      writeValue(buffer, value.keywords);
+      writeValue(buffer, value.contentUrl);
+      writeValue(buffer, value.customTargeting);
+      writeValue(buffer, value.customTargetingLists);
     } else {
       super.writeValue(buffer, value);
     }
@@ -285,8 +313,28 @@ class AdMessageCodec extends StandardMessageCodec {
           readValueOfType(buffer.getUint8(), buffer),
           readValueOfType(buffer.getUint8(), buffer),
         );
+      case _valuePublisherAdRequest:
+        return PublisherAdRequest(
+          keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
+          contentUrl: readValueOfType(buffer.getUint8(), buffer),
+          customTargeting: readValueOfType(buffer.getUint8(), buffer)
+              ?.cast<String, String>(),
+          customTargetingLists: _deepMapCast<String>(
+            readValueOfType(buffer.getUint8(), buffer),
+          ),
+        );
       default:
         return super.readValueOfType(type, buffer);
     }
+  }
+
+  Map<String, List<T>> _deepMapCast<T>(Map<dynamic, dynamic> map) {
+    if (map == null) return null;
+    return map.map<String, List<T>>(
+      (dynamic key, dynamic value) => MapEntry<String, List<T>>(
+        key,
+        value?.cast<T>(),
+      ),
+    );
   }
 }

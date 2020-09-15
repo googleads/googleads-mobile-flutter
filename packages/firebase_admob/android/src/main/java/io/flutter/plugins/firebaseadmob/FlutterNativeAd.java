@@ -1,6 +1,8 @@
 package io.flutter.plugins.firebaseadmob;
 
 import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
@@ -9,20 +11,69 @@ import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
 import java.util.Map;
 
-public class FlutterNativeAd extends FlutterAd implements PlatformView {
-  private UnifiedNativeAdView ad;
-  final NativeAdFactory adFactory;
-  public Map<String, Object> customOptions;
+class FlutterNativeAd extends FlutterAd implements PlatformView {
+  @NonNull private final AdInstanceManager manager;
+  @NonNull private final String adUnitId;
+  @NonNull private final NativeAdFactory adFactory;
+  @Nullable private FlutterAdRequest request;
+  @Nullable private Map<String, Object> customOptions;
+  @Nullable private UnifiedNativeAdView ad;
+
+  static class Builder {
+    @Nullable private AdInstanceManager manager;
+    @Nullable private String adUnitId;
+    @Nullable private NativeAdFactory adFactory;
+    @Nullable private FlutterAdRequest request;
+    @Nullable private Map<String, Object> customOptions;
+
+    public Builder setAdFactory(@NonNull NativeAdFactory adFactory) {
+      this.adFactory = adFactory;
+      return this;
+    }
+
+    public Builder setCustomOptions(@Nullable Map<String, Object> customOptions) {
+      this.customOptions = customOptions;
+      return this;
+    }
+
+    public Builder setManager(@NonNull AdInstanceManager manager) {
+      this.manager = manager;
+      return this;
+    }
+
+    public Builder setAdUnitId(@NonNull String adUnitId) {
+      this.adUnitId = adUnitId;
+      return this;
+    }
+
+    public Builder setRequest(@Nullable FlutterAdRequest request) {
+      this.request = request;
+      return this;
+    }
+
+    FlutterNativeAd build() {
+      if (manager == null) {
+        throw new IllegalStateException("AdInstanceManager cannot not be null.");
+      } else if (adUnitId == null) {
+        throw new IllegalStateException("AdUnitId cannot not be null.");
+      } else if (adFactory == null) {
+        throw new IllegalStateException("NativeAdFactory cannot not be null.");
+      }
+
+      final FlutterNativeAd nativeAd = new FlutterNativeAd(manager, adUnitId, adFactory);
+      nativeAd.request = request;
+      nativeAd.customOptions = customOptions;
+      return nativeAd;
+    }
+  }
 
   public FlutterNativeAd(
-      AdInstanceManager manager,
-      String adUnitId,
-      FlutterAdRequest request,
-      io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory adFactory,
-      Map<String, Object> customOptions) {
-    super(manager, adUnitId, request);
+      @NonNull AdInstanceManager manager,
+      @NonNull String adUnitId,
+      @NonNull io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory adFactory) {
+    this.manager = manager;
+    this.adUnitId = adUnitId;
     this.adFactory = adFactory;
-    this.customOptions = customOptions;
   }
 
   @Override
@@ -51,10 +102,16 @@ public class FlutterNativeAd extends FlutterAd implements PlatformView {
                   }
                 })
             .build();
-    adLoader.loadAd(request.asAdRequest());
+
+    if (request != null) {
+      adLoader.loadAd(request.asAdRequest());
+    } else {
+      adLoader.loadAd(new FlutterAdRequest.Builder().build().asAdRequest());
+    }
   }
 
   @Override
+  @Nullable
   public View getView() {
     return ad;
   }
