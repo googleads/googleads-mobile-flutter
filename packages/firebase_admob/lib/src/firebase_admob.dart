@@ -32,6 +32,39 @@ enum MobileAdGender {
   female,
 }
 
+/// Error information about why an ad load operation failed.
+class LoadAdError {
+  /// Default constructor for [LoadAdError].
+  LoadAdError(this.code, this.domain, this.message)
+      : assert(code != null),
+        assert(domain != null),
+        assert(message != null);
+
+  /// Unique code to identify the error.
+  ///
+  /// See links below for possible error codes:
+  /// Android:
+  ///   https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest#constant-summary
+  /// Ios:
+  ///   https://developers.google.com/admob/ios/api/reference/Enums/GADErrorCode
+  final int code;
+
+  /// The domain from which the error came.
+  final String domain;
+
+  /// A message detailing the error.
+  ///
+  /// For example "Account not approved yet". See
+  /// https://support.google.com/admob/answer/9905175 for explanations of
+  /// common errors.
+  final String message;
+
+  @override
+  String toString() {
+    return '$runtimeType(code: $code, domain: $domain, message: $message)';
+  }
+}
+
 /// Targeting info per the native AdMob API.
 ///
 /// This class's properties mirror the native AdRequest API. See for example:
@@ -191,7 +224,7 @@ class AdListener {
   final void Function(Ad ad) onAdLoaded;
 
   /// Called when an ad request failed.
-  final void Function(Ad ad) onAdFailedToLoad;
+  final void Function(Ad ad, LoadAdError error) onAdFailedToLoad;
 
   /// Called when a click is recorded for a [NativeAd].
   final void Function(NativeAd ad) onNativeAdClicked;

@@ -47,8 +47,8 @@ class _MyAppState extends State<MyApp> {
           print('${ad.runtimeType} loaded.');
           setState(() => _bannerReady = true);
         },
-        onAdFailedToLoad: (Ad ad) {
-          print('${ad.runtimeType} failed to load.');
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('${ad.runtimeType} failed to load: $error');
           setState(() {
             _bannerAd.dispose();
             _bannerAd = null;
@@ -70,8 +70,8 @@ class _MyAppState extends State<MyApp> {
           print('${ad.runtimeType} loaded.');
           setState(() => _interstitialReady = true);
         },
-        onAdFailedToLoad: (Ad ad) => setState(() {
-          print('${ad.runtimeType} failed to load.');
+        onAdFailedToLoad: (Ad ad, LoadAdError error) => setState(() {
+          print('${ad.runtimeType} failed to load: $error');
           _interstitialAd.dispose();
           _interstitialAd = null;
         }),
@@ -98,8 +98,8 @@ class _MyAppState extends State<MyApp> {
           print('${ad.runtimeType} loaded.');
           setState(() => _nativeReady = true);
         },
-        onAdFailedToLoad: (Ad ad) => setState(() {
-          print('${ad.runtimeType} failed to load.');
+        onAdFailedToLoad: (Ad ad, LoadAdError error) => setState(() {
+          print('${ad.runtimeType} failed to load: $error');
           _nativeAd.dispose();
           _nativeAd = null;
         }),
@@ -121,8 +121,8 @@ class _MyAppState extends State<MyApp> {
           print('${ad.runtimeType} loaded.');
           setState(() => _rewardedReady = true);
         },
-        onAdFailedToLoad: (Ad ad) => setState(() {
-          print('${ad.runtimeType} failed to load.');
+        onAdFailedToLoad: (Ad ad, LoadAdError error) => setState(() {
+          print('${ad.runtimeType} failed to load: error');
           _rewardedAd.dispose();
           _rewardedAd = null;
         }),

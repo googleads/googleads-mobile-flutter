@@ -2,6 +2,7 @@ package io.flutter.plugins.firebaseadmob;
 
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.LoadAdError;
 
 class FlutterAdListener extends AdListener {
   @NonNull private final AdInstanceManager manager;
@@ -18,8 +19,8 @@ class FlutterAdListener extends AdListener {
   }
 
   @Override
-  public void onAdFailedToLoad(int var1) {
-    manager.onAdFailedToLoad(ad);
+  public void onAdFailedToLoad(LoadAdError loadAdError) {
+    manager.onAdFailedToLoad(ad, new FlutterAd.FlutterLoadAdError(loadAdError));
   }
 
   @Override

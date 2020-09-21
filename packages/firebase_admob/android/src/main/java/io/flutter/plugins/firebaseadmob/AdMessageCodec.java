@@ -18,7 +18,8 @@ final class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_DATE_TIME = (byte) 130;
   private static final byte VALUE_MOBILE_AD_GENDER = (byte) 131;
   private static final byte VALUE_REWARD_ITEM = (byte) 132;
-  private static final byte VALUE_PUBLISHER_AD_REQUEST = (byte) 133;
+  private static final byte VALUE_LOAD_AD_ERROR = (byte) 133;
+  private static final byte VALUE_PUBLISHER_AD_REQUEST = (byte) 134;
 
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
@@ -49,6 +50,12 @@ final class AdMessageCodec extends StandardMessageCodec {
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;
       writeValue(stream, item.amount);
       writeValue(stream, item.type);
+    } else if (value instanceof FlutterAd.FlutterLoadAdError) {
+      stream.write(VALUE_LOAD_AD_ERROR);
+      final FlutterAd.FlutterLoadAdError error = (FlutterAd.FlutterLoadAdError) value;
+      writeValue(stream, error.code);
+      writeValue(stream, error.domain);
+      writeValue(stream, error.message);
     } else if (value instanceof FlutterPublisherAdRequest) {
       stream.write(VALUE_PUBLISHER_AD_REQUEST);
       final FlutterPublisherAdRequest request = (FlutterPublisherAdRequest) value;
@@ -87,6 +94,11 @@ final class AdMessageCodec extends StandardMessageCodec {
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
             (Integer) readValueOfType(buffer.get(), buffer),
+            (String) readValueOfType(buffer.get(), buffer));
+      case VALUE_LOAD_AD_ERROR:
+        return new FlutterAd.FlutterLoadAdError(
+            (Integer) readValueOfType(buffer.get(), buffer),
+            (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer));
       case VALUE_PUBLISHER_AD_REQUEST:
         return new FlutterPublisherAdRequest.Builder()

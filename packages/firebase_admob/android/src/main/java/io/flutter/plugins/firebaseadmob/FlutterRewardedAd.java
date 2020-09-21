@@ -3,6 +3,7 @@ package io.flutter.plugins.firebaseadmob;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
@@ -93,8 +94,8 @@ class FlutterRewardedAd extends FlutterAd implements FlutterAd.FlutterAdWithoutV
           }
 
           @Override
-          public void onRewardedAdFailedToLoad(int errorCode) {
-            manager.onAdFailedToLoad(FlutterRewardedAd.this);
+          public void onRewardedAdFailedToLoad(LoadAdError loadAdError) {
+            manager.onAdFailedToLoad(FlutterRewardedAd.this, new FlutterLoadAdError(loadAdError));
           }
         };
 

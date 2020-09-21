@@ -153,6 +153,20 @@ public class FirebaseFlutterAdMobTest {
   }
 
   @Test
+  public void adMessageCodec_encodeFlutterLoadAdError() {
+    final AdMessageCodec codec = new AdMessageCodec();
+    final ByteBuffer message =
+        codec.encodeMessage(new FlutterBannerAd.FlutterLoadAdError(1, "domain", "message"));
+
+    final FlutterAd.FlutterLoadAdError error =
+        (FlutterAd.FlutterLoadAdError) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertNotNull(error);
+    assertEquals(error.code, 1);
+    assertEquals(error.domain, "domain");
+    assertEquals(error.message, "message");
+  }
+
+  @Test
   public void mobileAdGender_indexMapsToGADGender() {
     assertEquals(FlutterAdRequest.MobileAdGender.UNKNOWN.ordinal(), 0);
     assertEquals(FlutterAdRequest.MobileAdGender.MALE.ordinal(), 1);
@@ -191,7 +205,7 @@ public class FirebaseFlutterAdMobTest {
             .build();
     testManager.loadAd(bannerAd, 0);
 
-    testManager.onAdFailedToLoad(bannerAd);
+    testManager.onAdFailedToLoad(bannerAd, new FlutterAd.FlutterLoadAdError(1, "hi", "friend"));
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
@@ -199,6 +213,10 @@ public class FirebaseFlutterAdMobTest {
     assertThat(call.arguments, (Matcher) hasEntry("eventName", "onAdFailedToLoad"));
     //noinspection rawtypes
     assertThat(call.arguments, (Matcher) hasEntry("adId", 0));
+    //noinspection rawtypes
+    assertThat(
+        call.arguments,
+        (Matcher) hasEntry("loadAdError", new FlutterAd.FlutterLoadAdError(1, "hi", "friend")));
   }
 
   @Test

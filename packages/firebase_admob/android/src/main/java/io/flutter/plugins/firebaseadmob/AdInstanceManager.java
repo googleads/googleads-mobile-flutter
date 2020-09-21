@@ -64,10 +64,11 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
-  void onAdFailedToLoad(@NonNull FlutterAd ad) {
+  void onAdFailedToLoad(@NonNull FlutterAd ad, @NonNull FlutterAd.FlutterLoadAdError error) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
     arguments.put("eventName", "onAdFailedToLoad");
+    arguments.put("loadAdError", error);
     channel.invokeMethod("onAdEvent", arguments);
   }
 

@@ -234,20 +234,25 @@ void main() {
     });
 
     test('onAdFailedToLoad', () async {
-      final Completer<Ad> adEventCompleter = Completer<Ad>();
+      final Completer<List<dynamic>> resultsCompleter =
+          Completer<List<dynamic>>();
 
       final BannerAd banner = BannerAd(
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
         listener: AdListener(
-            onAdFailedToLoad: (Ad ad) => adEventCompleter.complete(ad)),
+            onAdFailedToLoad: (Ad ad, LoadAdError error) =>
+                resultsCompleter.complete(<dynamic>[ad, error])),
         request: AdRequest(),
       );
 
       await banner.load();
 
-      final MethodCall methodCall = MethodCall('onAdEvent',
-          <dynamic, dynamic>{'adId': 0, 'eventName': 'onAdFailedToLoad'});
+      final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+        'adId': 0,
+        'eventName': 'onAdFailedToLoad',
+        'loadAdError': LoadAdError(1, 'domain', 'message'),
+      });
 
       final ByteData data =
           instanceManager.channel.codec.encodeMethodCall(methodCall);
@@ -258,7 +263,11 @@ void main() {
         (ByteData data) {},
       );
 
-      expect(adEventCompleter.future, completion(banner));
+      final List<dynamic> results = await resultsCompleter.future;
+      expect(results[0], banner);
+      expect(results[1].code, 1);
+      expect(results[1].domain, 'domain');
+      expect(results[1].message, 'message');
     });
 
     test('onNativeAdClicked', () async {
@@ -492,6 +501,16 @@ void main() {
     test('encode/decode MobileAdGender', () async {
       final ByteData byteData = codec.encodeMessage(MobileAdGender.unknown);
       expect(codec.decodeMessage(byteData), MobileAdGender.unknown);
+    });
+
+    test('encode/decode $LoadAdError', () async {
+      final ByteData byteData = codec.encodeMessage(
+        LoadAdError(1, 'domain', 'message'),
+      );
+      final LoadAdError error = codec.decodeMessage(byteData);
+      expect(error.code, 1);
+      expect(error.domain, 'domain');
+      expect(error.message, 'message');
     });
 
     test('encode/decode $RewardItem', () async {

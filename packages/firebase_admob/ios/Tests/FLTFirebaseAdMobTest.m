@@ -80,12 +80,16 @@
                             rootViewController:OCMClassMock([UIViewController class])];
   [_manager loadAd:ad adId:@(1)];
 
-  [_manager onAdFailedToLoad:ad];
+  FLTLoadAdError *error = [[FLTLoadAdError alloc] initWithCode:@(1)
+                                                        domain:@"domain"
+                                                       message:@"message"];
+  [_manager onAdFailedToLoad:ad error:error];
   NSData *data = [_methodCodec
       encodeMethodCall:[FlutterMethodCall methodCallWithMethodName:@"onAdEvent"
                                                          arguments:@{
                                                            @"adId" : @1,
-                                                           @"eventName" : @"onAdFailedToLoad"
+                                                           @"eventName" : @"onAdFailedToLoad",
+                                                           @"loadAdError" : error,
                                                          }]];
   OCMVerify([_mockMessenger sendOnChannel:@"plugins.flutter.io/firebase_admob" message:data]);
 }

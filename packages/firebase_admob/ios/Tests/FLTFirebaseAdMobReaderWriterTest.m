@@ -81,4 +81,16 @@
   XCTAssertEqualObjects(decodedItem.amount, @(1));
   XCTAssertEqualObjects(decodedItem.type, @"apple");
 }
+
+- (void)testEncodeDecodeLoadAdError {
+  FLTLoadAdError *error = [[FLTLoadAdError alloc] initWithCode:@(1)
+                                                        domain:@"domain"
+                                                       message:@"message"];
+  NSData *encodedMessage = [_messageCodec encode:error];
+
+  FLTLoadAdError *decodedError = [_messageCodec decode:encodedMessage];
+  XCTAssertEqualObjects(decodedError.code, @(1));
+  XCTAssertEqualObjects(decodedError.domain, @"domain");
+  XCTAssertEqualObjects(decodedError.message, @"message");
+}
 @end

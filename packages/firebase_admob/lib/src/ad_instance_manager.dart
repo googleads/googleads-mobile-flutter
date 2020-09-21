@@ -55,7 +55,7 @@ class AdInstanceManager {
         ad.listener?.onAdLoaded(ad);
         break;
       case 'onAdFailedToLoad':
-        ad.listener?.onAdFailedToLoad(ad);
+        ad.listener?.onAdFailedToLoad(ad, arguments['loadAdError']);
         break;
       case 'onNativeAdClicked':
         ad.listener?.onNativeAdClicked(ad);
@@ -237,7 +237,8 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueDateTime = 130;
   static const int _valueMobileAdGender = 131;
   static const int _valueRewardItem = 132;
-  static const int _valuePublisherAdRequest = 133;
+  static const int _valueLoadAdError = 133;
+  static const int _valuePublisherAdRequest = 134;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -265,6 +266,11 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
       writeValue(buffer, value.type);
+    } else if (value is LoadAdError) {
+      buffer.putUint8(_valueLoadAdError);
+      writeValue(buffer, value.code);
+      writeValue(buffer, value.domain);
+      writeValue(buffer, value.message);
     } else if (value is PublisherAdRequest) {
       buffer.putUint8(_valuePublisherAdRequest);
       writeValue(buffer, value.keywords);
@@ -310,6 +316,12 @@ class AdMessageCodec extends StandardMessageCodec {
         return MobileAdGender.unknown;
       case _valueRewardItem:
         return RewardItem(
+          readValueOfType(buffer.getUint8(), buffer),
+          readValueOfType(buffer.getUint8(), buffer),
+        );
+      case _valueLoadAdError:
+        return LoadAdError(
+          readValueOfType(buffer.getUint8(), buffer),
           readValueOfType(buffer.getUint8(), buffer),
           readValueOfType(buffer.getUint8(), buffer),
         );

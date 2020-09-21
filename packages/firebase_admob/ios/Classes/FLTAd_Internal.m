@@ -41,6 +41,30 @@
 }
 @end
 
+@implementation FLTLoadAdError
+- (instancetype _Nonnull)initWithCode:(NSNumber *_Nonnull)code
+                               domain:(NSString *_Nonnull)domain
+                              message:(NSString *_Nonnull)message {
+  self = [super init];
+  if (self) {
+    _code = code;
+    _domain = domain;
+    _message = message;
+  }
+  return self;
+}
+
+- (instancetype _Nonnull)initWithError:(GADRequestError *_Nonnull)error {
+  self = [super init];
+  if (self) {
+    _code = @(error.code);
+    _domain = error.domain;
+    _message = error.localizedDescription;
+  }
+  return self;
+}
+@end
+
 @implementation FLTPublisherAdRequest
 - (GADRequest *_Nonnull)asDFPRequest {
   DFPRequest *request = [DFPRequest request];
@@ -82,7 +106,7 @@
 }
 
 - (void)adView:(GADBannerView *)adView didFailToReceiveAdWithError:(GADRequestError *)error {
-  [_manager onAdFailedToLoad:self];
+  [_manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
 }
 
 - (void)adViewWillPresentScreen:(GADBannerView *)adView {
@@ -142,7 +166,7 @@
 
 - (void)adLoader:(nonnull GADAdLoader *)adLoader
     didFailToReceiveAdWithError:(nonnull GADRequestError *)error {
-  [self.manager onAdFailedToLoad:self];
+  [self.manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
 }
 
 - (void)adLoader:(nonnull GADAdLoader *)adLoader
@@ -191,7 +215,7 @@
 }
 
 - (void)interstitial:(GADInterstitial *)ad didFailToReceiveAdWithError:(GADRequestError *)error {
-  [_manager onAdFailedToLoad:self];
+  [_manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
 }
 
 - (void)interstitialWillPresentScreen:(GADInterstitial *)ad {
@@ -229,7 +253,8 @@
   [_rewardedView loadRequest:[_adRequest asGADRequest]
            completionHandler:^(GADRequestError *_Nullable error) {
              if (error) {
-               [self->_manager onAdFailedToLoad:self];
+               [self->_manager onAdFailedToLoad:self
+                                          error:[[FLTLoadAdError alloc] initWithError:error]];
              } else {
                [self->_manager onAdLoaded:self];
              }
@@ -298,7 +323,7 @@
 }
 
 - (void)adLoader:(GADAdLoader *)adLoader didFailToReceiveAdWithError:(GADRequestError *)error {
-  [_manager onAdFailedToLoad:self];
+  [_manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
 }
 
 - (void)nativeAdDidRecordClick:(GADUnifiedNativeAd *)nativeAd {

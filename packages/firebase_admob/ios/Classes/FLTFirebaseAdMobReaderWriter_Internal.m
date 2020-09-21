@@ -7,7 +7,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdMobFieldDateTime = 130,
   FLTAdMobFieldAdGender = 131,
   FLTADMobFieldRewardItem = 132,
-  FLTADMobFieldPublisherAdRequest = 133,
+  FLTAdMobFieldLoadAdError = 133,
+  FLTADMobFieldPublisherAdRequest = 134,
 };
 
 @interface FLTFirebaseAdMobReader : FlutterStandardReader
@@ -67,6 +68,11 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       return [[FLTRewardItem alloc] initWithAmount:[self readValueOfType:[self readByte]]
                                               type:[self readValueOfType:[self readByte]]];
     }
+    case FLTAdMobFieldLoadAdError: {
+      return [[FLTLoadAdError alloc] initWithCode:[self readValueOfType:[self readByte]]
+                                           domain:[self readValueOfType:[self readByte]]
+                                          message:[self readValueOfType:[self readByte]]];
+    }
     case FLTADMobFieldPublisherAdRequest: {
       FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
 
@@ -119,6 +125,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     FLTRewardItem *item = value;
     [self writeValue:item.amount];
     [self writeValue:item.type];
+  } else if ([value isKindOfClass:[FLTLoadAdError class]]) {
+    [self writeByte:FLTAdMobFieldLoadAdError];
+    FLTLoadAdError *error = value;
+    [self writeValue:error.code];
+    [self writeValue:error.domain];
+    [self writeValue:error.message];
   } else {
     [super writeValue:value];
   }
