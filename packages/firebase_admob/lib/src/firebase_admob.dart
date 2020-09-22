@@ -242,7 +242,7 @@ class AdListener {
   /// Called when an ad is in the process of leaving the application.
   final void Function(Ad ad) onApplicationExit;
 
-  /// Called when the user is about to return to the application after clicking on an ad.
+  /// Called when an ad removes an overlay that covers the screen.
   final void Function(Ad ad) onAdClosed;
 
   /// Called when a [RewardedAd] triggers a reward.

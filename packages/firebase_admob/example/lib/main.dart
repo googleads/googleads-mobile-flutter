@@ -4,6 +4,8 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 
@@ -25,11 +27,27 @@ class _MyAppState extends State<MyApp> {
     nonPersonalizedAds: true,
   );
 
-  BannerAd _bannerAd;
-  bool _bannerReady = false;
-
-  NativeAd _nativeAd;
-  bool _nativeReady = false;
+  final List<String> _article = <String>[
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod'
+        ' tempor incididunt ut labore et dolore magna aliqua. Faucibus purus in'
+        ' massa tempor. Quis enim lobortis scelerisque fermentum dui faucibus'
+        ' in. Nibh praesent tristique magna sit amet purus gravida quis.'
+        ' Magna sit amet purus gravida quis blandit turpis cursus in. Sed'
+        ' adipiscing diam donec adipiscing tristique. Urna porttitor rhoncus'
+        ' dolor purus non enim praesent. Pellentesque habitant morbi tristique'
+        ' senectus et netus. Risus ultricies tristique nulla aliquet enim tortor'
+        ' at.',
+    'Eget dolor morbi non arcu. Nec sagittis aliquam malesuada bibendum. Nec'
+        ' feugiat nisl pretium fusce id velit ut. Volutpat commodo sed egestas'
+        ' egestas. Ultrices neque ornare aenean euismod elementum. Consequat'
+        ' semper viverra nam libero justo laoreet sit amet cursus. Fusce ut'
+        ' placerat orci nulla pellentesque dignissim. Justo donec enim diam'
+        ' vulputate ut pharetra sit amet.',
+    'Et malesuada fames ac turpis egestas maecenas. Augue ut lectus arcu'
+        ' bibendum at varius. Mauris rhoncus aenean vel elit scelerisque mauris'
+        ' pellentesque pulvinar. Faucibus a pellentesque sit amet porttitor'
+        ' eget dolor.'
+  ];
 
   InterstitialAd _interstitialAd;
   bool _interstitialReady = false;
@@ -37,28 +55,11 @@ class _MyAppState extends State<MyApp> {
   RewardedAd _rewardedAd;
   bool _rewardedReady = false;
 
-  void createBannerAd() {
-    _bannerAd ??= BannerAd(
-      adUnitId: BannerAd.testAdUnitId,
-      request: request,
-      size: AdSize.banner,
-      listener: AdListener(
-        onAdLoaded: (Ad ad) {
-          print('${ad.runtimeType} loaded.');
-          setState(() => _bannerReady = true);
-        },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('${ad.runtimeType} failed to load: $error');
-          setState(() {
-            _bannerAd.dispose();
-            _bannerAd = null;
-          });
-        },
-        onAdOpened: onAdOpened,
-        onAdClosed: onAdClosed,
-        onApplicationExit: onApplicationExit,
-      ),
-    )..load();
+  @override
+  void initState() {
+    super.initState();
+    createInterstitialAd();
+    createRewardedAd();
   }
 
   void createInterstitialAd() {
@@ -68,46 +69,22 @@ class _MyAppState extends State<MyApp> {
       listener: AdListener(
         onAdLoaded: (Ad ad) {
           print('${ad.runtimeType} loaded.');
-          setState(() => _interstitialReady = true);
+          _interstitialReady = true;
         },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) => setState(() {
-          print('${ad.runtimeType} failed to load: $error');
-          _interstitialAd.dispose();
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('${ad.runtimeType} failed to load: $error.');
+          ad.dispose();
           _interstitialAd = null;
-        }),
-        onAdOpened: onAdOpened,
+          createInterstitialAd();
+        },
+        onAdOpened: (Ad ad) => print('${ad.runtimeType} onAdOpened.'),
         onAdClosed: (Ad ad) {
           print('${ad.runtimeType} closed.');
-          setState(() {
-            _interstitialAd.dispose();
-            _interstitialAd = null;
-          });
+          ad.dispose();
+          createInterstitialAd();
         },
-        onApplicationExit: onApplicationExit,
-      ),
-    )..load();
-  }
-
-  void createNativeAd() {
-    _nativeAd ??= NativeAd(
-      adUnitId: NativeAd.testAdUnitId,
-      request: request,
-      factoryId: 'adFactoryExample',
-      listener: AdListener(
-        onAdLoaded: (Ad ad) {
-          print('${ad.runtimeType} loaded.');
-          setState(() => _nativeReady = true);
-        },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) => setState(() {
-          print('${ad.runtimeType} failed to load: $error');
-          _nativeAd.dispose();
-          _nativeAd = null;
-        }),
-        onAdOpened: onAdOpened,
-        onAdClosed: onAdClosed,
-        onApplicationExit: onApplicationExit,
-        onNativeAdClicked: onNativeAdClicked,
-        onNativeAdImpression: onNativeAdImpression,
+        onApplicationExit: (Ad ad) =>
+            print('${ad.runtimeType} onApplicationExit.'),
       ),
     )..load();
   }
@@ -117,50 +94,34 @@ class _MyAppState extends State<MyApp> {
       adUnitId: RewardedAd.testAdUnitId,
       request: request,
       listener: AdListener(
-        onAdLoaded: (Ad ad) {
-          print('${ad.runtimeType} loaded.');
-          setState(() => _rewardedReady = true);
-        },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) => setState(() {
-          print('${ad.runtimeType} failed to load: error');
-          _rewardedAd.dispose();
-          _rewardedAd = null;
-        }),
-        onAdOpened: onAdOpened,
-        onAdClosed: (Ad ad) {
-          print('${ad.runtimeType} closed.');
-          setState(() {
-            _rewardedAd.dispose();
+          onAdLoaded: (Ad ad) {
+            print('${ad.runtimeType} loaded.');
+            _rewardedReady = true;
+          },
+          onAdFailedToLoad: (Ad ad, LoadAdError error) {
+            print('${ad.runtimeType} failed to load: $error');
+            ad.dispose();
             _rewardedAd = null;
-          });
-        },
-        onApplicationExit: onApplicationExit,
-        onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) =>
-            onRewardedAdUserEarnedReward(ad, reward),
-      ),
+            createRewardedAd();
+          },
+          onAdOpened: (Ad ad) => print('${ad.runtimeType} onAdOpened.'),
+          onAdClosed: (Ad ad) {
+            print('${ad.runtimeType} closed.');
+            ad.dispose();
+            createRewardedAd();
+          },
+          onApplicationExit: (Ad ad) =>
+              print('${ad.runtimeType} onApplicationExit.'),
+          onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) {
+            print(
+              '$RewardedAd with reward $RewardItem(${reward.amount}, ${reward.type})',
+            );
+          }),
     )..load();
   }
 
-  void onAdOpened(Ad ad) => print('${ad.runtimeType} opened.');
-
-  void onAdClosed(Ad ad) => print('${ad.runtimeType} closed.');
-
-  void onApplicationExit(Ad ad) =>
-      print('${ad.runtimeType} leaving application.');
-
-  void onNativeAdClicked(NativeAd ad) => print('${ad.runtimeType} clicked.');
-
-  void onNativeAdImpression(NativeAd ad) =>
-      print('${ad.runtimeType} impression.');
-
-  void onRewardedAdUserEarnedReward(RewardedAd ad, RewardItem reward) => print(
-        '${ad.runtimeType} with reward: $RewardItem(${reward.amount}, ${reward.type})',
-      );
-
   @override
   void dispose() {
-    _bannerAd?.dispose();
-    _nativeAd?.dispose();
     _interstitialAd?.dispose();
     _rewardedAd?.dispose();
     super.dispose();
@@ -172,77 +133,217 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('AdMob Plugin example app'),
-        ),
-        body: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                RaisedButton(
-                  child: Text('Load $BannerAd'),
-                  onPressed: _bannerAd == null ? createBannerAd : null,
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              onSelected: (String result) {
+                assert(result == 'InterstitialAd' || result == 'RewardedAd');
+                switch (result) {
+                  case 'InterstitialAd':
+                    if (!_interstitialReady) return;
+                    _interstitialAd.show();
+                    _interstitialReady = false;
+                    _interstitialAd = null;
+                    break;
+                  case 'RewardedAd':
+                    if (!_rewardedReady) return;
+                    _rewardedAd.show();
+                    _rewardedReady = false;
+                    _rewardedAd = null;
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                  child: Text('$InterstitialAd'),
+                  value: '$InterstitialAd',
                 ),
-                Container(
-                  alignment: Alignment.center,
-                  child: _bannerReady ? AdWidget(ad: _bannerAd) : Container(),
-                  width: _bannerReady ? _bannerAd.size.width.toDouble() : 0,
-                  height: _bannerReady ? _bannerAd.size.height.toDouble() : 0,
+                PopupMenuItem<String>(
+                  child: Text('$RewardedAd'),
+                  value: '$RewardedAd',
                 ),
-                RaisedButton(
-                  child: Text('Load $NativeAd'),
-                  onPressed: _nativeAd == null ? createNativeAd : null,
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  child: _nativeReady ? AdWidget(ad: _nativeAd) : Container(),
-                  width: _nativeReady ? 300 : 0,
-                  height: _nativeReady ? 300 : 0,
-                ),
-                RaisedButton(
-                  child: Text('Load $InterstitialAd'),
-                  onPressed: _interstitialAd == null
-                      ? () => setState(() => createInterstitialAd())
-                      : null,
-                ),
-                RaisedButton(
-                  child: Text('Show $InterstitialAd'),
-                  onPressed: _interstitialReady
-                      ? () {
-                          setState(() {
-                            _interstitialAd.show();
-                            _interstitialReady = false;
-                          });
-                        }
-                      : null,
-                ),
-                RaisedButton(
-                  child: Text('Load $RewardedAd'),
-                  onPressed: _rewardedAd == null
-                      ? () => setState(() => createRewardedAd())
-                      : null,
-                ),
-                RaisedButton(
-                  child: Text('Show $RewardedAd'),
-                  onPressed: _rewardedReady
-                      ? () {
-                          setState(() {
-                            _rewardedAd.show();
-                            _rewardedReady = false;
-                          });
-                        }
-                      : null,
-                ),
-              ].map((Widget button) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: button,
-                );
-              }).toList(),
+              ],
             ),
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: ListView.separated(
+            cacheExtent: 500,
+            itemCount: 100,
+            separatorBuilder: (BuildContext context, int index) {
+              return Container(
+                height: 40,
+              );
+            },
+            itemBuilder: (BuildContext context, int index) {
+              if (index % 2 == 0) {
+                return Text(
+                  _article[(index / 2).ceil() % 3],
+                  style: TextStyle(fontSize: 24),
+                );
+              }
+
+              final int adIndex = (index / 2).floor();
+              Widget adWidget;
+              if (adIndex % 3 == 0) {
+                adWidget = BannerAdWidget(AdSize.banner);
+              } else if (adIndex % 3 == 1) {
+                adWidget = BannerAdWidget(AdSize.largeBanner);
+              } else {
+                adWidget = NativeAdWidget();
+              }
+              return Center(child: adWidget);
+            },
           ),
         ),
       ),
+    );
+  }
+}
+
+class BannerAdWidget extends StatefulWidget {
+  BannerAdWidget(this.size);
+
+  final AdSize size;
+
+  @override
+  State<StatefulWidget> createState() => BannerAdState();
+}
+
+class BannerAdState extends State<BannerAdWidget> {
+  BannerAd _bannerAd;
+  final Completer<BannerAd> bannerCompleter = Completer<BannerAd>();
+
+  @override
+  void initState() {
+    super.initState();
+    _bannerAd = BannerAd(
+      adUnitId: BannerAd.testAdUnitId,
+      request: AdRequest(),
+      size: widget.size,
+      listener: AdListener(
+        onAdLoaded: (Ad ad) {
+          print('$BannerAd loaded.');
+          bannerCompleter.complete(ad as BannerAd);
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('$BannerAd failedToLoad: $error');
+          bannerCompleter.completeError(null);
+        },
+        onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
+        onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
+        onApplicationExit: (Ad ad) => print('$BannerAd onApplicationExit.'),
+      ),
+    );
+    Future<void>.delayed(Duration(seconds: 1), () => _bannerAd?.load());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bannerAd?.dispose();
+    _bannerAd = null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<BannerAd>(
+      future: bannerCompleter.future,
+      builder: (BuildContext context, AsyncSnapshot<BannerAd> snapshot) {
+        Widget child;
+
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+          case ConnectionState.active:
+            child = Container();
+            break;
+          case ConnectionState.done:
+            if (snapshot.hasData) {
+              child = AdWidget(ad: _bannerAd);
+            } else {
+              child = Text('Error loading $BannerAd');
+            }
+        }
+
+        return Container(
+          width: _bannerAd.size.width.toDouble(),
+          height: _bannerAd.size.height.toDouble(),
+          child: child,
+          color: Colors.blueGrey,
+        );
+      },
+    );
+  }
+}
+
+class NativeAdWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => NativeAdState();
+}
+
+class NativeAdState extends State<NativeAdWidget> {
+  NativeAd _nativeAd;
+  final Completer<NativeAd> nativeAdCompleter = Completer<NativeAd>();
+
+  @override
+  void initState() {
+    super.initState();
+    _nativeAd = NativeAd(
+      adUnitId: NativeAd.testAdUnitId,
+      request: AdRequest(),
+      factoryId: 'adFactoryExample',
+      listener: AdListener(
+        onAdLoaded: (Ad ad) {
+          print('$NativeAd loaded.');
+          nativeAdCompleter.complete(ad as NativeAd);
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('$NativeAd failedToLoad: $error');
+          nativeAdCompleter.completeError(null);
+        },
+        onAdOpened: (Ad ad) => print('$NativeAd onAdOpened.'),
+        onAdClosed: (Ad ad) => print('$NativeAd onAdClosed.'),
+        onApplicationExit: (Ad ad) => print('$NativeAd onApplicationExit.'),
+      ),
+    );
+    Future<void>.delayed(Duration(seconds: 1), () => _nativeAd?.load());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _nativeAd?.dispose();
+    _nativeAd = null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<NativeAd>(
+      future: nativeAdCompleter.future,
+      builder: (BuildContext context, AsyncSnapshot<NativeAd> snapshot) {
+        Widget child;
+
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+          case ConnectionState.active:
+            child = Container();
+            break;
+          case ConnectionState.done:
+            if (snapshot.hasData) {
+              child = AdWidget(ad: _nativeAd);
+            } else {
+              child = Text('Error loading $NativeAd');
+            }
+        }
+
+        return Container(
+          width: 250,
+          height: 350,
+          child: child,
+          color: Colors.blueGrey,
+        );
+      },
     );
   }
 }

@@ -101,7 +101,6 @@ class FlutterAdRequest {
         builder.addKeyword(keyword);
       }
     }
-
     if (contentUrl != null) builder.setContentUrl(contentUrl);
     if (birthday != null) builder.setBirthday(birthday);
     if (gender != null) builder.setGender(gender.ordinal());
