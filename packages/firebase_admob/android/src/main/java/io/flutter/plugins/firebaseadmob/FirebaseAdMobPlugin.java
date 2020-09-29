@@ -320,7 +320,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
       case "showAdWithoutView":
         final boolean adShown = instanceManager.showAdWithId(call.<Integer>argument("adId"));
         if (!adShown) {
-          result.error("AdShowError", "Ad failed to show", null);
+          result.error("AdShowError", "Ad failed to show.", null);
           break;
         }
         result.success(null);

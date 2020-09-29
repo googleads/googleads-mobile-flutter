@@ -55,9 +55,9 @@
   return self;
 }
 
-+ (BOOL)registerNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
++ (BOOL)registerNativeAdFactory:(id<FlutterPluginRegistry>)registry
                       factoryId:(NSString *)factoryId
-                nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory {
+                nativeAdFactory:(id<FLTNativeAdFactory>)nativeAdFactory {
   NSString *pluginClassName = NSStringFromClass([FLTFirebaseAdMobPlugin class]);
   FLTFirebaseAdMobPlugin *adMobPlugin =
       (FLTFirebaseAdMobPlugin *)[registry valuePublishedByPlugin:pluginClassName];
@@ -77,7 +77,7 @@
   return YES;
 }
 
-+ (id<FLTNativeAdFactory>)unregisterNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
++ (id<FLTNativeAdFactory>)unregisterNativeAdFactory:(id<FlutterPluginRegistry>)registry
                                           factoryId:(NSString *)factoryId {
   FLTFirebaseAdMobPlugin *adMobPlugin = (FLTFirebaseAdMobPlugin *)[registry
       valuePublishedByPlugin:NSStringFromClass([FLTFirebaseAdMobPlugin class])];
@@ -92,10 +92,10 @@
       UIApplication.sharedApplication.delegate.window.rootViewController;
 
   if ([call.method isEqualToString:@"loadBannerAd"]) {
-    FLTNewBannerAd *ad = [[FLTNewBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                             size:call.arguments[@"size"]
-                                                          request:call.arguments[@"request"]
-                                               rootViewController:rootController];
+    FLTBannerAd *ad = [[FLTBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                                       size:call.arguments[@"size"]
+                                                    request:call.arguments[@"request"]
+                                         rootViewController:rootController];
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method isEqualToString:@"loadPublisherBannerAd"]) {
@@ -117,25 +117,24 @@
       return;
     }
 
-    FLTNewNativeAd *ad = [[FLTNewNativeAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                          request:call.arguments[@"request"]
-                                                  nativeAdFactory:(id)factory
-                                                    customOptions:call.arguments[@"customOptions"]
-                                               rootViewController:rootController];
+    FLTNativeAd *ad = [[FLTNativeAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                                    request:call.arguments[@"request"]
+                                            nativeAdFactory:(id)factory
+                                              customOptions:call.arguments[@"customOptions"]
+                                         rootViewController:rootController];
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method isEqualToString:@"loadInterstitialAd"]) {
-    FLTNewInterstitialAd *ad =
-        [[FLTNewInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                               request:call.arguments[@"request"]
-                                    rootViewController:rootController];
+    FLTInterstitialAd *ad = [[FLTInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                                                request:call.arguments[@"request"]
+                                                     rootViewController:rootController];
 
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedAd"]) {
-    FLTNewRewardedAd *ad = [[FLTNewRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                              request:call.arguments[@"request"]
-                                                   rootViewController:rootController];
+    FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                                        request:call.arguments[@"request"]
+                                             rootViewController:rootController];
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method isEqualToString:@"disposeAd"]) {

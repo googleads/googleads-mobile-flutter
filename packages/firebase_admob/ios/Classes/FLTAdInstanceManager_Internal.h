@@ -7,8 +7,8 @@
 #import "FLTFirebaseAdMobReaderWriter_Internal.h"
 
 @protocol FLTAd;
-@class FLTNewNativeAd;
-@class FLTNewRewardedAd;
+@class FLTNativeAd;
+@class FLTRewardedAd;
 @class FLTRewardItem;
 @class FLTLoadAdError;
 
@@ -22,12 +22,12 @@
 - (void)showAdWithID:(NSNumber *_Nonnull)adId;
 - (void)onAdLoaded:(id<FLTAd> _Nonnull)ad;
 - (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(FLTLoadAdError *_Nonnull)error;
-- (void)onNativeAdClicked:(FLTNewNativeAd *_Nonnull)ad;
-- (void)onNativeAdImpression:(FLTNewNativeAd *_Nonnull)ad;
+- (void)onNativeAdClicked:(FLTNativeAd *_Nonnull)ad;
+- (void)onNativeAdImpression:(FLTNativeAd *_Nonnull)ad;
 - (void)onAdOpened:(id<FLTAd> _Nonnull)ad;
 - (void)onApplicationExit:(id<FLTAd> _Nonnull)ad;
 - (void)onAdClosed:(id<FLTAd> _Nonnull)ad;
-- (void)onRewardedAdUserEarnedReward:(FLTNewRewardedAd *_Nonnull)ad
+- (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward;
 @end
 

@@ -18,7 +18,7 @@ import java.util.Locale;
 
 /** Displays loaded FlutterAds for an AdInstanceManager */
 final class FirebaseAdMobViewFactory extends PlatformViewFactory {
-  private final AdInstanceManager manager;
+  @NonNull private final AdInstanceManager manager;
 
   private static class ErrorTextView implements PlatformView {
     private final TextView textView;

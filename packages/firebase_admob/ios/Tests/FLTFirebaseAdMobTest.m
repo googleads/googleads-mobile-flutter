@@ -25,13 +25,13 @@
 
 - (void)testLoadAd {
   FLTAdSize *size = [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)];
-  FLTNewBannerAd *bannerAd =
-      [[FLTNewBannerAd alloc] initWithAdUnitId:@"testId"
-                                          size:size
-                                       request:[[FLTAdRequest alloc] init]
-                            rootViewController:OCMClassMock([UIViewController class])];
+  FLTBannerAd *bannerAd =
+      [[FLTBannerAd alloc] initWithAdUnitId:@"testId"
+                                       size:size
+                                    request:[[FLTAdRequest alloc] init]
+                         rootViewController:OCMClassMock([UIViewController class])];
 
-  FLTNewBannerAd *mockBannerAd = OCMPartialMock(bannerAd);
+  FLTBannerAd *mockBannerAd = OCMPartialMock(bannerAd);
   OCMStub([mockBannerAd load]);
 
   [_manager loadAd:bannerAd adId:@(1)];
@@ -41,14 +41,114 @@
   XCTAssertEqualObjects([_manager adIdFor:bannerAd], @(1));
 }
 
+- (void)testLoadInterstitialAd {
+  FLTAdRequest *request = [[FLTAdRequest alloc] init];
+  request.keywords = @[ @"apple" ];
+  FLTInterstitialAd *ad =
+      [[FLTInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                          request:request
+                               rootViewController:OCMClassMock([UIViewController class])];
+
+  FLTInterstitialAd *mockInterstitialAd = OCMPartialMock(ad);
+  GADInterstitial *mockInterstitial = OCMClassMock([GADInterstitial class]);
+  OCMStub([mockInterstitialAd interstitial]).andReturn(mockInterstitial);
+  [mockInterstitialAd load];
+
+  OCMVerify([mockInterstitial loadRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
+                                GADRequest *requestArg = obj;
+                                return [requestArg.keywords isEqualToArray:@[ @"apple" ]];
+                              }]]);
+}
+
+- (void)testLoadBannerAd {
+  FLTAdRequest *request = [[FLTAdRequest alloc] init];
+  request.keywords = @[ @"apple" ];
+  FLTBannerAd *ad = [[FLTBannerAd alloc] initWithAdUnitId:@"testId"
+                                                     size:[[FLTAdSize alloc] initWithWidth:@(1)
+                                                                                    height:@(2)]
+                                                  request:request
+                                       rootViewController:OCMClassMock([UIViewController class])];
+
+  FLTBannerAd *mockBannerAd = OCMPartialMock(ad);
+  GADBannerView *mockView = OCMClassMock([GADBannerView class]);
+  OCMStub([mockBannerAd bannerView]).andReturn(mockView);
+  [mockBannerAd load];
+
+  OCMVerify([mockView loadRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
+                        GADRequest *requestArg = obj;
+                        return [requestArg.keywords isEqualToArray:@[ @"apple" ]];
+                      }]]);
+}
+
+- (void)testLoadPublisherBannerAd {
+  FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+  request.keywords = @[ @"apple" ];
+  FLTPublisherBannerAd *ad = [[FLTPublisherBannerAd alloc]
+        initWithAdUnitId:@"testId"
+                   sizes:@[ [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)] ]
+                 request:request
+      rootViewController:OCMClassMock([UIViewController class])];
+
+  FLTPublisherBannerAd *mockBannerAd = OCMPartialMock(ad);
+  DFPBannerView *mockView = OCMClassMock([DFPBannerView class]);
+  OCMStub([mockBannerAd bannerView]).andReturn(mockView);
+  [mockBannerAd load];
+
+  OCMVerify([mockView loadRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
+                        GADRequest *requestArg = obj;
+                        return [requestArg.keywords isEqualToArray:@[ @"apple" ]];
+                      }]]);
+}
+
+- (void)testLoadNativeAd {
+  FLTAdRequest *request = [[FLTAdRequest alloc] init];
+  request.keywords = @[ @"apple" ];
+  FLTNativeAd *ad =
+      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                    request:request
+                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+                              customOptions:nil
+                         rootViewController:OCMClassMock([UIViewController class])];
+
+  FLTNativeAd *mockNativeAd = OCMPartialMock(ad);
+  GADAdLoader *mockLoader = OCMClassMock([GADAdLoader class]);
+  OCMStub([mockNativeAd adLoader]).andReturn(mockLoader);
+  [mockNativeAd load];
+
+  OCMVerify([mockLoader loadRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
+                          GADRequest *requestArg = obj;
+                          return [requestArg.keywords isEqualToArray:@[ @"apple" ]];
+                        }]]);
+}
+
+- (void)testLoadRewardedAd {
+  FLTAdRequest *request = [[FLTAdRequest alloc] init];
+  request.keywords = @[ @"apple" ];
+  FLTRewardedAd *ad =
+      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                      request:request
+                           rootViewController:OCMClassMock([UIViewController class])];
+
+  FLTRewardedAd *mockFltAd = OCMPartialMock(ad);
+  GADRewardedAd *mockRewardedAd = OCMClassMock([GADRewardedAd class]);
+  OCMStub([mockFltAd rewardedAd]).andReturn(mockRewardedAd);
+  [mockFltAd load];
+
+  OCMVerify([mockRewardedAd loadRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
+                              GADRequest *requestArg = obj;
+                              return [requestArg.keywords isEqualToArray:@[ @"apple" ]];
+                            }]
+                      completionHandler:[OCMArg any]]);
+}
+
 - (void)testDisposeAd {
   FLTAdSize *size = [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)];
-  FLTNewBannerAd *bannerAd =
-      [[FLTNewBannerAd alloc] initWithAdUnitId:@"testId"
-                                          size:size
-                                       request:[[FLTAdRequest alloc] init]
-                            rootViewController:OCMClassMock([UIViewController class])];
-  FLTNewBannerAd *mockBannerAd = OCMPartialMock(bannerAd);
+  FLTBannerAd *bannerAd =
+      [[FLTBannerAd alloc] initWithAdUnitId:@"testId"
+                                       size:size
+                                    request:[[FLTAdRequest alloc] init]
+                         rootViewController:OCMClassMock([UIViewController class])];
+  FLTBannerAd *mockBannerAd = OCMPartialMock(bannerAd);
   OCMStub([mockBannerAd load]);
 
   [_manager loadAd:bannerAd adId:@(1)];
@@ -59,12 +159,12 @@
 }
 
 - (void)testOnAdLoaded {
-  FLTNewNativeAd *ad =
-      [[FLTNewNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
-                                       request:[[FLTAdRequest alloc] init]
-                               nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-                                 customOptions:nil
-                            rootViewController:OCMClassMock([UIViewController class])];
+  FLTNativeAd *ad =
+      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                    request:[[FLTAdRequest alloc] init]
+                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+                              customOptions:nil
+                         rootViewController:OCMClassMock([UIViewController class])];
   [_manager loadAd:ad adId:@(1)];
 
   [_manager onAdLoaded:ad];
@@ -76,12 +176,12 @@
 }
 
 - (void)testOnAdFailedToLoad {
-  FLTNewNativeAd *ad =
-      [[FLTNewNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
-                                       request:[[FLTAdRequest alloc] init]
-                               nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-                                 customOptions:nil
-                            rootViewController:OCMClassMock([UIViewController class])];
+  FLTNativeAd *ad =
+      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                    request:[[FLTAdRequest alloc] init]
+                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+                              customOptions:nil
+                         rootViewController:OCMClassMock([UIViewController class])];
   [_manager loadAd:ad adId:@(1)];
 
   FLTLoadAdError *error = [[FLTLoadAdError alloc] initWithCode:@(1)
@@ -99,12 +199,12 @@
 }
 
 - (void)testOnNativeAdClicked {
-  FLTNewNativeAd *ad =
-      [[FLTNewNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
-                                       request:[[FLTAdRequest alloc] init]
-                               nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-                                 customOptions:nil
-                            rootViewController:OCMClassMock([UIViewController class])];
+  FLTNativeAd *ad =
+      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                    request:[[FLTAdRequest alloc] init]
+                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+                              customOptions:nil
+                         rootViewController:OCMClassMock([UIViewController class])];
   [_manager loadAd:ad adId:@(1)];
 
   [_manager onNativeAdClicked:ad];
@@ -118,12 +218,12 @@
 }
 
 - (void)testOnNativeAdImpression {
-  FLTNewNativeAd *ad =
-      [[FLTNewNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
-                                       request:[[FLTAdRequest alloc] init]
-                               nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-                                 customOptions:nil
-                            rootViewController:OCMClassMock([UIViewController class])];
+  FLTNativeAd *ad =
+      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                    request:[[FLTAdRequest alloc] init]
+                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+                              customOptions:nil
+                         rootViewController:OCMClassMock([UIViewController class])];
   [_manager loadAd:ad adId:@(1)];
 
   [_manager onNativeAdImpression:ad];
@@ -137,12 +237,12 @@
 }
 
 - (void)testOnAdOpened {
-  FLTNewNativeAd *ad =
-      [[FLTNewNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
-                                       request:[[FLTAdRequest alloc] init]
-                               nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-                                 customOptions:nil
-                            rootViewController:OCMClassMock([UIViewController class])];
+  FLTNativeAd *ad =
+      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                    request:[[FLTAdRequest alloc] init]
+                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+                              customOptions:nil
+                         rootViewController:OCMClassMock([UIViewController class])];
   [_manager loadAd:ad adId:@(1)];
 
   [_manager onAdOpened:ad];
@@ -154,12 +254,12 @@
 }
 
 - (void)testOnApplicationExit {
-  FLTNewNativeAd *ad =
-      [[FLTNewNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
-                                       request:[[FLTAdRequest alloc] init]
-                               nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-                                 customOptions:nil
-                            rootViewController:OCMClassMock([UIViewController class])];
+  FLTNativeAd *ad =
+      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                    request:[[FLTAdRequest alloc] init]
+                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+                              customOptions:nil
+                         rootViewController:OCMClassMock([UIViewController class])];
   [_manager loadAd:ad adId:@(1)];
 
   [_manager onApplicationExit:ad];
@@ -173,12 +273,12 @@
 }
 
 - (void)testOnAdClosed {
-  FLTNewNativeAd *ad =
-      [[FLTNewNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
-                                       request:[[FLTAdRequest alloc] init]
-                               nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-                                 customOptions:nil
-                            rootViewController:OCMClassMock([UIViewController class])];
+  FLTNativeAd *ad =
+      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                    request:[[FLTAdRequest alloc] init]
+                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+                              customOptions:nil
+                         rootViewController:OCMClassMock([UIViewController class])];
   [_manager loadAd:ad adId:@(1)];
 
   [_manager onAdClosed:ad];
@@ -190,10 +290,10 @@
 }
 
 - (void)testOnRewardedAdUserEarnedReward {
-  FLTNewRewardedAd *ad =
-      [[FLTNewRewardedAd alloc] initWithAdUnitId:@"testId"
-                                         request:[[FLTAdRequest alloc] init]
-                              rootViewController:OCMClassMock([UIViewController class])];
+  FLTRewardedAd *ad =
+      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                      request:[[FLTAdRequest alloc] init]
+                           rootViewController:OCMClassMock([UIViewController class])];
   [_manager loadAd:ad adId:@(1)];
 
   [_manager onRewardedAdUserEarnedReward:ad

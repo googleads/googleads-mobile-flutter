@@ -62,52 +62,52 @@ typedef NS_ENUM(NSInteger, FLTAdGender) {
 - (void)show;
 @end
 
-// TODO(bparrishMines): Change name to FLTBannerAd once refactor is finished.
-@interface FLTNewBannerAd : NSObject <FLTAd, FlutterPlatformView, GADBannerViewDelegate>
+@interface FLTBannerAd : NSObject <FLTAd, FlutterPlatformView, GADBannerViewDelegate>
 @property(weak) FLTAdInstanceManager *_Nullable manager;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                      size:(FLTAdSize *_Nonnull)size
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
+- (GADBannerView *_Nonnull)bannerView;
 @end
 
 /**
  * Wrapper around `DFPBannerAd` for the Firebase AdMob Plugin.
  */
-@interface FLTPublisherBannerAd : FLTNewBannerAd <DFPBannerAdLoaderDelegate>
+@interface FLTPublisherBannerAd : FLTBannerAd <DFPBannerAdLoaderDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                     sizes:(NSArray<FLTAdSize *> *_Nonnull)sizes
                                   request:(FLTPublisherAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
 @end
 
-// TODO(cg021): Change name to FLTInterstitialAd once refactor is finished.
-@interface FLTNewInterstitialAd : NSObject <FLTAd, FLTAdWithoutView, GADInterstitialDelegate>
+@interface FLTInterstitialAd : NSObject <FLTAd, FLTAdWithoutView, GADInterstitialDelegate>
 @property(weak) FLTAdInstanceManager *_Nullable manager;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
+- (GADInterstitial *_Nonnull)interstitial;
 @end
 
-// TODO(cg021): Change name to FLTRewardedAd once refactor is finished.
-@interface FLTNewRewardedAd : NSObject <FLTAd, FLTAdWithoutView, GADRewardedAdDelegate>
+@interface FLTRewardedAd : NSObject <FLTAd, FLTAdWithoutView, GADRewardedAdDelegate>
 @property(weak) FLTAdInstanceManager *_Nullable manager;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
+- (GADRewardedAd *_Nonnull)rewardedAd;
 @end
 
-// TODO(bparrishMines): Change name to FLTNativeAd once refactor is finished.
-@interface FLTNewNativeAd : NSObject <FLTAd,
-                                      FlutterPlatformView,
-                                      GADUnifiedNativeAdDelegate,
-                                      GADUnifiedNativeAdLoaderDelegate>
+@interface FLTNativeAd : NSObject <FLTAd,
+                                   FlutterPlatformView,
+                                   GADUnifiedNativeAdDelegate,
+                                   GADUnifiedNativeAdLoaderDelegate>
 @property(weak) FLTAdInstanceManager *_Nullable manager;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                           nativeAdFactory:(NSObject<FLTNativeAdFactory> *_Nonnull)nativeAdFactory
                             customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
+- (GADAdLoader *_Nonnull)adLoader;
 @end
 
 @interface FLTRewardItem : NSObject

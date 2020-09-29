@@ -22,8 +22,8 @@ import java.util.Map;
 class AdInstanceManager {
   @NonNull Activity activity;
 
-  private final Map<Integer, FlutterAd> ads;
-  private final MethodChannel channel;
+  @NonNull private final Map<Integer, FlutterAd> ads;
+  @NonNull private final MethodChannel channel;
 
   AdInstanceManager(@NonNull Activity activity, @NonNull BinaryMessenger binaryMessenger) {
     this.activity = activity;

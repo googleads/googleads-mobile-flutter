@@ -30,8 +30,8 @@
  * `GADUnifiedNativeAdView`. Nullable.
  * @return a `GADUnifiedNativeAdView` that is overlaid on top of the FlutterView.
  */
-- (GADUnifiedNativeAdView *)createNativeAd:(GADUnifiedNativeAd *)nativeAd
-                             customOptions:(NSDictionary *)customOptions;
+- (GADUnifiedNativeAdView *_Nullable)createNativeAd:(GADUnifiedNativeAd *_Nonnull)nativeAd
+                                      customOptions:(NSDictionary *_Nullable)customOptions;
 @end
 
 /**
@@ -48,9 +48,9 @@
  * @param nativeAdFactory creates `GADUnifiedNativeAdView`s when a Native Ad is created in Dart.
  * @return whether the factoryId is unique and the nativeAdFactory was successfully added.
  */
-+ (BOOL)registerNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
-                      factoryId:(NSString *)factoryId
-                nativeAdFactory:(NSObject<FLTNativeAdFactory> *)nativeAdFactory;
++ (BOOL)registerNativeAdFactory:(id<FlutterPluginRegistry> _Nonnull)registry
+                      factoryId:(NSString *_Nonnull)factoryId
+                nativeAdFactory:(id<FLTNativeAdFactory> _Nonnull)nativeAdFactory;
 
 /**
  * Unregisters a `FLTNativeAdFactory` used to create `GADUnifiedNativeAdView`s from a Native Ad
@@ -62,6 +62,7 @@
  * @return the previous `FLTNativeAdFactory` associated with this factoryId, or null if there was
  * none for this factoryId.
  */
-+ (id<FLTNativeAdFactory>)unregisterNativeAdFactory:(NSObject<FlutterPluginRegistry> *)registry
-                                          factoryId:(NSString *)factoryId;
++ (id<FLTNativeAdFactory> _Nullable)unregisterNativeAdFactory:
+                                        (id<FlutterPluginRegistry> _Nonnull)registry
+                                                    factoryId:(NSString *_Nonnull)factoryId;
 @end

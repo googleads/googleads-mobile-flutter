@@ -77,12 +77,12 @@
                }];
 }
 
-- (void)onNativeAdClicked:(FLTNewNativeAd *_Nonnull)ad {
+- (void)onNativeAdClicked:(FLTNativeAd *_Nonnull)ad {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdClicked"}];
 }
 
-- (void)onNativeAdImpression:(FLTNewNativeAd *_Nonnull)ad {
+- (void)onNativeAdImpression:(FLTNativeAd *_Nonnull)ad {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdImpression"}];
 }
@@ -102,7 +102,7 @@
                arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdClosed"}];
 }
 
-- (void)onRewardedAdUserEarnedReward:(FLTNewRewardedAd *_Nonnull)ad
+- (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{

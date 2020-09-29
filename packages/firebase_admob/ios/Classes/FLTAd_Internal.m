@@ -30,10 +30,13 @@
   GADRequest *request = [GADRequest request];
   request.keywords = _keywords;
   request.contentURL = _contentURL;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   request.birthday = _birthday;
-  request.gender = _gender;
+  request.gender = (NSUInteger)_gender;
   [request tagForChildDirectedTreatment:_childDirected];
   request.testDevices = _testDevices;
+#pragma clang diagnostic pop
   if (_nonPersonalizedAds) {
     GADExtras *extras = [[GADExtras alloc] init];
     extras.additionalParameters = @{@"npa" : @"1"};
@@ -85,7 +88,7 @@
 }
 @end
 
-@implementation FLTNewBannerAd {
+@implementation FLTBannerAd {
   GADBannerView *_bannerView;
   FLTAdRequest *_adRequest;
 }
@@ -99,14 +102,18 @@
     _adRequest = request;
     _bannerView = [[GADBannerView alloc] initWithAdSize:size.size];
     _bannerView.adUnitID = adUnitId;
-    _bannerView.rootViewController = rootViewController;
+    self.bannerView.rootViewController = rootViewController;
   }
   return self;
 }
 
+- (GADBannerView *_Nonnull)bannerView {
+  return _bannerView;
+}
+
 - (void)load {
-  _bannerView.delegate = self;
-  [_bannerView loadRequest:[_adRequest asGADRequest]];
+  self.bannerView.delegate = self;
+  [self.bannerView loadRequest:_adRequest.asGADRequest];
 }
 
 - (void)adView:(GADBannerView *)adView didFailToReceiveAdWithError:(GADRequestError *)error {
@@ -130,7 +137,7 @@
 }
 
 - (nonnull UIView *)view {
-  return _bannerView;
+  return self.bannerView;
 }
 @end
 
@@ -160,12 +167,16 @@
   return self;
 }
 
+- (GADBannerView *_Nonnull)bannerView {
+  return _bannerView;
+}
+
 - (void)load {
-  [_bannerView loadRequest:[_adRequest asDFPRequest]];
+  [self.bannerView loadRequest:_adRequest.asDFPRequest];
 }
 
 - (nonnull UIView *)view {
-  return _bannerView;
+  return self.bannerView;
 }
 
 - (void)adLoader:(nonnull GADAdLoader *)adLoader
@@ -183,7 +194,7 @@
 }
 @end
 
-@implementation FLTNewInterstitialAd {
+@implementation FLTInterstitialAd {
   GADInterstitial *_interstitialView;
   FLTAdRequest *_adRequest;
   UIViewController *_rootViewController;
@@ -196,19 +207,23 @@
   if (self) {
     _adRequest = request;
     _interstitialView = [[GADInterstitial alloc] initWithAdUnitID:adUnitId];
-    _interstitialView.delegate = self;
+    self.interstitial.delegate = self;
     _rootViewController = rootViewController;
   }
   return self;
 }
 
+- (GADInterstitial *_Nonnull)interstitial {
+  return _interstitialView;
+}
+
 - (void)load {
-  [_interstitialView loadRequest:[_adRequest asGADRequest]];
+  [self.interstitial loadRequest:_adRequest.asGADRequest];
 }
 
 - (void)show {
-  if (_interstitialView.isReady) {
-    [_interstitialView presentFromRootViewController:_rootViewController];
+  if (self.interstitial.isReady) {
+    [self.interstitial presentFromRootViewController:_rootViewController];
   } else {
     NSLog(@"InterstitialAd failed to show because the ad was not ready.");
   }
@@ -235,7 +250,7 @@
 }
 @end
 
-@implementation FLTNewRewardedAd {
+@implementation FLTRewardedAd {
   GADRewardedAd *_rewardedView;
   FLTAdRequest *_adRequest;
   UIViewController *_rootViewController;
@@ -253,21 +268,25 @@
   return self;
 }
 
+- (GADRewardedAd *_Nonnull)rewardedAd {
+  return _rewardedView;
+}
+
 - (void)load {
-  [_rewardedView loadRequest:[_adRequest asGADRequest]
-           completionHandler:^(GADRequestError *_Nullable error) {
-             if (error) {
-               [self->_manager onAdFailedToLoad:self
-                                          error:[[FLTLoadAdError alloc] initWithError:error]];
-             } else {
-               [self->_manager onAdLoaded:self];
-             }
-           }];
+  [self.rewardedAd loadRequest:_adRequest.asGADRequest
+             completionHandler:^(GADRequestError *_Nullable error) {
+               if (error) {
+                 [self->_manager onAdFailedToLoad:self
+                                            error:[[FLTLoadAdError alloc] initWithError:error]];
+               } else {
+                 [self->_manager onAdLoaded:self];
+               }
+             }];
 }
 
 - (void)show {
-  if (_rewardedView.isReady) {
-    [_rewardedView presentFromRootViewController:_rootViewController delegate:self];
+  if (self.rewardedAd.isReady) {
+    [self.rewardedAd presentFromRootViewController:_rootViewController delegate:self];
   } else {
     NSLog(@"RewardedAd failed to show because the ad was not ready.");
   }
@@ -289,8 +308,9 @@
 }
 @end
 
-@implementation FLTNewNativeAd {
+@implementation FLTNativeAd {
   NSString *_adUnitId;
+  FLTAdRequest *_adRequest;
   NSObject<FLTNativeAdFactory> *_nativeAdFactory;
   NSDictionary<NSString *, id> *_customOptions;
   GADUnifiedNativeAdView *_view;
@@ -305,19 +325,24 @@
   self = [super init];
   if (self) {
     _adUnitId = adUnitId;
+    _adRequest = request;
     _nativeAdFactory = nativeAdFactory;
     _customOptions = customOptions;
     _adLoader = [[GADAdLoader alloc] initWithAdUnitID:_adUnitId
                                    rootViewController:rootViewController
                                               adTypes:@[ kGADAdLoaderAdTypeUnifiedNative ]
                                               options:@[]];
-    _adLoader.delegate = self;
+    self.adLoader.delegate = self;
   }
   return self;
 }
 
+- (GADAdLoader *_Nonnull)adLoader {
+  return _adLoader;
+}
+
 - (void)load {
-  [_adLoader loadRequest:[GADRequest request]];
+  [self.adLoader loadRequest:_adRequest.asGADRequest];
 }
 
 - (void)adLoader:(GADAdLoader *)adLoader didReceiveUnifiedNativeAd:(GADUnifiedNativeAd *)nativeAd {
