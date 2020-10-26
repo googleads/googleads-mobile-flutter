@@ -91,7 +91,12 @@
   UIViewController *rootController =
       UIApplication.sharedApplication.delegate.window.rootViewController;
 
-  if ([call.method isEqualToString:@"loadBannerAd"]) {
+  if ([call.method isEqualToString:@"MobileAds#initialize"]) {
+    [[GADMobileAds sharedInstance]
+        startWithCompletionHandler:^(GADInitializationStatus *_Nonnull status) {
+          result([[FLTInitializationStatus alloc] initWithStatus:status]);
+        }];
+  } else if ([call.method isEqualToString:@"loadBannerAd"]) {
     FLTBannerAd *ad = [[FLTBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                        size:call.arguments[@"size"]
                                                     request:call.arguments[@"request"]
@@ -143,6 +148,8 @@
   } else if ([call.method isEqualToString:@"showAdWithoutView"]) {
     [_manager showAdWithID:call.arguments[@"adId"]];
     result(nil);
+  } else {
+    result(FlutterMethodNotImplemented);
   }
 }
 @end

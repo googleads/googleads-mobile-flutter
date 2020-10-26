@@ -3,3 +3,4 @@
 // found in the LICENSE file.
 
 export 'src/firebase_admob.dart';
+export 'src/mobile_ads.dart';

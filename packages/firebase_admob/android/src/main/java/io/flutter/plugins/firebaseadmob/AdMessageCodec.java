@@ -24,6 +24,9 @@ final class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_REWARD_ITEM = (byte) 132;
   private static final byte VALUE_LOAD_AD_ERROR = (byte) 133;
   private static final byte VALUE_PUBLISHER_AD_REQUEST = (byte) 134;
+  private static final byte VALUE_INITIALIZATION_STATE = (byte) 135;
+  private static final byte VALUE_ADAPTER_STATUS = (byte) 136;
+  private static final byte VALUE_INITIALIZATION_STATUS = (byte) 137;
 
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
@@ -67,6 +70,30 @@ final class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getContentUrl());
       writeValue(stream, request.getCustomTargeting());
       writeValue(stream, request.getCustomTargetingLists());
+    } else if (value instanceof FlutterAdapterStatus.AdapterInitializationState) {
+      stream.write(VALUE_INITIALIZATION_STATE);
+      final FlutterAdapterStatus.AdapterInitializationState state =
+          (FlutterAdapterStatus.AdapterInitializationState) value;
+      switch (state) {
+        case NOT_READY:
+          writeValue(stream, "notReady");
+          return;
+        case READY:
+          writeValue(stream, "ready");
+          return;
+      }
+      final String message = String.format("Unable to handle state: %s", state);
+      throw new IllegalArgumentException(message);
+    } else if (value instanceof FlutterAdapterStatus) {
+      stream.write(VALUE_ADAPTER_STATUS);
+      final FlutterAdapterStatus status = (FlutterAdapterStatus) value;
+      writeValue(stream, status.state);
+      writeValue(stream, status.description);
+      writeValue(stream, status.latency);
+    } else if (value instanceof FlutterInitializationStatus) {
+      stream.write(VALUE_INITIALIZATION_STATUS);
+      final FlutterInitializationStatus status = (FlutterInitializationStatus) value;
+      writeValue(stream, status.adapterStatuses);
     } else {
       super.writeValue(stream, value);
     }
@@ -112,6 +139,24 @@ final class AdMessageCodec extends StandardMessageCodec {
             .setCustomTargetingLists(
                 (Map<String, List<String>>) readValueOfType(buffer.get(), buffer))
             .build();
+      case VALUE_INITIALIZATION_STATE:
+        final String state = (String) readValueOfType(buffer.get(), buffer);
+        switch (state) {
+          case "notReady":
+            return FlutterAdapterStatus.AdapterInitializationState.NOT_READY;
+          case "ready":
+            return FlutterAdapterStatus.AdapterInitializationState.READY;
+        }
+        final String message = String.format("Unable to handle state: %s", state);
+        throw new IllegalArgumentException(message);
+      case VALUE_ADAPTER_STATUS:
+        return new FlutterAdapterStatus(
+            (FlutterAdapterStatus.AdapterInitializationState) readValueOfType(buffer.get(), buffer),
+            (String) readValueOfType(buffer.get(), buffer),
+            (Number) readValueOfType(buffer.get(), buffer));
+      case VALUE_INITIALIZATION_STATUS:
+        return new FlutterInitializationStatus(
+            (Map<String, FlutterAdapterStatus>) readValueOfType(buffer.get(), buffer));
       default:
         return super.readValueOfType(type, buffer);
     }

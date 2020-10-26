@@ -58,8 +58,11 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    createInterstitialAd();
-    createRewardedAd();
+    MobileAds.instance.initialize().then((InitializationStatus status) {
+      print('Initialization done: ${status.adapterStatuses}');
+      createInterstitialAd();
+      createRewardedAd();
+    });
   }
 
   void createInterstitialAd() {

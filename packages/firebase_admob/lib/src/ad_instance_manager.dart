@@ -8,6 +8,7 @@
 
 import 'dart:async';
 
+import 'package:firebase_admob/src/mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -242,6 +243,9 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueRewardItem = 132;
   static const int _valueLoadAdError = 133;
   static const int _valuePublisherAdRequest = 134;
+  static const int _valueInitializationState = 135;
+  static const int _valueAdapterStatus = 136;
+  static const int _valueInitializationStatus = 137;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -280,6 +284,17 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.contentUrl);
       writeValue(buffer, value.customTargeting);
       writeValue(buffer, value.customTargetingLists);
+    } else if (value is AdapterInitializationState) {
+      buffer.putUint8(_valueInitializationState);
+      writeValue(buffer, describeEnum(value));
+    } else if (value is AdapterStatus) {
+      buffer.putUint8(_valueAdapterStatus);
+      writeValue(buffer, value.state);
+      writeValue(buffer, value.description);
+      writeValue(buffer, value.latency);
+    } else if (value is InitializationStatus) {
+      buffer.putUint8(_valueInitializationStatus);
+      writeValue(buffer, value.adapterStatuses);
     } else {
       super.writeValue(buffer, value);
     }
@@ -337,6 +352,33 @@ class AdMessageCodec extends StandardMessageCodec {
           customTargetingLists: _deepMapCast<String>(
             readValueOfType(buffer.getUint8(), buffer),
           ),
+        );
+      case _valueInitializationState:
+        switch (readValueOfType(buffer.getUint8(), buffer)) {
+          case 'notReady':
+            return AdapterInitializationState.notReady;
+          case 'ready':
+            return AdapterInitializationState.ready;
+        }
+        throw ArgumentError();
+      case _valueAdapterStatus:
+        final AdapterInitializationState state =
+            readValueOfType(buffer.getUint8(), buffer);
+        final String description = readValueOfType(buffer.getUint8(), buffer);
+
+        double latency = readValueOfType(buffer.getUint8(), buffer);
+        // Android provides this value as an int in milliseconds while iOS
+        // provides this value as a double in seconds.
+        if (latency != null &&
+            defaultTargetPlatform == TargetPlatform.android) {
+          latency /= 1000;
+        }
+
+        return AdapterStatus(state, description, latency);
+      case _valueInitializationStatus:
+        return InitializationStatus(
+          readValueOfType(buffer.getUint8(), buffer)
+              .cast<String, AdapterStatus>(),
         );
       default:
         return super.readValueOfType(type, buffer);

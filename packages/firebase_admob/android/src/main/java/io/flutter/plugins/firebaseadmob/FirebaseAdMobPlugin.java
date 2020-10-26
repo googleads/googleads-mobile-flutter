@@ -6,9 +6,13 @@ package io.flutter.plugins.firebaseadmob;
 
 import android.app.Activity;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -243,8 +247,18 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   }
 
   @Override
-  public void onMethodCall(MethodCall call, Result result) {
+  public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
     switch (call.method) {
+      case "MobileAds#initialize":
+        MobileAds.initialize(
+            instanceManager.activity,
+            new OnInitializationCompleteListener() {
+              @Override
+              public void onInitializationComplete(InitializationStatus initializationStatus) {
+                result.success(new FlutterInitializationStatus(initializationStatus));
+              }
+            });
+        break;
       case "loadBannerAd":
         final FlutterBannerAd bannerAd =
             new FlutterBannerAd.Builder()
@@ -257,7 +271,6 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
         bannerAd.load();
         result.success(null);
         break;
-
       case "loadNativeAd":
         final String factoryId = call.argument("factoryId");
         final NativeAdFactory factory = nativeAdFactories.get(factoryId);

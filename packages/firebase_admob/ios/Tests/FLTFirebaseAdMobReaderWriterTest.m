@@ -97,4 +97,32 @@
   XCTAssertEqualObjects(decodedError.domain, @"domain");
   XCTAssertEqualObjects(decodedError.message, @"message");
 }
+
+- (void)testEncodeDecodeAdapterStatus {
+  FLTAdapterStatus *status = [[FLTAdapterStatus alloc] init];
+  status.state = @(1);
+  status.statusDescription = @"desc";
+  status.latency = @(23);
+
+  NSData *encodedMessage = [_messageCodec encode:status];
+
+  FLTAdapterStatus *decodedStatus = [_messageCodec decode:encodedMessage];
+  XCTAssertEqualObjects(decodedStatus.state, @(1));
+  XCTAssertEqualObjects(decodedStatus.statusDescription, @"desc");
+  XCTAssertEqualObjects(decodedStatus.latency, @(23));
+}
+
+- (void)testEncodeDecodeInitializationStatus {
+  FLTInitializationStatus *status = [[FLTInitializationStatus alloc] init];
+  status.adapterStatuses = @{@"name" : [[FLTAdapterStatus alloc] init]};
+
+  NSData *encodedMessage = [_messageCodec encode:status];
+
+  FLTInitializationStatus *decodedStatus = [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedStatus.adapterStatuses.count, 1);
+  XCTAssertEqualObjects(decodedStatus.adapterStatuses.allKeys[0], @"name");
+  XCTAssertNil(decodedStatus.adapterStatuses.allValues[0].state);
+  XCTAssertNil(decodedStatus.adapterStatuses.allValues[0].statusDescription);
+  XCTAssertNil(decodedStatus.adapterStatuses.allValues[0].latency);
+}
 @end

@@ -10,9 +10,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdMobFieldAdRequest = 129,
   FLTAdMobFieldDateTime = 130,
   FLTAdMobFieldAdGender = 131,
-  FLTADMobFieldRewardItem = 132,
+  FLTAdMobFieldRewardItem = 132,
   FLTAdMobFieldLoadAdError = 133,
-  FLTADMobFieldPublisherAdRequest = 134,
+  FLTAdMobFieldPublisherAdRequest = 134,
+  FLTAdMobFieldAdapterInitializationState = 135,
+  FLTAdMobFieldAdapterStatus = 136,
+  FLTAdMobFieldInitializationStatus = 137,
 };
 
 @interface FLTFirebaseAdMobReader : FlutterStandardReader
@@ -68,7 +71,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     case FLTAdMobFieldAdGender: {
       return [self readValueOfType:[self readByte]];
     }
-    case FLTADMobFieldRewardItem: {
+    case FLTAdMobFieldRewardItem: {
       return [[FLTRewardItem alloc] initWithAmount:[self readValueOfType:[self readByte]]
                                               type:[self readValueOfType:[self readByte]]];
     }
@@ -77,7 +80,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                                            domain:[self readValueOfType:[self readByte]]
                                           message:[self readValueOfType:[self readByte]]];
     }
-    case FLTADMobFieldPublisherAdRequest: {
+    case FLTAdMobFieldPublisherAdRequest: {
       FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
 
       request.keywords = [self readValueOfType:[self readByte]];
@@ -86,6 +89,30 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.customTargetingLists = [self readValueOfType:[self readByte]];
 
       return request;
+    }
+    case FLTAdMobFieldAdapterInitializationState: {
+      NSString *state = [self readValueOfType:[self readByte]];
+      if (!state) {
+        return nil;
+      } else if ([@"notReady" isEqualToString:state]) {
+        return @(FLTAdapterInitializationStateNotReady);
+      } else if ([@"ready" isEqualToString:state]) {
+        return @(FLTAdapterInitializationStateReady);
+      }
+      NSLog(@"Failed to interpret AdapterInitializationState of: %@", state);
+      return nil;
+    }
+    case FLTAdMobFieldAdapterStatus: {
+      FLTAdapterStatus *status = [[FLTAdapterStatus alloc] init];
+      status.state = [self readValueOfType:[self readByte]];
+      status.statusDescription = [self readValueOfType:[self readByte]];
+      status.latency = [self readValueOfType:[self readByte]];
+      return status;
+    }
+    case FLTAdMobFieldInitializationStatus: {
+      FLTInitializationStatus *status = [[FLTInitializationStatus alloc] init];
+      status.adapterStatuses = [self readValueOfType:[self readByte]];
+      return status;
     }
   }
   return [super readValueOfType:type];
@@ -100,7 +127,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:size.width];
     [self writeValue:size.height];
   } else if ([value isKindOfClass:[FLTPublisherAdRequest class]]) {
-    [self writeByte:FLTADMobFieldPublisherAdRequest];
+    [self writeByte:FLTAdMobFieldPublisherAdRequest];
     FLTPublisherAdRequest *request = value;
     [self writeValue:request.keywords];
     [self writeValue:request.contentURL];
@@ -125,7 +152,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     NSDate *date = value;
     [self writeValue:@([date timeIntervalSince1970] * 1000)];
   } else if ([value isKindOfClass:[FLTRewardItem class]]) {
-    [self writeByte:FLTADMobFieldRewardItem];
+    [self writeByte:FLTAdMobFieldRewardItem];
     FLTRewardItem *item = value;
     [self writeValue:item.amount];
     [self writeValue:item.type];
@@ -135,6 +162,26 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:error.code];
     [self writeValue:error.domain];
     [self writeValue:error.message];
+  } else if ([value isKindOfClass:[FLTAdapterStatus class]]) {
+    [self writeByte:FLTAdMobFieldAdapterStatus];
+    FLTAdapterStatus *status = value;
+    [self writeByte:FLTAdMobFieldAdapterInitializationState];
+    if (!status.state) {
+      [self writeValue:[NSNull null]];
+    } else if (status.state.unsignedLongValue == FLTAdapterInitializationStateNotReady) {
+      [self writeValue:@"notReady"];
+    } else if (status.state.unsignedLongValue == FLTAdapterInitializationStateReady) {
+      [self writeValue:@"ready"];
+    } else {
+      NSLog(@"Failed to interpret AdapterInitializationState of: %@", status.state);
+      [self writeValue:[NSNull null]];
+    }
+    [self writeValue:status.statusDescription];
+    [self writeValue:status.latency];
+  } else if ([value isKindOfClass:[FLTInitializationStatus class]]) {
+    [self writeByte:FLTAdMobFieldInitializationStatus];
+    FLTInitializationStatus *status = value;
+    [self writeValue:status.adapterStatuses];
   } else {
     [super writeValue:value];
   }

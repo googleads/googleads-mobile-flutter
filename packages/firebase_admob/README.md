@@ -82,12 +82,31 @@ You must pass the same value when you initialize the plugin in your Dart code.
 See https://developers.google.com/admob/ios/quick-start#update_your_infoplist for more information
 about configuring `Info.plist` and setting up your App ID.
 
-## Initializing the plugin
-The AdMob plugin must be initialized with the AdMob App ID used in your
-`AndroidManifest.xml`/`GoogleService-info.plist`.
+## Initialize the Mobile Ads SDK
+Before loading ads, have your app initialize the Mobile Ads SDK by calling
+`MobileAds.instance.initialize()` which initializes the SDK and returns a `Future` that finishes
+once initialization is complete (or after a 30-second timeout). This needs to be done only once,
+ideally at app launch. If you're using mediation, wait until the `Future` completes, as this will
+ensure that all mediation adapters are initialized.
 
 ```dart
-FirebaseAdMob.instance.initialize(appId: appId);
+import 'package:firebase_admob/firebase_admob.dart';
+import 'package:flutter/material.dart';
+
+class MyApp extends StatefulWidget {
+  @override
+  MyAppState createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    MobileAds.instance.initialize().then((InitializationStatus status) {
+      // Load ads with mediation.
+   });
+  }
+}
 ```
 
 ## Creating and Loading an Ad
