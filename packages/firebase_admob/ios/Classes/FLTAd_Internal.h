@@ -74,7 +74,7 @@ typedef NS_ENUM(NSInteger, FLTAdGender) {
 /**
  * Wrapper around `DFPBannerAd` for the Firebase AdMob Plugin.
  */
-@interface FLTPublisherBannerAd : FLTBannerAd <DFPBannerAdLoaderDelegate>
+@interface FLTPublisherBannerAd : FLTBannerAd <DFPBannerAdLoaderDelegate, GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                     sizes:(NSArray<FLTAdSize *> *_Nonnull)sizes
                                   request:(FLTPublisherAdRequest *_Nonnull)request

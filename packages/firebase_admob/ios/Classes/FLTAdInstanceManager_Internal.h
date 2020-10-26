@@ -22,6 +22,9 @@
 - (void)showAdWithID:(NSNumber *_Nonnull)adId;
 - (void)onAdLoaded:(id<FLTAd> _Nonnull)ad;
 - (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(FLTLoadAdError *_Nonnull)error;
+- (void)onAppEvent:(id<FLTAd> _Nonnull)ad
+              name:(NSString *_Nullable)name
+              data:(NSString *_Nullable)data;
 - (void)onNativeAdClicked:(FLTNativeAd *_Nonnull)ad;
 - (void)onNativeAdImpression:(FLTNativeAd *_Nonnull)ad;
 - (void)onAdOpened:(id<FLTAd> _Nonnull)ad;

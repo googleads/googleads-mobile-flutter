@@ -224,6 +224,31 @@ public class FirebaseFlutterAdMobTest {
   }
 
   @Test
+  public void flutterAdListener_onAppEvent() {
+    final FlutterBannerAd bannerAd =
+        new FlutterBannerAd.Builder()
+            .setManager(testManager)
+            .setAdUnitId("testId")
+            .setSize(new FlutterAdSize(1, 2))
+            .setRequest(request)
+            .build();
+    testManager.loadAd(bannerAd, 0);
+
+    testManager.onAppEvent(bannerAd, "color", "red");
+
+    final MethodCall call = getLastMethodCall();
+    assertEquals("onAdEvent", call.method);
+    //noinspection rawtypes
+    assertThat(call.arguments, (Matcher) hasEntry("eventName", "onAppEvent"));
+    //noinspection rawtypes
+    assertThat(call.arguments, (Matcher) hasEntry("adId", 0));
+    //noinspection rawtypes
+    assertThat(call.arguments, (Matcher) hasEntry("name", "color"));
+    //noinspection rawtypes
+    assertThat(call.arguments, (Matcher) hasEntry("data", "red"));
+  }
+
+  @Test
   public void flutterAdListener_onApplicationExit() {
     final FlutterBannerAd bannerAd =
         new FlutterBannerAd.Builder()

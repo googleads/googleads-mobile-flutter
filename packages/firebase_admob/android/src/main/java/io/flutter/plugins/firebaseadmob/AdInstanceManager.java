@@ -76,6 +76,15 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
+  void onAppEvent(@NonNull FlutterAd ad, @NonNull String name, @NonNull String data) {
+    Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onAppEvent");
+    arguments.put("name", name);
+    arguments.put("data", data);
+    channel.invokeMethod("onAdEvent", arguments);
+  }
+
   void onNativeAdClicked(@NonNull FlutterNativeAd ad) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));

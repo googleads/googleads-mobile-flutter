@@ -198,6 +198,28 @@
   OCMVerify([_mockMessenger sendOnChannel:@"plugins.flutter.io/firebase_admob" message:data]);
 }
 
+- (void)testOnAppEvent {
+  FLTNativeAd *ad =
+      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                    request:[[FLTAdRequest alloc] init]
+                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+                              customOptions:nil
+                         rootViewController:OCMClassMock([UIViewController class])];
+  [_manager loadAd:ad adId:@(1)];
+
+  [_manager onAppEvent:ad name:@"color" data:@"red"];
+
+  NSData *data = [_methodCodec
+      encodeMethodCall:[FlutterMethodCall methodCallWithMethodName:@"onAdEvent"
+                                                         arguments:@{
+                                                           @"adId" : @1,
+                                                           @"eventName" : @"onAppEvent",
+                                                           @"name" : @"color",
+                                                           @"data" : @"red"
+                                                         }]];
+  OCMVerify([_mockMessenger sendOnChannel:@"plugins.flutter.io/firebase_admob" message:data]);
+}
+
 - (void)testOnNativeAdClicked {
   FLTNativeAd *ad =
       [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"

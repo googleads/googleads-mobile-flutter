@@ -72,6 +72,9 @@ class AdInstanceManager {
       case 'onAdClosed':
         ad.listener?.onAdClosed(ad);
         break;
+      case 'onAppEvent':
+        ad.listener?.onAppEvent(ad, arguments['name'], arguments['data']);
+        break;
       case 'onRewardedAdUserEarnedReward':
         assert(arguments['rewardItem'] != null);
         ad.listener?.onRewardedAdUserEarnedReward(ad, arguments['rewardItem']);

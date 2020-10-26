@@ -222,6 +222,7 @@ class AdListener {
     this.onApplicationExit,
     this.onAdClosed,
     this.onRewardedAdUserEarnedReward,
+    this.onAppEvent,
   });
 
   /// Called when an ad is successfully received.
@@ -229,6 +230,9 @@ class AdListener {
 
   /// Called when an ad request failed.
   final void Function(Ad ad, LoadAdError error) onAdFailedToLoad;
+
+  /// Called when an app event is received.
+  final void Function(Ad ad, String name, String data) onAppEvent;
 
   /// Called when a click is recorded for a [NativeAd].
   final void Function(NativeAd ad) onNativeAdClicked;

@@ -77,6 +77,16 @@
                }];
 }
 
+- (void)onAppEvent:(id<FLTAd> _Nonnull)ad name:(NSString *)name data:(NSString *)data {
+  [_channel invokeMethod:@"onAdEvent"
+               arguments:@{
+                 @"adId" : [self adIdFor:ad],
+                 @"eventName" : @"onAppEvent",
+                 @"name" : name,
+                 @"data" : data
+               }];
+}
+
 - (void)onNativeAdClicked:(FLTNativeAd *_Nonnull)ad {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdClicked"}];

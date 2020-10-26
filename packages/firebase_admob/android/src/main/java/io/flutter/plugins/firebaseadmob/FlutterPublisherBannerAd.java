@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.doubleclick.AppEventListener;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import io.flutter.plugin.platform.PlatformView;
 import java.util.List;
@@ -84,6 +85,13 @@ class FlutterPublisherBannerAd extends FlutterAd implements PlatformView {
   void load() {
     view = new PublisherAdView(manager.activity);
     view.setAdUnitId(adUnitId);
+    view.setAppEventListener(
+        new AppEventListener() {
+          @Override
+          public void onAppEvent(String name, String data) {
+            manager.onAppEvent(FlutterPublisherBannerAd.this, name, data);
+          }
+        });
 
     final AdSize[] allSizes = new AdSize[sizes.size()];
     for (int i = 0; i < sizes.size(); i++) {

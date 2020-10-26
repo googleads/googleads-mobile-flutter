@@ -135,7 +135,11 @@
 - (void)adViewDidReceiveAd:(GADBannerView *)adView {
   [_manager onAdLoaded:self];
 }
-
+- (void)adView:(nonnull GADBannerView *)banner
+    didReceiveAppEvent:(nonnull NSString *)name
+              withInfo:(nullable NSString *)info {
+  [_manager onAppEvent:self name:name data:info];
+}
 - (nonnull UIView *)view {
   return self.bannerView;
 }
@@ -156,6 +160,7 @@
     _bannerView = [[DFPBannerView alloc] initWithAdSize:sizes[0].size];
     _bannerView.adUnitID = adUnitId;
     _bannerView.rootViewController = rootViewController;
+    _bannerView.appEventDelegate = self;
     _bannerView.delegate = self;
 
     NSMutableArray<NSValue *> *validAdSizes = [NSMutableArray arrayWithCapacity:sizes.count];
