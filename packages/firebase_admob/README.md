@@ -352,6 +352,40 @@ myRewardedAd.load();
 See section **Displaying an Ad** to see how to show the ad in your app and section
 **AdRequest Info and Ad Event Listeners** to see additional parameters.
 
+## Ad Manager
+
+This plugin also contains support for ads using [Google Ad Manager](https://admanager.google.com/home/).
+Below are all supported Ad Manager ad types.
+
+### PublisherBanner
+
+Instantiating a `PublisherBannerAd` requires at least an `adUnitId`, one `AdSize`, a
+`PublisherAdRequest`, and an `AdListener` as seen below. When testing, you should always use
+[test ads](https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads) and switch
+to an ad unit id from your Ad Manager account when releasing.
+
+```dart
+final PublisherBannerAd myBanner = PublisherBannerAd(
+  // Replace the adUnitId with an ad unit id from the Ad Manager dashboard.
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/ios/test-ads
+  adUnitId: '/6499/example/banner',
+  sizes: <AdSize>[AdSize.banner],
+  request: PublisherAdRequest(),
+  listener: AdListener(),
+);
+```
+
+After a `PublisherBannerAd` is instantiated, you must call `load()` before it can be shown on the
+screen.
+
+```dart
+myBanner.load();
+```
+
+See section **Displaying an Ad** to see how to show the ad in your app and section
+**AdRequest Info and Ad Event Listeners** to see additional parameters.
+
 ## Displaying an Ad
 
 Each ad format can be displayed using at least one of two methods. **Overlay** and **Widget**. This
@@ -396,9 +430,9 @@ look similar to:
 
 An ad that is displayed as a **Widget** is displayed as a typical Flutter `Widget` and can be added
 to the Flutter widget tree. This is only supported by ads that don't cover an entire screen, such as
-`BannerAd` and `NativeAd`. To display one of these ads as a widget, you must instantiate an
-`AdWidget` with a supported ad after calling. You can create the widget before calling `load()`, but
-`load()` must be called before adding it to the widget tree.
+`BannerAd`, `PublisherBannerAd`, and `NativeAd`. To display one of these ads as a widget, you must
+instantiate an `AdWidget` with a supported ad after calling `load()`. You can create the widget
+before calling `load()`, but `load()` must be called before adding it to the widget tree.
 
 ```dart
 final AdWidget adWidget = AdWidget(ad: myBanner);
@@ -425,7 +459,7 @@ widget tree or in the `AdListener.onAdFailedToLoad` callback.
 ## AdRequest Info and Ad Event Listeners
 
 `BannerAd`s, `InterstitialAd`s, `RewardedAd`s and `NativeAd`s can also be configured with targeting
-information a an `AdListener` below.
+information and an `AdListener` as shown below.
 
 ```dart
 final AdRequest request = AdRequest(
@@ -448,6 +482,32 @@ BannerAd myBanner = BannerAd(
   listener: AdListener(
     onAdLoaded: (Ad ad) {
       print("$BannerAd loaded.");
+    },
+  ),
+);
+```
+
+`PublisherBannerAd`s can also be configured with targeting information and an `AdListener` as shown
+below.
+
+```dart
+final PublisherAdRequest request = PublisherAdRequest(
+  keywords: <String>['flutterio', 'beautiful apps'],
+  contentUrl: 'https://flutter.dev',
+  customTargeting: <String, String>{'some', 'targeting'},
+  customTargetingLists: <String, List<String>>{'favoriteColors': <String>['red', 'yellow']},
+);
+
+final PublisherBannerAd myBanner = PublisherBannerAd(
+  // Replace the adUnitId with an ad unit id from the Ad Manager dash.
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/ios/test-ads
+  adUnitId: '/6499/example/banner',
+  sizes: <AdSize>[AdSize.banner],
+  request: request,
+  listener: AdListener(
+    onAdLoaded: (Ad ad) {
+      print("$PublisherBannerAd loaded.");
     },
   ),
 );
