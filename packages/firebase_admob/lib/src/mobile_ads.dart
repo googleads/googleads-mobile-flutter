@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'firebase_admob.dart';
+import 'ad_instance_manager.dart';
 
 /// The initialization state of the mediation adapter.
 enum AdapterInitializationState {

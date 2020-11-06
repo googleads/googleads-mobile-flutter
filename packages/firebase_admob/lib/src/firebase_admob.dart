@@ -19,12 +19,6 @@ import 'package:collection/collection.dart';
 
 import 'ad_instance_manager.dart';
 
-/// Loads and disposes [BannerAds] and [InterstitialAds].
-@visibleForTesting
-AdInstanceManager instanceManager = AdInstanceManager(
-  'plugins.flutter.io/firebase_admob',
-);
-
 /// The user's gender for the sake of ad targeting using [AdRequest].
 // Warning: the index values of the enums must match the values of the corresponding
 // AdMob constants. For example MobileAdGender.female.index == kGADGenderFemale.

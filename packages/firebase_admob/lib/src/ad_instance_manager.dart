@@ -16,6 +16,11 @@ import 'package:quiver/collection.dart';
 
 import 'firebase_admob.dart';
 
+/// Loads and disposes [BannerAds] and [InterstitialAds].
+AdInstanceManager instanceManager = AdInstanceManager(
+  'plugins.flutter.io/firebase_admob',
+);
+
 /// Maintains access to loaded [Ad] instances.
 class AdInstanceManager {
   AdInstanceManager(String channelName)
@@ -366,7 +371,7 @@ class AdMessageCodec extends StandardMessageCodec {
             readValueOfType(buffer.getUint8(), buffer);
         final String description = readValueOfType(buffer.getUint8(), buffer);
 
-        double latency = readValueOfType(buffer.getUint8(), buffer);
+        double latency = readValueOfType(buffer.getUint8(), buffer)?.toDouble();
         // Android provides this value as an int in milliseconds while iOS
         // provides this value as a double in seconds.
         if (latency != null &&

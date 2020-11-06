@@ -13,7 +13,7 @@ void main() {
     TestWidgetsFlutterBinding.ensureInitialized();
 
     final List<MethodCall> log = <MethodCall>[];
-    final MessageCodec codec = AdMessageCodec();
+    final AdMessageCodec codec = AdMessageCodec();
 
     setUpAll(() {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
@@ -67,6 +67,21 @@ void main() {
       expect(result.state, AdapterInitializationState.notReady);
       expect(result.description, 'describe');
       expect(result.latency, 23);
+    });
+
+    test('handle int values for AdapterStatus', () {
+      final WriteBuffer buffer = WriteBuffer();
+      codec.writeValue(buffer, AdapterInitializationState.ready);
+      codec.writeValue(buffer, null);
+      codec.writeValue(buffer, 23);
+
+      expect(
+        () => codec.readValueOfType(
+          136 /* AdMessageCodec._valueAdapterStatus */,
+          ReadBuffer(buffer.done()),
+        ),
+        returnsNormally,
+      );
     });
 
     test('encode/decode $InitializationStatus', () {
