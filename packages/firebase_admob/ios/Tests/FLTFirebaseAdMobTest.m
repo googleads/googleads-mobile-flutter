@@ -100,6 +100,41 @@
                       }]]);
 }
 
+- (void)testLoadPublisherInterstitialAd {
+  FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+  request.keywords = @[ @"apple" ];
+  FLTPublisherInterstitialAd *ad =
+      [[FLTPublisherInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                   request:request
+                                        rootViewController:OCMClassMock([UIViewController class])];
+
+  FLTPublisherInterstitialAd *mockInterstitialAd = OCMPartialMock(ad);
+  DFPInterstitial *mockAd = OCMClassMock([DFPInterstitial class]);
+  OCMStub([mockInterstitialAd interstitial]).andReturn(mockAd);
+  [mockInterstitialAd load];
+
+  OCMVerify([mockAd loadRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
+                      DFPRequest *requestArg = obj;
+                      return [requestArg.keywords isEqualToArray:@[ @"apple" ]];
+                    }]]);
+}
+
+- (void)testShowPublisherInterstitialAd {
+  FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+  FLTPublisherInterstitialAd *ad =
+      [[FLTPublisherInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                   request:request
+                                        rootViewController:OCMClassMock([UIViewController class])];
+
+  FLTPublisherInterstitialAd *mockInterstitialAd = OCMPartialMock(ad);
+  DFPInterstitial *mockAd = OCMClassMock([DFPInterstitial class]);
+  OCMStub([mockInterstitialAd interstitial]).andReturn(mockAd);
+
+  OCMStub([mockAd isReady]).andReturn(YES);
+  [mockInterstitialAd show];
+  OCMVerify([mockAd presentFromRootViewController:OCMOCK_ANY]);
+}
+
 - (void)testLoadNativeAd {
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];

@@ -136,6 +136,14 @@
 
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
+  } else if ([call.method isEqualToString:@"loadPublisherInterstitialAd"]) {
+    FLTPublisherInterstitialAd *ad =
+        [[FLTPublisherInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                                     request:call.arguments[@"request"]
+                                          rootViewController:rootController];
+
+    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+    result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedAd"]) {
     FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                         request:call.arguments[@"request"]

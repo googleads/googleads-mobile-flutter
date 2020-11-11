@@ -143,12 +143,12 @@ See section **Displaying an Ad** to see how to show the ad in your app and secti
 
 ### Interstitial
 
-Instantiating an `InterstitialAd` requires at least an `adUnitId` as shown below. When testing, you
-should always use `InterstitialAd.testAdUnitId` and switch to an ad unit id from your AdMob
-account when releasing. 
+Instantiating an `InterstitialAd` requires at least an `adUnitId`, `AdRequest`, and `AdListener` as
+shown below. When testing, you should always use `InterstitialAd.testAdUnitId` and switch to an ad
+unit id from your AdMob account when releasing.
 
 ```dart
-final InterstitialAd myInterstitial = myInterstitial(
+final InterstitialAd myInterstitial = InterstitialAd(
   // Replace the testAdUnitId with an ad unit id from the AdMob dash.
   // https://developers.google.com/admob/android/test-ads
   // https://developers.google.com/admob/ios/test-ads
@@ -400,6 +400,34 @@ screen.
 
 ```dart
 myBanner.load();
+```
+
+See section **Displaying an Ad** to see how to show the ad in your app and section
+**AdRequest Info and Ad Event Listeners** to see additional parameters.
+
+### PublisherInterstitial
+
+Instantiating a `PublisherInterstitialAd` requires at least an `adUnitId`, `PublisherAdRequest`, and
+`AdListener`, as shown below. When testing, you should always use test ids and switch to an ad unit
+id from your Ad Manager account when releasing.
+
+```dart
+final PublisherInterstitialAd myInterstitial = PublisherInterstitialAd(
+  // Replace the adUnitId with an ad unit id from the Ad Manager dashboard or test ids from the
+  // links below:
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/ios/test-ads
+  adUnitId: '/6499/example/interstitial',
+  request: PublisherAdRequest(),
+  listener: AdListener(),
+);
+```
+
+After a `PublisherInterstitialAd` is instantiated, you must call `load()` before it can be shown on
+the screen.
+
+```dart
+myInterstitial.load();
 ```
 
 See section **Displaying an Ad** to see how to show the ad in your app and section

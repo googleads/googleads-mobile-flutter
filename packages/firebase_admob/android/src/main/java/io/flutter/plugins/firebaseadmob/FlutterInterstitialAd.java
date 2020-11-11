@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.InterstitialAd;
 
-class FlutterInterstitialAd extends FlutterAd implements FlutterAd.FlutterAdWithoutView {
+class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   private static final String TAG = "FlutterInterstitialAd";
 
   @NonNull private final AdInstanceManager manager;

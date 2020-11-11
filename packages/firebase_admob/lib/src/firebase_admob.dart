@@ -501,7 +501,8 @@ class NativeAd extends AdWithView {
 class InterstitialAd extends AdWithoutView {
   /// Creates an [InterstitialAd].
   ///
-  /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
+  /// A valid [adUnitId] from the AdMob dashboard, a nonnull [listener], and a
+  /// nonnull [request] is required.
   InterstitialAd({
     @required String adUnitId,
     @required AdListener listener,
@@ -520,6 +521,28 @@ class InterstitialAd extends AdWithoutView {
   @override
   Future<void> load() async {
     await instanceManager.loadInterstitialAd(this);
+  }
+}
+
+/// A full-screen interstitial ad for use with Ad Manager.
+class PublisherInterstitialAd extends AdWithoutView {
+  /// Creates an [PublisherInterstitialAd].
+  ///
+  /// A valid [adUnitId] from the Ad Manager dashboard, a nonnull [listener],
+  /// and nonnull [request] is required.
+  PublisherInterstitialAd({
+    @required String adUnitId,
+    @required AdListener listener,
+    @required this.request,
+  })  : assert(request != null),
+        super(adUnitId: adUnitId, listener: listener);
+
+  /// Targeting information used to fetch an [Ad].
+  final PublisherAdRequest request;
+
+  @override
+  Future<void> load() async {
+    await instanceManager.loadPublisherInterstitialAd(this);
   }
 }
 

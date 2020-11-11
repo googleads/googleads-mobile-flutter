@@ -255,6 +255,42 @@
 }
 @end
 
+@implementation FLTPublisherInterstitialAd {
+  DFPInterstitial *_insterstitial;
+  FLTPublisherAdRequest *_adRequest;
+  UIViewController *_rootViewController;
+}
+
+- (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                         request:(FLTPublisherAdRequest *_Nonnull)request
+              rootViewController:(UIViewController *_Nonnull)rootViewController {
+  self = [super init];
+  if (self) {
+    _adRequest = request;
+    _insterstitial = [[DFPInterstitial alloc] initWithAdUnitID:adUnitId];
+    _insterstitial.delegate = self;
+    _rootViewController = rootViewController;
+  }
+  return self;
+}
+
+- (GADInterstitial *_Nonnull)interstitial {
+  return _insterstitial;
+}
+
+- (void)load {
+  [self.interstitial loadRequest:[_adRequest asDFPRequest]];
+}
+
+- (void)show {
+  if (self.interstitial.isReady) {
+    [self.interstitial presentFromRootViewController:_rootViewController];
+  } else {
+    NSLog(@"InterstitialAd failed to show because the ad was not ready.");
+  }
+}
+@end
+
 @implementation FLTRewardedAd {
   GADRewardedAd *_rewardedView;
   FLTAdRequest *_adRequest;

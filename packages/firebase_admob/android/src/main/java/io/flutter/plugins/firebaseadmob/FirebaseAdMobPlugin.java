@@ -41,6 +41,11 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
   private static final String GENERATED_PLUGIN_KEY =
       "io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin";
 
+  private static <T> T requireNonNull(T obj) {
+    if (obj == null) throw new IllegalArgumentException();
+    return obj;
+  }
+
   // This is always null when not using v2 embedding.
   @Nullable private FlutterPluginBinding pluginBinding;
   @Nullable private AdInstanceManager instanceManager;
@@ -324,6 +329,17 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
                 .build();
         instanceManager.loadAd(publisherBannerAd, call.<Integer>argument("adId"));
         publisherBannerAd.load();
+        result.success(null);
+        break;
+      case "loadPublisherInterstitialAd":
+        final FlutterPublisherInterstitialAd publisherInterstitialAd =
+            new FlutterPublisherInterstitialAd(
+                requireNonNull(instanceManager),
+                requireNonNull(call.<String>argument("adUnitId")),
+                call.<FlutterPublisherAdRequest>argument("request"));
+        instanceManager.loadAd(
+            publisherInterstitialAd, requireNonNull(call.<Integer>argument("adId")));
+        publisherInterstitialAd.load();
         result.success(null);
         break;
       case "disposeAd":

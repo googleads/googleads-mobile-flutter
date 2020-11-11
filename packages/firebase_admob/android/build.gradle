@@ -35,6 +35,6 @@ android {
         api 'com.google.firebase:firebase-ads:19.3.0'
         testImplementation 'junit:junit:4.12'
         testImplementation 'org.hamcrest:hamcrest:2.2'
-        testImplementation 'org.mockito:mockito-core:2.28.2'
+        testImplementation 'org.mockito:mockito-inline:2.13.0'
     }
 }

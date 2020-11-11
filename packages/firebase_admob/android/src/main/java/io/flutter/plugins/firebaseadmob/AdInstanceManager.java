@@ -130,7 +130,7 @@ class AdInstanceManager {
   }
 
   boolean showAdWithId(int id) {
-    final FlutterAd.FlutterAdWithoutView ad = (FlutterAd.FlutterAdWithoutView) adForId(id);
+    final FlutterAd.FlutterOverlayAd ad = (FlutterAd.FlutterOverlayAd) adForId(id);
 
     if (ad == null) {
       return false;

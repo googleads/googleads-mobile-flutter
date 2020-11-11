@@ -13,7 +13,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
-class FlutterRewardedAd extends FlutterAd implements FlutterAd.FlutterAdWithoutView {
+class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   private static final String TAG = "FlutterRewardedAd";
 
   @NonNull private final AdInstanceManager manager;

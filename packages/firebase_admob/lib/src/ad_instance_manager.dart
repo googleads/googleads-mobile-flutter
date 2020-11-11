@@ -201,6 +201,26 @@ class AdInstanceManager {
     );
   }
 
+  /// Loads an ad if not currently loading or loaded.
+  ///
+  /// Loading also terminates if ad is already in the process of loading.
+  Future<void> loadPublisherInterstitialAd(PublisherInterstitialAd ad) {
+    if (adIdFor(ad) != null) {
+      return null;
+    }
+
+    final int adId = _nextAdId++;
+    _loadedAds[adId] = ad;
+    return channel.invokeMethod<void>(
+      'loadPublisherInterstitialAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+      },
+    );
+  }
+
   /// Free the plugin resources associated with this ad.
   ///
   /// Disposing a banner ad that's been shown removes it from the screen.

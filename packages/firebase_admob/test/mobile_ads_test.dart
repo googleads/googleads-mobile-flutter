@@ -21,9 +21,10 @@ void main() {
 
     setUp(() async {
       log.clear();
-      instanceManager = AdInstanceManager('test_channel');
-      instanceManager.channel
-          .setMockMethodCallHandler((MethodCall methodCall) async {
+      MethodChannel(
+        'plugins.flutter.io/firebase_admob',
+        StandardMethodCodec(AdMessageCodec()),
+      ).setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
           case 'MobileAds#initialize':

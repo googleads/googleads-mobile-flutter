@@ -8,8 +8,9 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.ads.LoadAdError;
 
 abstract class FlutterAd {
-  interface FlutterAdWithoutView {
-    void show();
+  /** A {@link FlutterAd} that is overlaid on top of a running application. */
+  abstract static class FlutterOverlayAd extends FlutterAd {
+    abstract void show();
   }
 
   static class FlutterLoadAdError {

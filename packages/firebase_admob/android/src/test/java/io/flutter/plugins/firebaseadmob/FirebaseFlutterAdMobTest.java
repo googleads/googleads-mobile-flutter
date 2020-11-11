@@ -8,10 +8,15 @@ import static org.hamcrest.Matchers.hasEntry;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import android.app.Activity;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -64,6 +69,44 @@ public class FirebaseFlutterAdMobTest {
     assertNotNull(testManager.adForId(0));
     assertEquals(bannerAd, testManager.adForId(0));
     assertEquals(0, testManager.adIdFor(bannerAd).intValue());
+  }
+
+  @Test
+  public void loadPublisherInterstitialAd() {
+    final FlutterPublisherAdRequest mockFlutterRequest = mock(FlutterPublisherAdRequest.class);
+    final PublisherAdRequest mockRequest = mock(PublisherAdRequest.class);
+    when(mockFlutterRequest.asPublisherAdRequest()).thenReturn(mockRequest);
+
+    final FlutterPublisherInterstitialAd interstitialAd =
+        new FlutterPublisherInterstitialAd(testManager, "testId", mockFlutterRequest);
+
+    final FlutterPublisherInterstitialAd mockFlutterAd = spy(interstitialAd);
+    final PublisherInterstitialAd mockPublisherAd = mock(PublisherInterstitialAd.class);
+    doReturn(mockPublisherAd).when(mockFlutterAd).createPublisherInterstitialAd();
+    mockFlutterAd.load();
+    verify(mockPublisherAd).setAdUnitId("testId");
+
+    final ArgumentCaptor<PublisherAdRequest> captor =
+        ArgumentCaptor.forClass(PublisherAdRequest.class);
+    verify(mockPublisherAd).loadAd(captor.capture());
+    assertEquals(captor.getValue(), mockRequest);
+  }
+
+  @Test
+  public void showPublisherInterstitialAd() {
+    final FlutterPublisherAdRequest mockFlutterRequest = mock(FlutterPublisherAdRequest.class);
+
+    final FlutterPublisherInterstitialAd interstitialAd =
+        new FlutterPublisherInterstitialAd(testManager, "testId", mockFlutterRequest);
+
+    final FlutterPublisherInterstitialAd mockFlutterAd = spy(interstitialAd);
+    final PublisherInterstitialAd mockPublisherAd = mock(PublisherInterstitialAd.class);
+    doReturn(mockPublisherAd).when(mockFlutterAd).createPublisherInterstitialAd();
+    mockFlutterAd.load();
+
+    when(mockPublisherAd.isLoaded()).thenReturn(true);
+    mockFlutterAd.show();
+    verify(mockPublisherAd).show();
   }
 
   @Test

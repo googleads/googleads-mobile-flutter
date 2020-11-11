@@ -89,6 +89,12 @@ typedef NS_ENUM(NSInteger, FLTAdGender) {
 - (GADInterstitial *_Nonnull)interstitial;
 @end
 
+@interface FLTPublisherInterstitialAd : FLTInterstitialAd
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                                  request:(FLTPublisherAdRequest *_Nonnull)request
+                       rootViewController:(UIViewController *_Nonnull)rootViewController;
+@end
+
 @interface FLTRewardedAd : NSObject <FLTAd, FLTAdWithoutView, GADRewardedAdDelegate>
 @property(weak) FLTAdInstanceManager *_Nullable manager;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
