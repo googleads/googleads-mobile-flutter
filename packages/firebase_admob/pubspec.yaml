@@ -18,7 +18,7 @@ dependencies:
   meta: ^1.0.4
   flutter:
     sdk: flutter
-  firebase_core: ^0.4.2+1
+  firebase_core: ^0.5.2
 
 dev_dependencies:
   pedantic: ^1.8.0
