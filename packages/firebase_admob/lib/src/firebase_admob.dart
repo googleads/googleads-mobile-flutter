@@ -465,8 +465,28 @@ class NativeAd extends AdWithView {
     @required AdListener listener,
     @required this.request,
     this.customOptions,
-  })  : assert(factoryId != null),
+  })  : publisherRequest = null,
+        assert(adUnitId != null),
+        assert(listener != null),
+        assert(factoryId != null),
         assert(request != null),
+        super(adUnitId: adUnitId, listener: listener);
+
+  /// Creates a [NativeAd] with Ad Manager.
+  ///
+  /// A valid [adUnitId], nonnull [listener], nonnull [publisherRequest], and
+  /// nonnull [factoryId] is required.
+  NativeAd.fromPublisherRequest({
+    @required String adUnitId,
+    @required this.factoryId,
+    @required AdListener listener,
+    @required this.publisherRequest,
+    this.customOptions,
+  })  : request = null,
+        assert(factoryId != null),
+        assert(adUnitId != null),
+        assert(listener != null),
+        assert(publisherRequest != null),
         super(adUnitId: adUnitId, listener: listener);
 
   /// An identifier for the factory that creates the Platform view.
@@ -479,6 +499,9 @@ class NativeAd extends AdWithView {
 
   /// Targeting information used to fetch an [Ad].
   final AdRequest request;
+
+  /// Targeting information used to fetch an [Ad] with Ad Manager.
+  final PublisherAdRequest publisherRequest;
 
   /// {@template firebase_admob.testAdUnitId}
   /// A platform-specific AdMob test ad unit ID.

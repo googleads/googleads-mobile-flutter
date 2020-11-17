@@ -176,6 +176,27 @@
                       completionHandler:[OCMArg any]]);
 }
 
+- (void)testLoadNativeAdWithPublisherRequest {
+  FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+  request.keywords = @[ @"apple" ];
+  FLTNativeAd *ad =
+      [[FLTNativeAd alloc] initWithAdUnitId:@"testId"
+                                    request:request
+                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+                              customOptions:nil
+                         rootViewController:OCMClassMock([UIViewController class])];
+
+  FLTNativeAd *mockFltAd = OCMPartialMock(ad);
+  GADAdLoader *mockAdLoader = OCMClassMock([GADAdLoader class]);
+  OCMStub([mockFltAd adLoader]).andReturn(mockAdLoader);
+  [mockFltAd load];
+
+  OCMVerify([mockAdLoader loadRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
+                            DFPRequest *requestArg = obj;
+                            return [requestArg.keywords isEqualToArray:@[ @"apple" ]];
+                          }]]);
+}
+
 - (void)testDisposeAd {
   FLTAdSize *size = [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)];
   FLTBannerAd *bannerAd =

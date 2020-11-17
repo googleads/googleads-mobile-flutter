@@ -383,7 +383,15 @@
 }
 
 - (void)load {
-  [self.adLoader loadRequest:_adRequest.asGADRequest];
+  GADRequest *request;
+  if ([_adRequest isKindOfClass:[FLTPublisherAdRequest class]]) {
+    FLTPublisherAdRequest *publisherRequest = (FLTPublisherAdRequest *)_adRequest;
+    request = publisherRequest.asDFPRequest;
+  } else {
+    request = _adRequest.asGADRequest;
+  }
+
+  [self.adLoader loadRequest:request];
 }
 
 - (void)adLoader:(GADAdLoader *)adLoader didReceiveUnifiedNativeAd:(GADUnifiedNativeAd *)nativeAd {

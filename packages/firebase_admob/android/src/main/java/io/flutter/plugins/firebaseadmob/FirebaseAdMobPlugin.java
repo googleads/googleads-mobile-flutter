@@ -291,6 +291,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
                 .setAdUnitId(call.<String>argument("adUnitId"))
                 .setAdFactory(factory)
                 .setRequest(call.<FlutterAdRequest>argument("request"))
+                .setPublisherRequest(call.<FlutterPublisherAdRequest>argument("publisherRequest"))
                 .setCustomOptions(call.<Map<String, Object>>argument("customOptions"))
                 .build();
         instanceManager.loadAd(nativeAd, call.<Integer>argument("adId"));

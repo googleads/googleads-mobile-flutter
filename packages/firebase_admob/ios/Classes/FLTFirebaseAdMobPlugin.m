@@ -122,8 +122,15 @@
       return;
     }
 
+    FLTAdRequest *request;
+    if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
+      request = call.arguments[@"request"];
+    } else if (![call.arguments[@"publisherRequest"] isEqual:[NSNull null]]) {
+      request = call.arguments[@"publisherRequest"];
+    }
+
     FLTNativeAd *ad = [[FLTNativeAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                    request:call.arguments[@"request"]
+                                                    request:request
                                             nativeAdFactory:(id)factory
                                               customOptions:call.arguments[@"customOptions"]
                                          rootViewController:rootController];

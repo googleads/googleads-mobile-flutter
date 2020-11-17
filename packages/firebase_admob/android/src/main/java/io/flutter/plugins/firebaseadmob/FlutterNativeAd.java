@@ -4,9 +4,11 @@
 
 package io.flutter.plugins.firebaseadmob;
 
+import android.util.Log;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.formats.NativeAdOptions;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
@@ -16,10 +18,13 @@ import io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory;
 import java.util.Map;
 
 class FlutterNativeAd extends FlutterAd implements PlatformView {
+  private static final String TAG = "FlutterNativeAd";
+
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final NativeAdFactory adFactory;
   @Nullable private FlutterAdRequest request;
+  @Nullable private FlutterPublisherAdRequest publisherRequest;
   @Nullable private Map<String, Object> customOptions;
   @Nullable private UnifiedNativeAdView ad;
 
@@ -28,6 +33,7 @@ class FlutterNativeAd extends FlutterAd implements PlatformView {
     @Nullable private String adUnitId;
     @Nullable private NativeAdFactory adFactory;
     @Nullable private FlutterAdRequest request;
+    @Nullable private FlutterPublisherAdRequest publisherRequest;
     @Nullable private Map<String, Object> customOptions;
 
     public Builder setAdFactory(@NonNull NativeAdFactory adFactory) {
@@ -55,6 +61,11 @@ class FlutterNativeAd extends FlutterAd implements PlatformView {
       return this;
     }
 
+    public Builder setPublisherRequest(@Nullable FlutterPublisherAdRequest request) {
+      this.publisherRequest = request;
+      return this;
+    }
+
     FlutterNativeAd build() {
       if (manager == null) {
         throw new IllegalStateException("AdInstanceManager cannot not be null.");
@@ -62,55 +73,53 @@ class FlutterNativeAd extends FlutterAd implements PlatformView {
         throw new IllegalStateException("AdUnitId cannot not be null.");
       } else if (adFactory == null) {
         throw new IllegalStateException("NativeAdFactory cannot not be null.");
+      } else if (request == null && publisherRequest == null) {
+        throw new IllegalStateException("adRequest or publisherRequest must be non-null.");
       }
 
-      final FlutterNativeAd nativeAd = new FlutterNativeAd(manager, adUnitId, adFactory);
-      nativeAd.request = request;
+      final FlutterNativeAd nativeAd;
+      if (request == null) {
+        nativeAd = new FlutterNativeAd(manager, adUnitId, adFactory, publisherRequest);
+      } else {
+        nativeAd = new FlutterNativeAd(manager, adUnitId, adFactory, request);
+      }
       nativeAd.customOptions = customOptions;
       return nativeAd;
     }
   }
 
-  public FlutterNativeAd(
+  private FlutterNativeAd(
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
-      @NonNull io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory adFactory) {
+      @NonNull NativeAdFactory adFactory,
+      @NonNull FlutterAdRequest request) {
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.adFactory = adFactory;
+    this.request = request;
+  }
+
+  private FlutterNativeAd(
+      @NonNull AdInstanceManager manager,
+      @NonNull String adUnitId,
+      @NonNull NativeAdFactory adFactory,
+      @NonNull FlutterPublisherAdRequest publisherRequest) {
+    this.manager = manager;
+    this.adUnitId = adUnitId;
+    this.adFactory = adFactory;
+    this.publisherRequest = publisherRequest;
   }
 
   @Override
   void load() {
-    final AdLoader adLoader =
-        new AdLoader.Builder(manager.activity, adUnitId)
-            .forUnifiedNativeAd(
-                new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
-                  @Override
-                  public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                    ad = adFactory.createNativeAd(unifiedNativeAd, customOptions);
-                    manager.onAdLoaded(FlutterNativeAd.this);
-                  }
-                })
-            .withNativeAdOptions(new NativeAdOptions.Builder().build())
-            .withAdListener(
-                new FlutterAdListener(manager, this) {
-                  @Override
-                  public void onAdClicked() {
-                    manager.onNativeAdClicked(FlutterNativeAd.this);
-                  }
-
-                  @Override
-                  public void onAdImpression() {
-                    manager.onNativeAdImpression(FlutterNativeAd.this);
-                  }
-                })
-            .build();
+    final AdLoader adLoader = buildAdLoader();
 
     if (request != null) {
       adLoader.loadAd(request.asAdRequest());
+    } else if (publisherRequest != null) {
+      adLoader.loadAd(publisherRequest.asPublisherAdRequest());
     } else {
-      adLoader.loadAd(new FlutterAdRequest.Builder().build().asAdRequest());
+      Log.e(TAG, "A null or invalid ad request was provided.");
     }
   }
 
@@ -123,5 +132,33 @@ class FlutterNativeAd extends FlutterAd implements PlatformView {
   @Override
   public void dispose() {
     // Do nothing.
+  }
+
+  @NonNull
+  @VisibleForTesting
+  AdLoader buildAdLoader() {
+    return new AdLoader.Builder(manager.activity, adUnitId)
+        .forUnifiedNativeAd(
+            new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+              @Override
+              public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                ad = adFactory.createNativeAd(unifiedNativeAd, customOptions);
+                manager.onAdLoaded(FlutterNativeAd.this);
+              }
+            })
+        .withNativeAdOptions(new NativeAdOptions.Builder().build())
+        .withAdListener(
+            new FlutterAdListener(manager, this) {
+              @Override
+              public void onAdClicked() {
+                manager.onNativeAdClicked(FlutterNativeAd.this);
+              }
+
+              @Override
+              public void onAdImpression() {
+                manager.onNativeAdImpression(FlutterNativeAd.this);
+              }
+            })
+        .build();
   }
 }

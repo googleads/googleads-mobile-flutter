@@ -15,6 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.app.Activity;
+import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
@@ -69,6 +70,72 @@ public class FirebaseFlutterAdMobTest {
     assertNotNull(testManager.adForId(0));
     assertEquals(bannerAd, testManager.adForId(0));
     assertEquals(0, testManager.adIdFor(bannerAd).intValue());
+  }
+
+  @Test
+  public void loadNativeAdWithPublisherRequest() {
+    final FlutterPublisherAdRequest mockFlutterRequest = mock(FlutterPublisherAdRequest.class);
+    final PublisherAdRequest mockRequest = mock(PublisherAdRequest.class);
+    when(mockFlutterRequest.asPublisherAdRequest()).thenReturn(mockRequest);
+
+    final FlutterNativeAd nativeAd =
+        new FlutterNativeAd.Builder()
+            .setManager(testManager)
+            .setAdUnitId("testId")
+            .setAdFactory(mock(FirebaseAdMobPlugin.NativeAdFactory.class))
+            .setRequest(null)
+            .setPublisherRequest(mockFlutterRequest)
+            .build();
+
+    final FlutterNativeAd mockFlutterAd = spy(nativeAd);
+    final AdLoader mockAdLoader = mock(AdLoader.class);
+    doReturn(mockAdLoader).when(mockFlutterAd).buildAdLoader();
+    mockFlutterAd.load();
+
+    final ArgumentCaptor<PublisherAdRequest> captor =
+        ArgumentCaptor.forClass(PublisherAdRequest.class);
+    verify(mockAdLoader).loadAd(captor.capture());
+
+    assertEquals(captor.getValue(), mockRequest);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void nativeAdBuilderNullManager() {
+    new FlutterNativeAd.Builder()
+        .setManager(null)
+        .setAdUnitId("testId")
+        .setAdFactory(mock(FirebaseAdMobPlugin.NativeAdFactory.class))
+        .setRequest(request)
+        .build();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void nativeAdBuilderNullAdUnitId() {
+    new FlutterNativeAd.Builder()
+        .setManager(testManager)
+        .setAdUnitId(null)
+        .setAdFactory(mock(FirebaseAdMobPlugin.NativeAdFactory.class))
+        .setRequest(request)
+        .build();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void nativeAdBuilderNullAdFactory() {
+    new FlutterNativeAd.Builder()
+        .setManager(testManager)
+        .setAdUnitId("testId")
+        .setAdFactory(null)
+        .setRequest(request)
+        .build();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void nativeAdBuilderNullRequest() {
+    new FlutterNativeAd.Builder()
+        .setManager(testManager)
+        .setAdUnitId("testId")
+        .setAdFactory(mock(FirebaseAdMobPlugin.NativeAdFactory.class))
+        .build();
   }
 
   @Test

@@ -371,6 +371,19 @@ myRewardedAd.load();
 See section **Displaying an Ad** to see how to show the ad in your app and section
 **AdRequest Info and Ad Event Listeners** to see additional parameters.
 
+### Test Ads
+
+It's important to enable test ads during development so that you can click on them without charging
+Google advertisers. If you click on too many ads without being in test mode, you risk your account
+being flagged for invalid activity.
+
+The quickest way to enable testing is to use Google-provided test ad units. These ad units are not
+associated with your AdMob account, so there's no risk of your account generating invalid
+traffic when using these ad units.
+
+**Android**: https://developers.google.com/admob/android/test-ads
+**iOS**: https://developers.google.com/admob/ios/test-ads
+
 ## Ad Manager
 
 This plugin also contains support for ads using [Google Ad Manager](https://admanager.google.com/home/).
@@ -432,6 +445,52 @@ myInterstitial.load();
 
 See section **Displaying an Ad** to see how to show the ad in your app and section
 **AdRequest Info and Ad Event Listeners** to see additional parameters.
+
+### Native Ads with Ad Manager
+
+Creating a `NativeAd` with Ad Manager requires additional setup on Android and iOS. See section
+**Native** under **Creating and Loading an Ad With AdMob** for steps creating a `NativeAdFactory` on
+Android and iOS.
+
+After a `NativeAdFactory` is implemented, instantiating a `NativeAd` from Dart is similar to
+`BannerAd` or `InterstitialAd` with an additional requirement of a `factoryId` that matches the id
+used to register the `NativeAdFactory` in Java/Kotlin/Obj-C/Swift. An example of this implementation
+is seen below. Also, remember that testing should always be done with the test ids.
+
+```dart
+final NativeAd nativeAd = NativeAd.fromPublisherRequest(
+  // Replace the adUnitId with an ad unit id from the Ad Manager dashboard or test ids from the
+  // links below:
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/ios/test-ads
+  adUnitId: '/6499/example/native',
+  factoryId: 'adFactoryExample',
+  publisherRequest: PublisherAdRequest(),
+  listener: AdListener(),
+);
+```
+
+Once created you can call `load()`.
+
+```dart
+nativeAd.load();
+```
+
+See section **Displaying an Ad** to see how to show the ad in your app and section
+**AdRequest Info and Ad Event Listeners** to see additional parameters.
+
+### Test Ads
+
+It's important to enable test ads during development so that you can click on them without charging
+Google advertisers. If you click on too many ads without being in test mode, you risk your account
+being flagged for invalid activity.
+
+The quickest way to enable testing is to use Google-provided test ad units. These ad units are not
+associated with your Ad Manager account, so there's no risk of your account generating invalid
+traffic when using these ad units.
+
+**Android**: https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads
+**iOS**: https://developers.google.com/ad-manager/mobile-ads-sdk/ios/test-ads
 
 ## Displaying an Ad
 

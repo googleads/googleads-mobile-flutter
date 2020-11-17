@@ -153,6 +153,7 @@ class AdInstanceManager {
         'adId': adId,
         'adUnitId': nativeAd.adUnitId,
         'request': ad.request,
+        'publisherRequest': ad.publisherRequest,
         'factoryId': ad.factoryId,
         'customOptions': ad.customOptions,
       },

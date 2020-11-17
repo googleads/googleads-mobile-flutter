@@ -113,6 +113,33 @@ void main() {
           'adId': 0,
           'adUnitId': NativeAd.testAdUnitId,
           'request': native.request,
+          'publisherRequest': null,
+          'factoryId': '0',
+          'customOptions': options,
+        })
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+    });
+
+    test('load native with $PublisherAdRequest', () async {
+      final Map<String, Object> options = <String, Object>{'a': 1, 'b': 2};
+
+      final NativeAd native = NativeAd.fromPublisherRequest(
+        adUnitId: 'test-id',
+        factoryId: '0',
+        customOptions: options,
+        listener: AdListener(),
+        publisherRequest: PublisherAdRequest(),
+      );
+
+      await native.load();
+      expect(log, <Matcher>[
+        isMethodCall('loadNativeAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'adUnitId': 'test-id',
+          'request': null,
+          'publisherRequest': native.publisherRequest,
           'factoryId': '0',
           'customOptions': options,
         })
@@ -275,7 +302,7 @@ void main() {
 
       final NativeAd native = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
-        factoryId: NativeAd.testAdUnitId,
+        factoryId: 'testId',
         listener: AdListener(
             onNativeAdClicked: (Ad ad) => adEventCompleter.complete(ad)),
         request: AdRequest(),
@@ -303,7 +330,7 @@ void main() {
 
       final NativeAd native = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
-        factoryId: NativeAd.testAdUnitId,
+        factoryId: 'testId',
         listener: AdListener(
             onNativeAdImpression: (Ad ad) => adEventCompleter.complete(ad)),
         request: AdRequest(),
