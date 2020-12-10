@@ -177,6 +177,7 @@ class AdInstanceManager {
         'adId': adId,
         'adUnitId': rewardedAd.adUnitId,
         'request': rewardedAd.request,
+        'publisherRequest': rewardedAd.publisherRequest,
       },
     );
   }

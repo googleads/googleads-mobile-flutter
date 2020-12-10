@@ -182,6 +182,28 @@ void main() {
           'adId': 0,
           'adUnitId': RewardedAd.testAdUnitId,
           'request': rewarded.request,
+          'publisherRequest': null,
+        }),
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+    });
+
+    test('load rewarded with $PublisherAdRequest', () async {
+      final RewardedAd rewarded = RewardedAd.fromPublisherRequest(
+        adUnitId: RewardedAd.testAdUnitId,
+        listener: AdListener(),
+        publisherRequest: PublisherAdRequest(),
+      );
+
+      await rewarded.load();
+
+      expect(log, <Matcher>[
+        isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'adUnitId': RewardedAd.testAdUnitId,
+          'request': null,
+          'publisherRequest': rewarded.publisherRequest,
         }),
       ]);
 

@@ -152,8 +152,20 @@
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedAd"]) {
+    FLTAdRequest *request;
+    if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
+      request = call.arguments[@"request"];
+    } else if (![call.arguments[@"publisherRequest"] isEqual:[NSNull null]]) {
+      request = call.arguments[@"publisherRequest"];
+    } else {
+      result([FlutterError errorWithCode:@"InvalidRequest"
+                                 message:@"A null or invalid ad request was provided."
+                                 details:nil]);
+      return;
+    }
+
     FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                        request:call.arguments[@"request"]
+                                                        request:request
                                              rootViewController:rootController];
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);

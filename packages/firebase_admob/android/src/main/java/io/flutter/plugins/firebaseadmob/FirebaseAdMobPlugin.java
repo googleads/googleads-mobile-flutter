@@ -36,6 +36,8 @@ import java.util.Map;
  * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
  */
 public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
+  private static final String TAG = "FirebaseAdMobPlugin";
+
   // This the plugin key used in the Embedding V1 generated GeneratedRegistrant.java. This key is
   // used when this plugin publishes it's self in registerWith(registrar).
   private static final String GENERATED_PLUGIN_KEY =
@@ -272,7 +274,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
                 .setRequest(call.<FlutterAdRequest>argument("request"))
                 .setSize(call.<FlutterAdSize>argument("size"))
                 .build();
-        instanceManager.loadAd(bannerAd, call.<Integer>argument("adId"));
+        instanceManager.trackAd(bannerAd, call.<Integer>argument("adId"));
         bannerAd.load();
         result.success(null);
         break;
@@ -294,7 +296,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
                 .setPublisherRequest(call.<FlutterPublisherAdRequest>argument("publisherRequest"))
                 .setCustomOptions(call.<Map<String, Object>>argument("customOptions"))
                 .build();
-        instanceManager.loadAd(nativeAd, call.<Integer>argument("adId"));
+        instanceManager.trackAd(nativeAd, call.<Integer>argument("adId"));
         nativeAd.load();
         result.success(null);
         break;
@@ -305,18 +307,27 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
                 .setAdUnitId(call.<String>argument("adUnitId"))
                 .setRequest(call.<FlutterAdRequest>argument("request"))
                 .build();
-        instanceManager.loadAd(interstitial, call.<Integer>argument("adId"));
+        instanceManager.trackAd(interstitial, call.<Integer>argument("adId"));
         interstitial.load();
         result.success(null);
         break;
       case "loadRewardedAd":
-        final FlutterRewardedAd rewardedAd =
-            new FlutterRewardedAd.Builder()
-                .setManager(instanceManager)
-                .setAdUnitId(call.<String>argument("adUnitId"))
-                .setRequest(call.<FlutterAdRequest>argument("request"))
-                .build();
-        instanceManager.loadAd(rewardedAd, call.<Integer>argument("adId"));
+        final String adUnitId = requireNonNull(call.<String>argument("adUnitId"));
+        final FlutterAdRequest request = call.argument("request");
+        final FlutterPublisherAdRequest publisherRequest = call.argument("publisherRequest");
+
+        final FlutterRewardedAd rewardedAd;
+        if (request != null) {
+          rewardedAd = new FlutterRewardedAd(requireNonNull(instanceManager), adUnitId, request);
+        } else if (publisherRequest != null) {
+          rewardedAd =
+              new FlutterRewardedAd(requireNonNull(instanceManager), adUnitId, publisherRequest);
+        } else {
+          result.error("InvalidRequest", "A null or invalid ad request was provided.", null);
+          break;
+        }
+
+        instanceManager.trackAd(rewardedAd, requireNonNull(call.<Integer>argument("adId")));
         rewardedAd.load();
         result.success(null);
         break;
@@ -328,7 +339,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
                 .setSizes(call.<List<FlutterAdSize>>argument("sizes"))
                 .setRequest(call.<FlutterPublisherAdRequest>argument("request"))
                 .build();
-        instanceManager.loadAd(publisherBannerAd, call.<Integer>argument("adId"));
+        instanceManager.trackAd(publisherBannerAd, call.<Integer>argument("adId"));
         publisherBannerAd.load();
         result.success(null);
         break;
@@ -338,7 +349,7 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
                 requireNonNull(instanceManager),
                 requireNonNull(call.<String>argument("adUnitId")),
                 call.<FlutterPublisherAdRequest>argument("request"));
-        instanceManager.loadAd(
+        instanceManager.trackAd(
             publisherInterstitialAd, requireNonNull(call.<Integer>argument("adId")));
         publisherInterstitialAd.load();
         result.success(null);

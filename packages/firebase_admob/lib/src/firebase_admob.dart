@@ -574,17 +574,31 @@ class PublisherInterstitialAd extends AdWithoutView {
 /// Because the video assets are so large, it's a good idea to start loading an
 /// ad well in advance of when it's likely to be needed.
 class RewardedAd extends AdWithoutView {
-  /// Creates a [RewardedAd].
+  /// Creates a [RewardedAd] with an [AdRequest].
   ///
   /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
   RewardedAd({
     @required String adUnitId,
     @required AdListener listener,
     @required this.request,
-  }) : super(adUnitId: adUnitId, listener: listener);
+  })  : publisherRequest = null,
+        super(adUnitId: adUnitId, listener: listener);
+
+  /// Creates a [RewardedAd] with a [PublisherAdRequest].
+  ///
+  /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
+  RewardedAd.fromPublisherRequest({
+    @required String adUnitId,
+    @required AdListener listener,
+    @required this.publisherRequest,
+  })  : request = null,
+        super(adUnitId: adUnitId, listener: listener);
 
   /// Targeting information used to fetch an [Ad].
   final AdRequest request;
+
+  /// Targeting information used to fetch an [Ad] using Ad Manager.
+  final PublisherAdRequest publisherRequest;
 
   /// {@template firebase_admob.testAdUnitId}
   /// A platform-specific AdMob test ad unit ID.

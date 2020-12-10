@@ -49,7 +49,7 @@ class AdInstanceManager {
     return null;
   }
 
-  void loadAd(@NonNull FlutterAd ad, int adId) {
+  void trackAd(@NonNull FlutterAd ad, int adId) {
     if (ads.get(adId) != null) {
       throw new IllegalArgumentException(
           String.format("Ad for following adId already exists: %d", adId));

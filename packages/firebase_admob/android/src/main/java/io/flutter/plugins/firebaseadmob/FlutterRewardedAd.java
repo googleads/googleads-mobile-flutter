@@ -7,6 +7,7 @@ package io.flutter.plugins.firebaseadmob;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
@@ -18,41 +19,9 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
-  @Nullable FlutterAdRequest request;
+  @Nullable private final FlutterAdRequest request;
+  @Nullable private final FlutterPublisherAdRequest publisherRequest;
   @Nullable RewardedAd rewardedAd;
-
-  static class Builder {
-    @Nullable private AdInstanceManager manager;
-    @Nullable private String adUnitId;
-    @Nullable private FlutterAdRequest request;
-
-    Builder setManager(@NonNull AdInstanceManager manager) {
-      this.manager = manager;
-      return this;
-    }
-
-    Builder setAdUnitId(@NonNull String adUnitId) {
-      this.adUnitId = adUnitId;
-      return this;
-    }
-
-    Builder setRequest(@Nullable FlutterAdRequest request) {
-      this.request = request;
-      return this;
-    }
-
-    FlutterRewardedAd build() {
-      if (manager == null) {
-        throw new IllegalStateException("AdInstanceManager cannot not be null.");
-      } else if (adUnitId == null) {
-        throw new IllegalStateException("AdUnitId cannot not be null.");
-      }
-
-      final FlutterRewardedAd rewardedAd = new FlutterRewardedAd(manager, adUnitId);
-      rewardedAd.request = request;
-      return rewardedAd;
-    }
-  }
 
   static class FlutterRewardItem {
     @NonNull final Integer amount;
@@ -82,14 +51,29 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
     }
   }
 
-  private FlutterRewardedAd(@NonNull AdInstanceManager manager, @NonNull String adUnitId) {
+  public FlutterRewardedAd(
+      @NonNull AdInstanceManager manager,
+      @NonNull String adUnitId,
+      @NonNull FlutterAdRequest request) {
     this.manager = manager;
     this.adUnitId = adUnitId;
+    this.request = request;
+    this.publisherRequest = null;
+  }
+
+  public FlutterRewardedAd(
+      @NonNull AdInstanceManager manager,
+      @NonNull String adUnitId,
+      @NonNull FlutterPublisherAdRequest publisherRequest) {
+    this.manager = manager;
+    this.adUnitId = adUnitId;
+    this.publisherRequest = publisherRequest;
+    this.request = null;
   }
 
   @Override
   void load() {
-    rewardedAd = new RewardedAd(manager.activity, adUnitId);
+    rewardedAd = createRewardedAd();
     final RewardedAdLoadCallback adLoadCallback =
         new RewardedAdLoadCallback() {
           @Override
@@ -105,8 +89,10 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
     if (request != null) {
       rewardedAd.loadAd(request.asAdRequest(), adLoadCallback);
+    } else if (publisherRequest != null) {
+      rewardedAd.loadAd(publisherRequest.asPublisherAdRequest(), adLoadCallback);
     } else {
-      rewardedAd.loadAd(new FlutterAdRequest.Builder().build().asAdRequest(), adLoadCallback);
+      Log.e(TAG, "A null or invalid ad request was provided.");
     }
   }
 
@@ -137,5 +123,11 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
           }
         };
     rewardedAd.show(manager.activity, adCallback);
+  }
+
+  @NonNull
+  @VisibleForTesting
+  RewardedAd createRewardedAd() {
+    return new RewardedAd(manager.activity, adUnitId);
   }
 }

@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.hasEntry;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -20,6 +21,9 @@ import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.StandardMethodCodec;
@@ -32,6 +36,7 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 
 public class FirebaseFlutterAdMobTest {
   private AdInstanceManager testManager;
@@ -65,7 +70,7 @@ public class FirebaseFlutterAdMobTest {
             .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
-    testManager.loadAd(bannerAd, 0);
+    testManager.trackAd(bannerAd, 0);
 
     assertNotNull(testManager.adForId(0));
     assertEquals(bannerAd, testManager.adForId(0));
@@ -177,6 +182,44 @@ public class FirebaseFlutterAdMobTest {
   }
 
   @Test
+  public void loadRewardedAdWithPublisherRequest() {
+    final FlutterPublisherAdRequest mockFlutterRequest = mock(FlutterPublisherAdRequest.class);
+    final PublisherAdRequest mockRequest = mock(PublisherAdRequest.class);
+    when(mockFlutterRequest.asPublisherAdRequest()).thenReturn(mockRequest);
+
+    final FlutterRewardedAd rewardedAd =
+        new FlutterRewardedAd(testManager, "testId", mockFlutterRequest);
+
+    final FlutterRewardedAd mockFlutterAd = spy(rewardedAd);
+    final RewardedAd mockPublisherAd = mock(RewardedAd.class);
+    doReturn(mockPublisherAd).when(mockFlutterAd).createRewardedAd();
+    mockFlutterAd.load();
+
+    final ArgumentCaptor<PublisherAdRequest> captor =
+        ArgumentCaptor.forClass(PublisherAdRequest.class);
+    verify(mockPublisherAd)
+        .loadAd(captor.capture(), ArgumentMatchers.any(RewardedAdLoadCallback.class));
+    assertEquals(captor.getValue(), mockRequest);
+  }
+
+  @Test
+  public void showRewardedAd() {
+    final FlutterAdRequest mockFlutterRequest = mock(FlutterAdRequest.class);
+
+    final FlutterRewardedAd rewardedAd =
+        new FlutterRewardedAd(testManager, "testId", mockFlutterRequest);
+
+    final FlutterRewardedAd mockFlutterAd = spy(rewardedAd);
+    final RewardedAd mockRewardedAd = mock(RewardedAd.class);
+    doReturn(mockRewardedAd).when(mockFlutterAd).createRewardedAd();
+    mockFlutterAd.load();
+
+    when(mockRewardedAd.isLoaded()).thenReturn(true);
+    mockFlutterAd.show();
+    verify(mockRewardedAd).show(any(Activity.class), any(RewardedAdCallback.class));
+  }
+
+  @Test
   public void disposeAd() {
     final FlutterBannerAd bannerAd =
         new FlutterBannerAd.Builder()
@@ -185,7 +228,7 @@ public class FirebaseFlutterAdMobTest {
             .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
-    testManager.loadAd(bannerAd, 2);
+    testManager.trackAd(bannerAd, 2);
     assertNotNull(testManager.adForId(2));
     assertNotNull(testManager.adIdFor(bannerAd));
     testManager.disposeAd(2);
@@ -296,7 +339,7 @@ public class FirebaseFlutterAdMobTest {
             .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
-    testManager.loadAd(bannerAd, 0);
+    testManager.trackAd(bannerAd, 0);
 
     testManager.onAdLoaded(bannerAd);
 
@@ -317,7 +360,7 @@ public class FirebaseFlutterAdMobTest {
             .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
-    testManager.loadAd(bannerAd, 0);
+    testManager.trackAd(bannerAd, 0);
 
     testManager.onAdFailedToLoad(bannerAd, new FlutterAd.FlutterLoadAdError(1, "hi", "friend"));
 
@@ -342,7 +385,7 @@ public class FirebaseFlutterAdMobTest {
             .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
-    testManager.loadAd(bannerAd, 0);
+    testManager.trackAd(bannerAd, 0);
 
     testManager.onAppEvent(bannerAd, "color", "red");
 
@@ -367,7 +410,7 @@ public class FirebaseFlutterAdMobTest {
             .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
-    testManager.loadAd(bannerAd, 0);
+    testManager.trackAd(bannerAd, 0);
 
     testManager.onApplicationExit(bannerAd);
 
@@ -388,7 +431,7 @@ public class FirebaseFlutterAdMobTest {
             .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
-    testManager.loadAd(bannerAd, 0);
+    testManager.trackAd(bannerAd, 0);
 
     testManager.onAdOpened(bannerAd);
 
@@ -416,7 +459,7 @@ public class FirebaseFlutterAdMobTest {
                   }
                 })
             .build();
-    testManager.loadAd(nativeAd, 0);
+    testManager.trackAd(nativeAd, 0);
 
     testManager.onNativeAdClicked(nativeAd);
 
@@ -444,7 +487,7 @@ public class FirebaseFlutterAdMobTest {
                   }
                 })
             .build();
-    testManager.loadAd(nativeAd, 0);
+    testManager.trackAd(nativeAd, 0);
 
     testManager.onNativeAdImpression(nativeAd);
 
@@ -465,7 +508,7 @@ public class FirebaseFlutterAdMobTest {
             .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
-    testManager.loadAd(bannerAd, 0);
+    testManager.trackAd(bannerAd, 0);
 
     testManager.onAdClosed(bannerAd);
 
@@ -479,9 +522,8 @@ public class FirebaseFlutterAdMobTest {
 
   @Test
   public void flutterAdListener_onRewardedAdUserEarnedReward() {
-    final FlutterRewardedAd ad =
-        new FlutterRewardedAd.Builder().setManager(testManager).setAdUnitId("testId").build();
-    testManager.loadAd(ad, 0);
+    final FlutterRewardedAd ad = new FlutterRewardedAd(testManager, "testId", request);
+    testManager.trackAd(ad, 0);
 
     testManager.onRewardedAdUserEarnedReward(
         ad, new FlutterRewardedAd.FlutterRewardItem(23, "coins"));

@@ -86,8 +86,7 @@ about configuring `Info.plist` and setting up your App ID.
 Before loading ads, have your app initialize the Mobile Ads SDK by calling
 `MobileAds.instance.initialize()` which initializes the SDK and returns a `Future` that finishes
 once initialization is complete (or after a 30-second timeout). This needs to be done only once,
-ideally at app launch. If you're using mediation, wait until the `Future` completes, as this will
-ensure that all mediation adapters are initialized.
+ideally at app launch.
 
 ```dart
 import 'package:firebase_admob/firebase_admob.dart';
@@ -109,7 +108,7 @@ class MyAppState extends State<MyApp> {
 }
 ```
 
-## Creating and Loading an Ad
+## Creating and Loading an Ad with AdMob
 
 Instantiating each ad is slightly different and each supported format is explained in this section.
 To see how to display an Ad after loading one, see section **Displaying an Ad**.
@@ -384,7 +383,7 @@ traffic when using these ad units.
 **Android**: https://developers.google.com/admob/android/test-ads
 **iOS**: https://developers.google.com/admob/ios/test-ads
 
-## Ad Manager
+## Creating and Loading an Ad with Ad Manager
 
 This plugin also contains support for ads using [Google Ad Manager](https://admanager.google.com/home/).
 Below are all supported Ad Manager ad types.
@@ -474,6 +473,33 @@ Once created you can call `load()`.
 
 ```dart
 nativeAd.load();
+```
+
+See section **Displaying an Ad** to see how to show the ad in your app and section
+**AdRequest Info and Ad Event Listeners** to see additional parameters.
+
+### Rewarded Ads for Ad Manager
+
+Instantiating a `RewardedAd` requires at least an `adUnitId`, an `AdRequest`/`PublisherAdRequest`, and
+an `AdListener` as seen below. When testing, you should always use test ids and switch to an ad unit
+id from your Ad Manager account when releasing.
+
+```dart
+final RewardedAd myRewardedAd = RewardedAd.fromPublisherRequest(
+  // Replace the adUnitId with an ad unit id from the Ad Manager dashboard or test ids from the
+  // links below:
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/ios/test-ads
+  adUnitId: '/6499/example/rewarded-video',
+  publisherRequest: PublisherAdRequest(),
+  listener: AdListener(),
+);
+```
+
+After a `RewardedAd` is instantiated, you must call `load()` before it can be shown on the screen.
+
+```dart
+myRewardedAd.load();
 ```
 
 See section **Displaying an Ad** to see how to show the ad in your app and section

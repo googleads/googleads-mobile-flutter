@@ -176,6 +176,43 @@
                       completionHandler:[OCMArg any]]);
 }
 
+- (void)testShowRewardedAd {
+  FLTAdRequest *request = [[FLTAdRequest alloc] init];
+  request.keywords = @[ @"apple" ];
+  FLTRewardedAd *ad =
+      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                      request:request
+                           rootViewController:OCMClassMock([UIViewController class])];
+
+  FLTRewardedAd *mockFltAd = OCMPartialMock(ad);
+  GADRewardedAd *mockRewardedAd = OCMClassMock([GADRewardedAd class]);
+  OCMStub([mockFltAd rewardedAd]).andReturn(mockRewardedAd);
+
+  OCMStub([mockRewardedAd isReady]).andReturn(YES);
+  [mockFltAd show];
+  OCMVerify([mockRewardedAd presentFromRootViewController:OCMOCK_ANY delegate:OCMOCK_ANY]);
+}
+
+- (void)testLoadRewardedAdWithPublisherRequest {
+  FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+  request.keywords = @[ @"apple" ];
+  FLTRewardedAd *ad =
+      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                      request:request
+                           rootViewController:OCMClassMock([UIViewController class])];
+
+  FLTRewardedAd *mockFltAd = OCMPartialMock(ad);
+  GADRewardedAd *mockRewardedAd = OCMClassMock([GADRewardedAd class]);
+  OCMStub([mockFltAd rewardedAd]).andReturn(mockRewardedAd);
+  [mockFltAd load];
+
+  OCMVerify([mockRewardedAd loadRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
+                              DFPRequest *requestArg = obj;
+                              return [requestArg.keywords isEqualToArray:@[ @"apple" ]];
+                            }]
+                      completionHandler:[OCMArg any]]);
+}
+
 - (void)testLoadNativeAdWithPublisherRequest {
   FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
   request.keywords = @[ @"apple" ];

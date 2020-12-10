@@ -314,7 +314,18 @@
 }
 
 - (void)load {
-  [self.rewardedAd loadRequest:_adRequest.asGADRequest
+  GADRequest *request;
+  if ([_adRequest isKindOfClass:[FLTPublisherAdRequest class]]) {
+    FLTPublisherAdRequest *publisherRequest = (FLTPublisherAdRequest *)_adRequest;
+    request = publisherRequest.asDFPRequest;
+  } else if ([_adRequest isKindOfClass:[FLTAdRequest class]]) {
+    request = _adRequest.asGADRequest;
+  } else {
+    NSLog(@"A null or invalid ad request was provided.");
+    return;
+  }
+
+  [self.rewardedAd loadRequest:request
              completionHandler:^(GADRequestError *_Nullable error) {
                if (error) {
                  [self->_manager onAdFailedToLoad:self
