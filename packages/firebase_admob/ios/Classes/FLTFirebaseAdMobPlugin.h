@@ -6,8 +6,6 @@
 
 #import <GoogleMobileAds/GoogleMobileAds.h>
 
-#import <Firebase/Firebase.h>
-
 #import "FLTAdInstanceManager_Internal.h"
 #import "FLTAd_Internal.h"
 #import "FLTMobileAds_Internal.h"
