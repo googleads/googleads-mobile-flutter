@@ -102,7 +102,7 @@ class MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     MobileAds.instance.initialize().then((InitializationStatus status) {
-      // Load ads with mediation.
+      // Load ads.
    });
   }
 }
