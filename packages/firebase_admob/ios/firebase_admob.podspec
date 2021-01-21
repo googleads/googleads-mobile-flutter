@@ -15,7 +15,7 @@ Firebase Admob plugin for Flutter.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'Firebase/Analytics', '~> 6.33.0'
+  s.dependency 'Firebase/Analytics', '~> 7.3.0'
   s.dependency 'Google-Mobile-Ads-SDK'
   s.ios.deployment_target = '8.0'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS' => 'armv7 arm64 x86_64' }

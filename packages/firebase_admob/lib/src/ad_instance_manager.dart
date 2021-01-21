@@ -7,12 +7,12 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:firebase_admob/src/mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:quiver/collection.dart';
 
 import 'firebase_admob.dart';
 
@@ -45,7 +45,7 @@ class AdInstanceManager {
   }
 
   int _nextAdId = 0;
-  final BiMap<int, Ad> _loadedAds = BiMap<int, Ad>();
+  final _BiMap<int, Ad> _loadedAds = _BiMap<int, Ad>();
   final Set<Ad> _onAdLoadedAds = <Ad>{};
 
   bool onAdLoadedCalled(Ad ad) => _onAdLoadedAds.contains(ad);
@@ -420,5 +420,46 @@ class AdMessageCodec extends StandardMessageCodec {
         value?.cast<T>(),
       ),
     );
+  }
+}
+
+class _BiMap<K extends Object, V extends Object> extends MapBase<K, V> {
+  _BiMap() {
+    _inverse = _BiMap<V, K>._inverse(this);
+  }
+
+  _BiMap._inverse(this._inverse);
+
+  final Map<K, V> _map = <K, V>{};
+  _BiMap<V, K> _inverse;
+
+  _BiMap get inverse => _inverse;
+
+  @override
+  V operator [](Object key) => _map[key];
+
+  @override
+  void operator []=(K key, V value) {
+    assert(!_map.containsKey(key));
+    assert(!inverse.containsKey(value));
+    _map[key] = value;
+    inverse._map[value] = key;
+  }
+
+  @override
+  void clear() {
+    _map.clear();
+    inverse._map.clear();
+  }
+
+  @override
+  Iterable<K> get keys => _map.keys;
+
+  @override
+  V remove(Object key) {
+    if (key == null) return null;
+    final V value = _map[key];
+    inverse._map.remove(value);
+    return _map.remove(key);
   }
 }

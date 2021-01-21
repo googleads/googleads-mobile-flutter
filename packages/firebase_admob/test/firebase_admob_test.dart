@@ -3,6 +3,8 @@
 // found in the LICENSE file.
 // ignore_for_file: deprecated_member_use_from_same_package
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_admob/src/ad_instance_manager.dart';
