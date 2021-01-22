@@ -66,14 +66,14 @@ class FlutterPublisherAdRequest {
       }
     }
 
-    if (contentUrl != null) builder.setContentUrl(contentUrl);
-
+    if (contentUrl != null) {
+      builder.setContentUrl(contentUrl);
+    }
     if (customTargeting != null) {
       for (final Map.Entry<String, String> entry : customTargeting.entrySet()) {
         builder.addCustomTargeting(entry.getKey(), entry.getValue());
       }
     }
-
     if (customTargetingLists != null) {
       for (final Map.Entry<String, List<String>> entry : customTargetingLists.entrySet()) {
         builder.addCustomTargeting(entry.getKey(), entry.getValue());
@@ -111,13 +111,17 @@ class FlutterPublisherAdRequest {
 
     FlutterPublisherAdRequest request = (FlutterPublisherAdRequest) o;
 
-    if (keywords != null ? !keywords.equals(request.keywords) : request.keywords != null)
+    if (keywords != null ? !keywords.equals(request.keywords) : request.keywords != null) {
       return false;
-    if (contentUrl != null ? !contentUrl.equals(request.contentUrl) : request.contentUrl != null)
+    }
+    if (contentUrl != null ? !contentUrl.equals(request.contentUrl) : request.contentUrl != null) {
       return false;
+    }
     if (customTargeting != null
         ? !customTargeting.equals(request.customTargeting)
-        : request.customTargeting != null) return false;
+        : request.customTargeting != null) {
+      return false;
+    }
     return customTargetingLists != null
         ? customTargetingLists.equals(request.customTargetingLists)
         : request.customTargetingLists == null;

@@ -43,9 +43,10 @@ class AdInstanceManager {
 
   Integer adIdFor(@NonNull FlutterAd ad) {
     for (Integer adId : ads.keySet()) {
-      if (ads.get(adId) == ad) return adId;
+      if (ads.get(adId) == ad) {
+        return adId;
+      }
     }
-
     return null;
   }
 

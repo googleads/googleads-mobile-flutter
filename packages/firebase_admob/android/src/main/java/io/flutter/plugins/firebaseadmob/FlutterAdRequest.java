@@ -101,11 +101,21 @@ class FlutterAdRequest {
         builder.addKeyword(keyword);
       }
     }
-    if (contentUrl != null) builder.setContentUrl(contentUrl);
-    if (birthday != null) builder.setBirthday(birthday);
-    if (gender != null) builder.setGender(gender.ordinal());
-    if (designedForFamilies != null) builder.setIsDesignedForFamilies(designedForFamilies);
-    if (childDirected != null) builder.tagForChildDirectedTreatment(childDirected);
+    if (contentUrl != null) {
+      builder.setContentUrl(contentUrl);
+    }
+    if (birthday != null) {
+      builder.setBirthday(birthday);
+    }
+    if (gender != null) {
+      builder.setGender(gender.ordinal());
+    }
+    if (designedForFamilies != null) {
+      builder.setIsDesignedForFamilies(designedForFamilies);
+    }
+    if (childDirected != null) {
+      builder.tagForChildDirectedTreatment(childDirected);
+    }
     if (testDevices != null) {
       for (final String testDevice : testDevices) {
         builder.addTestDevice(testDevice);
@@ -158,43 +168,5 @@ class FlutterAdRequest {
   @Nullable
   public Boolean getNonPersonalizedAds() {
     return nonPersonalizedAds;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof FlutterAdRequest)) return false;
-
-    FlutterAdRequest that = (FlutterAdRequest) o;
-
-    if (keywords != null ? !keywords.equals(that.keywords) : that.keywords != null) return false;
-    if (contentUrl != null ? !contentUrl.equals(that.contentUrl) : that.contentUrl != null)
-      return false;
-    if (birthday != null ? !birthday.equals(that.birthday) : that.birthday != null) return false;
-    if (gender != that.gender) return false;
-    if (designedForFamilies != null
-        ? !designedForFamilies.equals(that.designedForFamilies)
-        : that.designedForFamilies != null) return false;
-    if (childDirected != null
-        ? !childDirected.equals(that.childDirected)
-        : that.childDirected != null) return false;
-    if (testDevices != null ? !testDevices.equals(that.testDevices) : that.testDevices != null)
-      return false;
-    return nonPersonalizedAds != null
-        ? nonPersonalizedAds.equals(that.nonPersonalizedAds)
-        : that.nonPersonalizedAds == null;
-  }
-
-  @Override
-  public int hashCode() {
-    int result = keywords != null ? keywords.hashCode() : 0;
-    result = 31 * result + (contentUrl != null ? contentUrl.hashCode() : 0);
-    result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
-    result = 31 * result + (gender != null ? gender.hashCode() : 0);
-    result = 31 * result + (designedForFamilies != null ? designedForFamilies.hashCode() : 0);
-    result = 31 * result + (childDirected != null ? childDirected.hashCode() : 0);
-    result = 31 * result + (testDevices != null ? testDevices.hashCode() : 0);
-    result = 31 * result + (nonPersonalizedAds != null ? nonPersonalizedAds.hashCode() : 0);
-    return result;
   }
 }

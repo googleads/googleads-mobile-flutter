@@ -26,12 +26,17 @@ class FlutterAdSize {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof FlutterAdSize)) return false;
+    if (this == o) {
+      return true;
+    } else if (!(o instanceof FlutterAdSize)) {
+      return false;
+    }
 
     final FlutterAdSize that = (FlutterAdSize) o;
 
-    if (width != that.width) return false;
+    if (width != that.width) {
+      return false;
+    }
     return height == that.height;
   }
 

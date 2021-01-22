@@ -99,6 +99,7 @@ final class AdMessageCodec extends StandardMessageCodec {
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   protected Object readValueOfType(byte type, ByteBuffer buffer) {
     switch (type) {
@@ -146,9 +147,10 @@ final class AdMessageCodec extends StandardMessageCodec {
             return FlutterAdapterStatus.AdapterInitializationState.NOT_READY;
           case "ready":
             return FlutterAdapterStatus.AdapterInitializationState.READY;
+          default:
+            final String message = String.format("Unable to handle state: %s", state);
+            throw new IllegalArgumentException(message);
         }
-        final String message = String.format("Unable to handle state: %s", state);
-        throw new IllegalArgumentException(message);
       case VALUE_ADAPTER_STATUS:
         return new FlutterAdapterStatus(
             (FlutterAdapterStatus.AdapterInitializationState) readValueOfType(buffer.get(), buffer),
@@ -163,8 +165,10 @@ final class AdMessageCodec extends StandardMessageCodec {
   }
 
   @Nullable
-  private Boolean booleanValueOf(@Nullable Object object) {
-    if (object == null) return null;
+  private static Boolean booleanValueOf(@Nullable Object object) {
+    if (object == null) {
+      return null;
+    }
     return (Boolean) object;
   }
 }

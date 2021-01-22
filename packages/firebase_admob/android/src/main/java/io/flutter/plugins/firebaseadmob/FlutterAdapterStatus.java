@@ -54,13 +54,18 @@ class FlutterAdapterStatus {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof FlutterAdapterStatus)) return false;
+    if (this == o) {
+      return true;
+    } else if (!(o instanceof FlutterAdapterStatus)) {
+      return false;
+    }
 
     final FlutterAdapterStatus that = (FlutterAdapterStatus) o;
-
-    if (state != that.state) return false;
-    if (!description.equals(that.description)) return false;
+    if (state != that.state) {
+      return false;
+    } else if (!description.equals(that.description)) {
+      return false;
+    }
     return latency.equals(that.latency);
   }
 

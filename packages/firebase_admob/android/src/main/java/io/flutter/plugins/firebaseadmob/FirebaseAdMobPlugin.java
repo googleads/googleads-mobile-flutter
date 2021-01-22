@@ -22,8 +22,6 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugin.platform.PlatformViewRegistry;
 import java.util.HashMap;
@@ -36,15 +34,11 @@ import java.util.Map;
  * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
  */
 public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
-  private static final String TAG = "FirebaseAdMobPlugin";
-
-  // This the plugin key used in the Embedding V1 generated GeneratedRegistrant.java. This key is
-  // used when this plugin publishes it's self in registerWith(registrar).
-  private static final String GENERATED_PLUGIN_KEY =
-      "io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin";
 
   private static <T> T requireNonNull(T obj) {
-    if (obj == null) throw new IllegalArgumentException();
+    if (obj == null) {
+      throw new IllegalArgumentException();
+    }
     return obj;
   }
 
@@ -72,47 +66,6 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
      *     top of the FlutterView.
      */
     UnifiedNativeAdView createNativeAd(UnifiedNativeAd nativeAd, Map<String, Object> customOptions);
-  }
-
-  /**
-   * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
-   *
-   * <p>Calling this will register the plugin with the passed registrar. However, plugins
-   * initialized this way won't react to changes in activity or context.
-   *
-   * @param registrar connects this plugin's {@link
-   *     io.flutter.plugin.common.MethodChannel.MethodCallHandler} to its {@link
-   *     io.flutter.plugin.common.BinaryMessenger}.
-   */
-  public static void registerWith(Registrar registrar) {
-    if (registrar.activity() == null) {
-      // If a background Flutter view tries to register the plugin, there will be no activity from the registrar.
-      // We stop the registering process immediately because the firebase_admob requires an activity.
-      return;
-    }
-
-    final FirebaseAdMobPlugin plugin = new FirebaseAdMobPlugin();
-    registrar.publish(plugin);
-    plugin.initializePlugin(
-        registrar.activity(), registrar.messenger(), registrar.platformViewRegistry());
-  }
-
-  /**
-   * Adds a {@link io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory} used to
-   * create {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from a Native Ad created
-   * in Dart.
-   *
-   * @param registry maintains access to a FirebaseAdMobPlugin instance.
-   * @param factoryId a unique identifier for the ad factory. The Native Ad created in Dart includes
-   *     a parameter that refers to this.
-   * @param nativeAdFactory creates {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s
-   *     when Flutter NativeAds are created.
-   * @return whether the factoryId is unique and the nativeAdFactory was successfully added.
-   */
-  public static boolean registerNativeAdFactory(
-      PluginRegistry registry, String factoryId, NativeAdFactory nativeAdFactory) {
-    final FirebaseAdMobPlugin adMobPlugin = registry.valuePublishedByPlugin(GENERATED_PLUGIN_KEY);
-    return registerNativeAdFactory(adMobPlugin, factoryId, nativeAdFactory);
   }
 
   /**
@@ -145,26 +98,6 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
     }
 
     return plugin.addNativeAdFactory(factoryId, nativeAdFactory);
-  }
-
-  /**
-   * Unregisters a {@link io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory} used
-   * to create {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from a Native Ad
-   * created in Dart.
-   *
-   * @param registry maintains access to a FirebaseAdMobPlugin instance.
-   * @param factoryId a unique identifier for the ad factory. The Native ad created in Dart includes
-   *     a parameter that refers to this.
-   * @return the previous {@link
-   *     io.flutter.plugins.firebaseadmob.FirebaseAdMobPlugin.NativeAdFactory} associated with this
-   *     factoryId, or null if there was none for this factoryId.
-   */
-  public static NativeAdFactory unregisterNativeAdFactory(
-      PluginRegistry registry, String factoryId) {
-    final FirebaseAdMobPlugin adMobPlugin = registry.valuePublishedByPlugin(GENERATED_PLUGIN_KEY);
-    if (adMobPlugin != null) adMobPlugin.removeNativeAdFactory(factoryId);
-
-    return null;
   }
 
   /**
@@ -244,8 +177,9 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
 
   @Override
   public void onReattachedToActivityForConfigChanges(ActivityPluginBinding binding) {
-    assert instanceManager != null;
-    instanceManager.setActivity(binding.getActivity());
+    if (instanceManager != null) {
+      instanceManager.setActivity(binding.getActivity());
+    }
   }
 
   @Override

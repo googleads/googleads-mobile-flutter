@@ -34,12 +34,16 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
     @Override
     public boolean equals(Object other) {
-      if (this == other) return true;
-      if (!(other instanceof FlutterRewardItem)) return false;
+      if (this == other) {
+        return true;
+      } else if (!(other instanceof FlutterRewardItem)) {
+        return false;
+      }
 
       final FlutterRewardItem that = (FlutterRewardItem) other;
-
-      if (!amount.equals(that.amount)) return false;
+      if (!amount.equals(that.amount)) {
+        return false;
+      }
       return type.equals(that.type);
     }
 

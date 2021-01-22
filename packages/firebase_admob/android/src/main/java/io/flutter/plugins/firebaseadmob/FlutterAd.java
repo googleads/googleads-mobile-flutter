@@ -32,13 +32,19 @@ abstract class FlutterAd {
 
     @Override
     public boolean equals(Object object) {
-      if (this == object) return true;
-      if (!(object instanceof FlutterLoadAdError)) return false;
+      if (this == object) {
+        return true;
+      } else if (!(object instanceof FlutterLoadAdError)) {
+        return false;
+      }
 
       final FlutterLoadAdError that = (FlutterLoadAdError) object;
 
-      if (code != that.code) return false;
-      if (!domain.equals(that.domain)) return false;
+      if (code != that.code) {
+        return false;
+      } else if (!domain.equals(that.domain)) {
+        return false;
+      }
       return message.equals(that.message);
     }
 
