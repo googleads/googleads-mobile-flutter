@@ -5,7 +5,12 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-@import google_mobile_ads;
+#import "../Classes/FLTGoogleMobileAdsReaderWriter_Internal.h"
+#import "../Classes/FLTMobileAds_Internal.h"
+#import "../Classes/FLTGoogleMobileAdsPlugin.h"
+#import "../Classes/FLTGoogleMobileAdsCollection_Internal.h"
+#import "../Classes/FLTAd_Internal.h"
+#import "../Classes/FLTAdInstanceManager_Internal.h"
 
 @interface FLTGoogleMobileAdsReaderWriterTest : XCTestCase
 @end
