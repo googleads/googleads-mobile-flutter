@@ -11,6 +11,7 @@ import java.util.Collections;
 import org.junit.Test;
 
 public class AdMessageCodecTest {
+
   @Test
   public void adMessageCodec_encodeAdapterInitializationState() {
     final AdMessageCodec codec = new AdMessageCodec();

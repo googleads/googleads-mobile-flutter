@@ -30,15 +30,10 @@ jobs:
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
-# TODO Add test driver - pending AdMob rework.
-#      - name: "Drive Example"
-#        uses: reactivecircus/android-emulator-runner@v2
-#        with:
-#          api-level: 28
-#          arch: x86_64
-#          target: google_apis
-#          profile: Nexus 5X
-#          script: ./.github/workflows/scripts/drive-example.sh android
+      - name: "Unit Tests"
+        run: |
+          cd packages/google_mobile_ads/example/android
+          ./gradlew test
 
   apple:
     runs-on: macos-latest
@@ -55,10 +50,9 @@ jobs:
           flutter config --enable-macos-desktop
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
-# TODO Add test driver - pending AdMob rework.
-#      - name: "Drive iOS Example"
-#        run: ./.github/workflows/scripts/drive-example.sh ios
-#      - name: "Build MacOS Example"
-#        run: ./.github/workflows/scripts/build-example.sh macos
-#      - name: "Drive MacOS Example"
-#        run: ./.github/workflows/scripts/drive-example.sh macos
+      - name: "Unit Tests"
+        run: |
+          cd packages/google_mobile_ads/ios
+          pod lib lint --allow-warnings
+        env:
+          DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer

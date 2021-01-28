@@ -260,18 +260,16 @@ public class GoogleMobileAdsTest {
                 .setNonPersonalizedAds(false)
                 .build());
 
-    assertEquals(
-        codec.decodeMessage((ByteBuffer) message.position(0)),
-        new FlutterAdRequest.Builder()
-            .setKeywords(Arrays.asList("1", "2", "3"))
-            .setContentUrl("contentUrl")
-            .setBirthday(new Date(23))
-            .setGender(FlutterAdRequest.MobileAdGender.UNKNOWN)
-            .setDesignedForFamilies(false)
-            .setChildDirected(true)
-            .setTestDevices(Arrays.asList("Android", "iOS"))
-            .setNonPersonalizedAds(false)
-            .build());
+    final FlutterAdRequest request =
+        (FlutterAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(Arrays.asList("1", "2", "3"), request.getKeywords());
+    assertEquals("contentUrl", request.getContentUrl());
+    assertEquals(new Date(23), request.getBirthday());
+    assertEquals(FlutterAdRequest.MobileAdGender.UNKNOWN, request.getGender());
+    assertEquals(false, request.getDesignedForFamilies());
+    assertEquals(true, request.getChildDirected());
+    assertEquals(Arrays.asList("Android", "iOS"), request.getTestDevices());
+    assertEquals(false, request.getNonPersonalizedAds());
   }
 
   @Test
