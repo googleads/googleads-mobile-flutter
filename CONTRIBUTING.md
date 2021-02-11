@@ -228,5 +228,3 @@ Some things to keep in mind before publishing the release:
   to be unavailable. There may be bugs with the release or questions about it
   from people that immediately adopt it, and uncovering and resolving those
   support issues will take more time if you're unavailable.
-
-<!-- TODO(ehesp): detail melos release process -->
