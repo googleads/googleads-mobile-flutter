@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'ad_instance_manager.dart';
+import 'request_configuration.dart';
 
 /// The initialization state of the mediation adapter.
 enum AdapterInitializationState {
@@ -47,6 +48,11 @@ class MobileAds {
     return instanceManager.channel.invokeMethod<InitializationStatus>(
       'MobileAds#initialize',
     );
+  }
+
+  /// Update the [RequestConfiguration] to apply for future ad requests.
+  Future<void> updateRequestConfiguration(RequestConfiguration requestConfiguration) {
+    return instanceManager.updateRequestConfiguration(requestConfiguration);
   }
 }
 

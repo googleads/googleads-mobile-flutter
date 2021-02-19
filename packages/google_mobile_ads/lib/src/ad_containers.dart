@@ -83,7 +83,9 @@ class AdRequest {
         this.birthday,
     @Deprecated('This functionality is deprecated in AdMob without replacement.')
         this.gender,
-    @Deprecated('Use `childDirected` instead.') this.designedForFamilies,
+    @Deprecated('See `RequestConfiguration.maxAdContentRating`.')
+      this.designedForFamilies,
+    @Deprecated('See `RequestConfiguration.tagForChildDirectedTreatment')
     this.childDirected,
     this.testDevices,
     this.nonPersonalizedAds,
@@ -95,9 +97,9 @@ class AdRequest {
   final DateTime birthday;
   @Deprecated('This functionality is deprecated in AdMob without replacement.')
   final MobileAdGender gender;
-  @Deprecated(
-      'This functionality is deprecated in AdMob.  Use `childDirected` instead.')
+  @Deprecated('See `RequestConfiguration.maxAdContentRating`.')
   final bool designedForFamilies;
+  @Deprecated('Use `RequestConfiguration.tagForChildDirectedTreatment')
   final bool childDirected;
   final List<String> testDevices;
   final bool nonPersonalizedAds;

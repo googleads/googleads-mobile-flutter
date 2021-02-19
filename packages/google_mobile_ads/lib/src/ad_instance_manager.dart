@@ -24,6 +24,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import 'request_configuration.dart';
 import 'ad_containers.dart';
 
 /// Loads and disposes [BannerAds] and [InterstitialAds].
@@ -264,6 +265,20 @@ class AdInstanceManager {
       'showAdWithoutView',
       <dynamic, dynamic>{
         'adId': adIdFor(ad),
+      },
+    );
+  }
+
+  /// Set the [RequestConfiguration] to apply for future ad requests.
+  Future<void> updateRequestConfiguration(
+      RequestConfiguration requestConfiguration) {
+    return channel.invokeMethod<void>(
+      'MobileAds#updateRequestConfiguration',
+      <dynamic, dynamic>{
+        'maxAdContentRating': requestConfiguration.maxAdContentRating,
+        'tagForChildDirectedTreatment': requestConfiguration.tagForChildDirectedTreatment,
+        'testDeviceIds': requestConfiguration.testDeviceIds,
+        'tagForUnderAgeOfConsent': requestConfiguration.tagForUnderAgeOfConsent,
       },
     );
   }

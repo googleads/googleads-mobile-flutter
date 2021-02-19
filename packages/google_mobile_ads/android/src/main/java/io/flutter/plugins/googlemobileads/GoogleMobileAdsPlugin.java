@@ -19,6 +19,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -209,6 +210,27 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 result.success(new FlutterInitializationStatus(initializationStatus));
               }
             });
+        break;
+      case "MobileAds#updateRequestConfiguration":
+        RequestConfiguration.Builder builder = MobileAds.getRequestConfiguration().toBuilder();
+        String maxAdContentRating = call.argument("maxAdContentRating");
+        Integer tagForChildDirectedTreatment = call.argument("tagForChildDirectedTreatment");
+        Integer tagForUnderAgeOfConsent = call.argument("tagForUnderAgeOfConsent");
+        List<String> testDeviceIds = call.argument("testDeviceIds");
+        if (maxAdContentRating != null) {
+          builder.setMaxAdContentRating(maxAdContentRating);
+        }
+        if (tagForChildDirectedTreatment != null) {
+          builder.setTagForChildDirectedTreatment(tagForChildDirectedTreatment);
+        }
+        if (tagForUnderAgeOfConsent != null) {
+          builder.setTagForUnderAgeOfConsent(tagForUnderAgeOfConsent);
+        }
+        if (testDeviceIds != null) {
+          builder.setTestDeviceIds(testDeviceIds);
+        }
+        MobileAds.setRequestConfiguration(builder.build());
+        result.success(null);
         break;
       case "loadBannerAd":
         final FlutterBannerAd bannerAd =

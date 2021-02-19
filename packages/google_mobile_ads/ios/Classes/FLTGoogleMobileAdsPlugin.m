@@ -100,6 +100,51 @@
         startWithCompletionHandler:^(GADInitializationStatus *_Nonnull status) {
           result([[FLTInitializationStatus alloc] initWithStatus:status]);
         }];
+  } else if ([call.method isEqualToString:@"MobileAds#updateRequestConfiguration"]) {
+      NSString* maxAdContentRating = call.arguments[@"maxAdContentRating"];
+      NSNumber* tagForChildDirectedTreatment = call.arguments[@"tagForChildDirectedTreatment"];
+      NSNumber* tagForUnderAgeOfConsent = call.arguments[@"tagForUnderAgeOfConsent"];
+      NSArray<NSString*>* testDeviceIds = call.arguments[@"testDeviceIds"];
+
+    if (maxAdContentRating != NULL && maxAdContentRating != (id)[NSNull null]) {
+      if ([maxAdContentRating isEqualToString:@"G"]) {
+        GADMobileAds.sharedInstance.requestConfiguration.maxAdContentRating =
+          GADMaxAdContentRatingGeneral;
+      } else if ([maxAdContentRating isEqualToString:@"PG"]) {
+        GADMobileAds.sharedInstance.requestConfiguration.maxAdContentRating =
+          GADMaxAdContentRatingParentalGuidance;
+      } else if ([maxAdContentRating isEqualToString:@"T"]) {
+        GADMobileAds.sharedInstance.requestConfiguration.maxAdContentRating =
+          GADMaxAdContentRatingTeen;
+      } else if ([maxAdContentRating isEqualToString:@"MA"]) {
+        GADMobileAds.sharedInstance.requestConfiguration.maxAdContentRating =
+          GADMaxAdContentRatingMatureAudience;
+      }
+    }
+    if (tagForChildDirectedTreatment != NULL && tagForChildDirectedTreatment != (id)[NSNull null]) {
+      switch ([tagForChildDirectedTreatment intValue]) {
+        case 0:
+          [GADMobileAds.sharedInstance.requestConfiguration tagForChildDirectedTreatment:NO];
+          break;
+        case 1:
+          [GADMobileAds.sharedInstance.requestConfiguration tagForChildDirectedTreatment:YES];
+          break;
+      }
+    }
+    if (tagForUnderAgeOfConsent != NULL && tagForUnderAgeOfConsent != (id)[NSNull null]) {
+      switch ([tagForUnderAgeOfConsent intValue]) {
+        case 0:
+          [GADMobileAds.sharedInstance.requestConfiguration tagForUnderAgeOfConsent:NO];
+          break;
+        case 1:
+          [GADMobileAds.sharedInstance.requestConfiguration tagForUnderAgeOfConsent:YES];
+          break;
+      }
+    }
+    if (testDeviceIds != NULL && testDeviceIds != (id)[NSNull null]) {
+      GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers = testDeviceIds;
+    }
+    result(nil);
   } else if ([call.method isEqualToString:@"loadBannerAd"]) {
     FLTBannerAd *ad = [[FLTBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                        size:call.arguments[@"size"]

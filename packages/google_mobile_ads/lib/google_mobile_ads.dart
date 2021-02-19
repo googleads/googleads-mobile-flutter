@@ -14,3 +14,4 @@
 
 export 'src/ad_containers.dart';
 export 'src/mobile_ads.dart';
+export 'src/request_configuration.dart';

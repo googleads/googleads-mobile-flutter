@@ -33,7 +33,6 @@ class _MyAppState extends State<MyApp> {
     testDevices: testDevice != null ? <String>[testDevice] : null,
     keywords: <String>['foo', 'bar'],
     contentUrl: 'http://foo.com/bar.html',
-    childDirected: true,
     nonPersonalizedAds: true,
   );
 
@@ -70,8 +69,13 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     MobileAds.instance.initialize().then((InitializationStatus status) {
       print('Initialization done: ${status.adapterStatuses}');
-      createInterstitialAd();
-      createRewardedAd();
+      MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
+        tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified
+      ))
+        .then((value) {
+        createInterstitialAd();
+        createRewardedAd();
+      });
     });
   }
 
