@@ -14,7 +14,9 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.os.Bundle;
 import androidx.annotation.Nullable;
+import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +30,14 @@ class FlutterPublisherAdRequest {
   @Nullable private String contentUrl;
   @Nullable private Map<String, String> customTargeting;
   @Nullable private Map<String, List<String>> customTargetingLists;
+  @Nullable private Boolean nonPersonalizedAds;
 
-  static class Builder {
+  public static class Builder {
     @Nullable private List<String> keywords;
     @Nullable private String contentUrl;
     @Nullable private Map<String, String> customTargeting;
     @Nullable private Map<String, List<String>> customTargetingLists;
+    @Nullable private Boolean nonPersonalizedAds;
 
     public Builder setKeywords(@Nullable List<String> keywords) {
       this.keywords = keywords;
@@ -56,12 +60,18 @@ class FlutterPublisherAdRequest {
       return this;
     }
 
+    public Builder setNonPersonalizedAds(@Nullable Boolean nonPersonalizedAds) {
+      this.nonPersonalizedAds = nonPersonalizedAds;
+      return this;
+    }
+
     FlutterPublisherAdRequest build() {
       final FlutterPublisherAdRequest request = new FlutterPublisherAdRequest();
       request.keywords = keywords;
       request.contentUrl = contentUrl;
       request.customTargeting = customTargeting;
       request.customTargetingLists = customTargetingLists;
+      request.nonPersonalizedAds = nonPersonalizedAds;
       return request;
     }
   }
@@ -89,7 +99,11 @@ class FlutterPublisherAdRequest {
         builder.addCustomTargeting(entry.getKey(), entry.getValue());
       }
     }
-
+    if (nonPersonalizedAds != null && nonPersonalizedAds) {
+      final Bundle extras = new Bundle();
+      extras.putString("npa", "1");
+      builder.addNetworkExtrasBundle(AdMobAdapter.class, extras);
+    }
     builder.setRequestAgent("Flutter");
     return builder.build();
   }
@@ -114,6 +128,11 @@ class FlutterPublisherAdRequest {
     return customTargetingLists;
   }
 
+  @Nullable
+  public Boolean getNonPersonalizedAds() {
+    return nonPersonalizedAds;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -121,20 +140,21 @@ class FlutterPublisherAdRequest {
 
     FlutterPublisherAdRequest request = (FlutterPublisherAdRequest) o;
 
-    if (keywords != null ? !keywords.equals(request.keywords) : request.keywords != null) {
-      return false;
-    }
-    if (contentUrl != null ? !contentUrl.equals(request.contentUrl) : request.contentUrl != null) {
-      return false;
-    }
-    if (customTargeting != null
-        ? !customTargeting.equals(request.customTargeting)
-        : request.customTargeting != null) {
-      return false;
-    }
-    return customTargetingLists != null
-        ? customTargetingLists.equals(request.customTargetingLists)
-        : request.customTargetingLists == null;
+    return objectEquals(keywords, request.keywords)
+      && objectEquals(contentUrl, request.contentUrl)
+      && objectEquals(customTargeting, request.customTargeting)
+      && objectEquals(nonPersonalizedAds, request.nonPersonalizedAds)
+      && objectEquals(customTargetingLists, request.customTargetingLists);
+  }
+
+  /**
+   * Calculate object equality between l and r.
+   * We can't use Objects.equals() due to backwards compatibility to API 16.
+   */
+  private boolean objectEquals(Object l, Object r) {
+    return (l == null)
+      ? (r == null)
+      : (l.equals(r));
   }
 
   @Override

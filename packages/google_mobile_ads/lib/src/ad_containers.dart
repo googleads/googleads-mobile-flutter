@@ -122,12 +122,14 @@ class PublisherAdRequest {
     this.contentUrl,
     this.customTargeting,
     this.customTargetingLists,
+    this.nonPersonalizedAds
   });
 
   final List<String> keywords;
   final String contentUrl;
   final Map<String, String> customTargeting;
   final Map<String, List<String>> customTargetingLists;
+  final bool nonPersonalizedAds;
 
   @override
   bool operator ==(other) {
@@ -135,7 +137,8 @@ class PublisherAdRequest {
         contentUrl == other.contentUrl &&
         MapEquality().equals(customTargeting, other.customTargeting) &&
         DeepCollectionEquality()
-            .equals(customTargetingLists, other.customTargetingLists);
+            .equals(customTargetingLists, other.customTargetingLists) &&
+        nonPersonalizedAds == other.nonPersonalizedAds;
   }
 }
 

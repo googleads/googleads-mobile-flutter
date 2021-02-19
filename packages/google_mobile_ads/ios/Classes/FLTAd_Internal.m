@@ -87,12 +87,18 @@
   DFPRequest *request = [DFPRequest request];
   request.keywords = self.keywords;
   request.contentURL = self.contentURL;
-
+  
   NSMutableDictionary<NSString *, id> *targetingDictionary =
       [NSMutableDictionary dictionaryWithDictionary:self.customTargeting];
   [targetingDictionary addEntriesFromDictionary:self.customTargetingLists];
   request.customTargeting = targetingDictionary;
 
+  if (self.nonPersonalizedAds) {
+    GADExtras *extras = [[GADExtras alloc] init];
+    extras.additionalParameters = @{@"npa" : @"1"};
+    [request registerAdNetworkExtras:extras];
+  }
+  
   request.requestAgent = @"Flutter";
   return request;
 }

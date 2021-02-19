@@ -336,6 +336,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.contentUrl);
       writeValue(buffer, value.customTargeting);
       writeValue(buffer, value.customTargetingLists);
+      writeValue(buffer, value.nonPersonalizedAds);
     } else if (value is AdapterInitializationState) {
       buffer.putUint8(_valueInitializationState);
       writeValue(buffer, describeEnum(value));
@@ -404,6 +405,7 @@ class AdMessageCodec extends StandardMessageCodec {
           customTargetingLists: _deepMapCast<String>(
             readValueOfType(buffer.getUint8(), buffer),
           ),
+          nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueInitializationState:
         switch (readValueOfType(buffer.getUint8(), buffer)) {

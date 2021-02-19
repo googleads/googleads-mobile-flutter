@@ -81,6 +81,7 @@ final class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getContentUrl());
       writeValue(stream, request.getCustomTargeting());
       writeValue(stream, request.getCustomTargetingLists());
+      writeValue(stream, request.getNonPersonalizedAds());
     } else if (value instanceof FlutterAdapterStatus.AdapterInitializationState) {
       stream.write(VALUE_INITIALIZATION_STATE);
       final FlutterAdapterStatus.AdapterInitializationState state =
@@ -150,6 +151,7 @@ final class AdMessageCodec extends StandardMessageCodec {
             .setCustomTargeting((Map<String, String>) readValueOfType(buffer.get(), buffer))
             .setCustomTargetingLists(
                 (Map<String, List<String>>) readValueOfType(buffer.get(), buffer))
+            .setNonPersonalizedAds((Boolean) readValueOfType(buffer.get(), buffer))
             .build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);

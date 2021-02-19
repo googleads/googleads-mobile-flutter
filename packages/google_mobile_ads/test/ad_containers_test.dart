@@ -610,6 +610,7 @@ void main() {
         customTargetingLists: <String, List<String>>{
           'him': <String>['is']
         },
+        nonPersonalizedAds: true,
       ));
 
       expect(
@@ -621,6 +622,7 @@ void main() {
           customTargetingLists: <String, List<String>>{
             'him': <String>['is'],
           },
+          nonPersonalizedAds: true,
         ),
       );
     });
