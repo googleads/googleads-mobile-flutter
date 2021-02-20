@@ -1,19 +1,10 @@
-// Copyright 2021 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+// Copyright 2020 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 
 // ignore_for_file: public_member_api_docs
 // ignore_for_file: deprecated_member_use_from_same_package
+// TODO(gonzchristian): Document all public members
 
 import 'dart:async';
 import 'dart:io' show Platform;
@@ -24,13 +15,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
-import 'package:collection/collection.dart';
 
 import 'ad_instance_manager.dart';
 
 /// The user's gender for the sake of ad targeting using [AdRequest].
 // Warning: the index values of the enums must match the values of the corresponding
 // AdMob constants. For example MobileAdGender.female.index == kGADGenderFemale.
+// TODO(bparrishMines): Unit tests should be added to the iOS and Android platform code to verify the above warning.
 @Deprecated('This functionality is deprecated in AdMob without replacement.')
 enum MobileAdGender {
   unknown,
@@ -84,9 +75,9 @@ class AdRequest {
     @Deprecated('This functionality is deprecated in AdMob without replacement.')
         this.gender,
     @Deprecated('See `RequestConfiguration.maxAdContentRating`.')
-      this.designedForFamilies,
+        this.designedForFamilies,
     @Deprecated('See `RequestConfiguration.tagForChildDirectedTreatment')
-    this.childDirected,
+        this.childDirected,
     this.testDevices,
     this.nonPersonalizedAds,
   });
@@ -122,7 +113,7 @@ class PublisherAdRequest {
     this.contentUrl,
     this.customTargeting,
     this.customTargetingLists,
-    this.nonPersonalizedAds
+    this.nonPersonalizedAds,
   });
 
   final List<String> keywords;
@@ -133,11 +124,11 @@ class PublisherAdRequest {
 
   @override
   bool operator ==(other) {
-    return ListEquality().equals(keywords, other.keywords) &&
+    return listEquals<String>(keywords, other.keywords) &&
         contentUrl == other.contentUrl &&
-        MapEquality().equals(customTargeting, other.customTargeting) &&
-        DeepCollectionEquality()
-            .equals(customTargetingLists, other.customTargetingLists) &&
+        mapEquals(customTargeting, other.customTargeting) &&
+        customTargetingLists.toString() ==
+            other.customTargetingLists.toString() &&
         nonPersonalizedAds == other.nonPersonalizedAds;
   }
 }
@@ -269,7 +260,7 @@ class AdListener {
 abstract class Ad {
   /// Default constructor, used by subclasses.
   const Ad({@required this.adUnitId, @required this.listener})
-      : assert(adUnitId != null ),
+      : assert(adUnitId != null),
         assert(listener != null);
 
   /// Receive callbacks from [Ad] lifecycle events.
