@@ -24,7 +24,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
-import 'package:collection/collection.dart';
 
 import 'ad_instance_manager.dart';
 
@@ -84,9 +83,9 @@ class AdRequest {
     @Deprecated('This functionality is deprecated in AdMob without replacement.')
         this.gender,
     @Deprecated('See `RequestConfiguration.maxAdContentRating`.')
-      this.designedForFamilies,
+        this.designedForFamilies,
     @Deprecated('See `RequestConfiguration.tagForChildDirectedTreatment')
-    this.childDirected,
+        this.childDirected,
     this.testDevices,
     this.nonPersonalizedAds,
   });
@@ -122,7 +121,7 @@ class PublisherAdRequest {
     this.contentUrl,
     this.customTargeting,
     this.customTargetingLists,
-    this.nonPersonalizedAds
+    this.nonPersonalizedAds,
   });
 
   final List<String> keywords;
@@ -133,11 +132,11 @@ class PublisherAdRequest {
 
   @override
   bool operator ==(other) {
-    return ListEquality().equals(keywords, other.keywords) &&
+    return listEquals<String>(keywords, other.keywords) &&
         contentUrl == other.contentUrl &&
-        MapEquality().equals(customTargeting, other.customTargeting) &&
-        DeepCollectionEquality()
-            .equals(customTargetingLists, other.customTargetingLists) &&
+        mapEquals(customTargeting, other.customTargeting) &&
+        customTargetingLists.toString() ==
+            other.customTargetingLists.toString() &&
         nonPersonalizedAds == other.nonPersonalizedAds;
   }
 }
@@ -269,7 +268,7 @@ class AdListener {
 abstract class Ad {
   /// Default constructor, used by subclasses.
   const Ad({@required this.adUnitId, @required this.listener})
-      : assert(adUnitId != null ),
+      : assert(adUnitId != null),
         assert(listener != null);
 
   /// Receive callbacks from [Ad] lifecycle events.
