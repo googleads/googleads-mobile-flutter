@@ -14,8 +14,8 @@
 
 name: google_mobile_ads
 description: Flutter plugin for Google Mobile Ads, supporting
-  banner, interstitial (full-screen), and rewarded video ads
-homepage: https://github.com/flutterfire_temporary/tree/master/packages/google_mobile_ads
+  banner, interstitial (full-screen),  rewarded and native ads
+homepage: https://github.com/googleads/googleads-mobile-flutter/tree/master/packages/google_mobile_ads
 version: 0.10.0
 
 flutter:
