@@ -30,7 +30,6 @@ import 'ad_instance_manager.dart';
 /// The user's gender for the sake of ad targeting using [AdRequest].
 // Warning: the index values of the enums must match the values of the corresponding
 // AdMob constants. For example MobileAdGender.female.index == kGADGenderFemale.
-// TODO(bparrishMines): Unit tests should be added to the iOS and Android platform code to verify the above warning.
 @Deprecated('This functionality is deprecated in AdMob without replacement.')
 enum MobileAdGender {
   unknown,
