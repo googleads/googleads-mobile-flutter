@@ -33,7 +33,6 @@ class _MyAppState extends State<MyApp> {
     testDevices: testDevice != null ? <String>[testDevice] : null,
     keywords: <String>['foo', 'bar'],
     contentUrl: 'http://foo.com/bar.html',
-    childDirected: true,
     nonPersonalizedAds: true,
   );
 
@@ -70,8 +69,13 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     MobileAds.instance.initialize().then((InitializationStatus status) {
       print('Initialization done: ${status.adapterStatuses}');
-      createInterstitialAd();
-      createRewardedAd();
+      MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
+        tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified
+      ))
+        .then((value) {
+        createInterstitialAd();
+        createRewardedAd();
+      });
     });
   }
 
@@ -200,7 +204,7 @@ class _MyAppState extends State<MyApp> {
               if (adIndex % 3 == 0) {
                 adWidget = BannerAdWidget(AdSize.banner);
               } else if (adIndex % 3 == 1) {
-                adWidget = BannerAdWidget(AdSize.largeBanner);
+                adWidget = PublisherBannerAdWidget(AdSize.largeBanner);
               } else {
                 adWidget = NativeAdWidget();
               }
@@ -281,6 +285,82 @@ class BannerAdState extends State<BannerAdWidget> {
         return Container(
           width: _bannerAd.size.width.toDouble(),
           height: _bannerAd.size.height.toDouble(),
+          child: child,
+          color: Colors.blueGrey,
+        );
+      },
+    );
+  }
+}
+
+class PublisherBannerAdWidget extends StatefulWidget {
+  PublisherBannerAdWidget(this.size);
+
+  final AdSize size;
+
+  @override
+  State<StatefulWidget> createState() => PublisherBannerAdState();
+}
+
+class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
+  PublisherBannerAd _bannerAd;
+  final Completer<PublisherBannerAd> bannerCompleter = Completer<PublisherBannerAd>();
+
+  @override
+  void initState() {
+    super.initState();
+    _bannerAd = PublisherBannerAd(
+      adUnitId: '/6499/example/banner',
+      request: PublisherAdRequest(nonPersonalizedAds: true),
+      sizes: [widget.size],
+      listener: AdListener(
+        onAdLoaded: (Ad ad) {
+          print('$PublisherBannerAd loaded.');
+          bannerCompleter.complete(ad as PublisherBannerAd);
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('$PublisherBannerAd failedToLoad: $error');
+          bannerCompleter.completeError(null);
+        },
+        onAdOpened: (Ad ad) => print('$PublisherBannerAd onAdOpened.'),
+        onAdClosed: (Ad ad) => print('$PublisherBannerAd onAdClosed.'),
+        onApplicationExit: (Ad ad) => print('$PublisherBannerAd onApplicationExit.'),
+      ),
+    );
+    Future<void>.delayed(Duration(seconds: 1), () => _bannerAd?.load());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bannerAd?.dispose();
+    _bannerAd = null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<PublisherBannerAd>(
+      future: bannerCompleter.future,
+      builder: (BuildContext context, AsyncSnapshot<PublisherBannerAd> snapshot) {
+        Widget child;
+
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+          case ConnectionState.waiting:
+          case ConnectionState.active:
+            child = Container();
+            break;
+          case ConnectionState.done:
+            if (snapshot.hasData) {
+              child = AdWidget(ad: _bannerAd);
+            } else {
+              child = Text('Error loading $PublisherBannerAd');
+            }
+        }
+
+        return Container(
+          width: _bannerAd.sizes[0].width.toDouble(),
+          height: _bannerAd.sizes[0].height.toDouble(),
           child: child,
           color: Colors.blueGrey,
         );

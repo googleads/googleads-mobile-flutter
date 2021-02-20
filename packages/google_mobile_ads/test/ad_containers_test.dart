@@ -36,6 +36,7 @@ void main() {
           .setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
+          case 'MobileAds#updateRequestConfiguration':
           case 'loadBannerAd':
           case 'loadNativeAd':
           case 'showAdWithoutView':
@@ -49,6 +50,26 @@ void main() {
             return null;
         }
       });
+    });
+
+    test('updateRequestConfiguration', () async {
+      final RequestConfiguration requestConfiguration = RequestConfiguration(
+        maxAdContentRating: MaxAdContentRating.ma,
+        tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+        tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes,
+        testDeviceIds: ["test-device-id"],
+      );
+      await instanceManager.updateRequestConfiguration(requestConfiguration);
+      expect(log, <Matcher>[
+        isMethodCall(
+            'MobileAds#updateRequestConfiguration',
+            arguments: <String, dynamic> {
+            'maxAdContentRating': MaxAdContentRating.ma,
+            'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
+            'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.yes,
+            'testDeviceIds': ['test-device-id'],
+        })
+      ]);
     });
 
     test('load banner', () async {
@@ -589,6 +610,7 @@ void main() {
         customTargetingLists: <String, List<String>>{
           'him': <String>['is']
         },
+        nonPersonalizedAds: true,
       ));
 
       expect(
@@ -600,6 +622,7 @@ void main() {
           customTargetingLists: <String, List<String>>{
             'him': <String>['is'],
           },
+          nonPersonalizedAds: true,
         ),
       );
     });

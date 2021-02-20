@@ -97,7 +97,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.contentURL = [self readValueOfType:[self readByte]];
       request.customTargeting = [self readValueOfType:[self readByte]];
       request.customTargetingLists = [self readValueOfType:[self readByte]];
-
+      NSNumber *nonPersonalizedAds = [self readValueOfType:[self readByte]];
+      request.nonPersonalizedAds = nonPersonalizedAds.boolValue;
       return request;
     }
     case FLTAdMobFieldAdapterInitializationState: {
@@ -143,6 +144,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.contentURL];
     [self writeValue:request.customTargeting];
     [self writeValue:request.customTargetingLists];
+    [self writeValue:@(request.nonPersonalizedAds)];
   } else if ([value isKindOfClass:[FLTAdRequest class]]) {
     [self writeByte:FLTAdMobFieldAdRequest];
     FLTAdRequest *request = value;

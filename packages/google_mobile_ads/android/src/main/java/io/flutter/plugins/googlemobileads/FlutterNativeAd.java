@@ -153,7 +153,6 @@ class FlutterNativeAd extends FlutterAd implements PlatformView {
               @Override
               public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
                 ad = adFactory.createNativeAd(unifiedNativeAd, customOptions);
-                manager.onAdLoaded(FlutterNativeAd.this);
               }
             })
         .withNativeAdOptions(new NativeAdOptions.Builder().build())

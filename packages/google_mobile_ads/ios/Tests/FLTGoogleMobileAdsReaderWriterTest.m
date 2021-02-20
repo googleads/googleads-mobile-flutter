@@ -81,7 +81,7 @@
   request.contentURL = @"banana";
   request.customTargeting = @{@"table" : @"linen"};
   request.customTargetingLists = @{@"go" : @[ @"lakers" ]};
-
+  request.nonPersonalizedAds = YES;
   NSData *encodedMessage = [_messageCodec encode:request];
 
   FLTPublisherAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
@@ -90,6 +90,7 @@
   XCTAssertTrue([decodedRequest.customTargeting isEqualToDictionary:@{@"table" : @"linen"}]);
   XCTAssertTrue(
       [decodedRequest.customTargetingLists isEqualToDictionary:@{@"go" : @[ @"lakers" ]}]);
+  XCTAssertTrue(decodedRequest.nonPersonalizedAds);
 }
 
 - (void)testEncodeDecodeRewardItem {
@@ -140,4 +141,5 @@
   XCTAssertNil(decodedStatus.adapterStatuses.allValues[0].statusDescription);
   XCTAssertNil(decodedStatus.adapterStatuses.allValues[0].latency);
 }
+
 @end

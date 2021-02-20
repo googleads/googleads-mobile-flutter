@@ -17,7 +17,11 @@ package io.flutter.plugins.googlemobileads;
 import static org.junit.Assert.assertEquals;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.junit.Test;
 
 public class AdMessageCodecTest {
@@ -70,5 +74,32 @@ public class AdMessageCodecTest {
         adapterStatus,
         new FlutterAdapterStatus(
             FlutterAdapterStatus.AdapterInitializationState.NOT_READY, "desc", 56.66));
+  }
+
+  @Test
+  public void adMessageCodec_decodeInitializationStatus() {
+    AdMessageCodec codec = new AdMessageCodec();
+    Map<String, String> targeting = new HashMap<>();
+    targeting.put("testKey", "testValue");
+
+    Map<String, List<String>> targetingList = new HashMap<>();
+    List<String> list = new ArrayList<>();
+    list.add("testValue1");
+    list.add("testValue2");
+    targetingList.put("testKey", list);
+
+    FlutterPublisherAdRequest flutterPublisherAdRequest = new FlutterPublisherAdRequest.Builder()
+      .setContentUrl("test-content-url")
+      .setCustomTargeting(targeting)
+      .setCustomTargetingLists(targetingList)
+      .setKeywords(list)
+      .setNonPersonalizedAds(true)
+      .build();
+
+    ByteBuffer message = codec.encodeMessage(flutterPublisherAdRequest);
+
+    FlutterPublisherAdRequest decodedPublisherAdRequest = (FlutterPublisherAdRequest)
+      codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(decodedPublisherAdRequest, flutterPublisherAdRequest);
   }
 }
