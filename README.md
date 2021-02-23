@@ -564,8 +564,8 @@ BannerAd myBanner = BannerAd(
 );
 ```
 
-`PublisherBannerAd`s can also be configured with targeting information and an `AdListener` as shown
-below.
+`PublisherBannerAd`s can also be configured with custom targeting information
+and an `AdListener` as shown below.
 
 ```dart
 final PublisherAdRequest request = PublisherAdRequest(
@@ -588,6 +588,77 @@ final PublisherBannerAd myBanner = PublisherBannerAd(
     },
   ),
 );
+```
+
+## Targeting
+The `RequestConfiguration` object collects the global configuration for every ad
+request and is applied by `MobileAds.instance.updateRequestConfiguration()`.
+
+### Child-directed setting
+For purposes of the [Children's Online Privacy Protection Act (COPPA)](https://www.ftc.gov/tips-advice/business-center/privacy-and-security/children%27s-privacy), there is
+a setting called "tag for child-directed treatment."
+
+As an app developer, you can indicate whether you want Google to treat your
+content as child-directed when you make an ad request. If you indicate that you
+want Google to treat your content as child-directed, we take steps to disable
+IBA and remarketing ads on that ad request. The setting can be used with all
+versions of the Google Play services SDK via
+`RequestConfiguration.tagForChildDirectedTreatment()`:
+
+- Use the argument `TagForChildDirectedTreatment.yes` to indicate that you want your content treated as child-directed for the purposes of COPPA.
+- Use the argument `TagForChildDirectedTreatment.no` to indicate that you don't want your content treated as child-directed for the purposes of COPPA.
+- Use the argument `TagForChildDirectedTreatment.unspecified` or do not set this tag if you do not wish to indicate how you would like your content
+treated with respect to COPPA in ad requests.
+
+The following example indicates that you want your content treated as child-directed for purposes of COPPA:
+
+```dart
+RequestConfiguration requestConfiguration = RequestConfiguration(
+  tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes);
+MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+```
+
+### Users under the age of consent
+You can mark your ad requests to receive treatment for users in the European Economic Area (EEA) under the age of consent.
+ This feature is designed to help facilitate compliance with the [General Data Protection Regulation (GDPR)](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32016R0679).
+ Note that you may have other legal obligations under GDPR. Please review the European Union’s guidance and
+ consult with your own legal counsel. Please remember that Google's tools are designed to facilitate compliance and do not
+ relieve any particular publisher of its obligations under the law. [Learn more about how the GDPR affects publishers](https://support.google.com/admob/answer/7666366).
+
+When using this feature, a Tag For Users under the Age of Consent in Europe (TFUA) parameter will be included in the ad request.
+This parameter disables personalized advertising, including remarketing, for that specific ad request. It also disables requests to third-party ad vendors,
+ such as ad measurement pixels and third-party ad servers.
+
+The setting can be used via `RequestConfiguration.tagForUnderAgeOfConsent()`:
+- Use the argument `TagForUnderAgeOfConsent.yes` to indicate that you want the request configuration to be handled in a manner suitable for users under the age of consent.
+- Use the argument `TagForUnderAgeOfConsent.no` to indicates that you don't want the request configuration to be handled in a manner suitable for users under the age of consent.
+- Use the argument `TagForUnderAgeOfConsent.unspecified` or do not set this tag to indicate that you have not specified whether the ad request should receive treatment for users in the European Economic Area (EEA) under the age of consent.
+The following example indicates that you want TFUA included in your ad request:
+```dart
+RequestConfiguration requestConfiguration = RequestConfiguration(
+  tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes
+);
+MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+```
+
+The tags to enable the Child-directed setting and setTagForUnderAgeOfConsent should not both simultaneously be set to true. If they are, the child-directed setting takes precedence.
+### Ad Content Filtering
+The setting can be set via `RequestConfiguration.maxAdContentRating()`:
+
+AdMob ads returned for these requests have a content rating at or below that level. The possible values for this network extra are based on [digital content label classifications](https://support.google.com/admob/answer/7562142),
+and should be one of the following `MaxAdContentRating` objects:
+
+- `MaxAdContentRating.g`
+- `MaxAdContentRating.pg`
+- `MaxAdContentRating.t`
+- `MaxAdContentRating.ma`
+
+The following example indicates that you want TFUA included in your ad request:
+```dart
+RequestConfiguration requestConfiguration = RequestConfiguration(
+  maxAdContentRating: MaxAdContentRating.yes
+);
+MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 ```
 
 ## Issues and feedback
