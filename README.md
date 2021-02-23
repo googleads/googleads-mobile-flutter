@@ -653,6 +653,14 @@ and should be one of the following `MaxAdContentRating` objects:
 - `MaxAdContentRating.t`
 - `MaxAdContentRating.ma`
 
+The following example indicates that you want TFUA included in your ad request:
+```dart
+RequestConfiguration requestConfiguration = RequestConfiguration(
+  maxAdContentRating: MaxAdContentRating.yes
+);
+MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+```
+
 ## Issues and feedback
 
 Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/flutter/flutterfire_temporary/issues/new).
