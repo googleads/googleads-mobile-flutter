@@ -472,7 +472,7 @@ section explains the difference between them.
 
 An ad that is displayed as an **Overlay** is displayed on top of all app content and is statically
 placed. Ad displayed this way can't be added to the Flutter widget tree. Only `InterstitialAd`s and
-`NativeAd`s can be displayed this way. You can display an ad by calling `show()` after the `Ad` is
+`RewardedAd`s can be displayed this way. You can display an ad by calling `show()` after the `Ad` is
 loaded.
 
 ```dart
@@ -481,7 +481,7 @@ myInterstitial.show();
 
 This method should only be called after `load()` and the `AdListener.onAdLoaded` method has been
 triggered. Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and
-require user input.
+require user input. Do not call `show()` more than once per ad. Instead, load and show a new ad.
 
 Once an `Ad` has called `load()`, it must call `dispose()` when access to it is no longer needed.
 The best practice for when to call `dispose()` is either after calling `show()` or in the
