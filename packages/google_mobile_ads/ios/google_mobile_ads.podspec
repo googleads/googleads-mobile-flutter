@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 Google Mobile Ads plugin for Flutter.
                        DESC
-  s.homepage         = 'https://github.com/flutterfire_temporary/tree/master/packages/google_mobile_ads'
+  s.homepage         = 'https://github.com/googleads/googleads-mobile-flutter'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Flutter Team' => 'flutter-dev@googlegroups.com' }
   s.source           = { :path => '.' }
