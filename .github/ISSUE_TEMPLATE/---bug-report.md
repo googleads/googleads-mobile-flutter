@@ -1,7 +1,7 @@
 ---
 name: "⚠️ Bug Report"
-about: Report a bug with existing FlutterFire features.
-title: "\U0001F41B [PLUGIN_NAME_HERE] Your issue title here"
+about: Report a bug with existing GoogleMobileAds Flutter features.
+title: "\U0001F41B Your issue title here"
 labels: 'Needs Attention, type: bug'
 assignees: ''
 
