@@ -663,10 +663,10 @@ MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 
 ## Issues and feedback
 
-Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/flutter/flutterfire_temporary/issues/new).
+Please file GMA specific issues, bugs, or feature requests in our [issue tracker](https://github.com/googleads/googleads-mobile-flutter/issues/new).
 
 Plugin issues that are not specific to Google Mobile Ads can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
-please review our [contribution guide](https://github.com/flutter/flutterfire_temporary/blob/master/CONTRIBUTING.md)
-and open a [pull request](https://github.com/flutter/flutterfire_temporary/pulls).
+please review our [contribution guide](https://github.com/googleads/googleads-mobile-flutter/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/googleads/googleads-mobile-flutter/pulls).
