@@ -26,8 +26,8 @@ on:
     - "docs/**"
 
 env:
-  FLUTTERFIRE_PLUGIN_SCOPE: "*google_mobile_ads*"
-  FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: "*google_mobile_ads_example*"
+  GOOGLEMOBILEADS_PLUGIN_SCOPE: "*google_mobile_ads*"
+  GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "*google_mobile_ads_example*"
 
 jobs:
   android:
