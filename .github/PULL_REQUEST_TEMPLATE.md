@@ -4,7 +4,7 @@
 
 ## Related Issues
 
-*Replace this paragraph with a list of issues related to this PR from the [issue database](https://github.com/flutter/flutter/issues). Indicate, which of these issues are resolved or fixed by this PR. Note that you'll have to prefix the issue numbers with flutter/flutter#.*
+*Replace this paragraph with a list of issues related to this PR from the [issue database](https://github.com/googleads/googleads-mobile-flutter/issues). Indicate, which of these issues are resolved or fixed by this PR.
 
 ## Checklist
 
@@ -28,8 +28,8 @@ Does your PR require plugin users to manually update their apps to accommodate y
 - [ ] No, this is *not* a breaking change.
 
 <!-- Links -->
-[issue database]: https://github.com/flutter/flutter/issues
-[Contributor Guide]: https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md
+[issue database]: https://github.com/googleads/googleads-mobile-flutter/issues
+[Contributor Guide]: https://github.com/googleads/googleads-mobile-flutter/blob/master/CONTRIBUTING.md
 [Flutter Style Guide]: https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo
 [pub versioning philosophy]: https://dart.dev/tools/pub/versioning
 [CLA]: https://cla.developers.google.com/
