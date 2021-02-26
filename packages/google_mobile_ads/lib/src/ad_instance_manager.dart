@@ -107,6 +107,17 @@ class AdInstanceManager {
   /// Returns null if an invalid [Ad] was passed in.
   int adIdFor(Ad ad) => _loadedAds.inverse[ad];
 
+  Set<int> _mountedWidgetAdIds = <int>{};
+
+  /// Returns true if the [adId] is already mounted in a [WidgetAd].
+  bool isWidgetAdIdMounted(int adId) => _mountedWidgetAdIds.contains(adId);
+
+  /// Indicates that [adId] is mounted in widget tree.
+  void mountWidgetAdId(int adId) => _mountedWidgetAdIds.add(adId);
+
+  /// Indicates that [adId] is unmounted from the widget tree.
+  void unmountWidgetAdId(int adId) => _mountedWidgetAdIds.add(adId);
+
   /// Starts loading the ad if not previously loaded.
   ///
   /// Loading also terminates if ad is already in the process of loading.
@@ -276,7 +287,8 @@ class AdInstanceManager {
       'MobileAds#updateRequestConfiguration',
       <dynamic, dynamic>{
         'maxAdContentRating': requestConfiguration.maxAdContentRating,
-        'tagForChildDirectedTreatment': requestConfiguration.tagForChildDirectedTreatment,
+        'tagForChildDirectedTreatment':
+            requestConfiguration.tagForChildDirectedTreatment,
         'testDeviceIds': requestConfiguration.testDeviceIds,
         'tagForUnderAgeOfConsent': requestConfiguration.tagForUnderAgeOfConsent,
       },

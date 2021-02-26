@@ -326,7 +326,7 @@ abstract class AdWithoutView extends Ad {
 ///
 /// Must call `load()` first before showing the widget. Otherwise, a
 /// [PlatformException] will be thrown.
-class AdWidget extends StatelessWidget {
+class AdWidget extends StatefulWidget {
   const AdWidget({Key key, @required this.ad})
       : assert(ad != null),
         super(key: key);
@@ -335,7 +335,41 @@ class AdWidget extends StatelessWidget {
   final AdWithView ad;
 
   @override
+  _AdWidgetState createState() => _AdWidgetState();
+}
+
+class _AdWidgetState extends State<AdWidget> {
+  bool _adIdAlreadyMounted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final int adId = instanceManager.adIdFor(widget.ad);
+    if (instanceManager.isWidgetAdIdMounted(adId)) {
+      _adIdAlreadyMounted = true;
+    }
+    instanceManager.mountWidgetAdId(adId);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    final int adId = instanceManager.adIdFor(widget.ad);
+    instanceManager.unmountWidgetAdId(adId);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_adIdAlreadyMounted) {
+      throw FlutterError.fromParts(<DiagnosticsNode>[
+        ErrorSummary('This AdWidget is already in the Widget tree'),
+        ErrorHint(
+            'If you placed this AdWidget in a list, make sure you create a new instance '
+            'in the builder function with a unique ad object.'),
+        ErrorHint(
+            'Make sure you are not using the same ad object in more than one AdWidget.'),
+      ]);
+    }
     if (defaultTargetPlatform == TargetPlatform.android) {
       return PlatformViewLink(
         viewType: '${instanceManager.channel.name}/ad_widget',
@@ -352,7 +386,7 @@ class AdWidget extends StatelessWidget {
             id: params.id,
             viewType: '${instanceManager.channel.name}/ad_widget',
             layoutDirection: TextDirection.ltr,
-            creationParams: instanceManager.adIdFor(ad),
+            creationParams: instanceManager.adIdFor(widget.ad),
             creationParamsCodec: StandardMessageCodec(),
           )
             ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
@@ -363,7 +397,7 @@ class AdWidget extends StatelessWidget {
 
     return UiKitView(
       viewType: '${instanceManager.channel.name}/ad_widget',
-      creationParams: instanceManager.adIdFor(ad),
+      creationParams: instanceManager.adIdFor(widget.ad),
       creationParamsCodec: StandardMessageCodec(),
     );
   }
