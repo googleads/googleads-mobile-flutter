@@ -31,7 +31,8 @@ void main() {
 
     setUp(() async {
       log.clear();
-      instanceManager = AdInstanceManager('plugins.flutter.io/google_mobile_ads');
+      instanceManager =
+          AdInstanceManager('plugins.flutter.io/google_mobile_ads');
       instanceManager.channel
           .setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
@@ -61,14 +62,13 @@ void main() {
       );
       await instanceManager.updateRequestConfiguration(requestConfiguration);
       expect(log, <Matcher>[
-        isMethodCall(
-            'MobileAds#updateRequestConfiguration',
-            arguments: <String, dynamic> {
-            'maxAdContentRating': MaxAdContentRating.ma,
-            'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
-            'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.yes,
-            'testDeviceIds': ['test-device-id'],
-        })
+        isMethodCall('MobileAds#updateRequestConfiguration',
+            arguments: <String, dynamic>{
+              'maxAdContentRating': MaxAdContentRating.ma,
+              'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
+              'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.yes,
+              'testDeviceIds': ['test-device-id'],
+            })
       ]);
     });
 
@@ -192,12 +192,145 @@ void main() {
             );
 
             AdWidget widget = AdWidget(ad: native);
-            var buildWidget = widget.build(context);
+            var buildWidget = widget.createElement().build();
             expect(buildWidget, isA<PlatformViewLink>());
             return widget;
           },
         ),
       );
+    });
+
+    testWidgets('build ad widget', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        Builder(
+          builder: (BuildContext context) {
+            final NativeAd native = NativeAd(
+              adUnitId: NativeAd.testAdUnitId,
+              factoryId: '0',
+              listener: AdListener(),
+              request: AdRequest(),
+            );
+
+            AdWidget widget = AdWidget(ad: native);
+            var buildWidget = widget.createElement().build();
+            expect(buildWidget, isA<PlatformViewLink>());
+            return widget;
+          },
+        ),
+      );
+    });
+
+    testWidgets('warns when ad object is reused', (WidgetTester tester) async {
+      final NativeAd ad = NativeAd(
+        adUnitId: NativeAd.testAdUnitId,
+        factoryId: '0',
+        listener: AdListener(),
+        request: AdRequest(),
+      );
+      try {
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: Stack(
+                children: <Widget>[
+                  AdWidget(ad: ad),
+                  AdWidget(ad: ad),
+                ],
+              ),
+            ),
+          ),
+        );
+      } finally {
+        dynamic exception = tester.takeException();
+        expect(exception, isA<FlutterError>());
+        expect(
+            (exception as FlutterError).toStringDeep(),
+            'FlutterError\n'
+            '   This AdWidget is already in the Widget tree\n'
+            '   If you placed this AdWidget in a list, make sure you create a new\n'
+            '   instance in the builder function with a unique ad object.\n'
+            '   Make sure you are not using the same ad object in more than one\n'
+            '   AdWidget.\n'
+            '');
+      }
+    });
+
+    testWidgets('warns when the widget is reused', (WidgetTester tester) async {
+      final NativeAd ad = NativeAd(
+        adUnitId: NativeAd.testAdUnitId,
+        factoryId: '0',
+        listener: AdListener(),
+        request: AdRequest(),
+      );
+      final AdWidget widget = AdWidget(ad: ad);
+      try {
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: Stack(
+                children: <Widget>[
+                  widget,
+                  widget,
+                ],
+              ),
+            ),
+          ),
+        );
+      } finally {
+        dynamic exception = tester.takeException();
+        expect(exception, isA<FlutterError>());
+        expect(
+            (exception as FlutterError).toStringDeep(),
+            'FlutterError\n'
+            '   This AdWidget is already in the Widget tree\n'
+            '   If you placed this AdWidget in a list, make sure you create a new\n'
+            '   instance in the builder function with a unique ad object.\n'
+            '   Make sure you are not using the same ad object in more than one\n'
+            '   AdWidget.\n'
+            '');
+      }
+    });
+
+    testWidgets(
+        'ad objects can be reused if the widget holding the object is disposed',
+        (WidgetTester tester) async {
+      final NativeAd ad = NativeAd(
+        adUnitId: NativeAd.testAdUnitId,
+        factoryId: '0',
+        listener: AdListener(),
+        request: AdRequest(),
+      );
+      final AdWidget widget = AdWidget(ad: ad);
+      try {
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: widget,
+            ),
+          ),
+        );
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: widget,
+            ),
+          ),
+        );
+      } finally {
+        expect(tester.takeException(), isNull);
+      }
     });
 
     test('load rewarded', () async {
