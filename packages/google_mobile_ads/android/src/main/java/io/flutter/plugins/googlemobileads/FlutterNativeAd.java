@@ -143,6 +143,7 @@ class FlutterNativeAd extends FlutterAd implements PlatformView {
   public void dispose() {
     if (ad != null) {
       ad.destroy();
+      ad = null;
     }
   }
 
