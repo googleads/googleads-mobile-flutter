@@ -319,7 +319,6 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueAdRequest);
       writeValue(buffer, value.keywords);
       writeValue(buffer, value.contentUrl);
-      writeValue(buffer, value.designedForFamilies);
       writeValue(buffer, value.childDirected);
       writeValue(buffer, value.testDevices);
       writeValue(buffer, value.nonPersonalizedAds);
@@ -367,7 +366,6 @@ class AdMessageCodec extends StandardMessageCodec {
         return AdRequest(
           keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
           contentUrl: readValueOfType(buffer.getUint8(), buffer),
-          designedForFamilies: readValueOfType(buffer.getUint8(), buffer),
           childDirected: readValueOfType(buffer.getUint8(), buffer),
           testDevices:
               readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),

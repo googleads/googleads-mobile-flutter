@@ -29,7 +29,6 @@
 @interface FLTAdRequest : NSObject
 @property NSArray<NSString *> *_Nullable keywords;
 @property NSString *_Nullable contentURL;
-@property BOOL designedForFamilies;
 @property BOOL childDirected;
 @property NSArray<NSString *> *_Nullable testDevices;
 @property BOOL nonPersonalizedAds;

@@ -55,9 +55,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.keywords = [self readValueOfType:[self readByte]];
       request.contentURL = [self readValueOfType:[self readByte]];
 
-      NSNumber *designedForFamilies = [self readValueOfType:[self readByte]];
-      request.designedForFamilies = designedForFamilies.boolValue;
-
       NSNumber *childDirected = [self readValueOfType:[self readByte]];
       request.childDirected = childDirected.boolValue;
 
@@ -138,7 +135,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.keywords];
     [self writeValue:request.contentURL];
 
-    [self writeValue:@(request.designedForFamilies)];
     [self writeValue:@(request.childDirected)];
     [self writeValue:request.testDevices];
     [self writeValue:@(request.nonPersonalizedAds)];

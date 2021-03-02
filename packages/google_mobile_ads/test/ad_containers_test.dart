@@ -696,7 +696,6 @@ void main() {
       final AdRequest adRequest = AdRequest(
           keywords: ['1', '2', '3'],
           contentUrl: 'contentUrl',
-          designedForFamilies: true,
           childDirected: true,
           testDevices: ['Android', 'iOS'],
           nonPersonalizedAds: false);

@@ -68,8 +68,6 @@ class AdRequest {
   const AdRequest({
     this.keywords,
     this.contentUrl,
-    @Deprecated('See `RequestConfiguration.maxAdContentRating`.')
-        this.designedForFamilies,
     @Deprecated('See `RequestConfiguration.tagForChildDirectedTreatment')
         this.childDirected,
     this.testDevices,
@@ -78,8 +76,6 @@ class AdRequest {
 
   final List<String> keywords;
   final String contentUrl;
-  @Deprecated('See `RequestConfiguration.maxAdContentRating`.')
-  final bool designedForFamilies;
   @Deprecated('Use `RequestConfiguration.tagForChildDirectedTreatment')
   final bool childDirected;
   final List<String> testDevices;
@@ -89,7 +85,6 @@ class AdRequest {
   bool operator ==(other) {
     return this.keywords.toString() == other.keywords.toString() &&
         this.contentUrl == other.contentUrl &&
-        this.designedForFamilies == other.designedForFamilies &&
         this.testDevices.toString() == other.testDevices.toString() &&
         this.nonPersonalizedAds == other.nonPersonalizedAds;
   }
