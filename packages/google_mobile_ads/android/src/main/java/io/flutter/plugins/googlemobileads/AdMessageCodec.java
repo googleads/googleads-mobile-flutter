@@ -31,7 +31,6 @@ final class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_AD_SIZE = (byte) 128;
   private static final byte VALUE_AD_REQUEST = (byte) 129;
   private static final byte VALUE_DATE_TIME = (byte) 130;
-  private static final byte VALUE_MOBILE_AD_GENDER = (byte) 131;
   private static final byte VALUE_REWARD_ITEM = (byte) 132;
   private static final byte VALUE_LOAD_AD_ERROR = (byte) 133;
   private static final byte VALUE_PUBLISHER_AD_REQUEST = (byte) 134;
@@ -52,7 +51,6 @@ final class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getKeywords());
       writeValue(stream, request.getContentUrl());
       writeValue(stream, request.getBirthday());
-      writeValue(stream, request.getGender());
       writeValue(stream, request.getDesignedForFamilies());
       writeValue(stream, request.getChildDirected());
       writeValue(stream, request.getTestDevices());
@@ -60,9 +58,6 @@ final class AdMessageCodec extends StandardMessageCodec {
     } else if (value instanceof Date) {
       stream.write(VALUE_DATE_TIME);
       writeValue(stream, ((Date) value).getTime());
-    } else if (value instanceof FlutterAdRequest.MobileAdGender) {
-      stream.write(VALUE_MOBILE_AD_GENDER);
-      writeValue(stream, ((FlutterAdRequest.MobileAdGender) value).ordinal());
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
       stream.write(VALUE_REWARD_ITEM);
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;
@@ -124,7 +119,6 @@ final class AdMessageCodec extends StandardMessageCodec {
             .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))
             .setContentUrl((String) readValueOfType(buffer.get(), buffer))
             .setBirthday((Date) readValueOfType(buffer.get(), buffer))
-            .setGender((FlutterAdRequest.MobileAdGender) readValueOfType(buffer.get(), buffer))
             .setDesignedForFamilies(booleanValueOf(readValueOfType(buffer.get(), buffer)))
             .setChildDirected(booleanValueOf(readValueOfType(buffer.get(), buffer)))
             .setTestDevices((List<String>) readValueOfType(buffer.get(), buffer))
@@ -132,9 +126,6 @@ final class AdMessageCodec extends StandardMessageCodec {
             .build();
       case VALUE_DATE_TIME:
         return new Date((Long) readValueOfType(buffer.get(), buffer));
-      case VALUE_MOBILE_AD_GENDER:
-        return FlutterAdRequest.MobileAdGender.values()[
-            (Integer) readValueOfType(buffer.get(), buffer)];
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
             (Integer) readValueOfType(buffer.get(), buffer),

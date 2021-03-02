@@ -43,7 +43,6 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   request.birthday = _birthday;
-  request.gender = (NSUInteger)_gender;
   [request tagForChildDirectedTreatment:_childDirected];
   request.testDevices = _testDevices;
 #pragma clang diagnostic pop
@@ -87,7 +86,7 @@
   DFPRequest *request = [DFPRequest request];
   request.keywords = self.keywords;
   request.contentURL = self.contentURL;
-  
+
   NSMutableDictionary<NSString *, id> *targetingDictionary =
       [NSMutableDictionary dictionaryWithDictionary:self.customTargeting];
   [targetingDictionary addEntriesFromDictionary:self.customTargetingLists];
@@ -98,7 +97,7 @@
     extras.additionalParameters = @{@"npa" : @"1"};
     [request registerAdNetworkExtras:extras];
   }
-  
+
   request.requestAgent = @"Flutter";
   return request;
 }

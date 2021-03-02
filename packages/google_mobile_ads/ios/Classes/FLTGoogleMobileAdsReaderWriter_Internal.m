@@ -19,7 +19,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdMobFieldAdSize = 128,
   FLTAdMobFieldAdRequest = 129,
   FLTAdMobFieldDateTime = 130,
-  FLTAdMobFieldAdGender = 131,
   FLTAdMobFieldRewardItem = 132,
   FLTAdMobFieldLoadAdError = 133,
   FLTAdMobFieldPublisherAdRequest = 134,
@@ -58,9 +57,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.contentURL = [self readValueOfType:[self readByte]];
       request.birthday = [self readValueOfType:[self readByte]];
 
-      NSNumber *gender = [self readValueOfType:[self readByte]];
-      request.gender = gender.longValue;
-
       NSNumber *designedForFamilies = [self readValueOfType:[self readByte]];
       request.designedForFamilies = designedForFamilies.boolValue;
 
@@ -77,9 +73,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     case FLTAdMobFieldDateTime: {
       NSNumber *milliSeconds = [self readValueOfType:[self readByte]];
       return [NSDate dateWithTimeIntervalSince1970:milliSeconds.longValue / 1000.0];
-    }
-    case FLTAdMobFieldAdGender: {
-      return [self readValueOfType:[self readByte]];
     }
     case FLTAdMobFieldRewardItem: {
       return [[FLTRewardItem alloc] initWithAmount:[self readValueOfType:[self readByte]]
@@ -151,9 +144,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.keywords];
     [self writeValue:request.contentURL];
     [self writeValue:request.birthday];
-
-    [self writeByte:FLTAdMobFieldAdGender];
-    [self writeValue:@(request.gender)];
 
     [self writeValue:@(request.designedForFamilies)];
     [self writeValue:@(request.childDirected)];

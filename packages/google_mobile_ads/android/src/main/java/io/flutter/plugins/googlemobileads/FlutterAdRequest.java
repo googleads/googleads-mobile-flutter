@@ -25,23 +25,15 @@ class FlutterAdRequest {
   @Nullable private List<String> keywords;
   @Nullable private String contentUrl;
   @Nullable private Date birthday;
-  @Nullable private MobileAdGender gender;
   @Nullable private Boolean designedForFamilies;
   @Nullable private Boolean childDirected;
   @Nullable private List<String> testDevices;
   @Nullable private Boolean nonPersonalizedAds;
 
-  enum MobileAdGender {
-    UNKNOWN,
-    MALE,
-    FEMALE,
-  }
-
   static class Builder {
     @Nullable private List<String> keywords;
     @Nullable private String contentUrl;
     @Nullable private Date birthday;
-    @Nullable private MobileAdGender gender;
     @Nullable private Boolean designedForFamilies;
     @Nullable private Boolean childDirected;
     @Nullable private List<String> testDevices;
@@ -59,11 +51,6 @@ class FlutterAdRequest {
 
     Builder setBirthday(@Nullable Date birthday) {
       this.birthday = birthday;
-      return this;
-    }
-
-    Builder setGender(@Nullable MobileAdGender gender) {
-      this.gender = gender;
       return this;
     }
 
@@ -92,7 +79,6 @@ class FlutterAdRequest {
       request.keywords = keywords;
       request.contentUrl = contentUrl;
       request.birthday = birthday;
-      request.gender = gender;
       request.designedForFamilies = designedForFamilies;
       request.childDirected = childDirected;
       request.testDevices = testDevices;
@@ -116,9 +102,6 @@ class FlutterAdRequest {
     }
     if (birthday != null) {
       builder.setBirthday(birthday);
-    }
-    if (gender != null) {
-      builder.setGender(gender.ordinal());
     }
     if (designedForFamilies != null) {
       builder.setIsDesignedForFamilies(designedForFamilies);
@@ -153,11 +136,6 @@ class FlutterAdRequest {
   @Nullable
   public Date getBirthday() {
     return birthday;
-  }
-
-  @Nullable
-  public MobileAdGender getGender() {
-    return gender;
   }
 
   @Nullable

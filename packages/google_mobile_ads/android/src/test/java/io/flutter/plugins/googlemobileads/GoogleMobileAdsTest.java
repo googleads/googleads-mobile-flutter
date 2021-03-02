@@ -263,7 +263,6 @@ public class GoogleMobileAdsTest {
                 .setKeywords(Arrays.asList("1", "2", "3"))
                 .setContentUrl("contentUrl")
                 .setBirthday(new Date(23))
-                .setGender(FlutterAdRequest.MobileAdGender.UNKNOWN)
                 .setDesignedForFamilies(false)
                 .setChildDirected(true)
                 .setTestDevices(Arrays.asList("Android", "iOS"))
@@ -275,7 +274,6 @@ public class GoogleMobileAdsTest {
     assertEquals(Arrays.asList("1", "2", "3"), request.getKeywords());
     assertEquals("contentUrl", request.getContentUrl());
     assertEquals(new Date(23), request.getBirthday());
-    assertEquals(FlutterAdRequest.MobileAdGender.UNKNOWN, request.getGender());
     assertEquals(false, request.getDesignedForFamilies());
     assertEquals(true, request.getChildDirected());
     assertEquals(Arrays.asList("Android", "iOS"), request.getTestDevices());
@@ -329,13 +327,6 @@ public class GoogleMobileAdsTest {
     assertEquals(error.code, 1);
     assertEquals(error.domain, "domain");
     assertEquals(error.message, "message");
-  }
-
-  @Test
-  public void mobileAdGender_indexMapsToGADGender() {
-    assertEquals(FlutterAdRequest.MobileAdGender.UNKNOWN.ordinal(), 0);
-    assertEquals(FlutterAdRequest.MobileAdGender.MALE.ordinal(), 1);
-    assertEquals(FlutterAdRequest.MobileAdGender.FEMALE.ordinal(), 2);
   }
 
   @Test

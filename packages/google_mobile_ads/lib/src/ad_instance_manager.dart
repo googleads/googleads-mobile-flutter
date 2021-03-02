@@ -303,7 +303,6 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueAdSize = 128;
   static const int _valueAdRequest = 129;
   static const int _valueDateTime = 130;
-  static const int _valueMobileAdGender = 131;
   static const int _valueRewardItem = 132;
   static const int _valueLoadAdError = 133;
   static const int _valuePublisherAdRequest = 134;
@@ -322,7 +321,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.keywords);
       writeValue(buffer, value.contentUrl);
       writeValue(buffer, value.birthday);
-      writeValue(buffer, value.gender);
       writeValue(buffer, value.designedForFamilies);
       writeValue(buffer, value.childDirected);
       writeValue(buffer, value.testDevices);
@@ -330,9 +328,6 @@ class AdMessageCodec extends StandardMessageCodec {
     } else if (value is DateTime) {
       buffer.putUint8(_valueDateTime);
       writeValue(buffer, value.millisecondsSinceEpoch);
-    } else if (value is MobileAdGender) {
-      buffer.putUint8(_valueMobileAdGender);
-      writeValue(buffer, value.index);
     } else if (value is RewardItem) {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
@@ -378,7 +373,6 @@ class AdMessageCodec extends StandardMessageCodec {
           keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
           contentUrl: readValueOfType(buffer.getUint8(), buffer),
           birthday: readValueOfType(buffer.getUint8(), buffer),
-          gender: readValueOfType(buffer.getUint8(), buffer),
           designedForFamilies: readValueOfType(buffer.getUint8(), buffer),
           childDirected: readValueOfType(buffer.getUint8(), buffer),
           testDevices:
@@ -388,15 +382,6 @@ class AdMessageCodec extends StandardMessageCodec {
       case _valueDateTime:
         return DateTime.fromMillisecondsSinceEpoch(
             readValueOfType(buffer.getUint8(), buffer));
-      case _valueMobileAdGender:
-        int gender = readValueOfType(buffer.getUint8(), buffer);
-        switch (gender) {
-          case 1:
-            return MobileAdGender.male;
-          case 2:
-            return MobileAdGender.female;
-        }
-        return MobileAdGender.unknown;
       case _valueRewardItem:
         return RewardItem(
           readValueOfType(buffer.getUint8(), buffer),

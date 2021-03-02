@@ -56,7 +56,6 @@
   request.keywords = @[ @"apple" ];
   request.contentURL = @"banana";
   request.birthday = [NSDate dateWithTimeIntervalSince1970:0.1];
-  request.gender = FLTAdGenderMale;
   request.designedForFamilies = YES;
   request.childDirected = NO;
   request.testDevices = @[ @"orange" ];
@@ -68,7 +67,6 @@
   XCTAssertTrue([decodedRequest.keywords isEqualToArray:@[ @"apple" ]]);
   XCTAssertEqualObjects(decodedRequest.contentURL, @"banana");
   XCTAssertEqualObjects(decodedRequest.birthday, [NSDate dateWithTimeIntervalSince1970:0.1]);
-  XCTAssertEqual(decodedRequest.gender, FLTAdGenderMale);
   XCTAssertTrue(decodedRequest.designedForFamilies);
   XCTAssertFalse(decodedRequest.childDirected);
   XCTAssertTrue([decodedRequest.testDevices isEqualToArray:@[ @"orange" ]]);

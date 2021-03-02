@@ -26,17 +26,10 @@
 - (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width height:(NSNumber *_Nonnull)height;
 @end
 
-typedef NS_ENUM(NSInteger, FLTAdGender) {
-  FLTAdGenderUnknown,
-  FLTAdGenderMale,
-  FLTAdGenderFemale,
-};
-
 @interface FLTAdRequest : NSObject
 @property NSArray<NSString *> *_Nullable keywords;
 @property NSString *_Nullable contentURL;
 @property NSDate *_Nullable birthday;
-@property FLTAdGender gender;
 @property BOOL designedForFamilies;
 @property BOOL childDirected;
 @property NSArray<NSString *> *_Nullable testDevices;

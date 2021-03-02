@@ -697,7 +697,6 @@ void main() {
           keywords: ['1', '2', '3'],
           contentUrl: 'contentUrl',
           birthday: DateTime(2020),
-          gender: MobileAdGender.unknown,
           designedForFamilies: true,
           childDirected: true,
           testDevices: ['Android', 'iOS'],
@@ -710,11 +709,6 @@ void main() {
     test('encode/decode DateTime', () async {
       final ByteData byteData = codec.encodeMessage(DateTime(2020));
       expect(codec.decodeMessage(byteData), DateTime(2020));
-    });
-
-    test('encode/decode MobileAdGender', () async {
-      final ByteData byteData = codec.encodeMessage(MobileAdGender.unknown);
-      expect(codec.decodeMessage(byteData), MobileAdGender.unknown);
     });
 
     test('encode/decode $LoadAdError', () async {

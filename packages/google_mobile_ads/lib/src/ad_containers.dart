@@ -27,16 +27,6 @@ import 'package:meta/meta.dart';
 
 import 'ad_instance_manager.dart';
 
-/// The user's gender for the sake of ad targeting using [AdRequest].
-// Warning: the index values of the enums must match the values of the corresponding
-// AdMob constants. For example MobileAdGender.female.index == kGADGenderFemale.
-@Deprecated('This functionality is deprecated in AdMob without replacement.')
-enum MobileAdGender {
-  unknown,
-  male,
-  female,
-}
-
 /// Error information about why an ad load operation failed.
 class LoadAdError {
   /// Default constructor for [LoadAdError].
@@ -80,8 +70,6 @@ class AdRequest {
     this.contentUrl,
     @Deprecated('This functionality is deprecated in AdMob without replacement.')
         this.birthday,
-    @Deprecated('This functionality is deprecated in AdMob without replacement.')
-        this.gender,
     @Deprecated('See `RequestConfiguration.maxAdContentRating`.')
         this.designedForFamilies,
     @Deprecated('See `RequestConfiguration.tagForChildDirectedTreatment')
@@ -94,8 +82,6 @@ class AdRequest {
   final String contentUrl;
   @Deprecated('This functionality is deprecated in AdMob without replacement.')
   final DateTime birthday;
-  @Deprecated('This functionality is deprecated in AdMob without replacement.')
-  final MobileAdGender gender;
   @Deprecated('See `RequestConfiguration.maxAdContentRating`.')
   final bool designedForFamilies;
   @Deprecated('Use `RequestConfiguration.tagForChildDirectedTreatment')
@@ -108,7 +94,6 @@ class AdRequest {
     return this.keywords.toString() == other.keywords.toString() &&
         this.contentUrl == other.contentUrl &&
         this.birthday == other.birthday &&
-        this.gender == other.gender &&
         this.designedForFamilies == other.designedForFamilies &&
         this.testDevices.toString() == other.testDevices.toString() &&
         this.nonPersonalizedAds == other.nonPersonalizedAds;
