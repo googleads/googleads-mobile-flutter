@@ -42,7 +42,6 @@
   request.contentURL = _contentURL;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  request.birthday = _birthday;
   [request tagForChildDirectedTreatment:_childDirected];
   request.testDevices = _testDevices;
 #pragma clang diagnostic pop

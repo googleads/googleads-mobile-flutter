@@ -696,7 +696,6 @@ void main() {
       final AdRequest adRequest = AdRequest(
           keywords: ['1', '2', '3'],
           contentUrl: 'contentUrl',
-          birthday: DateTime(2020),
           designedForFamilies: true,
           childDirected: true,
           testDevices: ['Android', 'iOS'],
@@ -704,11 +703,6 @@ void main() {
 
       final ByteData byteData = codec.encodeMessage(adRequest);
       expect(codec.decodeMessage(byteData), adRequest);
-    });
-
-    test('encode/decode DateTime', () async {
-      final ByteData byteData = codec.encodeMessage(DateTime(2020));
-      expect(codec.decodeMessage(byteData), DateTime(2020));
     });
 
     test('encode/decode $LoadAdError', () async {

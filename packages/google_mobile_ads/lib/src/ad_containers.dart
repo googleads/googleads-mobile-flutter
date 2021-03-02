@@ -68,8 +68,6 @@ class AdRequest {
   const AdRequest({
     this.keywords,
     this.contentUrl,
-    @Deprecated('This functionality is deprecated in AdMob without replacement.')
-        this.birthday,
     @Deprecated('See `RequestConfiguration.maxAdContentRating`.')
         this.designedForFamilies,
     @Deprecated('See `RequestConfiguration.tagForChildDirectedTreatment')
@@ -80,8 +78,6 @@ class AdRequest {
 
   final List<String> keywords;
   final String contentUrl;
-  @Deprecated('This functionality is deprecated in AdMob without replacement.')
-  final DateTime birthday;
   @Deprecated('See `RequestConfiguration.maxAdContentRating`.')
   final bool designedForFamilies;
   @Deprecated('Use `RequestConfiguration.tagForChildDirectedTreatment')
@@ -93,7 +89,6 @@ class AdRequest {
   bool operator ==(other) {
     return this.keywords.toString() == other.keywords.toString() &&
         this.contentUrl == other.contentUrl &&
-        this.birthday == other.birthday &&
         this.designedForFamilies == other.designedForFamilies &&
         this.testDevices.toString() == other.testDevices.toString() &&
         this.nonPersonalizedAds == other.nonPersonalizedAds;

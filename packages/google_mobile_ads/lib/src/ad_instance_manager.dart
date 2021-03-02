@@ -302,7 +302,6 @@ class AdMessageCodec extends StandardMessageCodec {
   // The type values below must be consistent for each platform.
   static const int _valueAdSize = 128;
   static const int _valueAdRequest = 129;
-  static const int _valueDateTime = 130;
   static const int _valueRewardItem = 132;
   static const int _valueLoadAdError = 133;
   static const int _valuePublisherAdRequest = 134;
@@ -320,15 +319,11 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueAdRequest);
       writeValue(buffer, value.keywords);
       writeValue(buffer, value.contentUrl);
-      writeValue(buffer, value.birthday);
       writeValue(buffer, value.designedForFamilies);
       writeValue(buffer, value.childDirected);
       writeValue(buffer, value.testDevices);
       writeValue(buffer, value.nonPersonalizedAds);
-    } else if (value is DateTime) {
-      buffer.putUint8(_valueDateTime);
-      writeValue(buffer, value.millisecondsSinceEpoch);
-    } else if (value is RewardItem) {
+    }  else if (value is RewardItem) {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
       writeValue(buffer, value.type);
@@ -372,16 +367,12 @@ class AdMessageCodec extends StandardMessageCodec {
         return AdRequest(
           keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
           contentUrl: readValueOfType(buffer.getUint8(), buffer),
-          birthday: readValueOfType(buffer.getUint8(), buffer),
           designedForFamilies: readValueOfType(buffer.getUint8(), buffer),
           childDirected: readValueOfType(buffer.getUint8(), buffer),
           testDevices:
               readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
           nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
         );
-      case _valueDateTime:
-        return DateTime.fromMillisecondsSinceEpoch(
-            readValueOfType(buffer.getUint8(), buffer));
       case _valueRewardItem:
         return RewardItem(
           readValueOfType(buffer.getUint8(), buffer),

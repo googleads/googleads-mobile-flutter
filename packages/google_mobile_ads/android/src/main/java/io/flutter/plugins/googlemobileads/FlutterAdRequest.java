@@ -18,13 +18,11 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
-import java.util.Date;
 import java.util.List;
 
 class FlutterAdRequest {
   @Nullable private List<String> keywords;
   @Nullable private String contentUrl;
-  @Nullable private Date birthday;
   @Nullable private Boolean designedForFamilies;
   @Nullable private Boolean childDirected;
   @Nullable private List<String> testDevices;
@@ -33,7 +31,6 @@ class FlutterAdRequest {
   static class Builder {
     @Nullable private List<String> keywords;
     @Nullable private String contentUrl;
-    @Nullable private Date birthday;
     @Nullable private Boolean designedForFamilies;
     @Nullable private Boolean childDirected;
     @Nullable private List<String> testDevices;
@@ -46,11 +43,6 @@ class FlutterAdRequest {
 
     Builder setContentUrl(@Nullable String contentUrl) {
       this.contentUrl = contentUrl;
-      return this;
-    }
-
-    Builder setBirthday(@Nullable Date birthday) {
-      this.birthday = birthday;
       return this;
     }
 
@@ -78,7 +70,6 @@ class FlutterAdRequest {
       final FlutterAdRequest request = new FlutterAdRequest();
       request.keywords = keywords;
       request.contentUrl = contentUrl;
-      request.birthday = birthday;
       request.designedForFamilies = designedForFamilies;
       request.childDirected = childDirected;
       request.testDevices = testDevices;
@@ -99,9 +90,6 @@ class FlutterAdRequest {
     }
     if (contentUrl != null) {
       builder.setContentUrl(contentUrl);
-    }
-    if (birthday != null) {
-      builder.setBirthday(birthday);
     }
     if (designedForFamilies != null) {
       builder.setIsDesignedForFamilies(designedForFamilies);
@@ -131,11 +119,6 @@ class FlutterAdRequest {
   @Nullable
   public String getContentUrl() {
     return contentUrl;
-  }
-
-  @Nullable
-  public Date getBirthday() {
-    return birthday;
   }
 
   @Nullable
