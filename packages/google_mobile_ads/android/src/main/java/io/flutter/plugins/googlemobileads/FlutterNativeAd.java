@@ -141,7 +141,9 @@ class FlutterNativeAd extends FlutterAd implements PlatformView {
 
   @Override
   public void dispose() {
-    ad.destroy();
+    if (ad != null) {
+      ad.destroy();
+    }
   }
 
   @NonNull

@@ -97,6 +97,8 @@ class FlutterBannerAd extends FlutterAd implements PlatformView {
 
   @Override
   public void dispose() {
-    view.destroy();
+    if (view != null) {
+      view.destroy();
+    }
   }
 }
