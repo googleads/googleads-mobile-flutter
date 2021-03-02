@@ -48,7 +48,6 @@ final class AdMessageCodec extends StandardMessageCodec {
       final FlutterAdRequest request = (FlutterAdRequest) value;
       writeValue(stream, request.getKeywords());
       writeValue(stream, request.getContentUrl());
-      writeValue(stream, request.getChildDirected());
       writeValue(stream, request.getTestDevices());
       writeValue(stream, request.getNonPersonalizedAds());
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
@@ -111,7 +110,6 @@ final class AdMessageCodec extends StandardMessageCodec {
         return new FlutterAdRequest.Builder()
             .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))
             .setContentUrl((String) readValueOfType(buffer.get(), buffer))
-            .setChildDirected(booleanValueOf(readValueOfType(buffer.get(), buffer)))
             .setTestDevices((List<String>) readValueOfType(buffer.get(), buffer))
             .setNonPersonalizedAds(booleanValueOf(readValueOfType(buffer.get(), buffer)))
             .build();

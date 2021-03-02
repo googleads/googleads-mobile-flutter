@@ -47,7 +47,6 @@
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
   request.contentURL = @"banana";
-  request.childDirected = NO;
   request.testDevices = @[ @"orange" ];
   request.nonPersonalizedAds = YES;
 
@@ -56,7 +55,6 @@
   FLTAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
   XCTAssertTrue([decodedRequest.keywords isEqualToArray:@[ @"apple" ]]);
   XCTAssertEqualObjects(decodedRequest.contentURL, @"banana");
-  XCTAssertFalse(decodedRequest.childDirected);
   XCTAssertTrue([decodedRequest.testDevices isEqualToArray:@[ @"orange" ]]);
   XCTAssertTrue(decodedRequest.nonPersonalizedAds);
 }

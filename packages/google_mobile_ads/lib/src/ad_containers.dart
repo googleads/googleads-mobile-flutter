@@ -68,16 +68,12 @@ class AdRequest {
   const AdRequest({
     this.keywords,
     this.contentUrl,
-    @Deprecated('See `RequestConfiguration.tagForChildDirectedTreatment')
-        this.childDirected,
     this.testDevices,
     this.nonPersonalizedAds,
   });
 
   final List<String> keywords;
   final String contentUrl;
-  @Deprecated('Use `RequestConfiguration.tagForChildDirectedTreatment')
-  final bool childDirected;
   final List<String> testDevices;
   final bool nonPersonalizedAds;
 

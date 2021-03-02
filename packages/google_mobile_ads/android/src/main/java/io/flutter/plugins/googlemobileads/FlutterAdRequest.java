@@ -23,14 +23,12 @@ import java.util.List;
 class FlutterAdRequest {
   @Nullable private List<String> keywords;
   @Nullable private String contentUrl;
-  @Nullable private Boolean childDirected;
   @Nullable private List<String> testDevices;
   @Nullable private Boolean nonPersonalizedAds;
 
   static class Builder {
     @Nullable private List<String> keywords;
     @Nullable private String contentUrl;
-    @Nullable private Boolean childDirected;
     @Nullable private List<String> testDevices;
     @Nullable private Boolean nonPersonalizedAds;
 
@@ -41,11 +39,6 @@ class FlutterAdRequest {
 
     Builder setContentUrl(@Nullable String contentUrl) {
       this.contentUrl = contentUrl;
-      return this;
-    }
-
-    Builder setChildDirected(@Nullable Boolean childDirected) {
-      this.childDirected = childDirected;
       return this;
     }
 
@@ -63,7 +56,6 @@ class FlutterAdRequest {
       final FlutterAdRequest request = new FlutterAdRequest();
       request.keywords = keywords;
       request.contentUrl = contentUrl;
-      request.childDirected = childDirected;
       request.testDevices = testDevices;
       request.nonPersonalizedAds = nonPersonalizedAds;
       return request;
@@ -82,9 +74,6 @@ class FlutterAdRequest {
     }
     if (contentUrl != null) {
       builder.setContentUrl(contentUrl);
-    }
-    if (childDirected != null) {
-      builder.tagForChildDirectedTreatment(childDirected);
     }
     if (testDevices != null) {
       for (final String testDevice : testDevices) {
@@ -108,11 +97,6 @@ class FlutterAdRequest {
   @Nullable
   public String getContentUrl() {
     return contentUrl;
-  }
-
-  @Nullable
-  public Boolean getChildDirected() {
-    return childDirected;
   }
 
   @Nullable
