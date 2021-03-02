@@ -1,3 +1,24 @@
+## 0.11.0
+Open beta release of the Google Mobile Ads Flutter plugin.
+Please see the [README](https://github.com/googleads/googleads-mobile-flutter/blob/master/README.md) for updated integration steps.
+
+* Package and file names have been renamed from `firebase_admob` to `google_mobile_ads`.
+
+* Removes support for legacy plugin APIs.
+
+* Removes Firebase dependencies.
+
+* Adds support for `RequestConfiguration` targeting APIs.
+
+* Adds support for Ad Manager key values, via the new `Publisher` ad containers.
+See `PublisherBannerAd` and similar classes.
+
+* Shows warning if an `Ad` object is reused without being disposed.
+
+* Removes support for V1 embedding.
+
+* Add version to request agent.
+
 ## 0.10.0
 
 * Old Plugin API has been moved to `lib/firebase_admob_legacy.dart`. To keep using the old API change
@@ -42,7 +63,7 @@ BannerAd(
 
 * Fix smart banners on iOS.
   - `AdSize.smartBanner` is for Android only.
-  - `AdSize.smartBannerPortrait` and `AdSize.smartBannerLandscape` are only for iOS. 
+  - `AdSize.smartBannerPortrait` and `AdSize.smartBannerLandscape` are only for iOS.
   - Use `Adsize.getSmartBanner(Orientation)` to get the correct value depending on platform. The
   orientation can be retrieved using a `BuildContext`:
 ```dart

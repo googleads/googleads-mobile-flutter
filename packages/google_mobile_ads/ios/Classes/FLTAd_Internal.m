@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "FLTAd_Internal.h"
+#import "FLTConstants.h"
 
 @implementation FLTAdSize
 - (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width height:(NSNumber *_Nonnull)height {
@@ -50,7 +51,7 @@
     [request registerAdNetworkExtras:extras];
   }
 
-  request.requestAgent = @"Flutter";
+  request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
   return request;
 }
 @end
@@ -96,7 +97,7 @@
     [request registerAdNetworkExtras:extras];
   }
 
-  request.requestAgent = @"Flutter";
+  request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
   return request;
 }
 @end

@@ -85,7 +85,7 @@ class FlutterAdRequest {
       extras.putString("npa", "1");
       builder.addNetworkExtrasBundle(AdMobAdapter.class, extras);
     }
-    builder.setRequestAgent("Flutter");
+    builder.setRequestAgent(Constants.REQUEST_AGENT_PREFIX_VERSIONED);
     return builder.build();
   }
 
