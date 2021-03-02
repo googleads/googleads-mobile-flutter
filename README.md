@@ -157,7 +157,7 @@ A `BannerAd` requires an `adUnitId`, an `AdSize`, an `AdRequest`, and an `AdList
 
 ```dart
 final BannerAd myBanner = BannerAd(
-  adUnitId: '<test id or account id>',
+  adUnitId: '<ad unit id>',
   size: AdSize.banner,
   request: AdRequest(),
   listener: AdListener(),
@@ -239,12 +239,6 @@ final AdSize adSize = AdSize(300, 50);
 ```
 
 
-
-### Targeting Information
-
-[AdRequest](https://pub.dev/documentation/google_mobile_ads/latest/google_mobile_ads/AdRequest-class.html) objects represent a single ad request, and contain properties for things like targeting information.
-
-
 ### Banner Ad Events
 
 Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
@@ -256,13 +250,13 @@ final AdListener listener = AdListener(
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
-   print('Ad failedToLoad: $error');
+   print('Ad failed to load: $error');
  },
  // Called when an ad opens an overlay that covers the screen.
  onAdOpened: (Ad ad) => print('Ad opened.'),
- // Called when an ad is in the process of leaving the application.
- onAdClosed: (Ad ad) => print('Ad closed.'),
  // Called when an ad removes an overlay that covers the screen.
+ onAdClosed: (Ad ad) => print('Ad closed.'),
+ // Called when an ad is in the process of leaving the application.
  onApplicationExit: (Ad ad) => print('Left application.'),
 );
 ```
@@ -336,17 +330,12 @@ An `InterstitialAd` requires an `adUnitId`, an `AdRequest`, and an `AdListener`.
 
 ```dart
 final InterstitialAd myInterstitial = BanInterstitialAdnerAd(
-  adUnitId: '<test id or account id>',
+  adUnitId: '<ad unit id>',
   request: AdRequest(),
   listener: AdListener(),
 );
 ```
 
-
-
-### Targeting Information
-
-[AdRequest](https://pub.dev/documentation/google_mobile_ads/latest/google_mobile_ads/AdRequest-class.html)  objects represent a single ad request, and contain properties for things like targeting information.
 
 
 ### Interstitial Ad Events
@@ -360,13 +349,13 @@ final AdListener listener = AdListener(
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
-   print('Ad failedToLoad: $error');
+   print('Ad failed to load: $error');
  },
  // Called when an ad opens an overlay that covers the screen.
  onAdOpened: (Ad ad) => print('Ad opened.'),
- // Called when an ad is in the process of leaving the application.
- onAdClosed: (Ad ad) => print('Ad closed.'),
  // Called when an ad removes an overlay that covers the screen.
+ onAdClosed: (Ad ad) => print('Ad closed.'),
+ // Called when an ad is in the process of leaving the application.
  onApplicationExit: (Ad ad) => print('Left application.'),
 );
 ```
@@ -663,11 +652,6 @@ final NativeAd myNative = NativeAd(
 The `factoryId` will need to match the one used to add the factory to `GoogleMobileAdsPlugin` on Android and/or the `FLTGoogleMobileAdsPlugin` on iOS. The same `factoryId` can be used by both platforms or each can have their own.
 
 
-### Targeting Information
-
-[AdRequest](https://pub.dev/documentation/google_mobile_ads/latest/google_mobile_ads/AdRequest-class.html)  objects represent a single ad request, and contain properties for things like targeting information.
-
-
 ### Native Ad Events
 
 Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
@@ -679,13 +663,13 @@ AdListener(
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
-   print('Ad failedToLoad: $error');
+   print('Ad failed to load: $error');
  },
  // Called when an ad opens an overlay that covers the screen.
  onAdOpened: (Ad ad) => print('Ad opened.'),
- // Called when an ad is in the process of leaving the application.
- onAdClosed: (Ad ad) => print('Ad closed.'),
  // Called when an ad removes an overlay that covers the screen.
+ onAdClosed: (Ad ad) => print('Ad closed.'),
+ // Called when an ad is in the process of leaving the application.
  onApplicationExit: (Ad ad) => print('Left application.'),
  // Called when a click is recorded for a NativeAd.
  onNativeAdClicked: (NativeAd ad) => print('Ad clicked.'),
@@ -783,11 +767,6 @@ final RewardedAd myRewarded = RewardedAd(
 
 
 
-### Targeting Information
-
-[AdRequest](https://pub.dev/documentation/google_mobile_ads/latest/google_mobile_ads/AdRequest-class.html)  objects represent a single ad request, and contain properties for things like targeting information.
-
-
 ### Rewarded Ad Events
 
 Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
@@ -799,13 +778,13 @@ AdListener(
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
-   print('Ad failedToLoad: $error');
+   print('Ad failed to load: $error');
  },
  // Called when an ad opens an overlay that covers the screen.
  onAdOpened: (Ad ad) => print('Ad opened.'),
- // Called when an ad is in the process of leaving the application.
- onAdClosed: (Ad ad) => print('Ad closed.'),
  // Called when an ad removes an overlay that covers the screen.
+ onAdClosed: (Ad ad) => print('Ad closed.'),
+ // Called when an ad is in the process of leaving the application.
  onApplicationExit: (Ad ad) => print('Left application.'),
  // Called when a RewardedAd triggers a reward.
  onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) {
@@ -814,7 +793,8 @@ AdListener(
 );
 ```
 
-
+Key Point: Make sure to implement the `onRewardedAdUserEarnedReward` event to
+reward the user for watching an ad.
 
 ## Load Rewarded Ad
 
