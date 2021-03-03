@@ -98,4 +98,5 @@ jobs:
       - uses: actions/checkout@v2
       - uses: axel-op/googlejavaformat-action@v3.4.0
         with:
+          node-version: '14'
           args: "--dry-run --set-exit-if-changed"
