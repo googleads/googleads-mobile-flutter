@@ -20,7 +20,8 @@
 #import "FLTAd_Internal.h"
 #import "FLTMobileAds_Internal.h"
 
-#define FLTLogWarning(format, ...) NSLog((@"GoogleMobileAdsPlugin <warning> " format), ##__VA_ARGS__)
+#define FLTLogWarning(format, ...) \
+  NSLog((@"GoogleMobileAdsPlugin <warning> " format), ##__VA_ARGS__)
 
 /**
  * Creates a `GADUnifiedNativeAdView` to be shown in a Flutter app.

@@ -72,8 +72,8 @@
 
   NativeAdFactoryExample *nativeAdFactory = [[NativeAdFactoryExample alloc] init];
   [FLTGoogleMobileAdsPlugin registerNativeAdFactory:self
-                                        factoryId:@"adFactoryExample"
-                                  nativeAdFactory:nativeAdFactory];
+                                          factoryId:@"adFactoryExample"
+                                    nativeAdFactory:nativeAdFactory];
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 

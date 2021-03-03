@@ -141,20 +141,18 @@ class FlutterPublisherAdRequest {
     FlutterPublisherAdRequest request = (FlutterPublisherAdRequest) o;
 
     return objectEquals(keywords, request.keywords)
-      && objectEquals(contentUrl, request.contentUrl)
-      && objectEquals(customTargeting, request.customTargeting)
-      && objectEquals(nonPersonalizedAds, request.nonPersonalizedAds)
-      && objectEquals(customTargetingLists, request.customTargetingLists);
+        && objectEquals(contentUrl, request.contentUrl)
+        && objectEquals(customTargeting, request.customTargeting)
+        && objectEquals(nonPersonalizedAds, request.nonPersonalizedAds)
+        && objectEquals(customTargetingLists, request.customTargetingLists);
   }
 
   /**
-   * Calculate object equality between l and r.
-   * We can't use Objects.equals() due to backwards compatibility to API 16.
+   * Calculate object equality between l and r. We can't use Objects.equals() due to backwards
+   * compatibility to API 16.
    */
   private boolean objectEquals(Object l, Object r) {
-    return (l == null)
-      ? (r == null)
-      : (l.equals(r));
+    return (l == null) ? (r == null) : (l.equals(r));
   }
 
   @Override
