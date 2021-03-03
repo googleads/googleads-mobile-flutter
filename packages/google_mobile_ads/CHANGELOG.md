@@ -1,3 +1,7 @@
+## 0.11.0+1
+
+* Improve AdRequest documentation and fix README heading.
+
 ## 0.11.0
 Open beta release of the Google Mobile Ads Flutter plugin.
 Please see the [README](https://github.com/googleads/googleads-mobile-flutter/blob/master/README.md) for updated integration steps.
