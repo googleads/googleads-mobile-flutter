@@ -40,7 +40,6 @@ class FlutterPublisherAdRequest {
     @Nullable private Boolean nonPersonalizedAds;
 
     public Builder setKeywords(@Nullable List<String> keywords) {
-      String tmp;
       this.keywords = keywords;
       return this;
     }

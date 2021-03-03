@@ -493,12 +493,12 @@ class NativeAd extends AdWithView {
   ///
   /// A valid [adUnitId], nonnull [listener], nonnull [publisherRequest], and
   /// nonnull [factoryId] is required.
-  NativeAd.fromPublisherRequest({
+  NativeAd.fromPublisherRequest( {
     @required String adUnitId,
     @required this.factoryId,
     @required AdListener listener,
     @required this.publisherRequest,
-    this.customOptions,
+    this.customOptions
   })  : request = null,
         assert(factoryId != null),
         assert(adUnitId != null),
