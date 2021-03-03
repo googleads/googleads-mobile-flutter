@@ -69,10 +69,11 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     MobileAds.instance.initialize().then((InitializationStatus status) {
       print('Initialization done: ${status.adapterStatuses}');
-      MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
-        tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified
-      ))
-        .then((value) {
+      MobileAds.instance
+          .updateRequestConfiguration(RequestConfiguration(
+              tagForChildDirectedTreatment:
+                  TagForChildDirectedTreatment.unspecified))
+          .then((value) {
         createInterstitialAd();
         createRewardedAd();
       });
@@ -304,7 +305,8 @@ class PublisherBannerAdWidget extends StatefulWidget {
 
 class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
   PublisherBannerAd _bannerAd;
-  final Completer<PublisherBannerAd> bannerCompleter = Completer<PublisherBannerAd>();
+  final Completer<PublisherBannerAd> bannerCompleter =
+      Completer<PublisherBannerAd>();
 
   @override
   void initState() {
@@ -324,7 +326,8 @@ class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
         },
         onAdOpened: (Ad ad) => print('$PublisherBannerAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$PublisherBannerAd onAdClosed.'),
-        onApplicationExit: (Ad ad) => print('$PublisherBannerAd onApplicationExit.'),
+        onApplicationExit: (Ad ad) =>
+            print('$PublisherBannerAd onApplicationExit.'),
       ),
     );
     Future<void>.delayed(Duration(seconds: 1), () => _bannerAd?.load());
@@ -341,7 +344,8 @@ class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
   Widget build(BuildContext context) {
     return FutureBuilder<PublisherBannerAd>(
       future: bannerCompleter.future,
-      builder: (BuildContext context, AsyncSnapshot<PublisherBannerAd> snapshot) {
+      builder:
+          (BuildContext context, AsyncSnapshot<PublisherBannerAd> snapshot) {
         Widget child;
 
         switch (snapshot.connectionState) {
