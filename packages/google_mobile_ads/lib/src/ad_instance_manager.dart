@@ -321,7 +321,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.contentUrl);
       writeValue(buffer, value.testDevices);
       writeValue(buffer, value.nonPersonalizedAds);
-    }  else if (value is RewardItem) {
+    } else if (value is RewardItem) {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
       writeValue(buffer, value.type);

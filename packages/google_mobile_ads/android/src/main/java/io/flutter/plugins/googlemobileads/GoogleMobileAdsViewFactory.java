@@ -71,7 +71,7 @@ final class GoogleMobileAdsViewFactory extends PlatformViewFactory {
         String.format(
             Locale.getDefault(),
             "This ad may have not been loaded or has been disposed. "
-              + "Ad with the following id could not be found: %d.",
+                + "Ad with the following id could not be found: %d.",
             adId);
 
     if (BuildConfig.DEBUG) {

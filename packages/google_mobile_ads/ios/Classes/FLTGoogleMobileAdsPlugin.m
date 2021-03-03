@@ -41,7 +41,8 @@
 
   FLTNewGoogleMobileAdsViewFactory *viewFactory =
       [[FLTNewGoogleMobileAdsViewFactory alloc] initWithManager:instance->_manager];
-  [registrar registerViewFactory:viewFactory withId:@"plugins.flutter.io/google_mobile_ads/ad_widget"];
+  [registrar registerViewFactory:viewFactory
+                          withId:@"plugins.flutter.io/google_mobile_ads/ad_widget"];
 }
 
 - (instancetype)init {
@@ -101,24 +102,24 @@
           result([[FLTInitializationStatus alloc] initWithStatus:status]);
         }];
   } else if ([call.method isEqualToString:@"MobileAds#updateRequestConfiguration"]) {
-      NSString* maxAdContentRating = call.arguments[@"maxAdContentRating"];
-      NSNumber* tagForChildDirectedTreatment = call.arguments[@"tagForChildDirectedTreatment"];
-      NSNumber* tagForUnderAgeOfConsent = call.arguments[@"tagForUnderAgeOfConsent"];
-      NSArray<NSString*>* testDeviceIds = call.arguments[@"testDeviceIds"];
+    NSString *maxAdContentRating = call.arguments[@"maxAdContentRating"];
+    NSNumber *tagForChildDirectedTreatment = call.arguments[@"tagForChildDirectedTreatment"];
+    NSNumber *tagForUnderAgeOfConsent = call.arguments[@"tagForUnderAgeOfConsent"];
+    NSArray<NSString *> *testDeviceIds = call.arguments[@"testDeviceIds"];
 
     if (maxAdContentRating != NULL && maxAdContentRating != (id)[NSNull null]) {
       if ([maxAdContentRating isEqualToString:@"G"]) {
         GADMobileAds.sharedInstance.requestConfiguration.maxAdContentRating =
-          GADMaxAdContentRatingGeneral;
+            GADMaxAdContentRatingGeneral;
       } else if ([maxAdContentRating isEqualToString:@"PG"]) {
         GADMobileAds.sharedInstance.requestConfiguration.maxAdContentRating =
-          GADMaxAdContentRatingParentalGuidance;
+            GADMaxAdContentRatingParentalGuidance;
       } else if ([maxAdContentRating isEqualToString:@"T"]) {
         GADMobileAds.sharedInstance.requestConfiguration.maxAdContentRating =
-          GADMaxAdContentRatingTeen;
+            GADMaxAdContentRatingTeen;
       } else if ([maxAdContentRating isEqualToString:@"MA"]) {
         GADMobileAds.sharedInstance.requestConfiguration.maxAdContentRating =
-          GADMaxAdContentRatingMatureAudience;
+            GADMaxAdContentRatingMatureAudience;
       }
     }
     if (tagForChildDirectedTreatment != NULL && tagForChildDirectedTreatment != (id)[NSNull null]) {

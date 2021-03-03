@@ -61,8 +61,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   /**
    * Interface used to display a {@link com.google.android.gms.ads.formats.UnifiedNativeAd}.
    *
-   * <p>Added to a {@link io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin} and creates {@link
-   * com.google.android.gms.ads.formats.UnifiedNativeAdView}s from Native Ads created in Dart.
+   * <p>Added to a {@link io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin} and creates
+   * {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from Native Ads created in
+   * Dart.
    */
   public interface NativeAdFactory {
     /**
@@ -80,8 +81,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   }
 
   /**
-   * Registers a {@link io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory} used
-   * to create {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from a Native Ad
+   * Registers a {@link io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory}
+   * used to create {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from a Native Ad
    * created in Dart.
    *
    * @param engine maintains access to a GoogleMobileAdsPlugin instance.
@@ -99,12 +100,12 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   }
 
   private static boolean registerNativeAdFactory(
-    GoogleMobileAdsPlugin plugin, String factoryId, NativeAdFactory nativeAdFactory) {
+      GoogleMobileAdsPlugin plugin, String factoryId, NativeAdFactory nativeAdFactory) {
     if (plugin == null) {
       final String message =
           String.format(
               "Could not find a %s instance. The plugin may have not been registered.",
-            GoogleMobileAdsPlugin.class.getSimpleName());
+              GoogleMobileAdsPlugin.class.getSimpleName());
       throw new IllegalStateException(message);
     }
 
@@ -112,16 +113,16 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   }
 
   /**
-   * Unregisters a {@link io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory} used
-   * to create {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from a Native Ad
+   * Unregisters a {@link io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory}
+   * used to create {@link com.google.android.gms.ads.formats.UnifiedNativeAdView}s from a Native Ad
    * created in Dart.
    *
    * @param engine maintains access to a GoogleMobileAdsPlugin instance.
    * @param factoryId a unique identifier for the ad factory. The Native ad created in Dart includes
    *     a parameter that refers to this.
    * @return the previous {@link
-   *     io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory} associated with this
-   *     factoryId, or null if there was none for this factoryId.
+   *     io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory} associated with
+   *     this factoryId, or null if there was none for this factoryId.
    */
   public static NativeAdFactory unregisterNativeAdFactory(FlutterEngine engine, String factoryId) {
     final FlutterPlugin gmaPlugin = engine.getPlugins().get(GoogleMobileAdsPlugin.class);
