@@ -16,6 +16,7 @@ Note: This plugin also contains support for **[Google Ad Manager](https://admana
     *   Android Studio 3.2 or higher
     *   Target Android API level 19 or higher
     *   Set `compileSdkVersion` to 28 or higher
+    *   Android Gradle 4.1 or higher (this is the version supported by Flutter out of the box)
 *   Ios
     *   Latest version of Xcode with [enabled command-line tools](https://flutter.dev/docs/get-started/install/macos#install-xcode).
 *   Recommended: [Create an AdMob account](https://support.google.com/admob/answer/2784575) and [register an Android and/or iOS app](https://support.google.com/admob/answer/2773509)
@@ -31,8 +32,7 @@ Note: This plugin also contains support for **[Google Ad Manager](https://admana
 ### iOS
 
 
-####
-Update your Info.plist
+#### Update your Info.plist
 
 In your app's `ios/Runner/Info.plist` file, add a `GADApplicationIdentifier` key with a string value of your AdMob app ID ([identified in the AdMob UI](https://support.google.com/admob/answer/7356431)) as shown below:
 
@@ -122,7 +122,7 @@ The Mobile Ads SDK is now imported and you're ready to implement an ad. AdMob of
 *   Rewarded
     *   Ads that reward users for watching short videos and interacting with playable ads and surveys. Good for monetizing free-to-play users.
 
-#Banner Ads
+# Banner Ads
 
 Banner ads occupy a spot within an app's layout, either at the top or bottom of the device screen. They stay on screen while users are interacting with the app, and can refresh automatically after a certain period of time.
 

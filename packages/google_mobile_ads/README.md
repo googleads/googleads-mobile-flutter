@@ -16,6 +16,7 @@ Note: This plugin also contains support for **[Google Ad Manager](https://admana
     *   Android Studio 3.2 or higher
     *   Target Android API level 19 or higher
     *   Set `compileSdkVersion` to 28 or higher
+    *   Android Gradle 4.1 or higher (this is the version supported by Flutter out of the box)
 *   Ios
     *   Latest version of Xcode with [enabled command-line tools](https://flutter.dev/docs/get-started/install/macos#install-xcode).
 *   Recommended: [Create an AdMob account](https://support.google.com/admob/answer/2784575) and [register an Android and/or iOS app](https://support.google.com/admob/answer/2773509)
