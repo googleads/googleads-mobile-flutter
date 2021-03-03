@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// ignore_for_file: public_member_api_docs
 // ignore_for_file: deprecated_member_use_from_same_package
 
 import 'dart:async';
@@ -60,11 +59,12 @@ class LoadAdError {
   }
 }
 
-/// Targeting info per the native AdMob API.
+/// Targeting info per the AdMob API.
 ///
 /// This class's properties mirror the native AdRequest API. See for example:
 /// [AdRequest.Builder for Android](https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest.Builder).
 class AdRequest {
+  /// Default constructor for [AdRequest].
   const AdRequest({
     this.keywords,
     this.contentUrl,
@@ -72,9 +72,25 @@ class AdRequest {
     this.nonPersonalizedAds,
   });
 
+  /// Words or phrases describing the current user activity.
   final List<String> keywords;
+
+  /// URL string for a webpage whose content matches the app’s primary content.
+  ///
+  /// This webpage content is used for targeting and brand safety purposes.
   final String contentUrl;
+
+  /// Causes a device to receive test ads.
+  ///
+  /// The deviceId can be obtained by viewing the logcat output after creating a
+  /// new ad. This method should only be used while debugging. Be sure to remove
+  /// all calls to this method before releasing your app.
   final List<String> testDevices;
+
+  /// Non-personalized ads are ads that are not based on a user’s past behavior.
+  ///
+  /// For more information:
+  /// https://support.google.com/admob/answer/7676680?hl=en
   final bool nonPersonalizedAds;
 
   @override
@@ -86,7 +102,9 @@ class AdRequest {
   }
 }
 
+/// Targeting info per the Ad Manager API.
 class PublisherAdRequest {
+  /// Default constructor for [PublisherAdRequest].
   const PublisherAdRequest({
     this.keywords,
     this.contentUrl,
@@ -95,10 +113,24 @@ class PublisherAdRequest {
     this.nonPersonalizedAds,
   });
 
+  /// Words or phrases describing the current user activity.
   final List<String> keywords;
+
+  /// URL string for a webpage whose content matches the app’s primary content.
+  ///
+  /// This webpage content is used for targeting and brand safety purposes.
   final String contentUrl;
+
+  /// Key-value pairs used for custom targeting.
   final Map<String, String> customTargeting;
+
+  /// Key-value pairs used for custom targeting.
   final Map<String, List<String>> customTargetingLists;
+
+  /// Non-personalized ads are ads that are not based on a user’s past behavior.
+  ///
+  /// For more information:
+  /// https://support.google.com/admanager/answer/9005435?hl=en
   final bool nonPersonalizedAds;
 
   @override
@@ -119,6 +151,7 @@ class PublisherAdRequest {
 /// and [iOS](https://developers.google.com/admob/ios/banner#banner_sizes) for
 /// additional details.
 class AdSize {
+  /// Default constructor for [AdSize].
   const AdSize({
     @required this.width,
     @required this.height,
@@ -190,6 +223,7 @@ class AdSize {
 
 /// A listener for receiving notifications during the lifecycle of an ad.
 class AdListener {
+  /// Default constructor for [AdListener].
   const AdListener({
     this.onAdLoaded,
     this.onAdFailedToLoad,
@@ -298,6 +332,9 @@ abstract class AdWithoutView extends Ad {
 /// Must call `load()` first before showing the widget. Otherwise, a
 /// [PlatformException] will be thrown.
 class AdWidget extends StatefulWidget {
+  /// Default constructor for [AdWidget].
+  ///
+  /// [ad] must be loaded before this is added to the widget tree.
   const AdWidget({Key key, @required this.ad})
       : assert(ad != null),
         super(key: key);
@@ -424,6 +461,9 @@ class BannerAd extends AdWithView {
 /// This ad can either be overlaid on top of all flutter widgets by passing this
 /// to an [AdWidget] after calling [load].
 class PublisherBannerAd extends AdWithView {
+  /// Default constructor for [PublisherBannerAd].
+  ///
+  /// [sizes], [adUnitId], [listener], and [request] are all required values.
   PublisherBannerAd({
     @required this.sizes,
     @required String adUnitId,
@@ -636,6 +676,10 @@ class RewardedAd extends AdWithoutView {
 
 /// Credit information about a reward received from a [RewardedAd].
 class RewardItem {
+  /// Default constructor for [RewardItem].
+  ///
+  /// This is mostly used to return [RewardItem]s for a [RewardedAd] and
+  /// shouldn't be needed to be used directly.
   RewardItem(this.amount, this.type)
       : assert(amount != null),
         assert(type != null);

@@ -22,8 +22,6 @@ on:
   push:
     branches:
       - master
-    paths-ignore:
-    - "docs/**"
 
 env:
   GOOGLEMOBILEADS_PLUGIN_SCOPE: "*google_mobile_ads*"
@@ -83,22 +81,17 @@ jobs:
         run: ./.github/workflows/scripts/install-flutter.sh dev
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
-      - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
       - name: "Unit Tests"
         run: |
           cd packages/google_mobile_ads/
           flutter test
-
-  formatting:
-    runs-on: macos-latest
-    if: github.event_name == 'pull_request'
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v1
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev
-      - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+      - name: "Flutter Analyze"
+        run: |
+          cd packages/google_mobile_ads/
+          flutter analyze
+      - name: "Flutter Publish"
+        run: |
+          cd packages/google_mobile_ads/
+          flutter pub publish --dry-run
       - name: "Flutter Format"
         run: flutter format --set-exit-if-changed packages/google_mobile_ads

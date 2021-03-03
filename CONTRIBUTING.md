@@ -1,4 +1,4 @@
-# Contributing to FlutterFire
+# Contributing
 
 _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#code-of-conduct)_
 
@@ -22,7 +22,6 @@ again.
 - An ssh client (used to authenticate with GitHub).
 - An IDE such as [Android Studio](https://developer.android.com/studio) or [Visual Studio Code](https://code.visualstudio.com/).
 - [`flutter_plugin_tools`](https://pub.dev/packages/flutter_plugin_tools) locally activated.
-- [`tuneup`](https://pub.dev/packages/tuneup) locally activated.
 - [`clang-format`](https://clang.llvm.org/docs/ClangFormat.html) (available via brew on macOS, apt on Ubuntu, maybe via llvm on chocolatey for Windows)
 
 ## 2. Forking & cloning the repository
@@ -42,89 +41,34 @@ again.
 
 ## 3. Environment Setup
 
-Google Mobile Ads uses [Melos](https://github.com/invertase/melos) to manage the project and dependencies.
+Follow the steps for [installing Flutter](https://flutter.dev/docs/get-started/install) and
+[setting up an editor](https://flutter.dev/docs/get-started/editor).
 
-To install Melos, run the following command from your SSH client:
+## 4. Running the example app
 
+Run `flutter pub get`:
 ```bash
-pub global activate melos
+cd packages/google_mobile_ads
+flutter pub get
 ```
 
-Next, at the root of your locally cloned repository bootstrap the projects dependencies:
+Run the example app:
 
 ```bash
-melos bootstrap
-```
-
-The bootstrap command locally links all dependencies within the project without having to
-provide manual [`dependency_overrides`](https://dart.dev/tools/pub/pubspec). This allows all
-plugins, examples and tests to build from the local clone project.
-
-> You do not need to run `flutter pub get` once bootstrap has been completed.
-
-## 4. Running an example
-
-Each plugin provides an example app which aims to showcase the main use-cases of each plugin.
-
-To run an example, run the `flutter run` command from the `example` directory of each plugins main
-directory. For example, for Firebase Auth example:
-
-```bash
-cd packages/firebase_auth/firebase_auth/example
+cd packages/google_mobile_ads/example
 flutter run
 ```
 
-Using Melos (installed in step 3), any changes made to the plugins locally will also be reflected within all
-example applications code automatically.
-
 ## 4. Running tests
-
-FlutterFire comprises of a number of tests for each plugin, either end-to-end (e2e) or unit tests.
 
 ### Unit tests
 
-Unit tests are responsible for ensuring expected behavior whilst developing the plugins Dart code. Unit tests do not
-interact with 3rd party Firebase services, and mock where possible. To run unit tests for a specific plugin, run the
-`flutter test` command from the plugins root directory. For example, Firebase Auth platform interface tests can be run
-with the following commands:
+To run unit tests, use the following commands:
 
 ```bash
 cd packages/firebase_auth/firebase_auth_platform_interface
 flutter test
 ```
-
-### End-to-end (e2e) tests
-
-E2e tests are those which directly communicate with Firebase, whose results cannot be mocked. These tests run directly from
-an example application. To run e2e tests, run the `flutter drive` command from the plugins main `example` directory, targeting the
-entry e2e test file.
-
-> Some packages use Firebase Emulator Suite to run tests. To learn more, [visit the official documentation](https://firebase.google.com/docs/emulator-suite).
-
-```bash
-cd packages/firebase_auth/firebase_auth/example
-flutter drive --target=./test_driver/firebase_auth_e2e.dart
-```
-
-To run tests against web environments, run the command as a release build:
-
-```bash
-cd packages/firebase_auth/firebase_auth/example
-flutter drive --target=./test_driver/firebase_auth_e2e.dart --release -d chrome
-```
-
-### Using Melos
-
-To help aid developer workflow, Melos provides a number of commands to quickly run
-tests against plugins. For example, to run all e2e tests across all plugins at once,
-run the following command from the root of your cloned repository:
-
-```bash
-melos run test:e2e
-```
-
-A full list of all commands can be found within the [`melos.yaml`](https://github.com/googleads/googleads-mobile-flutter/blob/master/melos.yaml)
-file.
 
 ## 5. Contributing code
 
@@ -147,10 +91,12 @@ commands can be run locally to highlight any issues before committing your code:
 
 ```bash
 # Run the analyze check
-melos run analyze
+dart analyze
 
-# Format code
-melos run format
+# Format code. 
+# Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
+# Requires `clang-format` (can be installed via Brew on macOS).
+dart pub global run flutter_plugin_tools format
 ```
 
 Assuming all is successful, commit and push your code:
@@ -167,12 +113,9 @@ To send us a pull request:
 Please make sure all your check-ins have detailed commit messages explaining the patch.
 
 When naming the title of your pull request, please follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.4/)
-guide. For example, for a fix to the Firebase Auth plugin:
+guide. 
 
-`fix(firebase_auth): fixed a bug!`
-
-Plugins tests are run automatically on contributions using GitHub Actions. Depending on
-your code contributions, various tests will be run against your updated code automatically.
+Plugins tests are run automatically on contributions using GitHub Actions. 
 
 Once you've gotten an LGTM from a project maintainer and once your PR has received
 the green light from all our automated testing, wait for one the package maintainers
@@ -200,12 +143,7 @@ Newly opened PRs first go through initial triage which results in one of:
 
 ### The release process
 
-We push releases manually, using [Melos](https://github.com/invertase/melos)
-to take care of the hard work.
-
-Changelogs and version updates are automatically updated by a project maintainer
-(via [Melos](https://github.com/invertase/melos)). The new version is automatically
-generated via the commit types and changelogs via the commit messages.
+We push releases manually. Changelogs and version updates are updated by a project maintainer.
 
 Some things to keep in mind before publishing the release:
 
