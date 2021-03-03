@@ -22,8 +22,6 @@ on:
   push:
     branches:
       - master
-    paths-ignore:
-    - "docs/**"
 
 env:
   GOOGLEMOBILEADS_PLUGIN_SCOPE: "*google_mobile_ads*"
@@ -83,9 +81,15 @@ jobs:
         run: ./.github/workflows/scripts/install-flutter.sh dev
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
-      - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
       - name: "Unit Tests"
         run: |
           cd packages/google_mobile_ads/
           flutter test
+      - name: "Flutter Analyze"
+        run: |
+          cd packages/google_mobile_ads/
+          flutter analyze
+      - name: "Flutter Publish"
+        run: |
+          cd packages/google_mobile_ads/
+          flutter pub publish --dry-run
