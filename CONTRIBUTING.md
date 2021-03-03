@@ -66,7 +66,7 @@ flutter run
 To run unit tests, use the following commands:
 
 ```bash
-cd packages/firebase_auth/firebase_auth_platform_interface
+cd packages/google_mobile_ads
 flutter test
 ```
 
