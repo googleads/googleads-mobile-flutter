@@ -89,3 +89,13 @@ jobs:
         run: |
           cd packages/google_mobile_ads/
           flutter test
+
+  java-formatting:
+    runs-on: macos-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+      - uses: axel-op/googlejavaformat-action@v3
+        with:
+          args: "--dry-run --set-exit-if-changed"
