@@ -31,8 +31,7 @@ Note: This plugin also contains support for **[Google Ad Manager](https://admana
 ### iOS
 
 
-####
-Update your Info.plist
+#### Update your Info.plist
 
 In your app's `ios/Runner/Info.plist` file, add a `GADApplicationIdentifier` key with a string value of your AdMob app ID ([identified in the AdMob UI](https://support.google.com/admob/answer/7356431)) as shown below:
 
