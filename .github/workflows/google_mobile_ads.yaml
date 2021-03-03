@@ -93,3 +93,5 @@ jobs:
         run: |
           cd packages/google_mobile_ads/
           flutter pub publish --dry-run
+      - name: "Flutter Format"
+        run: flutter format --set-exit-if-changed packages/google_mobile_ads
