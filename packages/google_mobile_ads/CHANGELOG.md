@@ -1,6 +1,7 @@
 ## 0.11.0+2
 
 * Update minimum gradle version.
+* Add references to the [codelab](https://codelabs.developers.google.com/codelabs/admob-inline-ads-in-flutter#0) in the README. 
 
 ## 0.11.0+1
 
