@@ -211,7 +211,7 @@ class AdSize {
   /// Ad units that render screen-width banner ads on any screen size across different devices in landscape on iOS.
   // iOS expects a width of -1 and a height of -2 represents a landscape smart banner.
   static AdSize get smartBannerLandscape {
-    assert(defaultTargetPlatform == TargetPlatform.android);
+    assert(defaultTargetPlatform == TargetPlatform.iOS);
     return AdSize(width: -1, height: -3);
   }
 
