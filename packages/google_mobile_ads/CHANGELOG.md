@@ -1,3 +1,7 @@
+## 0.11.0+2
+
+* Set min Android version to `19`.
+
 ## 0.11.0+1
 
 * Improve AdRequest documentation and fix README heading.
