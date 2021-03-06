@@ -1,6 +1,7 @@
 ## 0.11.0+2
 
 * Set min Android version to `19`.
+* Fixes bug that displayed "This AdWidget is already in the Widget tree".
 
 ## 0.11.0+1
 
