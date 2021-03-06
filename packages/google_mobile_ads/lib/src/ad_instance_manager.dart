@@ -116,7 +116,7 @@ class AdInstanceManager {
   void mountWidgetAdId(int adId) => _mountedWidgetAdIds.add(adId);
 
   /// Indicates that [adId] is unmounted from the widget tree.
-  void unmountWidgetAdId(int adId) => _mountedWidgetAdIds.add(adId);
+  void unmountWidgetAdId(int adId) => _mountedWidgetAdIds.remove(adId);
 
   /// Starts loading the ad if not previously loaded.
   ///

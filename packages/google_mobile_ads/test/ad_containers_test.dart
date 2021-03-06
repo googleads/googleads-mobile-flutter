@@ -306,6 +306,7 @@ void main() {
         listener: AdListener(),
         request: AdRequest(),
       );
+      await ad.load();
       final AdWidget widget = AdWidget(ad: ad);
       try {
         await tester.pumpWidget(
@@ -318,6 +319,9 @@ void main() {
             ),
           ),
         );
+
+        await tester.pumpWidget(Container());
+
         await tester.pumpWidget(
           Directionality(
             textDirection: TextDirection.ltr,
