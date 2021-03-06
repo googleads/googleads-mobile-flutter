@@ -1,7 +1,9 @@
 ## 0.11.0+2
 
+* Set min Android version to `19`.
+* Fixes bug that displayed "This AdWidget is already in the Widget tree".
 * Update minimum gradle version.
-* Add references to the [codelab](https://codelabs.developers.google.com/codelabs/admob-inline-ads-in-flutter#0) in the README. 
+* Add references to the [codelab](https://codelabs.developers.google.com/codelabs/admob-inline-ads-in-flutter#0) in the README.
 
 ## 0.11.0+1
 

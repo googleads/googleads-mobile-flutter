@@ -47,7 +47,7 @@ jobs:
           cd packages/google_mobile_ads/example/android
           ./gradlew test
 
-  apple:
+  iOS:
     runs-on: macos-latest
     timeout-minutes: 40
     steps:

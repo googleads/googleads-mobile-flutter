@@ -315,7 +315,7 @@ An `InterstitialAd` requires an `adUnitId`, an `AdRequest`, and an `AdListener`.
 
 
 ```dart
-final InterstitialAd myInterstitial = BanInterstitialAdnerAd(
+final InterstitialAd myInterstitial = InterstitialAd(
   adUnitId: '<ad unit id>',
   request: AdRequest(),
   listener: AdListener(),
