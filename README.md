@@ -1,4 +1,4 @@
-# Get Started
+# Google Mobile Ads for Flutter
 
 This guide is intended for publishers who want to monetize a [Flutter](https://flutter.dev/) app.
 
@@ -8,6 +8,8 @@ The Google Mobile Ads SDK for Flutter currently supports loading and displaying 
 
 Note: This plugin also contains support for **[Google Ad Manager](https://admanager.google.com/home/)**. If you are interested in creating and loading an Ad with Ad Manager, you may follow the same prerequisites, platform setup, mobile ads SDK initialization steps outlined in this doc, and see [creating and loading an ad with Ad Manager](https://github.com/googleads/googleads-mobile-flutter#creating-and-loading-an-ad-with-ad-manager) for further instructions.
 
+See also the [codelab for inline ads in Flutter](https://codelabs.developers.google.com/codelabs/admob-inline-ads-in-flutter#0) for a detailed guide on setting 
+inline banner and native ads.
 
 ## Prerequisites
 
@@ -16,6 +18,7 @@ Note: This plugin also contains support for **[Google Ad Manager](https://admana
     *   Android Studio 3.2 or higher
     *   Target Android API level 19 or higher
     *   Set `compileSdkVersion` to 28 or higher
+    *   Android Gradle Plugin 4.1 or higher (this is the version supported by Flutter out of the box)
 *   Ios
     *   Latest version of Xcode with [enabled command-line tools](https://flutter.dev/docs/get-started/install/macos#install-xcode).
 *   Recommended: [Create an AdMob account](https://support.google.com/admob/answer/2784575) and [register an Android and/or iOS app](https://support.google.com/admob/answer/2773509)
@@ -31,8 +34,7 @@ Note: This plugin also contains support for **[Google Ad Manager](https://admana
 ### iOS
 
 
-####
-Update your Info.plist
+#### Update your Info.plist
 
 In your app's `ios/Runner/Info.plist` file, add a `GADApplicationIdentifier` key with a string value of your AdMob app ID ([identified in the AdMob UI](https://support.google.com/admob/answer/7356431)) as shown below:
 
@@ -122,14 +124,16 @@ The Mobile Ads SDK is now imported and you're ready to implement an ad. AdMob of
 *   Rewarded
     *   Ads that reward users for watching short videos and interacting with playable ads and surveys. Good for monetizing free-to-play users.
 
-#Banner Ads
+## Banner Ads
 
 Banner ads occupy a spot within an app's layout, either at the top or bottom of the device screen. They stay on screen while users are interacting with the app, and can refresh automatically after a certain period of time.
 
 This guide shows you how to integrate banner ads from AdMob into a Flutter app. In addition to code snippets and instructions, it also includes information about sizing banners properly and links to additional resources.
 
+See also the [codelab for inline ads in Flutter](https://codelabs.developers.google.com/codelabs/admob-inline-ads-in-flutter#6) for a detailed guide on setting up banner ads.
 
-## Always test with test ads
+
+### Always test with test ads
 
 When building and testing your apps, make sure you use test ads rather than live, production ads. Failure to do so can lead to suspension of your account.
 
@@ -141,7 +145,7 @@ The easiest way to load test ads is to use our dedicated test ad unit ID for ban
 It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
 
-## Instantiate a Banner Ad
+### Instantiate a Banner Ad
 
 A `BannerAd` requires an `adUnitId`, an `AdSize`, an `AdRequest`, and an `AdListener`. An example is shown below as well as more information on each parameter following.
 
@@ -155,7 +159,7 @@ final BannerAd myBanner = BannerAd(
 );
 ```
 
-### Banner Sizes
+#### Banner Sizes
 
 The table below lists the standard banner sizes.
 
@@ -227,7 +231,7 @@ final AdSize adSize = AdSize(300, 50);
 ```
 
 
-### Banner Ad Events
+#### Banner Ad Events
 
 Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
 
@@ -249,7 +253,7 @@ final AdListener listener = AdListener(
 );
 ```
 
-## Load Banner Ad
+### Load Banner Ad
 
 After a `BannerAd` is instantiated, `load()` must be called before it can be shown on the screen.
 
@@ -258,7 +262,7 @@ After a `BannerAd` is instantiated, `load()` must be called before it can be sho
 myBanner.load();
 ```
 
-## Display a Banner Ad
+### Display a Banner Ad
 
 To display a `BannerAd` as a widget, you must instantiate an `AdWidget` with a supported ad after calling `load()`. You can create the widget before calling `load()`, but `load()` must be called before adding it to the widget tree.
 
@@ -285,14 +289,14 @@ Once an Ad has called `load()`, it must call `dispose()` when access to it is no
 That's it! Your app is now ready to display banner ads.
 
 
-# Interstitial Ad
+## Interstitial Ad
 
 Interstitial ads are full-screen ads that cover the interface of their host app. They're typically displayed at natural transition points in the flow of an app, such as between activities or during the pause between levels in a game. When an app shows an interstitial ad, the user has the choice to either tap on the ad and continue to its destination or close it and return to the app.
 
 This guide explains how to integrate interstitial ads into a Flutter app.
 
 
-## Always test with test ads
+### Always test with test ads
 
 When building and testing your apps, make sure you use test ads rather than live, production ads. Failure to do so can lead to suspension of your account.
 
@@ -305,7 +309,7 @@ The easiest way to load test ads is to use our dedicated test ad unit ID for ban
 It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
 
-## Instantiate an Interstitial Ad
+### Instantiate an Interstitial Ad
 
 An `InterstitialAd` requires an `adUnitId`, an `AdRequest`, and an `AdListener`. An example is shown below as well as more information on each parameter following.
 
@@ -318,7 +322,7 @@ final InterstitialAd myInterstitial = InterstitialAd(
 );
 ```
 
-### Interstitial Ad Events
+#### Interstitial Ad Events
 
 Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
 
@@ -340,7 +344,7 @@ final AdListener listener = AdListener(
 );
 ```
 
-## Load Interstitial Ad
+### Load Interstitial Ad
 
 After an `InterstitialAd` is instantiated, `load()` must be called before it can be shown on the screen.
 
@@ -349,7 +353,7 @@ After an `InterstitialAd` is instantiated, `load()` must be called before it can
 myInterstitial.load();
 ```
 
-## Display an Interstitial Ad
+### Display an Interstitial Ad
 
 An `InterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the add by calling `show()` after the ad is loaded.
 
@@ -364,7 +368,7 @@ Once an ad has called `load()`, it must call `dispose()` when access to it is no
 That's it! Your app is now ready to display interstitial ads.
 
 
-## Next steps
+### Next steps
 
 
 
@@ -372,22 +376,24 @@ That's it! Your app is now ready to display interstitial ads.
 *   Check out an [Interstitial ads case study](https://admob.google.com/home/resources/freaking-math-powers-revenue-increase-with-google-admob-support/).
 *   If you haven't already, create your own interstitial ad unit in the [AdMob UI](https://apps.admob.com/).
 
-# Native Ads
+## Native Ads
 
 
 Native ads are ad assets that are presented to users via UI components that are native to the platform. They're shown using the same types of views with which you're already building your layouts, and can be formatted to match the visual design of the user experience in which they live. In coding terms, this means that when a native ad loads, your app receives a NativeAd object that contains its assets, and the app (rather than the Google Mobile Ads SDK) is then responsible for displaying them.
 
 Broadly speaking, there are two parts to successfully implementing Native Ads: loading an ad via the SDK and displaying the ad content in your app. This guide is concerned with using the SDK to load native ads.
 
+See also the [codelab for inline ads in Flutter](https://codelabs.developers.google.com/codelabs/admob-inline-ads-in-flutter#7) for a detailed guide on setting up native ads.
 
-## Platform Setup
+
+### Platform Setup
 
 Native Ads are presented to users via UI components that are native to the platform. (e.g. A [View](https://developer.android.com/reference/android/view/View) on Android or a [UIView](https://developer.apple.com/documentation/uikit/uiview?language=objc) on iOS).
 
 Since Native Ads require UI components native to a platform, this feature requires additional setup for Android and iOS:
 
 
-### Android
+#### Android
 
 The Android implementation of the Google Mobile Ads plugin requires a class that implements a NativeAdFactory. A `NativeAdFactory` contains a method that takes a [UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd) and custom options and returns a [UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView). The [UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView) is what will be displayed in your app.
 
@@ -486,7 +492,7 @@ class NativeAdFactoryExample implements NativeAdFactory {
 }
 ```
 
-### iOS
+#### iOS
 
 The iOS implementation of the Google Mobile Ads plugin requires a class that implements a `FLTNativeAdFactory`. A `FLTNativeAdFactory` contains a method that takes a `GADUnifiedNativeAd` and custom options and returns a `GADUnifiedNativeAdView`. The `GADUnifiedNativeAdView` is what will be displayed in your app.
 
@@ -586,7 +592,7 @@ When creating the `NativeAd` in Dart, the `factoryID` will need to match the one
 @end
 ```
 
-## Always test with test ads
+### Always test with test ads
 
 When building and testing your apps, make sure you use test ads rather than live, production ads. Failure to do so can lead to suspension of your account.
 
@@ -598,7 +604,7 @@ The easiest way to load test ads is to use our dedicated test ad unit ID for ban
 It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
 
-## Instantiate a Native Ad
+### Instantiate a Native Ad
 
 A `NativeAd` requires an `adUnitId`, a `factoryId`, an `AdRequest`, and an `AdListener`. An example is shown below as well as more information on each parameter following.
 
@@ -612,12 +618,12 @@ final NativeAd myNative = NativeAd(
 );
 ```
 
-### Factory Id
+#### Factory Id
 
 The `factoryId` will need to match the one used to add the factory to `GoogleMobileAdsPlugin` on Android and/or the `FLTGoogleMobileAdsPlugin` on iOS. The same `factoryId` can be used by both platforms or each can have their own.
 
 
-### Native Ad Events
+#### Native Ad Events
 
 Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
 
@@ -642,7 +648,7 @@ AdListener(
 );
 ```
 
-## Load Native Ad
+### Load Native Ad
 
 After a `NativeAd` is instantiated, `load()` must be called before it can be shown on the screen.
 
@@ -651,7 +657,7 @@ After a `NativeAd` is instantiated, `load()` must be called before it can be sho
 myNative.load();
 ```
 
-## Display a Native Ad
+### Display a Native Ad
 
 To display a `NativeAd` as a widget, you must instantiate an `AdWidget` with a supported ad after calling `load()`. You can create the widget before calling `load()`, but `load()` must be called before adding it to the widget tree.
 
@@ -676,19 +682,19 @@ Once an Ad has called `load()`, it must call `dispose()` when access to it is no
 That's it! Your app is now ready to display native ads.
 
 
-## Next steps
+### Next steps
 
 *   Learn more about native ads in our [native ad playbook](https://admob.google.com/home/resources/native-ads-playbook/).
 *   See [native ads policies and guidelines](https://support.google.com/admob/answer/6329638) for implementing native ads.
 *   Check out some customer success stories: [Case study 1](https://admob.google.com/home/resources/alarmmon-achieves-higher-rpm-with-admob-triggered-native-ads/), [Case Study 2](https://admob.google.com/home/resources/linghit-limited-doubles-ad-revenue-with-admob-native-ads/)
 
 
-# Rewarded Ads
+## Rewarded Ads
 
 Rewarded ads are ads that users have the option of interacting with [in exchange for in-app rewards](https://support.google.com/admob/answer/7313578). This guide shows you how to integrate rewarded ads from AdMob into a Flutter app.
 
 
-## Always test with test ads
+### Always test with test ads
 
 When building and testing your apps, make sure you use test ads rather than live, production ads. Failure to do so can lead to suspension of your account.
 
@@ -701,7 +707,7 @@ The easiest way to load test ads is to use our dedicated test ad unit ID for ban
 It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
 
-## Instantiate a Rewarded Ad
+### Instantiate a Rewarded Ad
 
 A `RewardedAd` requires an `adUnitId`, an `AdRequest`, and an `AdListener` with the `onRewardedAdUserEarnedReward` callback implemented. An example is shown below as well as more information on each parameter following.
 
@@ -720,7 +726,7 @@ final RewardedAd myRewarded = RewardedAd(
 ```
 
 
-### Rewarded Ad Events
+#### Rewarded Ad Events
 
 Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
 
@@ -749,7 +755,7 @@ AdListener(
 Key Point: Make sure to implement the `onRewardedAdUserEarnedReward` event to
 reward the user for watching an ad.
 
-## Load Rewarded Ad
+### Load Rewarded Ad
 
 After a `RewardedAd` is instantiated, `load()` must be called before it can be shown on the screen.
 
@@ -758,7 +764,7 @@ After a `RewardedAd` is instantiated, `load()` must be called before it can be s
 myRewarded.load();
 ```
 
-## Display a RewardedAd
+### Display a RewardedAd
 
 A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the add by calling `show()` after the ad is loaded.
 
@@ -774,11 +780,11 @@ Once an ad has called `load()`, it must call `dispose()` when access to it is no
 That's it! Your app is now ready to display rewarded ads.
 
 
-# Targeting
+## Targeting
 
 The `RequestConfiguration` object collects the global configuration for every ad request and is applied by` MobileAds.instance.updateRequestConfiguration()`.
 
-## Child-directed setting
+### Child-directed setting
 
 For purposes of the [Children's Online Privacy Protection Act (COPPA)](https://www.ftc.gov/tips-advice/business-center/privacy-and-security/children%27s-privacy), there is a setting called "tag for child-directed treatment."
 
@@ -797,7 +803,7 @@ final RequestConfiguration requestConfiguration = RequestConfiguration(
 MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 ```
 
-## Users under the age of consent
+### Users under the age of consent
 
 You can mark your ad requests to receive treatment for users in the European Economic Area (EEA) under the age of consent. This feature is designed to help facilitate compliance with the [General Data Protection Regulation (GDPR)](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32016R0679). Note that you may have other legal obligations under GDPR. Please review the European Union’s guidance and consult with your own legal counsel. Please remember that Google's tools are designed to facilitate compliance and do not relieve any particular publisher of its obligations under the law. [Learn more about how the GDPR affects publishers](https://support.google.com/admob/answer/7666366).
 
@@ -819,7 +825,7 @@ MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 The tags to enable the Child-directed setting and setTagForUnderAgeOfConsent should not both simultaneously be set to true. If they are, the child-directed setting takes precedence.
 
 
-## Ad Content Filtering
+### Ad Content Filtering
 
 The setting can be set via` RequestConfiguration.maxAdContentRating()`:
 
