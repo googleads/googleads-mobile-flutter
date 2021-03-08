@@ -239,24 +239,6 @@ public class GoogleMobileAdsTest {
     verify(bannerAd).destroy();
     assertNull(testManager.adForId(2));
     assertNull(testManager.adIdFor(bannerAd));
-
-    FlutterPublisherBannerAd publisherBannerAd = Mockito.mock(FlutterPublisherBannerAd.class);
-    testManager.trackAd(publisherBannerAd, 2);
-    assertNotNull(testManager.adForId(2));
-    assertNotNull(testManager.adIdFor(publisherBannerAd));
-    testManager.disposeAd(2);
-    verify(publisherBannerAd).destroy();
-    assertNull(testManager.adForId(2));
-    assertNull(testManager.adIdFor(publisherBannerAd));
-
-    FlutterNativeAd flutterNativeAd = Mockito.mock(FlutterNativeAd.class);
-    testManager.trackAd(flutterNativeAd, 2);
-    assertNotNull(testManager.adForId(2));
-    assertNotNull(testManager.adIdFor(flutterNativeAd));
-    testManager.disposeAd(2);
-    verify(flutterNativeAd).destroy();
-    assertNull(testManager.adForId(2));
-    assertNull(testManager.adIdFor(flutterNativeAd));
   }
 
   @Test
