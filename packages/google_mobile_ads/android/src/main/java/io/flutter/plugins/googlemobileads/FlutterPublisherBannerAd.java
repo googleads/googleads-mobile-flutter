@@ -126,8 +126,9 @@ class FlutterPublisherBannerAd extends FlutterAd implements PlatformView, Flutte
 
   @Override
   public void dispose() {
-    // Do nothing. This is because banner ads can be displayed again after being removed from
-    // the view hierarchy. For example, if in a scrolling list view.
+    // Do nothing. Cleanup is handled in destroy() below, which is triggered from dispose() being
+    // called on the flutter ad object. This is allows for reuse of the ad view, for example
+    // in a scrolling list view.
   }
 
   @Override
