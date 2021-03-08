@@ -18,10 +18,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:google_mobile_ads_example/reusable_banner_example.dart';
 
 import 'constants.dart';
-import 'reusable_banner_example.dart';
+import 'reusable_inline_example.dart';
 
 // You can also test with your own ad unit IDs by registering your device as a
 // test device. Check the logs for your device's ID value.
@@ -150,11 +149,11 @@ class _MyAppState extends State<MyApp> {
                       _rewardedReady = false;
                       _rewardedAd = null;
                       break;
-                    case 'ReusableBannerExample':
+                    case 'ReusableInlineExample':
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ReusableBannerExample()),
+                            builder: (context) => ReusableInlineExample()),
                       );
                       break;
                     default:
@@ -171,8 +170,8 @@ class _MyAppState extends State<MyApp> {
                     value: '$RewardedAd',
                   ),
                   PopupMenuItem<String>(
-                    child: Text('Reusable Banner Example'),
-                    value: 'ReusableBannerExample',
+                    child: Text('Reusable Inline Ads Object Example'),
+                    value: 'ReusableInlineExample',
                   ),
                 ],
               ),

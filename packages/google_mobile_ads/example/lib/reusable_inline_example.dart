@@ -3,14 +3,16 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'constants.dart';
 import 'dart:io' show Platform;
 
-/// This example displays a banner ad in a list view where the banner ad
-/// is reused.
-class ReusableBannerExample extends StatefulWidget {
+/// This example demonstrates inline ads in a list view, where the ad objects
+/// live for the lifetime of this widget. This differs from the example in
+/// [main.dart], which creates a new ad object whenever an ad is to be displayed
+/// in the ListView.
+class ReusableInlineExample extends StatefulWidget {
   @override
-  _ReusableBannerExampleState createState() => _ReusableBannerExampleState();
+  _ReusableInlineExampleState createState() => _ReusableInlineExampleState();
 }
 
-class _ReusableBannerExampleState extends State<ReusableBannerExample> {
+class _ReusableInlineExampleState extends State<ReusableInlineExample> {
   BannerAd _bannerAd;
   bool _bannerAdIsLoaded = false;
 
@@ -23,7 +25,7 @@ class _ReusableBannerExampleState extends State<ReusableBannerExample> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text('Reusable Banner Ad Example'),
+          title: Text('Reusable Inline Ad Example'),
         ),
         body: Center(
           child: Padding(
@@ -69,6 +71,7 @@ class _ReusableBannerExampleState extends State<ReusableBannerExample> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    // Create the ad objects and load ads.
     _bannerAd = BannerAd(
         size: AdSize.banner,
         adUnitId: Platform.isAndroid
