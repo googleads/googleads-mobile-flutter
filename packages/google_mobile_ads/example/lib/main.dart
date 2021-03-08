@@ -18,6 +18,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads_example/reusable_banner_example.dart';
+
+import 'constants.dart';
+import 'reusable_banner_example.dart';
 
 // You can also test with your own ad unit IDs by registering your device as a
 // test device. Check the logs for your device's ID value.
@@ -35,28 +39,6 @@ class _MyAppState extends State<MyApp> {
     contentUrl: 'http://foo.com/bar.html',
     nonPersonalizedAds: true,
   );
-
-  final List<String> _article = <String>[
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod'
-        ' tempor incididunt ut labore et dolore magna aliqua. Faucibus purus in'
-        ' massa tempor. Quis enim lobortis scelerisque fermentum dui faucibus'
-        ' in. Nibh praesent tristique magna sit amet purus gravida quis.'
-        ' Magna sit amet purus gravida quis blandit turpis cursus in. Sed'
-        ' adipiscing diam donec adipiscing tristique. Urna porttitor rhoncus'
-        ' dolor purus non enim praesent. Pellentesque habitant morbi tristique'
-        ' senectus et netus. Risus ultricies tristique nulla aliquet enim tortor'
-        ' at.',
-    'Eget dolor morbi non arcu. Nec sagittis aliquam malesuada bibendum. Nec'
-        ' feugiat nisl pretium fusce id velit ut. Volutpat commodo sed egestas'
-        ' egestas. Ultrices neque ornare aenean euismod elementum. Consequat'
-        ' semper viverra nam libero justo laoreet sit amet cursus. Fusce ut'
-        ' placerat orci nulla pellentesque dignissim. Justo donec enim diam'
-        ' vulputate ut pharetra sit amet.',
-    'Et malesuada fames ac turpis egestas maecenas. Augue ut lectus arcu'
-        ' bibendum at varius. Mauris rhoncus aenean vel elit scelerisque mauris'
-        ' pellentesque pulvinar. Faucibus a pellentesque sit amet porttitor'
-        ' eget dolor.'
-  ];
 
   InterstitialAd _interstitialAd;
   bool _interstitialReady = false;
@@ -148,69 +130,84 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('AdMob Plugin example app'),
-          actions: <Widget>[
-            PopupMenuButton<String>(
-              onSelected: (String result) {
-                assert(result == 'InterstitialAd' || result == 'RewardedAd');
-                switch (result) {
-                  case 'InterstitialAd':
-                    if (!_interstitialReady) return;
-                    _interstitialAd.show();
-                    _interstitialReady = false;
-                    _interstitialAd = null;
-                    break;
-                  case 'RewardedAd':
-                    if (!_rewardedReady) return;
-                    _rewardedAd.show();
-                    _rewardedReady = false;
-                    _rewardedAd = null;
-                }
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  child: Text('$InterstitialAd'),
-                  value: '$InterstitialAd',
-                ),
-                PopupMenuItem<String>(
-                  child: Text('$RewardedAd'),
-                  value: '$RewardedAd',
-                ),
-              ],
-            ),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: ListView.separated(
-            cacheExtent: 500,
-            itemCount: 100,
-            separatorBuilder: (BuildContext context, int index) {
-              return Container(
-                height: 40,
-              );
-            },
-            itemBuilder: (BuildContext context, int index) {
-              if (index % 2 == 0) {
-                return Text(
-                  _article[(index / 2).ceil() % 3],
-                  style: TextStyle(fontSize: 24),
+      home: Builder(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: const Text('AdMob Plugin example app'),
+            actions: <Widget>[
+              PopupMenuButton<String>(
+                onSelected: (String result) {
+                  switch (result) {
+                    case 'InterstitialAd':
+                      if (!_interstitialReady) return;
+                      _interstitialAd.show();
+                      _interstitialReady = false;
+                      _interstitialAd = null;
+                      break;
+                    case 'RewardedAd':
+                      if (!_rewardedReady) return;
+                      _rewardedAd.show();
+                      _rewardedReady = false;
+                      _rewardedAd = null;
+                      break;
+                    case 'ReusableBannerExample':
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ReusableBannerExample()),
+                      );
+                      break;
+                    default:
+                      throw AssertionError('unexpected button: ${result}');
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    child: Text('$InterstitialAd'),
+                    value: '$InterstitialAd',
+                  ),
+                  PopupMenuItem<String>(
+                    child: Text('$RewardedAd'),
+                    value: '$RewardedAd',
+                  ),
+                  PopupMenuItem<String>(
+                    child: Text('Reusable Banner Example'),
+                    value: 'ReusableBannerExample',
+                  ),
+                ],
+              ),
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: ListView.separated(
+              cacheExtent: 500,
+              itemCount: 100,
+              separatorBuilder: (BuildContext context, int index) {
+                return Container(
+                  height: 40,
                 );
-              }
+              },
+              itemBuilder: (BuildContext context, int index) {
+                if (index % 2 == 0) {
+                  return Text(
+                    Constants.article[(index / 2).ceil() % 3],
+                    style: TextStyle(fontSize: 24),
+                  );
+                }
 
-              final int adIndex = (index / 2).floor();
-              Widget adWidget;
-              if (adIndex % 3 == 0) {
-                adWidget = BannerAdWidget(AdSize.banner);
-              } else if (adIndex % 3 == 1) {
-                adWidget = PublisherBannerAdWidget(AdSize.largeBanner);
-              } else {
-                adWidget = NativeAdWidget();
-              }
-              return Center(child: adWidget);
-            },
+                final int adIndex = (index / 2).floor();
+                Widget adWidget;
+                if (adIndex % 3 == 0) {
+                  adWidget = BannerAdWidget(AdSize.banner);
+                } else if (adIndex % 3 == 1) {
+                  adWidget = PublisherBannerAdWidget(AdSize.largeBanner);
+                } else {
+                  adWidget = NativeAdWidget();
+                }
+                return Center(child: adWidget);
+              },
+            ),
           ),
         ),
       ),

@@ -46,6 +46,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 
 public class GoogleMobileAdsTest {
   private AdInstanceManager testManager;
@@ -229,20 +230,57 @@ public class GoogleMobileAdsTest {
   }
 
   @Test
-  public void disposeAd() {
-    final FlutterBannerAd bannerAd =
-        new FlutterBannerAd.Builder()
-            .setManager(testManager)
-            .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
-            .setRequest(request)
-            .build();
+  public void disposeAd_banner() {
+    FlutterBannerAd bannerAd = Mockito.mock(FlutterBannerAd.class);
     testManager.trackAd(bannerAd, 2);
     assertNotNull(testManager.adForId(2));
     assertNotNull(testManager.adIdFor(bannerAd));
     testManager.disposeAd(2);
+    verify(bannerAd).destroy();
     assertNull(testManager.adForId(2));
     assertNull(testManager.adIdFor(bannerAd));
+
+    FlutterPublisherBannerAd publisherBannerAd = Mockito.mock(FlutterPublisherBannerAd.class);
+    testManager.trackAd(publisherBannerAd, 2);
+    assertNotNull(testManager.adForId(2));
+    assertNotNull(testManager.adIdFor(publisherBannerAd));
+    testManager.disposeAd(2);
+    verify(publisherBannerAd).destroy();
+    assertNull(testManager.adForId(2));
+    assertNull(testManager.adIdFor(publisherBannerAd));
+
+    FlutterNativeAd flutterNativeAd = Mockito.mock(FlutterNativeAd.class);
+    testManager.trackAd(flutterNativeAd, 2);
+    assertNotNull(testManager.adForId(2));
+    assertNotNull(testManager.adIdFor(flutterNativeAd));
+    testManager.disposeAd(2);
+    verify(flutterNativeAd).destroy();
+    assertNull(testManager.adForId(2));
+    assertNull(testManager.adIdFor(flutterNativeAd));
+  }
+
+  @Test
+  public void disposeAd_publisherBanner() {
+    FlutterPublisherBannerAd publisherBannerAd = Mockito.mock(FlutterPublisherBannerAd.class);
+    testManager.trackAd(publisherBannerAd, 2);
+    assertNotNull(testManager.adForId(2));
+    assertNotNull(testManager.adIdFor(publisherBannerAd));
+    testManager.disposeAd(2);
+    verify(publisherBannerAd).destroy();
+    assertNull(testManager.adForId(2));
+    assertNull(testManager.adIdFor(publisherBannerAd));
+  }
+
+  @Test
+  public void disposeAd_native() {
+    FlutterNativeAd flutterNativeAd = Mockito.mock(FlutterNativeAd.class);
+    testManager.trackAd(flutterNativeAd, 2);
+    assertNotNull(testManager.adForId(2));
+    assertNotNull(testManager.adIdFor(flutterNativeAd));
+    testManager.disposeAd(2);
+    verify(flutterNativeAd).destroy();
+    assertNull(testManager.adForId(2));
+    assertNull(testManager.adIdFor(flutterNativeAd));
   }
 
   @Test

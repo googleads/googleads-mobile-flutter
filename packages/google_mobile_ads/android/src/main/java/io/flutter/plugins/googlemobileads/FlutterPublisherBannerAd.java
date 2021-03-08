@@ -27,7 +27,7 @@ import java.util.List;
  * Wrapper around {@link com.google.android.gms.ads.doubleclick.PublisherAdView} for the Google
  * Mobile Ads Plugin.
  */
-class FlutterPublisherBannerAd extends FlutterAd implements PlatformView {
+class FlutterPublisherBannerAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final List<FlutterAdSize> sizes;
@@ -126,10 +126,15 @@ class FlutterPublisherBannerAd extends FlutterAd implements PlatformView {
 
   @Override
   public void dispose() {
+    // Do nothing. This is because banner ads can be displayed again after being removed from
+    // the view hierarchy. For example, if in a scrolling list view.
+  }
+
+  @Override
+  public void destroy() {
     if (view != null) {
       view.destroy();
       view = null;
     }
-    // Do nothing.
   }
 }

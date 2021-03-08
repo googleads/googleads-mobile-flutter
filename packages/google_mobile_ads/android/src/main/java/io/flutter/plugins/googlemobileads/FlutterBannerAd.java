@@ -20,7 +20,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdView;
 import io.flutter.plugin.platform.PlatformView;
 
-class FlutterBannerAd extends FlutterAd implements PlatformView {
+class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final FlutterAdSize size;
@@ -97,6 +97,12 @@ class FlutterBannerAd extends FlutterAd implements PlatformView {
 
   @Override
   public void dispose() {
+    // Do nothing. This is because banner ads can be displayed again after being removed from
+    // the view hierarchy. For example, if in a scrolling list view.
+  }
+
+  @Override
+  public void destroy() {
     if (view != null) {
       view.destroy();
       view = null;
