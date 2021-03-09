@@ -6,7 +6,7 @@ Integrating Google Mobile Ads SDK into a Flutter app, which you will do here, is
 
 The Google Mobile Ads SDK for Flutter currently supports loading and displaying banner, interstitial (full-screen), native ads, and rewarded video ads.
 
-Note: This plugin also contains support for **[Google Ad Manager](https://admanager.google.com/home/)**. If you are interested in creating and loading an Ad with Ad Manager, you may follow the same prerequisites, platform setup, mobile ads SDK initialization steps outlined in this doc, and see [creating and loading an ad with Ad Manager](https://github.com/googleads/googleads-mobile-flutter#creating-and-loading-an-ad-with-ad-manager) for further instructions.
+Note: This plugin also contains support for **[Google Ad Manager](https://admanager.google.com/home/)**. If you are interested in creating and loading an Ad with Ad Manager, you may follow the same prerequisites, platform setup, mobile ads SDK initialization steps outlined in this doc, and then see [creating and loading an ad with Ad Manager](https://github.com/googleads/googleads-mobile-flutter#creating-and-loading-an-ad-with-ad-manager) for further instructions.
 
 See also the [codelab for inline ads in Flutter](https://codelabs.developers.google.com/codelabs/admob-inline-ads-in-flutter#0) for a detailed guide on setting 
 inline banner and native ads.
@@ -845,3 +845,102 @@ final RequestConfiguration requestConfiguration = RequestConfiguration(
 MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 ```
 
+
+## Creating and Loading an Ad with Ad Manager
+
+This plugin also contains support for ads using [Google Ad Manager](https://admanager.google.com/home/).
+The same ad types are supported as for Admob: Banner, Interstitial, Rewarded and Native ads. 
+The overall API usage is similar to what is defined above for Admob. However there are key differences in how
+the ad objects are instantiated, as described below.
+
+### PublisherAdRequest
+
+For Ad Manager, you will be using `PublisherAdRequest` instead of `AdRequest`.
+`PublisherAdRequest` is similar to `AdRequest` but has two additional properties: `customTargeting` and `customTargetingLists`,
+which are used to support [custom targeting](https://support.google.com/admanager/answer/188092?hl=en). 
+
+
+### PublisherBanner
+
+To create a banner ad for Ad Manager, use `PublisherBannerAd` instead of `BannerAd`. 
+Instantiating a `PublisherBannerAd` requires at least an `adUnitId`, one `AdSize`, a
+`PublisherAdRequest`, and an `AdListener` as seen below. When testing, you should always use
+[test ads](https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads) and switch
+to an ad unit id from your Ad Manager account when releasing.
+
+```dart
+final PublisherBannerAd myBanner = PublisherBannerAd(
+  // Replace the adUnitId with an ad unit id from the Ad Manager dashboard.
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/ios/test-ads
+  adUnitId: '/6499/example/banner',
+  sizes: <AdSize>[AdSize.banner],
+  request: PublisherAdRequest(),
+  listener: AdListener(),
+);
+```
+
+After a `PublisherBannerAd` is instantiated, the process of loading and showing the ad is the same as described above in [Load Banner Ad](https://github.com/googleads/googleads-mobile-flutter#Load-Banner-Ad) and [Display a Banner Ad](https://github.com/googleads/googleads-mobile-flutter#Display-a-Banner-Ad)]
+
+### PublisherInterstitial
+
+For interstitial ads, use `PublisherInterstitialAd` instead of `InterstitialAd`. Instantiating a `PublisherInterstitialAd` requires at least 
+an `adUnitId`, `PublisherAdRequest`, and`AdListener`, as shown below. When testing, you should always use test ids and switch to an ad unit
+id from your Ad Manager account when releasing.
+
+```dart
+final PublisherInterstitialAd myInterstitial = PublisherInterstitialAd(
+  // Replace the adUnitId with an ad unit id from the Ad Manager dashboard or test ids from the
+  // links below:
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/ios/test-ads
+  adUnitId: '/6499/example/interstitial',
+  request: PublisherAdRequest(),
+  listener: AdListener(),
+);
+```
+
+After a `PublisherInterstitialAd` is instantiated, the process of loading and showing the ad is the same as described above in [Load Interstitial Ad](https://github.com/googleads/googleads-mobile-flutter#Load-Interstitial-Ad) and [Display an Interstitial Ad](https://github.com/googleads/googleads-mobile-flutter#Display-an-Interstitial-Ad).
+
+### Native Ads with Ad Manager
+
+Creating a `NativeAd` with Ad Manager requires additional setup on Android and iOS. See section
+[Platform Setup](https://github.com/googleads/googleads-mobile-flutter#Platform-Setup) under [Native Ads](https://github.com/googleads/googleads-mobile-flutter#Native-Ads) for steps creating a `NativeAdFactory` on Android and iOS.
+
+After a `NativeAdFactory` is implemented, instantiate a `NativeAd` from Dart using `NativeAd.fromPublisherRequest()` with a 
+matching `factoryId`:
+
+```dart
+final NativeAd nativeAd = NativeAd.fromPublisherRequest(
+  // Replace the adUnitId with an ad unit id from the Ad Manager dashboard or test ids from the
+  // links below:
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/ios/test-ads
+  adUnitId: '/6499/example/native',
+  factoryId: 'adFactoryExample',
+  publisherRequest: PublisherAdRequest(),
+  listener: AdListener(),
+);
+```
+
+Once created you can follow the steps in [Load Native Ad](https://github.com/googleads/googleads-mobile-flutter#Load-Native-Ad) and [Display a Native Ad](https://github.com/googleads/googleads-mobile-flutter#Display-a-Native-Ad) to load and display the ad.
+
+
+### Rewarded Ads for Ad Manager
+
+Use `RewardedAd.fromPublisherRequest()` to create a `RewardedAd` for Ad Manager. It requires at least an `adUnitId`, an `AdRequest`/`PublisherAdRequest`, and
+an `AdListener` as seen below. When testing, you should always use test ids and switch to an ad unit id from your Ad Manager account when releasing.
+
+```dart
+final RewardedAd myRewardedAd = RewardedAd.fromPublisherRequest(
+  // Replace the adUnitId with an ad unit id from the Ad Manager dashboard or test ids from the
+  // links below:
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads
+  // https://developers.google.com/ad-manager/mobile-ads-sdk/ios/test-ads
+  adUnitId: '/6499/example/rewarded-video',
+  publisherRequest: PublisherAdRequest(),
+  listener: AdListener(),
+);
+```
+
+After a `RewardedAd` is instantiated, you can follow the steps in [load rewarded ad](https://github.com/googleads/googleads-mobile-flutter#load-rewarded-ad) and [Display a RewardedAd](https://github.com/googleads/googleads-mobile-flutter#display-a-rewardedad) to load and show the rewarded ad.
