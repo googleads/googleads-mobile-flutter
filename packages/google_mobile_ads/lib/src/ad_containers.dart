@@ -295,7 +295,7 @@ abstract class Ad {
   Future<void> load();
 
   /// Whether this [Ad.load] has been called for this [Ad] and [AdListener.onAdLoaded] callback has been called.
-  Future<bool> isLoaded() async {
+  bool isLoaded() {
     return instanceManager.adIdFor(this) != null &&
         instanceManager.onAdLoadedCalled(this);
   }

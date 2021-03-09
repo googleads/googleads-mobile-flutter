@@ -769,8 +769,7 @@ void main() {
       );
 
       await banner.load();
-
-      expect(banner.isLoaded(), completion(false));
+      expect(banner.isLoaded(), false);
 
       final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
         'adId': 0,
@@ -786,10 +785,10 @@ void main() {
         (ByteData data) {},
       );
 
-      expect(banner.isLoaded(), completion(true));
+      expect(banner.isLoaded(), true);
 
       await banner.dispose();
-      expect(banner.isLoaded(), completion(false));
+      expect(banner.isLoaded(), false);
     });
   });
 }
