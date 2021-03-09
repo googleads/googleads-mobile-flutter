@@ -1,3 +1,7 @@
+## 0.11.0+3
+
+* Changes `Ad.isLoaded()`from async to sync.
+
 ## 0.11.0+2
 
 * Set min Android version to `19`.
