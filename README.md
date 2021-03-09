@@ -36,16 +36,22 @@ inline banner and native ads.
 
 #### Update your Info.plist
 
-In your app's `ios/Runner/Info.plist` file, add a `GADApplicationIdentifier` key with a string value of your AdMob app ID ([identified in the AdMob UI](https://support.google.com/admob/answer/7356431)) as shown below:
+Update your app's `ios/Runner/Info.plist` file to add two keys:
 
+* A `GADApplicationIdentifier` key with a string value of your AdMob app ID ([identified in the AdMob UI](https://support.google.com/admob/answer/7356431)).
+* A `SKAdNetworkItems` key with Google's `SKAdNetworkIdentifier` value of `cstr6suwn9.skadnetwork`.
 
 ```xml
 <key>GADApplicationIdentifier</key>
-<string>ca-app-pub-################~##########</string>
+<string>ca-app-pub-3940256099942544~1458002511</string>
+<key>SKAdNetworkItems</key>
+  <array>
+    <dict>
+      <key>SKAdNetworkIdentifier</key>
+      <string>cstr6suwn9.skadnetwork</string>
+    </dict>
+  </array>
 ```
-
-
-You must pass the same value when you initialize the plugin in your Dart code.
 
 See https://developers.google.com/admob/ios/quick-start#update\_your\_infoplist for more information about configuring `Info.plist` and setting up your App ID.
 
