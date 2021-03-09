@@ -859,6 +859,15 @@ For Ad Manager, you will be using `PublisherAdRequest` instead of `AdRequest`.
 `PublisherAdRequest` is similar to `AdRequest` but has two additional properties: `customTargeting` and `customTargetingLists`,
 which are used to support [custom targeting](https://support.google.com/admanager/answer/188092?hl=en). 
 
+```
+final PublisherAdRequest request = PublisherAdRequest(
+  keywords: <String>['flutterio', 'beautiful apps'],
+  contentUrl: 'https://flutter.dev',
+  customTargeting: <String, String>{'some', 'targeting'},
+  customTargetingLists: <String, List<String>>{'favoriteColors': <String>['red', 'yellow']},
+);
+```
+
 
 ### PublisherBanner
 
