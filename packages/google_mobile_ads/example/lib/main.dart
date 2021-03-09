@@ -190,7 +190,7 @@ class _MyAppState extends State<MyApp> {
               itemBuilder: (BuildContext context, int index) {
                 if (index % 2 == 0) {
                   return Text(
-                    Constants.article[(index / 2).ceil() % 3],
+                    Constants.placeholderText,
                     style: TextStyle(fontSize: 24),
                   );
                 }

@@ -59,7 +59,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
                 }
 
                 return Text(
-                  Constants.article[(index / 2).ceil() % 3],
+                  Constants.placeholderText,
                   style: TextStyle(fontSize: 24),
                 );
               },
