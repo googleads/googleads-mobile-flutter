@@ -235,9 +235,9 @@ public class GoogleMobileAdsTest {
             .setManager(testManager)
             .setAdUnitId("testId")
             .setSize(new FlutterAdSize(1, 2))
-            .setRequest(request)d();
-
-            .buil  testManager.trackAd(bannerAd, 2);
+            .setRequest(request)
+            .build();
+    testManager.trackAd(bannerAd, 2);
     assertNotNull(testManager.adForId(2));
     assertNotNull(testManager.adIdFor(bannerAd));
     testManager.disposeAd(2);
