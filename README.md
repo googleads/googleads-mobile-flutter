@@ -889,7 +889,7 @@ final PublisherBannerAd myBanner = PublisherBannerAd(
 );
 ```
 
-After a `PublisherBannerAd` is instantiated, the process of loading and showing the ad is the same as described above in [Load Banner Ad](https://github.com/googleads/googleads-mobile-flutter#Load-Banner-Ad) and [Display a Banner Ad](https://github.com/googleads/googleads-mobile-flutter#Display-a-Banner-Ad)]
+After a `PublisherBannerAd` is instantiated, the process of loading and showing the ad is the same as described above in [Load Banner Ad](https://github.com/googleads/googleads-mobile-flutter#Load-Banner-Ad) and [Display a Banner Ad](https://github.com/googleads/googleads-mobile-flutter#Display-a-Banner-Ad).
 
 ### PublisherInterstitial
 
