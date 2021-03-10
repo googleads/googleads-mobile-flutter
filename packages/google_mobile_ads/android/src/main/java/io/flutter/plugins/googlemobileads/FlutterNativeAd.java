@@ -27,7 +27,7 @@ import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Map;
 
-class FlutterNativeAd extends FlutterAd implements PlatformView {
+class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
   private static final String TAG = "FlutterNativeAd";
 
   @NonNull private final AdInstanceManager manager;
@@ -141,6 +141,13 @@ class FlutterNativeAd extends FlutterAd implements PlatformView {
 
   @Override
   public void dispose() {
+    // Do nothing. Cleanup is handled in destroy() below, which is triggered from dispose() being
+    // called on the flutter ad object. This is allows for reuse of the ad view, for example
+    // in a scrolling list view.
+  }
+
+  @Override
+  public void destroy() {
     if (ad != null) {
       ad.destroy();
       ad = null;

@@ -69,6 +69,13 @@ class AdInstanceManager {
   }
 
   void disposeAd(int adId) {
+    if (!ads.containsKey(adId)) {
+      return;
+    }
+    Object adObject = ads.get(adId);
+    if (adObject instanceof FlutterDestroyableAd) {
+      ((FlutterDestroyableAd) adObject).destroy();
+    }
     ads.remove(adId);
   }
 
