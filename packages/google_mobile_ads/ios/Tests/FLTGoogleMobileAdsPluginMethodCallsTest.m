@@ -23,14 +23,13 @@
 
 @implementation FLTGoogleMobileAdsPluginMethodCallsTest {
   FLTGoogleMobileAdsPlugin *_fltGoogleMobileAdsPlugin;
-  NSObject<FlutterBinaryMessenger> *_mockMessenger;
-  FLTAdInstanceManager *_mockAdInstanceMessenger;
+  FLTAdInstanceManager *_mockAdInstanceManager;
 }
 
 - (void)setUp {
-  _mockAdInstanceMessenger = OCMClassMock([FLTAdInstanceManager class]);
+  _mockAdInstanceManager = OCMClassMock([FLTAdInstanceManager class]);
   _fltGoogleMobileAdsPlugin = [[FLTGoogleMobileAdsPlugin alloc] init];
-  [_fltGoogleMobileAdsPlugin setValue:_mockAdInstanceMessenger forKey:@"_manager"];
+  [_fltGoogleMobileAdsPlugin setValue:_mockAdInstanceManager forKey:@"_manager"];
 }
 
 - (void)testDisposeAd {
@@ -47,6 +46,6 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
-  OCMVerify([_mockAdInstanceMessenger dispose:@1]);
+  OCMVerify([_mockAdInstanceManager dispose:@1]);
 }
 @end
