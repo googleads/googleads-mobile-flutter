@@ -2,6 +2,8 @@
 
 * Fixes an [Android crash](https://github.com/googleads/googleads-mobile-flutter/issues/46) when reusing Native and Banner Ad objects.
 * Fixes [iOS memory leaks](https://github.com/googleads/googleads-mobile-flutter/issues/69).
+* Adds a section on Ad Manager to the README.
+* Updates iOS setup in the README to include SKAdNetwork.
 
 ## 0.11.0+2
 
