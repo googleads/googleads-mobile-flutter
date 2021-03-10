@@ -58,8 +58,8 @@
   [ad load];
 }
 
-- (void)dispose:(id<FLTAd> _Nonnull)ad {
-  [_ads removeObjectForKey:[self adIdFor:ad]];
+- (void)dispose:(NSNumber *_Nonnull)adId {
+  [_ads removeObjectForKey:adId];
 }
 
 - (void)showAdWithID:(NSNumber *_Nonnull)adId {
