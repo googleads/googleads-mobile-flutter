@@ -260,7 +260,7 @@
   OCMStub([mockBannerAd load]);
 
   [_manager loadAd:bannerAd adId:@(1)];
-  [_manager dispose:bannerAd];
+  [_manager dispose:@(1)];
 
   XCTAssertNil([_manager adFor:@(1)]);
   XCTAssertNil([_manager adIdFor:bannerAd]);
