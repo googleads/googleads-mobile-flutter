@@ -25,8 +25,8 @@
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FLTGoogleMobileAdsPlugin *instance =
-      [[FLTGoogleMobileAdsPlugin alloc] initWithBinaryMessenger:registrar.messenger];
+  FLTAdInstanceManager *instanceManager = [[FLTAdInstanceManager alloc] initWithBinaryMessenger:registrar.messenger];
+  FLTGoogleMobileAdsPlugin *instance = [[FLTGoogleMobileAdsPlugin alloc] initWithManager:instanceManager];
   [registrar publish:instance];
 
   FLTGoogleMobileAdsReaderWriter *readerWriter = [[FLTGoogleMobileAdsReaderWriter alloc] init];
@@ -45,16 +45,11 @@
                           withId:@"plugins.flutter.io/google_mobile_ads/ad_widget"];
 }
 
-- (instancetype)init {
-  self = [super init];
-  return self;
-}
-
-- (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger {
+- (instancetype)initWithManager:(FLTAdInstanceManager *)manager {
   self = [self init];
   if (self) {
     _nativeAdFactories = [NSMutableDictionary dictionary];
-    _manager = [[FLTAdInstanceManager alloc] initWithBinaryMessenger:binaryMessenger];
+    _manager = manager;
   }
 
   return self;

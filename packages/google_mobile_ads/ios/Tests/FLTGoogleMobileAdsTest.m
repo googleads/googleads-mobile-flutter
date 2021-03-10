@@ -260,7 +260,10 @@
   OCMStub([mockBannerAd load]);
 
   [_manager loadAd:bannerAd adId:@(1)];
-  [_manager dispose:bannerAd];
+  
+  FLTGoogleMobileAdsPlugin *plugin = [[FLTGoogleMobileAdsPlugin alloc] initWithManager:_manager];
+  FlutterMethodCall *methodCall = [FlutterMethodCall methodCallWithMethodName:@"disposeAd" arguments:@{@"adId": @(1)}];
+  [plugin handleMethodCall:methodCall result:^(id  _Nullable result) {}];
 
   XCTAssertNil([_manager adFor:@(1)]);
   XCTAssertNil([_manager adIdFor:bannerAd]);

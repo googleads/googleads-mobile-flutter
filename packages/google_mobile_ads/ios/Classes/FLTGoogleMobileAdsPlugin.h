@@ -23,6 +23,8 @@
 #define FLTLogWarning(format, ...) \
   NSLog((@"GoogleMobileAdsPlugin <warning> " format), ##__VA_ARGS__)
 
+@class FLTAdInstanceManager;
+
 /**
  * Creates a `GADUnifiedNativeAdView` to be shown in a Flutter app.
  *
@@ -48,6 +50,7 @@
  * Flutter plugin providing access to the Google Mobile Ads API.
  */
 @interface FLTGoogleMobileAdsPlugin : NSObject <FlutterPlugin>
+- (instancetype _Nonnull)initWithManager:(FLTAdInstanceManager *_Nonnull)manager;
 /**
  * Adds a `FLTNativeAdFactory` used to create a `GADUnifiedNativeAdView`s from a Native Ad created
  * in Dart.
