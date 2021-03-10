@@ -306,7 +306,7 @@ This guide explains how to integrate interstitial ads into a Flutter app.
 
 When building and testing your apps, make sure you use test ads rather than live, production ads. Failure to do so can lead to suspension of your account.
 
-The easiest way to load test ads is to use our dedicated test ad unit ID for banners:
+The easiest way to load test ads is to use our dedicated test ad unit ID for interstitials:
 
 
 *   Android: https://developers.google.com/admob/android/test-ads#sample\_ad\_units
@@ -602,7 +602,7 @@ When creating the `NativeAd` in Dart, the `factoryID` will need to match the one
 
 When building and testing your apps, make sure you use test ads rather than live, production ads. Failure to do so can lead to suspension of your account.
 
-The easiest way to load test ads is to use our dedicated test ad unit ID for banners:
+The easiest way to load test ads is to use our dedicated test ad unit ID for native ads:
 
 *   Android: https://developers.google.com/admob/android/test-ads#sample\_ad\_units
 *   iOS: https://developers.google.com/admob/ios/test-ads#demo\_ad\_units
@@ -704,7 +704,7 @@ Rewarded ads are ads that users have the option of interacting with [in exchange
 
 When building and testing your apps, make sure you use test ads rather than live, production ads. Failure to do so can lead to suspension of your account.
 
-The easiest way to load test ads is to use our dedicated test ad unit ID for banners:
+The easiest way to load test ads is to use our dedicated test ad unit ID for rewarded:
 
 
 *   Android: https://developers.google.com/admob/android/test-ads#sample\_ad\_units
@@ -1067,7 +1067,7 @@ That's it! Your app is now ready to display interstitial ads.
 *   See [Interstitial best practices](https://www.youtube.com/watch?v=r2RgFD3Apyo&index=5&list=PLOU2XLYxmsIKX0pUJV3uqp6N3NeHwHh0c) and [interstitial ad guidance](https://support.google.com/admanager/answer/6309702?hl=en).
 *   If you haven't already, create your own interstitial ad unit in the [Ad Manager UI](https://admanager.google.com/home/).
 
-## Native Ads
+## Ad Manager Native Ads
 
 
 Native ads are ad assets that are presented to users via UI components that are native to the platform. They're shown using the same types of views with which you're already building your layouts, and can be formatted to match the visual design of the user experience in which they live. In coding terms, this means that when a native ad loads, your app receives a NativeAd object that contains its assets, and the app (rather than the Google Mobile Ads SDK) is then responsible for displaying them.
@@ -1287,7 +1287,7 @@ When creating the `NativeAd` in Dart, the `factoryID` will need to match the one
 
 When building and testing your apps, make sure you use test ads rather than live, production ads. Failure to do so can lead to suspension of your account.
 
-The easiest way to load test ads is to use our dedicated test ad unit ID for banners:
+The easiest way to load test ads is to use our dedicated test ad unit ID for native ads:
 
 *   Android: https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads#sample_ad_units
 *   iOS: https://developers.google.com/ad-manager/mobile-ads-sdk/ios/test-ads#demo_ad_units
@@ -1379,7 +1379,7 @@ That's it! Your app is now ready to display native ads.
 *   Check out a [Native ads case study](https://admanager.google.com/home/resources/case-study-meaww-increases-cpms-with-native-ads/).
 
 
-## Rewarded Ads
+## Ad Manager Rewarded Ads
 
 Rewarded ads are ads that users have the option of interacting with [in exchange for in-app rewards](https://support.google.com/admanager/answer/7496282?hl=en). This guide shows you how to integrate rewarded ads from Ad Manager into a Flutter app.
 
@@ -1388,7 +1388,7 @@ Rewarded ads are ads that users have the option of interacting with [in exchange
 
 When building and testing your apps, make sure you use test ads rather than live, production ads. Failure to do so can lead to suspension of your account.
 
-The easiest way to load test ads is to use our dedicated test ad unit ID for banners:
+The easiest way to load test ads is to use our dedicated test ad unit ID for rewarded:
 
 
 *   Android: https://developers.google.com/ad-manager/mobile-ads-sdk/android/test-ads#sample_ad_units
