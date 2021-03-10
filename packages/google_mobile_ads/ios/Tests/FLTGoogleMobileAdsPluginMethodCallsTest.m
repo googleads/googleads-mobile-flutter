@@ -33,7 +33,7 @@
   [_fltGoogleMobileAdsPlugin setValue:_mockAdInstanceMessenger forKey:@"_manager"];
 }
 
-- (void)testEncodeDecodeAdSize {
+- (void)testDisposeAd {
   FlutterMethodCall *methodCall = [FlutterMethodCall methodCallWithMethodName:@"disposeAd"
                                                                     arguments:@{@"adId" : @1}];
   __block bool resultInvoked = false;
