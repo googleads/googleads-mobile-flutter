@@ -1,6 +1,7 @@
 ## 0.11.0+3
 
 * Changes `Ad.isLoaded()`from async to sync.
+* Fixes an [Android crash](https://github.com/googleads/googleads-mobile-flutter/issues/46) when reusing Native and Banner Ad objects
 
 ## 0.11.0+2
 
