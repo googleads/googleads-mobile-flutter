@@ -168,7 +168,7 @@
     if (!factory) {
       NSString *message =
           [NSString stringWithFormat:@"Can't find NativeAdFactory with id: %@", factoryId];
-      result([FlutterError errorWithCode:@"NatvieAdError" message:message details:nil]);
+      result([FlutterError errorWithCode:@"NativeAdError" message:message details:nil]);
       return;
     }
 
