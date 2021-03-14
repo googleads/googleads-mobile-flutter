@@ -24,7 +24,7 @@ import 'reusable_inline_example.dart';
 
 // You can also test with your own ad unit IDs by registering your device as a
 // test device. Check the logs for your device's ID value.
-const String testDevice = 'YOUR_DEVICE_ID';
+const String? testDevice = 'YOUR_DEVICE_ID';
 
 class MyApp extends StatefulWidget {
   @override
@@ -33,16 +33,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   static final AdRequest request = AdRequest(
-    testDevices: testDevice != null ? <String>[testDevice] : null,
+    testDevices: testDevice != null ? <String>[testDevice!] : null,
     keywords: <String>['foo', 'bar'],
     contentUrl: 'http://foo.com/bar.html',
     nonPersonalizedAds: true,
   );
 
-  InterstitialAd _interstitialAd;
+  InterstitialAd? _interstitialAd;
   bool _interstitialReady = false;
 
-  RewardedAd _rewardedAd;
+  RewardedAd? _rewardedAd;
   bool _rewardedReady = false;
 
   @override
@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
           .updateRequestConfiguration(RequestConfiguration(
               tagForChildDirectedTreatment:
                   TagForChildDirectedTreatment.unspecified))
-          .then((value) {
+          .then((void value) {
         createInterstitialAd();
         createRewardedAd();
       });
@@ -130,7 +130,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Builder(
-        builder: (context) => Scaffold(
+        builder: (BuildContext context) => Scaffold(
           appBar: AppBar(
             title: const Text('AdMob Plugin example app'),
             actions: <Widget>[
@@ -139,39 +139,40 @@ class _MyAppState extends State<MyApp> {
                   switch (result) {
                     case 'InterstitialAd':
                       if (!_interstitialReady) return;
-                      _interstitialAd.show();
+                      _interstitialAd!.show();
                       _interstitialReady = false;
                       _interstitialAd = null;
                       break;
                     case 'RewardedAd':
                       if (!_rewardedReady) return;
-                      _rewardedAd.show();
+                      _rewardedAd!.show();
                       _rewardedReady = false;
                       _rewardedAd = null;
                       break;
                     case 'ReusableInlineExample':
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => ReusableInlineExample()),
+                        MaterialPageRoute<void>(
+                            builder: (BuildContext context) =>
+                                ReusableInlineExample()),
                       );
                       break;
                     default:
-                      throw AssertionError('unexpected button: ${result}');
+                      throw AssertionError('unexpected button: $result');
                   }
                 },
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
-                    child: Text('$InterstitialAd'),
                     value: '$InterstitialAd',
+                    child: Text('$InterstitialAd'),
                   ),
                   PopupMenuItem<String>(
-                    child: Text('$RewardedAd'),
                     value: '$RewardedAd',
+                    child: Text('$RewardedAd'),
                   ),
                   PopupMenuItem<String>(
-                    child: Text('Reusable Inline Ads Object Example'),
                     value: 'ReusableInlineExample',
+                    child: Text('Reusable Inline Ads Object Example'),
                   ),
                 ],
               ),
@@ -224,7 +225,7 @@ class BannerAdWidget extends StatefulWidget {
 }
 
 class BannerAdState extends State<BannerAdWidget> {
-  BannerAd _bannerAd;
+  late BannerAd _bannerAd;
   final Completer<BannerAd> bannerCompleter = Completer<BannerAd>();
 
   @override
@@ -241,21 +242,20 @@ class BannerAdState extends State<BannerAdWidget> {
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('$BannerAd failedToLoad: $error');
-          bannerCompleter.completeError(null);
+          bannerCompleter.completeError(error);
         },
         onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
         onApplicationExit: (Ad ad) => print('$BannerAd onApplicationExit.'),
       ),
     );
-    Future<void>.delayed(Duration(seconds: 1), () => _bannerAd?.load());
+    Future<void>.delayed(Duration(seconds: 1), () => _bannerAd.load());
   }
 
   @override
   void dispose() {
     super.dispose();
-    _bannerAd?.dispose();
-    _bannerAd = null;
+    _bannerAd.dispose();
   }
 
   @override
@@ -282,8 +282,8 @@ class BannerAdState extends State<BannerAdWidget> {
         return Container(
           width: _bannerAd.size.width.toDouble(),
           height: _bannerAd.size.height.toDouble(),
-          child: child,
           color: Colors.blueGrey,
+          child: child,
         );
       },
     );
@@ -300,7 +300,7 @@ class PublisherBannerAdWidget extends StatefulWidget {
 }
 
 class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
-  PublisherBannerAd _bannerAd;
+  late PublisherBannerAd _bannerAd;
   final Completer<PublisherBannerAd> bannerCompleter =
       Completer<PublisherBannerAd>();
 
@@ -310,7 +310,7 @@ class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
     _bannerAd = PublisherBannerAd(
       adUnitId: '/6499/example/banner',
       request: PublisherAdRequest(nonPersonalizedAds: true),
-      sizes: [widget.size],
+      sizes: <AdSize>[widget.size],
       listener: AdListener(
         onAdLoaded: (Ad ad) {
           print('$PublisherBannerAd loaded.');
@@ -318,7 +318,7 @@ class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('$PublisherBannerAd failedToLoad: $error');
-          bannerCompleter.completeError(null);
+          bannerCompleter.completeError(error);
         },
         onAdOpened: (Ad ad) => print('$PublisherBannerAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$PublisherBannerAd onAdClosed.'),
@@ -326,14 +326,13 @@ class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
             print('$PublisherBannerAd onApplicationExit.'),
       ),
     );
-    Future<void>.delayed(Duration(seconds: 1), () => _bannerAd?.load());
+    Future<void>.delayed(Duration(seconds: 1), () => _bannerAd.load());
   }
 
   @override
   void dispose() {
     super.dispose();
-    _bannerAd?.dispose();
-    _bannerAd = null;
+    _bannerAd.dispose();
   }
 
   @override
@@ -361,8 +360,8 @@ class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
         return Container(
           width: _bannerAd.sizes[0].width.toDouble(),
           height: _bannerAd.sizes[0].height.toDouble(),
-          child: child,
           color: Colors.blueGrey,
+          child: child,
         );
       },
     );
@@ -375,7 +374,7 @@ class NativeAdWidget extends StatefulWidget {
 }
 
 class NativeAdState extends State<NativeAdWidget> {
-  NativeAd _nativeAd;
+  late NativeAd _nativeAd;
   final Completer<NativeAd> nativeAdCompleter = Completer<NativeAd>();
 
   @override
@@ -392,21 +391,20 @@ class NativeAdState extends State<NativeAdWidget> {
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('$NativeAd failedToLoad: $error');
-          nativeAdCompleter.completeError(null);
+          nativeAdCompleter.completeError(error);
         },
         onAdOpened: (Ad ad) => print('$NativeAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$NativeAd onAdClosed.'),
         onApplicationExit: (Ad ad) => print('$NativeAd onApplicationExit.'),
       ),
     );
-    Future<void>.delayed(Duration(seconds: 1), () => _nativeAd?.load());
+    Future<void>.delayed(Duration(seconds: 1), () => _nativeAd.load());
   }
 
   @override
   void dispose() {
     super.dispose();
-    _nativeAd?.dispose();
-    _nativeAd = null;
+    _nativeAd.dispose();
   }
 
   @override
@@ -433,8 +431,8 @@ class NativeAdState extends State<NativeAdWidget> {
         return Container(
           width: 250,
           height: 350,
-          child: child,
           color: Colors.blueGrey,
+          child: child,
         );
       },
     );

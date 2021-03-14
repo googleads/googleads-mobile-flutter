@@ -1,3 +1,7 @@
+## 0.12.0
+
+* Migrated to null safety.
+
 ## 0.11.0+3
 
 * Fixes an [Android crash](https://github.com/googleads/googleads-mobile-flutter/issues/46) when reusing Native and Banner Ad objects.

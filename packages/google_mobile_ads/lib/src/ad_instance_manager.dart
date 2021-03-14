@@ -35,8 +35,7 @@ AdInstanceManager instanceManager = AdInstanceManager(
 /// Maintains access to loaded [Ad] instances.
 class AdInstanceManager {
   AdInstanceManager(String channelName)
-      : assert(channelName != null),
-        channel = MethodChannel(
+      : channel = MethodChannel(
           channelName,
           StandardMethodCodec(AdMessageCodec()),
         ) {
@@ -46,7 +45,7 @@ class AdInstanceManager {
       final int adId = call.arguments['adId'];
       final String eventName = call.arguments['eventName'];
 
-      final Ad ad = adFor(adId);
+      final Ad? ad = adFor(adId);
       if (ad != null) {
         _onAdEvent(ad, eventName, call.arguments);
       } else {
@@ -65,36 +64,36 @@ class AdInstanceManager {
   final MethodChannel channel;
 
   void _onAdEvent(Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
-    assert(ad != null);
     switch (eventName) {
       case 'onAdLoaded':
         _onAdLoadedAds.add(ad);
-        ad.listener?.onAdLoaded(ad);
+        ad.listener.onAdLoaded?.call(ad);
         break;
       case 'onAdFailedToLoad':
-        ad.listener?.onAdFailedToLoad(ad, arguments['loadAdError']);
+        ad.listener.onAdFailedToLoad?.call(ad, arguments['loadAdError']);
         break;
       case 'onNativeAdClicked':
-        ad.listener?.onNativeAdClicked(ad);
+        ad.listener.onNativeAdClicked?.call(ad as NativeAd);
         break;
       case 'onNativeAdImpression':
-        ad.listener?.onNativeAdImpression(ad);
+        ad.listener.onNativeAdImpression?.call(ad as NativeAd);
         break;
       case 'onAdOpened':
-        ad.listener?.onAdOpened(ad);
+        ad.listener.onAdOpened?.call(ad);
         break;
       case 'onApplicationExit':
-        ad.listener?.onApplicationExit(ad);
+        ad.listener.onApplicationExit?.call(ad);
         break;
       case 'onAdClosed':
-        ad.listener?.onAdClosed(ad);
+        ad.listener.onAdClosed?.call(ad);
         break;
       case 'onAppEvent':
-        ad.listener?.onAppEvent(ad, arguments['name'], arguments['data']);
+        ad.listener.onAppEvent?.call(ad, arguments['name'], arguments['data']);
         break;
       case 'onRewardedAdUserEarnedReward':
         assert(arguments['rewardItem'] != null);
-        ad.listener?.onRewardedAdUserEarnedReward(ad, arguments['rewardItem']);
+        ad.listener.onRewardedAdUserEarnedReward
+            ?.call(ad as RewardedAd, arguments['rewardItem']);
         break;
       default:
         debugPrint('invalid ad event name: $eventName');
@@ -102,33 +101,33 @@ class AdInstanceManager {
   }
 
   /// Returns null if an invalid [adId] was passed in.
-  Ad adFor(int adId) => _loadedAds[adId];
+  Ad? adFor(int adId) => _loadedAds[adId];
 
   /// Returns null if an invalid [Ad] was passed in.
-  int adIdFor(Ad ad) => _loadedAds.inverse[ad];
+  int? adIdFor(Ad ad) => _loadedAds.inverse[ad];
 
-  Set<int> _mountedWidgetAdIds = <int>{};
+  final Set<int> _mountedWidgetAdIds = <int>{};
 
   /// Returns true if the [adId] is already mounted in a [WidgetAd].
-  bool isWidgetAdIdMounted(int adId) => _mountedWidgetAdIds.contains(adId);
+  bool isWidgetAdIdMounted(int? adId) => _mountedWidgetAdIds.contains(adId);
 
   /// Indicates that [adId] is mounted in widget tree.
   void mountWidgetAdId(int adId) => _mountedWidgetAdIds.add(adId);
 
   /// Indicates that [adId] is unmounted from the widget tree.
-  void unmountWidgetAdId(int adId) => _mountedWidgetAdIds.remove(adId);
+  void unmountWidgetAdId(int? adId) => _mountedWidgetAdIds.remove(adId);
 
   /// Starts loading the ad if not previously loaded.
   ///
   /// Loading also terminates if ad is already in the process of loading.
   Future<void> loadBannerAd(BannerAd ad) {
     if (adIdFor(ad) != null) {
-      return null;
+      return Future<void>.value();
     }
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    final Ad bannerAd = adFor(adId);
+    final Ad bannerAd = adFor(adId)!;
     return channel.invokeMethod<void>(
       'loadBannerAd',
       <dynamic, dynamic>{
@@ -142,12 +141,12 @@ class AdInstanceManager {
 
   Future<void> loadInterstitialAd(InterstitialAd ad) {
     if (adIdFor(ad) != null) {
-      return null;
+      return Future<void>.value();
     }
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    final InterstitialAd interstitialAd = adFor(adId);
+    final InterstitialAd interstitialAd = adFor(adId) as InterstitialAd;
     return channel.invokeMethod<void>(
       'loadInterstitialAd',
       <dynamic, dynamic>{
@@ -163,12 +162,12 @@ class AdInstanceManager {
   /// Loading also terminates if ad is already in the process of loading.
   Future<void> loadNativeAd(NativeAd ad) {
     if (adIdFor(ad) != null) {
-      return null;
+      return Future<void>.value();
     }
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    final Ad nativeAd = adFor(adId);
+    final Ad nativeAd = adFor(adId)!;
     return channel.invokeMethod<void>(
       'loadNativeAd',
       <dynamic, dynamic>{
@@ -187,12 +186,12 @@ class AdInstanceManager {
   /// Loading also terminates if ad is already in the process of loading.
   Future<void> loadRewardedAd(RewardedAd ad) {
     if (adIdFor(ad) != null) {
-      return null;
+      return Future<void>.value();
     }
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    final RewardedAd rewardedAd = adFor(adId);
+    final RewardedAd rewardedAd = adFor(adId) as RewardedAd;
     return channel.invokeMethod<void>(
       'loadRewardedAd',
       <dynamic, dynamic>{
@@ -209,7 +208,7 @@ class AdInstanceManager {
   /// Loading also terminates if ad is already in the process of loading.
   Future<void> loadPublisherBannerAd(PublisherBannerAd ad) {
     if (adIdFor(ad) != null) {
-      return null;
+      return Future<void>.value();
     }
 
     final int adId = _nextAdId++;
@@ -230,7 +229,7 @@ class AdInstanceManager {
   /// Loading also terminates if ad is already in the process of loading.
   Future<void> loadPublisherInterstitialAd(PublisherInterstitialAd ad) {
     if (adIdFor(ad) != null) {
-      return null;
+      return Future<void>.value();
     }
 
     final int adId = _nextAdId++;
@@ -252,10 +251,10 @@ class AdInstanceManager {
   Future<void> disposeAd(Ad ad) {
     _onAdLoadedAds.remove(ad);
 
-    final int adId = adIdFor(ad);
-    final Ad disposedAd = _loadedAds.remove(adId);
+    final int? adId = adIdFor(ad);
+    final Ad? disposedAd = _loadedAds.remove(adId);
     if (disposedAd == null) {
-      return null;
+      return Future<void>.value();
     }
     return channel.invokeMethod<void>(
       'disposeAd',
@@ -404,11 +403,10 @@ class AdMessageCodec extends StandardMessageCodec {
             readValueOfType(buffer.getUint8(), buffer);
         final String description = readValueOfType(buffer.getUint8(), buffer);
 
-        double latency = readValueOfType(buffer.getUint8(), buffer)?.toDouble();
+        double latency = readValueOfType(buffer.getUint8(), buffer).toDouble();
         // Android provides this value as an int in milliseconds while iOS
         // provides this value as a double in seconds.
-        if (latency != null &&
-            defaultTargetPlatform == TargetPlatform.android) {
+        if (defaultTargetPlatform == TargetPlatform.android) {
           latency /= 1000;
         }
 
@@ -423,7 +421,7 @@ class AdMessageCodec extends StandardMessageCodec {
     }
   }
 
-  Map<String, List<T>> _deepMapCast<T>(Map<dynamic, dynamic> map) {
+  Map<String, List<T>>? _deepMapCast<T>(Map<dynamic, dynamic>? map) {
     if (map == null) return null;
     return map.map<String, List<T>>(
       (dynamic key, dynamic value) => MapEntry<String, List<T>>(
@@ -442,12 +440,12 @@ class _BiMap<K extends Object, V extends Object> extends MapBase<K, V> {
   _BiMap._inverse(this._inverse);
 
   final Map<K, V> _map = <K, V>{};
-  _BiMap<V, K> _inverse;
+  late _BiMap<V, K> _inverse;
 
-  _BiMap get inverse => _inverse;
+  _BiMap<V, K> get inverse => _inverse;
 
   @override
-  V operator [](Object key) => _map[key];
+  V? operator [](Object? key) => _map[key];
 
   @override
   void operator []=(K key, V value) {
@@ -467,9 +465,9 @@ class _BiMap<K extends Object, V extends Object> extends MapBase<K, V> {
   Iterable<K> get keys => _map.keys;
 
   @override
-  V remove(Object key) {
+  V? remove(Object? key) {
     if (key == null) return null;
-    final V value = _map[key];
+    final V? value = _map[key];
     inverse._map.remove(value);
     return _map.remove(key);
   }
