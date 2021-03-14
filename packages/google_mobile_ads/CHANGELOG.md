@@ -1,3 +1,7 @@
+## 0.12.0
+
+* Migrated to null safety.
+
 ## 0.11.0+4
 
 * Fixes a [bug](https://github.com/googleads/googleads-mobile-flutter/issues/47) where state is not properly cleaned up on hot restart.

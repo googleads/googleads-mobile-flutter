@@ -44,10 +44,10 @@ class MobileAds {
   ///
   /// If this method is not called, the first ad request automatically
   /// initializes the Google Mobile Ads SDK.
-  Future<InitializationStatus> initialize() {
-    return instanceManager.channel.invokeMethod<InitializationStatus>(
+  Future<InitializationStatus> initialize() async {
+    return (await instanceManager.channel.invokeMethod<InitializationStatus>(
       'MobileAds#initialize',
-    );
+    ))!;
   }
 
   /// Update the [RequestConfiguration] to apply for future ad requests.
