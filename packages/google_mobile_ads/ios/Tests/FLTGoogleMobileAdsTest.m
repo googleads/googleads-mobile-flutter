@@ -266,6 +266,34 @@
   XCTAssertNil([_manager adIdFor:bannerAd]);
 }
 
+- (void)testDisposeAllAds {
+  FLTAdSize *size = [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)];
+  FLTBannerAd *bannerAd1 =
+      [[FLTBannerAd alloc] initWithAdUnitId:@"testId"
+                                       size:size
+                                    request:[[FLTAdRequest alloc] init]
+                         rootViewController:OCMClassMock([UIViewController class])];
+  FLTBannerAd *mockBannerAd1 = OCMPartialMock(bannerAd1);
+  OCMStub([mockBannerAd1 load]);
+
+  FLTBannerAd *bannerAd2 =
+      [[FLTBannerAd alloc] initWithAdUnitId:@"testId"
+                                       size:size
+                                    request:[[FLTAdRequest alloc] init]
+                         rootViewController:OCMClassMock([UIViewController class])];
+  FLTBannerAd *mockBannerAd2 = OCMPartialMock(bannerAd2);
+  OCMStub([mockBannerAd2 load]);
+
+  [_manager loadAd:bannerAd1 adId:@(1)];
+  [_manager loadAd:bannerAd2 adId:@(2)];
+  [_manager disposeAllAds];
+
+  XCTAssertNil([_manager adFor:@(1)]);
+  XCTAssertNil([_manager adIdFor:bannerAd1]);
+  XCTAssertNil([_manager adFor:@(2)]);
+  XCTAssertNil([_manager adIdFor:bannerAd2]);
+}
+
 - (void)testOnAdLoaded {
   FLTNativeAd *ad =
       [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"

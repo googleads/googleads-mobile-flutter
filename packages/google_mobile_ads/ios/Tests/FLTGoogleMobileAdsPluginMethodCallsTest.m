@@ -48,4 +48,23 @@
   XCTAssertNil(returnedResult);
   OCMVerify([_mockAdInstanceManager dispose:@1]);
 }
+
+- (void)testInternalInit {
+  FlutterMethodCall *methodCall = [FlutterMethodCall methodCallWithMethodName:@"_init"
+                                                                    arguments:@{}];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertNil(returnedResult);
+  OCMVerify([_mockAdInstanceManager disposeAllAds]);
+}
+
 @end
