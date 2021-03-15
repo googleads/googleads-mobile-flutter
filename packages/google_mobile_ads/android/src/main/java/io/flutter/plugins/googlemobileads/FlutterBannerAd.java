@@ -79,7 +79,8 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
   void load() {
     view = new AdView(manager.activity);
     view.setAdUnitId(adUnitId);
-    view.setAdSize(size.size);
+    //view.setAdSize(size.size);
+    view.setAdSize(getAdSize());
     view.setAdListener(new FlutterAdListener(manager, this));
 
     if (request != null) {
@@ -87,6 +88,21 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
     } else {
       view.loadAd(new FlutterAdRequest.Builder().build().asAdRequest());
     }
+  }
+
+  private AdSize getAdSize() {
+    // Step 2 - Determine the screen width (less decorations) to use for the ad width.
+    Display display = manager.activity.getWindowManager().getDefaultDisplay();
+    DisplayMetrics outMetrics = new DisplayMetrics();
+    display.getMetrics(outMetrics);
+
+    float widthPixels = outMetrics.widthPixels;
+    float density = outMetrics.density;
+
+    int adWidth = (int) (widthPixels / density);
+
+    // Step 3 - Get adaptive ad size and return for setting on the ad view.
+    return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(manager.activity, adWidth);
   }
 
   @Override
