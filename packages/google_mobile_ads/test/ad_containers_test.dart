@@ -226,6 +226,43 @@ void main() {
       await native.dispose();
     });
 
+    testWidgets('warns when ad has not been loaded',
+        (WidgetTester tester) async {
+      final NativeAd ad = NativeAd(
+        adUnitId: NativeAd.testAdUnitId,
+        factoryId: '0',
+        listener: AdListener(),
+        request: AdRequest(),
+      );
+
+      try {
+        await tester.pumpWidget(
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: Stack(
+                children: <Widget>[
+                  AdWidget(ad: ad),
+                ],
+              ),
+            ),
+          ),
+        );
+      } finally {
+        dynamic exception = tester.takeException();
+        expect(exception, isA<FlutterError>());
+        expect(
+            (exception as FlutterError).toStringDeep(),
+            'FlutterError\n'
+            '   AdWidget requires Ad.load to be called before AdWidget is\n'
+            '   inserted into the tree\n'
+            '   Parameter ad is not loaded. Call Ad.load before AdWidget is\n'
+            '   inserted into the tree.\n');
+      }
+    });
+
     testWidgets('warns when ad object is reused', (WidgetTester tester) async {
       final NativeAd ad = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
