@@ -20,6 +20,15 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdView;
 import io.flutter.plugin.platform.PlatformView;
 
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.widget.FrameLayout;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+
 class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
