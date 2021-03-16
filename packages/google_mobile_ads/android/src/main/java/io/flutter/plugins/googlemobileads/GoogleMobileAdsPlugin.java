@@ -60,8 +60,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   private final Map<String, NativeAdFactory> nativeAdFactories = new HashMap<>();
 
   /**
-   * Public constructor for the plugin.
-   * Dependency initialization is handled in lifecycle methods below.
+   * Public constructor for the plugin. Dependency initialization is handled in lifecycle methods
+   * below.
    */
   public GoogleMobileAdsPlugin() {}
 

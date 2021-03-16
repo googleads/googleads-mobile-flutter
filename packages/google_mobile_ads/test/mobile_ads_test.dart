@@ -118,10 +118,10 @@ void main() {
     test('$MobileAds.initialize', () async {
       final InitializationStatus result = await MobileAds.instance.initialize();
 
-      expect(log,
-          <Matcher>[
-            isMethodCall("_init", arguments: null),
-            isMethodCall("MobileAds#initialize", arguments: null)]);
+      expect(log, <Matcher>[
+        isMethodCall("_init", arguments: null),
+        isMethodCall("MobileAds#initialize", arguments: null)
+      ]);
 
       expect(result.adapterStatuses, hasLength(1));
       final AdapterStatus status = result.adapterStatuses['aName'];
