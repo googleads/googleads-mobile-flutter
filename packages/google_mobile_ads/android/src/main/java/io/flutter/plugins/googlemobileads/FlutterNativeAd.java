@@ -162,6 +162,9 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
             new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
               @Override
               public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                unifiedNativeAd.setOnPaidEventListener(
+                  new FlutterPaidEventListener(manager, FlutterNativeAd.this)
+                );
                 ad = adFactory.createNativeAd(unifiedNativeAd, customOptions);
               }
             })

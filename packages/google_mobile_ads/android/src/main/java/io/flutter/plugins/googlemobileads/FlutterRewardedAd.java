@@ -101,6 +101,8 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
           }
         };
 
+    rewardedAd.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
+
     if (request != null) {
       rewardedAd.loadAd(request.asAdRequest(), adLoadCallback);
     } else if (publisherRequest != null) {

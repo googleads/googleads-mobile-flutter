@@ -96,6 +96,14 @@ class AdInstanceManager {
         assert(arguments['rewardItem'] != null);
         ad.listener?.onRewardedAdUserEarnedReward(ad, arguments['rewardItem']);
         break;
+      case 'onPaidEvent':
+        ad.listener?.onPaidEvent(
+          ad,
+          arguments['valueMicros'] / 1000000,
+          arguments['precision'],
+          arguments['currencyCode'],
+        );
+        break;
       default:
         debugPrint('invalid ad event name: $eventName');
     }

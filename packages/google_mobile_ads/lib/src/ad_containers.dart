@@ -234,6 +234,7 @@ class AdListener {
     this.onAdClosed,
     this.onRewardedAdUserEarnedReward,
     this.onAppEvent,
+    this.onPaidEvent,
   });
 
   /// Called when an ad is successfully received.
@@ -265,6 +266,14 @@ class AdListener {
     RewardedAd ad,
     RewardItem reward,
   ) onRewardedAdUserEarnedReward;
+
+  /// Called when an ad receives revenue value.
+  final void Function(
+    Ad ad,
+    double value,
+    int precision,
+    String currencyCode,
+  ) onPaidEvent;
 }
 
 /// The base class for all ads.

@@ -147,6 +147,16 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
+  void onPaidEvent(@NonNull FlutterAd ad, @NonNull FlutterAdValue adValue) {
+    Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onPaidEvent");
+    arguments.put("valueMicros", adValue.valueMicros);
+    arguments.put("precision", adValue.precisionType);
+    arguments.put("currencyCode", adValue.currencyCode);
+    channel.invokeMethod("onAdEvent", arguments);
+  }
+
   boolean showAdWithId(int id) {
     final FlutterAd.FlutterOverlayAd ad = (FlutterAd.FlutterOverlayAd) adForId(id);
 

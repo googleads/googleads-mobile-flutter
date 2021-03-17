@@ -121,3 +121,12 @@
 @property(readonly) NSString *_Nonnull type;
 - (instancetype _Nonnull)initWithAmount:(NSNumber *_Nonnull)amount type:(NSString *_Nonnull)type;
 @end
+
+@interface FLTAdValue : NSObject
+@property(readonly) NSDecimalNumber *_Nonnull valueMicros;
+@property(readonly) NSInteger precision;
+@property(readonly) NSString *_Nonnull currencyCode;
+- (instancetype _Nonnull)initWithValue:(NSDecimalNumber *_Nonnull)value
+                             precision:(NSInteger)precision
+                          currencyCode:(NSString *_Nonnull)currencyCode;
+@end

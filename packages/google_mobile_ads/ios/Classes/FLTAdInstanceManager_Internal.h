@@ -21,6 +21,7 @@
 @class FLTRewardedAd;
 @class FLTRewardItem;
 @class FLTLoadAdError;
+@class FLTAdValue;
 
 @interface FLTAdInstanceManager : NSObject
 - (instancetype _Nonnull)initWithBinaryMessenger:
@@ -42,6 +43,7 @@
 - (void)onAdClosed:(id<FLTAd> _Nonnull)ad;
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward;
+- (void)onPaidEvent:(id<FLTAd> _Nonnull)ad value:(FLTAdValue *_Nonnull)value;
 @end
 
 @interface FLTNewGoogleMobileAdsViewFactory : NSObject <FlutterPlatformViewFactory>
