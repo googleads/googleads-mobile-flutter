@@ -36,6 +36,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.StandardMethodCodec;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -550,5 +551,41 @@ public class GoogleMobileAdsTest {
     assertThat(
         call.arguments,
         (Matcher) hasEntry("rewardItem", new FlutterRewardedAd.FlutterRewardItem(23, "coins")));
+  }
+
+  @Test
+  public void internalInitDisposesAds() {
+    // Set up testManager so that two ads have already been loaded and tracked.
+    final FlutterRewardedAd rewarded = Mockito.mock(FlutterRewardedAd.class);
+    final FlutterBannerAd banner = Mockito.mock(FlutterBannerAd.class);
+    testManager.trackAd(rewarded, 0);
+    testManager.trackAd(banner, 1);
+
+    assertEquals(testManager.adIdFor(rewarded), (Integer) 0);
+    assertEquals(testManager.adIdFor(banner), (Integer) 1);
+    assertEquals(testManager.adForId(0), rewarded);
+    assertEquals(testManager.adForId(1), banner);
+
+    // Check that ads are removed and disposed when "_init" is called.
+    AdInstanceManager testManagerSpy = Mockito.spy(testManager);
+    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy);
+    Result result = Mockito.mock(Result.class);
+    MethodCall methodCall = new MethodCall("_init", null);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(testManagerSpy).disposeAllAds();
+    verify(result).success(null);
+    verify(banner).destroy();
+    assertNull(testManager.adForId(0));
+    assertNull(testManager.adForId(1));
+    assertNull(testManager.adIdFor(rewarded));
+    assertNull(testManager.adIdFor(banner));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void trackAdThrowsErrorForDuplicateId() {
+    final FlutterBannerAd banner = Mockito.mock(FlutterBannerAd.class);
+    testManager.trackAd(banner, 0);
+    testManager.trackAd(banner, 0);
   }
 }

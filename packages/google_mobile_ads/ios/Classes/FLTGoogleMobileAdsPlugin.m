@@ -101,6 +101,9 @@
         startWithCompletionHandler:^(GADInitializationStatus *_Nonnull status) {
           result([[FLTInitializationStatus alloc] initWithStatus:status]);
         }];
+  } else if ([call.method isEqualToString:@"_init"]) {
+    [_manager disposeAllAds];
+    result(nil);
   } else if ([call.method isEqualToString:@"MobileAds#updateRequestConfiguration"]) {
     NSString *maxAdContentRating = call.arguments[@"maxAdContentRating"];
     NSNumber *tagForChildDirectedTreatment = call.arguments[@"tagForChildDirectedTreatment"];

@@ -59,4 +59,11 @@
   });
   return keys;
 }
+
+- (void)removeAllObjects {
+  dispatch_async(_lockQueue, ^{
+    [self->_dictionary removeAllObjects];
+  });
+}
+
 @end

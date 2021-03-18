@@ -24,4 +24,5 @@
 - (void)removeObjectForKey:(KeyType _Nonnull)key;
 - (id _Nullable)objectForKey:(KeyType _Nonnull)key;
 - (NSArray<KeyType> *_Nonnull)allKeysForObject:(ObjectType _Nonnull)object;
+- (void)removeAllObjects;
 @end

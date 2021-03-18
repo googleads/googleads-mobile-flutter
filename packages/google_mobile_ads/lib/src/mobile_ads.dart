@@ -32,7 +32,7 @@ enum AdapterInitializationState {
 class MobileAds {
   MobileAds._();
 
-  static final MobileAds _instance = MobileAds._();
+  static final MobileAds _instance = MobileAds._().._init();
 
   /// Shared instance to initialize the AdMob SDK.
   static MobileAds get instance => _instance;
@@ -54,6 +54,12 @@ class MobileAds {
   Future<void> updateRequestConfiguration(
       RequestConfiguration requestConfiguration) {
     return instanceManager.updateRequestConfiguration(requestConfiguration);
+  }
+
+  /// Internal init to cleanup state for hot restart.
+  /// This is a workaround for https://github.com/flutter/flutter/issues/7160.
+  void _init() {
+    instanceManager.channel.invokeMethod("_init");
   }
 }
 
