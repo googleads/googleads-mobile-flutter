@@ -13,7 +13,6 @@ class ReusableInlineExample extends StatefulWidget {
 }
 
 class _ReusableInlineExampleState extends State<ReusableInlineExample> {
-
   BannerAd _bannerAd;
   bool _bannerAdIsLoaded = false;
 
@@ -22,7 +21,6 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
 
   NativeAd _nativeAd;
   bool _nativeAdIsLoaded = false;
-
 
   @override
   Widget build(BuildContext context) => Scaffold(
