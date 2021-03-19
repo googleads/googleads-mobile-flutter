@@ -44,6 +44,7 @@
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward;
 - (void)onPaidEvent:(id<FLTAd> _Nonnull)ad value:(FLTAdValue *_Nonnull)value;
+- (void)disposeAllAds;
 @end
 
 @interface FLTNewGoogleMobileAdsViewFactory : NSObject <FlutterPlatformViewFactory>

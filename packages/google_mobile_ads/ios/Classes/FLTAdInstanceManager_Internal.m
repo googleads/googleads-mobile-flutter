@@ -62,6 +62,10 @@
   [_ads removeObjectForKey:adId];
 }
 
+- (void)disposeAllAds {
+  [_ads removeAllObjects];
+}
+
 - (void)showAdWithID:(NSNumber *_Nonnull)adId {
   id<FLTAdWithoutView> ad = (id<FLTAdWithoutView>)[self adFor:adId];
 
