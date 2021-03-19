@@ -240,6 +240,7 @@ class BannerAdState extends State<BannerAdWidget> {
           bannerCompleter.complete(ad as BannerAd);
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          ad.dispose();
           print('$BannerAd failedToLoad: $error');
           bannerCompleter.completeError(null);
         },
@@ -317,6 +318,7 @@ class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
           bannerCompleter.complete(ad as PublisherBannerAd);
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          ad.dispose();
           print('$PublisherBannerAd failedToLoad: $error');
           bannerCompleter.completeError(null);
         },
@@ -391,6 +393,7 @@ class NativeAdState extends State<NativeAdWidget> {
           nativeAdCompleter.complete(ad as NativeAd);
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          ad.dispose();
           print('$NativeAd failedToLoad: $error');
           nativeAdCompleter.completeError(null);
         },
