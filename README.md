@@ -8,7 +8,7 @@ The Google Mobile Ads SDK for Flutter currently supports loading and displaying 
 
 Note: This plugin also contains support for **[Google Ad Manager](https://admanager.google.com/home/)**. If you are interested in creating and loading an Ad with Ad Manager, you may follow the same prerequisites, platform setup, mobile ads SDK initialization steps outlined in this doc, and then see [creating and loading an ad with Ad Manager](https://github.com/googleads/googleads-mobile-flutter#creating-and-loading-an-ad-with-ad-manager) for further instructions.
 
-See also the [codelab for inline ads in Flutter](https://codelabs.developers.google.com/codelabs/admob-inline-ads-in-flutter#0) for a detailed guide on setting 
+See also the [codelab for inline ads in Flutter](https://codelabs.developers.google.com/codelabs/admob-inline-ads-in-flutter#0) for a detailed guide on setting
 inline banner and native ads.
 
 ## Prerequisites
@@ -248,6 +248,7 @@ final AdListener listener = AdListener(
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
+   ad.dispose();
    print('Ad failed to load: $error');
  },
  // Called when an ad opens an overlay that covers the screen.
@@ -339,12 +340,16 @@ final AdListener listener = AdListener(
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
+   ad.dispose();
    print('Ad failed to load: $error');
  },
  // Called when an ad opens an overlay that covers the screen.
  onAdOpened: (Ad ad) => print('Ad opened.'),
  // Called when an ad removes an overlay that covers the screen.
- onAdClosed: (Ad ad) => print('Ad closed.'),
+ onAdClosed: (Ad ad) {
+   ad.dispose();
+   print('Ad closed.');
+ },
  // Called when an ad is in the process of leaving the application.
  onApplicationExit: (Ad ad) => print('Left application.'),
 );
@@ -634,11 +639,12 @@ The `factoryId` will need to match the one used to add the factory to `GoogleMob
 Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
 
 ```dart
-AdListener(
+final AdListener listener = AdListener(
  // Called when an ad is successfully received.
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
+   ad.dispose();
    print('Ad failed to load: $error');
  },
  // Called when an ad opens an overlay that covers the screen.
@@ -738,17 +744,21 @@ Through the use of `AdListener`, you can listen for lifecycle events, such as wh
 
 
 ```dart
-AdListener(
+final AdListener listener = AdListener(
  // Called when an ad is successfully received.
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
+   ad.dispose();
    print('Ad failed to load: $error');
  },
  // Called when an ad opens an overlay that covers the screen.
  onAdOpened: (Ad ad) => print('Ad opened.'),
  // Called when an ad removes an overlay that covers the screen.
- onAdClosed: (Ad ad) => print('Ad closed.'),
+ onAdClosed: (Ad ad) {
+   ad.dispose();
+   print('Ad closed.');
+ },
  // Called when an ad is in the process of leaving the application.
  onApplicationExit: (Ad ad) => print('Left application.'),
  // Called when a RewardedAd triggers a reward.
@@ -788,7 +798,7 @@ That's it! Your app is now ready to display rewarded ads.
 
 ## Creating and Loading an Ad with Ad Manager
 
-This section shows how to create and load ads with [Google Ad Manager](https://admanager.google.com/home/). 
+This section shows how to create and load ads with [Google Ad Manager](https://admanager.google.com/home/).
 
 ## Select an Ad Format
 
@@ -805,7 +815,7 @@ This section shows how to create and load ads with [Google Ad Manager](https://a
 
 For Ad Manager you will be using `PublisherAdRequest` instead of `AdRequest`.
 `PublisherAdRequest` is similar to `AdRequest` but has two additional properties: `customTargeting` and `customTargetingLists`,
-which are used to support [custom targeting](https://support.google.com/admanager/answer/188092?hl=en). 
+which are used to support [custom targeting](https://support.google.com/admanager/answer/188092?hl=en).
 
 ```
 final PublisherAdRequest request = PublisherAdRequest(
@@ -814,7 +824,7 @@ final PublisherAdRequest request = PublisherAdRequest(
   customTargeting: <String, String>{'some', 'targeting'},
   customTargetingLists: <String, List<String>>{'favoriteColors': <String>['red', 'yellow']},
 );
-```    
+```
 
 ## Ad Manager Banner Ads
 
@@ -934,6 +944,7 @@ final AdListener listener = AdListener(
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
+   ad.dispose();
    print('Ad failed to load: $error');
  },
  // Called when an ad opens an overlay that covers the screen.
@@ -1025,12 +1036,16 @@ final AdListener listener = AdListener(
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
+   ad.dispose();
    print('Ad failed to load: $error');
  },
  // Called when an ad opens an overlay that covers the screen.
  onAdOpened: (Ad ad) => print('Ad opened.'),
  // Called when an ad removes an overlay that covers the screen.
- onAdClosed: (Ad ad) => print('Ad closed.'),
+ onAdClosed: (Ad ad) {
+   ad.dispose();
+   print('Ad closed.');
+ },
  // Called when an ad is in the process of leaving the application.
  onApplicationExit: (Ad ad) => print('Left application.'),
 );
@@ -1319,11 +1334,12 @@ The `factoryId` will need to match the one used to add the factory to `GoogleMob
 Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
 
 ```dart
-AdListener(
+final AdListener listener = AdListener(
  // Called when an ad is successfully received.
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
+   ad.dispose();
    print('Ad failed to load: $error');
  },
  // Called when an ad opens an overlay that covers the screen.
@@ -1422,17 +1438,21 @@ Through the use of `AdListener`, you can listen for lifecycle events, such as wh
 
 
 ```dart
-AdListener(
+final AdListener listener = AdListener(
  // Called when an ad is successfully received.
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
+   ad.dispose();
    print('Ad failed to load: $error');
  },
  // Called when an ad opens an overlay that covers the screen.
  onAdOpened: (Ad ad) => print('Ad opened.'),
  // Called when an ad removes an overlay that covers the screen.
- onAdClosed: (Ad ad) => print('Ad closed.'),
+ onAdClosed: (Ad ad) {
+   ad.dispose();
+   print('Ad closed.');
+ },
  // Called when an ad is in the process of leaving the application.
  onApplicationExit: (Ad ad) => print('Left application.'),
  // Called when a RewardedAd triggers a reward.

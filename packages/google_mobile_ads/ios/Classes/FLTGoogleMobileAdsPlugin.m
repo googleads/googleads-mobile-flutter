@@ -101,6 +101,9 @@
         startWithCompletionHandler:^(GADInitializationStatus *_Nonnull status) {
           result([[FLTInitializationStatus alloc] initWithStatus:status]);
         }];
+  } else if ([call.method isEqualToString:@"_init"]) {
+    [_manager disposeAllAds];
+    result(nil);
   } else if ([call.method isEqualToString:@"MobileAds#updateRequestConfiguration"]) {
     NSString *maxAdContentRating = call.arguments[@"maxAdContentRating"];
     NSNumber *tagForChildDirectedTreatment = call.arguments[@"tagForChildDirectedTreatment"];
@@ -168,7 +171,7 @@
     if (!factory) {
       NSString *message =
           [NSString stringWithFormat:@"Can't find NativeAdFactory with id: %@", factoryId];
-      result([FlutterError errorWithCode:@"NatvieAdError" message:message details:nil]);
+      result([FlutterError errorWithCode:@"NativeAdError" message:message details:nil]);
       return;
     }
 
