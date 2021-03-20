@@ -16,6 +16,7 @@ package io.flutter.plugins.googlemobileads;
 
 import android.app.Activity;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.StandardMethodCodec;
@@ -47,10 +48,12 @@ class AdInstanceManager {
     this.activity = activity;
   }
 
+  @Nullable
   FlutterAd adForId(int id) {
     return ads.get(id);
   }
 
+  @Nullable
   Integer adIdFor(@NonNull FlutterAd ad) {
     for (Integer adId : ads.keySet()) {
       if (ads.get(adId) == ad) {
@@ -77,6 +80,16 @@ class AdInstanceManager {
       ((FlutterDestroyableAd) adObject).destroy();
     }
     ads.remove(adId);
+  }
+
+  void disposeAllAds() {
+    for (Map.Entry<Integer, FlutterAd> entry : ads.entrySet()) {
+      if (entry.getValue() != null && entry.getValue() instanceof FlutterDestroyableAd) {
+        FlutterDestroyableAd destroyableAd = (FlutterDestroyableAd) entry.getValue();
+        destroyableAd.destroy();
+      }
+    }
+    ads.clear();
   }
 
   void onAdLoaded(@NonNull FlutterAd ad) {

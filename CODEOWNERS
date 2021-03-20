@@ -4,7 +4,7 @@
 # These names are just suggestions. It is fine to have your changes
 # reviewed by someone else.
 
-packages/firebase_admob/* @blasten @bparrishMines @jjliu15
+packages/google_mobile_ads/* @blasten @bparrishMines @jjliu15
 website/* @blasten @bparrishMines @jjliu15
 docs/* @blasten @bparrishMines @jjliu15
 .github/ @blasten @bparrishMines @jjliu15

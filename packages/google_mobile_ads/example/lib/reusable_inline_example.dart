@@ -86,6 +86,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
           },
           onAdFailedToLoad: (Ad ad, LoadAdError error) {
             print('$BannerAd failedToLoad: $error');
+            ad.dispose();
           },
           onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
           onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
@@ -108,7 +109,8 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$NativeAd failedToLoad: $error');
+          print('$NativeAd failedToLoad: ${error}');
+          ad.dispose();
         },
         onAdOpened: (Ad ad) => print('$NativeAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$NativeAd onAdClosed.'),
@@ -129,6 +131,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('$PublisherBannerAd failedToLoad: $error');
+          ad.dispose();
         },
         onAdOpened: (Ad ad) => print('$PublisherBannerAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$PublisherBannerAd onAdClosed.'),

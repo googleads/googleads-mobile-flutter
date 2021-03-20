@@ -1,3 +1,8 @@
+## 0.11.0+4
+
+* Fixes a [bug](https://github.com/googleads/googleads-mobile-flutter/issues/47) where state is not properly cleaned up on hot restart.
+* Update README and example app to appropriately dispose ads.
+
 ## 0.11.0+3
 
 * Fixes an [Android crash](https://github.com/googleads/googleads-mobile-flutter/issues/46) when reusing Native and Banner Ad objects.
