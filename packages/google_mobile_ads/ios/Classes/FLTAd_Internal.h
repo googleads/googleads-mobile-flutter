@@ -15,6 +15,7 @@
 #import <GoogleMobileAds/GoogleMobileAds.h>
 #import "FLTAdInstanceManager_Internal.h"
 #import "FLTGoogleMobileAdsPlugin.h"
+#import "FLTMobileAds_Internal.h"
 
 @class FLTAdInstanceManager;
 @protocol FLTNativeAdFactory;
@@ -99,7 +100,8 @@
 @property(weak) FLTAdInstanceManager *_Nullable manager;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController;
+                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                       serverSideVerificationOptions: (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
 - (GADRewardedAd *_Nonnull)rewardedAd;
 @end
 

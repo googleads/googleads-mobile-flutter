@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdMobFieldAdapterInitializationState = 135,
   FLTAdMobFieldAdapterStatus = 136,
   FLTAdMobFieldInitializationStatus = 137,
+  FLTAdmobFieldServerSideVerificationOptions = 138,
 };
 
 @interface FLTGoogleMobileAdsReader : FlutterStandardReader
@@ -105,6 +106,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       FLTInitializationStatus *status = [[FLTInitializationStatus alloc] init];
       status.adapterStatuses = [self readValueOfType:[self readByte]];
       return status;
+    }
+    case FLTAdmobFieldServerSideVerificationOptions: {
+      FLTServerSideVerificationOptions *options = [[FLTServerSideVerificationOptions alloc] init];
+      options.userIdentifier = [self readValueOfType:[self readByte]];
+      options.customRewardString = [self readValueOfType:[self readByte]];
+      return options;
     }
   }
   return [super readValueOfType:type];

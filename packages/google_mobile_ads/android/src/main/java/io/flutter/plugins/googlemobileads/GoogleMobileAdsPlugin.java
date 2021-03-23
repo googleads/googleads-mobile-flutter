@@ -303,13 +303,22 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         final String adUnitId = requireNonNull(call.<String>argument("adUnitId"));
         final FlutterAdRequest request = call.argument("request");
         final FlutterPublisherAdRequest publisherRequest = call.argument("publisherRequest");
+        final FlutterServerSideVerificationOptions serverSideVerificationOptions =
+          call.argument("serverSideVerificationOptions");
 
         final FlutterRewardedAd rewardedAd;
         if (request != null) {
-          rewardedAd = new FlutterRewardedAd(requireNonNull(instanceManager), adUnitId, request);
+          rewardedAd = new FlutterRewardedAd(
+            requireNonNull(instanceManager),
+            adUnitId,
+            request,
+            serverSideVerificationOptions);
         } else if (publisherRequest != null) {
-          rewardedAd =
-              new FlutterRewardedAd(requireNonNull(instanceManager), adUnitId, publisherRequest);
+          rewardedAd = new FlutterRewardedAd(
+            requireNonNull(instanceManager),
+            adUnitId,
+            publisherRequest,
+            serverSideVerificationOptions);
         } else {
           result.error("InvalidRequest", "A null or invalid ad request was provided.", null);
           break;
@@ -346,7 +355,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         instanceManager.disposeAd(call.<Integer>argument("adId"));
         result.success(null);
         break;
-      case "showAdWithoutView":
+      case "":
         final boolean adShown = instanceManager.showAdWithId(call.<Integer>argument("adId"));
         if (!adShown) {
           result.error("AdShowError", "Ad failed to show.", null);

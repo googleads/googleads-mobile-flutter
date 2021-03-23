@@ -219,7 +219,8 @@
 
     FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                         request:request
-                                             rootViewController:rootController];
+                                             rootViewController:rootController
+                                  serverSideVerificationOptions:call.arguments[@"serverSideVerificationOptions"]];
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method isEqualToString:@"disposeAd"]) {
