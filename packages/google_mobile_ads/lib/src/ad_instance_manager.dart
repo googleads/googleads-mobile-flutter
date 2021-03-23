@@ -196,7 +196,7 @@ class AdInstanceManager {
         'request': ad.request,
         'publisherRequest': ad.publisherRequest,
         'serverSideVerificationOptions':
-          ad.serverSideVerificationOptions,
+            ad.serverSideVerificationOptions,
       },
     );
   }

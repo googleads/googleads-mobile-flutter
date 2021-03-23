@@ -101,7 +101,8 @@
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
-                       serverSideVerificationOptions: (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
+            serverSideVerificationOptions:
+                (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
 - (GADRewardedAd *_Nonnull)rewardedAd;
 @end
 

@@ -82,7 +82,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterPublisherAdRequest publisherRequest,
-    @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions) {
+      @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions) {
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.publisherRequest = publisherRequest;
@@ -149,8 +149,8 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   RewardedAd createRewardedAd() {
     RewardedAd rewardedAd = new RewardedAd(manager.activity, adUnitId);
     if (serverSideVerificationOptions != null) {
-      rewardedAd.setServerSideVerificationOptions
-        (serverSideVerificationOptions.asServerSideVerificationOptions());
+      rewardedAd.setServerSideVerificationOptions(
+          serverSideVerificationOptions.asServerSideVerificationOptions());
     }
     return rewardedAd;
   }

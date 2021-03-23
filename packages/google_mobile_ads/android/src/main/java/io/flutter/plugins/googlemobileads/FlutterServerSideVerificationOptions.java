@@ -9,22 +9,23 @@ class FlutterServerSideVerificationOptions {
   @Nullable private final String customData;
 
   public FlutterServerSideVerificationOptions(
-    @Nullable String userId,
-    @Nullable String customData) {
+      @Nullable String userId, @Nullable String customData) {
     this.userId = userId;
     this.customData = customData;
   }
 
-  @Nullable public String getUserId() {
+  @Nullable
+  public String getUserId() {
     return userId;
   }
 
-  @Nullable public String getCustomData() {
+  @Nullable
+  public String getCustomData() {
     return customData;
   }
 
   public ServerSideVerificationOptions asServerSideVerificationOptions() {
-    ServerSideVerificationOptions.Builder builder =  new ServerSideVerificationOptions.Builder();
+    ServerSideVerificationOptions.Builder builder = new ServerSideVerificationOptions.Builder();
     if (userId != null) {
       builder.setUserId(userId);
     }

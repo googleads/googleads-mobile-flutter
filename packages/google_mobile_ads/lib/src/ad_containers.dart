@@ -695,12 +695,10 @@ class RewardItem {
 class ServerSideVerificationOptions {
   /// The user id.
   final String userId;
+
   /// Custom data.
   final String customData;
 
   /// Create [ServerSideVerificationOptions] with the userId or customData.
-  ServerSideVerificationOptions({
-    this.userId,
-    this.customData
-  });
+  ServerSideVerificationOptions({this.userId, this.customData});
 }

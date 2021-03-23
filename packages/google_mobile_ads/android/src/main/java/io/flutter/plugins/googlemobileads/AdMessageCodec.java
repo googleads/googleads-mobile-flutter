@@ -153,8 +153,8 @@ final class AdMessageCodec extends StandardMessageCodec {
             (Map<String, FlutterAdapterStatus>) readValueOfType(buffer.get(), buffer));
       case VALUE_SERVER_SIDE_VERIFICATION_OPTIONS:
         return new FlutterServerSideVerificationOptions(
-          (String) readValueOfType(buffer.get(), buffer),
-          (String) readValueOfType(buffer.get(), buffer));
+            (String) readValueOfType(buffer.get(), buffer),
+            (String) readValueOfType(buffer.get(), buffer));
       default:
         return super.readValueOfType(type, buffer);
     }

@@ -304,21 +304,23 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         final FlutterAdRequest request = call.argument("request");
         final FlutterPublisherAdRequest publisherRequest = call.argument("publisherRequest");
         final FlutterServerSideVerificationOptions serverSideVerificationOptions =
-          call.argument("serverSideVerificationOptions");
+            call.argument("serverSideVerificationOptions");
 
         final FlutterRewardedAd rewardedAd;
         if (request != null) {
-          rewardedAd = new FlutterRewardedAd(
-            requireNonNull(instanceManager),
-            adUnitId,
-            request,
-            serverSideVerificationOptions);
+          rewardedAd =
+              new FlutterRewardedAd(
+                  requireNonNull(instanceManager),
+                  adUnitId,
+                  request,
+                  serverSideVerificationOptions);
         } else if (publisherRequest != null) {
-          rewardedAd = new FlutterRewardedAd(
-            requireNonNull(instanceManager),
-            adUnitId,
-            publisherRequest,
-            serverSideVerificationOptions);
+          rewardedAd =
+              new FlutterRewardedAd(
+                  requireNonNull(instanceManager),
+                  adUnitId,
+                  publisherRequest,
+                  serverSideVerificationOptions);
         } else {
           result.error("InvalidRequest", "A null or invalid ad request was provided.", null);
           break;

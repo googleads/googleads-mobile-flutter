@@ -313,9 +313,10 @@
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                         request:(FLTAdRequest *_Nonnull)request
-              rootViewController:(UIViewController *_Nonnull)rootViewController
-              serverSideVerificationOptions: (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions {
+                          request:(FLTAdRequest *_Nonnull)request
+               rootViewController:(UIViewController *_Nonnull)rootViewController
+    serverSideVerificationOptions:
+        (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions {
   self = [super init];
   if (self) {
     _adRequest = request;
@@ -341,8 +342,10 @@
     NSLog(@"A null or invalid ad request was provided.");
     return;
   }
-  if (_serverSideVerificationOptions != NULL && ![_serverSideVerificationOptions isEqual:[NSNull null]]) {
-    _rewardedView.serverSideVerificationOptions = [_serverSideVerificationOptions asGADServerSideVerificationOptions];
+  if (_serverSideVerificationOptions != NULL &&
+      ![_serverSideVerificationOptions isEqual:[NSNull null]]) {
+    _rewardedView.serverSideVerificationOptions =
+        [_serverSideVerificationOptions asGADServerSideVerificationOptions];
   }
 
   [self.rewardedAd loadRequest:request
