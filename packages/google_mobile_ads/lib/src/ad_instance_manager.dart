@@ -127,12 +127,11 @@ class AdInstanceManager {
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    final Ad bannerAd = adFor(adId)!;
     return channel.invokeMethod<void>(
       'loadBannerAd',
       <dynamic, dynamic>{
         'adId': adId,
-        'adUnitId': bannerAd.adUnitId,
+        'adUnitId': ad.adUnitId,
         'request': ad.request,
         'size': ad.size,
       },
@@ -146,13 +145,12 @@ class AdInstanceManager {
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    final InterstitialAd interstitialAd = adFor(adId) as InterstitialAd;
     return channel.invokeMethod<void>(
       'loadInterstitialAd',
       <dynamic, dynamic>{
         'adId': adId,
-        'adUnitId': interstitialAd.adUnitId,
-        'request': interstitialAd.request,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
       },
     );
   }
@@ -167,12 +165,11 @@ class AdInstanceManager {
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    final Ad nativeAd = adFor(adId)!;
     return channel.invokeMethod<void>(
       'loadNativeAd',
       <dynamic, dynamic>{
         'adId': adId,
-        'adUnitId': nativeAd.adUnitId,
+        'adUnitId': ad.adUnitId,
         'request': ad.request,
         'publisherRequest': ad.publisherRequest,
         'factoryId': ad.factoryId,
@@ -191,14 +188,13 @@ class AdInstanceManager {
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    final RewardedAd rewardedAd = adFor(adId) as RewardedAd;
     return channel.invokeMethod<void>(
       'loadRewardedAd',
       <dynamic, dynamic>{
         'adId': adId,
-        'adUnitId': rewardedAd.adUnitId,
-        'request': rewardedAd.request,
-        'publisherRequest': rewardedAd.publisherRequest,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+        'publisherRequest': ad.publisherRequest,
       },
     );
   }
