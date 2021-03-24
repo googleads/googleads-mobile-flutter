@@ -24,7 +24,7 @@ import 'reusable_inline_example.dart';
 
 // You can also test with your own ad unit IDs by registering your device as a
 // test device. Check the logs for your device's ID value.
-const String? testDevice = 'YOUR_DEVICE_ID';
+const String testDevice = 'YOUR_DEVICE_ID';
 
 class MyApp extends StatefulWidget {
   @override
@@ -33,7 +33,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   static final AdRequest request = AdRequest(
-    testDevices: testDevice != null ? <String>[testDevice!] : null,
+    testDevices: <String>[testDevice],
     keywords: <String>['foo', 'bar'],
     contentUrl: 'http://foo.com/bar.html',
     nonPersonalizedAds: true,

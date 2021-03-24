@@ -109,13 +109,13 @@ class AdInstanceManager {
   final Set<int> _mountedWidgetAdIds = <int>{};
 
   /// Returns true if the [adId] is already mounted in a [WidgetAd].
-  bool isWidgetAdIdMounted(int? adId) => _mountedWidgetAdIds.contains(adId);
+  bool isWidgetAdIdMounted(int adId) => _mountedWidgetAdIds.contains(adId);
 
   /// Indicates that [adId] is mounted in widget tree.
   void mountWidgetAdId(int adId) => _mountedWidgetAdIds.add(adId);
 
   /// Indicates that [adId] is unmounted from the widget tree.
-  void unmountWidgetAdId(int? adId) => _mountedWidgetAdIds.remove(adId);
+  void unmountWidgetAdId(int adId) => _mountedWidgetAdIds.remove(adId);
 
   /// Starts loading the ad if not previously loaded.
   ///
@@ -385,7 +385,7 @@ class AdMessageCodec extends StandardMessageCodec {
           contentUrl: readValueOfType(buffer.getUint8(), buffer),
           customTargeting: readValueOfType(buffer.getUint8(), buffer)
               ?.cast<String, String>(),
-          customTargetingLists: _deepMapCast<String>(
+          customTargetingLists: _tryDeepMapCast<String>(
             readValueOfType(buffer.getUint8(), buffer),
           ),
           nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
@@ -421,7 +421,7 @@ class AdMessageCodec extends StandardMessageCodec {
     }
   }
 
-  Map<String, List<T>>? _deepMapCast<T>(Map<dynamic, dynamic>? map) {
+  Map<String, List<T>>? _tryDeepMapCast<T>(Map<dynamic, dynamic>? map) {
     if (map == null) return null;
     return map.map<String, List<T>>(
       (dynamic key, dynamic value) => MapEntry<String, List<T>>(

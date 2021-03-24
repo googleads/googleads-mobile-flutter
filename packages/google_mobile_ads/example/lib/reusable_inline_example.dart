@@ -39,23 +39,28 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
                 );
               },
               itemBuilder: (BuildContext context, int index) {
-                if (index == 5 && _bannerAdIsLoaded && _bannerAd != null) {
+                final BannerAd? bannerAd = _bannerAd;
+                if (index == 5 && _bannerAdIsLoaded && bannerAd != null) {
                   return Container(
-                      height: _bannerAd!.size.height.toDouble(),
-                      width: _bannerAd!.size.width.toDouble(),
-                      child: AdWidget(ad: _bannerAd!));
+                      height: bannerAd.size.height.toDouble(),
+                      width: bannerAd.size.width.toDouble(),
+                      child: AdWidget(ad: bannerAd));
                 }
+
+                final PublisherBannerAd? publisherBannerAd = _publisherBannerAd;
                 if (index == 10 &&
                     _publisherBannerAdIsLoaded &&
-                    _publisherBannerAd != null) {
+                    publisherBannerAd != null) {
                   return Container(
-                      height: _publisherBannerAd!.sizes[0].height.toDouble(),
-                      width: _publisherBannerAd!.sizes[0].width.toDouble(),
+                      height: publisherBannerAd.sizes[0].height.toDouble(),
+                      width: publisherBannerAd.sizes[0].width.toDouble(),
                       child: AdWidget(ad: _publisherBannerAd!));
                 }
-                if (index == 15 && _nativeAdIsLoaded && _nativeAd != null) {
+
+                final NativeAd? nativeAd = _nativeAd;
+                if (index == 15 && _nativeAdIsLoaded && nativeAd != null) {
                   return Container(
-                      width: 250, height: 350, child: AdWidget(ad: _nativeAd!));
+                      width: 250, height: 350, child: AdWidget(ad: nativeAd));
                 }
 
                 return Text(

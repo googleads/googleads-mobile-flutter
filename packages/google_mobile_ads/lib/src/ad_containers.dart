@@ -360,7 +360,9 @@ class _AdWidgetState extends State<AdWidget> {
   void dispose() {
     super.dispose();
     final int? adId = instanceManager.adIdFor(widget.ad);
-    instanceManager.unmountWidgetAdId(adId);
+    if (adId != null) {
+      instanceManager.unmountWidgetAdId(adId);
+    }
   }
 
   @override
