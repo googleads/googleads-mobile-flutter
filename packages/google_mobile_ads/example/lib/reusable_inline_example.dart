@@ -114,7 +114,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$NativeAd failedToLoad: ${error}');
+          print('$NativeAd failedToLoad: $error');
           ad.dispose();
         },
         onAdOpened: (Ad ad) => print('$NativeAd onAdOpened.'),

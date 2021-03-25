@@ -59,7 +59,7 @@ class MobileAds {
   /// Internal init to cleanup state for hot restart.
   /// This is a workaround for https://github.com/flutter/flutter/issues/7160.
   void _init() {
-    instanceManager.channel.invokeMethod("_init");
+    instanceManager.channel.invokeMethod('_init');
   }
 }
 
