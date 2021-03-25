@@ -1,6 +1,6 @@
 ## 0.12.0
 
-* Migrated to null safety.
+* Migrated to null safety. Minimum Dart SDK version is bumped to 2.12.0.
 
 ## 0.11.0+4
 
