@@ -675,7 +675,7 @@ To display a `NativeAd` as a widget, you must instantiate an `AdWidget` with a s
 
 
 ```dart
-final AdWidget adWidget = AdWidget(ad: myBanner);
+final AdWidget adWidget = AdWidget(ad: myNative);
 ```
 
 `AdWidget` inherits from Flutter's `Widget` class and can be used as any other widget. On iOS, make sure you place the widget in a widget with a specified width and height. Otherwise, your Ad may not be displayed.
