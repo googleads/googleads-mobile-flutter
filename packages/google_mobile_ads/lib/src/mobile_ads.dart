@@ -44,10 +44,10 @@ class MobileAds {
   ///
   /// If this method is not called, the first ad request automatically
   /// initializes the Google Mobile Ads SDK.
-  Future<InitializationStatus> initialize() {
-    return instanceManager.channel.invokeMethod<InitializationStatus>(
+  Future<InitializationStatus> initialize() async {
+    return (await instanceManager.channel.invokeMethod<InitializationStatus>(
       'MobileAds#initialize',
-    );
+    ))!;
   }
 
   /// Update the [RequestConfiguration] to apply for future ad requests.
@@ -59,7 +59,7 @@ class MobileAds {
   /// Internal init to cleanup state for hot restart.
   /// This is a workaround for https://github.com/flutter/flutter/issues/7160.
   void _init() {
-    instanceManager.channel.invokeMethod("_init");
+    instanceManager.channel.invokeMethod('_init');
   }
 }
 
