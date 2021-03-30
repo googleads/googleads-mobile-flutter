@@ -13,13 +13,13 @@ class ReusableInlineExample extends StatefulWidget {
 }
 
 class _ReusableInlineExampleState extends State<ReusableInlineExample> {
-  BannerAd _bannerAd;
+  BannerAd? _bannerAd;
   bool _bannerAdIsLoaded = false;
 
-  PublisherBannerAd _publisherBannerAd;
+  PublisherBannerAd? _publisherBannerAd;
   bool _publisherBannerAdIsLoaded = false;
 
-  NativeAd _nativeAd;
+  NativeAd? _nativeAd;
   bool _nativeAdIsLoaded = false;
 
   @override
@@ -39,23 +39,28 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
                 );
               },
               itemBuilder: (BuildContext context, int index) {
-                if (index == 5 && _bannerAdIsLoaded && _bannerAd != null) {
+                final BannerAd? bannerAd = _bannerAd;
+                if (index == 5 && _bannerAdIsLoaded && bannerAd != null) {
                   return Container(
-                      height: _bannerAd.size.height.toDouble(),
-                      width: _bannerAd.size.width.toDouble(),
-                      child: AdWidget(ad: _bannerAd));
+                      height: bannerAd.size.height.toDouble(),
+                      width: bannerAd.size.width.toDouble(),
+                      child: AdWidget(ad: bannerAd));
                 }
+
+                final PublisherBannerAd? publisherBannerAd = _publisherBannerAd;
                 if (index == 10 &&
                     _publisherBannerAdIsLoaded &&
-                    _publisherBannerAd != null) {
+                    publisherBannerAd != null) {
                   return Container(
-                      height: _publisherBannerAd.sizes[0].height.toDouble(),
-                      width: _publisherBannerAd.sizes[0].width.toDouble(),
-                      child: AdWidget(ad: _publisherBannerAd));
+                      height: publisherBannerAd.sizes[0].height.toDouble(),
+                      width: publisherBannerAd.sizes[0].width.toDouble(),
+                      child: AdWidget(ad: _publisherBannerAd!));
                 }
-                if (index == 15 && _nativeAdIsLoaded && _nativeAd != null) {
+
+                final NativeAd? nativeAd = _nativeAd;
+                if (index == 15 && _nativeAdIsLoaded && nativeAd != null) {
                   return Container(
-                      width: 250, height: 350, child: AdWidget(ad: _nativeAd));
+                      width: 250, height: 350, child: AdWidget(ad: nativeAd));
                 }
 
                 return Text(
@@ -81,7 +86,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
           onAdLoaded: (Ad ad) {
             print('$BannerAd loaded.');
             setState(() {
-              this._bannerAdIsLoaded = true;
+              _bannerAdIsLoaded = true;
             });
           },
           onAdFailedToLoad: (Ad ad, LoadAdError error) {
@@ -105,11 +110,11 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
         onAdLoaded: (Ad ad) {
           print('$NativeAd loaded.');
           setState(() {
-            this._nativeAdIsLoaded = true;
+            _nativeAdIsLoaded = true;
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$NativeAd failedToLoad: ${error}');
+          print('$NativeAd failedToLoad: $error');
           ad.dispose();
         },
         onAdOpened: (Ad ad) => print('$NativeAd onAdOpened.'),
@@ -121,12 +126,12 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
     _publisherBannerAd = PublisherBannerAd(
       adUnitId: '/6499/example/banner',
       request: PublisherAdRequest(nonPersonalizedAds: true),
-      sizes: [AdSize.largeBanner],
+      sizes: <AdSize>[AdSize.largeBanner],
       listener: AdListener(
         onAdLoaded: (Ad ad) {
           print('$PublisherBannerAd loaded.');
           setState(() {
-            this._publisherBannerAdIsLoaded = true;
+            _publisherBannerAdIsLoaded = true;
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
