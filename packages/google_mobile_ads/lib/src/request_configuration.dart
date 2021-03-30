@@ -18,16 +18,16 @@
 /// https://developers.google.com/ad-manager/mobile-ads-sdk/android/targeting#requestconfiguration.
 class RequestConfiguration {
   /// Maximum content rating that will be shown.
-  final String maxAdContentRating;
+  final String? maxAdContentRating;
 
   /// Whether to tag as child directed.
-  final int tagForChildDirectedTreatment;
+  final int? tagForChildDirectedTreatment;
 
   /// Whether to tag as under age of consent.
-  final int tagForUnderAgeOfConsent;
+  final int? tagForUnderAgeOfConsent;
 
   /// List of test device ids to set.
-  final List<String> testDeviceIds;
+  final List<String>? testDeviceIds;
 
   /// Creates a [RequestConfiguration].
   RequestConfiguration(
@@ -40,19 +40,19 @@ class RequestConfiguration {
 /// Values for [RequestConfiguration.maxAdContentRating].
 class MaxAdContentRating {
   /// No specified content rating.
-  static final String unspecified = "";
+  static final String unspecified = '';
 
   /// Content suitable for general audiences, including families.
-  static final String g = "G";
+  static final String g = 'G';
 
   /// Content suitable for most audiences with parental guidance.
-  static final String pg = "PG";
+  static final String pg = 'PG';
 
   /// Content suitable for most audiences with parental guidance.
-  static final String t = "T";
+  static final String t = 'T';
 
   /// Content suitable only for mature audiences.
-  static final String ma = "MA";
+  static final String ma = 'MA';
 }
 
 /// Values for [RequestConfiguration.tagForUnderAgeOfConsent].
