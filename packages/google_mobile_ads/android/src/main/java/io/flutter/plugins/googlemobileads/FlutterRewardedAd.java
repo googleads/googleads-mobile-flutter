@@ -93,6 +93,10 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   @Override
   void load() {
     rewardedAd = createRewardedAd();
+    if (serverSideVerificationOptions != null) {
+      rewardedAd.setServerSideVerificationOptions(
+        serverSideVerificationOptions.asServerSideVerificationOptions());
+    }
     final RewardedAdLoadCallback adLoadCallback =
         new RewardedAdLoadCallback() {
           @Override
@@ -148,10 +152,6 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   @VisibleForTesting
   RewardedAd createRewardedAd() {
     RewardedAd rewardedAd = new RewardedAd(manager.activity, adUnitId);
-    if (serverSideVerificationOptions != null) {
-      rewardedAd.setServerSideVerificationOptions(
-          serverSideVerificationOptions.asServerSideVerificationOptions());
-    }
     return rewardedAd;
   }
 }

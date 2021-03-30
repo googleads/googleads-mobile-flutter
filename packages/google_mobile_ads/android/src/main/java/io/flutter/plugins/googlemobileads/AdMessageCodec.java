@@ -94,6 +94,11 @@ final class AdMessageCodec extends StandardMessageCodec {
       stream.write(VALUE_INITIALIZATION_STATUS);
       final FlutterInitializationStatus status = (FlutterInitializationStatus) value;
       writeValue(stream, status.adapterStatuses);
+    } else if (value instanceof FlutterServerSideVerificationOptions) {
+      stream.write(VALUE_SERVER_SIDE_VERIFICATION_OPTIONS);
+      FlutterServerSideVerificationOptions options = (FlutterServerSideVerificationOptions) value;
+      writeValue(stream, options.getUserId());
+      writeValue(stream, options.getCustomData());
     } else {
       super.writeValue(stream, value);
     }

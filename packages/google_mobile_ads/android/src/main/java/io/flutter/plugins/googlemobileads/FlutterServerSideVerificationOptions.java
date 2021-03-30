@@ -2,6 +2,7 @@ package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions;
+import java.util.Objects;
 
 class FlutterServerSideVerificationOptions {
 
@@ -33,5 +34,14 @@ class FlutterServerSideVerificationOptions {
       builder.setCustomData(customData);
     }
     return builder.build();
+  }
+
+  @Override
+  public boolean equals(@Nullable Object obj) {
+    if (!(obj instanceof FlutterServerSideVerificationOptions)) {
+      return false;
+    }
+    FlutterServerSideVerificationOptions other = (FlutterServerSideVerificationOptions) obj;
+    return Objects.equals(other.userId, userId) && Objects.equals(other.customData, customData);
   }
 }

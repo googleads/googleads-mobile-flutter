@@ -52,6 +52,8 @@
 @implementation FLTServerSideVerificationOptions
 - (GADServerSideVerificationOptions *_Nonnull)asGADServerSideVerificationOptions {
   GADServerSideVerificationOptions *options = [[GADServerSideVerificationOptions alloc] init];
+  NSLog(@"JJL user identifier: %@\n", _userIdentifier);
+  NSLog(@"JJL user custom str: %@\n", _customRewardString);
   options.userIdentifier = _userIdentifier;
   options.customRewardString = _customRewardString;
   return options;

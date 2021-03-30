@@ -116,6 +116,9 @@ class _MyAppState extends State<MyApp> {
               '$RewardedAd with reward $RewardItem(${reward.amount}, ${reward.type})',
             );
           }),
+      serverSideVerificationOptions: ServerSideVerificationOptions(
+          userId: 'user1\$!%',
+          customData: 'customdata\$!%'),
     )..load();
   }
 

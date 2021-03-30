@@ -344,6 +344,7 @@
   }
   if (_serverSideVerificationOptions != NULL &&
       ![_serverSideVerificationOptions isEqual:[NSNull null]]) {
+    NSLog(@"JJL Rewarded server side verifications found\n");
     _rewardedView.serverSideVerificationOptions =
         [_serverSideVerificationOptions asGADServerSideVerificationOptions];
   }

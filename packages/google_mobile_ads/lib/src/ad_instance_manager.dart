@@ -419,6 +419,10 @@ class AdMessageCodec extends StandardMessageCodec {
           readValueOfType(buffer.getUint8(), buffer)
               .cast<String, AdapterStatus>(),
         );
+      case _valueServerSideVerificationOptions:
+        return ServerSideVerificationOptions(
+            userId: readValueOfType(buffer.getUint8(), buffer),
+            customData: readValueOfType(buffer.getUint8(), buffer));
       default:
         return super.readValueOfType(type, buffer);
     }

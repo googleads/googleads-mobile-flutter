@@ -16,6 +16,7 @@ package io.flutter.plugins.googlemobileads;
 
 import static org.junit.Assert.assertEquals;
 
+import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -102,5 +103,18 @@ public class AdMessageCodecTest {
     FlutterPublisherAdRequest decodedPublisherAdRequest =
         (FlutterPublisherAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedPublisherAdRequest, flutterPublisherAdRequest);
+  }
+
+  @Test
+  public void adMessageCodec_decodeServerSideVerificationOptions() {
+    AdMessageCodec codec = new AdMessageCodec();
+    FlutterServerSideVerificationOptions options = new FlutterServerSideVerificationOptions(
+      "user-id", "custom-data");
+
+    ByteBuffer message = codec.encodeMessage(options);
+
+    FlutterServerSideVerificationOptions decodedOptions = (FlutterServerSideVerificationOptions)
+      codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(decodedOptions, options);
   }
 }

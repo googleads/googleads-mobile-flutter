@@ -172,7 +172,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeByte:FLTAdMobFieldInitializationStatus];
     FLTInitializationStatus *status = value;
     [self writeValue:status.adapterStatuses];
-  } else {
+  } else if ([value isKindOfClass:[FLTServerSideVerificationOptions class]]) {
+    [self writeByte:FLTAdmobFieldServerSideVerificationOptions];
+    FLTServerSideVerificationOptions *options = value;
+    [self writeValue:options.userIdentifier];
+    [self writeValue:options.customRewardString];
+  }  else {
     [super writeValue:value];
   }
 }

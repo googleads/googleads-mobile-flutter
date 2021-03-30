@@ -357,7 +357,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         instanceManager.disposeAd(call.<Integer>argument("adId"));
         result.success(null);
         break;
-      case "":
+      case "showAdWithoutView":
         final boolean adShown = instanceManager.showAdWithId(call.<Integer>argument("adId"));
         if (!adShown) {
           result.error("AdShowError", "Ad failed to show.", null);

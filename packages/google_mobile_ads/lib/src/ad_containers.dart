@@ -666,7 +666,7 @@ class RewardedAd extends AdWithoutView {
       : 'ca-app-pub-3940256099942544/1712485313';
 
   /// Optional [ServerSideVerificationOptions].
-  final ServerSideVerificationOptions serverSideVerificationOptions;
+  final ServerSideVerificationOptions? serverSideVerificationOptions;
 
   @override
   Future<void> load() async {
@@ -694,11 +694,19 @@ class RewardItem {
 /// information.
 class ServerSideVerificationOptions {
   /// The user id.
-  final String userId;
+  final String? userId;
 
   /// Custom data.
-  final String customData;
+  final String? customData;
 
   /// Create [ServerSideVerificationOptions] with the userId or customData.
   ServerSideVerificationOptions({this.userId, this.customData});
+
+
+  @override
+  bool operator ==(other) {
+    return other is ServerSideVerificationOptions
+      && userId == other.userId
+      && customData == other.customData;
+  }
 }
