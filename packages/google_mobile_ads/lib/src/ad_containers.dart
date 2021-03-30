@@ -690,7 +690,8 @@ class RewardItem {
 }
 
 /// Options for RewardedAd server-side verification callbacks.
-/// See https://developers.google.com/admob/android/rewarded-video-ssv for more
+/// See https://developers.google.com/admob/ios/rewarded-video-ssv and
+/// https://developers.google.com/admob/android/rewarded-video-ssv for more
 /// information.
 class ServerSideVerificationOptions {
   /// The user id.

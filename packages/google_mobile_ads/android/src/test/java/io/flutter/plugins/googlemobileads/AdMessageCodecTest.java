@@ -114,7 +114,28 @@ public class AdMessageCodecTest {
     ByteBuffer message = codec.encodeMessage(options);
 
     FlutterServerSideVerificationOptions decodedOptions = (FlutterServerSideVerificationOptions)
-      codec.decodeMessage((ByteBuffer) message.position(0));
+    codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(decodedOptions, options);
+
+    // WIth userId = null.
+    options = new FlutterServerSideVerificationOptions(null, "custom-data");
+    message = codec.encodeMessage(options);
+    decodedOptions = (FlutterServerSideVerificationOptions)
+    codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(decodedOptions, options);
+
+    // WIth customData = null.
+    options = new FlutterServerSideVerificationOptions("user-Id", null);
+    message = codec.encodeMessage(options);
+    decodedOptions = (FlutterServerSideVerificationOptions)
+    codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(decodedOptions, options);
+
+    // WIth userId and customData = null.
+    options = new FlutterServerSideVerificationOptions(null, null);
+    message = codec.encodeMessage(options);
+    decodedOptions = (FlutterServerSideVerificationOptions)
+    codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
   }
 }

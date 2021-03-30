@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions;
 import java.util.Objects;
 
+/** A wrapper for {@link ServerSideVerificationOptions}. */
 class FlutterServerSideVerificationOptions {
 
   @Nullable private final String userId;
@@ -25,6 +26,7 @@ class FlutterServerSideVerificationOptions {
     return customData;
   }
 
+  /** Gets an equivalent {@link ServerSideVerificationOptions}. */
   public ServerSideVerificationOptions asServerSideVerificationOptions() {
     ServerSideVerificationOptions.Builder builder = new ServerSideVerificationOptions.Builder();
     if (userId != null) {

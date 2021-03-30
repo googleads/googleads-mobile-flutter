@@ -151,7 +151,6 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   @NonNull
   @VisibleForTesting
   RewardedAd createRewardedAd() {
-    RewardedAd rewardedAd = new RewardedAd(manager.activity, adUnitId);
-    return rewardedAd;
+    return new RewardedAd(manager.activity, adUnitId);
   }
 }
