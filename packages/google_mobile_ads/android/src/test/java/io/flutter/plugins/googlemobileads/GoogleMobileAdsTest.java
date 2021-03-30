@@ -201,7 +201,7 @@ public class GoogleMobileAdsTest {
     when(mockFlutterRequest.asPublisherAdRequest()).thenReturn(mockRequest);
 
     final FlutterServerSideVerificationOptions options =
-      new FlutterServerSideVerificationOptions("userId", "customData");
+        new FlutterServerSideVerificationOptions("userId", "customData");
     final FlutterRewardedAd rewardedAd =
         new FlutterRewardedAd(testManager, "testId", mockFlutterRequest, options);
 
@@ -215,16 +215,16 @@ public class GoogleMobileAdsTest {
     verify(mockPublisherAd)
         .loadAd(captor.capture(), ArgumentMatchers.any(RewardedAdLoadCallback.class));
     ArgumentMatcher<ServerSideVerificationOptions> serverSideVerificationOptionsArgumentMatcher =
-      new ArgumentMatcher<ServerSideVerificationOptions>() {
-        @Override
-        public boolean matches(ServerSideVerificationOptions argument) {
-          return argument.getCustomData().equals(options.getCustomData())
-            && argument.getUserId().equals(options.getUserId());
-        }
-      };
+        new ArgumentMatcher<ServerSideVerificationOptions>() {
+          @Override
+          public boolean matches(ServerSideVerificationOptions argument) {
+            return argument.getCustomData().equals(options.getCustomData())
+                && argument.getUserId().equals(options.getUserId());
+          }
+        };
     verify(mockPublisherAd)
-      .setServerSideVerificationOptions(ArgumentMatchers
-        .argThat(serverSideVerificationOptionsArgumentMatcher));
+        .setServerSideVerificationOptions(
+            ArgumentMatchers.argThat(serverSideVerificationOptionsArgumentMatcher));
     assertEquals(captor.getValue(), mockRequest);
   }
 

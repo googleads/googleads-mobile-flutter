@@ -16,7 +16,6 @@ package io.flutter.plugins.googlemobileads;
 
 import static org.junit.Assert.assertEquals;
 
-import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,34 +107,38 @@ public class AdMessageCodecTest {
   @Test
   public void adMessageCodec_decodeServerSideVerificationOptions() {
     AdMessageCodec codec = new AdMessageCodec();
-    FlutterServerSideVerificationOptions options = new FlutterServerSideVerificationOptions(
-      "user-id", "custom-data");
+    FlutterServerSideVerificationOptions options =
+        new FlutterServerSideVerificationOptions("user-id", "custom-data");
 
     ByteBuffer message = codec.encodeMessage(options);
 
-    FlutterServerSideVerificationOptions decodedOptions = (FlutterServerSideVerificationOptions)
-    codec.decodeMessage((ByteBuffer) message.position(0));
+    FlutterServerSideVerificationOptions decodedOptions =
+        (FlutterServerSideVerificationOptions)
+            codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
 
     // WIth userId = null.
     options = new FlutterServerSideVerificationOptions(null, "custom-data");
     message = codec.encodeMessage(options);
-    decodedOptions = (FlutterServerSideVerificationOptions)
-    codec.decodeMessage((ByteBuffer) message.position(0));
+    decodedOptions =
+        (FlutterServerSideVerificationOptions)
+            codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
 
     // WIth customData = null.
     options = new FlutterServerSideVerificationOptions("user-Id", null);
     message = codec.encodeMessage(options);
-    decodedOptions = (FlutterServerSideVerificationOptions)
-    codec.decodeMessage((ByteBuffer) message.position(0));
+    decodedOptions =
+        (FlutterServerSideVerificationOptions)
+            codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
 
     // WIth userId and customData = null.
     options = new FlutterServerSideVerificationOptions(null, null);
     message = codec.encodeMessage(options);
-    decodedOptions = (FlutterServerSideVerificationOptions)
-    codec.decodeMessage((ByteBuffer) message.position(0));
+    decodedOptions =
+        (FlutterServerSideVerificationOptions)
+            codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
   }
 }

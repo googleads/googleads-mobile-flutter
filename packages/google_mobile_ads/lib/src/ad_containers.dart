@@ -703,11 +703,10 @@ class ServerSideVerificationOptions {
   /// Create [ServerSideVerificationOptions] with the userId or customData.
   ServerSideVerificationOptions({this.userId, this.customData});
 
-
   @override
   bool operator ==(other) {
-    return other is ServerSideVerificationOptions
-      && userId == other.userId
-      && customData == other.customData;
+    return other is ServerSideVerificationOptions &&
+        userId == other.userId &&
+        customData == other.customData;
   }
 }

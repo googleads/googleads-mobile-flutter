@@ -117,8 +117,7 @@ class _MyAppState extends State<MyApp> {
             );
           }),
       serverSideVerificationOptions: ServerSideVerificationOptions(
-          userId: 'user1\$!%',
-          customData: 'customdata\$!%'),
+          userId: 'user1\$!%', customData: 'customdata\$!%'),
     )..load();
   }
 

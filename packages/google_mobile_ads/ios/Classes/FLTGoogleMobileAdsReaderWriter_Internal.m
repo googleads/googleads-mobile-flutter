@@ -177,7 +177,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     FLTServerSideVerificationOptions *options = value;
     [self writeValue:options.userIdentifier];
     [self writeValue:options.customRewardString];
-  }  else {
+  } else {
     [super writeValue:value];
   }
 }

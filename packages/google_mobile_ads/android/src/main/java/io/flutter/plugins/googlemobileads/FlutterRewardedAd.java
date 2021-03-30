@@ -95,7 +95,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
     rewardedAd = createRewardedAd();
     if (serverSideVerificationOptions != null) {
       rewardedAd.setServerSideVerificationOptions(
-        serverSideVerificationOptions.asServerSideVerificationOptions());
+          serverSideVerificationOptions.asServerSideVerificationOptions());
     }
     final RewardedAdLoadCallback adLoadCallback =
         new RewardedAdLoadCallback() {
