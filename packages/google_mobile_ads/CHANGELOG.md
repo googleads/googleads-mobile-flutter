@@ -1,4 +1,4 @@
-## 0.12.0+1
+## 0.12.1
 
 * Rewarded ads now take an optional `ServerSideVerification`, to support [custom data in rewarded ads](https://developers.google.com/admob/ios/rewarded-video-ssv#custom_data).
 
