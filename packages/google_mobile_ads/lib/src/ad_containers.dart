@@ -695,10 +695,10 @@ class RewardItem {
 /// https://developers.google.com/admob/android/rewarded-video-ssv for more
 /// information.
 class ServerSideVerificationOptions {
-  /// The user id.
+  /// The user id to be used in server-to-server reward callbacks.
   final String? userId;
 
-  /// Custom data.
+  /// The custom data to be used in server-to-server reward callbacks
   final String? customData;
 
   /// Create [ServerSideVerificationOptions] with the userId or customData.
