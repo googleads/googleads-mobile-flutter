@@ -117,7 +117,7 @@ public class AdMessageCodecTest {
             codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
 
-    // WIth userId = null.
+    // With userId = null.
     options = new FlutterServerSideVerificationOptions(null, "custom-data");
     message = codec.encodeMessage(options);
     decodedOptions =
@@ -125,7 +125,7 @@ public class AdMessageCodecTest {
             codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
 
-    // WIth customData = null.
+    // With customData = null.
     options = new FlutterServerSideVerificationOptions("user-Id", null);
     message = codec.encodeMessage(options);
     decodedOptions =
@@ -133,7 +133,7 @@ public class AdMessageCodecTest {
             codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
 
-    // WIth userId and customData = null.
+    // With userId and customData = null.
     options = new FlutterServerSideVerificationOptions(null, null);
     message = codec.encodeMessage(options);
     decodedOptions =
