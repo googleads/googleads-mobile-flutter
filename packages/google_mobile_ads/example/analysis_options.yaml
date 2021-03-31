@@ -12,23 +12,4 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-name: google_mobile_ads_example
-description: Demonstrates how to use the google mobile ads plugin.
-
-dependencies:
-  flutter:
-    sdk: flutter
-  google_mobile_ads:
-    path: ../
-
-dev_dependencies:
-  pedantic: ^1.11.0
-  e2e: ^0.7.0
-  flutter_driver:
-    sdk: flutter
-
-flutter:
-  uses-material-design: true
-
-environment:
-  sdk: ">=2.12.0 <3.0.0"
+include: ../../../analysis_options.yaml

@@ -1,6 +1,11 @@
+## 0.12.0
+
+* Migrated to null safety. Minimum Dart SDK version is bumped to 2.12.0.
+
 ## 0.11.0+4
 
 * Fixes a [bug](https://github.com/googleads/googleads-mobile-flutter/issues/47) where state is not properly cleaned up on hot restart.
+* Update README and example app to appropriately dispose ads.
 
 ## 0.11.0+3
 
