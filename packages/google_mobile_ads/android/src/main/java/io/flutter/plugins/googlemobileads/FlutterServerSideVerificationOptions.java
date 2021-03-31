@@ -40,10 +40,18 @@ class FlutterServerSideVerificationOptions {
 
   @Override
   public boolean equals(@Nullable Object obj) {
+    if (this == obj) {
+      return true;
+    }
     if (!(obj instanceof FlutterServerSideVerificationOptions)) {
       return false;
     }
     FlutterServerSideVerificationOptions other = (FlutterServerSideVerificationOptions) obj;
     return Objects.equals(other.userId, userId) && Objects.equals(other.customData, customData);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(userId, customData);
   }
 }
