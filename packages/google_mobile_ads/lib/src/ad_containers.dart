@@ -633,7 +633,8 @@ class RewardedAd extends AdWithoutView {
     required String adUnitId,
     required AdListener listener,
     required this.request,
-  })   : publisherRequest = null,
+    this.serverSideVerificationOptions,
+  })  : publisherRequest = null,
         super(adUnitId: adUnitId, listener: listener);
 
   /// Creates a [RewardedAd] with a [PublisherAdRequest].
@@ -643,7 +644,8 @@ class RewardedAd extends AdWithoutView {
     required String adUnitId,
     required AdListener listener,
     required this.publisherRequest,
-  })   : request = null,
+    this.serverSideVerificationOptions,
+  })  : request = null,
         super(adUnitId: adUnitId, listener: listener);
 
   /// Targeting information used to fetch an [Ad].
@@ -662,6 +664,9 @@ class RewardedAd extends AdWithoutView {
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/5224354917'
       : 'ca-app-pub-3940256099942544/1712485313';
+
+  /// Optional [ServerSideVerificationOptions].
+  final ServerSideVerificationOptions? serverSideVerificationOptions;
 
   @override
   Future<void> load() async {
@@ -682,4 +687,27 @@ class RewardItem {
 
   /// Type of credit rewarded.
   final String type;
+}
+
+/// Options for RewardedAd server-side verification callbacks.
+///
+/// See https://developers.google.com/admob/ios/rewarded-video-ssv and
+/// https://developers.google.com/admob/android/rewarded-video-ssv for more
+/// information.
+class ServerSideVerificationOptions {
+  /// The user id to be used in server-to-server reward callbacks.
+  final String? userId;
+
+  /// The custom data to be used in server-to-server reward callbacks
+  final String? customData;
+
+  /// Create [ServerSideVerificationOptions] with the userId or customData.
+  ServerSideVerificationOptions({this.userId, this.customData});
+
+  @override
+  bool operator ==(other) {
+    return other is ServerSideVerificationOptions &&
+        userId == other.userId &&
+        customData == other.customData;
+  }
 }

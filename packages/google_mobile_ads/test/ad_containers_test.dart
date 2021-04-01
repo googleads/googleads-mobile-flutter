@@ -388,10 +388,13 @@ void main() {
 
     test('load rewarded', () async {
       final RewardedAd rewarded = RewardedAd(
-        adUnitId: RewardedAd.testAdUnitId,
-        listener: AdListener(),
-        request: AdRequest(),
-      );
+          adUnitId: RewardedAd.testAdUnitId,
+          listener: AdListener(),
+          request: AdRequest(),
+          serverSideVerificationOptions: ServerSideVerificationOptions(
+            userId: 'test-user-id',
+            customData: 'test-custom-data',
+          ));
 
       await rewarded.load();
 
@@ -401,6 +404,8 @@ void main() {
           'adUnitId': RewardedAd.testAdUnitId,
           'request': rewarded.request,
           'publisherRequest': null,
+          'serverSideVerificationOptions':
+              rewarded.serverSideVerificationOptions,
         }),
       ]);
 
@@ -412,6 +417,10 @@ void main() {
         adUnitId: RewardedAd.testAdUnitId,
         listener: AdListener(),
         publisherRequest: PublisherAdRequest(),
+        serverSideVerificationOptions: ServerSideVerificationOptions(
+          userId: 'test-user-id',
+          customData: 'test-custom-data',
+        ),
       );
 
       await rewarded.load();
@@ -422,6 +431,8 @@ void main() {
           'adUnitId': RewardedAd.testAdUnitId,
           'request': null,
           'publisherRequest': rewarded.publisherRequest,
+          'serverSideVerificationOptions':
+              rewarded.serverSideVerificationOptions,
         }),
       ]);
 
