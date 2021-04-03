@@ -713,6 +713,48 @@ void main() {
       expect(result[1].type, 'one');
     });
 
+    test('onPaidEvent', () async {
+      final Completer<List<dynamic>> resultCompleter =
+          Completer<List<dynamic>>();
+
+      final BannerAd banner = BannerAd(
+        adUnitId: BannerAd.testAdUnitId,
+        size: AdSize.banner,
+        listener: AdListener(
+          onPaidEvent:
+              (Ad ad, double value, int precision, String currencyCode) =>
+                  resultCompleter
+                      .complete(<Object>[ad, value, precision, currencyCode]),
+        ),
+        request: AdRequest(),
+      );
+
+      await banner.load();
+
+      final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+        'adId': 0,
+        'eventName': 'onPaidEvent',
+        'valueMicros': 1.2345,
+        'precision': 1,
+        'currencyCode': 'USD',
+      });
+
+      final ByteData data =
+          instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+        'plugins.flutter.io/google_mobile_ads',
+        data,
+        (ByteData? data) {},
+      );
+
+      final List<dynamic> result = await resultCompleter.future;
+      expect(result[0], banner);
+      expect(result[1], 1.2345e-6);
+      expect(result[2], 1);
+      expect(result[3], 'USD');
+    });
+
     test('show $AdWithoutView', () {
       final InterstitialAd ad = InterstitialAd(
         adUnitId: 'testId',
