@@ -331,17 +331,20 @@
   GADRewardedAd *_rewardedView;
   FLTAdRequest *_adRequest;
   UIViewController *_rootViewController;
+  FLTServerSideVerificationOptions *_serverSideVerificationOptions;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
-              rootViewController:(UIViewController *_Nonnull)rootViewController {
+               rootViewController:(UIViewController *_Nonnull)rootViewController
+    serverSideVerificationOptions:
+        (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions {
   self = [super init];
   if (self) {
     _adRequest = request;
     _rewardedView = [[GADRewardedAd alloc] initWithAdUnitID:adUnitId];
     _rootViewController = rootViewController;
-
+    _serverSideVerificationOptions = serverSideVerificationOptions;
     __weak FLTRewardedAd *weakSelf = self;
     _rewardedView.paidEventHandler = ^(GADAdValue * _Nonnull value) {
       if (weakSelf.manager == nil) {
@@ -370,6 +373,11 @@
   } else {
     NSLog(@"A null or invalid ad request was provided.");
     return;
+  }
+  if (_serverSideVerificationOptions != NULL &&
+      ![_serverSideVerificationOptions isEqual:[NSNull null]]) {
+    _rewardedView.serverSideVerificationOptions =
+        [_serverSideVerificationOptions asGADServerSideVerificationOptions];
   }
 
   [self.rewardedAd loadRequest:request

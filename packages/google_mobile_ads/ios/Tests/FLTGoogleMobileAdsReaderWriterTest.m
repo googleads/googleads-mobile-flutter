@@ -86,6 +86,45 @@
   XCTAssertEqualObjects(decodedItem.type, @"apple");
 }
 
+- (void)testEncodeDecodeServerSideVerification {
+  FLTServerSideVerificationOptions *serverSideVerificationOptions =
+      [[FLTServerSideVerificationOptions alloc] init];
+  serverSideVerificationOptions.customRewardString = @"reward";
+  serverSideVerificationOptions.userIdentifier = @"user-id";
+  NSData *encodedMessage = [_messageCodec encode:serverSideVerificationOptions];
+
+  FLTServerSideVerificationOptions *decoded = [_messageCodec decode:encodedMessage];
+  XCTAssertEqualObjects(decoded.customRewardString,
+                        serverSideVerificationOptions.customRewardString);
+  XCTAssertEqualObjects(decoded.userIdentifier, serverSideVerificationOptions.userIdentifier);
+
+  // With customRewardString not defined.
+  serverSideVerificationOptions = [[FLTServerSideVerificationOptions alloc] init];
+  serverSideVerificationOptions.userIdentifier = @"user-id";
+  encodedMessage = [_messageCodec encode:serverSideVerificationOptions];
+  decoded = [_messageCodec decode:encodedMessage];
+  XCTAssertEqualObjects(decoded.customRewardString,
+                        serverSideVerificationOptions.customRewardString);
+  XCTAssertEqualObjects(decoded.userIdentifier, serverSideVerificationOptions.userIdentifier);
+
+  // With userId not defined.
+  serverSideVerificationOptions = [[FLTServerSideVerificationOptions alloc] init];
+  serverSideVerificationOptions.customRewardString = @"reward";
+  encodedMessage = [_messageCodec encode:serverSideVerificationOptions];
+  decoded = [_messageCodec decode:encodedMessage];
+  XCTAssertEqualObjects(decoded.customRewardString,
+                        serverSideVerificationOptions.customRewardString);
+  XCTAssertEqualObjects(decoded.userIdentifier, serverSideVerificationOptions.userIdentifier);
+
+  // Both undefined.
+  serverSideVerificationOptions = [[FLTServerSideVerificationOptions alloc] init];
+  encodedMessage = [_messageCodec encode:serverSideVerificationOptions];
+  decoded = [_messageCodec decode:encodedMessage];
+  XCTAssertEqualObjects(decoded.customRewardString,
+                        serverSideVerificationOptions.customRewardString);
+  XCTAssertEqualObjects(decoded.userIdentifier, serverSideVerificationOptions.userIdentifier);
+}
+
 - (void)testEncodeDecodeLoadAdError {
   FLTLoadAdError *error = [[FLTLoadAdError alloc] initWithCode:@(1)
                                                         domain:@"domain"
