@@ -17,6 +17,8 @@
 
 #import "../Classes/FLTAdInstanceManager_Internal.h"
 #import "../Classes/FLTGoogleMobileAdsPlugin.h"
+#import "../Classes/FLTGoogleMobileAdsReaderWriter_Internal.h"
+#import "../Classes/FLTMobileAds_Internal.h"
 
 @interface FLTGoogleMobileAdsPluginMethodCallsTest : XCTestCase
 @end
@@ -47,6 +49,52 @@
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
   OCMVerify([_mockAdInstanceManager dispose:@1]);
+}
+
+- (void)testLoadRewardedAd {
+  FLTAdRequest *request = [[FLTAdRequest alloc] init];
+  request.keywords = @[ @"apple" ];
+  FLTServerSideVerificationOptions *serverSideVerificationOptions =
+      [[FLTServerSideVerificationOptions alloc] init];
+  serverSideVerificationOptions.customRewardString = @"reward";
+  serverSideVerificationOptions.userIdentifier = @"user-id";
+  FLTRewardedAd *ad =
+      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                      request:request
+                           rootViewController:UIApplication.sharedApplication.delegate.window
+                                                  .rootViewController
+                serverSideVerificationOptions:serverSideVerificationOptions];
+
+  FlutterMethodCall *methodCall = [FlutterMethodCall
+      methodCallWithMethodName:@"loadRewardedAd"
+                     arguments:@{
+                       @"adUnitId" : @"testId",
+                       @"request" : request,
+                       @"serverSideVerificationOptions" : serverSideVerificationOptions
+                     }];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertNil(returnedResult);
+  BOOL (^verificationBlock)(FLTRewardedAd *) = ^BOOL(FLTRewardedAd *ad) {
+    FLTAdRequest *adRequest = [ad valueForKey:@"_adRequest"];
+    GADRewardedAd *rewardedAd = [ad valueForKey:@"_rewardedView"];
+    FLTServerSideVerificationOptions *options = [ad valueForKey:@"_serverSideVerificationOptions"];
+    XCTAssertEqualObjects(adRequest, request);
+    XCTAssertEqualObjects(rewardedAd.adUnitID, @"testId");
+    XCTAssertEqualObjects(options, serverSideVerificationOptions);
+    return YES;
+  };
+  OCMVerify([_mockAdInstanceManager loadAd:[OCMArg checkWithBlock:verificationBlock]
+                                      adId:[OCMArg any]]);
 }
 
 - (void)testInternalInit {

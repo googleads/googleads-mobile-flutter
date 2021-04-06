@@ -195,6 +195,7 @@ class AdInstanceManager {
         'adUnitId': ad.adUnitId,
         'request': ad.request,
         'publisherRequest': ad.publisherRequest,
+        'serverSideVerificationOptions': ad.serverSideVerificationOptions,
       },
     );
   }
@@ -303,6 +304,7 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueInitializationState = 135;
   static const int _valueAdapterStatus = 136;
   static const int _valueInitializationStatus = 137;
+  static const int _valueServerSideVerificationOptions = 138;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -343,6 +345,10 @@ class AdMessageCodec extends StandardMessageCodec {
     } else if (value is InitializationStatus) {
       buffer.putUint8(_valueInitializationStatus);
       writeValue(buffer, value.adapterStatuses);
+    } else if (value is ServerSideVerificationOptions) {
+      buffer.putUint8(_valueServerSideVerificationOptions);
+      writeValue(buffer, value.userId);
+      writeValue(buffer, value.customData);
     } else {
       super.writeValue(buffer, value);
     }
@@ -412,6 +418,10 @@ class AdMessageCodec extends StandardMessageCodec {
           readValueOfType(buffer.getUint8(), buffer)
               .cast<String, AdapterStatus>(),
         );
+      case _valueServerSideVerificationOptions:
+        return ServerSideVerificationOptions(
+            userId: readValueOfType(buffer.getUint8(), buffer),
+            customData: readValueOfType(buffer.getUint8(), buffer));
       default:
         return super.readValueOfType(type, buffer);
     }

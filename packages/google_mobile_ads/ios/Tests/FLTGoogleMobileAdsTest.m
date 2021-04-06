@@ -174,10 +174,14 @@
 - (void)testLoadRewardedAd {
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
-  FLTRewardedAd *ad =
-      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                      request:request
-                           rootViewController:OCMClassMock([UIViewController class])];
+  FLTServerSideVerificationOptions *serverSideVerificationOptions =
+      [[FLTServerSideVerificationOptions alloc] init];
+  serverSideVerificationOptions.customRewardString = @"reward";
+  serverSideVerificationOptions.userIdentifier = @"user-id";
+  FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                                      request:request
+                                           rootViewController:OCMClassMock([UIViewController class])
+                                serverSideVerificationOptions:serverSideVerificationOptions];
 
   FLTRewardedAd *mockFltAd = OCMPartialMock(ad);
   GADRewardedAd *mockRewardedAd = OCMClassMock([GADRewardedAd class]);
@@ -194,10 +198,10 @@
 - (void)testShowRewardedAd {
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
-  FLTRewardedAd *ad =
-      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                      request:request
-                           rootViewController:OCMClassMock([UIViewController class])];
+  FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                                      request:request
+                                           rootViewController:OCMClassMock([UIViewController class])
+                                serverSideVerificationOptions:nil];
 
   FLTRewardedAd *mockFltAd = OCMPartialMock(ad);
   GADRewardedAd *mockRewardedAd = OCMClassMock([GADRewardedAd class]);
@@ -211,10 +215,10 @@
 - (void)testLoadRewardedAdWithPublisherRequest {
   FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
-  FLTRewardedAd *ad =
-      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                      request:request
-                           rootViewController:OCMClassMock([UIViewController class])];
+  FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                                      request:request
+                                           rootViewController:OCMClassMock([UIViewController class])
+                                serverSideVerificationOptions:nil];
 
   FLTRewardedAd *mockFltAd = OCMPartialMock(ad);
   GADRewardedAd *mockRewardedAd = OCMClassMock([GADRewardedAd class]);
@@ -448,10 +452,10 @@
 }
 
 - (void)testOnRewardedAdUserEarnedReward {
-  FLTRewardedAd *ad =
-      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                      request:[[FLTAdRequest alloc] init]
-                           rootViewController:OCMClassMock([UIViewController class])];
+  FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                                      request:[[FLTAdRequest alloc] init]
+                                           rootViewController:OCMClassMock([UIViewController class])
+                                serverSideVerificationOptions:nil];
   [_manager loadAd:ad adId:@(1)];
 
   [_manager onRewardedAdUserEarnedReward:ad
