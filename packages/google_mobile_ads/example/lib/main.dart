@@ -178,36 +178,48 @@ class _MyAppState extends State<MyApp> {
               ),
             ],
           ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: ListView.separated(
-              cacheExtent: 500,
-              itemCount: 100,
-              separatorBuilder: (BuildContext context, int index) {
-                return Container(
-                  height: 40,
-                );
-              },
-              itemBuilder: (BuildContext context, int index) {
-                if (index % 2 == 0) {
-                  return Text(
-                    Constants.placeholderText,
-                    style: TextStyle(fontSize: 24),
-                  );
-                }
+          body: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ListView.separated(
+                  cacheExtent: 500,
+                  itemCount: 100,
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Container(
+                      height: 40,
+                    );
+                  },
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index % 2 == 0) {
+                      return Text(
+                        Constants.placeholderText,
+                        style: TextStyle(fontSize: 24),
+                      );
+                    }
 
-                final int adIndex = (index / 2).floor();
-                Widget adWidget;
-                if (adIndex % 3 == 0) {
-                  adWidget = BannerAdWidget(AdSize.banner);
-                } else if (adIndex % 3 == 1) {
-                  adWidget = PublisherBannerAdWidget(AdSize.largeBanner);
-                } else {
-                  adWidget = NativeAdWidget();
-                }
-                return Center(child: adWidget);
-              },
-            ),
+                    final int adIndex = (index / 2).floor();
+                    Widget adWidget;
+                    if (adIndex % 3 == 0) {
+                      adWidget = BannerAdWidget(AdSize.banner);
+                    } else if (adIndex % 3 == 1) {
+                      adWidget = PublisherBannerAdWidget(AdSize.largeBanner);
+                    } else {
+                      adWidget = NativeAdWidget();
+                    }
+                    return Center(child: adWidget);
+                  },
+                ),
+              ),
+              Container(
+                alignment: Alignment.bottomCenter,
+                child: BannerAdWidget(
+                  AdSize.getPortraitAnchoredAdaptiveBannerAdSize(
+                    MediaQuery.of(context).size.width.truncate(),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -280,9 +292,13 @@ class BannerAdState extends State<BannerAdWidget> {
             }
         }
 
+        final bool isSmartOrAdaptiveBanner =
+            _bannerAd.size.width <= 0 || _bannerAd.size.height <= 0;
+
         return Container(
           width: _bannerAd.size.width.toDouble(),
-          height: _bannerAd.size.height.toDouble(),
+          height:
+              isSmartOrAdaptiveBanner ? 50 : _bannerAd.size.height.toDouble(),
           color: Colors.blueGrey,
           child: child,
         );

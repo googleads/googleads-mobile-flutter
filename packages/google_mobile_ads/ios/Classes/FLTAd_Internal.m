@@ -24,10 +24,14 @@
 
     // These values must remain consistent with `AdSize.smartBannerPortrait` and
     // `adSize.smartBannerLandscape` in Dart.
-    if ([_width isEqual:@(-1)] && [_height isEqual:@(-2)]) {
+    if ([_width isEqual:@(-1)] && [_height isEqual:@(0)]) {
       _size = kGADAdSizeSmartBannerPortrait;
-    } else if ([_width isEqual:@(-1)] && [_height isEqual:@(-3)]) {
+    } else if ([_width isEqual:@(-1)] && [_height isEqual:@(1)]) {
       _size = kGADAdSizeSmartBannerLandscape;
+    } else if ([_height isEqual:@(-1)]) {
+      _size = GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(_width.doubleValue);
+    } else if ([_height isEqual:@(-2)]) {
+      _size = GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(_width.doubleValue);
     } else {
       _size = GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, height.doubleValue));
     }

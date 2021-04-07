@@ -14,21 +14,28 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.content.Context;
+
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdSize;
+
 
 class FlutterAdSize {
   @NonNull final AdSize size;
   final int width;
   final int height;
 
-  FlutterAdSize(int width, int height) {
+  FlutterAdSize(Context context, int width, int height) {
     this.width = width;
     this.height = height;
 
     // These values must remain consistent with `AdSize.smartBanner` in Dart.
-    if (width == -1 && height == -1) {
+    if (width == -1 && height == 0) {
       this.size = AdSize.SMART_BANNER;
+    } else if (height == -1) {
+      this.size = AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
+    } else if (height == -2) {
+      this.size = AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
     } else {
       this.size = new AdSize(width, height);
     }

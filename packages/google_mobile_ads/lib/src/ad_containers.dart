@@ -192,24 +192,44 @@ class AdSize {
   }
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in either orientation on Android.
-  // Android expects a width and height of -1 represents a smart banner.
+  // Android expects a width of -1 to represent a smart banner.
   static AdSize get smartBanner {
     assert(defaultTargetPlatform == TargetPlatform.android);
-    return AdSize(width: -1, height: -1);
+    return AdSize(width: -1, height: 0);
   }
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in portrait on iOS.
-  // iOS expects a width of -1 and a height of -2 represents a portrait smart banner.
+  // iOS expects a width of -1 and a height of 0 to represent a portrait smart banner.
   static AdSize get smartBannerPortrait {
     assert(defaultTargetPlatform == TargetPlatform.iOS);
-    return AdSize(width: -1, height: -2);
+    return AdSize(width: -1, height: 0);
   }
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in landscape on iOS.
-  // iOS expects a width of -1 and a height of -2 represents a landscape smart banner.
+  // iOS expects a width of -1 and a height of 1 to represent a landscape smart banner.
   static AdSize get smartBannerLandscape {
     assert(defaultTargetPlatform == TargetPlatform.iOS);
-    return AdSize(width: -1, height: -3);
+    return AdSize(width: -1, height: 1);
+  }
+
+  static AdSize getAnchoredAdaptiveBannerAdSize(
+    Orientation orientation,
+    int width,
+  ) {
+    switch (orientation) {
+      case Orientation.portrait:
+        return getPortraitAnchoredAdaptiveBannerAdSize(width);
+      case Orientation.landscape:
+        return getLandscapeAnchoredAdaptiveBannerAdSize(width);
+    }
+  }
+
+  static AdSize getPortraitAnchoredAdaptiveBannerAdSize(int width) {
+    return AdSize(width: width, height: -1);
+  }
+
+  static AdSize getLandscapeAnchoredAdaptiveBannerAdSize(int width) {
+    return AdSize(width: width, height: -2);
   }
 
   @override

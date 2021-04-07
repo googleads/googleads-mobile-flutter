@@ -171,7 +171,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         new MethodChannel(
             messenger,
             "plugins.flutter.io/google_mobile_ads",
-            new StandardMethodCodec(new AdMessageCodec()));
+            new StandardMethodCodec(new AdMessageCodec(activity)));
     channel.setMethodCallHandler(this);
     instanceManager = new AdInstanceManager(activity, messenger);
     viewRegistry.registerViewFactory(

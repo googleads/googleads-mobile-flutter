@@ -15,6 +15,8 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.content.Context;
+
 import androidx.annotation.Nullable;
 import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
@@ -36,6 +38,12 @@ final class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_ADAPTER_STATUS = (byte) 136;
   private static final byte VALUE_INITIALIZATION_STATUS = (byte) 137;
   private static final byte VALUE_SERVER_SIDE_VERIFICATION_OPTIONS = (byte) 138;
+
+  private final Context context;
+
+  AdMessageCodec(Context context) {
+    this.context = context;
+  }
 
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
@@ -110,6 +118,7 @@ final class AdMessageCodec extends StandardMessageCodec {
     switch (type) {
       case VALUE_AD_SIZE:
         return new FlutterAdSize(
+            context,
             (Integer) readValueOfType(buffer.get(), buffer),
             (Integer) readValueOfType(buffer.get(), buffer));
       case VALUE_AD_REQUEST:
