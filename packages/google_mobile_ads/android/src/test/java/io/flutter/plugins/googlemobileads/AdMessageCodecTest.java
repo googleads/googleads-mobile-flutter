@@ -28,7 +28,7 @@ public class AdMessageCodecTest {
 
   @Test
   public void adMessageCodec_encodeAdapterInitializationState() {
-    final AdMessageCodec codec = new AdMessageCodec();
+    final AdMessageCodec codec = new AdMessageCodec(null);
     final ByteBuffer message =
         codec.encodeMessage(FlutterAdapterStatus.AdapterInitializationState.NOT_READY);
 
@@ -39,7 +39,7 @@ public class AdMessageCodecTest {
 
   @Test
   public void adMessageCodec_encodeAdapterStatus() {
-    final AdMessageCodec codec = new AdMessageCodec();
+    final AdMessageCodec codec = new AdMessageCodec(null);
     final ByteBuffer message =
         codec.encodeMessage(
             new FlutterAdapterStatus(
@@ -55,7 +55,7 @@ public class AdMessageCodecTest {
 
   @Test
   public void adMessageCodec_encodeInitializationStatus() {
-    final AdMessageCodec codec = new AdMessageCodec();
+    final AdMessageCodec codec = new AdMessageCodec(null);
     final ByteBuffer message =
         codec.encodeMessage(
             new FlutterInitializationStatus(
@@ -78,7 +78,7 @@ public class AdMessageCodecTest {
 
   @Test
   public void adMessageCodec_decodeInitializationStatus() {
-    AdMessageCodec codec = new AdMessageCodec();
+    AdMessageCodec codec = new AdMessageCodec(null);
     Map<String, String> targeting = new HashMap<>();
     targeting.put("testKey", "testValue");
 
@@ -106,7 +106,7 @@ public class AdMessageCodecTest {
 
   @Test
   public void adMessageCodec_decodeServerSideVerificationOptions() {
-    AdMessageCodec codec = new AdMessageCodec();
+    AdMessageCodec codec = new AdMessageCodec(null);
     FlutterServerSideVerificationOptions options =
         new FlutterServerSideVerificationOptions("user-id", "custom-data");
 

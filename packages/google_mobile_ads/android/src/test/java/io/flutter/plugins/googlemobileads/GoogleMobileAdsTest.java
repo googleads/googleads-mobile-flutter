@@ -64,7 +64,7 @@ public class GoogleMobileAdsTest {
             byteBufferCaptor.capture(),
             (BinaryMessenger.BinaryReply) isNull());
 
-    return new StandardMethodCodec(new AdMessageCodec())
+    return new StandardMethodCodec(new AdMessageCodec(null))
         .decodeMethodCall((ByteBuffer) byteBufferCaptor.getValue().position(0));
   }
 
@@ -80,7 +80,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
+            .setSize(new FlutterAdSize(null, 1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -316,15 +316,15 @@ public class GoogleMobileAdsTest {
 
   @Test
   public void adMessageCodec_encodeFlutterAdSize() {
-    final AdMessageCodec codec = new AdMessageCodec();
-    final ByteBuffer message = codec.encodeMessage(new FlutterAdSize(1, 2));
+    final AdMessageCodec codec = new AdMessageCodec(null);
+    final ByteBuffer message = codec.encodeMessage(new FlutterAdSize(null, 1, 2));
 
-    assertEquals(codec.decodeMessage((ByteBuffer) message.position(0)), new FlutterAdSize(1, 2));
+    assertEquals(codec.decodeMessage((ByteBuffer) message.position(0)), new FlutterAdSize(null, 1, 2));
   }
 
   @Test
   public void adMessageCodec_encodeFlutterAdRequest() {
-    final AdMessageCodec codec = new AdMessageCodec();
+    final AdMessageCodec codec = new AdMessageCodec(null);
     final ByteBuffer message =
         codec.encodeMessage(
             new FlutterAdRequest.Builder()
@@ -344,7 +344,7 @@ public class GoogleMobileAdsTest {
 
   @Test
   public void adMessageCodec_encodeFlutterPublisherAdRequest() {
-    final AdMessageCodec codec = new AdMessageCodec();
+    final AdMessageCodec codec = new AdMessageCodec(null);
     final ByteBuffer message =
         codec.encodeMessage(
             new FlutterPublisherAdRequest.Builder()
@@ -368,7 +368,7 @@ public class GoogleMobileAdsTest {
 
   @Test
   public void adMessageCodec_encodeFlutterRewardItem() {
-    final AdMessageCodec codec = new AdMessageCodec();
+    final AdMessageCodec codec = new AdMessageCodec(null);
     final ByteBuffer message =
         codec.encodeMessage(new FlutterRewardedAd.FlutterRewardItem(23, "coins"));
 
@@ -379,7 +379,7 @@ public class GoogleMobileAdsTest {
 
   @Test
   public void adMessageCodec_encodeFlutterLoadAdError() {
-    final AdMessageCodec codec = new AdMessageCodec();
+    final AdMessageCodec codec = new AdMessageCodec(null);
     final ByteBuffer message =
         codec.encodeMessage(new FlutterBannerAd.FlutterLoadAdError(1, "domain", "message"));
 
@@ -397,7 +397,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
+            .setSize(new FlutterAdSize(null, 1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -418,7 +418,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
+            .setSize(new FlutterAdSize(null, 1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -443,7 +443,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
+            .setSize(new FlutterAdSize(null, 1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -468,7 +468,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
+            .setSize(new FlutterAdSize(null, 1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -489,7 +489,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
+            .setSize(new FlutterAdSize(null, 1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -566,7 +566,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
+            .setSize(new FlutterAdSize(null, 1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -636,6 +636,4 @@ public class GoogleMobileAdsTest {
     testManager.trackAd(banner, 0);
     testManager.trackAd(banner, 0);
   }
-
-  public void
 }
