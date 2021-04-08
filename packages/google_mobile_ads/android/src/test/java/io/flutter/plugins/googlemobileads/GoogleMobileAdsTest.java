@@ -16,14 +16,14 @@ package io.flutter.plugins.googlemobileads;
 
 import static org.hamcrest.Matchers.hasEntry;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+//import static org.mockito.ArgumentMatchers.eq;
+//import static org.mockito.ArgumentMatchers.isNull;
+//import static org.mockito.Mockito.any;
+//import static org.mockito.Mockito.doReturn;
+//import static org.mockito.Mockito.mock;
+//import static org.mockito.Mockito.spy;
+//import static org.mockito.Mockito.verify;
+//import static org.mockito.Mockito.when;
 
 import android.app.Activity;
 import com.google.android.gms.ads.AdLoader;
@@ -46,10 +46,10 @@ import java.util.Map;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatcher;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
+//import org.mockito.ArgumentCaptor;
+//import org.mockito.ArgumentMatcher;
+//import org.mockito.ArgumentMatchers;
+//import org.mockito.Mockito;
 
 public class GoogleMobileAdsTest {
   private AdInstanceManager testManager;
