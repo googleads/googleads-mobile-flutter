@@ -493,7 +493,7 @@ class PublisherBannerAd extends AdWithView {
     required String adUnitId,
     required AdListener listener,
     required this.request,
-  })   : assert(sizes.isNotEmpty),
+  })  : assert(sizes.isNotEmpty),
         super(adUnitId: adUnitId, listener: listener);
 
   /// Targeting information used to fetch an [Ad].
