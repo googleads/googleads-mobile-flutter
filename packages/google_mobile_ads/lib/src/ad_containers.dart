@@ -212,24 +212,23 @@ class AdSize {
     return AdSize(width: -1, height: 1);
   }
 
+  /// Returns an [AdSize] with the given width and a Google-optimized height to create a banner ad.
+  ///
+  /// The size returned will have an aspect ratio similar to [banner], suitable
+  /// for anchoring near the top or bottom of your app. The height will never be
+  /// larger than 15% of the device's portrait height and never smaller than
+  /// 50px. This function always returns the same height for any width / device
+  /// combination.
   static AdSize getAnchoredAdaptiveBannerAdSize(
     Orientation orientation,
     int width,
   ) {
     switch (orientation) {
       case Orientation.portrait:
-        return getPortraitAnchoredAdaptiveBannerAdSize(width);
+        return AdSize(width: width, height: -1);
       case Orientation.landscape:
-        return getLandscapeAnchoredAdaptiveBannerAdSize(width);
+        return AdSize(width: width, height: -2);
     }
-  }
-
-  static AdSize getPortraitAnchoredAdaptiveBannerAdSize(int width) {
-    return AdSize(width: width, height: -1);
-  }
-
-  static AdSize getLandscapeAnchoredAdaptiveBannerAdSize(int width) {
-    return AdSize(width: width, height: -2);
   }
 
   @override

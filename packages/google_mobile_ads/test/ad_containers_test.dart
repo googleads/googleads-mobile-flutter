@@ -845,5 +845,16 @@ void main() {
       await banner.dispose();
       expect(banner.isLoaded(), completion(false));
     });
+
+    test('correct values for adaptive banner $AdSize', () {
+      expect(
+        AdSize.getAnchoredAdaptiveBannerAdSize(Orientation.portrait, 50),
+        AdSize(width: 50, height: -1),
+      );
+      expect(
+        AdSize.getAnchoredAdaptiveBannerAdSize(Orientation.landscape, 50),
+        AdSize(width: 50, height: -2),
+      );
+    });
   });
 }

@@ -35,8 +35,6 @@ android {
       api 'com.google.android.gms:play-services-ads:19.7.0'
       testImplementation 'junit:junit:4.12'
       testImplementation 'org.hamcrest:hamcrest:2.2'
-      //testImplementation 'org.mockito:mockito-inline:2.13.0'
-      //testImplementation 'org.mockito:mockito-core:2.13.0'
       testImplementation 'org.powermock:powermock-api-mockito:1.6.2'
       testImplementation 'org.powermock:powermock-module-junit4-rule-agent:1.6.2'
       testImplementation 'org.powermock:powermock-module-junit4-rule:1.6.2'

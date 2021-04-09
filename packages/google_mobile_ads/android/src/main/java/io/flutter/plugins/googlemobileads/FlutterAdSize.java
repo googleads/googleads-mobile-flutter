@@ -34,8 +34,14 @@ class FlutterAdSize {
       this.size = AdSize.SMART_BANNER;
     } else if (height == -1) {
       this.size = AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
+      if (this.size == AdSize.INVALID) {
+        throw new IllegalStateException("Banner height could not be determined from the provided context.");
+      }
     } else if (height == -2) {
       this.size = AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
+      if (this.size == AdSize.INVALID) {
+        throw new IllegalStateException("Banner height could not be determined from the provided context.");
+      }
     } else {
       this.size = new AdSize(width, height);
     }

@@ -214,7 +214,8 @@ class _MyAppState extends State<MyApp> {
               Container(
                 alignment: Alignment.bottomCenter,
                 child: BannerAdWidget(
-                  AdSize.getPortraitAnchoredAdaptiveBannerAdSize(
+                  AdSize.getAnchoredAdaptiveBannerAdSize(
+                    Orientation.portrait,
                     MediaQuery.of(context).size.width.truncate(),
                   ),
                 ),
