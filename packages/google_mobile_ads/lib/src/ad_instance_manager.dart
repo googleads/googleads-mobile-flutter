@@ -97,10 +97,10 @@ class AdInstanceManager {
         break;
       case 'onPaidEvent':
         assert(arguments['valueMicros'] != null &&
-            arguments['valueMicros'] is double);
+            arguments['valueMicros'] is num);
         ad.listener.onPaidEvent?.call(
           ad,
-          arguments['valueMicros'] / 1000000,
+          arguments['valueMicros'] / 1000000.0,
           arguments['precision'],
           arguments['currencyCode'],
         );

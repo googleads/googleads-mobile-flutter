@@ -10,13 +10,13 @@ public class FlutterPaidEventListener implements OnPaidEventListener {
     @NonNull private final FlutterAd ad;
 
     FlutterPaidEventListener(@NonNull AdInstanceManager manager, @NonNull FlutterAd ad) {
-        this.manager = manager;
-        this.ad = ad;
+      this.manager = manager;
+      this.ad = ad;
     }
 
     @Override
     public void onPaidEvent(AdValue adValue) {
-        FlutterAdValue value = new FlutterAdValue(adValue.getPrecisionType(), adValue.getCurrencyCode(), adValue.getValueMicros());
-        manager.onPaidEvent(ad, value);
+      FlutterAdValue value = new FlutterAdValue(adValue.getPrecisionType(), adValue.getCurrencyCode(), adValue.getValueMicros());
+      manager.onPaidEvent(ad, value);
     }
 }
