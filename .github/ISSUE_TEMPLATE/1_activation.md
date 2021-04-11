@@ -38,7 +38,7 @@ assignees: ''
 ```
 ```
 
-<!-- If possible, paste the output of running `flutter pub  get` here. -->
+<!-- If possible, paste the output of running `flutter pub get` here. -->
 
 ```
 ```
