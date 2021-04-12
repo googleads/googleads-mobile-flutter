@@ -1,6 +1,6 @@
 ---
 name: I have a problem with my Flutter application using `google_mobile_ads`.
-about: You are writing an application with `google_mobile_ads`. but the application is crashing
+about: You are writing an application with `google_mobile_ads`, but the application is crashing
   or throws an exception, a widget is buggy, or something looks wrong.
 title: ''
 labels: ''
