@@ -17,28 +17,30 @@ package io.flutter.plugins.googlemobileads;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.doubleclick.AppEventListener;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
+import com.google.android.gms.ads.admanager.AppEventListener;
 import io.flutter.plugin.platform.PlatformView;
 import java.util.List;
 
 /**
- * Wrapper around {@link com.google.android.gms.ads.doubleclick.PublisherAdView} for the Google
+ * Wrapper around {@link com.google.android.gms.ads.admanager.AdManagerAdView} for the Google
  * Mobile Ads Plugin.
  */
 class FlutterPublisherBannerAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final List<FlutterAdSize> sizes;
-  @Nullable FlutterPublisherAdRequest request;
-  @Nullable private PublisherAdView view;
+  @Nullable FlutterAdManagerAdRequest request;
+  @Nullable private AdManagerAdView view;
 
   static class Builder {
     @Nullable private AdInstanceManager manager;
     @Nullable private String adUnitId;
     @Nullable private List<FlutterAdSize> sizes;
-    @Nullable private FlutterPublisherAdRequest request;
+    @Nullable private FlutterAdManagerAdRequest request;
 
     public Builder setManager(@NonNull AdInstanceManager manager) {
       this.manager = manager;
@@ -55,7 +57,7 @@ class FlutterPublisherBannerAd extends FlutterAd implements PlatformView, Flutte
       return this;
     }
 
-    public Builder setRequest(@Nullable FlutterPublisherAdRequest request) {
+    public Builder setRequest(@Nullable FlutterAdManagerAdRequest request) {
       this.request = request;
       return this;
     }
@@ -93,7 +95,7 @@ class FlutterPublisherBannerAd extends FlutterAd implements PlatformView, Flutte
 
   @Override
   void load() {
-    view = new PublisherAdView(manager.activity);
+    view = new AdManagerAdView(manager.activity);
     view.setAdUnitId(adUnitId);
     view.setAppEventListener(
         new AppEventListener() {
@@ -109,12 +111,49 @@ class FlutterPublisherBannerAd extends FlutterAd implements PlatformView, Flutte
     }
     view.setAdSizes(allSizes);
 
+    view.setAdListener(new AdListener() {
+      @Override
+      public void onAdClosed() {
+        // TODO
+        super.onAdClosed();
+      }
+
+      @Override
+      public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+        // TODO
+        super.onAdFailedToLoad(loadAdError);
+      }
+
+      @Override
+      public void onAdOpened() {
+        // TODO
+        super.onAdOpened();
+      }
+
+      @Override
+      public void onAdLoaded() {
+        // TODO
+        super.onAdLoaded();
+      }
+
+      @Override
+      public void onAdClicked() {
+        // TODO
+        super.onAdClicked();
+      }
+
+      @Override
+      public void onAdImpression() {
+        // TODO
+        super.onAdImpression();
+      }
+    });
     view.setAdListener(new FlutterAdListener(manager, this));
 
     if (request != null) {
-      view.loadAd(request.asPublisherAdRequest());
+      view.loadAd(request.asAdManagerAdRequest());
     } else {
-      view.loadAd(new FlutterPublisherAdRequest.Builder().build().asPublisherAdRequest());
+      view.loadAd(new FlutterAdManagerAdRequest.Builder().build().asAdManagerAdRequest());
     }
   }
 

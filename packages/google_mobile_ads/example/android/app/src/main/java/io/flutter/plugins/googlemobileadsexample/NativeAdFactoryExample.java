@@ -17,8 +17,8 @@ package io.flutter.plugins.googlemobileadsexample;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.widget.TextView;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdView;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Map;
 
@@ -30,10 +30,10 @@ class NativeAdFactoryExample implements NativeAdFactory {
   }
 
   @Override
-  public UnifiedNativeAdView createNativeAd(
-      UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
-    final UnifiedNativeAdView adView =
-        (UnifiedNativeAdView) layoutInflater.inflate(R.layout.my_native_ad, null);
+  public NativeAdView createNativeAd(
+      NativeAd nativeAd, Map<String, Object> customOptions) {
+    final NativeAdView adView =
+        (NativeAdView) layoutInflater.inflate(R.layout.my_native_ad, null);
     final TextView headlineView = adView.findViewById(R.id.ad_headline);
     final TextView bodyView = adView.findViewById(R.id.ad_body);
 

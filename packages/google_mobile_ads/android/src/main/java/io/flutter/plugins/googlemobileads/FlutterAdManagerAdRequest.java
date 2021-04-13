@@ -17,15 +17,15 @@ package io.flutter.plugins.googlemobileads;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.ads.mediation.admob.AdMobAdapter;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Instantiates and serializes {@link com.google.android.gms.ads.doubleclick.PublisherAdRequest} for
+ * Instantiates and serializes {@link com.google.android.gms.ads.admanager.AdManagerAdRequest} for
  * the Google Mobile Ads Plugin.
  */
-class FlutterPublisherAdRequest {
+class FlutterAdManagerAdRequest {
   @Nullable private List<String> keywords;
   @Nullable private String contentUrl;
   @Nullable private Map<String, String> customTargeting;
@@ -65,8 +65,8 @@ class FlutterPublisherAdRequest {
       return this;
     }
 
-    FlutterPublisherAdRequest build() {
-      final FlutterPublisherAdRequest request = new FlutterPublisherAdRequest();
+    FlutterAdManagerAdRequest build() {
+      final FlutterAdManagerAdRequest request = new FlutterAdManagerAdRequest();
       request.keywords = keywords;
       request.contentUrl = contentUrl;
       request.customTargeting = customTargeting;
@@ -76,10 +76,10 @@ class FlutterPublisherAdRequest {
     }
   }
 
-  private FlutterPublisherAdRequest() {}
+  private FlutterAdManagerAdRequest() {}
 
-  PublisherAdRequest asPublisherAdRequest() {
-    final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+  AdManagerAdRequest asAdManagerAdRequest() {
+    final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
     if (keywords != null) {
       for (final String keyword : keywords) {
         builder.addKeyword(keyword);
@@ -136,9 +136,9 @@ class FlutterPublisherAdRequest {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof FlutterPublisherAdRequest)) return false;
+    if (!(o instanceof FlutterAdManagerAdRequest)) return false;
 
-    FlutterPublisherAdRequest request = (FlutterPublisherAdRequest) o;
+    FlutterAdManagerAdRequest request = (FlutterAdManagerAdRequest) o;
 
     return objectEquals(keywords, request.keywords)
         && objectEquals(contentUrl, request.contentUrl)

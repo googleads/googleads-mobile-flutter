@@ -36,10 +36,11 @@ class FlutterAdListener extends AdListener {
     manager.onAdFailedToLoad(ad, new FlutterAd.FlutterLoadAdError(loadAdError));
   }
 
-  @Override
-  public void onAdLeftApplication() {
-    manager.onApplicationExit(ad);
-  }
+  // TODO - delete this
+  // @Override
+  // public void onAdLeftApplication() {
+  //   manager.onApplicationExit(ad);
+  // }
 
   @Override
   public void onAdOpened() {

@@ -17,11 +17,15 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
+import com.google.android.gms.ads.admanager.AppEventListener;
 
 /**
- * Wrapper around {@link com.google.android.gms.ads.doubleclick.PublisherInterstitialAd} for the
+ * Wrapper around {@link com.google.android.gms.ads.admanager.AdManagerInterstitialAd} for the
  * Google Mobile Ads Plugin.
  */
 class FlutterPublisherInterstitialAd extends FlutterAd.FlutterOverlayAd {
@@ -29,8 +33,8 @@ class FlutterPublisherInterstitialAd extends FlutterAd.FlutterOverlayAd {
 
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
-  @Nullable private final FlutterPublisherAdRequest request;
-  @Nullable private PublisherInterstitialAd ad;
+  @Nullable private final FlutterAdManagerAdRequest request;
+  @Nullable private AdManagerInterstitialAd ad;
 
   /**
    * Constructs a `FlutterPublisherInterstitialAd`.
@@ -41,7 +45,7 @@ class FlutterPublisherInterstitialAd extends FlutterAd.FlutterOverlayAd {
   public FlutterPublisherInterstitialAd(
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
-      @Nullable FlutterPublisherAdRequest request) {
+      @Nullable FlutterAdManagerAdRequest request) {
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.request = request;
@@ -49,28 +53,60 @@ class FlutterPublisherInterstitialAd extends FlutterAd.FlutterOverlayAd {
 
   @Override
   void load() {
-    ad = createPublisherInterstitialAd();
-    ad.setAdUnitId(adUnitId);
-    ad.setAdListener(new FlutterAdListener(manager, this));
+    AdManagerInterstitialAd.load(manager.activity, adUnitId, request.asAdManagerAdRequest(),
+      new AdManagerInterstitialAdLoadCallback() {
+        @Override
+        public void onAdLoaded(
+          @NonNull AdManagerInterstitialAd adManagerInterstitialAd) {
+          FlutterPublisherInterstitialAd.this.ad = adManagerInterstitialAd;
+          manager.onAdLoaded(FlutterPublisherInterstitialAd.this);
+        }
 
-    if (request != null) {
-      ad.loadAd(request.asPublisherAdRequest());
-    } else {
-      ad.loadAd(new FlutterPublisherAdRequest.Builder().build().asPublisherAdRequest());
-    }
+        @Override
+        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+          // TODO - this
+          super.onAdFailedToLoad(loadAdError);
+        }
+      });
   }
 
   @Override
   public void show() {
-    if (ad == null || !ad.isLoaded()) {
+    if (ad == null) {
       Log.e(TAG, "The interstitial wasn't loaded yet.");
       return;
     }
-    ad.show();
-  }
+    ad.setFullScreenContentCallback(new FullScreenContentCallback() {
+      @Override
+      public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+        // TODO
+        super.onAdFailedToShowFullScreenContent(adError);
+      }
 
-  @VisibleForTesting
-  PublisherInterstitialAd createPublisherInterstitialAd() {
-    return new PublisherInterstitialAd(manager.activity);
+      @Override
+      public void onAdShowedFullScreenContent() {
+        // TODO
+        super.onAdShowedFullScreenContent();
+      }
+
+      @Override
+      public void onAdDismissedFullScreenContent() {
+        // TODO
+        super.onAdDismissedFullScreenContent();
+      }
+
+      @Override
+      public void onAdImpression() {
+        // TODO
+        super.onAdImpression();
+      }
+    });
+    ad.setAppEventListener(new AppEventListener() {
+      @Override
+      public void onAppEvent(@NonNull String s, @NonNull String s1) {
+        // TODO
+      }
+    });
+    ad.show(manager.activity);
   }
 }

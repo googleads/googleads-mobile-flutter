@@ -77,7 +77,8 @@ class FlutterAdRequest {
     }
     if (testDevices != null) {
       for (final String testDevice : testDevices) {
-        builder.addTestDevice(testDevice);
+        // TODO - Delete testDevices
+        // builder.addTestDevice(testDevice);
       }
     }
     if (nonPersonalizedAds != null && nonPersonalizedAds) {
