@@ -15,6 +15,10 @@ assignees: ''
      the Flutter's team guide to filing a bug first: https://flutter.dev/docs/resources/bug-reports
 -->
 
+## Plugin Version
+
+<!-- Please tell us the version of the plugin used in your app. -->
+
 ## Steps to Reproduce
 
 <!-- Please tell us exactly how to reproduce the problem you are running into. -->
@@ -38,7 +42,7 @@ assignees: ''
 ```
 ```
 
-<!-- If possible, paste the output of running `flutter pub get` here. -->
+<!-- If possible, paste the output of running `flutter pub get -v --suppress-analytics` here. -->
 
 ```
 ```

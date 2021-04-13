@@ -15,6 +15,10 @@ assignees: ''
      the Flutter's team guide to filing a bug first: https://flutter.dev/docs/resources/bug-reports
 -->
 
+## Plugin Version
+
+<!-- Please tell us the version of the plugin used in your app. -->
+
 ## Steps to Reproduce
 
 <!-- You must include full steps to reproduce so that we can reproduce the problem. -->
