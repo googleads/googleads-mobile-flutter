@@ -2,15 +2,14 @@
 name: "⚠️ Bug Report"
 about: Report a bug with existing GoogleMobileAds Flutter features.
 title: "\U0001F41B Your issue title here"
-labels: 'Needs Attention, type: bug'
+labels: ''
 assignees: ''
 
 ---
 
 ## Bug report
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**Desription of what the bug is.
 
 ### Steps to reproduce
 
