@@ -17,7 +17,6 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
@@ -32,6 +31,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
+  @NonNull private final FlutterAdLoader flutterAdLoader;
   @Nullable private final FlutterAdRequest request;
   @Nullable private final FlutterAdManagerAdRequest adManagerRequest;
   @Nullable private final FlutterServerSideVerificationOptions serverSideVerificationOptions;
@@ -74,12 +74,14 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdRequest request,
-      @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions) {
+      @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions,
+      @NonNull FlutterAdLoader flutterAdLoader) {
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.request = request;
     this.adManagerRequest = null;
     this.serverSideVerificationOptions = serverSideVerificationOptions;
+    this.flutterAdLoader = flutterAdLoader;
   }
 
   /** Constructor for Ad Manager Ad request. */
@@ -87,12 +89,14 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdManagerAdRequest adManagerRequest,
-      @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions) {
+      @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions,
+      @NonNull FlutterAdLoader flutterAdLoader) {
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.adManagerRequest = adManagerRequest;
     this.request = null;
     this.serverSideVerificationOptions = serverSideVerificationOptions;
+    this.flutterAdLoader = flutterAdLoader;
   }
 
   @Override
@@ -113,14 +117,16 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
         @Override
         public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
           // TODO - callback
+          manager.onAdFailedToLoad(FlutterRewardedAd.this, new FlutterLoadAdError(loadAdError));
           super.onAdFailedToLoad(loadAdError);
         }
       };
 
     if (request != null) {
-      RewardedAd.load(manager.activity, adUnitId, request.asAdRequest(), adLoadCallback);
+      flutterAdLoader.loadRewarded(
+        manager.activity, adUnitId, request.asAdRequest(), adLoadCallback);
     } else if (adManagerRequest != null) {
-      RewardedAd.load(
+      flutterAdLoader.loadAdManagerRewarded(
         manager.activity, adUnitId, adManagerRequest.asAdManagerAdRequest(), adLoadCallback);
     } else {
       Log.e(TAG, "A null or invalid ad request was provided.");

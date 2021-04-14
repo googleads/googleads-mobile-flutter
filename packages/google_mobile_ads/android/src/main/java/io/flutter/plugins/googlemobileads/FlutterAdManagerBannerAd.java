@@ -29,7 +29,7 @@ import java.util.List;
  * Wrapper around {@link com.google.android.gms.ads.admanager.AdManagerAdView} for the Google
  * Mobile Ads Plugin.
  */
-class FlutterPublisherBannerAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
+class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final List<FlutterAdSize> sizes;
@@ -62,7 +62,7 @@ class FlutterPublisherBannerAd extends FlutterAd implements PlatformView, Flutte
       return this;
     }
 
-    FlutterPublisherBannerAd build() {
+    FlutterAdManagerBannerAd build() {
       if (manager == null) {
         throw new IllegalStateException("AdInstanceManager cannot not be null.");
       } else if (adUnitId == null) {
@@ -71,20 +71,20 @@ class FlutterPublisherBannerAd extends FlutterAd implements PlatformView, Flutte
         throw new IllegalStateException("Sizes cannot not be null or empty.");
       }
 
-      final FlutterPublisherBannerAd bannerAd =
-          new FlutterPublisherBannerAd(manager, adUnitId, sizes);
+      final FlutterAdManagerBannerAd bannerAd =
+          new FlutterAdManagerBannerAd(manager, adUnitId, sizes);
       bannerAd.request = request;
       return bannerAd;
     }
   }
 
   /**
-   * Constructs a `FlutterPublisherBannerAd`.
+   * Constructs a `FlutterAdManagerBannerAd`.
    *
    * <p>Call `load()` to instantiate the `AdView` and load the `AdRequest`. `getView()` will return
    * null only until `load` is called.
    */
-  private FlutterPublisherBannerAd(
+  private FlutterAdManagerBannerAd(
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull List<FlutterAdSize> sizes) {
@@ -101,7 +101,7 @@ class FlutterPublisherBannerAd extends FlutterAd implements PlatformView, Flutte
         new AppEventListener() {
           @Override
           public void onAppEvent(String name, String data) {
-            manager.onAppEvent(FlutterPublisherBannerAd.this, name, data);
+            manager.onAppEvent(FlutterAdManagerBannerAd.this, name, data);
           }
         });
 

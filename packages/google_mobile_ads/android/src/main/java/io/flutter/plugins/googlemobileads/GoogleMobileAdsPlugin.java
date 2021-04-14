@@ -281,7 +281,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 .setAdUnitId(call.<String>argument("adUnitId"))
                 .setAdFactory(factory)
                 .setRequest(call.<FlutterAdRequest>argument("request"))
-                .setPublisherRequest(call.<FlutterAdManagerAdRequest>argument("publisherRequest"))
+                .setAdManagerRequest(call.<FlutterAdManagerAdRequest>argument("publisherRequest"))
                 .setCustomOptions(call.<Map<String, Object>>argument("customOptions"))
                 .build();
         instanceManager.trackAd(nativeAd, call.<Integer>argument("adId"));
@@ -302,7 +302,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
       case "loadRewardedAd":
         final String adUnitId = requireNonNull(call.<String>argument("adUnitId"));
         final FlutterAdRequest request = call.argument("request");
-        final FlutterAdManagerAdRequest publisherRequest = call.argument("publisherRequest");
+        final FlutterAdManagerAdRequest adManagerRequest = call.argument("publisherRequest");
         final FlutterServerSideVerificationOptions serverSideVerificationOptions =
             call.argument("serverSideVerificationOptions");
 
@@ -313,14 +313,16 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   adUnitId,
                   request,
-                  serverSideVerificationOptions);
-        } else if (publisherRequest != null) {
+                  serverSideVerificationOptions,
+                  new FlutterAdLoader());
+        } else if (adManagerRequest != null) {
           rewardedAd =
               new FlutterRewardedAd(
                   requireNonNull(instanceManager),
                   adUnitId,
-                  publisherRequest,
-                  serverSideVerificationOptions);
+                  adManagerRequest,
+                  serverSideVerificationOptions,
+                  new FlutterAdLoader());
         } else {
           result.error("InvalidRequest", "A null or invalid ad request was provided.", null);
           break;
@@ -331,26 +333,27 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         result.success(null);
         break;
       case "loadPublisherBannerAd":
-        final FlutterPublisherBannerAd publisherBannerAd =
-            new FlutterPublisherBannerAd.Builder()
+        final FlutterAdManagerBannerAd adManagerBannerAd =
+            new FlutterAdManagerBannerAd.Builder()
                 .setManager(instanceManager)
                 .setAdUnitId(call.<String>argument("adUnitId"))
                 .setSizes(call.<List<FlutterAdSize>>argument("sizes"))
                 .setRequest(call.<FlutterAdManagerAdRequest>argument("request"))
                 .build();
-        instanceManager.trackAd(publisherBannerAd, call.<Integer>argument("adId"));
-        publisherBannerAd.load();
+        instanceManager.trackAd(adManagerBannerAd, call.<Integer>argument("adId"));
+        adManagerBannerAd.load();
         result.success(null);
         break;
       case "loadPublisherInterstitialAd":
-        final FlutterPublisherInterstitialAd publisherInterstitialAd =
-            new FlutterPublisherInterstitialAd(
+        final FlutterAdManagerInterstitialAd adManagerInterstitialAd =
+            new FlutterAdManagerInterstitialAd(
                 requireNonNull(instanceManager),
                 requireNonNull(call.<String>argument("adUnitId")),
-                call.<FlutterAdManagerAdRequest>argument("request"));
+                call.<FlutterAdManagerAdRequest>argument("request"),
+                new FlutterAdLoader());
         instanceManager.trackAd(
-            publisherInterstitialAd, requireNonNull(call.<Integer>argument("adId")));
-        publisherInterstitialAd.load();
+          adManagerInterstitialAd, requireNonNull(call.<Integer>argument("adId")));
+        adManagerInterstitialAd.load();
         result.success(null);
         break;
       case "disposeAd":

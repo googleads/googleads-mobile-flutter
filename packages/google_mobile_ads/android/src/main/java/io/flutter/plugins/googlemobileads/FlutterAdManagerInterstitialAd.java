@@ -28,43 +28,48 @@ import com.google.android.gms.ads.admanager.AppEventListener;
  * Wrapper around {@link com.google.android.gms.ads.admanager.AdManagerInterstitialAd} for the
  * Google Mobile Ads Plugin.
  */
-class FlutterPublisherInterstitialAd extends FlutterAd.FlutterOverlayAd {
+class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
   private static final String TAG = "FLTPubInterstitialAd";
 
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @Nullable private final FlutterAdManagerAdRequest request;
   @Nullable private AdManagerInterstitialAd ad;
+  @NonNull private FlutterAdLoader flutterAdLoader;
 
   /**
-   * Constructs a `FlutterPublisherInterstitialAd`.
+   * Constructs a `FlutterAdManagerInterstitialAd`.
    *
    * <p>Call `load()` to instantiate the `AdView` and load the `AdRequest`. `getView()` will return
    * null only until `load` is called.
    */
-  public FlutterPublisherInterstitialAd(
+  public FlutterAdManagerInterstitialAd(
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
-      @Nullable FlutterAdManagerAdRequest request) {
+      @Nullable FlutterAdManagerAdRequest request,
+      @NonNull FlutterAdLoader flutterAdLoader) {
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.request = request;
+    this.flutterAdLoader = flutterAdLoader;
   }
 
   @Override
   void load() {
-    AdManagerInterstitialAd.load(manager.activity, adUnitId, request.asAdManagerAdRequest(),
+    flutterAdLoader.loadAdManagerInterstitial(
+      manager.activity, adUnitId, request.asAdManagerAdRequest(),
       new AdManagerInterstitialAdLoadCallback() {
         @Override
         public void onAdLoaded(
           @NonNull AdManagerInterstitialAd adManagerInterstitialAd) {
-          FlutterPublisherInterstitialAd.this.ad = adManagerInterstitialAd;
-          manager.onAdLoaded(FlutterPublisherInterstitialAd.this);
+          FlutterAdManagerInterstitialAd.this.ad = adManagerInterstitialAd;
+          manager.onAdLoaded(FlutterAdManagerInterstitialAd.this);
         }
 
         @Override
         public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-          // TODO - this
+          manager.onAdFailedToLoad(
+            FlutterAdManagerInterstitialAd.this, new FlutterLoadAdError(loadAdError));
           super.onAdFailedToLoad(loadAdError);
         }
       });

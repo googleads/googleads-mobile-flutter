@@ -1,0 +1,137 @@
+package io.flutter.plugins.googlemobileads;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import android.app.Activity;
+import android.content.Context;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
+import com.google.android.gms.ads.nativead.NativeAdOptions;
+import com.google.android.gms.ads.rewarded.OnAdMetadataChangedListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions;
+import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
+import io.flutter.plugins.googlemobileads.FlutterRewardedAd.FlutterRewardItem;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentMatchers;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+public class FlutterNativeAdTest {
+
+  private AdInstanceManager testManager;
+  private final FlutterAdRequest request = new FlutterAdRequest.Builder().build();
+  private static BinaryMessenger mockMessenger;
+
+  @Before
+  public void setup() {
+    mockMessenger = mock(BinaryMessenger.class);
+    testManager = new AdInstanceManager(mock(Activity.class), mockMessenger);
+  }
+
+  @Test
+  public void loadNativeAdWithAdManagerAdRequest() {
+    final FlutterAdManagerAdRequest mockFlutterRequest = mock(FlutterAdManagerAdRequest.class);
+    final AdManagerAdRequest mockRequest = mock(AdManagerAdRequest.class);
+    when(mockFlutterRequest.asAdManagerAdRequest()).thenReturn(mockRequest);
+    FlutterAdLoader mockLoader = mock(FlutterAdLoader.class);
+    final FlutterNativeAd nativeAd =
+      new FlutterNativeAd(
+        testManager,
+        "testId",
+        mock(GoogleMobileAdsPlugin.NativeAdFactory.class),
+        mockFlutterRequest,
+        mockLoader);
+
+    nativeAd.load();
+    verify(mockLoader).loadAdManagerNativeAd(
+      eq(testManager.activity),
+      eq("testId"),
+      any(OnNativeAdLoadedListener.class),
+      any(NativeAdOptions.class),
+      any(AdListener.class),
+      eq(mockRequest));
+  }
+
+  @Test
+  public void loadNativeAdWithAdRequest() {
+    final FlutterAdRequest mockFlutterRequest = mock(FlutterAdRequest.class);
+    final AdRequest mockRequest = mock(AdRequest.class);
+    when(mockFlutterRequest.asAdRequest()).thenReturn(mockRequest);
+    FlutterAdLoader mockLoader = mock(FlutterAdLoader.class);
+    final FlutterNativeAd nativeAd =
+      new FlutterNativeAd(
+        testManager,
+        "testId",
+        mock(GoogleMobileAdsPlugin.NativeAdFactory.class),
+        mockFlutterRequest,
+        mockLoader);
+
+    nativeAd.load();
+    verify(mockLoader).loadNativeAd(
+      eq(testManager.activity),
+      eq("testId"),
+      any(OnNativeAdLoadedListener.class),
+      any(NativeAdOptions.class),
+      any(AdListener.class),
+      eq(mockRequest));
+  }
+
+
+  @Test(expected = IllegalStateException.class)
+  public void nativeAdBuilderNullManager() {
+    new FlutterNativeAd.Builder()
+      .setManager(null)
+      .setAdUnitId("testId")
+      .setAdFactory(mock(GoogleMobileAdsPlugin.NativeAdFactory.class))
+      .setRequest(request)
+      .build();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void nativeAdBuilderNullAdUnitId() {
+    new FlutterNativeAd.Builder()
+      .setManager(testManager)
+      .setAdUnitId(null)
+      .setAdFactory(mock(GoogleMobileAdsPlugin.NativeAdFactory.class))
+      .setRequest(request)
+      .build();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void nativeAdBuilderNullAdFactory() {
+    new FlutterNativeAd.Builder()
+      .setManager(testManager)
+      .setAdUnitId("testId")
+      .setAdFactory(null)
+      .setRequest(request)
+      .build();
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void nativeAdBuilderNullRequest() {
+    new FlutterNativeAd.Builder()
+      .setManager(testManager)
+      .setAdUnitId("testId")
+      .setAdFactory(mock(GoogleMobileAdsPlugin.NativeAdFactory.class))
+      .build();
+  }
+}
