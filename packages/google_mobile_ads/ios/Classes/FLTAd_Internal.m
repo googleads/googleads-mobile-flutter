@@ -429,7 +429,10 @@
 }
 
 - (void)adLoader:(GADAdLoader *)adLoader didReceiveUnifiedNativeAd:(GADUnifiedNativeAd *)nativeAd {
-  _view = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
+  // Use Nil instead of Null to fix crash with Swift integrations.
+  NSDictionary<NSString *, id> *customOptions =
+      [[NSNull null] isEqual:_customOptions] ? nil : _customOptions;
+  _view = [_nativeAdFactory createNativeAd:nativeAd customOptions:customOptions];
   nativeAd.delegate = self;
   [_manager onAdLoaded:self];
 }
