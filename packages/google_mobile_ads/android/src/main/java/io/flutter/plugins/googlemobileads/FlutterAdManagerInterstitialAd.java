@@ -63,6 +63,12 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
         public void onAdLoaded(
           @NonNull AdManagerInterstitialAd adManagerInterstitialAd) {
           FlutterAdManagerInterstitialAd.this.ad = adManagerInterstitialAd;
+          ad.setAppEventListener(new AppEventListener() {
+            @Override
+            public void onAppEvent(@NonNull String name, @NonNull String data) {
+              manager.onAppEvent(FlutterAdManagerInterstitialAd.this, name, data);
+            }
+          });
           manager.onAdLoaded(FlutterAdManagerInterstitialAd.this);
         }
 
@@ -82,12 +88,6 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
       return;
     }
     ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, this));
-    ad.setAppEventListener(new AppEventListener() {
-      @Override
-      public void onAppEvent(@NonNull String s, @NonNull String s1) {
-        // TODO
-      }
-    });
     ad.show(manager.activity);
   }
 }

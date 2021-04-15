@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 
 import android.app.Activity;
 import android.content.Context;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
@@ -37,29 +38,31 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+/** Tests for {@link FlutterInterstitialAd}. */
 public class FlutterInterstitialAdTest {
 
-  private AdInstanceManager testManager;
-  private final FlutterAdRequest request = new FlutterAdRequest.Builder().build();
-  private static BinaryMessenger mockMessenger;
+  private AdInstanceManager mockManager;
+  private FlutterAdLoader mockFlutterAdLoader;
+  private AdRequest mockAdRequest;
+
+  // The system under test.
+  private FlutterInterstitialAd flutterInterstitialAd;
+
 
   @Before
   public void setup() {
-    mockMessenger = mock(BinaryMessenger.class);
-    testManager = new AdInstanceManager(mock(Activity.class), mockMessenger);
+    mockManager = spy(new AdInstanceManager(mock(Activity.class), mock(BinaryMessenger.class)));
+    final FlutterAdRequest mockFlutterRequest = mock(FlutterAdRequest.class);
+    mockAdRequest = mock(AdRequest.class);
+    mockFlutterAdLoader = mock(FlutterAdLoader.class);
+    when(mockFlutterRequest.asAdRequest()).thenReturn(mockAdRequest);
+
+    flutterInterstitialAd = new FlutterInterstitialAd(
+      mockManager, "testId", mockFlutterRequest, mockFlutterAdLoader);
   }
 
   @Test
   public void loadInterstitialAd_failedToLoad() {
-    AdInstanceManager mockManager = spy(testManager);
-    final FlutterAdRequest mockFlutterRequest = mock(FlutterAdRequest.class);
-    final AdRequest mockRequest = mock(AdRequest.class);
-    final FlutterAdLoader mockFlutterAdLoader = mock(FlutterAdLoader.class);
-    when(mockFlutterRequest.asAdRequest()).thenReturn(mockRequest);
-
-    final FlutterInterstitialAd interstitialAd = new FlutterInterstitialAd(
-      mockManager, "testId", mockFlutterRequest, mockFlutterAdLoader);
-
     final LoadAdError loadAdError = new LoadAdError(1, "2", "3", null, null);
     doAnswer(new Answer() {
       @Override
@@ -76,29 +79,20 @@ public class FlutterInterstitialAdTest {
         any(AdRequest.class),
         any(InterstitialAdLoadCallback.class));
 
-    interstitialAd.load();
+    flutterInterstitialAd.load();
 
     verify(mockFlutterAdLoader).loadInterstitial(
       eq(mockManager.activity),
       eq("testId"),
-      eq(mockRequest),
+      eq(mockAdRequest),
       any(InterstitialAdLoadCallback.class));
 
     verify(mockManager)
-      .onAdFailedToLoad(eq(interstitialAd), eq(new FlutterLoadAdError(loadAdError)));
+      .onAdFailedToLoad(eq(flutterInterstitialAd), eq(new FlutterLoadAdError(loadAdError)));
   }
 
   @Test
   public void loadInterstitialAd_showSuccess() {
-    AdInstanceManager mockManager = spy(testManager);
-    final FlutterAdRequest mockFlutterRequest = mock(FlutterAdRequest.class);
-    final AdRequest mockRequest = mock(AdRequest.class);
-    final FlutterAdLoader mockFlutterAdLoader = mock(FlutterAdLoader.class);
-    when(mockFlutterRequest.asAdRequest()).thenReturn(mockRequest);
-
-    final FlutterInterstitialAd interstitialAd = new FlutterInterstitialAd(
-      mockManager, "testId", mockFlutterRequest, mockFlutterAdLoader);
-
     final InterstitialAd mockAdManagerAd = mock(InterstitialAd.class);
     doAnswer(new Answer() {
       @Override
@@ -115,30 +109,69 @@ public class FlutterInterstitialAdTest {
         any(AdRequest.class),
         any(InterstitialAdLoadCallback.class));
 
-    interstitialAd.load();
+    flutterInterstitialAd.load();
 
     verify(mockFlutterAdLoader).loadInterstitial(
-      eq(testManager.activity),
+      eq(mockManager.activity),
       eq("testId"),
-      eq(mockRequest),
+      eq(mockAdRequest),
       any(InterstitialAdLoadCallback.class));
 
-    verify(mockManager).onAdLoaded(interstitialAd);
+    verify(mockManager).onAdLoaded(flutterInterstitialAd);
 
     doAnswer(new Answer() {
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {
         FullScreenContentCallback callback = invocation.getArgument(0);
         callback.onAdShowedFullScreenContent();
+        callback.onAdImpression();
+        callback.onAdDismissedFullScreenContent();
         return null;
       }
     }).when(mockAdManagerAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
 
-    interstitialAd.show();
+    flutterInterstitialAd.show();
     verify(mockAdManagerAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
-    verify(mockAdManagerAd).show(testManager.activity);
-    // TODO - show callback.
+    verify(mockAdManagerAd).show(eq(mockManager.activity));
+    verify(mockManager).onAdShowedFullScreenContent(eq(flutterInterstitialAd));
+    verify(mockManager).onAdDismissedFullScreenContent(eq(flutterInterstitialAd));
+    verify(mockManager).onAdImpression(eq(flutterInterstitialAd));
   }
 
-  // TODO - other listener tests.
+  @Test
+  public void loadInterstitialAd_showFailure() {
+    final InterstitialAd mockAdManagerAd = mock(InterstitialAd.class);
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        InterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+        // Pass back null for ad
+        adLoadCallback.onAdLoaded(mockAdManagerAd);
+        return null;
+      }
+    }).when(mockFlutterAdLoader)
+      .loadInterstitial(
+        any(Context.class),
+        anyString(),
+        any(AdRequest.class),
+        any(InterstitialAdLoadCallback.class));
+
+    flutterInterstitialAd.load();
+    final AdError adError = new AdError(1, "2", "3");
+
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        FullScreenContentCallback callback = invocation.getArgument(0);
+        callback.onAdFailedToShowFullScreenContent(adError);
+        return null;
+      }
+    }).when(mockAdManagerAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
+
+    flutterInterstitialAd.show();
+    verify(mockManager)
+      .onFailedToShowFullScreenContent(
+        eq(flutterInterstitialAd),
+        eq(adError));
+  }
 }
