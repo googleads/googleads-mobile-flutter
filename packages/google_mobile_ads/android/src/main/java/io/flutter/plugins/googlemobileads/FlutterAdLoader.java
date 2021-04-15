@@ -15,7 +15,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
 /**
- * A wrapper around static load methods in GMA.
+ * A wrapper around load methods in GMA.
  * This exists mainly to make the android code more testable.
  */
 public class FlutterAdLoader {

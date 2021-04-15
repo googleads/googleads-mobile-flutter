@@ -17,6 +17,7 @@ package io.flutter.plugins.googlemobileads;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
@@ -79,9 +80,9 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
 
   @Override
   void load() {
-    view = new AdView(manager.activity);
+    view = makeAdView();
     view.setAdUnitId(adUnitId);
-    view.setAdSize(size.size);
+    view.setAdSize(size.getAdSize());
     view.setAdListener(new FlutterBannerAdListener(manager, this));
 
     if (request != null) {
@@ -110,5 +111,10 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
       view.destroy();
       view = null;
     }
+  }
+
+  @VisibleForTesting
+  protected AdView makeAdView() {
+    return new AdView(manager.activity);
   }
 }

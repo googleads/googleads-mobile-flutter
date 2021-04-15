@@ -35,7 +35,7 @@ android {
       api 'com.google.android.gms:play-services-ads:20.0.0'
       testImplementation 'junit:junit:4.12'
       testImplementation 'org.hamcrest:hamcrest:2.2'
-      testImplementation 'org.mockito:mockito-inline:2.13.0'
+      testImplementation 'org.mockito:mockito-inline:3.9.0'
     }
 }
 

@@ -17,6 +17,7 @@ package io.flutter.plugins.googlemobileads;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.LoadAdError;
@@ -96,7 +97,7 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
 
   @Override
   void load() {
-    view = new AdManagerAdView(manager.activity);
+    view = makeAdManagerAdView();
     view.setAdUnitId(adUnitId);
     view.setAppEventListener(
         new AppEventListener() {
@@ -108,7 +109,7 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
 
     final AdSize[] allSizes = new AdSize[sizes.size()];
     for (int i = 0; i < sizes.size(); i++) {
-      allSizes[i] = sizes.get(i).size;
+      allSizes[i] = sizes.get(i).getAdSize();
     }
     view.setAdSizes(allSizes);
     view.setAdListener(new FlutterBannerAdListener(manager, this));
@@ -139,5 +140,10 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
       view.destroy();
       view = null;
     }
+  }
+
+  @VisibleForTesting
+  protected AdManagerAdView makeAdManagerAdView() {
+    return new AdManagerAdView(manager.activity);
   }
 }
