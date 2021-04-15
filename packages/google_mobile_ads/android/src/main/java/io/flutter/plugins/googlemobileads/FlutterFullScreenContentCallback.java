@@ -11,50 +11,36 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.NonNull;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.FullScreenContentCallback;
 
-class FlutterAdListener extends AdListener {
+class FlutterFullScreenContentCallback extends FullScreenContentCallback {
+
   @NonNull protected final AdInstanceManager manager;
   @NonNull protected final FlutterAd ad;
 
-  FlutterAdListener(@NonNull AdInstanceManager manager, @NonNull FlutterAd ad) {
+  public FlutterFullScreenContentCallback(AdInstanceManager manager, FlutterAd ad) {
     this.manager = manager;
     this.ad = ad;
   }
 
   @Override
-  public void onAdClosed() {
-    manager.onAdClosed(ad);
+  public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+    manager.onFailedToShowFullScreenContent(ad, adError);
   }
 
   @Override
-  public void onAdFailedToLoad(LoadAdError loadAdError) {
-    manager.onAdFailedToLoad(ad, new FlutterAd.FlutterLoadAdError(loadAdError));
+  public void onAdShowedFullScreenContent() {
+    manager.onAdShowedFullScreenContent(ad);
   }
 
   @Override
-  public void onAdOpened() {
-    manager.onAdOpened(ad);
-  }
-
-  @Override
-  public void onAdLoaded() {
-    manager.onAdLoaded(ad);
-  }
-}
-
-/**
- * Ad listener for banner ads.
- * Does not override onAdClicked(), since that is only for native ads.
- */
-class FlutterBannerAdListener extends FlutterAdListener {
-
-  FlutterBannerAdListener(@NonNull AdInstanceManager manager, @NonNull FlutterAd ad) {
-    super(manager, ad);
+  public void onAdDismissedFullScreenContent() {
+    manager.onAdDismissedFullScreenContent(ad);
   }
 
   @Override

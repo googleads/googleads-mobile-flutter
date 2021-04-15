@@ -58,7 +58,7 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
         throw new IllegalStateException("AdInstanceManager cannot not be null.");
       } else if (adUnitId == null) {
         throw new IllegalStateException("AdUnitId cannot not be null.");
-      } else if (request != null) {
+      } else if (request == null) {
         throw new IllegalStateException("AdRequest cannot not be null.");
       }
       return new FlutterInterstitialAd(manager, adUnitId, request, new FlutterAdLoader());
@@ -107,31 +107,7 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
       Log.e(TAG, "The interstitial wasn't loaded yet.");
       return;
     }
-    ad.setFullScreenContentCallback(new FullScreenContentCallback() {
-      @Override
-      public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-        // TODO - callback
-        super.onAdFailedToShowFullScreenContent(adError);
-      }
-
-      @Override
-      public void onAdShowedFullScreenContent() {
-        // TODO - callback
-        super.onAdShowedFullScreenContent();
-      }
-
-      @Override
-      public void onAdDismissedFullScreenContent() {
-        // TODO - callback
-        super.onAdDismissedFullScreenContent();
-      }
-
-      @Override
-      public void onAdImpression() {
-        // TODO - callback
-        super.onAdImpression();
-      }
-    });
+    ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, this));
     ad.show(manager.activity);
   }
 }

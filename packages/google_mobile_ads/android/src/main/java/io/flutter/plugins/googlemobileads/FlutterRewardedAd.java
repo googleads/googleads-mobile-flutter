@@ -116,9 +116,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
         @Override
         public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-          // TODO - callback
           manager.onAdFailedToLoad(FlutterRewardedAd.this, new FlutterLoadAdError(loadAdError));
-          super.onAdFailedToLoad(loadAdError);
         }
       };
 
@@ -140,32 +138,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       return;
     }
 
-    rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
-      @Override
-      public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-        // TODO - callback
-        super.onAdFailedToShowFullScreenContent(adError);
-      }
-
-      @Override
-      public void onAdShowedFullScreenContent() {
-        // TODO - callback
-        super.onAdShowedFullScreenContent();
-      }
-
-      @Override
-      public void onAdDismissedFullScreenContent() {
-        // TODO - callback
-        super.onAdDismissedFullScreenContent();
-      }
-
-      @Override
-      public void onAdImpression() {
-        // TODO - callback
-        super.onAdImpression();
-      }
-    });
-
+    rewardedAd.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, this));
     rewardedAd.setOnAdMetadataChangedListener(new OnAdMetadataChangedListener() {
       @Override
       public void onAdMetadataChanged() {

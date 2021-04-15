@@ -17,6 +17,7 @@ package io.flutter.plugins.googlemobileads;
 import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.gms.ads.AdError;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.StandardMethodCodec;
@@ -116,6 +117,14 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
+  void onAdImpression(@NonNull FlutterAd ad) {
+    // TODO - this needs to be handled in dart.
+    Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onAdImpression");
+    channel.invokeMethod("onAdEvent", arguments);
+  }
+
   void onNativeAdClicked(@NonNull FlutterNativeAd ad) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
@@ -137,13 +146,6 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
-  void onApplicationExit(@NonNull FlutterAd ad) {
-    Map<Object, Object> arguments = new HashMap<>();
-    arguments.put("adId", adIdFor(ad));
-    arguments.put("eventName", "onApplicationExit");
-    channel.invokeMethod("onAdEvent", arguments);
-  }
-
   void onAdClosed(@NonNull FlutterAd ad) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
@@ -160,6 +162,34 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
+  // TODO - update dart to handle this.
+  void onFailedToShowFullScreenContent(@NonNull FlutterAd ad, AdError error) {
+    final Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onFailedToShowFullScreenContent");
+    arguments.put("code", error.getCode());
+    arguments.put("domain", error.getDomain());
+    arguments.put("message", error.getMessage());
+
+    channel.invokeMethod("onAdEvent", arguments);
+  }
+
+  // TODO - update dart to handle this.
+  void onAdShowedFullScreenContent(@NonNull FlutterAd ad) {
+    final Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onAdShowedFullScreenContent");
+    channel.invokeMethod("onAdEvent", arguments);
+  }
+
+  // TODO - update dart to handle this.
+  void onAdDismissedFullScreenContent(@NonNull FlutterAd ad) {
+    final Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onAdDismissedFullScreenContent");
+    channel.invokeMethod("onAdEvent", arguments);
+  }
+
   boolean showAdWithId(int id) {
     final FlutterAd.FlutterOverlayAd ad = (FlutterAd.FlutterOverlayAd) adForId(id);
 
@@ -170,4 +200,6 @@ class AdInstanceManager {
     ad.show();
     return true;
   }
+
+  // TODO - metadata changed listener
 }
