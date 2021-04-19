@@ -190,6 +190,14 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
+  // TODO - update dart to handle this.
+  void onAdMetadataChanged(@NonNull FlutterAd ad) {
+    final Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onAdMetadataChanged");
+    channel.invokeMethod("onAdEvent", arguments);
+  }
+
   boolean showAdWithId(int id) {
     final FlutterAd.FlutterOverlayAd ad = (FlutterAd.FlutterOverlayAd) adForId(id);
 

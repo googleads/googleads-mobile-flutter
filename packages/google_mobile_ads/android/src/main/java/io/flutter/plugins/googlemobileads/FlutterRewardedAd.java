@@ -142,7 +142,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
     rewardedAd.setOnAdMetadataChangedListener(new OnAdMetadataChangedListener() {
       @Override
       public void onAdMetadataChanged() {
-        // TODO
+        manager.onAdMetadataChanged(FlutterRewardedAd.this);
       }
     });
     rewardedAd.show(manager.activity, new OnUserEarnedRewardListener() {

@@ -15,10 +15,7 @@
 package io.flutter.plugins.googlemobileads;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -28,26 +25,12 @@ import android.app.Activity;
 import android.content.Context;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.FullScreenContentCallback;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
-import com.google.android.gms.ads.rewarded.OnAdMetadataChangedListener;
-import com.google.android.gms.ads.rewarded.RewardItem;
-import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
-import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions;
 import io.flutter.plugin.common.BinaryMessenger;
-import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
-import io.flutter.plugins.googlemobileads.FlutterRewardedAd.FlutterRewardItem;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
-import org.mockito.ArgumentMatchers;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 public class FlutterNativeAdTest {
 

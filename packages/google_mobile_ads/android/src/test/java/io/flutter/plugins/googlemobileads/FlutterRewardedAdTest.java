@@ -168,6 +168,15 @@ public class FlutterRewardedAdTest {
       }
     }).when(mockAdManagerAd).show(any(Activity.class), any(OnUserEarnedRewardListener.class));
 
+    doAnswer(new Answer() {
+      @Override
+      public Object answer(InvocationOnMock invocation) throws Throwable {
+        OnAdMetadataChangedListener listener = invocation.getArgument(0);
+        listener.onAdMetadataChanged();
+        return null;
+      }
+    }).when(mockAdManagerAd).setOnAdMetadataChangedListener(any(OnAdMetadataChangedListener.class));
+
     flutterRewardedAd.show();
     verify(mockAdManagerAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
     verify(mockAdManagerAd).show(eq(mockManager.activity), any(OnUserEarnedRewardListener.class));
@@ -187,6 +196,7 @@ public class FlutterRewardedAdTest {
     verify(mockManager).onAdImpression(eq(flutterRewardedAd));
     verify(mockManager).onAdDismissedFullScreenContent(eq(flutterRewardedAd));
     verify(mockManager).onRewardedAdUserEarnedReward(flutterRewardedAd, new FlutterRewardItem(5, "$$"));
+    verify(mockManager).onAdMetadataChanged(eq(flutterRewardedAd));
   }
 
   @Test
@@ -250,16 +260,7 @@ public class FlutterRewardedAdTest {
 
   @Test
   public void loadRewardedAdFailToShow() {
-    // AdInstanceManager mockManager = spy(testManager);
-    // final FlutterAdRequest mockFlutterRequest = mock(FlutterAdRequest.class);
-    // final AdRequest mockRequest = mock(AdRequest.class);
-    // when(mockFlutterRequest.asAdRequest()).thenReturn(mockRequest);
-    // final FlutterServerSideVerificationOptions options =
-    //   new FlutterServerSideVerificationOptions("userId", "customData");
     setupAdmobMocks(null);
-
-    // final FlutterRewardedAd rewardedAd = new FlutterRewardedAd(
-    //   mockManager, "testId", mockFlutterRequest, options, mockFlutterAdLoader);
 
     final RewardedAd mockRewardedAd = mock(RewardedAd.class);
     doAnswer(new Answer() {
@@ -300,6 +301,4 @@ public class FlutterRewardedAdTest {
     verify(mockRewardedAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
     verify(mockManager).onFailedToShowFullScreenContent(eq(flutterRewardedAd), eq(adError));
   }
-
-  //TODO - metadata
 }
