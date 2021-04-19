@@ -14,6 +14,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter/widgets.dart';
@@ -785,6 +786,21 @@ void main() {
       expect(result.type, 'type');
     });
 
+    test('encode/decode $AnchoredAdaptiveBannerAdSize', () async {
+      final ByteData byteData = codec.encodeMessage(AnchoredAdaptiveBannerAdSize(Orientation.landscape, 23))!;
+
+      final AnchoredAdaptiveBannerAdSize result = codec.decodeMessage(byteData);
+      expect(result.orientation, Orientation.landscape);
+      expect(result.width, 23);
+    });
+
+    test('encode/decode $SmartBannerAdSize', () async {
+      final ByteData byteData = codec.encodeMessage(SmartBannerAdSize(Orientation.portrait))!;
+
+      final SmartBannerAdSize result = codec.decodeMessage(byteData);
+      expect(result.orientation, Orientation.portrait);
+    });
+
     test('encode/decode $PublisherAdRequest', () async {
       final ByteData byteData = codec.encodeMessage(PublisherAdRequest(
         keywords: <String>['who'],
@@ -844,17 +860,6 @@ void main() {
 
       await banner.dispose();
       expect(banner.isLoaded(), completion(false));
-    });
-
-    test('correct values for adaptive banner $AdSize', () {
-      expect(
-        AdSize.getAnchoredAdaptiveBannerAdSize(Orientation.portrait, 50),
-        AdSize(width: 50, height: -1),
-      );
-      expect(
-        AdSize.getAnchoredAdaptiveBannerAdSize(Orientation.landscape, 50),
-        AdSize(width: 50, height: -2),
-      );
     });
   });
 }

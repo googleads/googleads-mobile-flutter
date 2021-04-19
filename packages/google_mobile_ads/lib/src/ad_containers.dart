@@ -142,6 +142,21 @@ class PublisherAdRequest {
   }
 }
 
+/// Returns an [AdSize] with the given width and a Google-optimized height to create a banner ad.
+class AnchoredAdaptiveBannerAdSize extends AdSize {
+  AnchoredAdaptiveBannerAdSize(this.orientation, int width)
+      : super(width: width, height: -1);
+
+  final Orientation orientation;
+}
+
+/// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
+class SmartBannerAdSize extends AdSize {
+  SmartBannerAdSize(this.orientation) : super(width: -1, height: -1);
+
+  final Orientation orientation;
+}
+
 /// [AdSize] represents the size of a banner ad.
 ///
 /// There are six sizes available, which are the same for both iOS and Android.
@@ -175,61 +190,6 @@ class AdSize {
 
   /// The leaderboard (728x90) size.
   static const AdSize leaderboard = AdSize(width: 728, height: 90);
-
-  /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
-  static AdSize getSmartBanner(Orientation orientation) {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return smartBanner;
-    } else if (defaultTargetPlatform == TargetPlatform.iOS &&
-        orientation == Orientation.portrait) {
-      return smartBannerPortrait;
-    } else if (defaultTargetPlatform == TargetPlatform.iOS &&
-        orientation == Orientation.landscape) {
-      return smartBannerLandscape;
-    }
-
-    throw AssertionError('Only supported on Android and iOS.');
-  }
-
-  /// Ad units that render screen-width banner ads on any screen size across different devices in either orientation on Android.
-  // Android expects a width of -1 to represent a smart banner.
-  static AdSize get smartBanner {
-    assert(defaultTargetPlatform == TargetPlatform.android);
-    return AdSize(width: -1, height: 0);
-  }
-
-  /// Ad units that render screen-width banner ads on any screen size across different devices in portrait on iOS.
-  // iOS expects a width of -1 and a height of 0 to represent a portrait smart banner.
-  static AdSize get smartBannerPortrait {
-    assert(defaultTargetPlatform == TargetPlatform.iOS);
-    return AdSize(width: -1, height: 0);
-  }
-
-  /// Ad units that render screen-width banner ads on any screen size across different devices in landscape on iOS.
-  // iOS expects a width of -1 and a height of 1 to represent a landscape smart banner.
-  static AdSize get smartBannerLandscape {
-    assert(defaultTargetPlatform == TargetPlatform.iOS);
-    return AdSize(width: -1, height: 1);
-  }
-
-  /// Returns an [AdSize] with the given width and a Google-optimized height to create a banner ad.
-  ///
-  /// The size returned will have an aspect ratio similar to [banner], suitable
-  /// for anchoring near the top or bottom of your app. The height will never be
-  /// larger than 15% of the device's portrait height and never smaller than
-  /// 50px. This function always returns the same height for any width / device
-  /// combination.
-  static AdSize getAnchoredAdaptiveBannerAdSize(
-    Orientation orientation,
-    int width,
-  ) {
-    switch (orientation) {
-      case Orientation.portrait:
-        return AdSize(width: width, height: -1);
-      case Orientation.landscape:
-        return AdSize(width: width, height: -2);
-    }
-  }
 
   @override
   bool operator ==(Object other) {
