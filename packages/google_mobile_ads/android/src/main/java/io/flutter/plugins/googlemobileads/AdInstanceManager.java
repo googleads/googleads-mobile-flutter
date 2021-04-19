@@ -208,6 +208,4 @@ class AdInstanceManager {
     ad.show();
     return true;
   }
-
-  // TODO - metadata changed listener
 }
