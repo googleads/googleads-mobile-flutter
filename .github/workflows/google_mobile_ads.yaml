@@ -59,7 +59,7 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
-          flutter config --enable-macos-desktop
+          flutter config
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
       - name: "Unit Tests"
