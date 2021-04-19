@@ -153,12 +153,13 @@
 - (void)testLoadNativeAd {
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
-  FLTNativeAd *ad =
-      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
-                                    request:request
-                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-                              customOptions:nil
-                         rootViewController:OCMClassMock([UIViewController class])];
+  id mockNativeAdFactory = OCMProtocolMock(@protocol(FLTNativeAdFactory));
+
+  FLTNativeAd *ad = [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                                  request:request
+                                          nativeAdFactory:mockNativeAdFactory
+                                            customOptions:[NSNull null]
+                                       rootViewController:OCMClassMock([UIViewController class])];
 
   FLTNativeAd *mockNativeAd = OCMPartialMock(ad);
   GADAdLoader *mockLoader = OCMClassMock([GADAdLoader class]);
@@ -169,6 +170,11 @@
                           GADRequest *requestArg = obj;
                           return [requestArg.keywords isEqualToArray:@[ @"apple" ]];
                         }]]);
+
+  // Check that nil is used instead of null when customOptions is Null
+  GADUnifiedNativeAd *mockUnifiedNativeAd = OCMClassMock([GADUnifiedNativeAd class]);
+  [ad adLoader:mockLoader didReceiveUnifiedNativeAd:mockUnifiedNativeAd];
+  OCMVerify([mockNativeAdFactory createNativeAd:mockUnifiedNativeAd customOptions:[OCMArg isNil]]);
 }
 
 - (void)testLoadRewardedAd {
