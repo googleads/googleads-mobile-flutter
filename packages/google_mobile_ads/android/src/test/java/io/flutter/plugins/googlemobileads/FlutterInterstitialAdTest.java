@@ -48,7 +48,6 @@ public class FlutterInterstitialAdTest {
   // The system under test.
   private FlutterInterstitialAd flutterInterstitialAd;
 
-
   @Before
   public void setup() {
     mockManager = spy(new AdInstanceManager(mock(Activity.class), mock(BinaryMessenger.class)));

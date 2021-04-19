@@ -17,8 +17,6 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
@@ -35,7 +33,7 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @NonNull private final String adUnitId;
   @Nullable private final FlutterAdManagerAdRequest request;
   @Nullable private AdManagerInterstitialAd ad;
-  @NonNull private FlutterAdLoader flutterAdLoader;
+  @NonNull private final FlutterAdLoader flutterAdLoader;
 
   /**
    * Constructs a `FlutterAdManagerInterstitialAd`.

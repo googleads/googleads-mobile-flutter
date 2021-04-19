@@ -17,8 +17,6 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
@@ -28,9 +26,9 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
 
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
-  @NonNull private FlutterAdRequest request;
+  @NonNull private final FlutterAdRequest request;
   @Nullable private InterstitialAd ad;
-  @NonNull private FlutterAdLoader flutterAdLoader;
+  @NonNull private final FlutterAdLoader flutterAdLoader;
 
   // TODO: (get rid of builder pattern)
   static class Builder {

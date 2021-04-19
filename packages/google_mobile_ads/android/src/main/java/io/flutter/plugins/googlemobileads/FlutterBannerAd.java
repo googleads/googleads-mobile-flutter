@@ -18,9 +18,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.LoadAdError;
 import io.flutter.plugin.platform.PlatformView;
 
 class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
