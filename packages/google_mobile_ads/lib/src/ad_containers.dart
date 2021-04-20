@@ -144,16 +144,20 @@ class PublisherAdRequest {
 
 /// Returns an [AdSize] with the given width and a Google-optimized height to create a banner ad.
 class AnchoredAdaptiveBannerAdSize extends AdSize {
+  /// Default constructor for [AnchoredAdaptiveBannerAdSize].
   AnchoredAdaptiveBannerAdSize(this.orientation, int width)
       : super(width: width, height: -1);
 
+  /// Orientation of the device used by the SDK to automatically find the correct height.
   final Orientation orientation;
 }
 
 /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
 class SmartBannerAdSize extends AdSize {
+  /// Default constructor for [SmartBannerAdSize].
   SmartBannerAdSize(this.orientation) : super(width: -1, height: -1);
 
+  /// Orientation of the device used by the SDK to automatically find the correct height.
   final Orientation orientation;
 }
 

@@ -18,6 +18,7 @@
 
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:google_mobile_ads/src/mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
@@ -464,7 +465,9 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.width);
     } else if (value is SmartBannerAdSize) {
       buffer.putUint8(_valueSmartBannerAdSize);
-      writeValue(buffer, describeEnum(value.orientation));
+      if (!Platform.isAndroid) {
+        writeValue(buffer, describeEnum(value.orientation));
+      }
     } else {
       buffer.putUint8(_valueAdSize);
       writeValue(buffer, value.width);

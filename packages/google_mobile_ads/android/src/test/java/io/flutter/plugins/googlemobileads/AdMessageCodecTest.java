@@ -171,10 +171,9 @@ public class AdMessageCodecTest {
 
     final ByteArrayOutputStream stream = new ByteArrayOutputStream();
     stream.write(140);
-    codec.writeValue(stream, "portrait");
 
-    final FlutterAdSize.AnchoredAdaptiveBannerAdSize result =
-      (FlutterAdSize.AnchoredAdaptiveBannerAdSize) codec.decodeMessage(ByteBuffer.wrap(stream.toByteArray()));
-    assertEquals(result.width, 46);
+    final FlutterAdSize.SmartBannerAdSize result =
+      (FlutterAdSize.SmartBannerAdSize) codec.decodeMessage(ByteBuffer.wrap(stream.toByteArray()));
+    assertEquals(result.size, AdSize.SMART_BANNER);
   }
 }
