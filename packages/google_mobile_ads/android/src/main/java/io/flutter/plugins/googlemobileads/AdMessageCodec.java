@@ -18,6 +18,8 @@ package io.flutter.plugins.googlemobileads;
 import android.content.Context;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+
 import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -38,11 +40,21 @@ final class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_ADAPTER_STATUS = (byte) 136;
   private static final byte VALUE_INITIALIZATION_STATUS = (byte) 137;
   private static final byte VALUE_SERVER_SIDE_VERIFICATION_OPTIONS = (byte) 138;
+  private static final byte VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE = (byte) 139;
+  private static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 140;
 
   private final Context context;
+  private final FlutterAdSize.AdSizeFactory adSizeFactory;
 
   AdMessageCodec(Context context) {
     this.context = context;
+    this.adSizeFactory = new FlutterAdSize.AdSizeFactory();
+  }
+
+  @VisibleForTesting
+  AdMessageCodec(Context context, FlutterAdSize.AdSizeFactory adSizeFactory) {
+    this.context = context;
+    this.adSizeFactory = adSizeFactory;
   }
 
   @Override
@@ -116,9 +128,15 @@ final class AdMessageCodec extends StandardMessageCodec {
   @Override
   protected Object readValueOfType(byte type, ByteBuffer buffer) {
     switch (type) {
+      case VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE:
+        return new FlutterAdSize.AnchoredAdaptiveBannerAdSize(context,
+          adSizeFactory,
+          (String) readValueOfType(buffer.get(), buffer),
+          (Integer) readValueOfType(buffer.get(), buffer));
+      case VALUE_SMART_BANNER_AD_SIZE:
+        return new FlutterAdSize.SmartBannerAdSize();
       case VALUE_AD_SIZE:
         return new FlutterAdSize(
-            context,
             (Integer) readValueOfType(buffer.get(), buffer),
             (Integer) readValueOfType(buffer.get(), buffer));
       case VALUE_AD_REQUEST:

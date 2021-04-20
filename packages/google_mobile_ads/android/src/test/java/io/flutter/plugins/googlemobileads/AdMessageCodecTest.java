@@ -14,8 +14,13 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.content.Context;
+
+import com.google.android.gms.ads.AdSize;
+
 import static org.junit.Assert.assertEquals;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +30,6 @@ import java.util.Map;
 import org.junit.Test;
 
 public class AdMessageCodecTest {
-
   @Test
   public void adMessageCodec_encodeAdapterInitializationState() {
     final AdMessageCodec codec = new AdMessageCodec(null);
@@ -140,5 +144,37 @@ public class AdMessageCodecTest {
         (FlutterServerSideVerificationOptions)
             codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
+  }
+
+  @Test
+  public void adMessageCodec_encodeAnchoredAdaptiveBannerAdSize() {
+    final AdMessageCodec codec = new AdMessageCodec(null, new FlutterAdSize.AdSizeFactory() {
+      @Override
+      AdSize getPortraitAnchoredAdaptiveBannerAdSize(Context context, int width) {
+        return new AdSize(width, width);
+      }
+    });
+
+    final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    stream.write(139);
+    codec.writeValue(stream, "portrait");
+    codec.writeValue(stream, 46);
+
+    final FlutterAdSize.AnchoredAdaptiveBannerAdSize result =
+      (FlutterAdSize.AnchoredAdaptiveBannerAdSize) codec.decodeMessage(ByteBuffer.wrap(stream.toByteArray()));
+    assertEquals(result.width, 46);
+  }
+
+  @Test
+  public void adMessageCodec_encodeSmartBannerAdSize() {
+    final AdMessageCodec codec = new AdMessageCodec(null, null);
+
+    final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    stream.write(140);
+    codec.writeValue(stream, "portrait");
+
+    final FlutterAdSize.AnchoredAdaptiveBannerAdSize result =
+      (FlutterAdSize.AnchoredAdaptiveBannerAdSize) codec.decodeMessage(ByteBuffer.wrap(stream.toByteArray()));
+    assertEquals(result.width, 46);
   }
 }

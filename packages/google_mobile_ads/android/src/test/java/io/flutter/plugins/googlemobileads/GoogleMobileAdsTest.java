@@ -20,17 +20,15 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 
 import android.app.Activity;
 
 import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
@@ -50,14 +48,9 @@ import java.util.Map;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({PublisherInterstitialAd.class, PublisherAdRequest.class, AdSize.class})
 public class GoogleMobileAdsTest {
   private AdInstanceManager testManager;
   private final FlutterAdRequest request = new FlutterAdRequest.Builder().build();
@@ -87,7 +80,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(null, 1, 2))
+            .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -224,7 +217,7 @@ public class GoogleMobileAdsTest {
     ArgumentMatcher<ServerSideVerificationOptions> serverSideVerificationOptionsArgumentMatcher =
         new ArgumentMatcher<ServerSideVerificationOptions>() {
           @Override
-          public boolean matches(Object argument) {
+          public boolean matches(ServerSideVerificationOptions argument) {
             final ServerSideVerificationOptions verificationOptions = (ServerSideVerificationOptions) argument;
             return verificationOptions.getCustomData().equals(options.getCustomData())
               && verificationOptions.getUserId().equals(options.getUserId());
@@ -259,7 +252,7 @@ public class GoogleMobileAdsTest {
     ArgumentMatcher<ServerSideVerificationOptions> serverSideVerificationOptionsArgumentMatcher =
         new ArgumentMatcher<ServerSideVerificationOptions>() {
           @Override
-          public boolean matches(Object argument) {
+          public boolean matches(ServerSideVerificationOptions argument) {
             final ServerSideVerificationOptions options = (ServerSideVerificationOptions) argument;
             return options.getCustomData().isEmpty() && options.getUserId().isEmpty();
           }
@@ -326,9 +319,9 @@ public class GoogleMobileAdsTest {
   @Test
   public void adMessageCodec_encodeFlutterAdSize() {
     final AdMessageCodec codec = new AdMessageCodec(null);
-    final ByteBuffer message = codec.encodeMessage(new FlutterAdSize(null, 1, 2));
+    final ByteBuffer message = codec.encodeMessage(new FlutterAdSize(1, 2));
 
-    assertEquals(codec.decodeMessage((ByteBuffer) message.position(0)), new FlutterAdSize(null, 1, 2));
+    assertEquals(codec.decodeMessage((ByteBuffer) message.position(0)), new FlutterAdSize(1, 2));
   }
 
   @Test
@@ -406,7 +399,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(null, 1, 2))
+            .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -427,7 +420,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(null, 1, 2))
+            .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -452,7 +445,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(null, 1, 2))
+            .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -477,7 +470,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(null, 1, 2))
+            .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -498,7 +491,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(null, 1, 2))
+            .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -575,7 +568,7 @@ public class GoogleMobileAdsTest {
         new FlutterBannerAd.Builder()
             .setManager(testManager)
             .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(null, 1, 2))
+            .setSize(new FlutterAdSize(1, 2))
             .setRequest(request)
             .build();
     testManager.trackAd(bannerAd, 0);
@@ -644,27 +637,5 @@ public class GoogleMobileAdsTest {
     final FlutterBannerAd banner = mock(FlutterBannerAd.class);
     testManager.trackAd(banner, 0);
     testManager.trackAd(banner, 0);
-  }
-
-  @Test
-  public void buildPortraitAdaptiveBanner() {
-    mockStatic(AdSize.class);
-
-    final AdSize mockSize = mock(AdSize.class);
-    when(AdSize.getPortraitAnchoredAdaptiveBannerAdSize(null, 50)).thenReturn(mockSize);
-
-    final FlutterAdSize flutterSize = new FlutterAdSize(null, 50, -1);
-    assertEquals(mockSize, flutterSize.size);
-  }
-
-  @Test
-  public void buildLandscapeAdaptiveBanner() {
-    mockStatic(AdSize.class);
-
-    final AdSize mockSize = mock(AdSize.class);
-    when(AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(null, 50)).thenReturn(mockSize);
-
-    final FlutterAdSize flutterSize = new FlutterAdSize(null, 50, -2);
-    assertEquals(mockSize, flutterSize.size);
   }
 }

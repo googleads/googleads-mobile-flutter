@@ -310,17 +310,8 @@ class AdMessageCodec extends StandardMessageCodec {
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
-    if (value is AnchoredAdaptiveBannerAdSize) {
-      buffer.putUint8(_valueAnchoredAdaptiveBannerAdSize);
-      writeValue(buffer, describeEnum(value.orientation));
-      writeValue(buffer, value.width);
-    } else if (value is SmartBannerAdSize) {
-      buffer.putUint8(_valueSmartBannerAdSize);
-      writeValue(buffer, describeEnum(value.orientation));
-    } else if (value is AdSize) {
-      buffer.putUint8(_valueAdSize);
-      writeValue(buffer, value.width);
-      writeValue(buffer, value.height);
+    if (value is AdSize) {
+      writeAdSize(buffer, value);
     } else if (value is AdRequest) {
       buffer.putUint8(_valueAdRequest);
       writeValue(buffer, value.keywords);
@@ -464,6 +455,21 @@ class AdMessageCodec extends StandardMessageCodec {
         value?.cast<T>(),
       ),
     );
+  }
+
+  void writeAdSize(WriteBuffer buffer, AdSize value) {
+    if (value is AnchoredAdaptiveBannerAdSize) {
+      buffer.putUint8(_valueAnchoredAdaptiveBannerAdSize);
+      writeValue(buffer, describeEnum(value.orientation));
+      writeValue(buffer, value.width);
+    } else if (value is SmartBannerAdSize) {
+      buffer.putUint8(_valueSmartBannerAdSize);
+      writeValue(buffer, describeEnum(value.orientation));
+    } else {
+      buffer.putUint8(_valueAdSize);
+      writeValue(buffer, value.width);
+      writeValue(buffer, value.height);
+    }
   }
 }
 

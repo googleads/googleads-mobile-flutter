@@ -25,26 +25,53 @@ class FlutterAdSize {
   final int width;
   final int height;
 
-  FlutterAdSize(Context context, int width, int height) {
-    this.width = width;
-    this.height = height;
-
-    // These values must remain consistent with `AdSize.smartBanner` in Dart.
-    if (width == -1 && height == 0) {
-      this.size = AdSize.SMART_BANNER;
-    } else if (height == -1) {
-      this.size = AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
-      if (this.size == AdSize.INVALID) {
-        throw new IllegalStateException("Banner height could not be determined from the provided context.");
-      }
-    } else if (height == -2) {
-      this.size = AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
-      if (this.size == AdSize.INVALID) {
-        throw new IllegalStateException("Banner height could not be determined from the provided context.");
-      }
-    } else {
-      this.size = new AdSize(width, height);
+  static class AdSizeFactory {
+    AdSize getPortraitAnchoredAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
     }
+
+    AdSize getLandscapeAnchoredAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
+    }
+  }
+
+  static class AnchoredAdaptiveBannerAdSize extends FlutterAdSize {
+    private static AdSize getAdSize(Context context, AdSizeFactory factory, String orientation, int width) {
+      final AdSize adSize;
+      if (orientation.equals("portrait")) {
+        adSize = factory.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
+      } else if (orientation.equals("landscape")) {
+        adSize = factory.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
+      } else {
+        throw new IllegalArgumentException("Orientation should be 'portrait' or 'landscape': " + orientation);
+      }
+
+      if (adSize == AdSize.INVALID) {
+        throw new IllegalArgumentException("Banner height could not be determined from the provided context");
+      }
+
+      return adSize;
+    }
+
+    AnchoredAdaptiveBannerAdSize(Context context, AdSizeFactory factory, String orientation, int width) {
+      super(getAdSize(context, factory, orientation, width));
+    }
+  }
+
+  static class SmartBannerAdSize extends FlutterAdSize {
+    SmartBannerAdSize() {
+      super(AdSize.SMART_BANNER);
+    }
+  }
+
+  FlutterAdSize(int width, int height) {
+    this(new AdSize(width, height));
+  }
+
+  FlutterAdSize(AdSize size) {
+    this.size = size;
+    this.width = size.getWidth();
+    this.height = size.getHeight();
   }
 
   @Override
