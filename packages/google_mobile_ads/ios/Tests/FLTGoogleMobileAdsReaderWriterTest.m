@@ -25,13 +25,17 @@
 @interface FLTGoogleMobileAdsReaderWriterTest : XCTestCase
 @end
 
+@interface FLTTestAdSizeFactory : FLTAdSizeFactory
+@end
+
 @implementation FLTGoogleMobileAdsReaderWriterTest {
   FlutterStandardMessageCodec *_messageCodec;
+  FLTGoogleMobileAdsReaderWriter *_readerWriter;
 }
 
 - (void)setUp {
-  FLTGoogleMobileAdsReaderWriter *readerWriter = [[FLTGoogleMobileAdsReaderWriter alloc] init];
-  _messageCodec = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
+  _readerWriter = [[FLTGoogleMobileAdsReaderWriter alloc] initWithFactory:[[FLTTestAdSizeFactory alloc] init]];
+  _messageCodec = [FlutterStandardMessageCodec codecWithReaderWriter:_readerWriter];
 }
 
 - (void)testEncodeDecodeAdSize {
@@ -41,6 +45,30 @@
   FLTAdSize *decodedSize = [_messageCodec decode:encodedMessage];
   XCTAssertEqualObjects(decodedSize.width, @(1));
   XCTAssertEqualObjects(decodedSize.height, @(2));
+}
+
+- (void)testEncodeDecodeAnchoredAdaptiveBannerAdSize {
+  NSMutableData *data = [NSMutableData data];
+  FlutterStandardWriter *writer = [_readerWriter writerWithData:data];
+  [writer writeByte:139];
+  [writer writeValue:@"portrait"];
+  [writer writeValue:@(56)];
+  
+  FLTAdSize *decodedSize = [_messageCodec decode:data];
+  XCTAssertTrue([decodedSize isKindOfClass:FLTAnchoredAdaptiveBannerSize.class]);
+  XCTAssertEqualObjects(decodedSize.width, @(56));
+}
+
+- (void)testEncodeDecodeSmartBannerAdSize {
+  NSMutableData *data = [NSMutableData data];
+  FlutterStandardWriter *writer = [_readerWriter writerWithData:data];
+  [writer writeByte:140];
+  [writer writeValue:@"landscape"];
+  
+  FLTAdSize *decodedSize = [_messageCodec decode:data];
+  XCTAssertTrue([decodedSize isKindOfClass:FLTSmartBannerSize.class]);
+  XCTAssertEqual(decodedSize.size.size.width, kGADAdSizeSmartBannerPortrait.size.width);
+  XCTAssertEqual(decodedSize.size.size.height, kGADAdSizeSmartBannerPortrait.size.height);
 }
 
 - (void)testEncodeDecodeAdRequest {
@@ -165,4 +193,14 @@
   XCTAssertNil(decodedStatus.adapterStatuses.allValues[0].latency);
 }
 
+@end
+
+@implementation FLTTestAdSizeFactory
+- (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *)width {
+  return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
+}
+
+- (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *)width {
+  return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
+}
 @end
