@@ -19,13 +19,13 @@
 @interface NativeAdFactoryExample : NSObject <FLTNativeAdFactory>
 @end
 
-// The UnifiedNativeAdView.xib and example GADUnifiedNativeAdView is provided and
+// The UnifiedNativeAdView.xib and example GADNativeAdView is provided and
 // explained by https://developers.google.com/admob/ios/native/advanced.
 @implementation NativeAdFactoryExample
-- (GADUnifiedNativeAdView *)createNativeAd:(GADUnifiedNativeAd *)nativeAd
+- (GADNativeAdView *)createNativeAd:(GADNativeAd *)nativeAd
                              customOptions:(NSDictionary *)customOptions {
   // Create and place ad in view hierarchy.
-  GADUnifiedNativeAdView *adView =
+  GADNativeAdView *adView =
       [[NSBundle mainBundle] loadNibNamed:@"UnifiedNativeAdView" owner:nil options:nil].firstObject;
 
   // Associate the native ad view with the native ad object. This is
