@@ -55,7 +55,11 @@
     return nil;
   }
   
-  return [self initWithAdSize:size];
+  self = [self initWithAdSize:size];
+  if (self) {
+    _orientation = orientation;
+  }
+  return self;
 }
 @end
 
@@ -71,7 +75,11 @@
     return nil;
   }
   
-  return [self initWithAdSize:size];
+  self = [self initWithAdSize:size];
+  if (self) {
+    _orientation = orientation;
+  }
+  return self;
 }
 @end
 

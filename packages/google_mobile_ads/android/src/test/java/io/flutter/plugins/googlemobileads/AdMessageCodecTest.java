@@ -19,8 +19,8 @@ import android.content.Context;
 import com.google.android.gms.ads.AdSize;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
-import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -148,32 +148,31 @@ public class AdMessageCodecTest {
 
   @Test
   public void adMessageCodec_encodeAnchoredAdaptiveBannerAdSize() {
-    final AdMessageCodec codec = new AdMessageCodec(null, new FlutterAdSize.AdSizeFactory() {
+    final AdSize mockAdSize = mock(AdSize.class);
+    final FlutterAdSize.AdSizeFactory factory = new FlutterAdSize.AdSizeFactory() {
       @Override
       AdSize getPortraitAnchoredAdaptiveBannerAdSize(Context context, int width) {
-        return new AdSize(width, width);
+        return mockAdSize;
       }
-    });
+    };
+    final AdMessageCodec codec = new AdMessageCodec(null, factory);
 
-    final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    stream.write(139);
-    codec.writeValue(stream, "portrait");
-    codec.writeValue(stream, 46);
+    final FlutterAdSize.AnchoredAdaptiveBannerAdSize adaptiveAdSize = new FlutterAdSize.AnchoredAdaptiveBannerAdSize(null, factory, "portrait", 23);
+    final ByteBuffer data = codec.encodeMessage(adaptiveAdSize);
 
     final FlutterAdSize.AnchoredAdaptiveBannerAdSize result =
-      (FlutterAdSize.AnchoredAdaptiveBannerAdSize) codec.decodeMessage(ByteBuffer.wrap(stream.toByteArray()));
-    assertEquals(result.width, 46);
+      (FlutterAdSize.AnchoredAdaptiveBannerAdSize) codec.decodeMessage((ByteBuffer) data.position(0));
+    assertEquals(result.size, mockAdSize);
   }
 
   @Test
   public void adMessageCodec_encodeSmartBannerAdSize() {
     final AdMessageCodec codec = new AdMessageCodec(null, null);
 
-    final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    stream.write(140);
+    final ByteBuffer data = codec.encodeMessage(new FlutterAdSize.SmartBannerAdSize());
 
     final FlutterAdSize.SmartBannerAdSize result =
-      (FlutterAdSize.SmartBannerAdSize) codec.decodeMessage(ByteBuffer.wrap(stream.toByteArray()));
+      (FlutterAdSize.SmartBannerAdSize) codec.decodeMessage((ByteBuffer) data.position(0));
     assertEquals(result.size, AdSize.SMART_BANNER);
   }
 }

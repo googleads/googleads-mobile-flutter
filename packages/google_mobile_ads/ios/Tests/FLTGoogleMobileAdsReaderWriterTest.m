@@ -26,6 +26,7 @@
 @end
 
 @interface FLTTestAdSizeFactory : FLTAdSizeFactory
+@property (readonly) GADAdSize testAdSize;
 @end
 
 @implementation FLTGoogleMobileAdsReaderWriterTest {
@@ -48,24 +49,27 @@
 }
 
 - (void)testEncodeDecodeAnchoredAdaptiveBannerAdSize {
-  NSMutableData *data = [NSMutableData data];
-  FlutterStandardWriter *writer = [_readerWriter writerWithData:data];
-  [writer writeByte:139];
-  [writer writeValue:@"portrait"];
-  [writer writeValue:@(56)];
-  
-  FLTAdSize *decodedSize = [_messageCodec decode:data];
-  XCTAssertTrue([decodedSize isKindOfClass:FLTAnchoredAdaptiveBannerSize.class]);
-  XCTAssertEqualObjects(decodedSize.width, @(56));
+  GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(0, 0));
+
+  FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
+  OCMStub([factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:@(23)]).andReturn(testAdSize);
+
+  FLTAnchoredAdaptiveBannerSize *size = [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory
+                                                                                   orientation:@"portrait"
+                                                                                         width:@(23)];
+  NSData *encodedMessage = [_messageCodec encode:size];
+
+  FLTAnchoredAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
+  XCTAssertEqual(decodedSize.size.size.height, testAdSize.size.height);
 }
 
 - (void)testEncodeDecodeSmartBannerAdSize {
-  NSMutableData *data = [NSMutableData data];
-  FlutterStandardWriter *writer = [_readerWriter writerWithData:data];
-  [writer writeByte:140];
-  [writer writeValue:@"landscape"];
+  FLTSmartBannerSize *size = [[FLTSmartBannerSize alloc] initWithOrientation:@"landscape"];
   
-  FLTAdSize *decodedSize = [_messageCodec decode:data];
+  NSData *encodedMessage = [_messageCodec encode:size];
+  FLTSmartBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  
   XCTAssertTrue([decodedSize isKindOfClass:FLTSmartBannerSize.class]);
   XCTAssertEqual(decodedSize.size.size.width, kGADAdSizeSmartBannerPortrait.size.width);
   XCTAssertEqual(decodedSize.size.size.height, kGADAdSizeSmartBannerPortrait.size.height);
@@ -196,6 +200,14 @@
 @end
 
 @implementation FLTTestAdSizeFactory
+- (instancetype)initWithAdSize:(GADAdSize)testAdSize {
+  self = [super init];
+  if (self) {
+    _testAdSize = testAdSize;
+  }
+  return self;
+}
+
 - (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *)width {
   return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
 }

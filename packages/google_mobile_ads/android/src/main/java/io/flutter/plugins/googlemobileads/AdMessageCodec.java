@@ -60,10 +60,7 @@ final class AdMessageCodec extends StandardMessageCodec {
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
     if (value instanceof FlutterAdSize) {
-      stream.write(VALUE_AD_SIZE);
-      final FlutterAdSize size = (FlutterAdSize) value;
-      writeValue(stream, size.width);
-      writeValue(stream, size.height);
+      writeAdSize(stream, (FlutterAdSize) value);
     } else if (value instanceof FlutterAdRequest) {
       stream.write(VALUE_AD_REQUEST);
       final FlutterAdRequest request = (FlutterAdRequest) value;
@@ -129,10 +126,13 @@ final class AdMessageCodec extends StandardMessageCodec {
   protected Object readValueOfType(byte type, ByteBuffer buffer) {
     switch (type) {
       case VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE:
-        return new FlutterAdSize.AnchoredAdaptiveBannerAdSize(context,
-          adSizeFactory,
-          (String) readValueOfType(buffer.get(), buffer),
-          (Integer) readValueOfType(buffer.get(), buffer));
+        final String orientation = (String) readValueOfType(buffer.get(), buffer);
+        final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
+        @SuppressWarnings("unused")
+        // Unused to create a new instance when reading the value from Dart.
+        // This is for the purpose of testing the writer.
+        final Integer height = (Integer) readValueOfType(buffer.get(), buffer);
+        return new FlutterAdSize.AnchoredAdaptiveBannerAdSize(context, adSizeFactory, orientation, width);
       case VALUE_SMART_BANNER_AD_SIZE:
         return new FlutterAdSize.SmartBannerAdSize();
       case VALUE_AD_SIZE:
@@ -189,6 +189,22 @@ final class AdMessageCodec extends StandardMessageCodec {
             (String) readValueOfType(buffer.get(), buffer));
       default:
         return super.readValueOfType(type, buffer);
+    }
+  }
+
+  protected void writeAdSize(ByteArrayOutputStream stream, FlutterAdSize value) {
+    if (value instanceof FlutterAdSize.AnchoredAdaptiveBannerAdSize) {
+      stream.write(VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE);
+      final FlutterAdSize.AnchoredAdaptiveBannerAdSize size = (FlutterAdSize.AnchoredAdaptiveBannerAdSize) value;
+      writeValue(stream, size.orientation);
+      writeValue(stream, size.width);
+      writeValue(stream, size.height);
+    } else if (value instanceof FlutterAdSize.SmartBannerAdSize) {
+      stream.write(VALUE_SMART_BANNER_AD_SIZE);
+    } else if (value instanceof FlutterAdSize) {
+      stream.write(VALUE_AD_SIZE);
+      writeValue(stream, value.width);
+      writeValue(stream, value.height);
     }
   }
 

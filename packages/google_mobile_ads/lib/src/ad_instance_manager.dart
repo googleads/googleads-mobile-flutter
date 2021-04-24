@@ -18,7 +18,6 @@
 
 import 'dart:async';
 import 'dart:collection';
-import 'dart:io';
 
 import 'package:google_mobile_ads/src/mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
@@ -361,13 +360,15 @@ class AdMessageCodec extends StandardMessageCodec {
       case _valueAnchoredAdaptiveBannerAdSize:
         final String orientationStr =
             readValueOfType(buffer.getUint8(), buffer);
-        final int width = readValueOfType(buffer.getUint8(), buffer);
+        final num width = readValueOfType(buffer.getUint8(), buffer);
+        final num height = readValueOfType(buffer.getUint8(), buffer);
         return AnchoredAdaptiveBannerAdSize(
           Orientation.values.firstWhere(
             (Orientation orientation) =>
                 describeEnum(orientation) == orientationStr,
           ),
-          width,
+          width: width.truncate(),
+          height: height.truncate(),
         );
       case _valueSmartBannerAdSize:
         final String orientationStr =
@@ -463,9 +464,10 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueAnchoredAdaptiveBannerAdSize);
       writeValue(buffer, describeEnum(value.orientation));
       writeValue(buffer, value.width);
+      writeValue(buffer, value.height);
     } else if (value is SmartBannerAdSize) {
       buffer.putUint8(_valueSmartBannerAdSize);
-      if (!Platform.isAndroid) {
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
         writeValue(buffer, describeEnum(value.orientation));
       }
     } else {

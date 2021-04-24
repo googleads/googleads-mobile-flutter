@@ -14,6 +14,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -26,7 +27,7 @@ void main() {
 
   group('GoogleMobileAds', () {
     final List<MethodCall> log = <MethodCall>[];
-    final MessageCodec<dynamic> codec = AdMessageCodec();
+    final AdMessageCodec codec = AdMessageCodec();
 
     setUp(() async {
       log.clear();
@@ -787,18 +788,34 @@ void main() {
     });
 
     test('encode/decode $AnchoredAdaptiveBannerAdSize', () async {
-      final ByteData byteData = codec.encodeMessage(AnchoredAdaptiveBannerAdSize(Orientation.landscape, 23))!;
+      final ByteData byteData = codec.encodeMessage(
+          AnchoredAdaptiveBannerAdSize(Orientation.landscape,
+              width: 23, height: 34))!;
 
       final AnchoredAdaptiveBannerAdSize result = codec.decodeMessage(byteData);
       expect(result.orientation, Orientation.landscape);
       expect(result.width, 23);
+      expect(result.height, 34);
     });
 
     test('encode/decode $SmartBannerAdSize', () async {
-      final ByteData byteData = codec.encodeMessage(SmartBannerAdSize(Orientation.portrait))!;
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final ByteData byteData =
+          codec.encodeMessage(SmartBannerAdSize(Orientation.portrait))!;
 
       final SmartBannerAdSize result = codec.decodeMessage(byteData);
       expect(result.orientation, Orientation.portrait);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final WriteBuffer expectedBuffer = WriteBuffer();
+      expectedBuffer.putUint8(140);
+
+      final WriteBuffer actualBuffer = WriteBuffer();
+      codec.writeAdSize(actualBuffer, SmartBannerAdSize(Orientation.portrait));
+      expect(
+        expectedBuffer.done().buffer.asInt8List(),
+        actualBuffer.done().buffer.asInt8List(),
+      );
     });
 
     test('encode/decode $PublisherAdRequest', () async {

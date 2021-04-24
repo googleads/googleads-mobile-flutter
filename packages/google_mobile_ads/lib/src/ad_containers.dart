@@ -142,11 +142,17 @@ class PublisherAdRequest {
   }
 }
 
-/// Returns an [AdSize] with the given width and a Google-optimized height to create a banner ad.
+/// An [AdSize] with the given width and a Google-optimized height to create a banner ad.
 class AnchoredAdaptiveBannerAdSize extends AdSize {
   /// Default constructor for [AnchoredAdaptiveBannerAdSize].
-  AnchoredAdaptiveBannerAdSize(this.orientation, int width)
-      : super(width: width, height: -1);
+  ///
+  /// Width of the current device can be found using:
+  /// `MediaQuery.of(context).size.width.truncate()`.
+  AnchoredAdaptiveBannerAdSize(
+    this.orientation, {
+    required int width,
+    required int height,
+  }) : super(width: width, height: height);
 
   /// Orientation of the device used by the SDK to automatically find the correct height.
   final Orientation orientation;
@@ -194,6 +200,25 @@ class AdSize {
 
   /// The leaderboard (728x90) size.
   static const AdSize leaderboard = AdSize(width: 728, height: 90);
+
+  static Future<AnchoredAdaptiveBannerAdSize?> getAnchoredAdaptiveBannerAdSize(
+    Orientation orientation,
+    int width,
+  ) async {
+    return await instanceManager.channel
+        .invokeMethod<AnchoredAdaptiveBannerAdSize?>(
+      'AdSize#getAnchoredAdaptiveBannerAdSize',
+      <String, Object>{
+        'orientation': describeEnum(orientation),
+        'width': width,
+      },
+    );
+  }
+
+  /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
+  static SmartBannerAdSize getSmartBanner(Orientation orientation) {
+    return SmartBannerAdSize(orientation);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -457,7 +482,7 @@ class PublisherBannerAd extends AdWithView {
     required String adUnitId,
     required AdListener listener,
     required this.request,
-  })   : assert(sizes.isNotEmpty),
+  })  : assert(sizes.isNotEmpty),
         super(adUnitId: adUnitId, listener: listener);
 
   /// Targeting information used to fetch an [Ad].

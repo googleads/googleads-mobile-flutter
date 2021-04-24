@@ -138,10 +138,16 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       options.customRewardString = [self readValueOfType:[self readByte]];
       return options;
     }
-    case FLTAdmobFieldAnchoredAdaptiveBannerAdSize:
+    case FLTAdmobFieldAnchoredAdaptiveBannerAdSize: {
+      NSString *orientation = [self readValueOfType:[self readByte]];
+      NSNumber *width = [self readValueOfType:[self readByte]];
+      // Unused to create AnchoredAdaptiveBannerAdSize, but need to clear the memory.
+      // This is for the purpose of testing the writer.
+      NSNumber *__unused height = [self readValueOfType:[self readByte]];
       return [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:_adSizeFactory
-                                                        orientation:[self readValueOfType:[self readByte]]
-                                                              width:[self readValueOfType:[self readByte]]];
+                                                        orientation:orientation
+                                                              width:width];
+    }
     case FLTAdmobFieldSmartBannerAdSize:
       return [[FLTSmartBannerSize alloc] initWithOrientation:[self readValueOfType:[self readByte]]];
   }
@@ -150,12 +156,27 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 @end
 
 @implementation FLTGoogleMobileAdsWriter
-- (void)writeValue:(id _Nonnull)value {
-  if ([value isKindOfClass:[FLTAdSize class]]) {
-    [self writeByte:FLTAdMobFieldAdSize];
-    FLTAdSize *size = value;
+- (void)writeAdSize:(FLTAdSize *_Nonnull)value {
+  if ([value isKindOfClass:[FLTAnchoredAdaptiveBannerSize class]]) {
+    [self writeByte:FLTAdmobFieldAnchoredAdaptiveBannerAdSize];
+    FLTAnchoredAdaptiveBannerSize *size = (FLTAnchoredAdaptiveBannerSize *) value;
+    [self writeValue:size.orientation];
     [self writeValue:size.width];
     [self writeValue:size.height];
+  } else if ([value isKindOfClass:[FLTSmartBannerSize class]]) {
+    [self writeByte:FLTAdmobFieldSmartBannerAdSize];
+    FLTSmartBannerSize *size = (FLTSmartBannerSize *) value;
+    [self writeValue:size.orientation];
+  } else if ([value isKindOfClass:[FLTAdSize class]]) {
+    [self writeByte:FLTAdMobFieldAdSize];
+    [self writeValue:value.width];
+    [self writeValue:value.height];
+  } 
+}
+
+- (void)writeValue:(id _Nonnull)value {
+  if ([value isKindOfClass:[FLTAdSize class]]) {
+    [self writeAdSize:value];
   } else if ([value isKindOfClass:[FLTPublisherAdRequest class]]) {
     [self writeByte:FLTAdMobFieldPublisherAdRequest];
     FLTPublisherAdRequest *request = value;

@@ -36,6 +36,8 @@ class FlutterAdSize {
   }
 
   static class AnchoredAdaptiveBannerAdSize extends FlutterAdSize {
+    final String orientation;
+
     private static AdSize getAdSize(Context context, AdSizeFactory factory, String orientation, int width) {
       final AdSize adSize;
       if (orientation.equals("portrait")) {
@@ -46,15 +48,12 @@ class FlutterAdSize {
         throw new IllegalArgumentException("Orientation should be 'portrait' or 'landscape': " + orientation);
       }
 
-      if (adSize == AdSize.INVALID) {
-        throw new IllegalArgumentException("Banner height could not be determined from the provided context");
-      }
-
       return adSize;
     }
 
     AnchoredAdaptiveBannerAdSize(Context context, AdSizeFactory factory, String orientation, int width) {
       super(getAdSize(context, factory, orientation, width));
+      this.orientation = orientation;
     }
   }
 
