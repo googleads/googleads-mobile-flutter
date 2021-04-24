@@ -145,9 +145,6 @@ class PublisherAdRequest {
 /// An [AdSize] with the given width and a Google-optimized height to create a banner ad.
 class AnchoredAdaptiveBannerAdSize extends AdSize {
   /// Default constructor for [AnchoredAdaptiveBannerAdSize].
-  ///
-  /// Width of the current device can be found using:
-  /// `MediaQuery.of(context).size.width.truncate()`.
   AnchoredAdaptiveBannerAdSize(
     this.orientation, {
     required int width,
@@ -201,6 +198,10 @@ class AdSize {
   /// The leaderboard (728x90) size.
   static const AdSize leaderboard = AdSize(width: 728, height: 90);
 
+  /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
+  ///
+  /// Width of the current device can be found using:
+  /// `MediaQuery.of(context).size.width.truncate()`.
   static Future<AnchoredAdaptiveBannerAdSize?> getAnchoredAdaptiveBannerAdSize(
     Orientation orientation,
     int width,

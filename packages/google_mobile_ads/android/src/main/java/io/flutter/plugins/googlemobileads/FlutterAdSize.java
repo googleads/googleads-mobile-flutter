@@ -19,7 +19,6 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdSize;
 
-
 class FlutterAdSize {
   @NonNull final AdSize size;
   final int width;

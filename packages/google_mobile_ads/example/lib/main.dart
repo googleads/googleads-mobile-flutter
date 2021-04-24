@@ -126,116 +126,90 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
   }
 
-  bool isReady = false;
-  late AdSize aSize;
-
-  Future<void> getAdaptiveBannerSize(BuildContext context) async {
-    print('getting ad size');
-    aSize = (await AdSize.getAnchoredAdaptiveBannerAdSize(
-      Orientation.portrait,
-      MediaQuery.of(context).size.width.truncate(),
-    ))!;
-    setState(() {
-      isReady = true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Builder(
-        builder: (BuildContext context) {
-          if (!isReady) getAdaptiveBannerSize(context);
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('AdMob Plugin example app'),
-              actions: <Widget>[
-                PopupMenuButton<String>(
-                  onSelected: (String result) {
-                    switch (result) {
-                      case 'InterstitialAd':
-                        if (!_interstitialReady) return;
-                        _interstitialAd!.show();
-                        _interstitialReady = false;
-                        _interstitialAd = null;
-                        break;
-                      case 'RewardedAd':
-                        if (!_rewardedReady) return;
-                        _rewardedAd!.show();
-                        _rewardedReady = false;
-                        _rewardedAd = null;
-                        break;
-                      case 'ReusableInlineExample':
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute<void>(
-                              builder: (BuildContext context) =>
-                                  ReusableInlineExample()),
-                        );
-                        break;
-                      default:
-                        throw AssertionError('unexpected button: $result');
-                    }
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuEntry<String>>[
-                    PopupMenuItem<String>(
-                      value: '$InterstitialAd',
-                      child: Text('$InterstitialAd'),
-                    ),
-                    PopupMenuItem<String>(
-                      value: '$RewardedAd',
-                      child: Text('$RewardedAd'),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'ReusableInlineExample',
-                      child: Text('Reusable Inline Ads Object Example'),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            body: Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: ListView.separated(
-                    cacheExtent: 500,
-                    itemCount: 100,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Container(
-                        height: 40,
+        builder: (BuildContext context) => Scaffold(
+          appBar: AppBar(
+            title: const Text('AdMob Plugin example app'),
+            actions: <Widget>[
+              PopupMenuButton<String>(
+                onSelected: (String result) {
+                  switch (result) {
+                    case 'InterstitialAd':
+                      if (!_interstitialReady) return;
+                      _interstitialAd!.show();
+                      _interstitialReady = false;
+                      _interstitialAd = null;
+                      break;
+                    case 'RewardedAd':
+                      if (!_rewardedReady) return;
+                      _rewardedAd!.show();
+                      _rewardedReady = false;
+                      _rewardedAd = null;
+                      break;
+                    case 'ReusableInlineExample':
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                            builder: (BuildContext context) =>
+                                ReusableInlineExample()),
                       );
-                    },
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index % 2 == 0) {
-                        return Text(
-                          Constants.placeholderText,
-                          style: TextStyle(fontSize: 24),
-                        );
-                      }
-
-                      final int adIndex = (index / 2).floor();
-                      Widget adWidget;
-                      if (adIndex % 3 == 0) {
-                        adWidget = BannerAdWidget(AdSize.banner);
-                      } else if (adIndex % 3 == 1) {
-                        adWidget = PublisherBannerAdWidget(AdSize.largeBanner);
-                      } else {
-                        adWidget = NativeAdWidget();
-                      }
-                      return Center(child: adWidget);
-                    },
+                      break;
+                    default:
+                      throw AssertionError('unexpected button: $result');
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: '$InterstitialAd',
+                    child: Text('$InterstitialAd'),
                   ),
-                ),
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  child: isReady ? BannerAdWidget(aSize) : Container(),
-                ),
-              ],
+                  PopupMenuItem<String>(
+                    value: '$RewardedAd',
+                    child: Text('$RewardedAd'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'ReusableInlineExample',
+                    child: Text('Reusable Inline Ads Object Example'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: ListView.separated(
+              cacheExtent: 500,
+              itemCount: 100,
+              separatorBuilder: (BuildContext context, int index) {
+                return Container(
+                  height: 40,
+                );
+              },
+              itemBuilder: (BuildContext context, int index) {
+                if (index % 2 == 0) {
+                  return Text(
+                    Constants.placeholderText,
+                    style: TextStyle(fontSize: 24),
+                  );
+                }
+
+                final int adIndex = (index / 2).floor();
+                Widget adWidget;
+                if (adIndex % 3 == 0) {
+                  adWidget = BannerAdWidget(AdSize.banner);
+                } else if (adIndex % 3 == 1) {
+                  adWidget = PublisherBannerAdWidget(AdSize.largeBanner);
+                } else {
+                  adWidget = NativeAdWidget();
+                }
+                return Center(child: adWidget);
+              },
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

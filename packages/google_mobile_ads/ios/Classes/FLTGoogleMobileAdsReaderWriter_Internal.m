@@ -35,7 +35,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 @end
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
-
 @end
 
 @implementation FLTGoogleMobileAdsReaderWriter
