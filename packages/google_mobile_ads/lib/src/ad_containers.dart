@@ -216,6 +216,23 @@ class AdSize {
     );
   }
 
+  /// Ad units that render screen-width banner ads on any screen size across different devices in either orientation on Android.
+  static AdSize get smartBanner {
+    assert(defaultTargetPlatform == TargetPlatform.android);
+    // Orientation is not used on Android.
+    return smartBannerPortrait;
+  }
+
+  /// Ad units that render screen-width banner ads on any screen size across different devices in portrait on iOS.
+  static AdSize get smartBannerPortrait {
+    return getSmartBanner(Orientation.portrait);
+  }
+
+  /// Ad units that render screen-width banner ads on any screen size across different devices in landscape on iOS.
+  static AdSize get smartBannerLandscape {
+    return getSmartBanner(Orientation.landscape);
+  }
+
   /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
   static SmartBannerAdSize getSmartBanner(Orientation orientation) {
     return SmartBannerAdSize(orientation);
