@@ -82,7 +82,7 @@
                arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdLoaded"}];
 }
 
-- (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(FLTLoadAdError *_Nonnull)error {
+- (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(NSError *_Nonnull)error {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
                  @"adId" : [self adIdFor:ad],

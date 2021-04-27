@@ -52,30 +52,6 @@
 }
 @end
 
-@implementation FLTLoadAdError
-- (instancetype _Nonnull)initWithCode:(NSNumber *_Nonnull)code
-                               domain:(NSString *_Nonnull)domain
-                              message:(NSString *_Nonnull)message {
-  self = [super init];
-  if (self) {
-    _code = code;
-    _domain = domain;
-    _message = message;
-  }
-  return self;
-}
-
-- (instancetype _Nonnull)initWithError:(NSError *_Nonnull)error {
-  self = [super init];
-  if (self) {
-    _code = @(error.code);
-    _domain = error.domain;
-    _message = error.localizedDescription;
-  }
-  return self;
-}
-@end
-
 @implementation FLTGAMAdRequest
 - (GADRequest *_Nonnull)asGAMRequest {
   GAMRequest *request = [GAMRequest request];
@@ -135,7 +111,7 @@
 
 - (void)bannerView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(NSError *)error {
   // TODO - replace with NSError.
-  [_manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
+  [_manager onAdFailedToLoad:self error:error];
 }
 
 - (void)bannerViewDidRecordImpression:(GADBannerView *)bannerView {
@@ -242,7 +218,7 @@
                               request:[_adRequest asGADRequest]
                     completionHandler:^(GADInterstitialAd *ad, NSError *error) {
                         if (error) {
-                          [self.manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
+                          [self.manager onAdFailedToLoad:self error:error];
                           return;
                         }
                         ad.fullScreenContentDelegate = self;
@@ -316,7 +292,7 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
                                        request:[_adRequest asGAMRequest]
                              completionHandler:^(GAMInterstitialAd *ad, NSError *error) {
      if (error) {
-       [self.manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
+       [self.manager onAdFailedToLoad:self error:error];
        return;
      }
     [self.manager onAdLoaded:self];
@@ -392,7 +368,7 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
                           request:request
                 completionHandler:^(GADRewardedAd * _Nullable rewardedAd, NSError * _Nullable error) {
     if (error) {
-      [self.manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
+      [self.manager onAdFailedToLoad:self error:error];
       return;
     }
     rewardedAd.fullScreenContentDelegate = self;
@@ -509,7 +485,7 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
 }
 
 - (void)adLoader:(GADAdLoader *)adLoader didFailToReceiveAdWithError:(NSError *)error {
-  [_manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
+  [_manager onAdFailedToLoad:self error:error];
 }
 
 #pragma mark - GADNativeAdDelegate

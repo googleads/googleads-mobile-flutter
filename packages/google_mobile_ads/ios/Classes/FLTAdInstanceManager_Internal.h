@@ -21,7 +21,6 @@
 @class FLTNativeAd;
 @class FLTRewardedAd;
 @class FLTRewardItem;
-@class FLTLoadAdError;
 
 @interface FLTAdInstanceManager : NSObject
 - (instancetype _Nonnull)initWithBinaryMessenger:
@@ -32,7 +31,7 @@
 - (void)dispose:(NSNumber *_Nonnull)adId;
 - (void)showAdWithID:(NSNumber *_Nonnull)adId;
 - (void)onAdLoaded:(id<FLTAd> _Nonnull)ad;
-- (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(FLTLoadAdError *_Nonnull)error;
+- (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(NSError *_Nonnull)error;
 - (void)onAppEvent:(id<FLTAd> _Nonnull)ad
               name:(NSString *_Nullable)name
               data:(NSString *_Nullable)data;

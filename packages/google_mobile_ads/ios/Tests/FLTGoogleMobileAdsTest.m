@@ -381,9 +381,9 @@
                          rootViewController:OCMClassMock([UIViewController class])];
   [_manager loadAd:ad adId:@(1)];
 
-  FLTLoadAdError *error = [[FLTLoadAdError alloc] initWithCode:@(1)
-                                                        domain:@"domain"
-                                                       message:@"message"];
+  NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"message" };
+  NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
+  
   [_manager onAdFailedToLoad:ad error:error];
   NSData *data = [_methodCodec
       encodeMethodCall:[FlutterMethodCall methodCallWithMethodName:@"onAdEvent"

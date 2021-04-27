@@ -67,8 +67,7 @@
   NSError *error = [NSError errorWithDomain:domain code:1 userInfo:userInfo];
   [bannerAd.bannerView.delegate bannerView:OCMClassMock([GADBannerView class])
                didFailToReceiveAdWithError:error];
-  // TODO - delete NSError
-//  OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:bannerAd] error:<#(FLTLoadAdError * _Nonnull)#>:[OCMArg isEqual:bannerAd]]);
+  OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:bannerAd] error:[OCMArg isEqual:error]]);
 }
 
 - (void)testLoad {

@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdMobFieldAdSize = 128,
   FLTAdMobFieldAdRequest = 129,
   FLTAdMobFieldRewardItem = 132,
-  FLTAdMobFieldLoadAdError = 133,
+  FLTAdMobFieldNSError = 133,
   FLTAdMobFieldPublisherAdRequest = 134,
   FLTAdMobFieldAdapterInitializationState = 135,
   FLTAdMobFieldAdapterStatus = 136,
@@ -67,10 +67,13 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       return [[FLTRewardItem alloc] initWithAmount:[self readValueOfType:[self readByte]]
                                               type:[self readValueOfType:[self readByte]]];
     }
-    case FLTAdMobFieldLoadAdError: {
-      return [[FLTLoadAdError alloc] initWithCode:[self readValueOfType:[self readByte]]
-                                           domain:[self readValueOfType:[self readByte]]
-                                          message:[self readValueOfType:[self readByte]]];
+    case FLTAdMobFieldNSError: {
+      NSNumber *code = [self readValueOfType:[self readByte]];
+      NSString *domain = [self readValueOfType:[self readByte]];
+      NSString *message = [self readValueOfType:[self readByte]];
+      return [NSError errorWithDomain:domain
+                                 code:code.longValue
+                             userInfo:@{ NSLocalizedDescriptionKey : message}];
     }
     case FLTAdMobFieldPublisherAdRequest: {
       FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
@@ -146,12 +149,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     FLTRewardItem *item = value;
     [self writeValue:item.amount];
     [self writeValue:item.type];
-  } else if ([value isKindOfClass:[FLTLoadAdError class]]) {
-    [self writeByte:FLTAdMobFieldLoadAdError];
-    FLTLoadAdError *error = value;
-    [self writeValue:error.code];
+  } else if ([value isKindOfClass:[NSError class]]) {
+    [self writeByte:FLTAdMobFieldNSError];
+    NSError *error = value;
+    [self writeValue:@(error.code)];
     [self writeValue:error.domain];
-    [self writeValue:error.message];
+    [self writeValue:error.localizedDescription];
   } else if ([value isKindOfClass:[FLTAdapterStatus class]]) {
     [self writeByte:FLTAdMobFieldAdapterStatus];
     FLTAdapterStatus *status = value;

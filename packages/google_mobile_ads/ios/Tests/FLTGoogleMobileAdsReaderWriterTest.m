@@ -125,16 +125,16 @@
   XCTAssertEqualObjects(decoded.userIdentifier, serverSideVerificationOptions.userIdentifier);
 }
 
-- (void)testEncodeDecodeLoadAdError {
-  FLTLoadAdError *error = [[FLTLoadAdError alloc] initWithCode:@(1)
-                                                        domain:@"domain"
-                                                       message:@"message"];
+- (void)testEncodeDecodeNSError {
+  NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"message" };
+  NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
+  
   NSData *encodedMessage = [_messageCodec encode:error];
 
-  FLTLoadAdError *decodedError = [_messageCodec decode:encodedMessage];
-  XCTAssertEqualObjects(decodedError.code, @(1));
+  NSError *decodedError = [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedError.code, 1);
   XCTAssertEqualObjects(decodedError.domain, @"domain");
-  XCTAssertEqualObjects(decodedError.message, @"message");
+  XCTAssertEqualObjects(decodedError.localizedDescription, @"message");
 }
 
 - (void)testEncodeDecodeAdapterStatus {
