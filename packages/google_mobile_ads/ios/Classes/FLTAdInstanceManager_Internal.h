@@ -17,6 +17,7 @@
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
 
 @protocol FLTAd;
+@class FLTBannerAd;
 @class FLTNativeAd;
 @class FLTRewardedAd;
 @class FLTRewardItem;
@@ -42,6 +43,10 @@
 - (void)onAdClosed:(id<FLTAd> _Nonnull)ad;
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward;
+- (void)onBannerImpression:(FLTBannerAd *_Nonnull)ad;
+- (void)onBannerWillDismissScreen:(FLTBannerAd *_Nonnull)ad;
+- (void)onBannerDidDismissScreen:(FLTBannerAd *_Nonnull)ad;
+- (void)onBannerWillPresentScreen:(FLTBannerAd *_Nonnull)ad;
 - (void)disposeAllAds;
 @end
 

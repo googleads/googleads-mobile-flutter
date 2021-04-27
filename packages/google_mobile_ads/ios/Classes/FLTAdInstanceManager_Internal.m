@@ -135,6 +135,35 @@
                  @"rewardItem" : reward,
                }];
 }
+
+- (void)onBannerImpression:(FLTBannerAd *_Nonnull)ad {
+  [_channel invokeMethod:@"onBannerImpression"
+               arguments:@{
+                 @"adId" : [self adIdFor:ad],
+               }];
+}
+
+- (void)onBannerWillDismissScreen:(FLTBannerAd *)ad {
+  [_channel invokeMethod:@"onBannerWillDismissScreen"
+               arguments:@{
+                 @"adId" : [self adIdFor:ad],
+               }];
+}
+
+- (void)onBannerDidDismissScreen:(FLTBannerAd *)ad {
+  [_channel invokeMethod:@"onBannerDidDismissScreen"
+               arguments:@{
+                 @"adId" : [self adIdFor:ad],
+               }];
+}
+
+- (void)onBannerWillPresentScreen:(FLTBannerAd *_Nonnull) ad {
+  [_channel invokeMethod:@"onBannerWillPresentScreen"
+               arguments:@{
+                 @"adId" : [self adIdFor:ad],
+               }];
+}
+
 @end
 
 @implementation FLTNewGoogleMobileAdsViewFactory

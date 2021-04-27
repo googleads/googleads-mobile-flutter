@@ -134,26 +134,24 @@
 }
 
 - (void)bannerView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(NSError *)error {
+  // TODO - replace with NSError.
   [_manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
 }
 
 - (void)bannerViewDidRecordImpression:(GADBannerView *)bannerView {
-  NSLog(@"bannerViewDidRecordImpression");
-  // TODO
+  [_manager onBannerImpression:self];
 }
 
 - (void)bannerViewWillPresentScreen:(GADBannerView *)bannerView {
-  // TODO - rename this
-  [_manager onAdOpened:self];
+  [_manager onBannerWillPresentScreen:self];
 }
 
 - (void)bannerViewWillDismissScreen:(GADBannerView *)bannerView {
-  NSLog(@"bannerViewWillDismissScreen");
+  [_manager onBannerWillDismissScreen:self];
 }
 
 - (void)bannerViewDidDismissScreen:(GADBannerView *)bannerView {
-  [_manager onAdClosed:self];
-  // TODO - rename this
+  [_manager onBannerDidDismissScreen:self];
 }
 
 #pragma mark - FlutterPlatformView
@@ -201,22 +199,6 @@
 
 - (nonnull UIView *)view {
   return self.bannerView;
-}
-
-#pragma mark - GAMBannerAdLoaderDelegate
-
-- (void)adLoader:(nonnull GADAdLoader *)adLoader
-    didFailToReceiveAdWithError:(nonnull NSError *)error {
-  [self.manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
-}
-
-- (void)adLoader:(nonnull GADAdLoader *)adLoader
-    didReceiveGAMBannerView:(nonnull GAMBannerView *)bannerView {
-  [self.manager onAdLoaded:self];
-}
-
-- (nonnull NSArray<NSValue *> *)validBannerSizesForAdLoader:(nonnull GADAdLoader *)adLoader {
-  return _bannerView.validAdSizes;
 }
 
 #pragma mark - GADAppEventDelegate
