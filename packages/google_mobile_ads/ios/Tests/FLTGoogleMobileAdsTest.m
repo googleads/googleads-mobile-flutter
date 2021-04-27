@@ -184,7 +184,7 @@
   FLTNativeAd *ad = [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
                                                   request:request
                                           nativeAdFactory:mockNativeAdFactory
-                                            customOptions:[NSNull null]
+                                            customOptions:nil
                                        rootViewController:OCMClassMock([UIViewController class])];
 
   FLTNativeAd *mockNativeAd = OCMPartialMock(ad);
@@ -198,9 +198,9 @@
                         }]]);
 
   // Check that nil is used instead of null when customOptions is Null
-  GADNativeAd *mockUnifiedNativeAd = OCMClassMock([GADNativeAd class]);
-  [ad adLoader:mockLoader didReceiveNativeAd:mockNativeAd];
-  OCMVerify([mockNativeAdFactory createNativeAd:mockNativeAd customOptions:[OCMArg isNil]]);
+  GADNativeAd *mockGADNativeAd = OCMClassMock([GADNativeAd class]);
+  [ad adLoader:mockLoader didReceiveNativeAd:mockGADNativeAd];
+  OCMVerify([mockNativeAdFactory createNativeAd:mockGADNativeAd customOptions:[OCMArg isNil]]);
 }
 
 - (void)testLoadRewardedAd {

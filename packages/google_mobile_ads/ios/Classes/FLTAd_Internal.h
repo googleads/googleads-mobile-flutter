@@ -90,13 +90,14 @@
 - (NSString *_Nonnull)adUnitId;
 @end
 
-@interface FLTPublisherInterstitialAd : FLTInterstitialAd
+@interface FLTPublisherInterstitialAd : FLTInterstitialAd<GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTPublisherAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
 @end
 
-@interface FLTRewardedAd : NSObject <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTRewardedAd :
+  NSObject <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate, GADAdMetadataDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController

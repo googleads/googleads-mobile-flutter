@@ -339,7 +339,7 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
      }
     [self.manager onAdLoaded:self];
     ad.fullScreenContentDelegate = self;
-    ad.appEventDelegate = self; // TODO - app event delegate
+    ad.appEventDelegate = self;
      self->_insterstitial = ad;
    }];
 }
@@ -351,6 +351,15 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
     NSLog(@"InterstitialAd failed to show because the ad was not ready.");
   }
 }
+
+#pragma mark - GADAppEventDelegate
+
+- (void)interstitialAd:(nonnull GADInterstitialAd *)interstitialAd
+    didReceiveAppEvent:(nonnull NSString *)name
+              withInfo:(nullable NSString *)info {
+  // TODO - callback in ad manager.
+}
+
 @end
 
 @implementation FLTRewardedAd {
@@ -452,6 +461,12 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
 }
 
 @synthesize manager;
+
+#pragma mark - GADAdMetadataDelegate
+
+- (void)adMetadataDidChange:(nonnull id<GADAdMetadataProvider>)ad {
+  // TODO - call ad instance manager
+}
 
 @end
 

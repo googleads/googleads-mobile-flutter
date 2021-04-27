@@ -68,6 +68,7 @@
   FlutterMethodCall *methodCall = [FlutterMethodCall
       methodCallWithMethodName:@"loadRewardedAd"
                      arguments:@{
+                       @"adId" : @2,
                        @"adUnitId" : @"testId",
                        @"request" : request,
                        @"serverSideVerificationOptions" : serverSideVerificationOptions
@@ -86,15 +87,15 @@
   XCTAssertNil(returnedResult);
   BOOL (^verificationBlock)(FLTRewardedAd *) = ^BOOL(FLTRewardedAd *ad) {
     FLTAdRequest *adRequest = [ad valueForKey:@"_adRequest"];
-    GADRewardedAd *rewardedAd = [ad valueForKey:@"_rewardedView"];
+    NSString *adUnit = [ad valueForKey:@"_adUnitId"];
     FLTServerSideVerificationOptions *options = [ad valueForKey:@"_serverSideVerificationOptions"];
     XCTAssertEqualObjects(adRequest, request);
-    XCTAssertEqualObjects(rewardedAd.adUnitID, @"testId");
+    XCTAssertEqualObjects(adUnit, @"testId");
     XCTAssertEqualObjects(options, serverSideVerificationOptions);
     return YES;
   };
   OCMVerify([_mockAdInstanceManager loadAd:[OCMArg checkWithBlock:verificationBlock]
-                                      adId:[OCMArg any]]);
+                                      adId:[OCMArg isEqual:@2]]);
 }
 
 - (void)testInternalInit {
