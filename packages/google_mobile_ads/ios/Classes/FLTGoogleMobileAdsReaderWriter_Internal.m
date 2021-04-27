@@ -73,7 +73,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                                           message:[self readValueOfType:[self readByte]]];
     }
     case FLTAdMobFieldPublisherAdRequest: {
-      FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+      FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
 
       request.keywords = [self readValueOfType:[self readByte]];
       request.contentURL = [self readValueOfType:[self readByte]];
@@ -125,9 +125,9 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     FLTAdSize *size = value;
     [self writeValue:size.width];
     [self writeValue:size.height];
-  } else if ([value isKindOfClass:[FLTPublisherAdRequest class]]) {
+  } else if ([value isKindOfClass:[FLTGAMAdRequest class]]) {
     [self writeByte:FLTAdMobFieldPublisherAdRequest];
-    FLTPublisherAdRequest *request = value;
+    FLTGAMAdRequest *request = value;
     [self writeValue:request.keywords];
     [self writeValue:request.contentURL];
     [self writeValue:request.customTargeting];

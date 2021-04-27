@@ -107,16 +107,16 @@
                       }]]);
 }
 
-- (void)testLoadPublisherBannerAd {
-  FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+- (void)testLoadGAMBannerAd {
+  FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
-  FLTPublisherBannerAd *ad = [[FLTPublisherBannerAd alloc]
+  FLTGAMBannerAd *ad = [[FLTGAMBannerAd alloc]
         initWithAdUnitId:@"testId"
                    sizes:@[ [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)] ]
                  request:request
       rootViewController:OCMClassMock([UIViewController class])];
 
-  FLTPublisherBannerAd *mockBannerAd = OCMPartialMock(ad);
+  FLTGAMBannerAd *mockBannerAd = OCMPartialMock(ad);
   GAMBannerView *mockView = OCMClassMock([GAMBannerView class]);
   OCMStub([mockBannerAd bannerView]).andReturn(mockView);
   [mockBannerAd load];
@@ -127,15 +127,15 @@
                       }]]);
 }
 
-- (void)testLoadPublisherInterstitialAd {
-  FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+- (void)testLoadGAMInterstitialAd {
+  FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
-  FLTPublisherInterstitialAd *ad =
-      [[FLTPublisherInterstitialAd alloc] initWithAdUnitId:@"testId"
+  FLTGAMInterstitialAd *ad =
+      [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
                                                    request:request
                                         rootViewController:OCMClassMock([UIViewController class])];
 
-  FLTPublisherInterstitialAd *mockInterstitialAd = OCMPartialMock(ad);
+  FLTGAMInterstitialAd *mockInterstitialAd = OCMPartialMock(ad);
   GAMInterstitialAd *mockAd = OCMClassMock([GAMInterstitialAd class]);
   OCMStub([mockInterstitialAd interstitial]).andReturn(mockAd);
   [mockInterstitialAd load];
@@ -160,14 +160,14 @@
 //                    }]]);
 }
 
-- (void)testShowPublisherInterstitialAd {
-  FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
-  FLTPublisherInterstitialAd *ad =
-      [[FLTPublisherInterstitialAd alloc] initWithAdUnitId:@"testId"
+- (void)testShowGAMInterstitialAd {
+  FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
+  FLTGAMInterstitialAd *ad =
+      [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
                                                    request:request
                                         rootViewController:OCMClassMock([UIViewController class])];
 
-  FLTPublisherInterstitialAd *mockInterstitialAd = OCMPartialMock(ad);
+  FLTGAMInterstitialAd *mockInterstitialAd = OCMPartialMock(ad);
   GAMInterstitialAd *mockAd = OCMClassMock([GAMInterstitialAd class]);
   OCMStub([mockInterstitialAd interstitial]).andReturn(mockAd);
 
@@ -256,8 +256,8 @@
   OCMVerify([mockRewardedAd presentFromRootViewController:OCMOCK_ANY userDidEarnRewardHandler:OCMOCK_ANY]);
 }
 
-- (void)testLoadRewardedAdWithPublisherRequest {
-  FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+- (void)testLoadRewardedAdWithGAMRequest {
+  FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
   FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
                                                       request:request
@@ -289,8 +289,8 @@
 //                      completionHandler:[OCMArg any]]);
 }
 
-- (void)testLoadNativeAdWithPublisherRequest {
-  FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+- (void)testLoadNativeAdWithGAMRequest {
+  FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
   FLTNativeAd *ad =
       [[FLTNativeAd alloc] initWithAdUnitId:@"testId"

@@ -59,8 +59,8 @@
   XCTAssertTrue(decodedRequest.nonPersonalizedAds);
 }
 
-- (void)testEncodeDecodePublisherAdRequest {
-  FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+- (void)testEncodeDecodeGAMAdRequest {
+  FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
   request.contentURL = @"banana";
   request.customTargeting = @{@"table" : @"linen"};
@@ -68,7 +68,7 @@
   request.nonPersonalizedAds = YES;
   NSData *encodedMessage = [_messageCodec encode:request];
 
-  FLTPublisherAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
+  FLTGAMAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
   XCTAssertTrue([decodedRequest.keywords isEqualToArray:@[ @"apple" ]]);
   XCTAssertEqualObjects(decodedRequest.contentURL, @"banana");
   XCTAssertTrue([decodedRequest.customTargeting isEqualToDictionary:@{@"table" : @"linen"}]);

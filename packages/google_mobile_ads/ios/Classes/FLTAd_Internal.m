@@ -76,7 +76,7 @@
 }
 @end
 
-@implementation FLTPublisherAdRequest
+@implementation FLTGAMAdRequest
 - (GADRequest *_Nonnull)asGAMRequest {
   GAMRequest *request = [GAMRequest request];
   request.keywords = self.keywords;
@@ -162,14 +162,14 @@
 }
 @end
 
-@implementation FLTPublisherBannerAd {
+@implementation FLTGAMBannerAd {
   GAMBannerView *_bannerView;
-  FLTPublisherAdRequest *_adRequest;
+  FLTGAMAdRequest *_adRequest;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                            sizes:(NSArray<FLTAdSize *> *_Nonnull)sizes
-                         request:(FLTPublisherAdRequest *_Nonnull)request
+                         request:(FLTGAMAdRequest *_Nonnull)request
               rootViewController:(UIViewController *_Nonnull)rootViewController {
   self = [super init];
   if (self) {
@@ -306,15 +306,15 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
 
 @end
 
-@implementation FLTPublisherInterstitialAd {
+@implementation FLTGAMInterstitialAd {
   GAMInterstitialAd *_insterstitial;
-  FLTPublisherAdRequest *_adRequest;
+  FLTGAMAdRequest *_adRequest;
   UIViewController *_rootViewController;
   NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                         request:(FLTPublisherAdRequest *_Nonnull)request
+                         request:(FLTGAMAdRequest *_Nonnull)request
               rootViewController:(UIViewController *_Nonnull)rootViewController {
   self = [super init];
   if (self) {
@@ -391,9 +391,9 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
 
 - (void)load {
   GADRequest *request;
-  if ([_adRequest isKindOfClass:[FLTPublisherAdRequest class]]) {
-    FLTPublisherAdRequest *publisherRequest = (FLTPublisherAdRequest *)_adRequest;
-    request = publisherRequest.asGAMRequest;
+  if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
+    FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
+    request = gamRequest.asGAMRequest;
   } else if ([_adRequest isKindOfClass:[FLTAdRequest class]]) {
     request = _adRequest.asGADRequest;
   } else {
@@ -505,9 +505,9 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
 
 - (void)load {
   GADRequest *request;
-  if ([_adRequest isKindOfClass:[FLTPublisherAdRequest class]]) {
-    FLTPublisherAdRequest *publisherRequest = (FLTPublisherAdRequest *)_adRequest;
-    request = publisherRequest.asGAMRequest;
+  if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
+    FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
+    request = gamRequest.asGAMRequest;
   } else {
     request = _adRequest.asGADRequest;
   }

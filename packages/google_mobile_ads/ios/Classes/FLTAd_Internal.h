@@ -38,7 +38,7 @@
 /**
  * Wrapper around `GAMRequest` for the Google Mobile Ads Plugin.
  */
-@interface FLTPublisherAdRequest : FLTAdRequest
+@interface FLTGAMAdRequest : FLTAdRequest
 @property NSDictionary<NSString *, NSString *> *_Nullable customTargeting;
 @property NSDictionary<NSString *, NSArray<NSString *> *> *_Nullable customTargetingLists;
 - (GAMRequest *_Nonnull)asGAMRequest;
@@ -75,10 +75,10 @@
 /**
  * Wrapper around `DFPBannerAd` for the Google Mobile Ads Plugin.
  */
-@interface FLTPublisherBannerAd : FLTBannerAd <GAMBannerAdLoaderDelegate, GADAppEventDelegate>
+@interface FLTGAMBannerAd : FLTBannerAd <GAMBannerAdLoaderDelegate, GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                     sizes:(NSArray<FLTAdSize *> *_Nonnull)sizes
-                                  request:(FLTPublisherAdRequest *_Nonnull)request
+                                  request:(FLTGAMAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
 @end
 
@@ -90,9 +90,9 @@
 - (NSString *_Nonnull)adUnitId;
 @end
 
-@interface FLTPublisherInterstitialAd : FLTInterstitialAd<GADAppEventDelegate>
+@interface FLTGAMInterstitialAd : FLTInterstitialAd<GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                                  request:(FLTPublisherAdRequest *_Nonnull)request
+                                  request:(FLTGAMAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
 @end
 
