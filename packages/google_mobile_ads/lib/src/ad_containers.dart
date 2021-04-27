@@ -202,6 +202,9 @@ class AdSize {
   ///
   /// Width of the current device can be found using:
   /// `MediaQuery.of(context).size.width.truncate()`.
+  ///
+  /// Returns `null` if a proper height could not be found for the device or
+  /// window.
   static Future<AnchoredAdaptiveBannerAdSize?> getAnchoredAdaptiveBannerAdSize(
     Orientation orientation,
     int width,
