@@ -226,6 +226,14 @@ The table below lists the standard banner sizes.
    <td>Use <code>getSmartBanner(Orientation)</code>
    </td>
   </tr>
+  <tr>
+   <td>Provided width x Adaptive height
+   </td>
+   <td><a href="https://developers.google.com/admob/android/banner/adaptive">Adaptive Banner</a>
+   </td>
+   <td>Use <code>getAnchoredAdaptiveBannerAdSize(Orientation, int)</code>
+   </td>
+  </tr>
 </table>
 
 
