@@ -126,16 +126,6 @@
                arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdWillDismissScreen"}];
 }
 
-- (void)onAdOpened:(id<FLTAd> _Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdOpened"}];
-}
-
-- (void)onAdClosed:(id<FLTAd> _Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdClosed"}];
-}
-
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward {
   [_channel invokeMethod:@"onAdEvent"

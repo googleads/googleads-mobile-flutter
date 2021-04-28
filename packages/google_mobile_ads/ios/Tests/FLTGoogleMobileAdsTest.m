@@ -201,40 +201,6 @@
   OCMVerify([_mockMessenger sendOnChannel:@"plugins.flutter.io/google_mobile_ads" message:data]);
 }
 
-- (void)testAdInstanceManagerOnAdOpened {
-  FLTNativeAd *ad =
-      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
-                                    request:[[FLTAdRequest alloc] init]
-                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-                              customOptions:nil
-                         rootViewController:OCMClassMock([UIViewController class])];
-  [_manager loadAd:ad adId:@(1)];
-
-  [_manager onAdOpened:ad];
-  NSData *data = [_methodCodec
-      encodeMethodCall:[FlutterMethodCall
-                           methodCallWithMethodName:@"onAdEvent"
-                                          arguments:@{@"adId" : @1, @"eventName" : @"onAdOpened"}]];
-  OCMVerify([_mockMessenger sendOnChannel:@"plugins.flutter.io/google_mobile_ads" message:data]);
-}
-
-- (void)testAdInstanceManagerOnAdClosed {
-  FLTNativeAd *ad =
-      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
-                                    request:[[FLTAdRequest alloc] init]
-                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-                              customOptions:nil
-                         rootViewController:OCMClassMock([UIViewController class])];
-  [_manager loadAd:ad adId:@(1)];
-
-  [_manager onAdClosed:ad];
-  NSData *data = [_methodCodec
-      encodeMethodCall:[FlutterMethodCall
-                           methodCallWithMethodName:@"onAdEvent"
-                                          arguments:@{@"adId" : @1, @"eventName" : @"onAdClosed"}]];
-  OCMVerify([_mockMessenger sendOnChannel:@"plugins.flutter.io/google_mobile_ads" message:data]);
-}
-
 - (void)testAdInstanceManagerOnRewardedAdUserEarnedReward {
   FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
                                                       request:[[FLTAdRequest alloc] init]

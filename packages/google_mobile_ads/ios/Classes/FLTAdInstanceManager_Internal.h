@@ -40,8 +40,6 @@
 - (void)onNativeAdWillPresentScreen:(FLTNativeAd *_Nonnull)ad;
 - (void)onNativeAdDidDismissScreen:(FLTNativeAd *_Nonnull)ad;
 - (void)onNativeAdWillDismissScreen:(FLTNativeAd *_Nonnull)ad;
-- (void)onAdOpened:(id<FLTAd> _Nonnull)ad;
-- (void)onAdClosed:(id<FLTAd> _Nonnull)ad;
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward;
 - (void)onBannerImpression:(FLTBannerAd *_Nonnull)ad;
