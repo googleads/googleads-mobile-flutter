@@ -17,10 +17,6 @@
 
 #import "../Classes/FLTAdInstanceManager_Internal.h"
 #import "../Classes/FLTAd_Internal.h"
-#import "../Classes/FLTGoogleMobileAdsCollection_Internal.h"
-#import "../Classes/FLTGoogleMobileAdsPlugin.h"
-#import "../Classes/FLTGoogleMobileAdsReaderWriter_Internal.h"
-#import "../Classes/FLTMobileAds_Internal.h"
 
 @interface FLTBannerAdTest : XCTestCase
 @end

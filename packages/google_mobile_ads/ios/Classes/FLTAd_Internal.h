@@ -78,6 +78,8 @@
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
 - (GADInterstitialAd *_Nullable)interstitial;
 - (NSString *_Nonnull)adUnitId;
+- (void)load;
+
 @end
 
 @interface FLTGAMInterstitialAd : FLTInterstitialAd<GADAppEventDelegate>

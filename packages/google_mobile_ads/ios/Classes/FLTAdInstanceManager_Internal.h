@@ -46,6 +46,13 @@
 - (void)onBannerWillDismissScreen:(FLTBannerAd *_Nonnull)ad;
 - (void)onBannerDidDismissScreen:(FLTBannerAd *_Nonnull)ad;
 - (void)onBannerWillPresentScreen:(FLTBannerAd *_Nonnull)ad;
+
+- (void)onAdDidPresentFullScreenContent:(id<FLTAd> _Nonnull)ad;
+- (void)adDidDismissFullScreenContent:(id<FLTAd> _Nonnull)ad;
+- (void)adWillDismissFullScreenContent:(id<FLTAd> _Nonnull)ad;
+- (void)adDidRecordImpression:(id<FLTAd> _Nonnull)ad;
+- (void)didFailToPresentFullScreenContentWithError:(id<FLTAd> _Nonnull)ad
+                                             error:(NSError *_Nonnull)error;
 - (void)disposeAllAds;
 @end
 

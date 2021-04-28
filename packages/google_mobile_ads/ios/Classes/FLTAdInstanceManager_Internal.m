@@ -163,6 +163,40 @@
                  @"adId" : [self adIdFor:ad],
                }];
 }
+- (void)onAdDidPresentFullScreenContent:(id<FLTAd> _Nonnull)ad {
+  [self invokeMethod:@"onAdDidPresentFullScreenContent" ad:ad];
+}
+
+- (void)adDidDismissFullScreenContent:(id<FLTAd> _Nonnull)ad {
+  [self invokeMethod:@"adDidDismissFullScreenContent" ad:ad];
+}
+
+- (void)adWillDismissFullScreenContent:(id<FLTAd> _Nonnull)ad {
+  [self invokeMethod:@"adWillDismissFullScreenContent" ad:ad];
+}
+
+- (void)adDidRecordImpression:(id<FLTAd> _Nonnull)ad {
+  [self invokeMethod:@"adDidRecordImpression" ad:ad];
+}
+
+- (void)didFailToPresentFullScreenContentWithError:(id<FLTAd> _Nonnull)ad
+                                             error:(NSError *_Nonnull)error {
+  [_channel invokeMethod:@"didFailToPresentFullScreenContentWithError"
+               arguments:@{
+                 @"adId" : [self adIdFor:ad],
+                 @"error" : error
+               }];
+}
+
+- (void)invokeMethod:(NSString *_Nonnull)method
+                          ad:(id<FLTAd>)ad {
+  [_channel invokeMethod:method
+               arguments:@{
+                 @"adId" : [self adIdFor:ad],
+               }];
+}
+  
+
 
 @end
 

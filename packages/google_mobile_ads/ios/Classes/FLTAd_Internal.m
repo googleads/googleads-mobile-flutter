@@ -110,7 +110,6 @@
 }
 
 - (void)bannerView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(NSError *)error {
-  // TODO - replace with NSError.
   [_manager onAdFailedToLoad:self error:error];
 }
 
@@ -239,25 +238,23 @@
 
 - (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
 didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
-  // TODO - Add new callback to manager
+  [self.manager didFailToPresentFullScreenContentWithError:self error:error];
 }
 
-/// Tells the delegate that the ad presented full screen content.
 - (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [self.manager onAdOpened:self];
+  [self.manager onAdDidPresentFullScreenContent:self];
 }
 
-/// Tells the delegate that the ad dismissed full screen content.
 - (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [self.manager onAdClosed:self];
+  [self.manager adDidDismissFullScreenContent:self];
 }
 
 - (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  // TODO - Add callback to manager
+  [self.manager adWillDismissFullScreenContent:self];
 }
 
 - (void)adDidRecordImpression:(nonnull id<GADFullScreenPresentingAd>)ad {
-  // TODO - Add callback to manager
+  [self.manager adDidRecordImpression:self];
 }
 
 @synthesize manager;
@@ -315,7 +312,7 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
 - (void)interstitialAd:(nonnull GADInterstitialAd *)interstitialAd
     didReceiveAppEvent:(nonnull NSString *)name
               withInfo:(nullable NSString *)info {
-  // TODO - callback in ad manager.
+  [self.manager onAppEvent:self name:name data:info];
 }
 
 @end
