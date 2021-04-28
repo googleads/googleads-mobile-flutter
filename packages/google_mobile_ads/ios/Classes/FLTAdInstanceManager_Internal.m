@@ -111,14 +111,24 @@
                arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdImpression"}];
 }
 
+- (void)onNativeAdWillPresentScreen:(FLTNativeAd *_Nonnull)ad {
+  [_channel invokeMethod:@"onAdEvent"
+               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdWillPresentScreen"}];
+}
+
+- (void)onNativeAdDidDismissScreen:(FLTNativeAd *_Nonnull)ad {
+  [_channel invokeMethod:@"onAdEvent"
+               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdDidDismissScreen"}];
+}
+
+- (void)onNativeAdWillDismissScreen:(FLTNativeAd *_Nonnull)ad {
+  [_channel invokeMethod:@"onAdEvent"
+               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdWillDismissScreen"}];
+}
+
 - (void)onAdOpened:(id<FLTAd> _Nonnull)ad {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdOpened"}];
-}
-
-- (void)onApplicationExit:(id<FLTAd> _Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onApplicationExit"}];
 }
 
 - (void)onAdClosed:(id<FLTAd> _Nonnull)ad {

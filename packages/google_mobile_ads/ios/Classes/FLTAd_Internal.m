@@ -490,15 +490,15 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
 }
 
 - (void)nativeAdWillPresentScreen:(GADNativeAd *)nativeAd {
-  [_manager onAdOpened:self];
+  [_manager onNativeAdWillPresentScreen:self];
 }
 
-- (void)nativeAdWillLeaveApplication:(GADNativeAd *)nativeAd {
-  [_manager onApplicationExit:self];
+- (void)nativeAdWillDismissScreen:(nonnull GADNativeAd *)nativeAd {
+  [_manager onNativeAdWillDismissScreen:self];
 }
 
 - (void)nativeAdDidDismissScreen:(GADNativeAd *)nativeAd {
-  [_manager onAdClosed:self];
+  [_manager onNativeAdDidDismissScreen:self];
 }
 
 #pragma mark - FlutterPlatformView
