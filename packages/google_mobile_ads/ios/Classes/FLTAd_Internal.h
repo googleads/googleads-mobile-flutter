@@ -63,7 +63,7 @@
 @end
 
 /**
- * Wrapper around `DFPBannerAd` for the Google Mobile Ads Plugin.
+ * Wrapper around `GAMBannerAd` for the Google Mobile Ads Plugin.
  */
 @interface FLTGAMBannerAd : FLTBannerAd <GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
