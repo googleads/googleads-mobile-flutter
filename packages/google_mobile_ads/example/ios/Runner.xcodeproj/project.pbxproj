@@ -39,6 +39,7 @@
 		9EF4E70A26392B230007E4FE /* FLTAdInstanceManager_Internal.h in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6FD26392B230007E4FE /* FLTAdInstanceManager_Internal.h */; };
 		9EF4E70B26392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6FE26392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.m */; };
 		9EF4E70C26392B230007E4FE /* FLTMobileAds_Internal.h in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6FF26392B230007E4FE /* FLTMobileAds_Internal.h */; };
+		9EF4E7102639410D0007E4FE /* FLTRewardedAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E70F2639410D0007E4FE /* FLTRewardedAdTest.m */; };
 		D2CF0978BD94BAEAD9E443C4 /* libPods-google_mobile_ads_exampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F8AB4520D15662F521C33C38 /* libPods-google_mobile_ads_exampleTests.a */; };
 		FBE669D215209F1F44CEEB21 /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F369F228D3A43519CEE308 /* libPods-Runner.a */; };
 /* End PBXBuildFile section */
@@ -106,6 +107,7 @@
 		9EF4E6FD26392B230007E4FE /* FLTAdInstanceManager_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FLTAdInstanceManager_Internal.h; path = ../../ios/Classes/FLTAdInstanceManager_Internal.h; sourceTree = "<group>"; };
 		9EF4E6FE26392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsCollection_Internal.m; path = ../../ios/Classes/FLTGoogleMobileAdsCollection_Internal.m; sourceTree = "<group>"; };
 		9EF4E6FF26392B230007E4FE /* FLTMobileAds_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FLTMobileAds_Internal.h; path = ../../ios/Classes/FLTMobileAds_Internal.h; sourceTree = "<group>"; };
+		9EF4E70F2639410D0007E4FE /* FLTRewardedAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTRewardedAdTest.m; path = ../../../ios/Tests/FLTRewardedAdTest.m; sourceTree = "<group>"; };
 		BC01F2AA74ECDC9497A31EF6 /* Pods-google_mobile_ads_exampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-google_mobile_ads_exampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-google_mobile_ads_exampleTests/Pods-google_mobile_ads_exampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		CE82265EF05E2A9632B25E60 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		F74051031B69F8124E38352E /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 		8FB13CD3248F07B80011A72F /* google_mobile_ads_exampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				9EF4E70F2639410D0007E4FE /* FLTRewardedAdTest.m */,
 				9EA747512637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m */,
 				9EA747522637EC7000E0B0E4 /* FLTInterstitialAdTest.m */,
 				9EA7474C2637CD6800E0B0E4 /* FLTBannerAdTest.m */,
@@ -429,6 +432,7 @@
 				9EF4E70226392B230007E4FE /* FLTConstants.h in Sources */,
 				9EF4E70326392B230007E4FE /* FLTMobileAds_Internal.m in Sources */,
 				9EF4E70426392B230007E4FE /* FLTGoogleMobileAdsPlugin.h in Sources */,
+				9EF4E7102639410D0007E4FE /* FLTRewardedAdTest.m in Sources */,
 				9EF4E70526392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.h in Sources */,
 				9EF4E70626392B230007E4FE /* FLTAdInstanceManager_Internal.m in Sources */,
 				9EF4E70726392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.m in Sources */,

@@ -355,11 +355,6 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
     NSLog(@"A null or invalid ad request was provided.");
     return;
   }
-  if (_serverSideVerificationOptions != NULL &&
-      ![_serverSideVerificationOptions isEqual:[NSNull null]]) {
-    _rewardedView.serverSideVerificationOptions =
-        [_serverSideVerificationOptions asGADServerSideVerificationOptions];
-  }
   
   [GADRewardedAd loadWithAdUnitID:_adUnitId
                           request:request
@@ -368,8 +363,13 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
       [self.manager onAdFailedToLoad:self error:error];
       return;
     }
+    if (self->_serverSideVerificationOptions != NULL &&
+        ![self->_serverSideVerificationOptions isEqual:[NSNull null]]) {
+      rewardedAd.serverSideVerificationOptions =
+      [self->_serverSideVerificationOptions asGADServerSideVerificationOptions];
+    }
+    
     rewardedAd.fullScreenContentDelegate = self;
-    rewardedAd.adMetadataDelegate = self; // TODO - ad metadata
     self->_rewardedView = rewardedAd;
     [self.manager onAdLoaded:self];
   }];
@@ -394,34 +394,28 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
 
 - (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
 didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
-  // TODO - Add new callback to manager
+  [manager didFailToPresentFullScreenContentWithError:self error:error];
 }
 
 /// Tells the delegate that the ad presented full screen content.
 - (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager onAdOpened:self];
+  [manager onAdDidPresentFullScreenContent:self];
 }
 
 /// Tells the delegate that the ad dismissed full screen content.
 - (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager onAdClosed:self];
+  [manager adDidDismissFullScreenContent:self];
 }
 
 - (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  // TODO - Add callback to manager
+  [manager adWillDismissFullScreenContent:self];
 }
 
 - (void)adDidRecordImpression:(nonnull id<GADFullScreenPresentingAd>)ad {
-  // TODO - Add callback to manager
+  [manager adDidRecordImpression:self];
 }
 
 @synthesize manager;
-
-#pragma mark - GADAdMetadataDelegate
-
-- (void)adMetadataDidChange:(nonnull id<GADAdMetadataProvider>)ad {
-  // TODO - call ad instance manager
-}
 
 @end
 

@@ -29,10 +29,6 @@
   mockManager = (OCMClassMock([FLTAdInstanceManager class]));
 }
 
-- (void)tearDown {
-  mockManager = nil;
-}
-
 - (void)testLoadShowInterstitialAd {
   FLTAdRequest *request = OCMClassMock([FLTAdRequest class]);
   OCMStub([request keywords]).andReturn(@[ @"apple" ]);
@@ -70,8 +66,8 @@
 
   [ad load];
 
-  OCMVerify(ClassMethod([interstitialClassMock loadWithAdUnitID:[OCMArg any]
-                                          request:[OCMArg any]
+  OCMVerify(ClassMethod([interstitialClassMock loadWithAdUnitID:[OCMArg isEqual:@"testId"]
+                                          request:[OCMArg isEqual:gadRequest]
                                 completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]]);
   OCMVerify([interstitialClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
@@ -79,6 +75,9 @@
   
   // Show the ad
   [ad show];
+  
+  OCMVerify([interstitialClassMock
+             presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);
   
   // Verify full screen callbacks.
   OCMVerify([mockManager onAdDidPresentFullScreenContent:[OCMArg isEqual:ad]]);
@@ -116,8 +115,8 @@
 
   [ad load];
 
-  OCMVerify(ClassMethod([interstitialClassMock loadWithAdUnitID:[OCMArg any]
-                                          request:[OCMArg any]
+  OCMVerify(ClassMethod([interstitialClassMock loadWithAdUnitID:[OCMArg isEqual:@"testId"]
+                                          request:[OCMArg isEqual:gadRequest]
                                 completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad] error:[OCMArg isEqual:error]]);
 }

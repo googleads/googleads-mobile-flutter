@@ -89,7 +89,7 @@
 @end
 
 @interface FLTRewardedAd :
-  NSObject <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate, GADAdMetadataDelegate>
+  NSObject <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController

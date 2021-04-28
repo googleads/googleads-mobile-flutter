@@ -74,15 +74,18 @@
 
   [ad load];
 
-  OCMVerify(ClassMethod([interstitialClassMock loadWithAdManagerAdUnitID:[OCMArg any]
-                                          request:[OCMArg any]
-                                completionHandler:[OCMArg any]]));
+  OCMVerify(ClassMethod([interstitialClassMock loadWithAdManagerAdUnitID:[OCMArg isEqual:@"testId"]
+                                                                 request:[OCMArg isEqual:gadRequest]
+                                                       completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]]);
   OCMVerify([interstitialClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
   XCTAssertEqual(ad.interstitial, interstitialClassMock);
   
   // Show the ad
   [ad show];
+  
+  OCMVerify([interstitialClassMock
+             presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);
   
   // Verify full screen callbacks.
   OCMVerify([mockManager onAdDidPresentFullScreenContent:[OCMArg isEqual:ad]]);
@@ -123,8 +126,8 @@
   
   [ad load];
 
-  OCMVerify(ClassMethod([interstitialClassMock loadWithAdManagerAdUnitID:[OCMArg any]
-                                          request:[OCMArg any]
+  OCMVerify(ClassMethod([interstitialClassMock loadWithAdManagerAdUnitID:[OCMArg isEqual:@"testId"]
+                                          request:[OCMArg isEqual:gadRequest]
                                 completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad] error:[OCMArg isEqual:error]]);
 }
