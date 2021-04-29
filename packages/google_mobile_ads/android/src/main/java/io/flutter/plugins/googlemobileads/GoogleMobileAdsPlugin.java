@@ -255,13 +255,12 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         result.success(null);
         break;
       case "loadBannerAd":
-        final FlutterBannerAd bannerAd =
-            new FlutterBannerAd.Builder()
-                .setManager(instanceManager)
-                .setAdUnitId(call.<String>argument("adUnitId"))
-                .setRequest(call.<FlutterAdRequest>argument("request"))
-                .setSize(call.<FlutterAdSize>argument("size"))
-                .build();
+        final FlutterBannerAd bannerAd = new FlutterBannerAd(
+            instanceManager,
+            call.<String>argument("adUnitId"),
+            call.<FlutterAdRequest>argument("request"),
+            call.<FlutterAdSize>argument("size"),
+            new BannerAdCreator(instanceManager.activity));
         instanceManager.trackAd(bannerAd, call.<Integer>argument("adId"));
         bannerAd.load();
         result.success(null);
@@ -338,7 +337,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 instanceManager,
                 call.<String>argument("adUnitId"),
                 call.<List<FlutterAdSize>>argument("sizes"),
-                call.<FlutterAdManagerAdRequest>argument("request"));
+                call.<FlutterAdManagerAdRequest>argument("request"),
+                new BannerAdCreator(instanceManager.activity));
         instanceManager.trackAd(adManagerBannerAd, call.<Integer>argument("adId"));
         adManagerBannerAd.load();
         result.success(null);

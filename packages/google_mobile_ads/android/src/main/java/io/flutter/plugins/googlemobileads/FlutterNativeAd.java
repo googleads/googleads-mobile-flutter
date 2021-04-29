@@ -27,6 +27,7 @@ import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Map;
 
+/** A wrapper for {@link NativeAd}. */
 class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
   private static final String TAG = "FlutterNativeAd";
 

@@ -24,6 +24,7 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
+/** A wrapper for {@link RewardedAd}. */
 class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   private static final String TAG = "FlutterRewardedAd";
 
@@ -35,6 +36,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   @Nullable private final FlutterServerSideVerificationOptions serverSideVerificationOptions;
   @Nullable RewardedAd rewardedAd;
 
+  /** A wrapper for {@link RewardItem}. */
   static class FlutterRewardItem {
     @NonNull final Integer amount;
     @NonNull final String type;
@@ -67,7 +69,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
     }
   }
 
-  /** Constructor for Admob Ad Request. */
+  /** Constructor for AdMob Ad Request. */
   public FlutterRewardedAd(
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,

@@ -17,7 +17,6 @@ package io.flutter.plugins.googlemobileads;
 import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
@@ -33,7 +32,8 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final List<FlutterAdSize> sizes;
-  @NonNull FlutterAdManagerAdRequest request;
+  @NonNull private final FlutterAdManagerAdRequest request;
+  @NonNull private final BannerAdCreator bannerAdCreator;
   @Nullable private AdManagerAdView view;
 
   /**
@@ -46,7 +46,8 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull List<FlutterAdSize> sizes,
-      @NonNull FlutterAdManagerAdRequest request) {
+      @NonNull FlutterAdManagerAdRequest request,
+      @NonNull BannerAdCreator bannerAdCreator) {
     Preconditions.checkNotNull(manager);
     Preconditions.checkNotNull(adUnitId);
     Preconditions.checkNotNull(sizes);
@@ -55,11 +56,12 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
     this.adUnitId = adUnitId;
     this.sizes = sizes;
     this.request = request;
+    this.bannerAdCreator = bannerAdCreator;
   }
 
   @Override
   void load() {
-    view = makeAdManagerAdView();
+    view = bannerAdCreator.createAdManagerAdView();
     view.setAdUnitId(adUnitId);
     view.setAppEventListener(
         new AppEventListener() {
@@ -75,12 +77,7 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
     }
     view.setAdSizes(allSizes);
     view.setAdListener(new FlutterBannerAdListener(manager, this));
-
-    if (request != null) {
-      view.loadAd(request.asAdManagerAdRequest());
-    } else {
-      view.loadAd(new FlutterAdManagerAdRequest.Builder().build().asAdManagerAdRequest());
-    }
+    view.loadAd(request.asAdManagerAdRequest());
   }
 
   @Override
@@ -102,10 +99,5 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
       view.destroy();
       view = null;
     }
-  }
-
-  @VisibleForTesting
-  protected AdManagerAdView makeAdManagerAdView() {
-    return new AdManagerAdView(manager.activity);
   }
 }

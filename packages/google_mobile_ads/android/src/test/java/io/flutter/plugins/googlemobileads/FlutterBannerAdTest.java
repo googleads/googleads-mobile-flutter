@@ -58,17 +58,11 @@ public class FlutterBannerAdTest {
     adSize = new AdSize(1, 2);
     when(mockFlutterRequest.asAdRequest()).thenReturn(mockAdRequest);
     when(mockFlutterAdSize.getAdSize()).thenReturn(adSize);
-
-    final FlutterBannerAd flutterBannerAd = new FlutterBannerAd.Builder()
-      .setAdUnitId("testId")
-      .setManager(mockManager)
-      .setRequest(mockFlutterRequest)
-      .setSize(mockFlutterAdSize)
-      .build();
-    final FlutterBannerAd flutterBannerAdSpy = spy(flutterBannerAd);
+    BannerAdCreator bannerAdCreator = mock(BannerAdCreator.class);
     mockAdView = mock(AdView.class);
-    doReturn(mockAdView).when(flutterBannerAdSpy).makeAdView();
-    this.flutterBannerAd = flutterBannerAdSpy;
+    doReturn(mockAdView).when(bannerAdCreator).createAdView();
+    flutterBannerAd = new FlutterBannerAd(
+        mockManager, "testId", mockFlutterRequest, mockFlutterAdSize, bannerAdCreator);
   }
 
   @Test

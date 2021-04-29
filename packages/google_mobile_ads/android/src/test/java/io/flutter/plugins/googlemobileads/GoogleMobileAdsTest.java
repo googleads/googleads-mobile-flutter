@@ -63,13 +63,12 @@ public class GoogleMobileAdsTest {
 
   @Test
   public void loadAd() {
-    final FlutterBannerAd bannerAd =
-        new FlutterBannerAd.Builder()
-            .setManager(testManager)
-            .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
-            .setRequest(request)
-            .build();
+    final FlutterBannerAd bannerAd = new FlutterBannerAd(
+        testManager,
+        "testId",
+        request,
+        new FlutterAdSize(1, 2),
+        new BannerAdCreator(testManager.activity));
     testManager.trackAd(bannerAd, 0);
 
     assertNotNull(testManager.adForId(0));
@@ -192,13 +191,12 @@ public class GoogleMobileAdsTest {
 
   @Test
   public void flutterAdListener_onAdLoaded() {
-    final FlutterBannerAd bannerAd =
-        new FlutterBannerAd.Builder()
-            .setManager(testManager)
-            .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
-            .setRequest(request)
-            .build();
+    final FlutterBannerAd bannerAd = new FlutterBannerAd(
+        testManager,
+        "testId",
+        request,
+        new FlutterAdSize(1, 2),
+        new BannerAdCreator(testManager.activity));
     testManager.trackAd(bannerAd, 0);
 
     testManager.onAdLoaded(bannerAd);
@@ -213,13 +211,12 @@ public class GoogleMobileAdsTest {
 
   @Test
   public void flutterAdListener_onAdFailedToLoad() {
-    final FlutterBannerAd bannerAd =
-        new FlutterBannerAd.Builder()
-            .setManager(testManager)
-            .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
-            .setRequest(request)
-            .build();
+    final FlutterBannerAd bannerAd = new FlutterBannerAd(
+        testManager,
+        "testId",
+        request,
+        new FlutterAdSize(1, 2),
+        new BannerAdCreator(testManager.activity));
     testManager.trackAd(bannerAd, 0);
 
     testManager.onAdFailedToLoad(bannerAd, new FlutterAd.FlutterLoadAdError(1, "hi", "friend"));
@@ -238,13 +235,12 @@ public class GoogleMobileAdsTest {
 
   @Test
   public void flutterAdListener_onAppEvent() {
-    final FlutterBannerAd bannerAd =
-        new FlutterBannerAd.Builder()
-            .setManager(testManager)
-            .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
-            .setRequest(request)
-            .build();
+    final FlutterBannerAd bannerAd = new FlutterBannerAd(
+        testManager,
+        "testId",
+        request,
+        new FlutterAdSize(1, 2),
+        new BannerAdCreator(testManager.activity));
     testManager.trackAd(bannerAd, 0);
 
     testManager.onAppEvent(bannerAd, "color", "red");
@@ -263,13 +259,12 @@ public class GoogleMobileAdsTest {
 
   @Test
   public void flutterAdListener_onAdOpened() {
-    final FlutterBannerAd bannerAd =
-        new FlutterBannerAd.Builder()
-            .setManager(testManager)
-            .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
-            .setRequest(request)
-            .build();
+    final FlutterBannerAd bannerAd = new FlutterBannerAd(
+        testManager,
+        "testId",
+        request,
+        new FlutterAdSize(1, 2),
+        new BannerAdCreator(testManager.activity));
     testManager.trackAd(bannerAd, 0);
 
     testManager.onAdOpened(bannerAd);
@@ -340,13 +335,12 @@ public class GoogleMobileAdsTest {
 
   @Test
   public void flutterAdListener_onAdClosed() {
-    final FlutterBannerAd bannerAd =
-        new FlutterBannerAd.Builder()
-            .setManager(testManager)
-            .setAdUnitId("testId")
-            .setSize(new FlutterAdSize(1, 2))
-            .setRequest(request)
-            .build();
+    final FlutterBannerAd bannerAd = new FlutterBannerAd(
+        testManager,
+        "testId",
+        request,
+        new FlutterAdSize(1, 2),
+        new BannerAdCreator(testManager.activity));
     testManager.trackAd(bannerAd, 0);
 
     testManager.onAdClosed(bannerAd);
