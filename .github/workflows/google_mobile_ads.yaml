@@ -67,7 +67,7 @@ jobs:
           cd packages/google_mobile_ads/ios
           pod lib lint --allow-warnings
         env:
-          DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer
+          DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
   
   flutter:
     runs-on: macos-latest
