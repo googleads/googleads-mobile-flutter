@@ -21,6 +21,7 @@ import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
+import com.google.android.gms.common.internal.Preconditions;
 import io.flutter.plugin.platform.PlatformView;
 import java.util.List;
 
@@ -32,51 +33,8 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final List<FlutterAdSize> sizes;
-  @Nullable FlutterAdManagerAdRequest request;
+  @NonNull FlutterAdManagerAdRequest request;
   @Nullable private AdManagerAdView view;
-
-  // TODO - remove builder pattern.
-  static class Builder {
-    @Nullable private AdInstanceManager manager;
-    @Nullable private String adUnitId;
-    @Nullable private List<FlutterAdSize> sizes;
-    @Nullable private FlutterAdManagerAdRequest request;
-
-    public Builder setManager(@NonNull AdInstanceManager manager) {
-      this.manager = manager;
-      return this;
-    }
-
-    public Builder setAdUnitId(@NonNull String adUnitId) {
-      this.adUnitId = adUnitId;
-      return this;
-    }
-
-    public Builder setSizes(@NonNull List<FlutterAdSize> sizes) {
-      this.sizes = sizes;
-      return this;
-    }
-
-    public Builder setRequest(@Nullable FlutterAdManagerAdRequest request) {
-      this.request = request;
-      return this;
-    }
-
-    FlutterAdManagerBannerAd build() {
-      if (manager == null) {
-        throw new IllegalStateException("AdInstanceManager cannot not be null.");
-      } else if (adUnitId == null) {
-        throw new IllegalStateException("AdUnitId cannot not be null.");
-      } else if (sizes == null || sizes.isEmpty()) {
-        throw new IllegalStateException("Sizes cannot not be null or empty.");
-      }
-
-      final FlutterAdManagerBannerAd bannerAd =
-          new FlutterAdManagerBannerAd(manager, adUnitId, sizes);
-      bannerAd.request = request;
-      return bannerAd;
-    }
-  }
 
   /**
    * Constructs a `FlutterAdManagerBannerAd`.
@@ -84,13 +42,19 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
    * <p>Call `load()` to instantiate the `AdView` and load the `AdRequest`. `getView()` will return
    * null only until `load` is called.
    */
-  private FlutterAdManagerBannerAd(
+  public FlutterAdManagerBannerAd(
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
-      @NonNull List<FlutterAdSize> sizes) {
+      @NonNull List<FlutterAdSize> sizes,
+      @NonNull FlutterAdManagerAdRequest request) {
+    Preconditions.checkNotNull(manager);
+    Preconditions.checkNotNull(adUnitId);
+    Preconditions.checkNotNull(sizes);
+    Preconditions.checkNotNull(request);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.sizes = sizes;
+    this.request = request;
   }
 
   @Override

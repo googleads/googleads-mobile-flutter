@@ -30,39 +30,6 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @Nullable private InterstitialAd ad;
   @NonNull private final FlutterAdLoader flutterAdLoader;
 
-  // TODO: (get rid of builder pattern)
-  static class Builder {
-    @Nullable private AdInstanceManager manager;
-    @Nullable private String adUnitId;
-    @Nullable private FlutterAdRequest request;
-
-    public Builder setManager(@NonNull AdInstanceManager manager) {
-      this.manager = manager;
-      return this;
-    }
-
-    public Builder setAdUnitId(@NonNull String adUnitId) {
-      this.adUnitId = adUnitId;
-      return this;
-    }
-
-    public Builder setRequest(@NonNull FlutterAdRequest request) {
-      this.request = request;
-      return this;
-    }
-
-    FlutterInterstitialAd build() {
-      if (manager == null) {
-        throw new IllegalStateException("AdInstanceManager cannot not be null.");
-      } else if (adUnitId == null) {
-        throw new IllegalStateException("AdUnitId cannot not be null.");
-      } else if (request == null) {
-        throw new IllegalStateException("AdRequest cannot not be null.");
-      }
-      return new FlutterInterstitialAd(manager, adUnitId, request, new FlutterAdLoader());
-    }
-  }
-
   public FlutterInterstitialAd(
     @NonNull AdInstanceManager manager,
     @NonNull String adUnitId,

@@ -27,11 +27,11 @@ import com.google.android.gms.ads.admanager.AppEventListener;
  * Google Mobile Ads Plugin.
  */
 class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
-  private static final String TAG = "FLTPubInterstitialAd";
+  private static final String TAG = "FlutterAdManagerInterstitialAd";
 
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
-  @Nullable private final FlutterAdManagerAdRequest request;
+  @NonNull private final FlutterAdManagerAdRequest request;
   @Nullable private AdManagerInterstitialAd ad;
   @NonNull private final FlutterAdLoader flutterAdLoader;
 
@@ -44,7 +44,7 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
   public FlutterAdManagerInterstitialAd(
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
-      @Nullable FlutterAdManagerAdRequest request,
+      @NonNull FlutterAdManagerAdRequest request,
       @NonNull FlutterAdLoader flutterAdLoader) {
     this.manager = manager;
     this.adUnitId = adUnitId;

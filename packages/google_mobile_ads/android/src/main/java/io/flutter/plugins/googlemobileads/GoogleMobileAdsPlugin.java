@@ -290,11 +290,11 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         break;
       case "loadInterstitialAd":
         final FlutterInterstitialAd interstitial =
-            new FlutterInterstitialAd.Builder()
-                .setManager(instanceManager)
-                .setAdUnitId(call.<String>argument("adUnitId"))
-                .setRequest(call.<FlutterAdRequest>argument("request"))
-                .build();
+            new FlutterInterstitialAd(
+                instanceManager,
+                call.<String>argument("adUnitId"),
+                call.<FlutterAdRequest>argument("request"),
+                new FlutterAdLoader());
         instanceManager.trackAd(interstitial, call.<Integer>argument("adId"));
         interstitial.load();
         result.success(null);
@@ -334,12 +334,11 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         break;
       case "loadPublisherBannerAd":
         final FlutterAdManagerBannerAd adManagerBannerAd =
-            new FlutterAdManagerBannerAd.Builder()
-                .setManager(instanceManager)
-                .setAdUnitId(call.<String>argument("adUnitId"))
-                .setSizes(call.<List<FlutterAdSize>>argument("sizes"))
-                .setRequest(call.<FlutterAdManagerAdRequest>argument("request"))
-                .build();
+            new FlutterAdManagerBannerAd(
+                instanceManager,
+                call.<String>argument("adUnitId"),
+                call.<List<FlutterAdSize>>argument("sizes"),
+                call.<FlutterAdManagerAdRequest>argument("request"));
         instanceManager.trackAd(adManagerBannerAd, call.<Integer>argument("adId"));
         adManagerBannerAd.load();
         result.success(null);

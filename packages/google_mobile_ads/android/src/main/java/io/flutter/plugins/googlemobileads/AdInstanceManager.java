@@ -118,7 +118,7 @@ class AdInstanceManager {
   }
 
   void onAdImpression(@NonNull FlutterAd ad) {
-    // TODO - this needs to be handled in dart.
+    // TODO(jjliu15) - this needs to be handled in dart.
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
     arguments.put("eventName", "onAdImpression");
@@ -162,8 +162,8 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
-  // TODO - update dart to handle this.
-  void onFailedToShowFullScreenContent(@NonNull FlutterAd ad, AdError error) {
+  // TODO(jjliu15) - update dart to handle this.
+  void onFailedToShowFullScreenContent(@NonNull FlutterAd ad, @NonNull AdError error) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
     arguments.put("eventName", "onFailedToShowFullScreenContent");
@@ -174,7 +174,7 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
-  // TODO - update dart to handle this.
+  // TODO(jjliu15) - update dart to handle this.
   void onAdShowedFullScreenContent(@NonNull FlutterAd ad) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
@@ -182,7 +182,7 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
-  // TODO - update dart to handle this.
+  // TODO(jjliu15) - update dart to handle this.
   void onAdDismissedFullScreenContent(@NonNull FlutterAd ad) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
@@ -190,7 +190,7 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
-  // TODO - update dart to handle this.
+  // TODO(jjliu15) - update dart to handle this.
   void onAdMetadataChanged(@NonNull FlutterAd ad) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));

@@ -67,12 +67,12 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
       return this;
     }
 
-    public Builder setRequest(@Nullable FlutterAdRequest request) {
+    public Builder setRequest(@NonNull FlutterAdRequest request) {
       this.request = request;
       return this;
     }
 
-    public Builder setAdManagerRequest(@Nullable FlutterAdManagerAdRequest request) {
+    public Builder setAdManagerRequest(@NonNull FlutterAdManagerAdRequest request) {
       this.adManagerRequest = request;
       return this;
     }

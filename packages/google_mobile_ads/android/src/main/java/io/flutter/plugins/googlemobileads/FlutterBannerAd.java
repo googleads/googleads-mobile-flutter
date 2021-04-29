@@ -25,7 +25,7 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final FlutterAdSize size;
-  @Nullable private FlutterAdRequest request;
+  @NonNull private FlutterAdRequest request;
   @Nullable private AdView view;
 
   static class Builder {
@@ -49,7 +49,7 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
       return this;
     }
 
-    public Builder setRequest(@Nullable FlutterAdRequest request) {
+    public Builder setRequest(@NonNull FlutterAdRequest request) {
       this.request = request;
       return this;
     }
