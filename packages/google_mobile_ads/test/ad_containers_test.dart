@@ -760,7 +760,6 @@ void main() {
       final AdRequest adRequest = AdRequest(
           keywords: <String>['1', '2', '3'],
           contentUrl: 'contentUrl',
-          testDevices: <String>['Android', 'iOS'],
           nonPersonalizedAds: false);
 
       final ByteData byteData = codec.encodeMessage(adRequest)!;

@@ -64,7 +64,6 @@ class AdRequest {
   const AdRequest({
     this.keywords,
     this.contentUrl,
-    this.testDevices,
     this.nonPersonalizedAds,
   });
 
@@ -75,13 +74,6 @@ class AdRequest {
   ///
   /// This webpage content is used for targeting and brand safety purposes.
   final String? contentUrl;
-
-  /// Causes a device to receive test ads.
-  ///
-  /// The deviceId can be obtained by viewing the logcat output after creating a
-  /// new ad. This method should only be used while debugging. Be sure to remove
-  /// all calls to this method before releasing your app.
-  final List<String>? testDevices;
 
   /// Non-personalized ads are ads that are not based on a user’s past behavior.
   ///
@@ -94,7 +86,6 @@ class AdRequest {
     return other is AdRequest &&
         listEquals<String>(keywords, other.keywords) &&
         contentUrl == other.contentUrl &&
-        listEquals<String>(testDevices, other.testDevices) &&
         nonPersonalizedAds == other.nonPersonalizedAds;
   }
 }
