@@ -32,22 +32,23 @@
 - (void)testLoadNativeAd {
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
-  [self testLoadNativeAd:request];
+  [self testLoadNativeAd:request customOptions:NULL];
 }
 
 - (void)testLoadNativeAdWithGAMRequest {
   FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
-  [self testLoadNativeAd:request];
+  [self testLoadNativeAd:request customOptions:OCMClassMock([NSDictionary class])];
 }
 
-- (void)testLoadNativeAd:(FLTAdRequest *)gadOrGAMRequest {
+- (void)testLoadNativeAd:(FLTAdRequest *)gadOrGAMRequest
+           customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions {
   id mockNativeAdFactory = OCMProtocolMock(@protocol(FLTNativeAdFactory));
 
   FLTNativeAd *ad = [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
                                                   request:gadOrGAMRequest
                                           nativeAdFactory:mockNativeAdFactory
-                                            customOptions:nil
+                                            customOptions:customOptions
                                        rootViewController:OCMClassMock([UIViewController class])];
   ad.manager = mockManager;
   
@@ -68,7 +69,11 @@
   // Check that nil is used instead of null when customOptions is Null
   GADNativeAd *mockGADNativeAd = OCMClassMock([GADNativeAd class]);
   [ad adLoader:mockLoader didReceiveNativeAd:mockGADNativeAd];
-  OCMVerify([mockNativeAdFactory createNativeAd:mockGADNativeAd customOptions:[OCMArg isNil]]);
+  if ([NSNull.null isEqual:customOptions] || customOptions == nil) {
+    OCMVerify([mockNativeAdFactory createNativeAd:mockGADNativeAd customOptions:[OCMArg isNil]]);
+  } else {
+    OCMVerify([mockNativeAdFactory createNativeAd:mockGADNativeAd customOptions:[OCMArg isEqual:customOptions]]);
+  }
   
   OCMStub([mockGADNativeAd setDelegate:[OCMArg checkWithBlock:^BOOL(id obj) {
     id<GADNativeAdDelegate> delegate = obj;

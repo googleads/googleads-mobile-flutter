@@ -56,8 +56,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.keywords = [self readValueOfType:[self readByte]];
       request.contentURL = [self readValueOfType:[self readByte]];
 
-      request.testDevices = [self readValueOfType:[self readByte]];
-
       NSNumber *nonPersonalizedAds = [self readValueOfType:[self readByte]];
       request.nonPersonalizedAds = nonPersonalizedAds.boolValue;
 
@@ -142,7 +140,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.keywords];
     [self writeValue:request.contentURL];
 
-    [self writeValue:request.testDevices];
     [self writeValue:@(request.nonPersonalizedAds)];
   } else if ([value isKindOfClass:[FLTRewardItem class]]) {
     [self writeByte:FLTAdMobFieldRewardItem];

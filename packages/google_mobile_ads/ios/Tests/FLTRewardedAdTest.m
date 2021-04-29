@@ -110,7 +110,7 @@
     [invocation getArgument:&rewardHandler atIndex:3];
     rewardHandler();
   });
-  // Prevent cals to setServerSideVerificationOptions if options is nil.
+  // Prevent calls to setServerSideVerificationOptions if options is nil.
   if (options == nil) {
     OCMReject([rewardedClassMock setServerSideVerificationOptions:[OCMArg any]]);
   }

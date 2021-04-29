@@ -30,7 +30,6 @@
 @interface FLTAdRequest : NSObject
 @property NSArray<NSString *> *_Nullable keywords;
 @property NSString *_Nullable contentURL;
-@property NSArray<NSString *> *_Nullable testDevices;
 @property BOOL nonPersonalizedAds;
 - (GADRequest *_Nonnull)asGADRequest;
 @end

@@ -47,7 +47,6 @@
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
   request.contentURL = @"banana";
-  request.testDevices = @[ @"orange" ];
   request.nonPersonalizedAds = YES;
 
   NSData *encodedMessage = [_messageCodec encode:request];
@@ -55,7 +54,6 @@
   FLTAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
   XCTAssertTrue([decodedRequest.keywords isEqualToArray:@[ @"apple" ]]);
   XCTAssertEqualObjects(decodedRequest.contentURL, @"banana");
-  XCTAssertTrue([decodedRequest.testDevices isEqualToArray:@[ @"orange" ]]);
   XCTAssertTrue(decodedRequest.nonPersonalizedAds);
 }
 
