@@ -17,6 +17,7 @@ package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
@@ -43,16 +44,17 @@ final class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE = (byte) 139;
   private static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 140;
 
+  @NonNull
   private final Context context;
   private final FlutterAdSize.AdSizeFactory adSizeFactory;
 
-  AdMessageCodec(Context context) {
+  AdMessageCodec(@NonNull Context context) {
     this.context = context;
     this.adSizeFactory = new FlutterAdSize.AdSizeFactory();
   }
 
   @VisibleForTesting
-  AdMessageCodec(Context context, FlutterAdSize.AdSizeFactory adSizeFactory) {
+  AdMessageCodec(@NonNull Context context, FlutterAdSize.AdSizeFactory adSizeFactory) {
     this.context = context;
     this.adSizeFactory = adSizeFactory;
   }
