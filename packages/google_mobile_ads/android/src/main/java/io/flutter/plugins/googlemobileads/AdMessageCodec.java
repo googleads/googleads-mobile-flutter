@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * Encodes and decodes values by reading from a ByteBuffer and writing to a ByteArrayOutputStream.
  */
-final class AdMessageCodec extends StandardMessageCodec {
+class AdMessageCodec extends StandardMessageCodec {
   // The type values below must be consistent for each platform.
   private static final byte VALUE_AD_SIZE = (byte) 128;
   private static final byte VALUE_AD_REQUEST = (byte) 129;
@@ -45,8 +45,9 @@ final class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 140;
 
   @NonNull
-  private final Context context;
-  private final FlutterAdSize.AdSizeFactory adSizeFactory;
+  final Context context;
+  @NonNull
+  final FlutterAdSize.AdSizeFactory adSizeFactory;
 
   AdMessageCodec(@NonNull Context context) {
     this.context = context;
@@ -54,7 +55,7 @@ final class AdMessageCodec extends StandardMessageCodec {
   }
 
   @VisibleForTesting
-  AdMessageCodec(@NonNull Context context, FlutterAdSize.AdSizeFactory adSizeFactory) {
+  AdMessageCodec(@NonNull Context context, @NonNull  FlutterAdSize.AdSizeFactory adSizeFactory) {
     this.context = context;
     this.adSizeFactory = adSizeFactory;
   }
@@ -130,10 +131,6 @@ final class AdMessageCodec extends StandardMessageCodec {
       case VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE:
         final String orientation = (String) readValueOfType(buffer.get(), buffer);
         final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
-        @SuppressWarnings("unused")
-        // Unused to create a new instance when reading the value from Dart.
-        // This is for the purpose of testing the writer.
-        final Integer height = (Integer) readValueOfType(buffer.get(), buffer);
         return new FlutterAdSize.AnchoredAdaptiveBannerAdSize(context, adSizeFactory, orientation, width);
       case VALUE_SMART_BANNER_AD_SIZE:
         return new FlutterAdSize.SmartBannerAdSize();
