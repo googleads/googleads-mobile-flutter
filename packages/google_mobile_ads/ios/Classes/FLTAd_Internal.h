@@ -28,6 +28,9 @@
 - (instancetype _Nonnull)initWithAdSize:(GADAdSize)size;
 @end
 
+/**
+ * Wrapper around top level methods for `GADAdSize` for the Google Mobile Ads Plugin.
+ */
 @interface FLTAdSizeFactory : NSObject
 -(GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
 -(GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;

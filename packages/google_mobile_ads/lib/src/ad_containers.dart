@@ -143,8 +143,16 @@ class PublisherAdRequest {
 }
 
 /// An [AdSize] with the given width and a Google-optimized height to create a banner ad.
+///
+/// See:
+///   [AdSize.getAnchoredAdaptiveBannerAdSize].
 class AnchoredAdaptiveBannerAdSize extends AdSize {
   /// Default constructor for [AnchoredAdaptiveBannerAdSize].
+  ///
+  /// This constructor should only be used internally.
+  ///
+  /// See:
+  ///   [AdSize.getAnchoredAdaptiveBannerAdSize].
   AnchoredAdaptiveBannerAdSize(
     this.orientation, {
     required int width,
