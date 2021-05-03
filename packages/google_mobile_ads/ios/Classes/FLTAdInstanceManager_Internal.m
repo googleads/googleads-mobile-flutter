@@ -78,8 +78,7 @@
 }
 
 - (void)onAdLoaded:(id<FLTAd> _Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdLoaded"}];
+  [self sendAdEvent:@"onAdLoaded" ad:ad];
 }
 
 - (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(NSError *_Nonnull)error {
@@ -102,28 +101,23 @@
 }
 
 - (void)onNativeAdClicked:(FLTNativeAd *_Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdClicked"}];
+  [self sendAdEvent:@"onNativeAdClicked" ad:ad];
 }
 
 - (void)onNativeAdImpression:(FLTNativeAd *_Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdImpression"}];
+  [self sendAdEvent:@"onNativeAdImpression" ad:ad];
 }
 
 - (void)onNativeAdWillPresentScreen:(FLTNativeAd *_Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdWillPresentScreen"}];
+  [self sendAdEvent:@"onNativeAdWillPresentScreen" ad:ad];
 }
 
 - (void)onNativeAdDidDismissScreen:(FLTNativeAd *_Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdDidDismissScreen"}];
+  [self sendAdEvent:@"onNativeAdDidDismissScreen" ad:ad];
 }
 
 - (void)onNativeAdWillDismissScreen:(FLTNativeAd *_Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdWillDismissScreen"}];
+  [self sendAdEvent:@"onNativeAdWillDismissScreen" ad:ad];
 }
 
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
@@ -137,46 +131,34 @@
 }
 
 - (void)onBannerImpression:(FLTBannerAd *_Nonnull)ad {
-  [_channel invokeMethod:@"onBannerImpression"
-               arguments:@{
-                 @"adId" : [self adIdFor:ad],
-               }];
+  [self sendAdEvent:@"onBannerImpression" ad:ad];
 }
 
 - (void)onBannerWillDismissScreen:(FLTBannerAd *)ad {
-  [_channel invokeMethod:@"onBannerWillDismissScreen"
-               arguments:@{
-                 @"adId" : [self adIdFor:ad],
-               }];
+  [self sendAdEvent:@"onBannerWillDismissScreen" ad:ad];
 }
 
 - (void)onBannerDidDismissScreen:(FLTBannerAd *)ad {
-  [_channel invokeMethod:@"onBannerDidDismissScreen"
-               arguments:@{
-                 @"adId" : [self adIdFor:ad],
-               }];
+  [self sendAdEvent:@"onBannerDidDismissScreen" ad:ad];
 }
 
 - (void)onBannerWillPresentScreen:(FLTBannerAd *_Nonnull) ad {
-  [_channel invokeMethod:@"onBannerWillPresentScreen"
-               arguments:@{
-                 @"adId" : [self adIdFor:ad],
-               }];
+  [self sendAdEvent:@"onBannerWillPresentScreen" ad:ad];
 }
 - (void)onAdDidPresentFullScreenContent:(id<FLTAd> _Nonnull)ad {
-  [self invokeMethod:@"onAdDidPresentFullScreenContent" ad:ad];
+  [self sendAdEvent:@"onAdDidPresentFullScreenContent" ad:ad];
 }
 
 - (void)adDidDismissFullScreenContent:(id<FLTAd> _Nonnull)ad {
-  [self invokeMethod:@"adDidDismissFullScreenContent" ad:ad];
+  [self sendAdEvent:@"adDidDismissFullScreenContent" ad:ad];
 }
 
 - (void)adWillDismissFullScreenContent:(id<FLTAd> _Nonnull)ad {
-  [self invokeMethod:@"adWillDismissFullScreenContent" ad:ad];
+  [self sendAdEvent:@"adWillDismissFullScreenContent" ad:ad];
 }
 
 - (void)adDidRecordImpression:(id<FLTAd> _Nonnull)ad {
-  [self invokeMethod:@"adDidRecordImpression" ad:ad];
+  [self sendAdEvent:@"adDidRecordImpression" ad:ad];
 }
 
 - (void)didFailToPresentFullScreenContentWithError:(id<FLTAd> _Nonnull)ad
@@ -188,11 +170,13 @@
                }];
 }
 
-- (void)invokeMethod:(NSString *_Nonnull)method
+/// Sends an ad event with the provided name.
+- (void)sendAdEvent:(NSString *_Nonnull)eventName
                           ad:(id<FLTAd>)ad {
-  [_channel invokeMethod:method
+  [_channel invokeMethod:@"onAdEvent"
                arguments:@{
                  @"adId" : [self adIdFor:ad],
+                 @"eventName" : eventName,
                }];
 }
   
