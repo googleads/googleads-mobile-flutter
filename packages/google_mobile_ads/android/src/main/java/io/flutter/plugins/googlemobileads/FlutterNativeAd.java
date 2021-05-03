@@ -92,12 +92,11 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
       final FlutterNativeAd nativeAd;
       if (request == null) {
         nativeAd = new FlutterNativeAd(
-          manager, adUnitId, adFactory, adManagerRequest, new FlutterAdLoader());
+          manager, adUnitId, adFactory, adManagerRequest, new FlutterAdLoader(), customOptions);
       } else {
         nativeAd = new FlutterNativeAd(
-          manager, adUnitId, adFactory, request, new FlutterAdLoader());
+          manager, adUnitId, adFactory, request, new FlutterAdLoader(), customOptions);
       }
-      nativeAd.customOptions = customOptions;
       return nativeAd;
     }
   }
@@ -107,12 +106,14 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
       @NonNull String adUnitId,
       @NonNull NativeAdFactory adFactory,
       @NonNull FlutterAdRequest request,
-      @NonNull FlutterAdLoader flutterAdLoader) {
+      @NonNull FlutterAdLoader flutterAdLoader,
+      @Nullable Map<String, Object> customOptions) {
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.adFactory = adFactory;
     this.request = request;
     this.flutterAdLoader = flutterAdLoader;
+    this.customOptions = customOptions;
   }
 
   protected FlutterNativeAd(
@@ -120,12 +121,14 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
       @NonNull String adUnitId,
       @NonNull NativeAdFactory adFactory,
       @NonNull FlutterAdManagerAdRequest adManagerRequest,
-      @NonNull FlutterAdLoader flutterAdLoader) {
+      @NonNull FlutterAdLoader flutterAdLoader,
+      @Nullable Map<String, Object> customOptions) {
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.adFactory = adFactory;
     this.adManagerRequest = adManagerRequest;
     this.flutterAdLoader = flutterAdLoader;
+    this.customOptions = customOptions;
   }
 
   @Override
