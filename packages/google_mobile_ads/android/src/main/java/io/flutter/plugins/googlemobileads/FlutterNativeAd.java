@@ -149,7 +149,7 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
 
       @Override
       public void onAdImpression() {
-        manager.onNativeAdImpression(FlutterNativeAd.this);
+        manager.onAdImpression(FlutterNativeAd.this);
       }
     };
     NativeAdOptions options = new NativeAdOptions.Builder().build();

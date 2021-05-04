@@ -85,6 +85,12 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
       Log.e(TAG, "The interstitial wasn't loaded yet.");
       return;
     }
+    ad.setAppEventListener(new AppEventListener() {
+      @Override
+      public void onAppEvent(@NonNull String name, @NonNull String data) {
+        manager.onAppEvent(FlutterAdManagerInterstitialAd.this, name, data);
+      }
+    });
     ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, this));
     ad.show(manager.activity);
   }

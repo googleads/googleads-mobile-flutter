@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
     _interstitialAd ??= InterstitialAd(
       adUnitId: InterstitialAd.testAdUnitId,
       request: request,
-      listener: AdListener(
+      listener: InterstitialAdListener(
         onAdLoaded: (Ad ad) {
           print('${ad.runtimeType} loaded.');
           _interstitialReady = true;
@@ -75,14 +75,12 @@ class _MyAppState extends State<MyApp> {
           _interstitialAd = null;
           createInterstitialAd();
         },
-        onAdOpened: (Ad ad) => print('${ad.runtimeType} onAdOpened.'),
-        onAdClosed: (Ad ad) {
+        onAdShowedFullScreenContent: (Ad ad) => print('${ad.runtimeType} onAdOpened.'),
+        onAdDismissedFullScreenContent: (Ad ad) {
           print('${ad.runtimeType} closed.');
           ad.dispose();
           createInterstitialAd();
         },
-        onApplicationExit: (Ad ad) =>
-            print('${ad.runtimeType} onApplicationExit.'),
       ),
     )..load();
   }
@@ -91,7 +89,7 @@ class _MyAppState extends State<MyApp> {
     _rewardedAd ??= RewardedAd(
       adUnitId: RewardedAd.testAdUnitId,
       request: request,
-      listener: AdListener(
+      listener: RewardedAdListener(
           onAdLoaded: (Ad ad) {
             print('${ad.runtimeType} loaded.');
             _rewardedReady = true;
@@ -102,14 +100,12 @@ class _MyAppState extends State<MyApp> {
             _rewardedAd = null;
             createRewardedAd();
           },
-          onAdOpened: (Ad ad) => print('${ad.runtimeType} onAdOpened.'),
-          onAdClosed: (Ad ad) {
+          onAdShowedFullScreenContent: (Ad ad) => print('${ad.runtimeType} onAdOpened.'),
+          onAdDismissedFullScreenContent: (Ad ad) {
             print('${ad.runtimeType} closed.');
             ad.dispose();
             createRewardedAd();
           },
-          onApplicationExit: (Ad ad) =>
-              print('${ad.runtimeType} onApplicationExit.'),
           onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) {
             print(
               '$RewardedAd with reward $RewardItem(${reward.amount}, ${reward.type})',
@@ -234,7 +230,7 @@ class BannerAdState extends State<BannerAdWidget> {
       adUnitId: BannerAd.testAdUnitId,
       request: AdRequest(),
       size: widget.size,
-      listener: AdListener(
+      listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           print('$BannerAd loaded.');
           bannerCompleter.complete(ad as BannerAd);
@@ -246,7 +242,6 @@ class BannerAdState extends State<BannerAdWidget> {
         },
         onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
-        onApplicationExit: (Ad ad) => print('$BannerAd onApplicationExit.'),
       ),
     );
     Future<void>.delayed(Duration(seconds: 1), () => _bannerAd.load());
@@ -311,7 +306,7 @@ class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
       adUnitId: '/6499/example/banner',
       request: PublisherAdRequest(nonPersonalizedAds: true),
       sizes: <AdSize>[widget.size],
-      listener: AdListener(
+      listener: AdManagerBannerAdListener(
         onAdLoaded: (Ad ad) {
           print('$PublisherBannerAd loaded.');
           bannerCompleter.complete(ad as PublisherBannerAd);
@@ -323,8 +318,6 @@ class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
         },
         onAdOpened: (Ad ad) => print('$PublisherBannerAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$PublisherBannerAd onAdClosed.'),
-        onApplicationExit: (Ad ad) =>
-            print('$PublisherBannerAd onApplicationExit.'),
       ),
     );
     Future<void>.delayed(Duration(seconds: 1), () => _bannerAd.load());
@@ -385,7 +378,7 @@ class NativeAdState extends State<NativeAdWidget> {
       adUnitId: NativeAd.testAdUnitId,
       request: AdRequest(),
       factoryId: 'adFactoryExample',
-      listener: AdListener(
+      listener: NativeAdListener(
         onAdLoaded: (Ad ad) {
           print('$NativeAd loaded.');
           nativeAdCompleter.complete(ad as NativeAd);
@@ -397,7 +390,6 @@ class NativeAdState extends State<NativeAdWidget> {
         },
         onAdOpened: (Ad ad) => print('$NativeAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$NativeAd onAdClosed.'),
-        onApplicationExit: (Ad ad) => print('$NativeAd onApplicationExit.'),
       ),
     );
     Future<void>.delayed(Duration(seconds: 1), () => _nativeAd.load());

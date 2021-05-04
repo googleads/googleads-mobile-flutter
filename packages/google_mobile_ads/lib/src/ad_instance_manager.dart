@@ -19,6 +19,7 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:google_mobile_ads/src/ad_listeners.dart';
 import 'package:google_mobile_ads/src/mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -32,7 +33,8 @@ AdInstanceManager instanceManager = AdInstanceManager(
   'plugins.flutter.io/google_mobile_ads',
 );
 
-/// Maintains access to loaded [Ad] instances.
+/// Maintains access to loaded [Ad] instances and handles sending/receiving
+/// messages to platform code.
 class AdInstanceManager {
   AdInstanceManager(String channelName)
       : channel = MethodChannel(
@@ -64,6 +66,89 @@ class AdInstanceManager {
   final MethodChannel channel;
 
   void _onAdEvent(Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      _onAdEventAndroid(ad, eventName, arguments);
+    } else {
+      _onAdEventIOS(ad, eventName, arguments);
+    }
+  }
+
+  void _onAdEventIOS(
+      Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
+    switch (eventName) {
+      case 'onAdLoaded':
+        _onAdLoadedAds.add(ad);
+        ad.listener.onAdLoaded?.call(ad);
+        break;
+      case 'onAdFailedToLoad':
+        ad.listener.onAdFailedToLoad?.call(ad, arguments['loadAdError']);
+        break;
+      case 'onAppEvent':
+        (ad.listener as AppEventListener?)?.onAppEvent
+            ?.call(ad, arguments['name'], arguments['data']);
+        break;
+      case 'onNativeAdClicked':
+        (ad as NativeAd?)?.listener.onNativeAdClicked?.call(ad as NativeAd);
+        break;
+      case 'onNativeAdImpression':
+        (ad as NativeAd?)?.listener.onAdImpression?.call(ad as NativeAd);
+        break;
+      case 'onNativeAdWillPresentScreen': // Fall through
+      case 'onBannerWillPresentScreen':
+        (ad.listener as AdWithViewListener?)?.onAdOpened?.call(ad);
+        break;
+      case 'onNativeAdDidDismissScreen': // Fall through
+      case 'onBannerDidDismissScreen':
+        (ad.listener as AdWithViewListener?)?.onAdClosed?.call(ad);
+        break;
+      case 'onBannerWillDismissScreen': // Fall through
+      case 'onNativeAdWillDismissScreen':
+        (ad.listener as AdWithViewListener?)?.onAdWillDismissScreen?.call(ad);
+        break;
+      case 'onRewardedAdUserEarnedReward':
+        assert(arguments['rewardItem'] != null);
+        (ad as RewardedAd?)?.listener?.onRewardedAdUserEarnedReward
+            ?.call(ad as RewardedAd, arguments['rewardItem']);
+        break;
+      case 'onBannerImpression':
+        (ad.listener as AdWithViewListener).onAdImpression?.call(ad);
+        break;
+      case 'onAdDidPresentFullScreenContent':
+        (ad.listener as FullScreenAdListener?)
+            ?.onAdShowedFullScreenContent?.call(ad);
+        break;
+      case 'adDidDismissFullScreenContent':
+        (ad.listener as FullScreenAdListener?)
+            ?.onAdDismissedFullScreenContent?.call(ad);
+        break;
+      case 'adWillDismissFullScreenContent':
+        (ad.listener as FullScreenAdListener?)
+            ?.onAdWillDismissFullScreenContent?.call(ad);
+        break;
+      case 'adDidRecordImpression':
+        (ad.listener as FullScreenAdListener).onAdImpression?.call(ad);
+        break;
+      case 'onFailedToShowFullScreenContent':
+        AdError adError =
+        AdError(arguments['code'], arguments['domain'], arguments['message']);
+        (ad.listener as FullScreenAdListener?)
+            ?.onAdFailedToShowFullScreenContent?.call(ad, adError);
+        break;
+      case 'didFailToPresentFullScreenContentWithError':
+        // (ad.listener as FullScreenAdListener?)
+        //     ?.onAdFailedToShowFullScreenContent?.call(ad, )
+        break;
+
+      case 'onAdMetadataChanged':
+      // TODO(jjliu15)
+        break;
+      default:
+        debugPrint('invalid ad event name: $eventName');
+    }
+  }
+
+  void _onAdEventAndroid(
+      Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     switch (eventName) {
       case 'onAdLoaded':
         _onAdLoadedAds.add(ad);
@@ -73,27 +158,46 @@ class AdInstanceManager {
         ad.listener.onAdFailedToLoad?.call(ad, arguments['loadAdError']);
         break;
       case 'onNativeAdClicked':
-        ad.listener.onNativeAdClicked?.call(ad as NativeAd);
-        break;
-      case 'onNativeAdImpression':
-        ad.listener.onNativeAdImpression?.call(ad as NativeAd);
+        (ad as NativeAd?)?.listener.onNativeAdClicked?.call(ad as NativeAd);
         break;
       case 'onAdOpened':
-        ad.listener.onAdOpened?.call(ad);
-        break;
-      case 'onApplicationExit':
-        ad.listener.onApplicationExit?.call(ad);
+        (ad.listener as AdWithViewListener?)?.onAdOpened?.call(ad);
         break;
       case 'onAdClosed':
-        ad.listener.onAdClosed?.call(ad);
+        (ad.listener as AdWithViewListener?)?.onAdClosed?.call(ad);
         break;
       case 'onAppEvent':
-        ad.listener.onAppEvent?.call(ad, arguments['name'], arguments['data']);
+        (ad.listener as AppEventListener?)?.onAppEvent
+            ?.call(ad, arguments['name'], arguments['data']);
         break;
       case 'onRewardedAdUserEarnedReward':
         assert(arguments['rewardItem'] != null);
-        ad.listener.onRewardedAdUserEarnedReward
+        (ad as RewardedAd?)?.listener?.onRewardedAdUserEarnedReward
             ?.call(ad as RewardedAd, arguments['rewardItem']);
+        break;
+      case 'onAdImpression':
+        if (ad.listener is FullScreenAdListener) {
+          (ad.listener as FullScreenAdListener).onAdImpression?.call(ad);
+        } else if (ad.listener is AdWithViewListener) {
+          (ad.listener as AdWithViewListener).onAdImpression?.call(ad);
+        }
+        break;
+      case 'onFailedToShowFullScreenContent':
+        AdError adError =
+        AdError(arguments['code'], arguments['domain'], arguments['message']);
+        (ad.listener as FullScreenAdListener?)
+            ?.onAdFailedToShowFullScreenContent?.call(ad, adError);
+        break;
+      case 'onAdShowedFullScreenContent':
+        (ad.listener as FullScreenAdListener?)
+            ?.onAdShowedFullScreenContent?.call(ad);
+        break;
+      case 'onAdDismissedFullScreenContent':
+        (ad.listener as FullScreenAdListener?)
+            ?.onAdDismissedFullScreenContent?.call(ad);
+        break;
+      case 'onAdMetadataChanged':
+      // TODO(jjliu15)
         break;
       default:
         debugPrint('invalid ad event name: $eventName');

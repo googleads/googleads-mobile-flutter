@@ -23,13 +23,11 @@ import java.util.List;
 class FlutterAdRequest {
   @Nullable private List<String> keywords;
   @Nullable private String contentUrl;
-  @Nullable private List<String> testDevices;
   @Nullable private Boolean nonPersonalizedAds;
 
   static class Builder {
     @Nullable private List<String> keywords;
     @Nullable private String contentUrl;
-    @Nullable private List<String> testDevices;
     @Nullable private Boolean nonPersonalizedAds;
 
     Builder setKeywords(@Nullable List<String> keywords) {
@@ -42,11 +40,6 @@ class FlutterAdRequest {
       return this;
     }
 
-    Builder setTestDevices(@Nullable List<String> testDevices) {
-      this.testDevices = testDevices;
-      return this;
-    }
-
     Builder setNonPersonalizedAds(@Nullable Boolean nonPersonalizedAds) {
       this.nonPersonalizedAds = nonPersonalizedAds;
       return this;
@@ -56,7 +49,6 @@ class FlutterAdRequest {
       final FlutterAdRequest request = new FlutterAdRequest();
       request.keywords = keywords;
       request.contentUrl = contentUrl;
-      request.testDevices = testDevices;
       request.nonPersonalizedAds = nonPersonalizedAds;
       return request;
     }
@@ -75,12 +67,6 @@ class FlutterAdRequest {
     if (contentUrl != null) {
       builder.setContentUrl(contentUrl);
     }
-    if (testDevices != null) {
-      for (final String testDevice : testDevices) {
-        // TODO(jjliu15) - Delete testDevices
-        // builder.addTestDevice(testDevice);
-      }
-    }
     if (nonPersonalizedAds != null && nonPersonalizedAds) {
       final Bundle extras = new Bundle();
       extras.putString("npa", "1");
@@ -98,11 +84,6 @@ class FlutterAdRequest {
   @Nullable
   public String getContentUrl() {
     return contentUrl;
-  }
-
-  @Nullable
-  public List<String> getTestDevices() {
-    return testDevices;
   }
 
   @Nullable

@@ -118,7 +118,6 @@ class AdInstanceManager {
   }
 
   void onAdImpression(@NonNull FlutterAd ad) {
-    // TODO(jjliu15) - this needs to be handled in dart.
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
     arguments.put("eventName", "onAdImpression");
@@ -129,13 +128,6 @@ class AdInstanceManager {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
     arguments.put("eventName", "onNativeAdClicked");
-    channel.invokeMethod("onAdEvent", arguments);
-  }
-
-  void onNativeAdImpression(@NonNull FlutterNativeAd ad) {
-    Map<Object, Object> arguments = new HashMap<>();
-    arguments.put("adId", adIdFor(ad));
-    arguments.put("eventName", "onNativeAdImpression");
     channel.invokeMethod("onAdEvent", arguments);
   }
 
@@ -162,7 +154,6 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
-  // TODO(jjliu15) - update dart to handle this.
   void onFailedToShowFullScreenContent(@NonNull FlutterAd ad, @NonNull AdError error) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
@@ -174,7 +165,6 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
-  // TODO(jjliu15) - update dart to handle this.
   void onAdShowedFullScreenContent(@NonNull FlutterAd ad) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
@@ -182,7 +172,6 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
-  // TODO(jjliu15) - update dart to handle this.
   void onAdDismissedFullScreenContent(@NonNull FlutterAd ad) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
@@ -190,7 +179,6 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
-  // TODO(jjliu15) - update dart to handle this.
   void onAdMetadataChanged(@NonNull FlutterAd ad) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));

@@ -108,7 +108,7 @@ public class FlutterNativeAdTest {
     verify(testManager).onAdOpened(eq(nativeAd));
     verify(testManager).onAdClosed(eq(nativeAd));
     verify(testManager).onNativeAdClicked(eq(nativeAd));
-    verify(testManager).onNativeAdImpression(eq(nativeAd));
+    verify(testManager).onAdImpression(eq(nativeAd));
     verify(testManager).onAdLoaded(eq(nativeAd));
     verify(testManager).onAdFailedToLoad(eq(nativeAd), eq(new FlutterLoadAdError(loadAdError)));
   }
@@ -172,7 +172,7 @@ public class FlutterNativeAdTest {
     verify(testManager).onAdOpened(eq(nativeAd));
     verify(testManager).onAdClosed(eq(nativeAd));
     verify(testManager).onNativeAdClicked(eq(nativeAd));
-    verify(testManager).onNativeAdImpression(eq(nativeAd));
+    verify(testManager).onAdImpression(eq(nativeAd));
     verify(testManager).onAdLoaded(eq(nativeAd));
     verify(testManager).onAdFailedToLoad(eq(nativeAd), eq(new FlutterLoadAdError(loadAdError)));
   }

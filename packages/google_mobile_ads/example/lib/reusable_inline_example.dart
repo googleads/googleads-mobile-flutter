@@ -82,7 +82,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
         adUnitId: Platform.isAndroid
             ? 'ca-app-pub-3940256099942544/6300978111'
             : 'ca-app-pub-3940256099942544/2934735716',
-        listener: AdListener(
+        listener: BannerAdListener(
           onAdLoaded: (Ad ad) {
             print('$BannerAd loaded.');
             setState(() {
@@ -95,7 +95,6 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
           },
           onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
           onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
-          onApplicationExit: (Ad ad) => print('$BannerAd onApplicationExit.'),
         ),
         request: AdRequest())
       ..load();
@@ -106,7 +105,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
           : 'ca-app-pub-3940256099942544/3986624511',
       request: AdRequest(),
       factoryId: 'adFactoryExample',
-      listener: AdListener(
+      listener: NativeAdListener(
         onAdLoaded: (Ad ad) {
           print('$NativeAd loaded.');
           setState(() {
@@ -119,7 +118,6 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
         },
         onAdOpened: (Ad ad) => print('$NativeAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$NativeAd onAdClosed.'),
-        onApplicationExit: (Ad ad) => print('$NativeAd onApplicationExit.'),
       ),
     )..load();
 
@@ -127,7 +125,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
       adUnitId: '/6499/example/banner',
       request: PublisherAdRequest(nonPersonalizedAds: true),
       sizes: <AdSize>[AdSize.largeBanner],
-      listener: AdListener(
+      listener: AdManagerBannerAdListener(
         onAdLoaded: (Ad ad) {
           print('$PublisherBannerAd loaded.');
           setState(() {
@@ -140,8 +138,6 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
         },
         onAdOpened: (Ad ad) => print('$PublisherBannerAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$PublisherBannerAd onAdClosed.'),
-        onApplicationExit: (Ad ad) =>
-            print('$PublisherBannerAd onApplicationExit.'),
       ),
     )..load();
   }

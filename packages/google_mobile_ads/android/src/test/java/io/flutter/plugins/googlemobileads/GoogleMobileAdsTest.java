@@ -128,7 +128,6 @@ public class GoogleMobileAdsTest {
             new FlutterAdRequest.Builder()
                 .setKeywords(Arrays.asList("1", "2", "3"))
                 .setContentUrl("contentUrl")
-                .setTestDevices(Arrays.asList("Android", "iOS"))
                 .setNonPersonalizedAds(false)
                 .build());
 
@@ -136,7 +135,6 @@ public class GoogleMobileAdsTest {
         (FlutterAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(Arrays.asList("1", "2", "3"), request.getKeywords());
     assertEquals("contentUrl", request.getContentUrl());
-    assertEquals(Arrays.asList("Android", "iOS"), request.getTestDevices());
     assertEquals(false, request.getNonPersonalizedAds());
   }
 
@@ -323,12 +321,12 @@ public class GoogleMobileAdsTest {
             .build();
     testManager.trackAd(nativeAd, 0);
 
-    testManager.onNativeAdImpression(nativeAd);
+    testManager.onAdImpression(nativeAd);
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
     //noinspection rawtypes
-    assertThat(call.arguments, (Matcher) hasEntry("eventName", "onNativeAdImpression"));
+    assertThat(call.arguments, (Matcher) hasEntry("eventName", "onAdImpression"));
     //noinspection rawtypes
     assertThat(call.arguments, (Matcher) hasEntry("adId", 0));
   }

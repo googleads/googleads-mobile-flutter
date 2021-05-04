@@ -24,11 +24,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'ad_instance_manager.dart';
+import 'ad_listeners.dart';
 
 /// Error information about why an ad load operation failed.
-class LoadAdError {
+class AdError {
   /// Default constructor for [LoadAdError].
-  LoadAdError(this.code, this.domain, this.message);
+  AdError(this.code, this.domain, this.message);
 
   /// Unique code to identify the error.
   ///
@@ -53,6 +54,13 @@ class LoadAdError {
   String toString() {
     return '$runtimeType(code: $code, domain: $domain, message: $message)';
   }
+}
+
+/// Represents errors that occur when loading an ad.
+class LoadAdError extends AdError {
+  /// Default constructor for [LoadAdError].
+  LoadAdError(int code, String domain, String message)
+      : super(code, domain, message);
 }
 
 /// Targeting info per the AdMob API.
@@ -209,52 +217,6 @@ class AdSize {
   }
 }
 
-/// A listener for receiving notifications during the lifecycle of an ad.
-class AdListener {
-  /// Default constructor for [AdListener].
-  const AdListener({
-    this.onAdLoaded,
-    this.onAdFailedToLoad,
-    this.onNativeAdClicked,
-    this.onNativeAdImpression,
-    this.onAdOpened,
-    this.onApplicationExit,
-    this.onAdClosed,
-    this.onRewardedAdUserEarnedReward,
-    this.onAppEvent,
-  });
-
-  /// Called when an ad is successfully received.
-  final void Function(Ad ad)? onAdLoaded;
-
-  /// Called when an ad request failed.
-  final void Function(Ad ad, LoadAdError error)? onAdFailedToLoad;
-
-  /// Called when an app event is received.
-  final void Function(Ad ad, String name, String data)? onAppEvent;
-
-  /// Called when a click is recorded for a [NativeAd].
-  final void Function(NativeAd ad)? onNativeAdClicked;
-
-  /// Called when an impression is recorded for a [NativeAd].
-  final void Function(NativeAd ad)? onNativeAdImpression;
-
-  /// Called when an ad opens an overlay that covers the screen.
-  final void Function(Ad ad)? onAdOpened;
-
-  /// Called when an ad is in the process of leaving the application.
-  final void Function(Ad ad)? onApplicationExit;
-
-  /// Called when an ad removes an overlay that covers the screen.
-  final void Function(Ad ad)? onAdClosed;
-
-  /// Called when a [RewardedAd] triggers a reward.
-  final void Function(
-    RewardedAd ad,
-    RewardItem reward,
-  )? onRewardedAdUserEarnedReward;
-}
-
 /// The base class for all ads.
 ///
 /// A valid [adUnitId] is required.
@@ -262,13 +224,13 @@ abstract class Ad {
   /// Default constructor, used by subclasses.
   const Ad({required this.adUnitId, required this.listener});
 
-  /// Receive callbacks from [Ad] lifecycle events.
-  final AdListener listener;
-
   /// Identifies the source of [Ad]s for your application.
   ///
   /// For testing use a [sample ad unit](https://developers.google.com/admob/ios/test-ads#sample_ad_units).
   final String adUnitId;
+
+  /// The [BaseAdListener] for the ad.
+  final BaseAdListener listener;
 
   /// Free the plugin resources associated with this ad.
   Future<void> dispose() {
@@ -292,14 +254,14 @@ abstract class Ad {
 /// A valid [adUnitId] and [size] are required.
 abstract class AdWithView extends Ad {
   /// Default constructor, used by subclasses.
-  const AdWithView({required String adUnitId, required AdListener listener})
+  const AdWithView({required String adUnitId, required BaseAdListener listener})
       : super(adUnitId: adUnitId, listener: listener);
 }
 
 /// An [Ad] that is overlaid on top of the UI.
 abstract class AdWithoutView extends Ad {
   /// Default constructor used by subclasses.
-  const AdWithoutView({required String adUnitId, required AdListener listener})
+  const AdWithoutView({required String adUnitId, required BaseAdListener listener})
       : super(adUnitId: adUnitId, listener: listener);
 
   /// Display this on top of the application.
@@ -421,7 +383,7 @@ class BannerAd extends AdWithView {
   BannerAd({
     required this.size,
     required String adUnitId,
-    required AdListener listener,
+    required this.listener,
     required this.request,
   }) : super(adUnitId: adUnitId, listener: listener);
 
@@ -434,6 +396,10 @@ class BannerAd extends AdWithView {
   /// See the guides for banners on Android](https://developers.google.com/admob/android/banner#banner_sizes)
   /// and [iOS](https://developers.google.com/admob/ios/banner#banner_sizes) for additional details.
   final AdSize size;
+
+  /// A listener for receiving events in the ad lifecycle.
+  @override
+  final BannerAdListener listener;
 
   /// {@template google_mobile_ads.testAdUnitId}
   /// A platform-specific AdMob test ad unit ID.
@@ -463,13 +429,17 @@ class PublisherBannerAd extends AdWithView {
   PublisherBannerAd({
     required this.sizes,
     required String adUnitId,
-    required AdListener listener,
+    required this.listener,
     required this.request,
   })  : assert(sizes.isNotEmpty),
         super(adUnitId: adUnitId, listener: listener);
 
   /// Targeting information used to fetch an [Ad].
   final PublisherAdRequest request;
+
+  /// A listener for receiving events in the ad lifecycle.
+  @override
+  final AdManagerBannerAdListener listener;
 
   /// Ad sizes supported by this [PublisherBannerAd].
   ///
@@ -513,7 +483,7 @@ class NativeAd extends AdWithView {
   NativeAd({
     required String adUnitId,
     required this.factoryId,
-    required AdListener listener,
+    required this.listener,
     required this.request,
     this.customOptions,
   })  : publisherRequest = null,
@@ -527,7 +497,7 @@ class NativeAd extends AdWithView {
   NativeAd.fromPublisherRequest({
     required String adUnitId,
     required this.factoryId,
-    required AdListener listener,
+    required this.listener,
     required this.publisherRequest,
     this.customOptions,
   })  : request = null,
@@ -536,6 +506,10 @@ class NativeAd extends AdWithView {
 
   /// An identifier for the factory that creates the Platform view.
   final String factoryId;
+
+  /// A listener for receiving events in the ad lifecycle.
+  @override
+  final NativeAdListener listener;
 
   /// Optional options used to create the [NativeAd].
   ///
@@ -573,12 +547,16 @@ class InterstitialAd extends AdWithoutView {
   /// nonnull [request] is required.
   InterstitialAd({
     required String adUnitId,
-    required AdListener listener,
+    required this.listener,
     required this.request,
   }) : super(adUnitId: adUnitId, listener: listener);
 
   /// Targeting information used to fetch an [Ad].
   final AdRequest request;
+
+  /// A listener for receiving events in the ad lifecycle.
+  @override
+  final InterstitialAdListener listener;
 
   /// {@macro google_mobile_ads.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
@@ -599,12 +577,16 @@ class PublisherInterstitialAd extends AdWithoutView {
   /// and nonnull [request] is required.
   PublisherInterstitialAd({
     required String adUnitId,
-    required AdListener listener,
+    required this.listener,
     required this.request,
   }) : super(adUnitId: adUnitId, listener: listener);
 
   /// Targeting information used to fetch an [Ad].
   final PublisherAdRequest request;
+
+  /// A listener for receiving events in the ad lifecycle.
+  @override
+  final AdManagerInterstitialAdListener listener;
 
   @override
   Future<void> load() async {
@@ -622,7 +604,7 @@ class RewardedAd extends AdWithoutView {
   /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
   RewardedAd({
     required String adUnitId,
-    required AdListener listener,
+    required this.listener,
     required this.request,
     this.serverSideVerificationOptions,
   })  : publisherRequest = null,
@@ -633,7 +615,7 @@ class RewardedAd extends AdWithoutView {
   /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
   RewardedAd.fromPublisherRequest({
     required String adUnitId,
-    required AdListener listener,
+    required this.listener,
     required this.publisherRequest,
     this.serverSideVerificationOptions,
   })  : request = null,
@@ -644,6 +626,10 @@ class RewardedAd extends AdWithoutView {
 
   /// Targeting information used to fetch an [Ad] using Ad Manager.
   final PublisherAdRequest? publisherRequest;
+
+  /// A listener for receiving events in the ad lifecycle.
+  @override
+  final RewardedAdListener listener;
 
   /// {@template google_mobile_ads.testAdUnitId}
   /// A platform-specific AdMob test ad unit ID.

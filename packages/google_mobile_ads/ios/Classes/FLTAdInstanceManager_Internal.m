@@ -145,6 +145,7 @@
 - (void)onBannerWillPresentScreen:(FLTBannerAd *_Nonnull) ad {
   [self sendAdEvent:@"onBannerWillPresentScreen" ad:ad];
 }
+
 - (void)onAdDidPresentFullScreenContent:(id<FLTAd> _Nonnull)ad {
   [self sendAdEvent:@"onAdDidPresentFullScreenContent" ad:ad];
 }
@@ -179,8 +180,6 @@
                  @"eventName" : eventName,
                }];
 }
-  
-
 
 @end
 
