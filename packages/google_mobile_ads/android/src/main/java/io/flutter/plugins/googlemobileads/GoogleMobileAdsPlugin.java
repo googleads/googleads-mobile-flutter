@@ -280,7 +280,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 .setAdUnitId(call.<String>argument("adUnitId"))
                 .setAdFactory(factory)
                 .setRequest(call.<FlutterAdRequest>argument("request"))
-                .setAdManagerRequest(call.<FlutterAdManagerAdRequest>argument("publisherRequest"))
+                .setAdManagerRequest(call.<FlutterAdManagerAdRequest>argument("adManagerRequest"))
                 .setCustomOptions(call.<Map<String, Object>>argument("customOptions"))
                 .build();
         instanceManager.trackAd(nativeAd, call.<Integer>argument("adId"));
@@ -301,7 +301,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
       case "loadRewardedAd":
         final String adUnitId = requireNonNull(call.<String>argument("adUnitId"));
         final FlutterAdRequest request = call.argument("request");
-        final FlutterAdManagerAdRequest adManagerRequest = call.argument("publisherRequest");
+        final FlutterAdManagerAdRequest adManagerRequest = call.argument("adManagerRequest");
         final FlutterServerSideVerificationOptions serverSideVerificationOptions =
             call.argument("serverSideVerificationOptions");
 
@@ -331,7 +331,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         rewardedAd.load();
         result.success(null);
         break;
-      case "loadPublisherBannerAd":
+      case "loadAdManagerBannerAd":
         final FlutterAdManagerBannerAd adManagerBannerAd =
             new FlutterAdManagerBannerAd(
                 instanceManager,
@@ -343,7 +343,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         adManagerBannerAd.load();
         result.success(null);
         break;
-      case "loadPublisherInterstitialAd":
+      case "loadAdManagerInterstitialAd":
         final FlutterAdManagerInterstitialAd adManagerInterstitialAd =
             new FlutterAdManagerInterstitialAd(
                 requireNonNull(instanceManager),

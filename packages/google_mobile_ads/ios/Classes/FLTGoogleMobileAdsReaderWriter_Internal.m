@@ -20,7 +20,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdMobFieldAdRequest = 129,
   FLTAdMobFieldRewardItem = 132,
   FLTAdMobFieldNSError = 133,
-  FLTAdMobFieldPublisherAdRequest = 134,
+  FLTAdMobFieldAdManagerAdRequest = 134,
   FLTAdMobFieldAdapterInitializationState = 135,
   FLTAdMobFieldAdapterStatus = 136,
   FLTAdMobFieldInitializationStatus = 137,
@@ -73,7 +73,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                                  code:code.longValue
                              userInfo:@{ NSLocalizedDescriptionKey : message}];
     }
-    case FLTAdMobFieldPublisherAdRequest: {
+    case FLTAdMobFieldAdManagerAdRequest: {
       FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
 
       request.keywords = [self readValueOfType:[self readByte]];
@@ -127,7 +127,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:size.width];
     [self writeValue:size.height];
   } else if ([value isKindOfClass:[FLTGAMAdRequest class]]) {
-    [self writeByte:FLTAdMobFieldPublisherAdRequest];
+    [self writeByte:FLTAdMobFieldAdManagerAdRequest];
     FLTGAMAdRequest *request = value;
     [self writeValue:request.keywords];
     [self writeValue:request.contentURL];
@@ -139,7 +139,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     FLTAdRequest *request = value;
     [self writeValue:request.keywords];
     [self writeValue:request.contentURL];
-
     [self writeValue:@(request.nonPersonalizedAds)];
   } else if ([value isKindOfClass:[FLTRewardItem class]]) {
     [self writeByte:FLTAdMobFieldRewardItem];

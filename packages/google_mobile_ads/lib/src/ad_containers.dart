@@ -99,9 +99,9 @@ class AdRequest {
 }
 
 /// Targeting info per the Ad Manager API.
-class PublisherAdRequest {
-  /// Default constructor for [PublisherAdRequest].
-  const PublisherAdRequest({
+class AdManagerAdRequest {
+  /// Default constructor for [AdManagerAdRequest].
+  const AdManagerAdRequest({
     this.keywords,
     this.contentUrl,
     this.customTargeting,
@@ -131,7 +131,7 @@ class PublisherAdRequest {
 
   @override
   bool operator ==(Object other) {
-    return other is PublisherAdRequest &&
+    return other is AdManagerAdRequest &&
         listEquals<String>(keywords, other.keywords) &&
         contentUrl == other.contentUrl &&
         mapEquals<String, String>(customTargeting, other.customTargeting) &&
@@ -418,15 +418,15 @@ class BannerAd extends AdWithView {
   }
 }
 
-/// A banner ad displayed with DoubleClick for Publishers (DFP).
+/// A banner ad displayed with Google Ad Manager.
 ///
 /// This ad can either be overlaid on top of all flutter widgets by passing this
 /// to an [AdWidget] after calling [load].
-class PublisherBannerAd extends AdWithView {
-  /// Default constructor for [PublisherBannerAd].
+class AdManagerBannerAd extends AdWithView {
+  /// Default constructor for [AdManagerBannerAd].
   ///
   /// [sizes], [adUnitId], [listener], and [request] are all required values.
-  PublisherBannerAd({
+  AdManagerBannerAd({
     required this.sizes,
     required String adUnitId,
     required this.listener,
@@ -435,23 +435,23 @@ class PublisherBannerAd extends AdWithView {
         super(adUnitId: adUnitId, listener: listener);
 
   /// Targeting information used to fetch an [Ad].
-  final PublisherAdRequest request;
+  final AdManagerAdRequest request;
 
   /// A listener for receiving events in the ad lifecycle.
   @override
   final AdManagerBannerAdListener listener;
 
-  /// Ad sizes supported by this [PublisherBannerAd].
+  /// Ad sizes supported by this [AdManagerBannerAd].
   ///
   /// In most cases, only one ad size will be specified. Multiple ad sizes can
   /// be specified if your application can appropriately handle multiple ad
-  /// sizes. If multiple ad sizes are specified, the [PublisherBannerAd] will
+  /// sizes. If multiple ad sizes are specified, the [AdManagerBannerAd] will
   /// assume the size of the first ad size until an ad is loaded.
   final List<AdSize> sizes;
 
   @override
   Future<void> load() async {
-    await instanceManager.loadPublisherBannerAd(this);
+    await instanceManager.loadAdManagerBannerAd(this);
   }
 }
 
@@ -486,22 +486,22 @@ class NativeAd extends AdWithView {
     required this.listener,
     required this.request,
     this.customOptions,
-  })  : publisherRequest = null,
+  })  : adManagerRequest = null,
         assert(request != null),
         super(adUnitId: adUnitId, listener: listener);
 
   /// Creates a [NativeAd] with Ad Manager.
   ///
-  /// A valid [adUnitId], nonnull [listener], nonnull [publisherRequest], and
+  /// A valid [adUnitId], nonnull [listener], nonnull [adManagerRequest], and
   /// nonnull [factoryId] is required.
-  NativeAd.fromPublisherRequest({
+  NativeAd.fromAdManagerRequest({
     required String adUnitId,
     required this.factoryId,
     required this.listener,
-    required this.publisherRequest,
+    required this.adManagerRequest,
     this.customOptions,
   })  : request = null,
-        assert(publisherRequest != null),
+        assert(adManagerRequest != null),
         super(adUnitId: adUnitId, listener: listener);
 
   /// An identifier for the factory that creates the Platform view.
@@ -520,7 +520,7 @@ class NativeAd extends AdWithView {
   final AdRequest? request;
 
   /// Targeting information used to fetch an [Ad] with Ad Manager.
-  final PublisherAdRequest? publisherRequest;
+  final AdManagerAdRequest? adManagerRequest;
 
   /// {@template google_mobile_ads.testAdUnitId}
   /// A platform-specific AdMob test ad unit ID.
@@ -570,19 +570,19 @@ class InterstitialAd extends AdWithoutView {
 }
 
 /// A full-screen interstitial ad for use with Ad Manager.
-class PublisherInterstitialAd extends AdWithoutView {
-  /// Creates an [PublisherInterstitialAd].
+class AdManagerInterstitialAd extends AdWithoutView {
+  /// Creates an [AdManagerInterstitialAd].
   ///
   /// A valid [adUnitId] from the Ad Manager dashboard, a nonnull [listener],
   /// and nonnull [request] is required.
-  PublisherInterstitialAd({
+  AdManagerInterstitialAd({
     required String adUnitId,
     required this.listener,
     required this.request,
   }) : super(adUnitId: adUnitId, listener: listener);
 
   /// Targeting information used to fetch an [Ad].
-  final PublisherAdRequest request;
+  final AdManagerAdRequest request;
 
   /// A listener for receiving events in the ad lifecycle.
   @override
@@ -590,7 +590,7 @@ class PublisherInterstitialAd extends AdWithoutView {
 
   @override
   Future<void> load() async {
-    await instanceManager.loadPublisherInterstitialAd(this);
+    await instanceManager.loadAdManagerInterstitialAd(this);
   }
 }
 
@@ -607,16 +607,16 @@ class RewardedAd extends AdWithoutView {
     required this.listener,
     required this.request,
     this.serverSideVerificationOptions,
-  })  : publisherRequest = null,
+  })  : adManagerRequest = null,
         super(adUnitId: adUnitId, listener: listener);
 
-  /// Creates a [RewardedAd] with a [PublisherAdRequest].
+  /// Creates a [RewardedAd] with a [AdManagerAdRequest].
   ///
   /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
-  RewardedAd.fromPublisherRequest({
+  RewardedAd.fromAdManagerRequest({
     required String adUnitId,
     required this.listener,
-    required this.publisherRequest,
+    required this.adManagerRequest,
     this.serverSideVerificationOptions,
   })  : request = null,
         super(adUnitId: adUnitId, listener: listener);
@@ -625,7 +625,7 @@ class RewardedAd extends AdWithoutView {
   final AdRequest? request;
 
   /// Targeting information used to fetch an [Ad] using Ad Manager.
-  final PublisherAdRequest? publisherRequest;
+  final AdManagerAdRequest? adManagerRequest;
 
   /// A listener for receiving events in the ad lifecycle.
   @override

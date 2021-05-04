@@ -196,7 +196,7 @@ class _MyAppState extends State<MyApp> {
                 if (adIndex % 3 == 0) {
                   adWidget = BannerAdWidget(AdSize.banner);
                 } else if (adIndex % 3 == 1) {
-                  adWidget = PublisherBannerAdWidget(AdSize.largeBanner);
+                  adWidget = AdManagerBannerAdWidget(AdSize.largeBanner);
                 } else {
                   adWidget = NativeAdWidget();
                 }
@@ -285,39 +285,39 @@ class BannerAdState extends State<BannerAdWidget> {
   }
 }
 
-class PublisherBannerAdWidget extends StatefulWidget {
-  PublisherBannerAdWidget(this.size);
+class AdManagerBannerAdWidget extends StatefulWidget {
+  AdManagerBannerAdWidget(this.size);
 
   final AdSize size;
 
   @override
-  State<StatefulWidget> createState() => PublisherBannerAdState();
+  State<StatefulWidget> createState() => AdManagerBannerAdState();
 }
 
-class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
-  late PublisherBannerAd _bannerAd;
-  final Completer<PublisherBannerAd> bannerCompleter =
-      Completer<PublisherBannerAd>();
+class AdManagerBannerAdState extends State<AdManagerBannerAdWidget> {
+  late AdManagerBannerAd _bannerAd;
+  final Completer<AdManagerBannerAd> bannerCompleter =
+      Completer<AdManagerBannerAd>();
 
   @override
   void initState() {
     super.initState();
-    _bannerAd = PublisherBannerAd(
+    _bannerAd = AdManagerBannerAd(
       adUnitId: '/6499/example/banner',
-      request: PublisherAdRequest(nonPersonalizedAds: true),
+      request: AdManagerAdRequest(nonPersonalizedAds: true),
       sizes: <AdSize>[widget.size],
       listener: AdManagerBannerAdListener(
         onAdLoaded: (Ad ad) {
-          print('$PublisherBannerAd loaded.');
-          bannerCompleter.complete(ad as PublisherBannerAd);
+          print('$AdManagerBannerAd loaded.');
+          bannerCompleter.complete(ad as AdManagerBannerAd);
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           ad.dispose();
-          print('$PublisherBannerAd failedToLoad: $error');
+          print('$AdManagerBannerAd failedToLoad: $error');
           bannerCompleter.completeError(error);
         },
-        onAdOpened: (Ad ad) => print('$PublisherBannerAd onAdOpened.'),
-        onAdClosed: (Ad ad) => print('$PublisherBannerAd onAdClosed.'),
+        onAdOpened: (Ad ad) => print('$AdManagerBannerAd onAdOpened.'),
+        onAdClosed: (Ad ad) => print('$AdManagerBannerAd onAdClosed.'),
       ),
     );
     Future<void>.delayed(Duration(seconds: 1), () => _bannerAd.load());
@@ -331,10 +331,10 @@ class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<PublisherBannerAd>(
+    return FutureBuilder<AdManagerBannerAd>(
       future: bannerCompleter.future,
       builder:
-          (BuildContext context, AsyncSnapshot<PublisherBannerAd> snapshot) {
+          (BuildContext context, AsyncSnapshot<AdManagerBannerAd> snapshot) {
         Widget child;
 
         switch (snapshot.connectionState) {
@@ -347,7 +347,7 @@ class PublisherBannerAdState extends State<PublisherBannerAdWidget> {
             if (snapshot.hasData) {
               child = AdWidget(ad: _bannerAd);
             } else {
-              child = Text('Error loading $PublisherBannerAd');
+              child = Text('Error loading $AdManagerBannerAd');
             }
         }
 

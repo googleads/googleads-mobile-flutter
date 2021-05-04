@@ -275,7 +275,7 @@ class AdInstanceManager {
         'adId': adId,
         'adUnitId': ad.adUnitId,
         'request': ad.request,
-        'publisherRequest': ad.publisherRequest,
+        'adManagerRequest': ad.adManagerRequest,
         'factoryId': ad.factoryId,
         'customOptions': ad.customOptions,
       },
@@ -298,7 +298,7 @@ class AdInstanceManager {
         'adId': adId,
         'adUnitId': ad.adUnitId,
         'request': ad.request,
-        'publisherRequest': ad.publisherRequest,
+        'adManagerRequest': ad.adManagerRequest,
         'serverSideVerificationOptions': ad.serverSideVerificationOptions,
       },
     );
@@ -307,7 +307,7 @@ class AdInstanceManager {
   /// Starts loading the ad if not previously loaded.
   ///
   /// Loading also terminates if ad is already in the process of loading.
-  Future<void> loadPublisherBannerAd(PublisherBannerAd ad) {
+  Future<void> loadAdManagerBannerAd(AdManagerBannerAd ad) {
     if (adIdFor(ad) != null) {
       return Future<void>.value();
     }
@@ -315,7 +315,7 @@ class AdInstanceManager {
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
     return channel.invokeMethod<void>(
-      'loadPublisherBannerAd',
+      'loadAdManagerBannerAd',
       <dynamic, dynamic>{
         'adId': adId,
         'sizes': ad.sizes,
@@ -328,7 +328,7 @@ class AdInstanceManager {
   /// Loads an ad if not currently loading or loaded.
   ///
   /// Loading also terminates if ad is already in the process of loading.
-  Future<void> loadPublisherInterstitialAd(PublisherInterstitialAd ad) {
+  Future<void> loadAdManagerInterstitialAd(AdManagerInterstitialAd ad) {
     if (adIdFor(ad) != null) {
       return Future<void>.value();
     }
@@ -336,7 +336,7 @@ class AdInstanceManager {
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
     return channel.invokeMethod<void>(
-      'loadPublisherInterstitialAd',
+      'loadAdManagerInterstitialAd',
       <dynamic, dynamic>{
         'adId': adId,
         'adUnitId': ad.adUnitId,
@@ -404,7 +404,7 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueAdRequest = 129;
   static const int _valueRewardItem = 132;
   static const int _valueLoadAdError = 133;
-  static const int _valuePublisherAdRequest = 134;
+  static const int _valueAdManagerAdRequest = 134;
   static const int _valueInitializationState = 135;
   static const int _valueAdapterStatus = 136;
   static const int _valueInitializationStatus = 137;
@@ -430,8 +430,8 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.code);
       writeValue(buffer, value.domain);
       writeValue(buffer, value.message);
-    } else if (value is PublisherAdRequest) {
-      buffer.putUint8(_valuePublisherAdRequest);
+    } else if (value is AdManagerAdRequest) {
+      buffer.putUint8(_valueAdManagerAdRequest);
       writeValue(buffer, value.keywords);
       writeValue(buffer, value.contentUrl);
       writeValue(buffer, value.customTargeting);
@@ -482,8 +482,8 @@ class AdMessageCodec extends StandardMessageCodec {
           readValueOfType(buffer.getUint8(), buffer),
           readValueOfType(buffer.getUint8(), buffer),
         );
-      case _valuePublisherAdRequest:
-        return PublisherAdRequest(
+      case _valueAdManagerAdRequest:
+        return AdManagerAdRequest(
           keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
           contentUrl: readValueOfType(buffer.getUint8(), buffer),
           customTargeting: readValueOfType(buffer.getUint8(), buffer)

@@ -42,7 +42,7 @@ void main() {
           case 'disposeAd':
           case 'loadRewardedAd':
           case 'loadInterstitialAd':
-          case 'loadPublisherBannerAd':
+          case 'loadAdManagerBannerAd':
             return Future<void>.value();
           default:
             assert(false);
@@ -143,7 +143,7 @@ void main() {
           'adId': 0,
           'adUnitId': NativeAd.testAdUnitId,
           'request': native.request,
-          'publisherRequest': null,
+          'adManagerRequest': null,
           'factoryId': '0',
           'customOptions': options,
         })
@@ -152,15 +152,15 @@ void main() {
       expect(instanceManager.adFor(0), isNotNull);
     });
 
-    test('load native with $PublisherAdRequest', () async {
+    test('load native with $AdManagerAdRequest', () async {
       final Map<String, Object> options = <String, Object>{'a': 1, 'b': 2};
 
-      final NativeAd native = NativeAd.fromPublisherRequest(
+      final NativeAd native = NativeAd.fromAdManagerRequest(
         adUnitId: 'test-id',
         factoryId: '0',
         customOptions: options,
         listener: NativeAdListener(),
-        publisherRequest: PublisherAdRequest(),
+        adManagerRequest: AdManagerAdRequest(),
       );
 
       await native.load();
@@ -169,7 +169,7 @@ void main() {
           'adId': 0,
           'adUnitId': 'test-id',
           'request': null,
-          'publisherRequest': native.publisherRequest,
+          'adManagerRequest': native.adManagerRequest,
           'factoryId': '0',
           'customOptions': options,
         })
@@ -403,7 +403,7 @@ void main() {
           'adId': 0,
           'adUnitId': RewardedAd.testAdUnitId,
           'request': rewarded.request,
-          'publisherRequest': null,
+          'adManagerRequest': null,
           'serverSideVerificationOptions':
               rewarded.serverSideVerificationOptions,
         }),
@@ -412,11 +412,11 @@ void main() {
       expect(instanceManager.adFor(0), isNotNull);
     });
 
-    test('load rewarded with $PublisherAdRequest', () async {
-      final RewardedAd rewarded = RewardedAd.fromPublisherRequest(
+    test('load rewarded with $AdManagerAdRequest', () async {
+      final RewardedAd rewarded = RewardedAd.fromAdManagerRequest(
         adUnitId: RewardedAd.testAdUnitId,
         listener: RewardedAdListener(),
-        publisherRequest: PublisherAdRequest(),
+        adManagerRequest: AdManagerAdRequest(),
         serverSideVerificationOptions: ServerSideVerificationOptions(
           userId: 'test-user-id',
           customData: 'test-custom-data',
@@ -430,7 +430,7 @@ void main() {
           'adId': 0,
           'adUnitId': RewardedAd.testAdUnitId,
           'request': null,
-          'publisherRequest': rewarded.publisherRequest,
+          'adManagerRequest': rewarded.adManagerRequest,
           'serverSideVerificationOptions':
               rewarded.serverSideVerificationOptions,
         }),
@@ -458,21 +458,21 @@ void main() {
       expect(instanceManager.adFor(0), isNotNull);
     });
 
-    test('load publisher banner', () async {
-      final PublisherBannerAd banner = PublisherBannerAd(
+    test('load ad manager banner', () async {
+      final AdManagerBannerAd banner = AdManagerBannerAd(
         adUnitId: 'testId',
         sizes: <AdSize>[AdSize.largeBanner],
         listener: AdManagerBannerAdListener(),
-        request: PublisherAdRequest(),
+        request: AdManagerAdRequest(),
       );
 
       await banner.load();
       expect(log, <Matcher>[
-        isMethodCall('loadPublisherBannerAd', arguments: <String, dynamic>{
+        isMethodCall('loadAdManagerBannerAd', arguments: <String, dynamic>{
           'adId': 0,
           'adUnitId': 'testId',
           'sizes': <AdSize>[AdSize.largeBanner],
-          'request': PublisherAdRequest(),
+          'request': AdManagerAdRequest(),
         })
       ]);
 
@@ -756,8 +756,8 @@ void main() {
       expect(result.type, 'type');
     });
 
-    test('encode/decode $PublisherAdRequest', () async {
-      final ByteData byteData = codec.encodeMessage(PublisherAdRequest(
+    test('encode/decode $AdManagerAdRequest', () async {
+      final ByteData byteData = codec.encodeMessage(AdManagerAdRequest(
         keywords: <String>['who'],
         contentUrl: 'dat',
         customTargeting: <String, String>{'boy': 'who'},
@@ -769,7 +769,7 @@ void main() {
 
       expect(
         codec.decodeMessage(byteData),
-        PublisherAdRequest(
+        AdManagerAdRequest(
           keywords: <String>['who'],
           contentUrl: 'dat',
           customTargeting: <String, String>{'boy': 'who'},

@@ -31,7 +31,7 @@ final class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_AD_REQUEST = (byte) 129;
   private static final byte VALUE_REWARD_ITEM = (byte) 132;
   private static final byte VALUE_LOAD_AD_ERROR = (byte) 133;
-  private static final byte VALUE_PUBLISHER_AD_REQUEST = (byte) 134;
+  private static final byte VALUE_ADMANAGER_AD_REQUEST = (byte) 134;
   private static final byte VALUE_INITIALIZATION_STATE = (byte) 135;
   private static final byte VALUE_ADAPTER_STATUS = (byte) 136;
   private static final byte VALUE_INITIALIZATION_STATUS = (byte) 137;
@@ -62,7 +62,7 @@ final class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, error.domain);
       writeValue(stream, error.message);
     } else if (value instanceof FlutterAdManagerAdRequest) {
-      stream.write(VALUE_PUBLISHER_AD_REQUEST);
+      stream.write(VALUE_ADMANAGER_AD_REQUEST);
       final FlutterAdManagerAdRequest request = (FlutterAdManagerAdRequest) value;
       writeValue(stream, request.getKeywords());
       writeValue(stream, request.getContentUrl());
@@ -126,7 +126,7 @@ final class AdMessageCodec extends StandardMessageCodec {
             (Integer) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer));
-      case VALUE_PUBLISHER_AD_REQUEST:
+      case VALUE_ADMANAGER_AD_REQUEST:
         return new FlutterAdManagerAdRequest.Builder()
             .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))
             .setContentUrl((String) readValueOfType(buffer.get(), buffer))

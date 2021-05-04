@@ -156,7 +156,7 @@
                                          rootViewController:rootController];
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
-  } else if ([call.method isEqualToString:@"loadPublisherBannerAd"]) {
+  } else if ([call.method isEqualToString:@"loadAdManagerBannerAd"]) {
     FLTGAMBannerAd *ad =
         [[FLTGAMBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                  sizes:call.arguments[@"sizes"]
@@ -178,8 +178,8 @@
     FLTAdRequest *request;
     if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
       request = call.arguments[@"request"];
-    } else if (![call.arguments[@"publisherRequest"] isEqual:[NSNull null]]) {
-      request = call.arguments[@"publisherRequest"];
+    } else if (![call.arguments[@"adManagerRequest"] isEqual:[NSNull null]]) {
+      request = call.arguments[@"adManagerRequest"];
     }
 
     FLTNativeAd *ad = [[FLTNativeAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
@@ -196,7 +196,7 @@
 
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
-  } else if ([call.method isEqualToString:@"loadPublisherInterstitialAd"]) {
+  } else if ([call.method isEqualToString:@"loadAdManagerInterstitialAd"]) {
     FLTGAMInterstitialAd *ad =
     [[FLTGAMInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                          request:call.arguments[@"request"]
@@ -208,8 +208,8 @@
     FLTAdRequest *request;
     if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
       request = call.arguments[@"request"];
-    } else if (![call.arguments[@"publisherRequest"] isEqual:[NSNull null]]) {
-      request = call.arguments[@"publisherRequest"];
+    } else if (![call.arguments[@"adManagerRequest"] isEqual:[NSNull null]]) {
+      request = call.arguments[@"adManagerRequest"];
     } else {
       result([FlutterError errorWithCode:@"InvalidRequest"
                                  message:@"A null or invalid ad request was provided."
