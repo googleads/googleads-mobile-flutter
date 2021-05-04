@@ -74,7 +74,7 @@ void main() {
       final BannerAd banner = BannerAd(
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
-        listener: AdListener(),
+        listener: BannerAdListener(),
         request: AdRequest(),
       );
 
@@ -95,7 +95,7 @@ void main() {
       final BannerAd banner = BannerAd(
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
-        listener: AdListener(),
+        listener: BannerAdListener(),
         request: AdRequest(),
       );
 
@@ -116,7 +116,7 @@ void main() {
       final BannerAd banner = BannerAd(
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
-        listener: AdListener(),
+        listener: BannerAdListener(),
         request: AdRequest(),
       );
 
@@ -133,7 +133,7 @@ void main() {
         adUnitId: NativeAd.testAdUnitId,
         factoryId: '0',
         customOptions: options,
-        listener: AdListener(),
+        listener: NativeAdListener(),
         request: AdRequest(),
       );
 
@@ -159,7 +159,7 @@ void main() {
         adUnitId: 'test-id',
         factoryId: '0',
         customOptions: options,
-        listener: AdListener(),
+        listener: NativeAdListener(),
         publisherRequest: PublisherAdRequest(),
       );
 
@@ -182,7 +182,7 @@ void main() {
       final NativeAd native = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
         factoryId: '0',
-        listener: AdListener(),
+        listener: NativeAdListener(),
         request: AdRequest(),
       );
 
@@ -206,7 +206,7 @@ void main() {
       final NativeAd native = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
         factoryId: '0',
-        listener: AdListener(),
+        listener: NativeAdListener(),
         request: AdRequest(),
       );
 
@@ -231,7 +231,7 @@ void main() {
       final NativeAd ad = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
         factoryId: '0',
-        listener: AdListener(),
+        listener: NativeAdListener(),
         request: AdRequest(),
       );
 
@@ -267,7 +267,7 @@ void main() {
       final NativeAd ad = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
         factoryId: '0',
-        listener: AdListener(),
+        listener: NativeAdListener(),
         request: AdRequest(),
       );
 
@@ -308,7 +308,7 @@ void main() {
       final NativeAd ad = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
         factoryId: '0',
-        listener: AdListener(),
+        listener: NativeAdListener(),
         request: AdRequest(),
       );
 
@@ -352,7 +352,7 @@ void main() {
       final NativeAd ad = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
         factoryId: '0',
-        listener: AdListener(),
+        listener: NativeAdListener(),
         request: AdRequest(),
       );
       await ad.load();
@@ -389,7 +389,7 @@ void main() {
     test('load rewarded', () async {
       final RewardedAd rewarded = RewardedAd(
           adUnitId: RewardedAd.testAdUnitId,
-          listener: AdListener(),
+          listener: RewardedAdListener(),
           request: AdRequest(),
           serverSideVerificationOptions: ServerSideVerificationOptions(
             userId: 'test-user-id',
@@ -415,7 +415,7 @@ void main() {
     test('load rewarded with $PublisherAdRequest', () async {
       final RewardedAd rewarded = RewardedAd.fromPublisherRequest(
         adUnitId: RewardedAd.testAdUnitId,
-        listener: AdListener(),
+        listener: RewardedAdListener(),
         publisherRequest: PublisherAdRequest(),
         serverSideVerificationOptions: ServerSideVerificationOptions(
           userId: 'test-user-id',
@@ -442,7 +442,7 @@ void main() {
     test('load interstitial', () async {
       final InterstitialAd interstitial = InterstitialAd(
         adUnitId: InterstitialAd.testAdUnitId,
-        listener: AdListener(),
+        listener: InterstitialAdListener(),
         request: AdRequest(),
       );
 
@@ -462,7 +462,7 @@ void main() {
       final PublisherBannerAd banner = PublisherBannerAd(
         adUnitId: 'testId',
         sizes: <AdSize>[AdSize.largeBanner],
-        listener: AdListener(),
+        listener: AdManagerBannerAdListener(),
         request: PublisherAdRequest(),
       );
 
@@ -486,7 +486,7 @@ void main() {
       final BannerAd banner = BannerAd(
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
-        listener: AdListener(
+        listener: BannerAdListener(
           onAdLoaded: (Ad ad) => adEventCompleter.complete(ad),
         ),
         request: AdRequest(),
@@ -518,7 +518,7 @@ void main() {
       final BannerAd banner = BannerAd(
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
-        listener: AdListener(
+        listener: BannerAdListener(
             onAdFailedToLoad: (Ad ad, LoadAdError error) =>
                 resultsCompleter.complete(<dynamic>[ad, error])),
         request: AdRequest(),
@@ -554,7 +554,7 @@ void main() {
       final NativeAd native = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
         factoryId: 'testId',
-        listener: AdListener(
+        listener: NativeAdListener(
             onNativeAdClicked: (Ad ad) => adEventCompleter.complete(ad)),
         request: AdRequest(),
       );
@@ -582,15 +582,15 @@ void main() {
       final NativeAd native = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
         factoryId: 'testId',
-        listener: AdListener(
-            onNativeAdImpression: (Ad ad) => adEventCompleter.complete(ad)),
+        listener: NativeAdListener(
+            onAdImpression: (Ad ad) => adEventCompleter.complete(ad)),
         request: AdRequest(),
       );
 
       await native.load();
 
       final MethodCall methodCall = MethodCall('onAdEvent',
-          <dynamic, dynamic>{'adId': 0, 'eventName': 'onNativeAdImpression'});
+          <dynamic, dynamic>{'adId': 0, 'eventName': 'onAdImpression'});
 
       final ByteData data =
           instanceManager.channel.codec.encodeMethodCall(methodCall);
@@ -611,7 +611,7 @@ void main() {
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
         listener:
-            AdListener(onAdOpened: (Ad ad) => adEventCompleter.complete(ad)),
+            BannerAdListener(onAdOpened: (Ad ad) => adEventCompleter.complete(ad)),
         request: AdRequest(),
       );
 
@@ -632,34 +632,6 @@ void main() {
       expect(adEventCompleter.future, completion(banner));
     });
 
-    test('onApplicationExit', () async {
-      final Completer<Ad> adEventCompleter = Completer<Ad>();
-
-      final BannerAd banner = BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
-        size: AdSize.banner,
-        listener: AdListener(
-            onApplicationExit: (Ad ad) => adEventCompleter.complete(ad)),
-        request: AdRequest(),
-      );
-
-      await banner.load();
-
-      final MethodCall methodCall = MethodCall('onAdEvent',
-          <dynamic, dynamic>{'adId': 0, 'eventName': 'onApplicationExit'});
-
-      final ByteData data =
-          instanceManager.channel.codec.encodeMethodCall(methodCall);
-
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        data,
-        (ByteData? data) {},
-      );
-
-      expect(adEventCompleter.future, completion(banner));
-    });
-
     test('onAdClosed', () async {
       final Completer<Ad> adEventCompleter = Completer<Ad>();
 
@@ -667,7 +639,7 @@ void main() {
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
         listener:
-            AdListener(onAdClosed: (Ad ad) => adEventCompleter.complete(ad)),
+            BannerAdListener(onAdClosed: (Ad ad) => adEventCompleter.complete(ad)),
         request: AdRequest(),
       );
 
@@ -694,7 +666,7 @@ void main() {
 
       final RewardedAd rewardedAd = RewardedAd(
         adUnitId: BannerAd.testAdUnitId,
-        listener: AdListener(
+        listener: RewardedAdListener(
           onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem item) =>
               resultCompleter.complete(<Object>[ad, item]),
         ),
@@ -728,7 +700,7 @@ void main() {
       final InterstitialAd ad = InterstitialAd(
         adUnitId: 'testId',
         request: AdRequest(),
-        listener: AdListener(),
+        listener: InterstitialAdListener(),
       );
 
       ad.load();
@@ -745,7 +717,7 @@ void main() {
       final InterstitialAd ad = InterstitialAd(
         adUnitId: 'testId',
         request: AdRequest(),
-        listener: AdListener(),
+        listener: InterstitialAdListener(),
       );
 
       expect(() => instanceManager.showAdWithoutView(ad), throwsAssertionError);
@@ -815,7 +787,7 @@ void main() {
       final BannerAd banner = BannerAd(
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
-        listener: AdListener(
+        listener: BannerAdListener(
           onAdLoaded: (Ad ad) => adEventCompleter.complete(ad),
         ),
         request: AdRequest(),
