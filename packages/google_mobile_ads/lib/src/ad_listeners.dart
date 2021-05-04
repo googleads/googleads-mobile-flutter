@@ -15,6 +15,8 @@
 import 'ad_containers.dart';
 
 /// Base class for all ad listeners.
+///
+/// Contains callbacks for successful and failed load events.
 abstract class BaseAdListener {
 
   /// Default constructor for [BaseAdListener].
@@ -27,12 +29,20 @@ abstract class BaseAdListener {
   final void Function(Ad ad, LoadAdError error)? onAdFailedToLoad;
 }
 
+/// Listener for app events.
 class AppEventListener {
   /// Called when an app event is received.
   void Function(Ad ad, String name, String data)? onAppEvent;
 }
 
+/// Shared event callbacks used in Native and Banner ads.
 class AdWithViewListener {
+
+  /// A full screen view/overlay is presented in response to the user clicking
+  /// on an ad. You may want to pause animations and time sensitive
+  /// interactions.
+  void Function(Ad ad)? onAdOpened;
+
   /// Called when the full screen view will be dismissed.
   ///
   /// Note this is only invoked on iOS.
@@ -41,11 +51,6 @@ class AdWithViewListener {
   /// Called when the full screen view has been closed. You should restart
   /// anything paused while handling onAdOpened.
   void Function(Ad ad)? onAdClosed;
-
-  /// A full screen view/overlay is presented in response to the user clicking
-  /// on an ad. You may want to pause animations and time sensitive
-  /// interactions.
-  void Function(Ad ad)? onAdOpened;
 
   /// Called when an impression occurs on the ad.
   void Function(Ad ad)? onAdImpression;
