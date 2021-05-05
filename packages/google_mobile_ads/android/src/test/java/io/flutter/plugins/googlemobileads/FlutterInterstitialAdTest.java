@@ -18,6 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -29,6 +30,7 @@ import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -62,7 +64,14 @@ public class FlutterInterstitialAdTest {
 
   @Test
   public void loadInterstitialAd_failedToLoad() {
-    final LoadAdError loadAdError = new LoadAdError(1, "2", "3", null, null);
+    final LoadAdError loadAdError = mock(LoadAdError.class);
+    ResponseInfo responseInfo = mock(ResponseInfo.class);
+    doReturn("id").when(responseInfo).getResponseId();
+    doReturn("className").when(responseInfo).getMediationAdapterClassName();
+    doReturn(1).when(loadAdError).getCode();
+    doReturn("2").when(loadAdError).getDomain();
+    doReturn("3").when(loadAdError).getMessage();
+    doReturn(null).when(loadAdError).getResponseInfo();
     doAnswer(new Answer() {
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -86,8 +95,9 @@ public class FlutterInterstitialAdTest {
       eq(mockAdRequest),
       any(InterstitialAdLoadCallback.class));
 
+    FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
     verify(mockManager)
-      .onAdFailedToLoad(eq(flutterInterstitialAd), eq(new FlutterLoadAdError(loadAdError)));
+      .onAdFailedToLoad(eq(flutterInterstitialAd), eq(expectedError));
   }
 
   @Test

@@ -29,6 +29,7 @@ import android.app.Activity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
@@ -78,7 +79,14 @@ public class FlutterAdManagerBannerAdTest {
 
   @Test
   public void failedToLoad() {
-    final LoadAdError loadError = new LoadAdError(1, "2", "3", null, null);
+    final LoadAdError loadError = mock(LoadAdError.class);
+    ResponseInfo responseInfo = mock(ResponseInfo.class);
+    doReturn("id").when(responseInfo).getResponseId();
+    doReturn("className").when(responseInfo).getMediationAdapterClassName();
+    doReturn(1).when(loadError).getCode();
+    doReturn("2").when(loadError).getDomain();
+    doReturn("3").when(loadError).getMessage();
+    doReturn(null).when(loadError).getResponseInfo();
     doAnswer(new Answer() {
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -94,7 +102,8 @@ public class FlutterAdManagerBannerAdTest {
     verify(mockAdView).setAppEventListener(any(AppEventListener.class));
     verify(mockAdView).setAdUnitId(eq("testId"));
     verify(mockAdView).setAdSizes(adSize);
-    verify(mockManager).onAdFailedToLoad(eq(flutterBannerAd), eq(new FlutterLoadAdError(loadError)));
+    FlutterLoadAdError expectedError = new FlutterLoadAdError(loadError);
+    verify(mockManager).onAdFailedToLoad(eq(flutterBannerAd), eq(expectedError));
   }
 
   @Test

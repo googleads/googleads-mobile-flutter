@@ -129,13 +129,14 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"message" };
   NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
   
+  FLTLoadAdError *loadAdError = [[FLTLoadAdError alloc] initWithError:error];
   [_manager onAdFailedToLoad:ad error:error];
   NSData *data = [_methodCodec
       encodeMethodCall:[FlutterMethodCall methodCallWithMethodName:@"onAdEvent"
                                                          arguments:@{
                                                            @"adId" : @1,
                                                            @"eventName" : @"onAdFailedToLoad",
-                                                           @"loadAdError" : error,
+                                                           @"loadAdError" : loadAdError,
                                                          }]];
   OCMVerify([_mockMessenger sendOnChannel:channel message:data]);
 }

@@ -84,7 +84,11 @@ public class FlutterRewardedAdTest {
   @Test
   public void loadAdManagerRewardedAd_failedToLoad() {
     setupAdManagerMocks(null);
-    final LoadAdError loadAdError = new LoadAdError(1, "2", "3", null, null);
+    final LoadAdError loadAdError = mock(LoadAdError.class);
+    doReturn(1).when(loadAdError).getCode();
+    doReturn("2").when(loadAdError).getDomain();
+    doReturn("3").when(loadAdError).getMessage();
+    doReturn(null).when(loadAdError).getResponseInfo();
     doAnswer(new Answer() {
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -108,8 +112,9 @@ public class FlutterRewardedAdTest {
       eq(mockAdManagerAdRequest),
       any(RewardedAdLoadCallback.class));
 
+    FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
     verify(mockManager)
-      .onAdFailedToLoad(eq(flutterRewardedAd), eq(new FlutterLoadAdError(loadAdError)));
+      .onAdFailedToLoad(eq(flutterRewardedAd), eq(expectedError));
   }
 
   @Test

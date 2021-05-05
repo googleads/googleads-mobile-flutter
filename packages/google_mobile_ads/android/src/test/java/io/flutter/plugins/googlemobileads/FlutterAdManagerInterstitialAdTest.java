@@ -18,6 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -57,11 +58,16 @@ public class FlutterAdManagerInterstitialAdTest {
     when(mockFlutterRequest.asAdManagerAdRequest()).thenReturn(mockRequest);
     flutterAdManagerInterstitialAd = new FlutterAdManagerInterstitialAd(
       mockManager, "testId", mockFlutterRequest, mockFlutterAdLoader);
+
   }
 
   @Test
   public void loadAdManagerInterstitialAd_failedToLoad() {
-    final LoadAdError loadAdError = new LoadAdError(1, "2", "3", null, null);
+    final LoadAdError loadAdError = mock(LoadAdError.class);
+    doReturn(1).when(loadAdError).getCode();
+    doReturn("2").when(loadAdError).getDomain();
+    doReturn("3").when(loadAdError).getMessage();
+    doReturn(null).when(loadAdError).getResponseInfo();
     doAnswer(new Answer() {
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -85,8 +91,9 @@ public class FlutterAdManagerInterstitialAdTest {
       eq(mockRequest),
       any(AdManagerInterstitialAdLoadCallback.class));
 
+    FlutterLoadAdError flutterLoadAdError = new FlutterLoadAdError(loadAdError);
     verify(mockManager).onAdFailedToLoad(
-      eq(flutterAdManagerInterstitialAd), eq(new FlutterLoadAdError(loadAdError)));
+      eq(flutterAdManagerInterstitialAd), eq(flutterLoadAdError));
   }
 
   @Test
