@@ -138,10 +138,6 @@ class AdInstanceManager {
             ?.onAdFailedToShowFullScreenContent
             ?.call(ad, arguments['error']);
         break;
-
-      case 'onAdMetadataChanged':
-        // TODO(jjliu15) - implement this.
-        break;
       default:
         debugPrint('invalid ad event name: $eventName');
     }
@@ -201,9 +197,6 @@ class AdInstanceManager {
         (ad.listener as FullScreenAdListener?)
             ?.onAdDismissedFullScreenContent
             ?.call(ad);
-        break;
-      case 'onAdMetadataChanged':
-        // TODO(jjliu15) - implement this.
         break;
       default:
         debugPrint('invalid ad event name: $eventName');

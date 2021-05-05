@@ -139,7 +139,6 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
     }
 
     rewardedAd.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, this));
-    // TODO - maybe just remove this and implement in another PR.
     rewardedAd.setOnAdMetadataChangedListener(new OnAdMetadataChangedListener() {
       @Override
       public void onAdMetadataChanged() {
