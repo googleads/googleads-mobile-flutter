@@ -525,11 +525,13 @@ void main() {
       );
 
       await banner.load();
+      ResponseInfo responseInfo = ResponseInfo(
+          responseId: 'id', mediationAdapterClassName: 'className');
 
       final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
         'adId': 0,
         'eventName': 'onAdFailedToLoad',
-        'loadAdError': LoadAdError(1, 'domain', 'message'),
+        'loadAdError': LoadAdError(1, 'domain', 'message', responseInfo),
       });
 
       final ByteData data =
@@ -546,6 +548,9 @@ void main() {
       expect(results[1].code, 1);
       expect(results[1].domain, 'domain');
       expect(results[1].message, 'message');
+      expect(results[1].responseInfo.responseId, responseInfo.responseId);
+      expect(results[1].responseInfo.mediationAdapterClassName,
+          responseInfo.mediationAdapterClassName);
     });
 
     test('onNativeAdClicked', () async {
@@ -610,8 +615,8 @@ void main() {
       final BannerAd banner = BannerAd(
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
-        listener:
-            BannerAdListener(onAdOpened: (Ad ad) => adEventCompleter.complete(ad)),
+        listener: BannerAdListener(
+            onAdOpened: (Ad ad) => adEventCompleter.complete(ad)),
         request: AdRequest(),
       );
 
@@ -638,8 +643,8 @@ void main() {
       final BannerAd banner = BannerAd(
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
-        listener:
-            BannerAdListener(onAdClosed: (Ad ad) => adEventCompleter.complete(ad)),
+        listener: BannerAdListener(
+            onAdClosed: (Ad ad) => adEventCompleter.complete(ad)),
         request: AdRequest(),
       );
 
@@ -739,13 +744,20 @@ void main() {
     });
 
     test('encode/decode $LoadAdError', () async {
+      ResponseInfo responseInfo = ResponseInfo(
+        responseId: 'id',
+        mediationAdapterClassName: 'class',
+      );
       final ByteData byteData = codec.encodeMessage(
-        LoadAdError(1, 'domain', 'message'),
+        LoadAdError(1, 'domain', 'message', responseInfo),
       )!;
       final LoadAdError error = codec.decodeMessage(byteData);
       expect(error.code, 1);
       expect(error.domain, 'domain');
       expect(error.message, 'message');
+      expect(error.responseInfo?.responseId, responseInfo.responseId);
+      expect(error.responseInfo?.mediationAdapterClassName,
+          responseInfo.mediationAdapterClassName);
     });
 
     test('encode/decode $RewardItem', () async {

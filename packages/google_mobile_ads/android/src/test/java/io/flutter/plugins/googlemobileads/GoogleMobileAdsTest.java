@@ -28,6 +28,7 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.StandardMethodCodec;
+import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collections;
@@ -176,8 +177,9 @@ public class GoogleMobileAdsTest {
   @Test
   public void adMessageCodec_encodeFlutterLoadAdError() {
     final AdMessageCodec codec = new AdMessageCodec();
-    final ByteBuffer message =
-        codec.encodeMessage(new FlutterBannerAd.FlutterLoadAdError(1, "domain", "message"));
+    FlutterResponseInfo info = new FlutterResponseInfo("responseId", "className");
+    final ByteBuffer message = codec.encodeMessage(
+        new FlutterBannerAd.FlutterLoadAdError(1, "domain", "message", info));
 
     final FlutterAd.FlutterLoadAdError error =
         (FlutterAd.FlutterLoadAdError) codec.decodeMessage((ByteBuffer) message.position(0));
@@ -185,6 +187,7 @@ public class GoogleMobileAdsTest {
     assertEquals(error.code, 1);
     assertEquals(error.domain, "domain");
     assertEquals(error.message, "message");
+    assertEquals(error.responseInfo, info);
   }
 
   @Test
@@ -217,7 +220,8 @@ public class GoogleMobileAdsTest {
         new BannerAdCreator(testManager.activity));
     testManager.trackAd(bannerAd, 0);
 
-    testManager.onAdFailedToLoad(bannerAd, new FlutterAd.FlutterLoadAdError(1, "hi", "friend"));
+    testManager.onAdFailedToLoad(
+        bannerAd, new FlutterAd.FlutterLoadAdError(1, "hi", "friend", null));
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
@@ -227,8 +231,8 @@ public class GoogleMobileAdsTest {
     assertThat(call.arguments, (Matcher) hasEntry("adId", 0));
     //noinspection rawtypes
     assertThat(
-        call.arguments,
-        (Matcher) hasEntry("loadAdError", new FlutterAd.FlutterLoadAdError(1, "hi", "friend")));
+      call.arguments,
+      (Matcher) hasEntry("loadAdError", new FlutterAd.FlutterLoadAdError(1, "hi", "friend", null)));
   }
 
   @Test

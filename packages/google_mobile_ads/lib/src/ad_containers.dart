@@ -56,11 +56,40 @@ class AdError {
   }
 }
 
+/// Contains information about the loaded ad or ad request.
+///
+/// For debugging and logging purposes.
+class ResponseInfo {
+  /// Default constructor for [ResponseInfo].
+  const ResponseInfo({this.responseId, this.mediationAdapterClassName});
+
+  /// An identifier for the loaded ad.
+  final String? responseId;
+
+  /// The mediation adapter class name of the ad network that loaded the ad.
+  final String? mediationAdapterClassName;
+
+  @override
+  String toString() {
+    return '$runtimeType(responseId: $responseId, '
+        'mediationAdapterClassName: $mediationAdapterClassName)';
+  }
+}
+
 /// Represents errors that occur when loading an ad.
 class LoadAdError extends AdError {
   /// Default constructor for [LoadAdError].
-  LoadAdError(int code, String domain, String message)
+  LoadAdError(int code, String domain, String message, this.responseInfo)
       : super(code, domain, message);
+
+  /// The [ResponseInfo] for the error.
+  final ResponseInfo? responseInfo;
+
+  @override
+  String toString() {
+    return '$runtimeType(code: $code, domain: $domain, message: $message'
+        ', responseInfo: $responseInfo)';
+  }
 }
 
 /// Targeting info per the AdMob API.
@@ -261,7 +290,8 @@ abstract class AdWithView extends Ad {
 /// An [Ad] that is overlaid on top of the UI.
 abstract class AdWithoutView extends Ad {
   /// Default constructor used by subclasses.
-  const AdWithoutView({required String adUnitId, required BaseAdListener listener})
+  const AdWithoutView(
+      {required String adUnitId, required BaseAdListener listener})
       : super(adUnitId: adUnitId, listener: listener);
 
   /// Display this on top of the application.

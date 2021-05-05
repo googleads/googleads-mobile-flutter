@@ -135,6 +135,51 @@
   XCTAssertEqualObjects(decodedError.localizedDescription, @"message");
 }
 
+- (void)testEncodeDecodeFLTGADLoadError {
+  GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
+  NSString *identifier = @"test-identifier";
+  NSString *className = @"test-class-name";
+  OCMStub([mockResponseInfo responseIdentifier]).andReturn(identifier);
+  OCMStub([mockResponseInfo adNetworkClassName]).andReturn(className);
+  NSDictionary *userInfo = @{
+    NSLocalizedDescriptionKey : @"message",
+    GADErrorUserInfoKeyResponseInfo: mockResponseInfo
+  };
+  NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
+  FLTLoadAdError *loadAdError = [[FLTLoadAdError alloc] initWithError:error];
+
+  NSData *encodedMessage = [_messageCodec encode:loadAdError];
+  FLTLoadAdError *decodedError = [_messageCodec decode:encodedMessage];
+
+  XCTAssertEqual(decodedError.code, 1);
+  XCTAssertEqualObjects(decodedError.domain, @"domain");
+  XCTAssertEqualObjects(decodedError.message, @"message");
+  XCTAssertEqualObjects(decodedError.responseInfo.adNetworkClassName, className);
+  XCTAssertEqualObjects(decodedError.responseInfo.responseIdentifier, identifier);
+}
+
+
+- (void)testEncodeDecodeFLTGADLoadErrorWithEmptyValues {
+  GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
+  OCMStub([mockResponseInfo responseIdentifier]).andReturn(nil);
+  OCMStub([mockResponseInfo adNetworkClassName]).andReturn(nil);
+  NSDictionary *userInfo = @{
+    NSLocalizedDescriptionKey : @"message",
+    GADErrorUserInfoKeyResponseInfo: mockResponseInfo
+  };
+  NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
+  FLTLoadAdError *loadAdError = [[FLTLoadAdError alloc] initWithError:error];
+
+  NSData *encodedMessage = [_messageCodec encode:loadAdError];
+  FLTLoadAdError *decodedError = [_messageCodec decode:encodedMessage];
+
+  XCTAssertEqual(decodedError.code, 1);
+  XCTAssertEqualObjects(decodedError.domain, @"domain");
+  XCTAssertEqualObjects(decodedError.message, @"message");
+  XCTAssertNil(decodedError.responseInfo.adNetworkClassName);
+  XCTAssertNil(decodedError.responseInfo.responseIdentifier);
+}
+
 - (void)testEncodeDecodeAdapterStatus {
   FLTAdapterStatus *status = [[FLTAdapterStatus alloc] init];
   status.state = @(1);

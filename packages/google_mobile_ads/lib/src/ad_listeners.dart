@@ -18,7 +18,6 @@ import 'ad_containers.dart';
 ///
 /// Contains callbacks for successful and failed load events.
 abstract class BaseAdListener {
-
   /// Default constructor for [BaseAdListener].
   const BaseAdListener(this.onAdLoaded, this.onAdFailedToLoad);
 
@@ -37,7 +36,6 @@ class AppEventListener {
 
 /// Shared event callbacks used in Native and Banner ads.
 class AdWithViewListener {
-
   /// A full screen view/overlay is presented in response to the user clicking
   /// on an ad. You may want to pause animations and time sensitive
   /// interactions.
@@ -58,7 +56,6 @@ class AdWithViewListener {
 
 /// Listener for Banner Ads.
 class BannerAdListener extends BaseAdListener implements AdWithViewListener {
-
   /// Default constructor for [BannerAdListener].
   BannerAdListener({
     Function(Ad ad)? onAdLoaded,
@@ -68,7 +65,6 @@ class BannerAdListener extends BaseAdListener implements AdWithViewListener {
     this.onAdClosed,
     this.onAdImpression,
   }) : super(onAdLoaded, onAdFailedToLoad);
-
 
   /// A full screen view/overlay is presented in response to the user clicking
   /// on an ad. You may want to pause animations and time sensitive
@@ -95,22 +91,22 @@ class BannerAdListener extends BaseAdListener implements AdWithViewListener {
 /// Listener for Ad Manager Banner Ads.
 class AdManagerBannerAdListener extends BannerAdListener
     implements AppEventListener, AdWithViewListener {
-
   /// Default constructor for [AdManagerBannerAdListener].
-  AdManagerBannerAdListener({
-    Function(Ad ad)? onAdLoaded,
-    Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
-    Function(Ad ad)? onAdOpened,
-    Function(Ad ad)? onAdWillDismissScreen,
-    Function(Ad ad)? onAdClosed,
-    Function(Ad ad)? onAdImpression,
-    this.onAppEvent
-  }) : super(onAdLoaded: onAdLoaded,
-      onAdFailedToLoad: onAdFailedToLoad,
-      onAdOpened: onAdOpened,
-      onAdWillDismissScreen: onAdWillDismissScreen,
-      onAdClosed: onAdClosed,
-      onAdImpression: onAdImpression);
+  AdManagerBannerAdListener(
+      {Function(Ad ad)? onAdLoaded,
+      Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
+      Function(Ad ad)? onAdOpened,
+      Function(Ad ad)? onAdWillDismissScreen,
+      Function(Ad ad)? onAdClosed,
+      Function(Ad ad)? onAdImpression,
+      this.onAppEvent})
+      : super(
+            onAdLoaded: onAdLoaded,
+            onAdFailedToLoad: onAdFailedToLoad,
+            onAdOpened: onAdOpened,
+            onAdWillDismissScreen: onAdWillDismissScreen,
+            onAdClosed: onAdClosed,
+            onAdImpression: onAdImpression);
 
   /// Called when an app event is received.
   @override
@@ -119,7 +115,6 @@ class AdManagerBannerAdListener extends BannerAdListener
 
 /// Base class for Full Screen Ads.
 abstract class FullScreenAdListener extends BaseAdListener {
-
   /// Constructor for [FullScreenAdListener].
   const FullScreenAdListener({
     Function(Ad ad)? onAdLoaded,
@@ -129,7 +124,7 @@ abstract class FullScreenAdListener extends BaseAdListener {
     this.onAdImpression,
     this.onAdFailedToShowFullScreenContent,
     this.onAdWillDismissFullScreenContent,
-  }): super(onAdLoaded, onAdFailedToLoad);
+  }) : super(onAdLoaded, onAdFailedToLoad);
 
   /// Called when an ad shows full screen content.
   final void Function(Ad ad)? onAdShowedFullScreenContent;
@@ -146,13 +141,11 @@ abstract class FullScreenAdListener extends BaseAdListener {
   final void Function(Ad ad)? onAdImpression;
 
   /// Called when ad fails to show full screen content.
-  final void Function(Ad ad, AdError error)?
-  onAdFailedToShowFullScreenContent;
+  final void Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent;
 }
 
 /// Listener for Admob iOS interstitial ads.
 class InterstitialAdListener extends FullScreenAdListener {
-
   /// Constructor for [InterstitialAdListener].
   const InterstitialAdListener({
     Function(Ad ad)? onAdLoaded,
@@ -163,19 +156,19 @@ class InterstitialAdListener extends FullScreenAdListener {
     Function(Ad ad)? onAdImpression,
     Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent,
   }) : super(
-      onAdLoaded: onAdLoaded,
-      onAdFailedToLoad: onAdFailedToLoad,
-      onAdShowedFullScreenContent: onAdShowedFullScreenContent,
-      onAdDismissedFullScreenContent: onAdDismissedFullScreenContent,
-      onAdWillDismissFullScreenContent: onAdWillDismissFullScreenContent,
-      onAdImpression: onAdImpression,
-      onAdFailedToShowFullScreenContent: onAdFailedToShowFullScreenContent);
+            onAdLoaded: onAdLoaded,
+            onAdFailedToLoad: onAdFailedToLoad,
+            onAdShowedFullScreenContent: onAdShowedFullScreenContent,
+            onAdDismissedFullScreenContent: onAdDismissedFullScreenContent,
+            onAdWillDismissFullScreenContent: onAdWillDismissFullScreenContent,
+            onAdImpression: onAdImpression,
+            onAdFailedToShowFullScreenContent:
+                onAdFailedToShowFullScreenContent);
 }
 
 /// Listener for Ad Manager interstitial ads.
-class AdManagerInterstitialAdListener
-    extends FullScreenAdListener implements AppEventListener {
-
+class AdManagerInterstitialAdListener extends FullScreenAdListener
+    implements AppEventListener {
   /// Constructor for [AdManagerInterstitialAdListener].
   AdManagerInterstitialAdListener({
     Function(Ad ad)? onAdLoaded,
@@ -186,13 +179,15 @@ class AdManagerInterstitialAdListener
     Function(Ad ad)? onAdImpression,
     Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent,
     this.onAppEvent,
-  }) : super(onAdLoaded: onAdLoaded,
-      onAdFailedToLoad: onAdFailedToLoad,
-      onAdShowedFullScreenContent: onAdShowedFullScreenContent,
-      onAdDismissedFullScreenContent: onAdDismissedFullScreenContent,
-      onAdWillDismissFullScreenContent: onAdWillDismissFullScreenContent,
-      onAdImpression: onAdImpression,
-      onAdFailedToShowFullScreenContent: onAdFailedToShowFullScreenContent);
+  }) : super(
+            onAdLoaded: onAdLoaded,
+            onAdFailedToLoad: onAdFailedToLoad,
+            onAdShowedFullScreenContent: onAdShowedFullScreenContent,
+            onAdDismissedFullScreenContent: onAdDismissedFullScreenContent,
+            onAdWillDismissFullScreenContent: onAdWillDismissFullScreenContent,
+            onAdImpression: onAdImpression,
+            onAdFailedToShowFullScreenContent:
+                onAdFailedToShowFullScreenContent);
 
   /// Called when an app event is received.
   @override
@@ -201,7 +196,6 @@ class AdManagerInterstitialAdListener
 
 /// Listener for rewarded ads.
 class RewardedAdListener extends FullScreenAdListener {
-
   /// Constructor for [RewardedAdListener].
   const RewardedAdListener({
     Function(Ad ad)? onAdLoaded,
@@ -213,25 +207,24 @@ class RewardedAdListener extends FullScreenAdListener {
     Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent,
     this.onRewardedAdUserEarnedReward,
   }) : super(
-      onAdLoaded: onAdLoaded,
-      onAdFailedToLoad: onAdFailedToLoad,
-      onAdShowedFullScreenContent: onAdShowedFullScreenContent,
-      onAdDismissedFullScreenContent: onAdDismissedFullScreenContent,
-      onAdWillDismissFullScreenContent: onAdWillDismissFullScreenContent,
-      onAdImpression: onAdImpression,
-      onAdFailedToShowFullScreenContent: onAdFailedToShowFullScreenContent);
+            onAdLoaded: onAdLoaded,
+            onAdFailedToLoad: onAdFailedToLoad,
+            onAdShowedFullScreenContent: onAdShowedFullScreenContent,
+            onAdDismissedFullScreenContent: onAdDismissedFullScreenContent,
+            onAdWillDismissFullScreenContent: onAdWillDismissFullScreenContent,
+            onAdImpression: onAdImpression,
+            onAdFailedToShowFullScreenContent:
+                onAdFailedToShowFullScreenContent);
 
   /// Called when a [RewardedAd] triggers a reward.
   final void Function(
-      RewardedAd ad,
-      RewardItem reward,
-      )? onRewardedAdUserEarnedReward;
-
+    RewardedAd ad,
+    RewardItem reward,
+  )? onRewardedAdUserEarnedReward;
 }
 
 /// Listener for native ads.
 class NativeAdListener extends BaseAdListener implements AdWithViewListener {
-
   /// Default constructor for [NativeAdListener].
   NativeAdListener({
     Function(Ad ad)? onAdLoaded,

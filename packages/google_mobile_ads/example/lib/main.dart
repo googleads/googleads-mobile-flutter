@@ -75,7 +75,8 @@ class _MyAppState extends State<MyApp> {
           _interstitialAd = null;
           createInterstitialAd();
         },
-        onAdShowedFullScreenContent: (Ad ad) => print('${ad.runtimeType} onAdOpened.'),
+        onAdShowedFullScreenContent: (Ad ad) =>
+            print('${ad.runtimeType} onAdOpened.'),
         onAdDismissedFullScreenContent: (Ad ad) {
           print('${ad.runtimeType} closed.');
           ad.dispose();
@@ -100,7 +101,8 @@ class _MyAppState extends State<MyApp> {
             _rewardedAd = null;
             createRewardedAd();
           },
-          onAdShowedFullScreenContent: (Ad ad) => print('${ad.runtimeType} onAdOpened.'),
+          onAdShowedFullScreenContent: (Ad ad) =>
+              print('${ad.runtimeType} onAdOpened.'),
           onAdDismissedFullScreenContent: (Ad ad) {
             print('${ad.runtimeType} closed.');
             ad.dispose();

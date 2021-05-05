@@ -15,7 +15,10 @@
 package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.ResponseInfo;
+import java.util.Objects;
 
 abstract class FlutterAd {
   /** A {@link FlutterAd} that is overlaid on top of a running application. */
@@ -23,21 +26,73 @@ abstract class FlutterAd {
     abstract void show();
   }
 
+  /** A wrapper around {@link ResponseInfo}. */
+  static class FlutterResponseInfo {
+
+    @Nullable private final String responseId;
+    @Nullable private final String mediationAdapterClassName;
+
+    FlutterResponseInfo(@Nullable String responseId, @Nullable String mediationAdapterClassName) {
+      this.responseId = responseId;
+      this.mediationAdapterClassName = mediationAdapterClassName;
+    }
+
+    @Nullable
+    String getResponseId() {
+      return responseId;
+    }
+
+    @Nullable
+    String getMediationAdapterClassName() {
+      return mediationAdapterClassName;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+      if (obj == this) {
+        return true;
+      } else if (!(obj instanceof FlutterResponseInfo)) {
+        return false;
+      }
+
+      FlutterResponseInfo that = (FlutterResponseInfo) obj;
+      return Objects.equals(responseId, that.responseId)
+        && Objects.equals(mediationAdapterClassName, that.mediationAdapterClassName);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(responseId, mediationAdapterClassName);
+    }
+  }
+
+  /** Wrapper for {@link LoadAdError}. */
   static class FlutterLoadAdError {
     final int code;
     @NonNull final String domain;
     @NonNull final String message;
+    @Nullable FlutterResponseInfo responseInfo;
 
     FlutterLoadAdError(@NonNull LoadAdError error) {
       code = error.getCode();
       domain = error.getDomain();
       message = error.getMessage();
+      if (error.getResponseInfo() != null) {
+        responseInfo = new FlutterResponseInfo(
+            error.getResponseInfo().getResponseId(),
+            error.getResponseInfo().getMediationAdapterClassName());
+      }
     }
 
-    FlutterLoadAdError(int code, @NonNull String domain, @NonNull String message) {
+    FlutterLoadAdError(
+        int code,
+        @NonNull String domain,
+        @NonNull String message,
+        @Nullable FlutterResponseInfo responseInfo) {
       this.code = code;
       this.domain = domain;
       this.message = message;
+      this.responseInfo = responseInfo;
     }
 
     @Override
@@ -54,16 +109,15 @@ abstract class FlutterAd {
         return false;
       } else if (!domain.equals(that.domain)) {
         return false;
+      } else if (!Objects.equals(responseInfo, that.responseInfo)) {
+        return false;
       }
       return message.equals(that.message);
     }
 
     @Override
     public int hashCode() {
-      int result = code;
-      result = 31 * result + domain.hashCode();
-      result = 31 * result + message.hashCode();
-      return result;
+      return Objects.hash(code, domain, message, responseInfo);
     }
   }
 

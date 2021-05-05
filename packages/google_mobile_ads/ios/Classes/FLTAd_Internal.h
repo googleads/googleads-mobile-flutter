@@ -35,6 +35,29 @@
 @end
 
 /**
+ * Wrapper around `GADResponseInfo`.
+ */
+@interface FLTGADResponseInfo : NSObject
+@property NSString *_Nullable responseIdentifier;
+@property NSString *_Nullable adNetworkClassName;
+
+- (instancetype _Nonnull)initWithResponseInfo:(GADResponseInfo *_Nonnull)responseInfo;
+@end
+
+/**
+ * Wrapper around `GAMRequest` for the Google Mobile Ads Plugin.
+ * Extracts response info from the userInfo dict.
+ */
+@interface FLTLoadAdError : NSObject
+@property NSInteger code;
+@property NSString *_Nullable domain;
+@property NSString *_Nullable message;
+@property FLTGADResponseInfo *_Nullable responseInfo;
+
+- (instancetype _Nonnull)initWithError:(NSError *_Nonnull)error;
+@end
+
+/**
  * Wrapper around `GAMRequest` for the Google Mobile Ads Plugin.
  */
 @interface FLTGAMAdRequest : FLTAdRequest

@@ -158,10 +158,7 @@ class AdInstanceManager {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
     arguments.put("eventName", "onFailedToShowFullScreenContent");
-    arguments.put("code", error.getCode());
-    arguments.put("domain", error.getDomain());
-    arguments.put("message", error.getMessage());
-
+    arguments.put("error", error);
     channel.invokeMethod("onAdEvent", arguments);
   }
 

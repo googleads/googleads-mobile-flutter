@@ -52,6 +52,35 @@
 }
 @end
 
+@implementation FLTGADResponseInfo
+
+- (instancetype _Nonnull)initWithResponseInfo:(GADResponseInfo *_Nonnull)responseInfo {
+  self = [super init];
+  if (self) {
+    _responseIdentifier = responseInfo.responseIdentifier;
+    _adNetworkClassName = responseInfo.adNetworkClassName;
+  }
+  return self;
+}
+@end
+
+@implementation FLTLoadAdError
+
+- (instancetype _Nonnull)initWithError:(NSError *_Nonnull)error {
+  self = [super init];
+  if (self) {
+    _code = error.code;
+    _domain = error.domain;
+    _message = error.localizedDescription;
+    GADResponseInfo * responseInfo = error.userInfo[GADErrorUserInfoKeyResponseInfo];
+    if (responseInfo) {
+      _responseInfo = [[FLTGADResponseInfo alloc] initWithResponseInfo: responseInfo];
+    }
+  }
+  return self;
+}
+@end
+
 @implementation FLTGAMAdRequest
 - (GADRequest *_Nonnull)asGAMRequest {
   GAMRequest *request = [GAMRequest request];

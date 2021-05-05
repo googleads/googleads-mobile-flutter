@@ -73,8 +73,7 @@ class AdInstanceManager {
     }
   }
 
-  void _onAdEventIOS(
-      Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
+  void _onAdEventIOS(Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     switch (eventName) {
       case 'onAdLoaded':
         _onAdLoadedAds.add(ad);
@@ -84,7 +83,8 @@ class AdInstanceManager {
         ad.listener.onAdFailedToLoad?.call(ad, arguments['loadAdError']);
         break;
       case 'onAppEvent':
-        (ad.listener as AppEventListener?)?.onAppEvent
+        (ad.listener as AppEventListener?)
+            ?.onAppEvent
             ?.call(ad, arguments['name'], arguments['data']);
         break;
       case 'onNativeAdClicked':
@@ -107,7 +107,9 @@ class AdInstanceManager {
         break;
       case 'onRewardedAdUserEarnedReward':
         assert(arguments['rewardItem'] != null);
-        (ad as RewardedAd?)?.listener?.onRewardedAdUserEarnedReward
+        (ad as RewardedAd?)
+            ?.listener
+            .onRewardedAdUserEarnedReward
             ?.call(ad as RewardedAd, arguments['rewardItem']);
         break;
       case 'onBannerImpression':
@@ -115,32 +117,30 @@ class AdInstanceManager {
         break;
       case 'onAdDidPresentFullScreenContent':
         (ad.listener as FullScreenAdListener?)
-            ?.onAdShowedFullScreenContent?.call(ad);
+            ?.onAdShowedFullScreenContent
+            ?.call(ad);
         break;
       case 'adDidDismissFullScreenContent':
         (ad.listener as FullScreenAdListener?)
-            ?.onAdDismissedFullScreenContent?.call(ad);
+            ?.onAdDismissedFullScreenContent
+            ?.call(ad);
         break;
       case 'adWillDismissFullScreenContent':
         (ad.listener as FullScreenAdListener?)
-            ?.onAdWillDismissFullScreenContent?.call(ad);
+            ?.onAdWillDismissFullScreenContent
+            ?.call(ad);
         break;
       case 'adDidRecordImpression':
         (ad.listener as FullScreenAdListener).onAdImpression?.call(ad);
         break;
-      case 'onFailedToShowFullScreenContent':
-        AdError adError =
-        AdError(arguments['code'], arguments['domain'], arguments['message']);
-        (ad.listener as FullScreenAdListener?)
-            ?.onAdFailedToShowFullScreenContent?.call(ad, adError);
-        break;
       case 'didFailToPresentFullScreenContentWithError':
-        // (ad.listener as FullScreenAdListener?)
-        //     ?.onAdFailedToShowFullScreenContent?.call(ad, )
+        (ad.listener as FullScreenAdListener?)
+            ?.onAdFailedToShowFullScreenContent
+            ?.call(ad, arguments['error']);
         break;
 
       case 'onAdMetadataChanged':
-      // TODO(jjliu15)
+        // TODO(jjliu15) - implement this.
         break;
       default:
         debugPrint('invalid ad event name: $eventName');
@@ -167,12 +167,15 @@ class AdInstanceManager {
         (ad.listener as AdWithViewListener?)?.onAdClosed?.call(ad);
         break;
       case 'onAppEvent':
-        (ad.listener as AppEventListener?)?.onAppEvent
+        (ad.listener as AppEventListener?)
+            ?.onAppEvent
             ?.call(ad, arguments['name'], arguments['data']);
         break;
       case 'onRewardedAdUserEarnedReward':
         assert(arguments['rewardItem'] != null);
-        (ad as RewardedAd?)?.listener?.onRewardedAdUserEarnedReward
+        (ad as RewardedAd?)
+            ?.listener
+            .onRewardedAdUserEarnedReward
             ?.call(ad as RewardedAd, arguments['rewardItem']);
         break;
       case 'onAdImpression':
@@ -183,21 +186,24 @@ class AdInstanceManager {
         }
         break;
       case 'onFailedToShowFullScreenContent':
-        AdError adError =
-        AdError(arguments['code'], arguments['domain'], arguments['message']);
+        AdError adError = AdError(
+            arguments['code'], arguments['domain'], arguments['message']);
         (ad.listener as FullScreenAdListener?)
-            ?.onAdFailedToShowFullScreenContent?.call(ad, adError);
+            ?.onAdFailedToShowFullScreenContent
+            ?.call(ad, adError);
         break;
       case 'onAdShowedFullScreenContent':
         (ad.listener as FullScreenAdListener?)
-            ?.onAdShowedFullScreenContent?.call(ad);
+            ?.onAdShowedFullScreenContent
+            ?.call(ad);
         break;
       case 'onAdDismissedFullScreenContent':
         (ad.listener as FullScreenAdListener?)
-            ?.onAdDismissedFullScreenContent?.call(ad);
+            ?.onAdDismissedFullScreenContent
+            ?.call(ad);
         break;
       case 'onAdMetadataChanged':
-      // TODO(jjliu15)
+        // TODO(jjliu15) - implement this.
         break;
       default:
         debugPrint('invalid ad event name: $eventName');
@@ -409,6 +415,8 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueAdapterStatus = 136;
   static const int _valueInitializationStatus = 137;
   static const int _valueServerSideVerificationOptions = 138;
+  static const int _valueAdError = 139;
+  static const int _valueResponseInfo = 140;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -425,7 +433,17 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
       writeValue(buffer, value.type);
+    } else if (value is ResponseInfo) {
+      buffer.putUint8(_valueResponseInfo);
+      writeValue(buffer, value.responseId);
+      writeValue(buffer, value.mediationAdapterClassName);
     } else if (value is LoadAdError) {
+      buffer.putUint8(_valueLoadAdError);
+      writeValue(buffer, value.code);
+      writeValue(buffer, value.domain);
+      writeValue(buffer, value.message);
+      writeValue(buffer, value.responseInfo);
+    } else if (value is AdError) {
       buffer.putUint8(_valueLoadAdError);
       writeValue(buffer, value.code);
       writeValue(buffer, value.domain);
@@ -476,12 +494,23 @@ class AdMessageCodec extends StandardMessageCodec {
           readValueOfType(buffer.getUint8(), buffer),
           readValueOfType(buffer.getUint8(), buffer),
         );
+      case _valueResponseInfo:
+        return ResponseInfo(
+          responseId: readValueOfType(buffer.getUint8(), buffer),
+          mediationAdapterClassName: readValueOfType(buffer.getUint8(), buffer),
+        );
       case _valueLoadAdError:
         return LoadAdError(
           readValueOfType(buffer.getUint8(), buffer),
           readValueOfType(buffer.getUint8(), buffer),
           readValueOfType(buffer.getUint8(), buffer),
+          readValueOfType(buffer.getUint8(), buffer),
         );
+      case _valueAdError:
+        return AdError(
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer));
       case _valueAdManagerAdRequest:
         return AdManagerAdRequest(
           keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),

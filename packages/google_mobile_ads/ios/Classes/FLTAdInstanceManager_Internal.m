@@ -86,7 +86,7 @@
                arguments:@{
                  @"adId" : [self adIdFor:ad],
                  @"eventName" : @"onAdFailedToLoad",
-                 @"loadAdError" : error
+                 @"loadAdError" : [[FLTLoadAdError alloc] initWithError:error]
                }];
 }
 

@@ -19,12 +19,14 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdMobFieldAdSize = 128,
   FLTAdMobFieldAdRequest = 129,
   FLTAdMobFieldRewardItem = 132,
-  FLTAdMobFieldNSError = 133,
+  FLTAdMobFieldLoadError = 133,
   FLTAdMobFieldAdManagerAdRequest = 134,
   FLTAdMobFieldAdapterInitializationState = 135,
   FLTAdMobFieldAdapterStatus = 136,
   FLTAdMobFieldInitializationStatus = 137,
   FLTAdmobFieldServerSideVerificationOptions = 138,
+  FLTAdmobFieldAdError = 139,
+  FLTAdmobFieldGadResponseInfo = 140
 };
 
 @interface FLTGoogleMobileAdsReader : FlutterStandardReader
@@ -65,7 +67,27 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       return [[FLTRewardItem alloc] initWithAmount:[self readValueOfType:[self readByte]]
                                               type:[self readValueOfType:[self readByte]]];
     }
-    case FLTAdMobFieldNSError: {
+    case FLTAdmobFieldGadResponseInfo: {
+      NSString *responseIdentifier = [self readValueOfType:[self readByte]];
+      NSString *adNetworkClassName = [self readValueOfType:[self readByte]];
+      FLTGADResponseInfo * gadResponseInfo = [[FLTGADResponseInfo alloc] init];
+      gadResponseInfo.adNetworkClassName = adNetworkClassName;
+      gadResponseInfo.responseIdentifier = responseIdentifier;
+      return gadResponseInfo;
+    }
+    case FLTAdMobFieldLoadError: {
+      NSNumber *code = [self readValueOfType:[self readByte]];
+      NSString *domain = [self readValueOfType:[self readByte]];
+      NSString *message = [self readValueOfType:[self readByte]];
+      FLTGADResponseInfo *responseInfo = [self readValueOfType:[self readByte]];
+      FLTLoadAdError * loadAdError = [[FLTLoadAdError alloc] init];
+      loadAdError.code = code.longValue;
+      loadAdError.domain = domain;
+      loadAdError.message = message;
+      loadAdError.responseInfo = responseInfo;
+      return loadAdError;
+    }
+    case FLTAdmobFieldAdError: {
       NSNumber *code = [self readValueOfType:[self readByte]];
       NSString *domain = [self readValueOfType:[self readByte]];
       NSString *message = [self readValueOfType:[self readByte]];
@@ -145,8 +167,20 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     FLTRewardItem *item = value;
     [self writeValue:item.amount];
     [self writeValue:item.type];
+  } else if ([value isKindOfClass:[FLTGADResponseInfo class]]) {
+    [self writeByte:FLTAdmobFieldGadResponseInfo];
+    GADResponseInfo *responseInfo = value;
+    [self writeValue:responseInfo.responseIdentifier];
+    [self writeValue:responseInfo.adNetworkClassName];
+  } else if ([value isKindOfClass:[FLTLoadAdError class]]) {
+    [self writeByte:FLTAdMobFieldLoadError];
+    FLTLoadAdError *error = value;
+    [self writeValue:@(error.code)];
+    [self writeValue:error.domain];
+    [self writeValue:error.message];
+    [self writeValue:error.responseInfo];
   } else if ([value isKindOfClass:[NSError class]]) {
-    [self writeByte:FLTAdMobFieldNSError];
+    [self writeByte:FLTAdmobFieldAdError];
     NSError *error = value;
     [self writeValue:@(error.code)];
     [self writeValue:error.domain];
