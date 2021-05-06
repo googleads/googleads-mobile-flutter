@@ -14,6 +14,7 @@
 
 import 'ad_instance_manager.dart';
 import 'request_configuration.dart';
+import 'package:flutter/foundation.dart';
 
 /// The initialization state of the mediation adapter.
 enum AdapterInitializationState {
@@ -54,6 +55,18 @@ class MobileAds {
   Future<void> updateRequestConfiguration(
       RequestConfiguration requestConfiguration) {
     return instanceManager.updateRequestConfiguration(requestConfiguration);
+  }
+
+  /// Set whether the Google Mobile Ads SDK Same App Key is enabled.
+  ///
+  /// The value set persists across app sessions. The key is enabled by default.
+  /// Note this is a no-op on Android.
+  Future<void> setSameAppKeyEnabled(bool isEnabled) {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return instanceManager.setSameAppKeyEnabled(isEnabled);
+    } else {
+      return Future.value();
+    }
   }
 
   /// Internal init to cleanup state for hot restart.

@@ -36,6 +36,7 @@ void main() {
         log.add(methodCall);
         switch (methodCall.method) {
           case 'MobileAds#updateRequestConfiguration':
+          case 'MobileAds#setSameAppKeyEnabled':
           case 'loadBannerAd':
           case 'loadNativeAd':
           case 'showAdWithoutView':
@@ -66,6 +67,31 @@ void main() {
               'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
               'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.yes,
               'testDeviceIds': <String>['test-device-id'],
+            })
+      ]);
+    });
+
+
+    test('setSameAppKeyEnabled', () async {
+      await instanceManager.setSameAppKeyEnabled(true);
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#setSameAppKeyEnabled',
+            arguments: <String, dynamic>{
+              'isEnabled': true,
+            })
+      ]);
+
+      await instanceManager.setSameAppKeyEnabled(false);
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#setSameAppKeyEnabled',
+            arguments: <String, dynamic>{
+              'isEnabled': true,
+            }),
+        isMethodCall('MobileAds#setSameAppKeyEnabled',
+            arguments: <String, dynamic>{
+              'isEnabled': false,
             })
       ]);
     });

@@ -104,6 +104,10 @@
   } else if ([call.method isEqualToString:@"_init"]) {
     [_manager disposeAllAds];
     result(nil);
+  } else if ([call.method isEqualToString:@"MobileAds#setSameAppKeyEnabled"]) {
+    GADRequestConfiguration *requestConfig = GADMobileAds.sharedInstance.requestConfiguration;
+    [requestConfig setSameAppKeyEnabled:call.arguments[@"isEnabled"]];
+    result(nil);
   } else if ([call.method isEqualToString:@"MobileAds#updateRequestConfiguration"]) {
     NSString *maxAdContentRating = call.arguments[@"maxAdContentRating"];
     NSNumber *tagForChildDirectedTreatment = call.arguments[@"tagForChildDirectedTreatment"];

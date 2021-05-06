@@ -393,6 +393,16 @@ class AdInstanceManager {
       },
     );
   }
+
+  /// Set whether same app key is enabled.
+  Future<void> setSameAppKeyEnabled(bool isEnabled) {
+    return channel.invokeMethod<void>(
+      'MobileAds#setSameAppKeyEnabled',
+      <dynamic, dynamic>{
+        'isEnabled': isEnabled,
+      },
+    );
+  }
 }
 
 class AdMessageCodec extends StandardMessageCodec {
