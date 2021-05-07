@@ -249,15 +249,12 @@ class NativeAdListener extends BaseAdListener implements AdWithViewListener {
   @override
   void Function(Ad ad)? onAdOpened;
 
-  /// Called before dismissing a full screen view.
-  ///
-  /// Note this is only available on iOS.
+  /// For iOS only. Called before dismissing a full screen view.
   @override
   void Function(Ad ad)? onAdWillDismissScreen;
 
   /// Called after dismissing a full screen view. Use this opportunity to
-  /// restart anything you may have stopped as part of
-  /// onAdOpened.
+  /// restart anything you may have stopped as part of [onAdOpened].
   @override
   void Function(Ad ad)? onAdClosed;
 }
