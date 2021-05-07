@@ -744,7 +744,7 @@ void main() {
     });
 
     test('encode/decode $LoadAdError', () async {
-      ResponseInfo responseInfo = ResponseInfo(
+      final ResponseInfo responseInfo = ResponseInfo(
         responseId: 'id',
         mediationAdapterClassName: 'class',
       );
