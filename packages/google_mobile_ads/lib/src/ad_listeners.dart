@@ -14,6 +14,12 @@
 
 import 'ad_containers.dart';
 
+/// The callback type to handle an event occurring for an [Ad].
+typedef AdEventCallback = void Function(Ad ad);
+
+/// The callback type to handle an error loading an [Ad].
+typedef AdLoadErrorCallback = void Function(Ad ad, LoadAdError error);
+
 /// Base class for all ad listeners.
 ///
 /// Contains callbacks for successful and failed load events.
@@ -22,10 +28,10 @@ abstract class BaseAdListener {
   const BaseAdListener(this.onAdLoaded, this.onAdFailedToLoad);
 
   /// Called when an ad is successfully received.
-  final void Function(Ad ad)? onAdLoaded;
+  final AdEventCallback? onAdLoaded;
 
   /// Called when an ad request failed.
-  final void Function(Ad ad, LoadAdError error)? onAdFailedToLoad;
+  final AdLoadErrorCallback? onAdFailedToLoad;
 }
 
 /// Listener for app events.
@@ -39,27 +45,27 @@ class AdWithViewListener {
   /// A full screen view/overlay is presented in response to the user clicking
   /// on an ad. You may want to pause animations and time sensitive
   /// interactions.
-  void Function(Ad ad)? onAdOpened;
+  AdEventCallback? onAdOpened;
 
   /// Called when the full screen view will be dismissed.
   ///
   /// Note this is only invoked on iOS.
-  void Function(Ad ad)? onAdWillDismissScreen;
+  AdEventCallback? onAdWillDismissScreen;
 
   /// Called when the full screen view has been closed. You should restart
   /// anything paused while handling onAdOpened.
-  void Function(Ad ad)? onAdClosed;
+  AdEventCallback? onAdClosed;
 
   /// Called when an impression occurs on the ad.
-  void Function(Ad ad)? onAdImpression;
+  AdEventCallback? onAdImpression;
 }
 
 /// Listener for Banner Ads.
 class BannerAdListener extends BaseAdListener implements AdWithViewListener {
   /// Default constructor for [BannerAdListener].
   BannerAdListener({
-    Function(Ad ad)? onAdLoaded,
-    Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
+    AdEventCallback? onAdLoaded,
+    AdLoadErrorCallback? onAdFailedToLoad,
     this.onAdOpened,
     this.onAdWillDismissScreen,
     this.onAdClosed,
@@ -70,22 +76,22 @@ class BannerAdListener extends BaseAdListener implements AdWithViewListener {
   /// on an ad. You may want to pause animations and time sensitive
   /// interactions.
   @override
-  void Function(Ad ad)? onAdOpened;
+  AdEventCallback? onAdOpened;
 
   /// Called when the full screen view will be dismissed.
   ///
   /// Note this is only invoked on iOS.
   @override
-  void Function(Ad ad)? onAdWillDismissScreen;
+  AdEventCallback? onAdWillDismissScreen;
 
   /// Called when the full screen view has been closed. You should restart
   /// anything paused while handling onAdOpened.
   @override
-  void Function(Ad ad)? onAdClosed;
+  AdEventCallback? onAdClosed;
 
   /// Called when an impression occurs on the ad.
   @override
-  void Function(Ad ad)? onAdImpression;
+  AdEventCallback? onAdImpression;
 }
 
 /// Listener for Ad Manager Banner Ads.
@@ -93,12 +99,12 @@ class AdManagerBannerAdListener extends BannerAdListener
     implements AppEventListener, AdWithViewListener {
   /// Default constructor for [AdManagerBannerAdListener].
   AdManagerBannerAdListener(
-      {Function(Ad ad)? onAdLoaded,
+      {AdEventCallback? onAdLoaded,
       Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
-      Function(Ad ad)? onAdOpened,
-      Function(Ad ad)? onAdWillDismissScreen,
-      Function(Ad ad)? onAdClosed,
-      Function(Ad ad)? onAdImpression,
+      AdEventCallback? onAdOpened,
+      AdEventCallback? onAdWillDismissScreen,
+      AdEventCallback? onAdClosed,
+      AdEventCallback? onAdImpression,
       this.onAppEvent})
       : super(
             onAdLoaded: onAdLoaded,
@@ -117,7 +123,7 @@ class AdManagerBannerAdListener extends BannerAdListener
 abstract class FullScreenAdListener extends BaseAdListener {
   /// Constructor for [FullScreenAdListener].
   const FullScreenAdListener({
-    Function(Ad ad)? onAdLoaded,
+    AdEventCallback? onAdLoaded,
     Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
     this.onAdShowedFullScreenContent,
     this.onAdDismissedFullScreenContent,
@@ -127,18 +133,18 @@ abstract class FullScreenAdListener extends BaseAdListener {
   }) : super(onAdLoaded, onAdFailedToLoad);
 
   /// Called when an ad shows full screen content.
-  final void Function(Ad ad)? onAdShowedFullScreenContent;
+  final AdEventCallback? onAdShowedFullScreenContent;
 
   /// Called when an ad dismisses full screen content.
-  final void Function(Ad ad)? onAdDismissedFullScreenContent;
+  final AdEventCallback? onAdDismissedFullScreenContent;
 
   /// Called when the ad will dismiss full screen content.
   ///
   /// Note this is only invoked on iOS.
-  final void Function(Ad ad)? onAdWillDismissFullScreenContent;
+  final AdEventCallback? onAdWillDismissFullScreenContent;
 
   /// Called when an ad impression occurs.
-  final void Function(Ad ad)? onAdImpression;
+  final AdEventCallback? onAdImpression;
 
   /// Called when ad fails to show full screen content.
   final void Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent;
@@ -148,12 +154,12 @@ abstract class FullScreenAdListener extends BaseAdListener {
 class InterstitialAdListener extends FullScreenAdListener {
   /// Constructor for [InterstitialAdListener].
   const InterstitialAdListener({
-    Function(Ad ad)? onAdLoaded,
+    AdEventCallback? onAdLoaded,
     Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
-    Function(Ad ad)? onAdShowedFullScreenContent,
-    Function(Ad ad)? onAdDismissedFullScreenContent,
-    Function(Ad ad)? onAdWillDismissFullScreenContent,
-    Function(Ad ad)? onAdImpression,
+    AdEventCallback? onAdShowedFullScreenContent,
+    AdEventCallback? onAdDismissedFullScreenContent,
+    AdEventCallback? onAdWillDismissFullScreenContent,
+    AdEventCallback? onAdImpression,
     Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent,
   }) : super(
             onAdLoaded: onAdLoaded,
@@ -171,12 +177,12 @@ class AdManagerInterstitialAdListener extends FullScreenAdListener
     implements AppEventListener {
   /// Constructor for [AdManagerInterstitialAdListener].
   AdManagerInterstitialAdListener({
-    Function(Ad ad)? onAdLoaded,
+    AdEventCallback? onAdLoaded,
     Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
-    Function(Ad ad)? onAdShowedFullScreenContent,
-    Function(Ad ad)? onAdDismissedFullScreenContent,
-    Function(Ad ad)? onAdWillDismissFullScreenContent,
-    Function(Ad ad)? onAdImpression,
+    AdEventCallback? onAdShowedFullScreenContent,
+    AdEventCallback? onAdDismissedFullScreenContent,
+    AdEventCallback? onAdWillDismissFullScreenContent,
+    AdEventCallback? onAdImpression,
     Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent,
     this.onAppEvent,
   }) : super(
@@ -198,12 +204,12 @@ class AdManagerInterstitialAdListener extends FullScreenAdListener
 class RewardedAdListener extends FullScreenAdListener {
   /// Constructor for [RewardedAdListener].
   const RewardedAdListener({
-    Function(Ad ad)? onAdLoaded,
+    AdEventCallback? onAdLoaded,
     Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
-    Function(Ad ad)? onAdShowedFullScreenContent,
-    Function(Ad ad)? onAdDismissedFullScreenContent,
-    Function(Ad ad)? onAdWillDismissFullScreenContent,
-    Function(Ad ad)? onAdImpression,
+    AdEventCallback? onAdShowedFullScreenContent,
+    AdEventCallback? onAdDismissedFullScreenContent,
+    AdEventCallback? onAdWillDismissFullScreenContent,
+    AdEventCallback? onAdImpression,
     Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent,
     this.onRewardedAdUserEarnedReward,
   }) : super(
@@ -227,7 +233,7 @@ class RewardedAdListener extends FullScreenAdListener {
 class NativeAdListener extends BaseAdListener implements AdWithViewListener {
   /// Default constructor for [NativeAdListener].
   NativeAdListener({
-    Function(Ad ad)? onAdLoaded,
+    AdEventCallback? onAdLoaded,
     Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
     this.onNativeAdClicked,
     this.onAdImpression,
@@ -241,20 +247,20 @@ class NativeAdListener extends BaseAdListener implements AdWithViewListener {
 
   /// Called when an impression is recorded for a [NativeAd].
   @override
-  void Function(Ad ad)? onAdImpression;
+  AdEventCallback? onAdImpression;
 
   /// Called when presenting the user a full screen view in response to an
   /// ad action. Use this opportunity to stop animations, time sensitive
   /// interactions, etc.
   @override
-  void Function(Ad ad)? onAdOpened;
+  AdEventCallback? onAdOpened;
 
   /// For iOS only. Called before dismissing a full screen view.
   @override
-  void Function(Ad ad)? onAdWillDismissScreen;
+  AdEventCallback? onAdWillDismissScreen;
 
   /// Called after dismissing a full screen view. Use this opportunity to
   /// restart anything you may have stopped as part of [onAdOpened].
   @override
-  void Function(Ad ad)? onAdClosed;
+  AdEventCallback? onAdClosed;
 }
