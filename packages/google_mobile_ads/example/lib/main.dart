@@ -25,6 +25,8 @@ import 'reusable_inline_example.dart';
 // You can also test with your own ad unit IDs by registering your device as a
 // test device. Check the logs for your device's ID value.
 const String testDevice = 'YOUR_DEVICE_ID';
+const int maxFailedLoadAttempts = 3;
+
 
 class MyApp extends StatefulWidget {
   @override
@@ -40,9 +42,11 @@ class _MyAppState extends State<MyApp> {
 
   InterstitialAd? _interstitialAd;
   bool _interstitialReady = false;
+  int _numInterstitialLoadAttempts = 0;
 
   RewardedAd? _rewardedAd;
   bool _rewardedReady = false;
+  int _numRewardedLoadAttempts = 0;
 
   @override
   void initState() {
@@ -61,59 +65,94 @@ class _MyAppState extends State<MyApp> {
   }
 
   void createInterstitialAd() {
-    _interstitialAd ??= InterstitialAd(
-      adUnitId: InterstitialAd.testAdUnitId,
-      request: request,
-      listener: InterstitialAdListener(
-        onAdLoaded: (Ad ad) {
-          print('${ad.runtimeType} loaded.');
-          _interstitialReady = true;
-        },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('${ad.runtimeType} failed to load: $error.');
-          ad.dispose();
-          _interstitialAd = null;
-          createInterstitialAd();
-        },
-        onAdShowedFullScreenContent: (Ad ad) =>
-            print('${ad.runtimeType} onAdOpened.'),
-        onAdDismissedFullScreenContent: (Ad ad) {
-          print('${ad.runtimeType} closed.');
-          ad.dispose();
-          createInterstitialAd();
-        },
-      ),
-    )..load();
+    InterstitialAd.load(
+        adUnitId: InterstitialAd.testAdUnitId,
+        request: request,
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            print('$ad loaded');
+            _interstitialAd = ad;
+            _interstitialReady = true;
+            _numInterstitialLoadAttempts = 0;
+          },
+          onAdFailedToLoad: (InterstitialAd ad, LoadAdError error) {
+            print('$ad failed to load: $error.');
+            ad.dispose();
+            _numInterstitialLoadAttempts += 1;
+            _interstitialAd = null;
+            if (_numInterstitialLoadAttempts <= maxFailedLoadAttempts) {
+              createInterstitialAd();
+            }
+          }
+        ));
+  }
+
+  void showInterstitialAd() {
+    if (!_interstitialReady) {
+      print('Warning: attempt to interstitial before loaded.');
+      return;
+    }
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) => print('ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+        createInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        createInterstitialAd();
+      },
+    );
+    _interstitialAd!.show();
+    _interstitialReady = false;
+    _interstitialAd = null;
   }
 
   void createRewardedAd() {
-    _rewardedAd ??= RewardedAd(
-      adUnitId: RewardedAd.testAdUnitId,
-      request: request,
-      listener: RewardedAdListener(
-          onAdLoaded: (Ad ad) {
-            print('${ad.runtimeType} loaded.');
-            _rewardedReady = true;
-          },
-          onAdFailedToLoad: (Ad ad, LoadAdError error) {
-            print('${ad.runtimeType} failed to load: $error');
-            ad.dispose();
-            _rewardedAd = null;
-            createRewardedAd();
-          },
-          onAdShowedFullScreenContent: (Ad ad) =>
-              print('${ad.runtimeType} onAdOpened.'),
-          onAdDismissedFullScreenContent: (Ad ad) {
-            print('${ad.runtimeType} closed.');
-            ad.dispose();
-            createRewardedAd();
-          },
-          onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) {
-            print(
-              '$RewardedAd with reward $RewardItem(${reward.amount}, ${reward.type})',
-            );
-          }),
-    )..load();
+    RewardedAd.load(
+        adUnitId: RewardedAd.testAdUnitId,
+        request: request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (RewardedAd ad) {
+              print('$ad loaded.');
+              _rewardedReady = true;
+              _rewardedAd = ad;
+              _numRewardedLoadAttempts = 0;
+            },
+            onAdFailedToLoad: (RewardedAd ad, LoadAdError error) {
+              print('$ad failed to load: $error');
+              ad.dispose();
+              _rewardedAd = null;
+              _numRewardedLoadAttempts += 1;
+              if (_numRewardedLoadAttempts <= maxFailedLoadAttempts) {
+                createRewardedAd();
+              }
+            }));
+  }
+
+  void showRewardedAd() {
+    if (!_rewardedReady) return;
+    _rewardedAd?.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (RewardedAd ad) => print('ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (RewardedAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+        createRewardedAd();
+      },
+      onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        createRewardedAd();
+      },
+    );
+
+    _rewardedAd!.show(onUserEarnedReward: (RewardedAd ad, RewardItem reward) {
+      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
+    });
+    _rewardedReady = false;
+    _rewardedAd = null;
   }
 
   @override
@@ -135,16 +174,10 @@ class _MyAppState extends State<MyApp> {
                 onSelected: (String result) {
                   switch (result) {
                     case 'InterstitialAd':
-                      if (!_interstitialReady) return;
-                      _interstitialAd!.show();
-                      _interstitialReady = false;
-                      _interstitialAd = null;
+                      showInterstitialAd();
                       break;
                     case 'RewardedAd':
-                      if (!_rewardedReady) return;
-                      _rewardedAd!.show();
-                      _rewardedReady = false;
-                      _rewardedAd = null;
+                      showRewardedAd();
                       break;
                     case 'ReusableInlineExample':
                       Navigator.push(

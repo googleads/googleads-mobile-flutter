@@ -250,30 +250,23 @@ class AdSize {
   }
 }
 
+
 /// The base class for all ads.
 ///
 /// A valid [adUnitId] is required.
 abstract class Ad {
   /// Default constructor, used by subclasses.
-  const Ad({required this.adUnitId, required this.listener});
+  const Ad({required this.adUnitId});
 
   /// Identifies the source of [Ad]s for your application.
   ///
   /// For testing use a [sample ad unit](https://developers.google.com/admob/ios/test-ads#sample_ad_units).
   final String adUnitId;
 
-  /// The [BaseAdListener] for the ad.
-  final BaseAdListener listener;
-
   /// Free the plugin resources associated with this ad.
   Future<void> dispose() {
     return instanceManager.disposeAd(this);
   }
-
-  /// Start loading this ad.
-  ///
-  /// Loading callbacks are sent to this [Ad]'s [listener].
-  Future<void> load();
 
   /// Whether this [Ad.load] has been called for this [Ad] and [AdListener.onAdLoaded] callback has been called.
   Future<bool> isLoaded() async {
@@ -287,21 +280,25 @@ abstract class Ad {
 /// A valid [adUnitId] and [size] are required.
 abstract class AdWithView extends Ad {
   /// Default constructor, used by subclasses.
-  const AdWithView({required String adUnitId, required BaseAdListener listener})
-      : super(adUnitId: adUnitId, listener: listener);
+  const AdWithView({required String adUnitId, required this.listener})
+      : super(adUnitId: adUnitId);
+
+  /// The [AdWithViewListener] for the ad.
+  final AdWithViewListener listener;
+
+  /// Start loading this ad.
+  ///
+  /// Loading callbacks are sent to this [Ad]'s [listener].
+  Future<void> load();
+
 }
 
 /// An [Ad] that is overlaid on top of the UI.
 abstract class AdWithoutView extends Ad {
   /// Default constructor used by subclasses.
-  const AdWithoutView(
-      {required String adUnitId, required BaseAdListener listener})
-      : super(adUnitId: adUnitId, listener: listener);
-
-  /// Display this on top of the application.
-  Future<void> show() {
-    return instanceManager.showAdWithoutView(this);
-  }
+  AdWithoutView(
+      {required String adUnitId})
+      : super(adUnitId: adUnitId);
 }
 
 /// Displays an [Ad] as a Flutter widget.
@@ -579,27 +576,45 @@ class InterstitialAd extends AdWithoutView {
   ///
   /// A valid [adUnitId] from the AdMob dashboard, a nonnull [listener], and a
   /// nonnull [request] is required.
-  InterstitialAd({
+  InterstitialAd._({
     required String adUnitId,
-    required this.listener,
     required this.request,
-  }) : super(adUnitId: adUnitId, listener: listener);
+    required this.adLoadCallback,
+  }) : super(adUnitId: adUnitId);
 
   /// Targeting information used to fetch an [Ad].
   final AdRequest request;
 
-  /// A listener for receiving events in the ad lifecycle.
-  @override
-  final InterstitialAdListener listener;
+  /// Callback to be invoked when the ad finishes loading.
+  final InterstitialAdLoadCallback adLoadCallback;
+
+  /// Callbacks to be invoked when ads show and dismiss full screen content.
+  FullScreenContentCallback<InterstitialAd>? fullScreenContentCallback;
 
   /// {@macro google_mobile_ads.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/1033173712'
       : 'ca-app-pub-3940256099942544/4411468910';
 
-  @override
-  Future<void> load() async {
-    await instanceManager.loadInterstitialAd(this);
+  /// Loads an [InterstitialAd] with the given [adUnitId] and [request].
+  static Future<void> load({
+    required String adUnitId,
+    required AdRequest request,
+    required InterstitialAdLoadCallback adLoadCallback}) async {
+    InterstitialAd ad = InterstitialAd._(
+        adUnitId: adUnitId,
+        adLoadCallback: adLoadCallback,
+        request: request);
+
+    await instanceManager.loadInterstitialAd(ad);
+  }
+
+  /// Display this on top of the application.
+  ///
+  /// Set [this.fullScreenContentCallback] before calling this method to be
+  /// notified of events that occur when showing the ad.
+  Future<void> show() {
+    return instanceManager.showAdWithoutView(this);
   }
 }
 
@@ -609,22 +624,44 @@ class AdManagerInterstitialAd extends AdWithoutView {
   ///
   /// A valid [adUnitId] from the Ad Manager dashboard, a nonnull [listener],
   /// and nonnull [request] is required.
-  AdManagerInterstitialAd({
+  AdManagerInterstitialAd._({
     required String adUnitId,
-    required this.listener,
     required this.request,
-  }) : super(adUnitId: adUnitId, listener: listener);
+    required this.adLoadCallback,
+  }) : super(adUnitId: adUnitId);
 
   /// Targeting information used to fetch an [Ad].
   final AdManagerAdRequest request;
 
-  /// A listener for receiving events in the ad lifecycle.
-  @override
-  final AdManagerInterstitialAdListener listener;
+  /// Callback to be invoked when the ad finishes loading.
+  final AdManagerInterstitialAdLoadCallback adLoadCallback;
 
-  @override
-  Future<void> load() async {
-    await instanceManager.loadAdManagerInterstitialAd(this);
+  /// Callbacks to be invoked when ads show and dismiss full screen content.
+  FullScreenContentCallback<AdManagerInterstitialAd>? fullScreenContentCallback;
+
+  AppEventListener? appEventListener;
+
+  /// Loads an [AdManagerInterstitialAd] with the given [adUnitId] and [request].
+  static Future<void> load({
+    required String adUnitId,
+    required AdManagerAdRequest request,
+    required AdManagerInterstitialAdLoadCallback adLoadCallback,
+    AppEventListener? appEventListener
+    }) async {
+    AdManagerInterstitialAd ad = AdManagerInterstitialAd._(
+        adUnitId: adUnitId,
+        adLoadCallback: adLoadCallback,
+        request: request);
+
+    await instanceManager.loadAdManagerInterstitialAd(ad);
+  }
+
+  /// Displays this on top of the application.
+  ///
+  /// Set [this.fullScreenContentCallback] before calling this method to be
+  /// notified of events that occur when showing the ad.
+  Future<void> show() {
+    return instanceManager.showAdWithoutView(this);
   }
 }
 
@@ -636,24 +673,24 @@ class RewardedAd extends AdWithoutView {
   /// Creates a [RewardedAd] with an [AdRequest].
   ///
   /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
-  RewardedAd({
+  RewardedAd._({
     required String adUnitId,
-    required this.listener,
+    required this.rewardedAdLoadCallback,
     required this.request,
     this.serverSideVerificationOptions,
   })  : adManagerRequest = null,
-        super(adUnitId: adUnitId, listener: listener);
+        super(adUnitId: adUnitId);
 
   /// Creates a [RewardedAd] with a [AdManagerAdRequest].
   ///
   /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
-  RewardedAd.fromAdManagerRequest({
+  RewardedAd._fromAdManagerRequest({
     required String adUnitId,
-    required this.listener,
+    required this.rewardedAdLoadCallback,
     required this.adManagerRequest,
     this.serverSideVerificationOptions,
   })  : request = null,
-        super(adUnitId: adUnitId, listener: listener);
+        super(adUnitId: adUnitId);
 
   /// Targeting information used to fetch an [Ad].
   final AdRequest? request;
@@ -661,9 +698,8 @@ class RewardedAd extends AdWithoutView {
   /// Targeting information used to fetch an [Ad] using Ad Manager.
   final AdManagerAdRequest? adManagerRequest;
 
-  /// A listener for receiving events in the ad lifecycle.
-  @override
-  final RewardedAdListener listener;
+  /// Callbacks for events that occur when attempting to load an ad.
+  final RewardedAdLoadCallback rewardedAdLoadCallback;
 
   /// {@template google_mobile_ads.testAdUnitId}
   /// A platform-specific AdMob test ad unit ID.
@@ -677,11 +713,56 @@ class RewardedAd extends AdWithoutView {
       : 'ca-app-pub-3940256099942544/1712485313';
 
   /// Optional [ServerSideVerificationOptions].
-  final ServerSideVerificationOptions? serverSideVerificationOptions;
+  ServerSideVerificationOptions? serverSideVerificationOptions;
 
-  @override
-  Future<void> load() async {
-    await instanceManager.loadRewardedAd(this);
+  /// Callbacks to be invoked when ads show and dismiss full screen content.
+  FullScreenContentCallback<RewardedAd>? fullScreenContentCallback;
+
+  /// Callback for when the user earns a reward.
+  OnUserEarnedRewardCallback? onUserEarnedRewardCallback;
+
+  /// Loads a [RewardedAd] using an [AdRequest].
+  static Future<void> load({
+    required String adUnitId,
+    required AdRequest request,
+    required RewardedAdLoadCallback rewardedAdLoadCallback,
+    ServerSideVerificationOptions? serverSideVerificationOptions}) async {
+
+    RewardedAd rewardedAd = RewardedAd._(
+      adUnitId: adUnitId,
+      request: request,
+      rewardedAdLoadCallback: rewardedAdLoadCallback,
+      serverSideVerificationOptions: serverSideVerificationOptions
+    );
+
+    await instanceManager.loadRewardedAd(rewardedAd);
+  }
+
+  /// Loads a [RewardedAd] using an [AdManagerAdRequest].
+  static Future<void> loadWithAdManagerAdRequest({
+    required String adUnitId,
+    required AdManagerAdRequest adManagerAdRequest,
+    required RewardedAdLoadCallback rewardedAdLoadCallback,
+    ServerSideVerificationOptions? serverSideVerificationOptions}) async {
+
+    RewardedAd rewardedAd = RewardedAd._fromAdManagerRequest(
+        adUnitId: adUnitId,
+        adManagerRequest: adManagerAdRequest,
+        rewardedAdLoadCallback: rewardedAdLoadCallback,
+        serverSideVerificationOptions: serverSideVerificationOptions
+    );
+
+    await instanceManager.loadRewardedAd(rewardedAd);
+  }
+
+  /// Display this on top of the application.
+  ///
+  /// Set [this.fullScreenContentCallback] before calling this method to be
+  /// notified of events that occur when showing the ad.
+  /// [onUserEarnedReward] will be invoked when the user earns a reward.
+  Future<void> show({required OnUserEarnedRewardCallback onUserEarnedReward}) {
+    onUserEarnedRewardCallback = onUserEarnedReward;
+    return instanceManager.showAdWithoutView(this);
   }
 }
 

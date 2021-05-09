@@ -77,15 +77,39 @@ class AdInstanceManager {
     switch (eventName) {
       case 'onAdLoaded':
         _onAdLoadedAds.add(ad);
-        ad.listener.onAdLoaded?.call(ad);
+        if (ad is AdWithView) {
+          ad.listener.onAdLoaded?.call(ad);
+        } else if (ad is RewardedAd) {
+          ad.rewardedAdLoadCallback.onAdLoaded.call(ad);
+        } else if (ad is InterstitialAd) {
+          ad.adLoadCallback.onAdLoaded.call(ad);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.adLoadCallback.onAdLoaded.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onAdFailedToLoad':
-        ad.listener.onAdFailedToLoad?.call(ad, arguments['loadAdError']);
+        if (ad is AdWithView) {
+          ad.listener.onAdFailedToLoad?.call(ad, arguments['loadAdError']);
+        } else if (ad is RewardedAd) {
+          ad.rewardedAdLoadCallback.onAdFailedToLoad.call(ad, arguments['loadAdError']);
+        } else if (ad is InterstitialAd) {
+          ad.adLoadCallback.onAdFailedToLoad.call(ad, arguments['loadAdError']);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.adLoadCallback.onAdFailedToLoad.call(ad, arguments['loadAdError']);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onAppEvent':
-        (ad.listener as AppEventListener?)
-            ?.onAppEvent
-            ?.call(ad, arguments['name'], arguments['data']);
+        if (ad is AdManagerBannerAd) {
+          ad.listener.onAppEvent?.call(ad, arguments['name'], arguments['data']);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.appEventListener?.onAppEvent?.call(ad, arguments['name'], arguments['data']);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onNativeAdClicked':
         (ad as NativeAd?)?.listener.onNativeAdClicked?.call(ad as NativeAd);
@@ -95,48 +119,93 @@ class AdInstanceManager {
         break;
       case 'onNativeAdWillPresentScreen': // Fall through
       case 'onBannerWillPresentScreen':
-        (ad.listener as AdWithViewListener?)?.onAdOpened?.call(ad);
+        if (ad is AdWithView) {
+          ad.listener.onAdOpened?.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onNativeAdDidDismissScreen': // Fall through
       case 'onBannerDidDismissScreen':
-        (ad.listener as AdWithViewListener?)?.onAdClosed?.call(ad);
+        if (ad is AdWithView) {
+          ad.listener.onAdClosed?.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onBannerWillDismissScreen': // Fall through
       case 'onNativeAdWillDismissScreen':
-        (ad.listener as AdWithViewListener?)?.onAdWillDismissScreen?.call(ad);
+        if (ad is AdWithView) {
+          ad.listener.onAdWillDismissScreen?.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onRewardedAdUserEarnedReward':
         assert(arguments['rewardItem'] != null);
-        (ad as RewardedAd?)
-            ?.listener
-            .onRewardedAdUserEarnedReward
-            ?.call(ad as RewardedAd, arguments['rewardItem']);
+        assert(ad is RewardedAd);
+        if (ad is RewardedAd) {
+          ad.onUserEarnedRewardCallback?.call(ad, arguments['rewardItem']);
+        }
         break;
       case 'onBannerImpression':
-        (ad.listener as AdWithViewListener).onAdImpression?.call(ad);
+        assert(ad is BannerAd);
+        (ad as BannerAd).listener.onAdImpression?.call(ad);
         break;
       case 'onAdDidPresentFullScreenContent':
-        (ad.listener as FullScreenAdListener?)
-            ?.onAdShowedFullScreenContent
-            ?.call(ad);
+        if (ad is RewardedAd) {
+          ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
+        } else if (ad is InterstitialAd) {
+          ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'adDidDismissFullScreenContent':
-        (ad.listener as FullScreenAdListener?)
-            ?.onAdDismissedFullScreenContent
-            ?.call(ad);
+        if (ad is RewardedAd) {
+          ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+        } else if (ad is InterstitialAd) {
+          ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'adWillDismissFullScreenContent':
-        (ad.listener as FullScreenAdListener?)
-            ?.onAdWillDismissFullScreenContent
-            ?.call(ad);
+        if (ad is RewardedAd) {
+          ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent?.call(ad);
+        } else if (ad is InterstitialAd) {
+          ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent?.call(ad);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent?.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'adDidRecordImpression':
-        (ad.listener as FullScreenAdListener).onAdImpression?.call(ad);
+        if (ad is RewardedAd) {
+          ad.fullScreenContentCallback?.onAdImpression?.call(ad);
+        } else if (ad is InterstitialAd) {
+          ad.fullScreenContentCallback?.onAdImpression?.call(ad);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.fullScreenContentCallback?.onAdImpression?.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'didFailToPresentFullScreenContentWithError':
-        (ad.listener as FullScreenAdListener?)
-            ?.onAdFailedToShowFullScreenContent
-            ?.call(ad, arguments['error']);
+        if (ad is RewardedAd) {
+          ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent?.call(ad, arguments['error']);
+        } else if (ad is InterstitialAd) {
+          ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent?.call(ad, arguments['error']);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent?.call(ad, arguments['error']);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       default:
         debugPrint('invalid ad event name: $eventName');
@@ -148,55 +217,109 @@ class AdInstanceManager {
     switch (eventName) {
       case 'onAdLoaded':
         _onAdLoadedAds.add(ad);
-        ad.listener.onAdLoaded?.call(ad);
+        if (ad is AdWithView) {
+          ad.listener.onAdLoaded?.call(ad);
+        } else if (ad is RewardedAd) {
+          ad.rewardedAdLoadCallback.onAdLoaded.call(ad);
+        } else if (ad is InterstitialAd) {
+          ad.adLoadCallback.onAdLoaded.call(ad);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.adLoadCallback.onAdLoaded.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onAdFailedToLoad':
-        ad.listener.onAdFailedToLoad?.call(ad, arguments['loadAdError']);
+        if (ad is AdWithView) {
+          ad.listener.onAdFailedToLoad?.call(ad, arguments['loadAdError']);
+        } else if (ad is RewardedAd) {
+          ad.rewardedAdLoadCallback.onAdFailedToLoad.call(ad, arguments['loadAdError']);
+        } else if (ad is InterstitialAd) {
+          ad.adLoadCallback.onAdFailedToLoad.call(ad, arguments['loadAdError']);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.adLoadCallback.onAdFailedToLoad.call(ad, arguments['loadAdError']);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onNativeAdClicked':
         (ad as NativeAd?)?.listener.onNativeAdClicked?.call(ad as NativeAd);
         break;
       case 'onAdOpened':
-        (ad.listener as AdWithViewListener?)?.onAdOpened?.call(ad);
+        if (ad is AdWithView) {
+          ad.listener.onAdOpened?.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onAdClosed':
-        (ad.listener as AdWithViewListener?)?.onAdClosed?.call(ad);
+        if (ad is AdWithView) {
+          ad.listener.onAdClosed?.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onAppEvent':
-        (ad.listener as AppEventListener?)
-            ?.onAppEvent
-            ?.call(ad, arguments['name'], arguments['data']);
+        if (ad is AdManagerBannerAd) {
+          ad.listener.onAppEvent?.call(ad, arguments['name'], arguments['data']);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.appEventListener?.onAppEvent?.call(ad, arguments['name'], arguments['data']);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onRewardedAdUserEarnedReward':
         assert(arguments['rewardItem'] != null);
-        (ad as RewardedAd?)
-            ?.listener
-            .onRewardedAdUserEarnedReward
-            ?.call(ad as RewardedAd, arguments['rewardItem']);
+        assert(ad is RewardedAd);
+        if (ad is RewardedAd) {
+          ad.onUserEarnedRewardCallback?.call(ad, arguments['rewardItem']);
+        }
         break;
       case 'onAdImpression':
-        if (ad.listener is FullScreenAdListener) {
-          (ad.listener as FullScreenAdListener).onAdImpression?.call(ad);
-        } else if (ad.listener is AdWithViewListener) {
-          (ad.listener as AdWithViewListener).onAdImpression?.call(ad);
+        if (ad is AdWithView) {
+          ad.listener.onAdImpression?.call(ad);
+        } else if (ad is RewardedAd) {
+          ad.fullScreenContentCallback?.onAdImpression?.call(ad);
+        } else if (ad is InterstitialAd) {
+          ad.fullScreenContentCallback?.onAdImpression?.call(ad);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.fullScreenContentCallback?.onAdImpression?.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
         }
         break;
       case 'onFailedToShowFullScreenContent':
-        AdError adError = AdError(
-            arguments['code'], arguments['domain'], arguments['message']);
-        (ad.listener as FullScreenAdListener?)
-            ?.onAdFailedToShowFullScreenContent
-            ?.call(ad, adError);
+        if (ad is RewardedAd) {
+          ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent?.call(ad, arguments['error']);
+        } else if (ad is InterstitialAd) {
+          ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent?.call(ad, arguments['error']);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent?.call(ad, arguments['error']);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onAdShowedFullScreenContent':
-        (ad.listener as FullScreenAdListener?)
-            ?.onAdShowedFullScreenContent
-            ?.call(ad);
+        if (ad is RewardedAd) {
+          ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
+        } else if (ad is InterstitialAd) {
+          ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       case 'onAdDismissedFullScreenContent':
-        (ad.listener as FullScreenAdListener?)
-            ?.onAdDismissedFullScreenContent
-            ?.call(ad);
+        if (ad is RewardedAd) {
+          ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+        } else if (ad is InterstitialAd) {
+          ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+        } else if (ad is AdManagerInterstitialAd) {
+          ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+        } else {
+          debugPrint('invalid ad: $ad, for event name: $eventName');
+        }
         break;
       default:
         debugPrint('invalid ad event name: $eventName');
@@ -447,7 +570,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.message);
       writeValue(buffer, value.responseInfo);
     } else if (value is AdError) {
-      buffer.putUint8(_valueLoadAdError);
+      buffer.putUint8(_valueAdError);
       writeValue(buffer, value.code);
       writeValue(buffer, value.domain);
       writeValue(buffer, value.message);
