@@ -63,6 +63,7 @@ class AdError {
 /// information on how this can be used.
 class ResponseInfo {
   /// Constructs a [ResponseInfo] with the [responseId] and [mediationAdapterClassName].
+  @protected
   const ResponseInfo({this.responseId, this.mediationAdapterClassName});
 
   /// An identifier for the loaded ad.
@@ -81,6 +82,7 @@ class ResponseInfo {
 /// Represents errors that occur when loading an ad.
 class LoadAdError extends AdError {
   /// Default constructor for [LoadAdError].
+  @protected
   LoadAdError(int code, String domain, String message, this.responseInfo)
       : super(code, domain, message);
 
