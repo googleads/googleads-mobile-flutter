@@ -28,7 +28,7 @@ import 'ad_listeners.dart';
 
 /// Error information about why an ad load operation failed.
 class AdError {
-  /// Default constructor for [LoadAdError].
+  /// Creates a [LoadAdError] with the given [code], [domain] and [message].
   AdError(this.code, this.domain, this.message);
 
   /// Unique code to identify the error.
@@ -58,9 +58,11 @@ class AdError {
 
 /// Contains information about the loaded ad or ad request.
 ///
-/// For debugging and logging purposes.
+/// For debugging and logging purposes. See
+/// https://developers.google.com/admob/android/response-info for more
+/// information on how this can be used.
 class ResponseInfo {
-  /// Default constructor for [ResponseInfo].
+  /// Constructs a [ResponseInfo] with the [responseId] and [mediationAdapterClassName].
   const ResponseInfo({this.responseId, this.mediationAdapterClassName});
 
   /// An identifier for the loaded ad.

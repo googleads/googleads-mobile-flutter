@@ -24,7 +24,7 @@ typedef AdLoadErrorCallback = void Function(Ad ad, LoadAdError error);
 ///
 /// Contains callbacks for successful and failed load events.
 abstract class BaseAdListener {
-  /// Default constructor for [BaseAdListener].
+  /// Default constructor for [BaseAdListener], meant to be used by subclasses.
   const BaseAdListener(this.onAdLoaded, this.onAdFailedToLoad);
 
   /// Called when an ad is successfully received.
@@ -62,7 +62,20 @@ class AdWithViewListener {
 
 /// Listener for Banner Ads.
 class BannerAdListener extends BaseAdListener implements AdWithViewListener {
-  /// Default constructor for [BannerAdListener].
+  /// Constructs a [BannerAdListener] that notifies for the provided event callbacks.
+  ///
+  /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
+  /// ```dart
+  /// BannerAdListener(
+  ///   onAdLoaded: (ad) {
+  ///     // Ad successfully loaded - display an AdWidget with the banner ad.
+  ///   },
+  ///   onAdFailedToLoad: (ad, error) {
+  ///     // Ad failed to load - log the error and dispose the ad.
+  ///   },
+  ///   ...
+  /// )
+  /// ```
   BannerAdListener({
     AdEventCallback? onAdLoaded,
     AdLoadErrorCallback? onAdFailedToLoad,
@@ -97,7 +110,20 @@ class BannerAdListener extends BaseAdListener implements AdWithViewListener {
 /// Listener for Ad Manager Banner Ads.
 class AdManagerBannerAdListener extends BannerAdListener
     implements AppEventListener, AdWithViewListener {
-  /// Default constructor for [AdManagerBannerAdListener].
+  /// Constructs an [AdManagerBannerAdListener] with the provided event callbacks.
+  ///
+  /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
+  /// ```dart
+  /// AdManagerBannerAdListener(
+  ///   onAdLoaded: (ad) {
+  ///     // Ad successfully loaded - display an AdWidget with the banner ad.
+  ///   },
+  ///   onAdFailedToLoad: (ad, error) {
+  ///     // Ad failed to load - log the error and dispose the ad.
+  ///   },
+  ///   ...
+  /// )
+  /// ```
   AdManagerBannerAdListener(
       {AdEventCallback? onAdLoaded,
       Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
@@ -121,7 +147,7 @@ class AdManagerBannerAdListener extends BannerAdListener
 
 /// Base class for Full Screen Ads.
 abstract class FullScreenAdListener extends BaseAdListener {
-  /// Constructor for [FullScreenAdListener].
+  /// Constructor for [FullScreenAdListener], for use by subclasses.
   const FullScreenAdListener({
     AdEventCallback? onAdLoaded,
     Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
@@ -152,7 +178,24 @@ abstract class FullScreenAdListener extends BaseAdListener {
 
 /// Listener for Admob iOS interstitial ads.
 class InterstitialAdListener extends FullScreenAdListener {
-  /// Constructor for [InterstitialAdListener].
+  /// Constructs an [InterstitialAdListener] with the provided event callbacks.
+  ///
+  /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
+  /// ```dart
+  /// InterstitialAdListener(
+  ///   onAdLoaded: (ad) {
+  ///     // Ad successfully loaded. Keep a reference to the ad so it can be
+  ///     // shown at an appropriate time.
+  ///   },
+  ///   onAdFailedToLoad: (ad, error) {
+  ///     // Ad failed to load - log the error and dispose the ad.
+  ///   },
+  ///   onAdFailedToShowFullScreenContent: (ad, error) {
+  ///     // An error occurred showing the ad. Log an error and dispose the ad.
+  ///   },
+  ///   ...
+  /// )
+  /// ```
   const InterstitialAdListener({
     AdEventCallback? onAdLoaded,
     Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
@@ -176,6 +219,23 @@ class InterstitialAdListener extends FullScreenAdListener {
 class AdManagerInterstitialAdListener extends FullScreenAdListener
     implements AppEventListener {
   /// Constructor for [AdManagerInterstitialAdListener].
+  ///
+  /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
+  /// ```dart
+  /// AdManagerInterstitialAdListener(
+  ///   onAdLoaded: (ad) {
+  ///     // Ad successfully loaded. Keep a reference to the ad so it can be
+  ///     // shown at an appropriate time.
+  ///   },
+  ///   onAdFailedToLoad: (ad, error) {
+  ///     // Ad failed to load - log the error and dispose the ad.
+  ///   },
+  ///   onAdFailedToShowFullScreenContent: (ad, error) {
+  ///     // An error occurred showing the ad. Log an error and dispose the ad.
+  ///   },
+  ///   ...
+  /// )
+  /// ```
   AdManagerInterstitialAdListener({
     AdEventCallback? onAdLoaded,
     Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
@@ -202,7 +262,27 @@ class AdManagerInterstitialAdListener extends FullScreenAdListener
 
 /// Listener for rewarded ads.
 class RewardedAdListener extends FullScreenAdListener {
-  /// Constructor for [RewardedAdListener].
+  /// Construct a [RewardedAdListener].
+  ///
+  /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
+  /// ```dart
+  /// RewardedAdListener(
+  ///   onAdLoaded: (ad) {
+  ///     // Ad successfully loaded. Keep a reference to the ad so it can be
+  ///     // shown at an appropriate time.
+  ///   },
+  ///   onAdFailedToLoad: (ad, error) {
+  ///     // Ad failed to load - log the error and dispose the ad.
+  ///   },
+  ///   onAdFailedToShowFullScreenContent: (ad, error) {
+  ///     // An error occurred showing the ad. Log an error and dispose the ad.
+  ///   },
+  ///   onRewardedAdUserEarnedReward: (ad, reward) {
+  ///     // Reward the user.
+  ///   }
+  ///   ...
+  /// )
+  /// ```
   const RewardedAdListener({
     AdEventCallback? onAdLoaded,
     Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
@@ -231,7 +311,20 @@ class RewardedAdListener extends FullScreenAdListener {
 
 /// Listener for native ads.
 class NativeAdListener extends BaseAdListener implements AdWithViewListener {
-  /// Default constructor for [NativeAdListener].
+  /// Constructs a [NativeAdListener] with the provided event callbacks.
+  ///
+  /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
+  /// ```dart
+  /// NativeAdListener(
+  ///   onAdLoaded: (ad) {
+  ///     // Ad successfully loaded - display an AdWidget with the banner ad.
+  ///   },
+  ///   onAdFailedToLoad: (ad, error) {
+  ///     // Ad failed to load - log the error and dispose the ad.
+  ///   },
+  ///   ...
+  /// )
+  /// ```
   NativeAdListener({
     AdEventCallback? onAdLoaded,
     Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
