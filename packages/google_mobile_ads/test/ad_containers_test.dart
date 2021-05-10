@@ -71,7 +71,6 @@ void main() {
       ]);
     });
 
-
     test('setSameAppKeyEnabled', () async {
       await instanceManager.setSameAppKeyEnabled(true);
 

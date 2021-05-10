@@ -136,14 +136,17 @@ void main() {
       await MobileAds.instance.setSameAppKeyEnabled(true);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setSameAppKeyEnabled', arguments: {'isEnabled': true})
+        isMethodCall('MobileAds#setSameAppKeyEnabled',
+            arguments: {'isEnabled': true})
       ]);
 
       await MobileAds.instance.setSameAppKeyEnabled(false);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setSameAppKeyEnabled', arguments: {'isEnabled': true}),
-        isMethodCall('MobileAds#setSameAppKeyEnabled', arguments: {'isEnabled': false})
+        isMethodCall('MobileAds#setSameAppKeyEnabled',
+            arguments: {'isEnabled': true}),
+        isMethodCall('MobileAds#setSameAppKeyEnabled',
+            arguments: {'isEnabled': false})
       ]);
     });
   });
