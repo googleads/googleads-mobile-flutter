@@ -27,7 +27,6 @@ import 'reusable_inline_example.dart';
 const String testDevice = 'YOUR_DEVICE_ID';
 const int maxFailedLoadAttempts = 3;
 
-
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -68,23 +67,21 @@ class _MyAppState extends State<MyApp> {
     InterstitialAd.load(
         adUnitId: InterstitialAd.testAdUnitId,
         request: request,
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            print('$ad loaded');
-            _interstitialAd = ad;
-            _interstitialReady = true;
-            _numInterstitialLoadAttempts = 0;
-          },
-          onAdFailedToLoad: (InterstitialAd ad, LoadAdError error) {
-            print('$ad failed to load: $error.');
-            ad.dispose();
-            _numInterstitialLoadAttempts += 1;
-            _interstitialAd = null;
-            if (_numInterstitialLoadAttempts <= maxFailedLoadAttempts) {
-              createInterstitialAd();
-            }
+        adLoadCallback:
+            InterstitialAdLoadCallback(onAdLoaded: (InterstitialAd ad) {
+          print('$ad loaded');
+          _interstitialAd = ad;
+          _interstitialReady = true;
+          _numInterstitialLoadAttempts = 0;
+        }, onAdFailedToLoad: (InterstitialAd ad, LoadAdError error) {
+          print('$ad failed to load: $error.');
+          ad.dispose();
+          _numInterstitialLoadAttempts += 1;
+          _interstitialAd = null;
+          if (_numInterstitialLoadAttempts <= maxFailedLoadAttempts) {
+            createInterstitialAd();
           }
-        ));
+        }));
   }
 
   void showInterstitialAd() {
@@ -93,7 +90,8 @@ class _MyAppState extends State<MyApp> {
       return;
     }
     _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) => print('ad onAdShowedFullScreenContent.'),
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+          print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
         print('$ad onAdDismissedFullScreenContent.');
         ad.dispose();
@@ -114,28 +112,28 @@ class _MyAppState extends State<MyApp> {
     RewardedAd.load(
         adUnitId: RewardedAd.testAdUnitId,
         request: request,
-        rewardedAdLoadCallback: RewardedAdLoadCallback(
-            onAdLoaded: (RewardedAd ad) {
-              print('$ad loaded.');
-              _rewardedReady = true;
-              _rewardedAd = ad;
-              _numRewardedLoadAttempts = 0;
-            },
-            onAdFailedToLoad: (RewardedAd ad, LoadAdError error) {
-              print('$ad failed to load: $error');
-              ad.dispose();
-              _rewardedAd = null;
-              _numRewardedLoadAttempts += 1;
-              if (_numRewardedLoadAttempts <= maxFailedLoadAttempts) {
-                createRewardedAd();
-              }
-            }));
+        rewardedAdLoadCallback:
+            RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
+          print('$ad loaded.');
+          _rewardedReady = true;
+          _rewardedAd = ad;
+          _numRewardedLoadAttempts = 0;
+        }, onAdFailedToLoad: (RewardedAd ad, LoadAdError error) {
+          print('$ad failed to load: $error');
+          ad.dispose();
+          _rewardedAd = null;
+          _numRewardedLoadAttempts += 1;
+          if (_numRewardedLoadAttempts <= maxFailedLoadAttempts) {
+            createRewardedAd();
+          }
+        }));
   }
 
   void showRewardedAd() {
     if (!_rewardedReady) return;
     _rewardedAd?.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedAd ad) => print('ad onAdShowedFullScreenContent.'),
+      onAdShowedFullScreenContent: (RewardedAd ad) =>
+          print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
         print('$ad onAdDismissedFullScreenContent.');
         ad.dispose();

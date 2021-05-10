@@ -423,10 +423,10 @@ void main() {
                 rewarded = ad;
               },
               onAdFailedToLoad: (ad, error) => null),
-      serverSideVerificationOptions: ServerSideVerificationOptions(
-        userId: 'test-user-id',
-        customData: 'test-custom-data',
-      ));
+          serverSideVerificationOptions: ServerSideVerificationOptions(
+            userId: 'test-user-id',
+            customData: 'test-custom-data',
+          ));
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -498,13 +498,14 @@ void main() {
     test('load show interstitial', () async {
       InterstitialAd? interstitial;
       await InterstitialAd.load(
-          adUnitId: InterstitialAd.testAdUnitId,
-          request: AdRequest(),
-          adLoadCallback: InterstitialAdLoadCallback(
-              onAdLoaded: (ad) {
-                interstitial = ad;
-              },
-              onAdFailedToLoad: (ad, error) => null),);
+        adUnitId: InterstitialAd.testAdUnitId,
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              interstitial = ad;
+            },
+            onAdFailedToLoad: (ad, error) => null),
+      );
 
       InterstitialAd createdAd = (instanceManager.adFor(0) as InterstitialAd);
       (createdAd).adLoadCallback.onAdLoaded(createdAd);
@@ -537,17 +538,20 @@ void main() {
             onAdLoaded: (ad) {
               interstitial = ad;
             },
-            onAdFailedToLoad: (ad, error) => null),);
+            onAdFailedToLoad: (ad, error) => null),
+      );
 
-      AdManagerInterstitialAd createdAd = (instanceManager.adFor(0) as AdManagerInterstitialAd);
+      AdManagerInterstitialAd createdAd =
+          (instanceManager.adFor(0) as AdManagerInterstitialAd);
       (createdAd).adLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
-        isMethodCall('loadAdManagerInterstitialAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-id',
-          'request': interstitial!.request,
-        })
+        isMethodCall('loadAdManagerInterstitialAd',
+            arguments: <String, dynamic>{
+              'adId': 0,
+              'adUnitId': 'test-id',
+              'request': interstitial!.request,
+            })
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -789,8 +793,9 @@ void main() {
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       createdAd.rewardedAdLoadCallback.onAdLoaded(createdAd);
       // Reward callback is now set when you call show.
-      await rewarded!.show(onUserEarnedReward:
-          (ad, item) => resultCompleter.complete(<Object>[ad, item]));
+      await rewarded!.show(
+          onUserEarnedReward: (ad, item) =>
+              resultCompleter.complete(<Object>[ad, item]));
 
       final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
         'adId': 0,
