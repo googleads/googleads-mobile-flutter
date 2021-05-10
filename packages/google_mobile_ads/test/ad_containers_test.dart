@@ -43,6 +43,7 @@ void main() {
           case 'disposeAd':
           case 'loadRewardedAd':
           case 'loadInterstitialAd':
+          case 'loadAdManagerInterstitialAd':
           case 'loadAdManagerBannerAd':
             return Future<void>.value();
           default:
@@ -411,76 +412,153 @@ void main() {
       }
     });
 
-    test('load rewarded', () async {
-      final RewardedAd rewarded = RewardedAd(
+    test('load show rewarded', () async {
+      RewardedAd? rewarded;
+      AdRequest request = AdRequest();
+      await RewardedAd.load(
           adUnitId: RewardedAd.testAdUnitId,
-          listener: RewardedAdListener(),
-          request: AdRequest(),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+          request: request,
+          rewardedAdLoadCallback: RewardedAdLoadCallback(
+              onAdLoaded: (ad) {
+                rewarded = ad;
+              },
+              onAdFailedToLoad: (ad, error) => null),
+      serverSideVerificationOptions: ServerSideVerificationOptions(
+        userId: 'test-user-id',
+        customData: 'test-custom-data',
+      ));
 
-      await rewarded.load();
+      RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
+      (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
         isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
           'adId': 0,
           'adUnitId': RewardedAd.testAdUnitId,
-          'request': rewarded.request,
+          'request': request,
           'adManagerRequest': null,
           'serverSideVerificationOptions':
-              rewarded.serverSideVerificationOptions,
+              rewarded!.serverSideVerificationOptions,
         }),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
+      expect(rewarded, createdAd);
+
+      log.clear();
+      await rewarded!.show(onUserEarnedReward: (ad, reward) => null);
+      expect(log, <Matcher>[
+        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
+          'adId': 0,
+        })
+      ]);
     });
 
-    test('load rewarded with $AdManagerAdRequest', () async {
-      final RewardedAd rewarded = RewardedAd.fromAdManagerRequest(
-        adUnitId: RewardedAd.testAdUnitId,
-        listener: RewardedAdListener(),
-        adManagerRequest: AdManagerAdRequest(),
-        serverSideVerificationOptions: ServerSideVerificationOptions(
-          userId: 'test-user-id',
-          customData: 'test-custom-data',
-        ),
-      );
+    test('load show rewarded with $AdManagerAdRequest', () async {
+      RewardedAd? rewarded;
+      AdManagerAdRequest request = AdManagerAdRequest();
+      await RewardedAd.loadWithAdManagerAdRequest(
+          adUnitId: RewardedAd.testAdUnitId,
+          adManagerRequest: request,
+          rewardedAdLoadCallback: RewardedAdLoadCallback(
+              onAdLoaded: (ad) {
+                rewarded = ad;
+              },
+              onAdFailedToLoad: (ad, error) => null),
+          serverSideVerificationOptions: ServerSideVerificationOptions(
+            userId: 'test-user-id',
+            customData: 'test-custom-data',
+          ));
 
-      await rewarded.load();
+      RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
+      (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
         isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
           'adId': 0,
           'adUnitId': RewardedAd.testAdUnitId,
           'request': null,
-          'adManagerRequest': rewarded.adManagerRequest,
+          'adManagerRequest': request,
           'serverSideVerificationOptions':
-              rewarded.serverSideVerificationOptions,
+              rewarded!.serverSideVerificationOptions,
         }),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
+
+      log.clear();
+      await rewarded!.show(onUserEarnedReward: (ad, reward) => null);
+      expect(log, <Matcher>[
+        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
+          'adId': 0,
+        })
+      ]);
     });
 
-    test('load interstitial', () async {
-      final InterstitialAd interstitial = InterstitialAd(
-        adUnitId: InterstitialAd.testAdUnitId,
-        listener: InterstitialAdListener(),
-        request: AdRequest(),
-      );
+    test('load show interstitial', () async {
+      InterstitialAd? interstitial;
+      await InterstitialAd.load(
+          adUnitId: InterstitialAd.testAdUnitId,
+          request: AdRequest(),
+          adLoadCallback: InterstitialAdLoadCallback(
+              onAdLoaded: (ad) {
+                interstitial = ad;
+              },
+              onAdFailedToLoad: (ad, error) => null),);
 
-      await interstitial.load();
+      InterstitialAd createdAd = (instanceManager.adFor(0) as InterstitialAd);
+      (createdAd).adLoadCallback.onAdLoaded(createdAd);
+
       expect(log, <Matcher>[
         isMethodCall('loadInterstitialAd', arguments: <String, dynamic>{
           'adId': 0,
           'adUnitId': InterstitialAd.testAdUnitId,
-          'request': interstitial.request,
+          'request': interstitial!.request,
         })
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
+
+      log.clear();
+      await interstitial!.show();
+      expect(log, <Matcher>[
+        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
+          'adId': 0,
+        })
+      ]);
+    });
+
+    test('load show ad manager interstitial', () async {
+      AdManagerInterstitialAd? interstitial;
+      await AdManagerInterstitialAd.load(
+        adUnitId: 'test-id',
+        request: AdManagerAdRequest(),
+        adLoadCallback: AdManagerInterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              interstitial = ad;
+            },
+            onAdFailedToLoad: (ad, error) => null),);
+
+      AdManagerInterstitialAd createdAd = (instanceManager.adFor(0) as AdManagerInterstitialAd);
+      (createdAd).adLoadCallback.onAdLoaded(createdAd);
+
+      expect(log, <Matcher>[
+        isMethodCall('loadAdManagerInterstitialAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'adUnitId': 'test-id',
+          'request': interstitial!.request,
+        })
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+
+      log.clear();
+      await interstitial!.show();
+      expect(log, <Matcher>[
+        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
+          'adId': 0,
+        })
+      ]);
     });
 
     test('load ad manager banner', () async {
@@ -694,16 +772,25 @@ void main() {
       final Completer<List<dynamic>> resultCompleter =
           Completer<List<dynamic>>();
 
-      final RewardedAd rewardedAd = RewardedAd(
-        adUnitId: BannerAd.testAdUnitId,
-        listener: RewardedAdListener(
-          onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem item) =>
-              resultCompleter.complete(<Object>[ad, item]),
-        ),
-        request: AdRequest(),
-      );
+      RewardedAd? rewarded;
+      await RewardedAd.load(
+          adUnitId: RewardedAd.testAdUnitId,
+          request: AdRequest(),
+          rewardedAdLoadCallback: RewardedAdLoadCallback(
+              onAdLoaded: (ad) {
+                rewarded = ad;
+              },
+              onAdFailedToLoad: (ad, error) => null),
+          serverSideVerificationOptions: ServerSideVerificationOptions(
+            userId: 'test-user-id',
+            customData: 'test-custom-data',
+          ));
 
-      await rewardedAd.load();
+      RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
+      createdAd.rewardedAdLoadCallback.onAdLoaded(createdAd);
+      // Reward callback is now set when you call show.
+      await rewarded!.show(onUserEarnedReward:
+          (ad, item) => resultCompleter.complete(<Object>[ad, item]));
 
       final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
         'adId': 0,
@@ -721,36 +808,9 @@ void main() {
       );
 
       final List<dynamic> result = await resultCompleter.future;
-      expect(result[0], rewardedAd);
+      expect(result[0], rewarded!);
       expect(result[1].amount, 1);
       expect(result[1].type, 'one');
-    });
-
-    test('show $AdWithoutView', () {
-      final InterstitialAd ad = InterstitialAd(
-        adUnitId: 'testId',
-        request: AdRequest(),
-        listener: InterstitialAdListener(),
-      );
-
-      ad.load();
-      log.clear();
-      ad.show();
-      expect(log, <Matcher>[
-        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
-          'adId': 0,
-        })
-      ]);
-    });
-
-    test('show $AdWithoutView throws $AssertionError', () {
-      final InterstitialAd ad = InterstitialAd(
-        adUnitId: 'testId',
-        request: AdRequest(),
-        listener: InterstitialAdListener(),
-      );
-
-      expect(() => instanceManager.showAdWithoutView(ad), throwsAssertionError);
     });
 
     test('encode/decode AdSize', () async {
