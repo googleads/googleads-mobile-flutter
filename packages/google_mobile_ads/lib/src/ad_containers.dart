@@ -28,7 +28,8 @@ import 'ad_listeners.dart';
 
 /// Error information about why an ad operation failed.
 class AdError {
-  /// Creates a [LoadAdError] with the given [code], [domain] and [message].
+  /// Creates an [AdError] with the given [code], [domain] and [message].
+  @protected
   AdError(this.code, this.domain, this.message);
 
   /// Unique code to identify the error.
