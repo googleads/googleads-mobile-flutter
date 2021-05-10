@@ -94,7 +94,7 @@ class InitializationStatus {
 
 /// An immutable snapshot of a mediation adapter's initialization status.
 class AdapterStatus {
-  /// Default constructor to create an [InitializationStatus].
+  /// Default constructor to create an [AdapterStatus].
   ///
   /// Returned when calling [MobileAds.initialize].
   AdapterStatus(this.state, this.description, this.latency);

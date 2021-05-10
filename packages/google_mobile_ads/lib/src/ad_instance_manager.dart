@@ -19,7 +19,6 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:google_mobile_ads/src/ad_listeners.dart';
 import 'package:google_mobile_ads/src/mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
