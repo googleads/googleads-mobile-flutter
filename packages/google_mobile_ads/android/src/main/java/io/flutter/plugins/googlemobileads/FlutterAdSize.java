@@ -68,7 +68,7 @@ class FlutterAdSize {
     this(new AdSize(width, height));
   }
 
-  FlutterAdSize(AdSize size) {
+  FlutterAdSize(@NonNull AdSize size) {
     this.size = size;
     this.width = size.getWidth();
     this.height = size.getHeight();

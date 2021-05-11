@@ -229,12 +229,9 @@ The table below lists the standard banner sizes.
    </td>
   </tr>
   <tr>
-   <td>Provided width x Adaptive height
-   </td>
-   <td><a href="https://developers.google.com/admob/android/banner/adaptive">Adaptive Banner</a>
-   </td>
-   <td>Use <code>getAnchoredAdaptiveBannerAdSize(Orientation, int)</code>
-   </td>
+   <td>Provided width x Adaptive height</td>
+   <td><a href="https://developers.google.com/admob/android/banner/adaptive">Adaptive Banner</a></td>
+   <td>Use <code>getAnchoredAdaptiveBannerAdSize(Orientation, int)</code></td>
   </tr>
 </table>
 
