@@ -57,10 +57,12 @@ class MobileAds {
     return instanceManager.updateRequestConfiguration(requestConfiguration);
   }
 
-  /// Set whether the Google Mobile Ads SDK Same App Key is enabled.
+  /// Set whether the Google Mobile Ads SDK Same App Key is enabled (iOS only).
   ///
   /// The value set persists across app sessions. The key is enabled by default.
-  /// Note this is a no-op on Android.
+  /// This is a no-op on Android.
+  /// More documentation on same app key is available at
+  /// https://developers.google.com/admob/ios/global-settings#same_app_key.
   Future<void> setSameAppKeyEnabled(bool isEnabled) {
     if (defaultTargetPlatform == TargetPlatform.iOS) {
       return instanceManager.setSameAppKeyEnabled(isEnabled);
