@@ -152,7 +152,7 @@ class NativeAdListener extends AdWithViewListener {
   /// ```dart
   /// NativeAdListener(
   ///   onAdLoaded: (ad) {
-  ///     // Ad successfully loaded - display an AdWidget with the banner ad.
+  ///     // Ad successfully loaded - display an AdWidget with the native ad.
   ///   },
   ///   onAdFailedToLoad: (ad, error) {
   ///     // Ad failed to load - log the error and dispose the ad.
@@ -186,7 +186,7 @@ class FullScreenContentCallback<Ad> {
   ///
   /// [Ad.dispose] should be called from [onAdFailedToShowFullScreenContent]
   /// and [onAdDismissedFullScreenContent], in order to free up resources.
-  FullScreenContentCallback(
+  const FullScreenContentCallback(
       {this.onAdShowedFullScreenContent,
       this.onAdImpression,
       this.onAdFailedToShowFullScreenContent,
@@ -194,25 +194,25 @@ class FullScreenContentCallback<Ad> {
       this.onAdDismissedFullScreenContent});
 
   /// Called when an ad shows full screen content.
-  GenericAdEventCallback<Ad>? onAdShowedFullScreenContent;
+  final GenericAdEventCallback<Ad>? onAdShowedFullScreenContent;
 
   /// Called when an ad dismisses full screen content.
-  GenericAdEventCallback<Ad>? onAdDismissedFullScreenContent;
+  final GenericAdEventCallback<Ad>? onAdDismissedFullScreenContent;
 
   /// For iOS only. Called before dismissing a full screen view.
-  GenericAdEventCallback<Ad>? onAdWillDismissFullScreenContent;
+  final GenericAdEventCallback<Ad>? onAdWillDismissFullScreenContent;
 
   /// Called when an ad impression occurs.
-  GenericAdEventCallback<Ad>? onAdImpression;
+  final GenericAdEventCallback<Ad>? onAdImpression;
 
   /// Called when ad fails to show full screen content.
-  void Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent;
+  final void Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent;
 }
 
 /// Generic parent class for ad load callbacks.
-abstract class AdLoadCallback<T> {
-  /// Default constructor for [AdLoadCallback[, used by suclasses.
-  const AdLoadCallback(
+abstract class FullScreenAdLoadCallback<T> {
+  /// Default constructor for [FullScreenAdLoadCallback[, used by subclasses.
+  const FullScreenAdLoadCallback(
       {required this.onAdLoaded, required this.onAdFailedToLoad});
 
   /// Called when the ad successfully loads.
@@ -225,7 +225,7 @@ abstract class AdLoadCallback<T> {
 }
 
 /// This class holds callbacks for loading a [RewardedAd].
-class RewardedAdLoadCallback extends AdLoadCallback<RewardedAd> {
+class RewardedAdLoadCallback extends FullScreenAdLoadCallback<RewardedAd> {
   /// Construct a [RewardedAdLoadCallback].
   ///
   /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
@@ -236,7 +236,8 @@ class RewardedAdLoadCallback extends AdLoadCallback<RewardedAd> {
 }
 
 /// This class holds callbacks for loading an [InterstitialAd].
-class InterstitialAdLoadCallback extends AdLoadCallback<InterstitialAd> {
+class InterstitialAdLoadCallback
+    extends FullScreenAdLoadCallback<InterstitialAd> {
   /// Construct a [InterstitialAdLoadCallback].
   ///
   /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
@@ -248,7 +249,7 @@ class InterstitialAdLoadCallback extends AdLoadCallback<InterstitialAd> {
 
 /// This class holds callbacks for loading an [AdManagerInterstitialAd].
 class AdManagerInterstitialAdLoadCallback
-    extends AdLoadCallback<AdManagerInterstitialAd> {
+    extends FullScreenAdLoadCallback<AdManagerInterstitialAd> {
   /// Construct a [AdManagerInterstitialAdLoadCallback].
   ///
   /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
