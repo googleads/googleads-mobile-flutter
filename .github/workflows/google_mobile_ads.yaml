@@ -93,5 +93,5 @@ jobs:
           flutter pub publish --dry-run
       - name: "Flutter Format"
         run: |
-          git clone git@github.com:flutter/plugins.git
-          dart run plugins/script/tool/lib/src/main.dart format --fail-on-change
+          flutter pub global activate flutter_plugin_tools
+          flutter pub global run flutter_plugin_tools format --fail-on-change
