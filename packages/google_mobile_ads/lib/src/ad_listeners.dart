@@ -209,7 +209,6 @@ class NativeAdListener extends BaseAdListener implements AdWithViewListener {
 
 /// Callback events for for full screen ads, such as Rewarded and Interstitial.
 class FullScreenContentCallback<Ad> {
-
   /// Construct a new [FullScreenContentCallback].
   ///
   /// [Ad.dispose] should be called from [onAdFailedToShowFullScreenContent]

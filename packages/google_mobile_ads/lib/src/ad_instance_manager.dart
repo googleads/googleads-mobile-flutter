@@ -180,9 +180,7 @@ class AdInstanceManager {
   }
 
   void _invokeOnAdLoaded(
-      Ad ad,
-      String eventName,
-      Map<dynamic, dynamic> arguments) {
+      Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     _onAdLoadedAds.add(ad);
     if (ad is AdWithView) {
       ad.listener.onAdLoaded?.call(ad);
@@ -198,9 +196,7 @@ class AdInstanceManager {
   }
 
   void _invokeOnAdFailedToLoad(
-      Ad ad,
-      String eventName,
-      Map<dynamic, dynamic> arguments) {
+      Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     if (ad is AdWithView) {
       ad.listener.onAdFailedToLoad?.call(ad, arguments['loadAdError']);
     } else if (ad is RewardedAd) {
@@ -216,12 +212,9 @@ class AdInstanceManager {
   }
 
   void _invokeOnAppEvent(
-      Ad ad,
-      String eventName,
-      Map<dynamic, dynamic> arguments) {
+      Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     if (ad is AdManagerBannerAd) {
-      ad.listener.onAppEvent
-          ?.call(ad, arguments['name'], arguments['data']);
+      ad.listener.onAppEvent?.call(ad, arguments['name'], arguments['data']);
     } else if (ad is AdManagerInterstitialAd) {
       ad.appEventListener?.onAppEvent
           ?.call(ad, arguments['name'], arguments['data']);
@@ -231,12 +224,12 @@ class AdInstanceManager {
   }
 
   void _invokeOnUserEarnedReward(
-      Ad ad,
-      String eventName,
-      Map<dynamic, dynamic> arguments) {
+      Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     assert(arguments['rewardItem'] != null);
     assert(ad is RewardedAd);
-    (ad as RewardedAd).onUserEarnedRewardCallback?.call(ad, arguments['rewardItem']);
+    (ad as RewardedAd)
+        .onUserEarnedRewardCallback
+        ?.call(ad, arguments['rewardItem']);
   }
 
   void _invokeOnAdOpened(Ad ad, String eventName) {
@@ -269,23 +262,18 @@ class AdInstanceManager {
 
   void _invokeOnAdDismissedFullScreenContent(Ad ad, String eventName) {
     if (ad is RewardedAd) {
-      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent
-          ?.call(ad);
+      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
     } else if (ad is InterstitialAd) {
-      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent
-          ?.call(ad);
+      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
-      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent
-          ?.call(ad);
+      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
     } else {
       debugPrint('invalid ad: $ad, for event name: $eventName');
     }
   }
 
   void _invokeOnAdFailedToShowFullScreenContent(
-      Ad ad,
-      String eventName,
-      Map<dynamic, dynamic> arguments) {
+      Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     if (ad is RewardedAd) {
       ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
           ?.call(ad, arguments['error']);

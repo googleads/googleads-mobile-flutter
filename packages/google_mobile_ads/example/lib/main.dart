@@ -40,11 +40,9 @@ class _MyAppState extends State<MyApp> {
   );
 
   InterstitialAd? _interstitialAd;
-  bool _interstitialReady = false;
   int _numInterstitialLoadAttempts = 0;
 
   RewardedAd? _rewardedAd;
-  bool _rewardedReady = false;
   int _numRewardedLoadAttempts = 0;
 
   @override
@@ -71,7 +69,6 @@ class _MyAppState extends State<MyApp> {
             InterstitialAdLoadCallback(onAdLoaded: (InterstitialAd ad) {
           print('$ad loaded');
           _interstitialAd = ad;
-          _interstitialReady = true;
           _numInterstitialLoadAttempts = 0;
         }, onAdFailedToLoad: (InterstitialAd ad, LoadAdError error) {
           print('$ad failed to load: $error.');
@@ -85,8 +82,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void showInterstitialAd() {
-    if (!_interstitialReady) {
-      print('Warning: attempt to interstitial before loaded.');
+    if (_interstitialAd == null) {
+      print('Warning: attempt to show interstitial before loaded.');
       return;
     }
     _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
@@ -104,7 +101,6 @@ class _MyAppState extends State<MyApp> {
       },
     );
     _interstitialAd!.show();
-    _interstitialReady = false;
     _interstitialAd = null;
   }
 
@@ -115,7 +111,6 @@ class _MyAppState extends State<MyApp> {
         rewardedAdLoadCallback:
             RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
           print('$ad loaded.');
-          _rewardedReady = true;
           _rewardedAd = ad;
           _numRewardedLoadAttempts = 0;
         }, onAdFailedToLoad: (RewardedAd ad, LoadAdError error) {
@@ -130,8 +125,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   void showRewardedAd() {
-    if (!_rewardedReady) return;
-    _rewardedAd?.fullScreenContentCallback = FullScreenContentCallback(
+    if (_rewardedAd == null) {
+      print('Warning: attempt to show rewarded before loaded.');
+      return;
+    }
+    _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (RewardedAd ad) =>
           print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
@@ -149,7 +147,6 @@ class _MyAppState extends State<MyApp> {
     _rewardedAd!.show(onUserEarnedReward: (RewardedAd ad, RewardItem reward) {
       print('$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
     });
-    _rewardedReady = false;
     _rewardedAd = null;
   }
 
