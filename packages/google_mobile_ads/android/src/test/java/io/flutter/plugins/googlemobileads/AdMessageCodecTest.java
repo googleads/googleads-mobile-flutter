@@ -41,7 +41,7 @@ public class AdMessageCodecTest {
 
     @Override
     protected Object readValueOfType(byte type, ByteBuffer buffer) {
-      if (type == (byte) 139) {
+      if (type == VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE) {
         final String orientation = (String) readValueOfType(buffer.get(), buffer);
         final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
         @SuppressWarnings("unused")

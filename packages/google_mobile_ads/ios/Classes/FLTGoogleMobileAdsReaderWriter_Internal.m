@@ -76,15 +76,15 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                                        height:[self readValueOfType:[self readByte]]];
     case FLTAdMobFieldAdRequest: {
       FLTAdRequest *request = [[FLTAdRequest alloc] init];
-      
+
       request.keywords = [self readValueOfType:[self readByte]];
       request.contentURL = [self readValueOfType:[self readByte]];
-      
+
       request.testDevices = [self readValueOfType:[self readByte]];
-      
+
       NSNumber *nonPersonalizedAds = [self readValueOfType:[self readByte]];
       request.nonPersonalizedAds = nonPersonalizedAds.boolValue;
-      
+
       return request;
     }
     case FLTAdMobFieldRewardItem: {
@@ -170,7 +170,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeByte:FLTAdMobFieldAdSize];
     [self writeValue:value.width];
     [self writeValue:value.height];
-  } 
+  }
 }
 
 - (void)writeValue:(id _Nonnull)value {
