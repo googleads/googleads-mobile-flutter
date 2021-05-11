@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:meta/meta.dart';
+
 import 'ad_containers.dart';
 
 /// The callback type to handle an event occurring for an [Ad].
@@ -31,20 +33,6 @@ typedef OnUserEarnedRewardCallback = void Function(
 /// The callback type to handle an error loading an [Ad].
 typedef AdLoadErrorCallback = void Function(Ad ad, LoadAdError error);
 
-/// Base class for all ad listeners.
-///
-/// Contains callbacks for successful and failed load events.
-abstract class BaseAdListener {
-  /// Default constructor for [BaseAdListener], meant to be used by subclasses.
-  BaseAdListener(this.onAdLoaded, this.onAdFailedToLoad);
-
-  /// Called when an ad is successfully received.
-  AdEventCallback? onAdLoaded;
-
-  /// Called when an ad request failed.
-  AdLoadErrorCallback? onAdFailedToLoad;
-}
-
 /// Listener for app events.
 class AppEventListener {
   /// Called when an app event is received.
@@ -53,30 +41,40 @@ class AppEventListener {
 
 /// Shared event callbacks used in Native and Banner ads.
 abstract class AdWithViewListener {
+  /// Default constructor for [AdWithViewListener], meant to be used by subclasses.
+  @protected
+  const AdWithViewListener(
+      {this.onAdLoaded,
+      this.onAdFailedToLoad,
+      this.onAdOpened,
+      this.onAdWillDismissScreen,
+      this.onAdImpression,
+      this.onAdClosed});
+
   /// Called when an ad is successfully received.
-  AdEventCallback? onAdLoaded;
+  final AdEventCallback? onAdLoaded;
 
   /// Called when an ad request failed.
-  AdLoadErrorCallback? onAdFailedToLoad;
+  final AdLoadErrorCallback? onAdFailedToLoad;
 
   /// A full screen view/overlay is presented in response to the user clicking
   /// on an ad. You may want to pause animations and time sensitive
   /// interactions.
-  AdEventCallback? onAdOpened;
+  final AdEventCallback? onAdOpened;
 
   /// For iOS only. Called before dismissing a full screen view.
-  AdEventCallback? onAdWillDismissScreen;
+  final AdEventCallback? onAdWillDismissScreen;
 
   /// Called when the full screen view has been closed. You should restart
   /// anything paused while handling onAdOpened.
-  AdEventCallback? onAdClosed;
+  final AdEventCallback? onAdClosed;
 
   /// Called when an impression occurs on the ad.
-  AdEventCallback? onAdImpression;
+  final AdEventCallback? onAdImpression;
 }
 
 /// A listener for receiving notifications for the lifecycle of a [BannerAd].
-class BannerAdListener extends BaseAdListener implements AdWithViewListener {
+class BannerAdListener extends AdWithViewListener {
   /// Constructs a [BannerAdListener] that notifies for the provided event callbacks.
   ///
   /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
@@ -91,38 +89,26 @@ class BannerAdListener extends BaseAdListener implements AdWithViewListener {
   ///   ...
   /// )
   /// ```
-  BannerAdListener({
-    AdEventCallback? onAdLoaded,
-    AdLoadErrorCallback? onAdFailedToLoad,
-    this.onAdOpened,
-    this.onAdWillDismissScreen,
-    this.onAdClosed,
-    this.onAdImpression,
-  }) : super(onAdLoaded, onAdFailedToLoad);
-
-  /// A full screen view/overlay is presented in response to the user clicking
-  /// on an ad. You may want to pause animations and time sensitive
-  /// interactions.
-  @override
-  AdEventCallback? onAdOpened;
-
-  /// For iOS only. Called before dismissing a full screen view.
-  @override
-  AdEventCallback? onAdWillDismissScreen;
-
-  /// Called when the full screen view has been closed. You should restart
-  /// anything paused while handling onAdOpened.
-  @override
-  AdEventCallback? onAdClosed;
-
-  /// Called when an impression occurs on the ad.
-  @override
-  AdEventCallback? onAdImpression;
+  const BannerAdListener(
+      {AdEventCallback? onAdLoaded,
+      AdLoadErrorCallback? onAdFailedToLoad,
+      AdEventCallback? onAdOpened,
+      AdEventCallback? onAdClosed,
+      AdEventCallback? onAdWillDismissScreen,
+      AdEventCallback? onAdImpression})
+      : super(
+          onAdLoaded: onAdLoaded,
+          onAdFailedToLoad: onAdFailedToLoad,
+          onAdOpened: onAdOpened,
+          onAdClosed: onAdClosed,
+          onAdWillDismissScreen: onAdWillDismissScreen,
+          onAdImpression: onAdImpression,
+        );
 }
 
 /// A listener for receiving notifications for the lifecycle of an [AdManagerBannerAd].
 class AdManagerBannerAdListener extends BannerAdListener
-    implements AppEventListener, AdWithViewListener {
+    implements AppEventListener {
   /// Constructs an [AdManagerBannerAdListener] with the provided event callbacks.
   ///
   /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
@@ -159,7 +145,7 @@ class AdManagerBannerAdListener extends BannerAdListener
 }
 
 /// A listener for receiving notifications for the lifecycle of a [NativeAd].
-class NativeAdListener extends BaseAdListener implements AdWithViewListener {
+class NativeAdListener extends AdWithViewListener {
   /// Constructs a [NativeAdListener] with the provided event callbacks.
   ///
   /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
@@ -177,34 +163,21 @@ class NativeAdListener extends BaseAdListener implements AdWithViewListener {
   NativeAdListener({
     AdEventCallback? onAdLoaded,
     Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
+    AdEventCallback? onAdOpened,
+    AdEventCallback? onAdWillDismissScreen,
+    AdEventCallback? onAdClosed,
+    AdEventCallback? onAdImpression,
     this.onNativeAdClicked,
-    this.onAdImpression,
-    this.onAdOpened,
-    this.onAdWillDismissScreen,
-    this.onAdClosed,
-  }) : super(onAdLoaded, onAdFailedToLoad);
+  }) : super(
+            onAdLoaded: onAdLoaded,
+            onAdFailedToLoad: onAdFailedToLoad,
+            onAdOpened: onAdOpened,
+            onAdWillDismissScreen: onAdWillDismissScreen,
+            onAdClosed: onAdClosed,
+            onAdImpression: onAdImpression);
 
   /// Called when a click is recorded for a [NativeAd].
   final void Function(NativeAd ad)? onNativeAdClicked;
-
-  /// Called when an impression is recorded for a [NativeAd].
-  @override
-  AdEventCallback? onAdImpression;
-
-  /// Called when presenting the user a full screen view in response to an
-  /// ad action. Use this opportunity to stop animations, time sensitive
-  /// interactions, etc.
-  @override
-  AdEventCallback? onAdOpened;
-
-  /// For iOS only. Called before dismissing a full screen view.
-  @override
-  AdEventCallback? onAdWillDismissScreen;
-
-  /// Called after dismissing a full screen view. Use this opportunity to
-  /// restart anything you may have stopped as part of [onAdOpened].
-  @override
-  AdEventCallback? onAdClosed;
 }
 
 /// Callback events for for full screen ads, such as Rewarded and Interstitial.
