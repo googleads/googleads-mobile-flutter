@@ -65,20 +65,22 @@ class _MyAppState extends State<MyApp> {
     InterstitialAd.load(
         adUnitId: InterstitialAd.testAdUnitId,
         request: request,
-        adLoadCallback:
-            InterstitialAdLoadCallback(onAdLoaded: (InterstitialAd ad) {
-          print('$ad loaded');
-          _interstitialAd = ad;
-          _numInterstitialLoadAttempts = 0;
-        }, onAdFailedToLoad: (InterstitialAd ad, LoadAdError error) {
-          print('$ad failed to load: $error.');
-          ad.dispose();
-          _numInterstitialLoadAttempts += 1;
-          _interstitialAd = null;
-          if (_numInterstitialLoadAttempts <= maxFailedLoadAttempts) {
-            createInterstitialAd();
-          }
-        }));
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            print('$ad loaded');
+            _interstitialAd = ad;
+            _numInterstitialLoadAttempts = 0;
+          },
+          onAdFailedToLoad: (InterstitialAd ad, LoadAdError error) {
+            print('$ad failed to load: $error.');
+            ad.dispose();
+            _numInterstitialLoadAttempts += 1;
+            _interstitialAd = null;
+            if (_numInterstitialLoadAttempts <= maxFailedLoadAttempts) {
+              createInterstitialAd();
+            }
+          },
+        ));
   }
 
   void showInterstitialAd() {
@@ -108,20 +110,22 @@ class _MyAppState extends State<MyApp> {
     RewardedAd.load(
         adUnitId: RewardedAd.testAdUnitId,
         request: request,
-        rewardedAdLoadCallback:
-            RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
-          print('$ad loaded.');
-          _rewardedAd = ad;
-          _numRewardedLoadAttempts = 0;
-        }, onAdFailedToLoad: (RewardedAd ad, LoadAdError error) {
-          print('$ad failed to load: $error');
-          ad.dispose();
-          _rewardedAd = null;
-          _numRewardedLoadAttempts += 1;
-          if (_numRewardedLoadAttempts <= maxFailedLoadAttempts) {
-            createRewardedAd();
-          }
-        }));
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (RewardedAd ad) {
+            print('$ad loaded.');
+            _rewardedAd = ad;
+            _numRewardedLoadAttempts = 0;
+          },
+          onAdFailedToLoad: (RewardedAd ad, LoadAdError error) {
+            print('$ad failed to load: $error');
+            ad.dispose();
+            _rewardedAd = null;
+            _numRewardedLoadAttempts += 1;
+            if (_numRewardedLoadAttempts <= maxFailedLoadAttempts) {
+              createRewardedAd();
+            }
+          },
+        ));
   }
 
   void showRewardedAd() {
