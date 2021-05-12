@@ -1,1 +1,0 @@
-#undef LLVM_REVISION
