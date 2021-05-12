@@ -1,3 +1,14 @@
+## 0.13.0
+
+* Updates GMA Android and iOS dependencies to 20.0.0 and 8.4.0, respectively.
+* Renames APIs that use the `Publisher` prefix to `AdManager`.
+* Rewarded and Interstitial ads now provide static `load` methods and a new `FullScreenContentCallback` for full screen events.
+* Native ads use [GADNativeAdView](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/api/reference/Classes/GADNativeAdView) for iOS 
+and [NativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView) on Android.
+* Adds support for [ResponseInfo](https://developers.google.com/admob/android/response-info).
+* Adds support for [same app key](https://developers.google.com/admob/ios/ios14#same_app_key) on iOS.
+* Removes `testDevices` from `AdRequest`. Use `MobileAds.updateRequestConfiguration` to set test device ids.
+
 ## 0.12.1+1
 
 * Fixes a [crash with Swift based native ads](https://github.com/googleads/googleads-mobile-flutter/issues/121)
