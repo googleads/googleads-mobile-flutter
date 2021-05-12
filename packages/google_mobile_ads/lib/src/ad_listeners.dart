@@ -43,13 +43,14 @@ class AppEventListener {
 abstract class AdWithViewListener {
   /// Default constructor for [AdWithViewListener], meant to be used by subclasses.
   @protected
-  const AdWithViewListener(
-      {this.onAdLoaded,
-      this.onAdFailedToLoad,
-      this.onAdOpened,
-      this.onAdWillDismissScreen,
-      this.onAdImpression,
-      this.onAdClosed});
+  const AdWithViewListener({
+    this.onAdLoaded,
+    this.onAdFailedToLoad,
+    this.onAdOpened,
+    this.onAdWillDismissScreen,
+    this.onAdImpression,
+    this.onAdClosed,
+  });
 
   /// Called when an ad is successfully received.
   final AdEventCallback? onAdLoaded;
@@ -89,14 +90,14 @@ class BannerAdListener extends AdWithViewListener {
   ///   ...
   /// )
   /// ```
-  const BannerAdListener(
-      {AdEventCallback? onAdLoaded,
-      AdLoadErrorCallback? onAdFailedToLoad,
-      AdEventCallback? onAdOpened,
-      AdEventCallback? onAdClosed,
-      AdEventCallback? onAdWillDismissScreen,
-      AdEventCallback? onAdImpression})
-      : super(
+  const BannerAdListener({
+    AdEventCallback? onAdLoaded,
+    AdLoadErrorCallback? onAdFailedToLoad,
+    AdEventCallback? onAdOpened,
+    AdEventCallback? onAdClosed,
+    AdEventCallback? onAdWillDismissScreen,
+    AdEventCallback? onAdImpression,
+  }) : super(
           onAdLoaded: onAdLoaded,
           onAdFailedToLoad: onAdFailedToLoad,
           onAdOpened: onAdOpened,
@@ -123,15 +124,15 @@ class AdManagerBannerAdListener extends BannerAdListener
   ///   ...
   /// )
   /// ```
-  AdManagerBannerAdListener(
-      {AdEventCallback? onAdLoaded,
-      Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
-      AdEventCallback? onAdOpened,
-      AdEventCallback? onAdWillDismissScreen,
-      AdEventCallback? onAdClosed,
-      AdEventCallback? onAdImpression,
-      this.onAppEvent})
-      : super(
+  AdManagerBannerAdListener({
+    AdEventCallback? onAdLoaded,
+    Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
+    AdEventCallback? onAdOpened,
+    AdEventCallback? onAdWillDismissScreen,
+    AdEventCallback? onAdClosed,
+    AdEventCallback? onAdImpression,
+    this.onAppEvent,
+  }) : super(
             onAdLoaded: onAdLoaded,
             onAdFailedToLoad: onAdFailedToLoad,
             onAdOpened: onAdOpened,
@@ -186,12 +187,13 @@ class FullScreenContentCallback<Ad> {
   ///
   /// [Ad.dispose] should be called from [onAdFailedToShowFullScreenContent]
   /// and [onAdDismissedFullScreenContent], in order to free up resources.
-  const FullScreenContentCallback(
-      {this.onAdShowedFullScreenContent,
-      this.onAdImpression,
-      this.onAdFailedToShowFullScreenContent,
-      this.onAdWillDismissFullScreenContent,
-      this.onAdDismissedFullScreenContent});
+  const FullScreenContentCallback({
+    this.onAdShowedFullScreenContent,
+    this.onAdImpression,
+    this.onAdFailedToShowFullScreenContent,
+    this.onAdWillDismissFullScreenContent,
+    this.onAdDismissedFullScreenContent,
+  });
 
   /// Called when an ad shows full screen content.
   final GenericAdEventCallback<Ad>? onAdShowedFullScreenContent;
@@ -212,8 +214,10 @@ class FullScreenContentCallback<Ad> {
 /// Generic parent class for ad load callbacks.
 abstract class FullScreenAdLoadCallback<T> {
   /// Default constructor for [FullScreenAdLoadCallback[, used by subclasses.
-  const FullScreenAdLoadCallback(
-      {required this.onAdLoaded, required this.onAdFailedToLoad});
+  const FullScreenAdLoadCallback({
+    required this.onAdLoaded,
+    required this.onAdFailedToLoad,
+  });
 
   /// Called when the ad successfully loads.
   final GenericAdEventCallback<T> onAdLoaded;

@@ -263,7 +263,7 @@ abstract class Ad {
   /// For testing use a [sample ad unit](https://developers.google.com/admob/ios/test-ads#sample_ad_units).
   final String adUnitId;
 
-  /// Free the plugin resources associated with this ad.
+  /// Frees the plugin resources associated with this ad.
   Future<void> dispose() {
     return instanceManager.disposeAd(this);
   }
@@ -286,7 +286,7 @@ abstract class AdWithView extends Ad {
   /// The [AdWithViewListener] for the ad.
   final AdWithViewListener listener;
 
-  /// Start loading this ad.
+  /// Starts loading this ad.
   ///
   /// Loading callbacks are sent to this [Ad]'s [listener].
   Future<void> load();
@@ -594,17 +594,18 @@ class InterstitialAd extends AdWithoutView {
       : 'ca-app-pub-3940256099942544/4411468910';
 
   /// Loads an [InterstitialAd] with the given [adUnitId] and [request].
-  static Future<void> load(
-      {required String adUnitId,
-      required AdRequest request,
-      required InterstitialAdLoadCallback adLoadCallback}) async {
+  static Future<void> load({
+    required String adUnitId,
+    required AdRequest request,
+    required InterstitialAdLoadCallback adLoadCallback,
+  }) async {
     InterstitialAd ad = InterstitialAd._(
         adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
 
     await instanceManager.loadInterstitialAd(ad);
   }
 
-  /// Display this on top of the application.
+  /// Displays this on top of the application.
   ///
   /// Set [fullScreenContentCallback] before calling this method to be
   /// notified of events that occur when showing the ad.
@@ -638,11 +639,12 @@ class AdManagerInterstitialAd extends AdWithoutView {
   AppEventListener? appEventListener;
 
   /// Loads an [AdManagerInterstitialAd] with the given [adUnitId] and [request].
-  static Future<void> load(
-      {required String adUnitId,
-      required AdManagerAdRequest request,
-      required AdManagerInterstitialAdLoadCallback adLoadCallback,
-      AppEventListener? appEventListener}) async {
+  static Future<void> load({
+    required String adUnitId,
+    required AdManagerAdRequest request,
+    required AdManagerInterstitialAdLoadCallback adLoadCallback,
+    AppEventListener? appEventListener,
+  }) async {
     AdManagerInterstitialAd ad = AdManagerInterstitialAd._(
         adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
 
@@ -715,11 +717,12 @@ class RewardedAd extends AdWithoutView {
   OnUserEarnedRewardCallback? onUserEarnedRewardCallback;
 
   /// Loads a [RewardedAd] using an [AdRequest].
-  static Future<void> load(
-      {required String adUnitId,
-      required AdRequest request,
-      required RewardedAdLoadCallback rewardedAdLoadCallback,
-      ServerSideVerificationOptions? serverSideVerificationOptions}) async {
+  static Future<void> load({
+    required String adUnitId,
+    required AdRequest request,
+    required RewardedAdLoadCallback rewardedAdLoadCallback,
+    ServerSideVerificationOptions? serverSideVerificationOptions,
+  }) async {
     RewardedAd rewardedAd = RewardedAd._(
         adUnitId: adUnitId,
         request: request,
@@ -730,11 +733,12 @@ class RewardedAd extends AdWithoutView {
   }
 
   /// Loads a [RewardedAd] using an [AdManagerAdRequest].
-  static Future<void> loadWithAdManagerAdRequest(
-      {required String adUnitId,
-      required AdManagerAdRequest adManagerRequest,
-      required RewardedAdLoadCallback rewardedAdLoadCallback,
-      ServerSideVerificationOptions? serverSideVerificationOptions}) async {
+  static Future<void> loadWithAdManagerAdRequest({
+    required String adUnitId,
+    required AdManagerAdRequest adManagerRequest,
+    required RewardedAdLoadCallback rewardedAdLoadCallback,
+    ServerSideVerificationOptions? serverSideVerificationOptions,
+  }) async {
     RewardedAd rewardedAd = RewardedAd._fromAdManagerRequest(
         adUnitId: adUnitId,
         adManagerRequest: adManagerRequest,
