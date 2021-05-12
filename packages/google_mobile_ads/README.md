@@ -1573,27 +1573,27 @@ properties:
    <th>Description</th>
   </tr>
   <tr>
-   <td>`adapterClassName`</td>
+   <td>adapterClassName</td>
    <td>A class name that identifies the ad network.</td>
   </tr>
   <tr>
-   <td>`credentials`</td>
+   <td>credentials</td>
    <td> A string description of adapter credentials specified in the AdMob or Ad 
      Manager UI.
    </td>
   </tr>
   <tr>
-   <td>`adError`</td>
+   <td>adError</td>
    <td>Error associated with the request to the network. Null if the network
     successfully loaded an ad or if the network was not attempted.</td>
   </tr>
   <tr>
-   <td>`latencyMillis`</td>
+   <td>latencyMillis</td>
    <td>Amount of time the ad network spent loading an ad. <code>0</code> if the
     network was not attempted.</td>
   </tr>
   <tr>
-   <td>`description`</td>
+   <td>description</td>
    <td>A log friendly string version of the AdapterResponseInfo.</td>
    </tr>
 </table>
