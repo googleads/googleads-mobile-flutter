@@ -155,7 +155,7 @@ It's been specially configured to return test ads for every request, and you're 
 
 ### Instantiate a Banner Ad
 
-A `BannerAd` requires an `adUnitId`, an `AdSize`, an `AdRequest`, and an `AdListener`. An example is shown below as well as more information on each parameter following.
+A `BannerAd` requires an `adUnitId`, an `AdSize`, an `AdRequest`, and a `BannerAdListener`. An example is shown below as well as more information on each parameter following.
 
 
 ```dart
@@ -409,7 +409,7 @@ Since Native Ads require UI components native to a platform, this feature requir
 
 #### Android
 
-The Android implementation of the Google Mobile Ads plugin requires a class that implements a `NativeAdFactory`. A `NativeAdFactory` contains a method that takes a [NativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAd) and custom options and returns a [NativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView). The [NativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView) is what will be displayed in your app.
+The Android implementation of the Google Mobile Ads plugin requires a class thatNativeAdView implements a `NativeAdFactory`. A `NativeAdFactory` contains a method that takes a [NativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAd) and custom options and returns a [NativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView). The [](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView) is what will be displayed in your app.
 
 You can implement this in your MainActivity.java or create a separate class in the same directory as MainActivity.java as seen below:
 
@@ -620,7 +620,7 @@ It's been specially configured to return test ads for every request, and you're 
 
 ### Instantiate a Native Ad
 
-A `NativeAd` requires an `adUnitId`, a `factoryId`, an `AdRequest`, and an `AdListener`. An example is shown below as well as more information on each parameter following.
+A `NativeAd` requires an `adUnitId`, a `factoryId`, an `AdRequest`, and a `NativeAdListener`. An example is shown below as well as more information on each parameter following.
 
 
 ```dart
@@ -723,7 +723,7 @@ The easiest way to load test ads is to use our dedicated test ad unit ID for rew
 It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
 
-### Instantiate a Rewarded Ad
+### Load a Rewarded Ad
 
 Loading a `RewardedAd` requires an `adUnitId`, an `AdRequest`, and a `RewardedAdLoadCallback`. An example is shown below as well as more information on each parameter following.
 
@@ -1007,7 +1007,7 @@ The easiest way to load test ads is to use our dedicated test ad unit ID for int
 It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
 
-### Instantiate an Interstitial Ad
+### Load an Interstitial Ad
 
 Loading an `AdManagerInterstitialAd` requires an `adUnitId`, an `AdRequest`, and an `AdManagerInterstitialAdLoadCallback`. An example is shown below as well as more information on each parameter following.
 
@@ -1407,7 +1407,7 @@ The easiest way to load test ads is to use our dedicated test ad unit ID for rew
 It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
 
-### Instantiate a Rewarded Ad
+### Load a Rewarded Ad
 
 Loading a `RewardedAd` requires an `adUnitId`, an `AdManagerAdRequest`, and a `RewardedAdLoadCallback`. An example is shown below as well as more information on each parameter following.
 
