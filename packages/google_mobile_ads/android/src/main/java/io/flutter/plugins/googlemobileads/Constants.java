@@ -17,5 +17,5 @@ package io.flutter.plugins.googlemobileads;
 /** Constants used in the plugin. */
 public class Constants {
   /** Version request agent. Should be bumped alongside plugin versions. */
-  public static final String REQUEST_AGENT_PREFIX_VERSIONED = "Flutter-GMA-0.12.1+1";
+  public static final String REQUEST_AGENT_PREFIX_VERSIONED = "Flutter-GMA-0.12.2";
 }
