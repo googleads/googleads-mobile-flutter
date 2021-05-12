@@ -182,8 +182,8 @@ class AdInstanceManager {
   void _invokeOnAdLoaded(
       Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     _onAdLoadedAds.add(ad);
-    
-    ad.responseInfo = arguments['responseInfo']; 
+
+    ad.responseInfo = arguments['responseInfo'];
     if (ad is AdWithView) {
       ad.listener.onAdLoaded?.call(ad);
     } else if (ad is RewardedAd) {
@@ -611,16 +611,16 @@ class AdMessageCodec extends StandardMessageCodec {
         return ResponseInfo(
           responseId: readValueOfType(buffer.getUint8(), buffer),
           mediationAdapterClassName: readValueOfType(buffer.getUint8(), buffer),
-          adapterResponses: readValueOfType(buffer.getUint8(), buffer)?.cast<AdapterResponseInfo>(),
+          adapterResponses: readValueOfType(buffer.getUint8(), buffer)
+              ?.cast<AdapterResponseInfo>(),
         );
       case _valueAdapterResponseInfo:
         return AdapterResponseInfo(
-          adapterClassName: readValueOfType(buffer.getUint8(), buffer),
-          latencyMillis: readValueOfType(buffer.getUint8(), buffer),
-          message: readValueOfType(buffer.getUint8(), buffer),
-          credentials: readValueOfType(buffer.getUint8(), buffer),
-          adError: readValueOfType(buffer.getUint8(), buffer)
-        );
+            adapterClassName: readValueOfType(buffer.getUint8(), buffer),
+            latencyMillis: readValueOfType(buffer.getUint8(), buffer),
+            message: readValueOfType(buffer.getUint8(), buffer),
+            credentials: readValueOfType(buffer.getUint8(), buffer),
+            adError: readValueOfType(buffer.getUint8(), buffer));
       case _valueLoadAdError:
         return LoadAdError(
           readValueOfType(buffer.getUint8(), buffer),

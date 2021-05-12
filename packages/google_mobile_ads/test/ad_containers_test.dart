@@ -642,7 +642,10 @@ void main() {
 
       List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
       ResponseInfo responseInfo = ResponseInfo(
-          responseId: 'id', mediationAdapterClassName: 'className', adapterResponses: adapterResponses,);
+        responseId: 'id',
+        mediationAdapterClassName: 'className',
+        adapterResponses: adapterResponses,
+      );
 
       final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
         'adId': 0,
@@ -667,7 +670,8 @@ void main() {
       expect(results[1].responseInfo.responseId, responseInfo.responseId);
       expect(results[1].responseInfo.mediationAdapterClassName,
           responseInfo.mediationAdapterClassName);
-      List<AdapterResponseInfo> responses = results[1].responseInfo.adapterResponses;
+      List<AdapterResponseInfo> responses =
+          results[1].responseInfo.adapterResponses;
       expect(responses.first.adapterClassName, 'adapter-name');
       expect(responses.first.latencyMillis, 500);
       expect(responses.first.message, 'message');
@@ -852,10 +856,9 @@ void main() {
 
     test('encode/decode $LoadAdError', () async {
       final ResponseInfo responseInfo = ResponseInfo(
-        responseId: 'id',
-        mediationAdapterClassName: 'class',
-        adapterResponses: null
-      );
+          responseId: 'id',
+          mediationAdapterClassName: 'class',
+          adapterResponses: null);
       final ByteData byteData = codec.encodeMessage(
         LoadAdError(1, 'domain', 'message', responseInfo),
       )!;

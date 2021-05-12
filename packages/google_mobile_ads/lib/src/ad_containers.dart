@@ -65,10 +65,8 @@ class AdError {
 class ResponseInfo {
   /// Constructs a [ResponseInfo] with the [responseId] and [mediationAdapterClassName].
   @protected
-  const ResponseInfo({
-    this.responseId,
-    this.mediationAdapterClassName,
-    this.adapterResponses});
+  const ResponseInfo(
+      {this.responseId, this.mediationAdapterClassName, this.adapterResponses});
 
   /// An identifier for the loaded ad.
   final String? responseId;
@@ -86,13 +84,12 @@ class ResponseInfo {
   String toString() {
     return '$runtimeType(responseId: $responseId, '
         'mediationAdapterClassName: $mediationAdapterClassName, '
-         'adapterResponses: $adapterResponses)' ;
+        'adapterResponses: $adapterResponses)';
   }
 }
 
 /// Response information for an individual ad network in an ad response.
 class AdapterResponseInfo {
-
   /// Constructs an [AdapterResponseInfo].
   @protected
   AdapterResponseInfo({
