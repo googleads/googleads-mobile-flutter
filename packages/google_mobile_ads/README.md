@@ -1597,3 +1597,37 @@ properties:
    <td>A log friendly string version of the AdapterResponseInfo.</td>
    </tr>
 </table>
+
+## Ad Load Errors
+
+When an ad fails to load, a failure callback is called which provides a
+`LoadAdError` object.
+
+The following code snippet retrieves error information when a rewarded ad fails
+to load:
+
+```dart
+onAdFailedToLoad: (ad, loadAdError) {
+  // Gets the domain from which the error came.
+  String domain = loadAdError.domain;
+
+  // Gets the error code. See
+  // https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest
+  // and https://developers.google.com/admob/ios/api/reference/Enums/GADErrorCode
+  // for a list of possible codes.
+  int code = loadAdError.code;
+  
+  // A log friendly string summarizing the error.
+  String message = loadAdError.message;
+  
+  // Get response information, which may include results of mediation requests.
+  ResponseInfo? responseInfo = loadAdError.responseInfo;
+}
+```
+
+This information can be used to more accurately determine what caused the ad
+load to fail. In particular, for errors under the domain `com.google.admob` on
+iOS and `com.google.android.gms.ads` on Android, the `GetMessage()` can be
+looked up in [this help center
+article](//support.google.com/admob/answer/9905175) for a more detailed
+explanation and possible actions that can be taken to resolve the issue.
