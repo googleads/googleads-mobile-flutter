@@ -95,5 +95,5 @@ jobs:
       - name: "Flutter Format"
         run: |
           flutter pub global activate flutter_plugin_tools
-          flutter pub global run flutter_plugin_tools format --clang-format ./github/workflows/scripts/clang+llvm-7.0.0-x86_64-apple-darwin/bin/clang-format
+          flutter pub global run flutter_plugin_tools format --clang-format ./github/workflows/scripts/clang-format
           ./github/workflows/scripts/validate-formatting.sh
