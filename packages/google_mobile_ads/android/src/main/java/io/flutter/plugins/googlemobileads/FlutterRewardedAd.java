@@ -110,7 +110,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
             rewardedAd.setServerSideVerificationOptions(
               serverSideVerificationOptions.asServerSideVerificationOptions());
           }
-          manager.onAdLoaded(FlutterRewardedAd.this);
+          manager.onAdLoaded(FlutterRewardedAd.this, rewardedAd.getResponseInfo());
           super.onAdLoaded(rewardedAd);
         }
 

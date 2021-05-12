@@ -30,7 +30,8 @@
 - (void)loadAd:(id<FLTAd> _Nonnull)ad adId:(NSNumber *_Nonnull)adId;
 - (void)dispose:(NSNumber *_Nonnull)adId;
 - (void)showAdWithID:(NSNumber *_Nonnull)adId;
-- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad;
+- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad
+      responseInfo:(GADResponseInfo *)responseInfo;
 - (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(NSError *_Nonnull)error;
 - (void)onAppEvent:(id<FLTAd> _Nonnull)ad
               name:(NSString *_Nullable)name

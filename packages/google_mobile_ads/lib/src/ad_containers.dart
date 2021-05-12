@@ -65,7 +65,10 @@ class AdError {
 class ResponseInfo {
   /// Constructs a [ResponseInfo] with the [responseId] and [mediationAdapterClassName].
   @protected
-  const ResponseInfo({this.responseId, this.mediationAdapterClassName});
+  const ResponseInfo({
+    this.responseId,
+    this.mediationAdapterClassName,
+    this.adapterResponses});
 
   /// An identifier for the loaded ad.
   final String? responseId;
@@ -73,11 +76,48 @@ class ResponseInfo {
   /// The mediation adapter class name of the ad network that loaded the ad.
   final String? mediationAdapterClassName;
 
+  /// The [AdapterResponseInfo]s containing metadata for each adapter included
+  /// in the ad response.
+  ///
+  /// Can be used to debug the mediation waterfall execution.
+  final List<AdapterResponseInfo>? adapterResponses;
+
   @override
   String toString() {
     return '$runtimeType(responseId: $responseId, '
         'mediationAdapterClassName: $mediationAdapterClassName)';
   }
+}
+
+/// Response information for an individual ad network in an ad response.
+class AdapterResponseInfo {
+
+  /// Constructs an [AdapterResponseInfo].
+  @protected
+  AdapterResponseInfo({
+    required this.adapterClassName,
+    required this.latencyMillis,
+    required this.message,
+    required this.credentials,
+    this.adError,
+  });
+
+  /// A class name that identifies the ad network adapter.
+  final String adapterClassName;
+
+  /// The amount of time the ad network adapter spent loading an ad.
+  ///
+  /// 0 if the adapter was not attempted.
+  final int latencyMillis;
+
+  /// A log friendly string version of this object.
+  final String message;
+
+  /// A string description of adapter credentials specified in the AdMob or Ad Manager UI
+  final String credentials;
+
+  /// The error that occurred while rendering the ad.
+  final AdError? adError;
 }
 
 /// Represents errors that occur when loading an ad.
@@ -256,7 +296,7 @@ class AdSize {
 /// A valid [adUnitId] is required.
 abstract class Ad {
   /// Default constructor, used by subclasses.
-  const Ad({required this.adUnitId});
+  Ad({required this.adUnitId, this.responseInfo});
 
   /// Identifies the source of [Ad]s for your application.
   ///
@@ -273,6 +313,11 @@ abstract class Ad {
     return instanceManager.adIdFor(this) != null &&
         instanceManager.onAdLoadedCalled(this);
   }
+
+  /// Contains information about the loaded request.
+  ///
+  /// Only present if the ad has been successfully loaded.
+  ResponseInfo? responseInfo;
 }
 
 /// Base class for mobile [Ad] that has an in-line view.
@@ -280,7 +325,7 @@ abstract class Ad {
 /// A valid [adUnitId] and [size] are required.
 abstract class AdWithView extends Ad {
   /// Default constructor, used by subclasses.
-  const AdWithView({required String adUnitId, required this.listener})
+  AdWithView({required String adUnitId, required this.listener})
       : super(adUnitId: adUnitId);
 
   /// The [AdWithViewListener] for the ad.

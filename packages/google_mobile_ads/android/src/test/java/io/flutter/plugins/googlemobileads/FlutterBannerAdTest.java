@@ -31,6 +31,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.ResponseInfo;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
 import org.junit.Before;
@@ -104,12 +105,15 @@ public class FlutterBannerAdTest {
       }
     }).when(mockAdView).setAdListener(any(AdListener.class));
 
+    ResponseInfo responseInfo = mock(ResponseInfo.class);
+    doReturn(responseInfo).when(mockAdView).getResponseInfo();
+
     flutterBannerAd.load();
     verify(mockAdView).loadAd(eq(mockAdRequest));
     verify(mockAdView).setAdListener(any(AdListener.class));
     verify(mockAdView).setAdUnitId(eq("testId"));
     verify(mockAdView).setAdSize(adSize);
-    verify(mockManager).onAdLoaded(eq(flutterBannerAd));
+    verify(mockManager).onAdLoaded(eq(flutterBannerAd), eq(responseInfo));
     verify(mockManager).onAdImpression(eq(flutterBannerAd));
     verify(mockManager).onAdClosed(eq(flutterBannerAd));
     verify(mockManager).onAdOpened(eq(flutterBannerAd));

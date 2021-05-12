@@ -16,8 +16,12 @@ package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdapterResponseInfo;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.ResponseInfo;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 abstract class FlutterAd {
@@ -31,10 +35,25 @@ abstract class FlutterAd {
 
     @Nullable private final String responseId;
     @Nullable private final String mediationAdapterClassName;
+    @NonNull private final List<FlutterAdapterResponseInfo> adapterResponses;
 
-    FlutterResponseInfo(@Nullable String responseId, @Nullable String mediationAdapterClassName) {
+    FlutterResponseInfo(@NonNull ResponseInfo responseInfo) {
+      this.responseId = responseInfo.getResponseId();
+      this.mediationAdapterClassName = responseInfo.getMediationAdapterClassName();
+      List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
+      for (AdapterResponseInfo adapterInfo: responseInfo.getAdapterResponses()) {
+        adapterResponseInfos.add(new FlutterAdapterResponseInfo(adapterInfo));
+      }
+      this.adapterResponses = adapterResponseInfos;
+    }
+
+    FlutterResponseInfo(
+        @Nullable String responseId,
+        @Nullable String mediationAdapterClassName,
+        @NonNull List<FlutterAdapterResponseInfo> adapterResponseInfos) {
       this.responseId = responseId;
       this.mediationAdapterClassName = mediationAdapterClassName;
+      this.adapterResponses = adapterResponseInfos;
     }
 
     @Nullable
@@ -47,6 +66,11 @@ abstract class FlutterAd {
       return mediationAdapterClassName;
     }
 
+    @NonNull
+    List<FlutterAdapterResponseInfo> getAdapterResponses() {
+      return adapterResponses;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
       if (obj == this) {
@@ -57,12 +81,135 @@ abstract class FlutterAd {
 
       FlutterResponseInfo that = (FlutterResponseInfo) obj;
       return Objects.equals(responseId, that.responseId)
-        && Objects.equals(mediationAdapterClassName, that.mediationAdapterClassName);
+        && Objects.equals(mediationAdapterClassName, that.mediationAdapterClassName)
+        && Objects.equals(adapterResponses, that.adapterResponses);
     }
 
     @Override
     public int hashCode() {
       return Objects.hash(responseId, mediationAdapterClassName);
+    }
+  }
+
+  /** A wrapper for {@link AdapterResponseInfo}. */
+  static class FlutterAdapterResponseInfo {
+
+    @NonNull private final String adapterClassName;
+    private final long latencyMillis;
+    @NonNull private final String description;
+    @NonNull private final String credentials;
+    @Nullable private final FlutterAdError error;
+
+    FlutterAdapterResponseInfo(@NonNull AdapterResponseInfo responseInfo) {
+      this.adapterClassName = responseInfo.getAdapterClassName();
+      this.latencyMillis = responseInfo.getLatencyMillis();
+      this.description = responseInfo.toString();
+      this.credentials = responseInfo.getCredentials().toString();
+      this.error = new FlutterAdError(responseInfo.getAdError());
+    }
+
+    FlutterAdapterResponseInfo(
+      @NonNull String adapterClassName,
+      long latencyMillis,
+      @NonNull String description,
+      @NonNull String credentials,
+      @Nullable FlutterAdError error
+    ) {
+      this.adapterClassName = adapterClassName;
+      this.latencyMillis = latencyMillis;
+      this.description = description;
+      this.credentials = credentials;
+      this.error = error;
+    }
+
+    @NonNull
+    public String getAdapterClassName() {
+      return adapterClassName;
+    }
+
+    public long getLatencyMillis() {
+      return latencyMillis;
+    }
+
+    @NonNull
+    public String getDescription() {
+      return description;
+    }
+
+    @NonNull
+    public String getCredentials() {
+      return credentials;
+    }
+
+    @Nullable
+    public FlutterAdError getError() {
+      return error;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+      if (obj == this) {
+        return true;
+      } else if (!(obj instanceof FlutterAdapterResponseInfo)) {
+        return false;
+      }
+
+      FlutterAdapterResponseInfo that = (FlutterAdapterResponseInfo) obj;
+      return Objects.equals(adapterClassName, that.adapterClassName)
+          && Objects.equals(latencyMillis, that.latencyMillis)
+          && Objects.equals(description, that.description)
+          && Objects.equals(credentials, that.credentials)
+          && Objects.equals(error, that.error);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(adapterClassName, latencyMillis, description, credentials, error);
+    }
+  }
+
+  /** Wrapper for {@link AdError}. */
+  static class FlutterAdError {
+    final int code;
+    @NonNull final String domain;
+    @NonNull final String message;
+
+    FlutterAdError(@NonNull AdError error) {
+      code = error.getCode();
+      domain = error.getDomain();
+      message = error.getMessage();
+    }
+
+    FlutterAdError(
+        int code,
+        @NonNull String domain,
+        @NonNull String message) {
+      this.code = code;
+      this.domain = domain;
+      this.message = message;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+      if (this == object) {
+        return true;
+      } else if (!(object instanceof FlutterAdError)) {
+        return false;
+      }
+
+      final FlutterAdError that = (FlutterAdError) object;
+
+      if (code != that.code) {
+        return false;
+      } else if (!domain.equals(that.domain)) {
+        return false;
+      }
+      return message.equals(that.message);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(code, domain, message);
     }
   }
 
@@ -77,10 +224,16 @@ abstract class FlutterAd {
       code = error.getCode();
       domain = error.getDomain();
       message = error.getMessage();
+
       if (error.getResponseInfo() != null) {
+        List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
+        for (AdapterResponseInfo adapterInfo: error.getResponseInfo().getAdapterResponses()) {
+          adapterResponseInfos.add(new FlutterAdapterResponseInfo(adapterInfo));
+        }
         responseInfo = new FlutterResponseInfo(
             error.getResponseInfo().getResponseId(),
-            error.getResponseInfo().getMediationAdapterClassName());
+            error.getResponseInfo().getMediationAdapterClassName(),
+            adapterResponseInfos);
       }
     }
 

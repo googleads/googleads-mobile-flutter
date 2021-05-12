@@ -18,6 +18,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.ResponseInfo;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.util.Preconditions;
 
@@ -53,7 +54,12 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
     view = bannerAdCreator.createAdView();
     view.setAdUnitId(adUnitId);
     view.setAdSize(size.getAdSize());
-    view.setAdListener(new FlutterBannerAdListener(manager, this));
+    view.setAdListener(new FlutterBannerAdListener(manager, this, new ResponseInfoProvider() {
+      @Override
+      public ResponseInfo getResponseInfo() {
+        return view.getResponseInfo();
+      }
+    }));
     view.loadAd(request.asAdRequest());
   }
 

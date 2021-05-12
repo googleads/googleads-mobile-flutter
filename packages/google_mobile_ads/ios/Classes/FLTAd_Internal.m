@@ -59,6 +59,28 @@
   if (self) {
     _responseIdentifier = responseInfo.responseIdentifier;
     _adNetworkClassName = responseInfo.adNetworkClassName;
+    NSMutableArray<FLTGADAdNetworkResponseInfo *> *infoArray =
+      [[NSMutableArray alloc] init];
+    for (GADAdNetworkResponseInfo * adNetworkInfo in responseInfo.adNetworkInfoArray) {
+      [infoArray addObject:[[FLTGADAdNetworkResponseInfo alloc] initWithResponseInfo:adNetworkInfo]];
+    }
+    _adNetworkInfoArray = infoArray;
+  }
+  return self;
+}
+@end
+
+@implementation FLTGADAdNetworkResponseInfo
+
+- (instancetype _Nonnull)initWithResponseInfo:(GADAdNetworkResponseInfo *_Nonnull)responseInfo {
+  self = [super init];
+  if (self) {
+    _adNetworkClassName = responseInfo.adNetworkClassName;
+    NSNumber *timeInMillis = [[NSNumber alloc] initWithDouble:responseInfo.latency * 1000];
+    _latency = @(timeInMillis.longValue);
+    _dictionaryDescription = responseInfo.dictionaryRepresentation.description;
+    _credentialsDescription = responseInfo.credentials.description;
+    _error = responseInfo.error;
   }
   return self;
 }
@@ -135,7 +157,7 @@
 
 
 - (void)bannerViewDidReceiveAd:(GADBannerView *)bannerView {
-  [_manager onAdLoaded:self];
+  [_manager onAdLoaded:self responseInfo:bannerView.responseInfo];
 }
 
 - (void)bannerView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(NSError *)error {
@@ -251,7 +273,7 @@
                         }
                         ad.fullScreenContentDelegate = self;
                         self->_interstitialView = ad;
-                        [self.manager onAdLoaded:self];
+                        [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
                       }];
 }
 
@@ -321,7 +343,7 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
        [self.manager onAdFailedToLoad:self error:error];
        return;
      }
-    [self.manager onAdLoaded:self];
+    [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
     ad.fullScreenContentDelegate = self;
     ad.appEventDelegate = self;
      self->_insterstitial = ad;
@@ -400,7 +422,7 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
     
     rewardedAd.fullScreenContentDelegate = self;
     self->_rewardedView = rewardedAd;
-    [self.manager onAdLoaded:self];
+    [self.manager onAdLoaded:self responseInfo:rewardedAd.responseInfo];
   }];
 }
   
@@ -501,7 +523,7 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
       [[NSNull null] isEqual:_customOptions] ? nil : _customOptions;
   _view = [_nativeAdFactory createNativeAd:nativeAd customOptions:customOptions];
   nativeAd.delegate = self;
-  [_manager onAdLoaded:self];
+  [_manager onAdLoaded:self responseInfo:nativeAd.responseInfo];
 }
 
 - (void)adLoader:(GADAdLoader *)adLoader didFailToReceiveAdWithError:(NSError *)error {

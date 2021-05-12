@@ -98,6 +98,8 @@
     [delegate adWillDismissFullScreenContent:rewardedClassMock];
     [delegate ad:rewardedClassMock didFailToPresentFullScreenContentWithError:error];
   });
+  GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
+  OCMStub([rewardedClassMock responseInfo]).andReturn(responseInfo);
   // Stub presentFromRootViewController to invoke reward callback.
   GADAdReward *mockReward = OCMClassMock([GADAdReward class]);
   OCMStub([mockReward amount]).andReturn(@1.0);
@@ -119,7 +121,7 @@
   OCMVerify(ClassMethod([rewardedClassMock loadWithAdUnitID:[OCMArg isEqual:@"testId"]
                                                     request:[OCMArg isEqual:gadOrGAMRequest]
                                           completionHandler:[OCMArg any]]));
-  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad] responseInfo:[OCMArg isEqual:responseInfo]]);
   OCMVerify([rewardedClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
   XCTAssertEqual(ad.rewardedAd, rewardedClassMock);
   if (options != nil) {

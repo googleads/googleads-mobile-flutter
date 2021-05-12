@@ -63,13 +63,16 @@
     [delegate adWillDismissFullScreenContent:interstitialClassMock];
     [delegate ad:interstitialClassMock didFailToPresentFullScreenContentWithError:error];
   });
+  
+  GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
+  OCMStub([interstitialClassMock responseInfo]).andReturn(mockResponseInfo);
 
   [ad load];
 
   OCMVerify(ClassMethod([interstitialClassMock loadWithAdUnitID:[OCMArg isEqual:@"testId"]
                                           request:[OCMArg isEqual:gadRequest]
                                 completionHandler:[OCMArg any]]));
-  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad] responseInfo:[OCMArg isEqual:mockResponseInfo]]);
   OCMVerify([interstitialClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
   XCTAssertEqual(ad.interstitial, interstitialClassMock);
   

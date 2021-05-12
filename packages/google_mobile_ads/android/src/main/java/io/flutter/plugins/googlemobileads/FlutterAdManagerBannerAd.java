@@ -18,6 +18,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
 import com.google.android.gms.common.internal.Preconditions;
@@ -76,7 +77,12 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
       allSizes[i] = sizes.get(i).getAdSize();
     }
     view.setAdSizes(allSizes);
-    view.setAdListener(new FlutterBannerAdListener(manager, this));
+    view.setAdListener(new FlutterBannerAdListener(manager, this, new ResponseInfoProvider() {
+      @Override
+      public ResponseInfo getResponseInfo() {
+        return view.getResponseInfo();
+      }
+    }));
     view.loadAd(request.asAdManagerAdRequest());
   }
 

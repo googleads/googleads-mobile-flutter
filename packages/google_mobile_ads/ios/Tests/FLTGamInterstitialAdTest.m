@@ -72,12 +72,15 @@
     [delegate interstitialAd:interstitialClassMock didReceiveAppEvent:@"event" withInfo:@"info"];
   });
 
+  GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
+  OCMStub([interstitialClassMock responseInfo]).andReturn(responseInfo);
+  
   [ad load];
 
   OCMVerify(ClassMethod([interstitialClassMock loadWithAdManagerAdUnitID:[OCMArg isEqual:@"testId"]
                                                                  request:[OCMArg isEqual:gadRequest]
                                                        completionHandler:[OCMArg any]]));
-  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad] responseInfo:[OCMArg isEqual:responseInfo]]);
   OCMVerify([interstitialClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
   XCTAssertEqual(ad.interstitial, interstitialClassMock);
   

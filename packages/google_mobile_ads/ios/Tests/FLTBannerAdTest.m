@@ -43,19 +43,23 @@
   
   XCTAssertEqual(bannerAd.bannerView.delegate, bannerAd);
   
-  [bannerAd.bannerView.delegate bannerViewDidReceiveAd:OCMClassMock([GADBannerView class])];
-  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:bannerAd]]);
+  GADBannerView *bannerMock = OCMClassMock([GADBannerView class]);
+  GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
+  OCMStub([bannerMock responseInfo]).andReturn(responseInfo);
   
-  [bannerAd.bannerView.delegate bannerViewDidDismissScreen:OCMClassMock([GADBannerView class])];
+  [bannerAd.bannerView.delegate bannerViewDidReceiveAd:bannerMock];
+  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:bannerAd] responseInfo:[OCMArg isEqual:responseInfo]]);
+  
+  [bannerAd.bannerView.delegate bannerViewDidDismissScreen:bannerMock];
   OCMVerify([mockManager onBannerDidDismissScreen:[OCMArg isEqual:bannerAd]]);
 
-  [bannerAd.bannerView.delegate bannerViewWillDismissScreen:OCMClassMock([GADBannerView class])];
+  [bannerAd.bannerView.delegate bannerViewWillDismissScreen:bannerMock];
   OCMVerify([mockManager onBannerWillDismissScreen:[OCMArg isEqual:bannerAd]]);
   
-  [bannerAd.bannerView.delegate bannerViewWillPresentScreen:OCMClassMock([GADBannerView class])];
+  [bannerAd.bannerView.delegate bannerViewWillPresentScreen:bannerMock];
   OCMVerify([mockManager onBannerWillPresentScreen:[OCMArg isEqual:bannerAd]]);
   
-  [bannerAd.bannerView.delegate bannerViewDidRecordImpression:OCMClassMock([GADBannerView class])];
+  [bannerAd.bannerView.delegate bannerViewDidRecordImpression:bannerMock];
   OCMVerify([mockManager onBannerImpression:[OCMArg isEqual:bannerAd]]);
   
   NSString *domain = @"domain";

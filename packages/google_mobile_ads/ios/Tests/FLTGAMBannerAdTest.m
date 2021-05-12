@@ -47,7 +47,8 @@
   XCTAssertEqual(adView.delegate, bannerAd);
   
   [bannerAd.bannerView.delegate bannerViewDidReceiveAd:OCMClassMock([GADBannerView class])];
-  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:bannerAd]]);
+  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:bannerAd]
+             responseInfo:[OCMArg isEqual:adView.responseInfo]]);
   
   [bannerAd.bannerView.delegate bannerViewDidDismissScreen:OCMClassMock([GADBannerView class])];
   OCMVerify([mockManager onBannerDidDismissScreen:[OCMArg isEqual:bannerAd]]);

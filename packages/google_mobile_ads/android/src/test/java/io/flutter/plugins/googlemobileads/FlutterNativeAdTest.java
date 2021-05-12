@@ -27,6 +27,7 @@ import android.app.Activity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
@@ -68,7 +69,9 @@ public class FlutterNativeAdTest {
             mockLoader,
             mockOptions);
 
+    final ResponseInfo responseInfo = mock(ResponseInfo.class);
     final NativeAd mockNativeAd = mock(NativeAd.class);
+    doReturn(responseInfo).when(mockNativeAd).getResponseInfo();
     final LoadAdError loadAdError = mock(LoadAdError.class);
     doReturn(1).when(loadAdError).getCode();
     doReturn("2").when(loadAdError).getDomain();
@@ -113,7 +116,7 @@ public class FlutterNativeAdTest {
     verify(testManager).onAdClosed(eq(nativeAd));
     verify(testManager).onNativeAdClicked(eq(nativeAd));
     verify(testManager).onAdImpression(eq(nativeAd));
-    verify(testManager).onAdLoaded(eq(nativeAd));
+    verify(testManager).onAdLoaded(eq(nativeAd), eq(responseInfo));
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
     verify(testManager).onAdFailedToLoad(eq(nativeAd), eq(expectedError));
   }
@@ -136,7 +139,9 @@ public class FlutterNativeAdTest {
         mockLoader,
         mockOptions);
 
+    final ResponseInfo responseInfo = mock(ResponseInfo.class);
     final NativeAd mockNativeAd = mock(NativeAd.class);
+    doReturn(responseInfo).when(mockNativeAd).getResponseInfo();
     final LoadAdError loadAdError = mock(LoadAdError.class);
     doReturn(1).when(loadAdError).getCode();
     doReturn("2").when(loadAdError).getDomain();
@@ -182,7 +187,7 @@ public class FlutterNativeAdTest {
     verify(testManager).onAdClosed(eq(nativeAd));
     verify(testManager).onNativeAdClicked(eq(nativeAd));
     verify(testManager).onAdImpression(eq(nativeAd));
-    verify(testManager).onAdLoaded(eq(nativeAd));
+    verify(testManager).onAdLoaded(eq(nativeAd), eq(responseInfo));
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
     verify(testManager).onAdFailedToLoad(eq(nativeAd), eq(expectedError));
   }

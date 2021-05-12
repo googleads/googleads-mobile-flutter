@@ -18,9 +18,12 @@ import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.ResponseInfo;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.StandardMethodCodec;
+import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
+import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -93,10 +96,11 @@ class AdInstanceManager {
     ads.clear();
   }
 
-  void onAdLoaded(@NonNull FlutterAd ad) {
+  void onAdLoaded(@NonNull FlutterAd ad, ResponseInfo responseInfo) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
     arguments.put("eventName", "onAdLoaded");
+    arguments.put("responseInfo", new FlutterResponseInfo(responseInfo));
     channel.invokeMethod("onAdEvent", arguments);
   }
 
@@ -158,7 +162,7 @@ class AdInstanceManager {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
     arguments.put("eventName", "onFailedToShowFullScreenContent");
-    arguments.put("error", error);
+    arguments.put("error", new FlutterAdError(error));
     channel.invokeMethod("onAdEvent", arguments);
   }
 

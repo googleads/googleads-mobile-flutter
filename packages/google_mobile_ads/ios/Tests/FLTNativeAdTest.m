@@ -67,7 +67,9 @@
                         }]]);
 
   // Check that nil is used instead of null when customOptions is Null
+  GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
   GADNativeAd *mockGADNativeAd = OCMClassMock([GADNativeAd class]);
+  OCMStub([mockGADNativeAd responseInfo]).andReturn(mockResponseInfo);
   [ad adLoader:mockLoader didReceiveNativeAd:mockGADNativeAd];
   if ([NSNull.null isEqual:customOptions] || customOptions == nil) {
     OCMVerify([mockNativeAdFactory createNativeAd:mockGADNativeAd customOptions:[OCMArg isNil]]);
@@ -89,7 +91,8 @@
   [(id<GADNativeAdLoaderDelegate>)ad.adLoader.delegate adLoader:mockLoader
                                              didReceiveNativeAd:mockGADNativeAd];
   
-  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
+                       responseInfo:[OCMArg isEqual:mockResponseInfo]]);
   
   NSError *error = OCMClassMock([NSError class]);
   [(id<GADNativeAdLoaderDelegate>)ad.adLoader.delegate adLoader:mockLoader

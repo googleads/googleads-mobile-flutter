@@ -111,9 +111,17 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
                               customOptions:nil
                          rootViewController:OCMClassMock([UIViewController class])];
   [_manager loadAd:ad adId:@(1)];
-
-  [_manager onAdLoaded:ad];
-  NSData *data = [self getDataForEvent:@"onAdLoaded" adId:@1];
+  
+  GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
+  FLTGADResponseInfo * fltResponseInfo = [[FLTGADResponseInfo alloc] initWithResponseInfo:responseInfo];
+  [_manager onAdLoaded:ad responseInfo:responseInfo];
+  NSData *data = [_methodCodec
+      encodeMethodCall:[FlutterMethodCall methodCallWithMethodName:@"onAdEvent"
+                                                         arguments:@{
+                                                           @"adId" : @1,
+                                                           @"eventName" : @"onAdLoaded",
+                                                           @"responseInfo" : fltResponseInfo,
+                                                         }]];
   OCMVerify([_mockMessenger sendOnChannel:channel message:data]);
 }
 

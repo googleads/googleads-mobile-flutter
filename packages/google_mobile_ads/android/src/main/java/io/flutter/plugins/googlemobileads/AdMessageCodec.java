@@ -16,8 +16,9 @@
 package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.AdError;
 import io.flutter.plugin.common.StandardMessageCodec;
+import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
+import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -40,6 +41,7 @@ final class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_SERVER_SIDE_VERIFICATION_OPTIONS = (byte) 138;
   private static final byte VALUE_AD_ERROR = (byte) 139;
   private static final byte VALUE_RESPONSE_INFO = (byte) 140;
+  private static final byte VALUE_ADAPTER_RESPONSE_INFO = (byte) 141;
 
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
@@ -59,11 +61,20 @@ final class AdMessageCodec extends StandardMessageCodec {
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;
       writeValue(stream, item.amount);
       writeValue(stream, item.type);
+    } else if (value instanceof FlutterAdapterResponseInfo) {
+      stream.write(VALUE_ADAPTER_RESPONSE_INFO);
+      final FlutterAdapterResponseInfo responseInfo = (FlutterAdapterResponseInfo) value;
+      writeValue(stream, responseInfo.getAdapterClassName());
+      writeValue(stream, responseInfo.getLatencyMillis());
+      writeValue(stream, responseInfo.getDescription());
+      writeValue(stream, responseInfo.getCredentials());
+      writeValue(stream, responseInfo.getError());
     } else if (value instanceof FlutterResponseInfo) {
       stream.write(VALUE_RESPONSE_INFO);
       final FlutterResponseInfo responseInfo = (FlutterResponseInfo) value;
       writeValue(stream, responseInfo.getResponseId());
       writeValue(stream, responseInfo.getMediationAdapterClassName());
+      writeValue(stream, responseInfo.getAdapterResponses());
     } else if (value instanceof FlutterAd.FlutterLoadAdError) {
       stream.write(VALUE_LOAD_AD_ERROR);
       final FlutterAd.FlutterLoadAdError error = (FlutterAd.FlutterLoadAdError) value;
@@ -71,12 +82,12 @@ final class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, error.domain);
       writeValue(stream, error.message);
       writeValue(stream, error.responseInfo);
-    } else if (value instanceof AdError) {
+    } else if (value instanceof FlutterAdError) {
       stream.write(VALUE_AD_ERROR);
-      final AdError error = (AdError) value;
-      writeValue(stream, error.getCode());
-      writeValue(stream, error.getDomain());
-      writeValue(stream, error.getMessage());
+      final FlutterAdError error = (FlutterAdError) value;
+      writeValue(stream, error.code);
+      writeValue(stream, error.domain);
+      writeValue(stream, error.message);
     } else if (value instanceof FlutterAdManagerAdRequest) {
       stream.write(VALUE_ADMANAGER_AD_REQUEST);
       final FlutterAdManagerAdRequest request = (FlutterAdManagerAdRequest) value;
@@ -137,10 +148,19 @@ final class AdMessageCodec extends StandardMessageCodec {
         return new FlutterRewardedAd.FlutterRewardItem(
             (Integer) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer));
+      case VALUE_ADAPTER_RESPONSE_INFO:
+        return new FlutterAdapterResponseInfo(
+            (String) readValueOfType(buffer.get(), buffer),
+            (long) readValueOfType(buffer.get(), buffer),
+            (String) readValueOfType(buffer.get(), buffer),
+            (String) readValueOfType(buffer.get(), buffer),
+            (FlutterAdError) readValueOfType(buffer.get(), buffer)
+        );
       case VALUE_RESPONSE_INFO:
         return new FlutterResponseInfo(
             (String) readValueOfType(buffer.get(), buffer),
-            (String) readValueOfType(buffer.get(), buffer));
+            (String) readValueOfType(buffer.get(), buffer),
+            (List<FlutterAdapterResponseInfo>) readValueOfType(buffer.get(), buffer));
       case VALUE_LOAD_AD_ERROR:
         return new FlutterAd.FlutterLoadAdError(
             (Integer) readValueOfType(buffer.get(), buffer),
@@ -148,7 +168,7 @@ final class AdMessageCodec extends StandardMessageCodec {
             (String) readValueOfType(buffer.get(), buffer),
             (FlutterResponseInfo) readValueOfType(buffer.get(), buffer));
       case VALUE_AD_ERROR:
-        return new AdError(
+        return new FlutterAdError(
             (Integer) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer));

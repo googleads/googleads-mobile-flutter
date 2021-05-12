@@ -29,6 +29,7 @@ import android.content.Context;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
@@ -112,6 +113,9 @@ public class FlutterAdManagerInterstitialAdTest {
         any(AdManagerAdRequest.class),
         any(AdManagerInterstitialAdLoadCallback.class));
 
+    ResponseInfo responseInfo = mock(ResponseInfo.class);
+    doReturn(responseInfo).when(mockAdManagerAd).getResponseInfo();
+
     flutterAdManagerInterstitialAd.load();
 
     verify(mockFlutterAdLoader).loadAdManagerInterstitial(
@@ -120,7 +124,7 @@ public class FlutterAdManagerInterstitialAdTest {
       eq(mockRequest),
       any(AdManagerInterstitialAdLoadCallback.class));
 
-    verify(mockManager).onAdLoaded(flutterAdManagerInterstitialAd);
+    verify(mockManager).onAdLoaded(flutterAdManagerInterstitialAd, responseInfo);
 
     doAnswer(new Answer() {
       @Override
@@ -159,7 +163,7 @@ public class FlutterAdManagerInterstitialAdTest {
         anyString(),
         any(AdManagerAdRequest.class),
         any(AdManagerInterstitialAdLoadCallback.class));
-
+    doReturn(mock(ResponseInfo.class)).when(mockAdManagerAd).getResponseInfo();
     flutterAdManagerInterstitialAd.load();
     final AdError adError = new AdError(-1, "test", "error");
     doAnswer(new Answer() {
@@ -193,6 +197,8 @@ public class FlutterAdManagerInterstitialAdTest {
         anyString(),
         any(AdManagerAdRequest.class),
         any(AdManagerInterstitialAdLoadCallback.class));
+
+    doReturn(mock(ResponseInfo.class)).when(mockAdManagerAd).getResponseInfo();
 
     doAnswer(new Answer() {
       @Override

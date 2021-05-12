@@ -119,14 +119,15 @@ public class FlutterAdManagerBannerAdTest {
         return null;
       }
     }).when(mockAdView).setAdListener(any(AdListener.class));
-
+    ResponseInfo responseInfo = mock(ResponseInfo.class);
+    doReturn(responseInfo).when(mockAdView).getResponseInfo();
     flutterBannerAd.load();
 
     verify(mockAdView).loadAd(eq(mockAdRequest));
     verify(mockAdView).setAdListener(any(AdListener.class));
     verify(mockAdView).setAdUnitId(eq("testId"));
     verify(mockAdView).setAdSizes(adSize);
-    verify(mockManager).onAdLoaded(eq(flutterBannerAd));
+    verify(mockManager).onAdLoaded(eq(flutterBannerAd), eq(responseInfo));
     verify(mockManager).onAdImpression(eq(flutterBannerAd));
     verify(mockManager).onAdClosed(eq(flutterBannerAd));
     verify(mockManager).onAdOpened(eq(flutterBannerAd));

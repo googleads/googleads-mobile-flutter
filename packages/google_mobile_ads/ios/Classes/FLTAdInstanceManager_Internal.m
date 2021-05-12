@@ -77,8 +77,14 @@
   [ad show];
 }
 
-- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad {
-  [self sendAdEvent:@"onAdLoaded" ad:ad];
+- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad
+      responseInfo:(GADResponseInfo *)responseInfo {
+  [_channel invokeMethod:@"onAdEvent"
+               arguments:@{
+                 @"adId" : [self adIdFor:ad],
+                 @"eventName" : @"onAdLoaded",
+                 @"responseInfo" : [[FLTGADResponseInfo alloc] initWithResponseInfo:responseInfo]
+               }];
 }
 
 - (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(NSError *_Nonnull)error {

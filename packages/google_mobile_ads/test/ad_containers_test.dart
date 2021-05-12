@@ -632,8 +632,17 @@ void main() {
       );
 
       await banner.load();
+      AdError adError = AdError(1, 'domain', 'error-message');
+      AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
+          adapterClassName: 'adapter-name',
+          latencyMillis: 500,
+          message: 'message',
+          credentials: 'credentials',
+          adError: adError);
+
+      List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
       ResponseInfo responseInfo = ResponseInfo(
-          responseId: 'id', mediationAdapterClassName: 'className');
+          responseId: 'id', mediationAdapterClassName: 'className', adapterResponses: adapterResponses,);
 
       final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
         'adId': 0,
@@ -658,6 +667,14 @@ void main() {
       expect(results[1].responseInfo.responseId, responseInfo.responseId);
       expect(results[1].responseInfo.mediationAdapterClassName,
           responseInfo.mediationAdapterClassName);
+      List<AdapterResponseInfo> responses = results[1].responseInfo.adapterResponses;
+      expect(responses.first.adapterClassName, 'adapter-name');
+      expect(responses.first.latencyMillis, 500);
+      expect(responses.first.message, 'message');
+      expect(responses.first.credentials, 'credentials');
+      expect(responses.first.adError!.code, 1);
+      expect(responses.first.adError!.message, 'error-message');
+      expect(responses.first.adError!.domain, 'domain');
     });
 
     test('onNativeAdClicked', () async {
@@ -837,6 +854,7 @@ void main() {
       final ResponseInfo responseInfo = ResponseInfo(
         responseId: 'id',
         mediationAdapterClassName: 'class',
+        adapterResponses: null
       );
       final ByteData byteData = codec.encodeMessage(
         LoadAdError(1, 'domain', 'message', responseInfo),
@@ -848,6 +866,7 @@ void main() {
       expect(error.responseInfo?.responseId, responseInfo.responseId);
       expect(error.responseInfo?.mediationAdapterClassName,
           responseInfo.mediationAdapterClassName);
+      expect(error.responseInfo?.adapterResponses, null);
     });
 
     test('encode/decode $RewardItem', () async {

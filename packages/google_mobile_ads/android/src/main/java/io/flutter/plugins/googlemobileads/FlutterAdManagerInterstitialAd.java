@@ -67,7 +67,9 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
               manager.onAppEvent(FlutterAdManagerInterstitialAd.this, name, data);
             }
           });
-          manager.onAdLoaded(FlutterAdManagerInterstitialAd.this);
+          manager.onAdLoaded(
+              FlutterAdManagerInterstitialAd.this,
+              adManagerInterstitialAd.getResponseInfo());
         }
 
         @Override

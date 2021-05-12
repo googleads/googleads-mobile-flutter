@@ -182,6 +182,8 @@ class AdInstanceManager {
   void _invokeOnAdLoaded(
       Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     _onAdLoadedAds.add(ad);
+    
+    ad.responseInfo = arguments['responseInfo']; 
     if (ad is AdWithView) {
       ad.listener.onAdLoaded?.call(ad);
     } else if (ad is RewardedAd) {
@@ -519,6 +521,7 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueServerSideVerificationOptions = 138;
   static const int _valueAdError = 139;
   static const int _valueResponseInfo = 140;
+  static const int _valueAdapterResponseInfo = 141;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -539,6 +542,14 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueResponseInfo);
       writeValue(buffer, value.responseId);
       writeValue(buffer, value.mediationAdapterClassName);
+      writeValue(buffer, value.adapterResponses);
+    } else if (value is AdapterResponseInfo) {
+      buffer.putUint8(_valueAdapterResponseInfo);
+      writeValue(buffer, value.adapterClassName);
+      writeValue(buffer, value.latencyMillis);
+      writeValue(buffer, value.message);
+      writeValue(buffer, value.credentials);
+      writeValue(buffer, value.adError);
     } else if (value is LoadAdError) {
       buffer.putUint8(_valueLoadAdError);
       writeValue(buffer, value.code);
@@ -600,6 +611,15 @@ class AdMessageCodec extends StandardMessageCodec {
         return ResponseInfo(
           responseId: readValueOfType(buffer.getUint8(), buffer),
           mediationAdapterClassName: readValueOfType(buffer.getUint8(), buffer),
+          adapterResponses: readValueOfType(buffer.getUint8(), buffer)?.cast<AdapterResponseInfo>(),
+        );
+      case _valueAdapterResponseInfo:
+        return AdapterResponseInfo(
+          adapterClassName: readValueOfType(buffer.getUint8(), buffer),
+          latencyMillis: readValueOfType(buffer.getUint8(), buffer),
+          message: readValueOfType(buffer.getUint8(), buffer),
+          credentials: readValueOfType(buffer.getUint8(), buffer),
+          adError: readValueOfType(buffer.getUint8(), buffer)
         );
       case _valueLoadAdError:
         return LoadAdError(

@@ -26,7 +26,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdMobFieldInitializationStatus = 137,
   FLTAdmobFieldServerSideVerificationOptions = 138,
   FLTAdmobFieldAdError = 139,
-  FLTAdmobFieldGadResponseInfo = 140
+  FLTAdmobFieldGadResponseInfo = 140,
+  FLTAdmobFieldGADAdNetworkResponseInfo = 141
 };
 
 @interface FLTGoogleMobileAdsReader : FlutterStandardReader
@@ -70,10 +71,27 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     case FLTAdmobFieldGadResponseInfo: {
       NSString *responseIdentifier = [self readValueOfType:[self readByte]];
       NSString *adNetworkClassName = [self readValueOfType:[self readByte]];
+      NSArray<FLTGADAdNetworkResponseInfo *> *adNetworkInfoArray =
+        [self readValueOfType:[self readByte]];
       FLTGADResponseInfo * gadResponseInfo = [[FLTGADResponseInfo alloc] init];
       gadResponseInfo.adNetworkClassName = adNetworkClassName;
       gadResponseInfo.responseIdentifier = responseIdentifier;
+      gadResponseInfo.adNetworkInfoArray = adNetworkInfoArray;
       return gadResponseInfo;
+    }
+    case FLTAdmobFieldGADAdNetworkResponseInfo: {
+      NSString * adNetworkClassName = [self readValueOfType:[self readByte]];
+      NSNumber *latency = [self readValueOfType:[self readByte]];
+      NSString *dictionaryDescription = [self readValueOfType:[self readByte]];
+      NSString *credentialsDescription = [self readValueOfType:[self readByte]];
+      NSError *error = [self readValueOfType:[self readByte]];
+      FLTGADAdNetworkResponseInfo *adNetworkResponseInfo = [[FLTGADAdNetworkResponseInfo alloc] init];
+      adNetworkResponseInfo.adNetworkClassName = adNetworkClassName;
+      adNetworkResponseInfo.latency = latency;
+      adNetworkResponseInfo.dictionaryDescription = dictionaryDescription;
+      adNetworkResponseInfo.credentialsDescription = credentialsDescription;
+      adNetworkResponseInfo.error = error;
+      return adNetworkResponseInfo;
     }
     case FLTAdMobFieldLoadError: {
       NSNumber *code = [self readValueOfType:[self readByte]];
@@ -172,6 +190,15 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     GADResponseInfo *responseInfo = value;
     [self writeValue:responseInfo.responseIdentifier];
     [self writeValue:responseInfo.adNetworkClassName];
+    [self writeValue:responseInfo.adNetworkInfoArray];
+  } else if ([value isKindOfClass:[FLTGADAdNetworkResponseInfo class]]) {
+    [self writeByte:FLTAdmobFieldGADAdNetworkResponseInfo];
+    FLTGADAdNetworkResponseInfo *networkResponseInfo = value;
+    [self writeValue:networkResponseInfo.adNetworkClassName];
+    [self writeValue:networkResponseInfo.latency];
+    [self writeValue:networkResponseInfo.dictionaryDescription];
+    [self writeValue:networkResponseInfo.credentialsDescription];
+    [self writeValue:networkResponseInfo.error];
   } else if ([value isKindOfClass:[FLTLoadAdError class]]) {
     [self writeByte:FLTAdMobFieldLoadError];
     FLTLoadAdError *error = value;

@@ -35,11 +35,26 @@
 @end
 
 /**
+ * Wrapper around `GADAdNetworkResponseInfo`.
+ */
+@interface FLTGADAdNetworkResponseInfo : NSObject
+
+@property NSString *_Nullable adNetworkClassName;
+@property NSNumber *_Nullable latency;
+@property NSString *_Nullable dictionaryDescription;
+@property NSString *_Nullable credentialsDescription;
+@property NSError *_Nullable error;
+
+- (instancetype _Nonnull)initWithResponseInfo:(GADAdNetworkResponseInfo *_Nonnull)responseInfo;
+@end
+
+/**
  * Wrapper around `GADResponseInfo`.
  */
 @interface FLTGADResponseInfo : NSObject
 @property NSString *_Nullable responseIdentifier;
 @property NSString *_Nullable adNetworkClassName;
+@property NSArray<FLTGADAdNetworkResponseInfo *> *_Nullable adNetworkInfoArray;
 
 - (instancetype _Nonnull)initWithResponseInfo:(GADResponseInfo *_Nonnull)responseInfo;
 @end
