@@ -1540,3 +1540,60 @@ final RequestConfiguration requestConfiguration = RequestConfiguration(
   maxAdContentRating: MaxAdContentRating.g);
 MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 ```
+
+## Response Info
+
+For debugging and logging purposes, `LoadAdError`s and successfully loaded ads
+provide a `ResponseInfo` object. This object contains information about the ad 
+it loaded. Each ad format class has a property `Ad.responseInfo` which is
+populated after it loads.
+
+Properties on the `ResponseInfo` object include:
+
+`mediationAdapterClassName`
+:  The class name of the ad network that fetched the current ad.
+
+
+`responseId`
+:  The response identifier is a unique identifier for the ad response. This
+identifier can be used to identify and block the ad in the Ads Review Center
+(ARC).
+
+`adapterResponses`
+:  The list of `AdapterResponseInfo` containing metadata for each adapter 
+included in the ad response. Can be used to debug the mediation waterfall 
+execution.
+
+For each ad network in the waterfall, `AdapterResponseInfo` provides the following
+properties:
+
+<table style="max-width: 70%;">
+  <tr>
+   <th>Property</th>
+   <th>Description</th>
+  </tr>
+  <tr>
+   <td>`adapterClassName`</td>
+   <td>A class name that identifies the ad network.</td>
+  </tr>
+  <tr>
+   <td>`credentials`</td>
+   <td> A string description of adapter credentials specified in the AdMob or Ad 
+     Manager UI.
+   </td>
+  </tr>
+  <tr>
+   <td>`adError`</td>
+   <td>Error associated with the request to the network. Null if the network
+    successfully loaded an ad or if the network was not attempted.</td>
+  </tr>
+  <tr>
+   <td>`latencyMillis`</td>
+   <td>Amount of time the ad network spent loading an ad. <code>0</code> if the
+    network was not attempted.</td>
+  </tr>
+  <tr>
+   <td>`description`</td>
+   <td>A log friendly string version of the AdapterResponseInfo.</td>
+   </tr>
+</table>
