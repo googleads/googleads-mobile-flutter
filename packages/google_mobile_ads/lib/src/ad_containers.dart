@@ -85,7 +85,8 @@ class ResponseInfo {
   @override
   String toString() {
     return '$runtimeType(responseId: $responseId, '
-        'mediationAdapterClassName: $mediationAdapterClassName)';
+        'mediationAdapterClassName: $mediationAdapterClassName, '
+         'adapterResponses: $adapterResponses)' ;
   }
 }
 
@@ -118,6 +119,15 @@ class AdapterResponseInfo {
 
   /// The error that occurred while rendering the ad.
   final AdError? adError;
+
+  @override
+  String toString() {
+    return '$runtimeType(adapterClassName: $adapterClassName, '
+        'latencyMillis: $latencyMillis), '
+        'message: $message, '
+        'credentials: $credentials, '
+        'adError: $adError)';
+  }
 }
 
 /// Represents errors that occur when loading an ad.
