@@ -636,7 +636,7 @@ void main() {
       AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
           adapterClassName: 'adapter-name',
           latencyMillis: 500,
-          message: 'message',
+          description: 'message',
           credentials: 'credentials',
           adError: adError);
 
@@ -674,7 +674,7 @@ void main() {
           results[1].responseInfo.adapterResponses;
       expect(responses.first.adapterClassName, 'adapter-name');
       expect(responses.first.latencyMillis, 500);
-      expect(responses.first.message, 'message');
+      expect(responses.first.description, 'message');
       expect(responses.first.credentials, 'credentials');
       expect(responses.first.adError!.code, 1);
       expect(responses.first.adError!.message, 'error-message');

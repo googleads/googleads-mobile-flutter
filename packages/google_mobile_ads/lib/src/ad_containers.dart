@@ -95,7 +95,7 @@ class AdapterResponseInfo {
   AdapterResponseInfo({
     required this.adapterClassName,
     required this.latencyMillis,
-    required this.message,
+    required this.description,
     required this.credentials,
     this.adError,
   });
@@ -109,7 +109,7 @@ class AdapterResponseInfo {
   final int latencyMillis;
 
   /// A log friendly string version of this object.
-  final String message;
+  final String description;
 
   /// A string description of adapter credentials specified in the AdMob or Ad Manager UI
   final String credentials;
@@ -121,7 +121,7 @@ class AdapterResponseInfo {
   String toString() {
     return '$runtimeType(adapterClassName: $adapterClassName, '
         'latencyMillis: $latencyMillis), '
-        'message: $message, '
+        'description: $description, '
         'credentials: $credentials, '
         'adError: $adError)';
   }
