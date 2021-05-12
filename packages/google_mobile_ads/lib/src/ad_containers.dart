@@ -111,7 +111,7 @@ class AdapterResponseInfo {
   /// A log friendly string version of this object.
   final String description;
 
-  /// A string description of adapter credentials specified in the AdMob or Ad Manager UI
+  /// A string description of adapter credentials specified in the AdMob or Ad Manager UI.
   final String credentials;
 
   /// The error that occurred while rendering the ad.
