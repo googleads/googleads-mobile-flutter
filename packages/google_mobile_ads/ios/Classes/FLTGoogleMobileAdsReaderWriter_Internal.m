@@ -30,8 +30,9 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 };
 
 @interface FLTGoogleMobileAdsReader : FlutterStandardReader
-@property (readonly) FLTAdSizeFactory *_Nonnull adSizeFactory;
--(instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory data:(NSData *_Nonnull)data;
+@property(readonly) FLTAdSizeFactory *_Nonnull adSizeFactory;
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory
+                                    data:(NSData *_Nonnull)data;
 @end
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
@@ -42,7 +43,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   return [self initWithFactory:[[FLTAdSizeFactory alloc] init]];
 }
 
--(instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory {
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory {
   self = [super init];
   if (self) {
     _adSizeFactory = adSizeFactory;
@@ -60,7 +61,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 @end
 
 @implementation FLTGoogleMobileAdsReader
--(instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory data:(NSData *_Nonnull)data {
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory
+                                    data:(NSData *_Nonnull)data {
   self = [super initWithData:data];
   if (self) {
     _adSizeFactory = adSizeFactory;
@@ -98,7 +100,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     }
     case FLTAdMobFieldPublisherAdRequest: {
       FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
-      
+
       request.keywords = [self readValueOfType:[self readByte]];
       request.contentURL = [self readValueOfType:[self readByte]];
       request.customTargeting = [self readValueOfType:[self readByte]];
@@ -148,7 +150,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                                                               width:width];
     }
     case FLTAdmobFieldSmartBannerAdSize:
-      return [[FLTSmartBannerSize alloc] initWithOrientation:[self readValueOfType:[self readByte]]];
+      return
+          [[FLTSmartBannerSize alloc] initWithOrientation:[self readValueOfType:[self readByte]]];
   }
   return [super readValueOfType:type];
 }
@@ -158,13 +161,13 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 - (void)writeAdSize:(FLTAdSize *_Nonnull)value {
   if ([value isKindOfClass:[FLTAnchoredAdaptiveBannerSize class]]) {
     [self writeByte:FLTAdmobFieldAnchoredAdaptiveBannerAdSize];
-    FLTAnchoredAdaptiveBannerSize *size = (FLTAnchoredAdaptiveBannerSize *) value;
+    FLTAnchoredAdaptiveBannerSize *size = (FLTAnchoredAdaptiveBannerSize *)value;
     [self writeValue:size.orientation];
     [self writeValue:size.width];
     [self writeValue:size.height];
   } else if ([value isKindOfClass:[FLTSmartBannerSize class]]) {
     [self writeByte:FLTAdmobFieldSmartBannerAdSize];
-    FLTSmartBannerSize *size = (FLTSmartBannerSize *) value;
+    FLTSmartBannerSize *size = (FLTSmartBannerSize *)value;
     [self writeValue:size.orientation];
   } else if ([value isKindOfClass:[FLTAdSize class]]) {
     [self writeByte:FLTAdMobFieldAdSize];

@@ -23,9 +23,7 @@ class FlutterAdSize {
   final int width;
   final int height;
 
-  /**
-   * Wrapper around static methods for {@link com.google.android.gms.ads.AdSize}.
-   */
+  /** Wrapper around static methods for {@link com.google.android.gms.ads.AdSize}. */
   static class AdSizeFactory {
     AdSize getPortraitAnchoredAdaptiveBannerAdSize(Context context, int width) {
       return AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
@@ -40,19 +38,28 @@ class FlutterAdSize {
     final String orientation;
 
     @NonNull
-    private static AdSize getAdSize(@NonNull Context context, @NonNull AdSizeFactory factory, @NonNull String orientation, int width) {
+    private static AdSize getAdSize(
+        @NonNull Context context,
+        @NonNull AdSizeFactory factory,
+        @NonNull String orientation,
+        int width) {
       final AdSize adSize;
       if (orientation.equals("portrait")) {
         adSize = factory.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
       } else if (orientation.equals("landscape")) {
         adSize = factory.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
       } else {
-        throw new IllegalArgumentException("Orientation should be 'portrait' or 'landscape': " + orientation);
+        throw new IllegalArgumentException(
+            "Orientation should be 'portrait' or 'landscape': " + orientation);
       }
       return adSize;
     }
 
-    AnchoredAdaptiveBannerAdSize(@NonNull Context context, @NonNull AdSizeFactory factory, @NonNull String orientation, int width) {
+    AnchoredAdaptiveBannerAdSize(
+        @NonNull Context context,
+        @NonNull AdSizeFactory factory,
+        @NonNull String orientation,
+        int width) {
       super(getAdSize(context, factory, orientation, width));
       this.orientation = orientation;
     }

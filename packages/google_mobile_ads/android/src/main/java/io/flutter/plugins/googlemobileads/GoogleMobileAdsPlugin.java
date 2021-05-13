@@ -370,10 +370,11 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         break;
       case "AdSize#getAnchoredAdaptiveBannerAdSize":
         final FlutterAdSize.AnchoredAdaptiveBannerAdSize size =
-          new FlutterAdSize.AnchoredAdaptiveBannerAdSize(activityBinding.getActivity(),
-            new FlutterAdSize.AdSizeFactory(),
-            call.<String>argument("orientation"),
-            call.<Integer>argument("width"));
+            new FlutterAdSize.AnchoredAdaptiveBannerAdSize(
+                activityBinding.getActivity(),
+                new FlutterAdSize.AdSizeFactory(),
+                call.<String>argument("orientation"),
+                call.<Integer>argument("width"));
         if (size.size == AdSize.INVALID) {
           result.success(null);
         } else {

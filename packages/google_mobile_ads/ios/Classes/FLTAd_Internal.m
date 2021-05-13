@@ -17,7 +17,8 @@
 
 @implementation FLTAdSize
 - (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width height:(NSNumber *_Nonnull)height {
-  return [self initWithAdSize:GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, height.doubleValue))];
+  return
+      [self initWithAdSize:GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, height.doubleValue))];
 }
 
 - (instancetype _Nonnull)initWithAdSize:(GADAdSize)size {
@@ -32,11 +33,11 @@
 @end
 
 @implementation FLTAdSizeFactory
--(GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+- (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
   return GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
 }
 
--(GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+- (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
   return GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
 }
 @end
@@ -54,7 +55,7 @@
     NSLog(@"AdaptiveBanner orientation should be 'portrait' or 'landscape': %@", orientation);
     return nil;
   }
-  
+
   self = [self initWithAdSize:size];
   if (self) {
     _orientation = orientation;
@@ -74,7 +75,7 @@
     NSLog(@"SmartBanner orientation should be 'portrait' or 'landscape': %@", orientation);
     return nil;
   }
-  
+
   self = [self initWithAdSize:size];
   if (self) {
     _orientation = orientation;

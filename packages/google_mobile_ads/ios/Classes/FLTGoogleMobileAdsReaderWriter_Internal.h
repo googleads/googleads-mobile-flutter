@@ -18,6 +18,6 @@
 @class FLTAdSizeFactory;
 
 @interface FLTGoogleMobileAdsReaderWriter : FlutterStandardReaderWriter
-@property (readonly) FLTAdSizeFactory *_Nonnull adSizeFactory;
--(instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory;
+@property(readonly) FLTAdSizeFactory *_Nonnull adSizeFactory;
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory;
 @end

@@ -42,10 +42,8 @@ class AdMessageCodec extends StandardMessageCodec {
   static final byte VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE = (byte) 139;
   static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 140;
 
-  @NonNull
-  final Context context;
-  @NonNull
-  final FlutterAdSize.AdSizeFactory adSizeFactory;
+  @NonNull final Context context;
+  @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
 
   AdMessageCodec(@NonNull Context context) {
     this.context = context;
@@ -53,7 +51,7 @@ class AdMessageCodec extends StandardMessageCodec {
   }
 
   @VisibleForTesting
-  AdMessageCodec(@NonNull Context context, @NonNull  FlutterAdSize.AdSizeFactory adSizeFactory) {
+  AdMessageCodec(@NonNull Context context, @NonNull FlutterAdSize.AdSizeFactory adSizeFactory) {
     this.context = context;
     this.adSizeFactory = adSizeFactory;
   }
@@ -129,7 +127,8 @@ class AdMessageCodec extends StandardMessageCodec {
       case VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE:
         final String orientation = (String) readValueOfType(buffer.get(), buffer);
         final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
-        return new FlutterAdSize.AnchoredAdaptiveBannerAdSize(context, adSizeFactory, orientation, width);
+        return new FlutterAdSize.AnchoredAdaptiveBannerAdSize(
+            context, adSizeFactory, orientation, width);
       case VALUE_SMART_BANNER_AD_SIZE:
         return new FlutterAdSize.SmartBannerAdSize();
       case VALUE_AD_SIZE:
@@ -192,7 +191,8 @@ class AdMessageCodec extends StandardMessageCodec {
   protected void writeAdSize(ByteArrayOutputStream stream, FlutterAdSize value) {
     if (value instanceof FlutterAdSize.AnchoredAdaptiveBannerAdSize) {
       stream.write(VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE);
-      final FlutterAdSize.AnchoredAdaptiveBannerAdSize size = (FlutterAdSize.AnchoredAdaptiveBannerAdSize) value;
+      final FlutterAdSize.AnchoredAdaptiveBannerAdSize size =
+          (FlutterAdSize.AnchoredAdaptiveBannerAdSize) value;
       writeValue(stream, size.orientation);
       writeValue(stream, size.width);
       writeValue(stream, size.height);

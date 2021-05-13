@@ -14,22 +14,18 @@
 
 package io.flutter.plugins.googlemobileads;
 
-import android.content.Context;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.ads.AdSize;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
+import android.content.Context;
+import androidx.annotation.NonNull;
+import com.google.android.gms.ads.AdSize;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,7 +44,8 @@ public class AdMessageCodecTest {
         // Unused to create a new instance when reading the value from Dart.
         // This is for the purpose of testing the writer.
         final Integer height = (Integer) readValueOfType(buffer.get(), buffer);
-        return new FlutterAdSize.AnchoredAdaptiveBannerAdSize(context, adSizeFactory, orientation, width);
+        return new FlutterAdSize.AnchoredAdaptiveBannerAdSize(
+            context, adSizeFactory, orientation, width);
       } else {
         return super.readValueOfType(type, buffer);
       }
@@ -62,12 +59,13 @@ public class AdMessageCodecTest {
   @Before
   public void setup() {
     mockAdSize = mock(AdSize.class);
-    testAdFactory = new FlutterAdSize.AdSizeFactory() {
-      @Override
-      AdSize getPortraitAnchoredAdaptiveBannerAdSize(Context context, int width) {
-        return mockAdSize;
-      }
-    };
+    testAdFactory =
+        new FlutterAdSize.AdSizeFactory() {
+          @Override
+          AdSize getPortraitAnchoredAdaptiveBannerAdSize(Context context, int width) {
+            return mockAdSize;
+          }
+        };
     testCodec = new TestMessageCodec(null, testAdFactory);
   }
 
@@ -184,11 +182,13 @@ public class AdMessageCodecTest {
 
   @Test
   public void adMessageCodec_encodeAnchoredAdaptiveBannerAdSize() {
-    final FlutterAdSize.AnchoredAdaptiveBannerAdSize adaptiveAdSize = new FlutterAdSize.AnchoredAdaptiveBannerAdSize(null, testAdFactory, "portrait", 23);
+    final FlutterAdSize.AnchoredAdaptiveBannerAdSize adaptiveAdSize =
+        new FlutterAdSize.AnchoredAdaptiveBannerAdSize(null, testAdFactory, "portrait", 23);
     final ByteBuffer data = testCodec.encodeMessage(adaptiveAdSize);
 
     final FlutterAdSize.AnchoredAdaptiveBannerAdSize result =
-      (FlutterAdSize.AnchoredAdaptiveBannerAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
+        (FlutterAdSize.AnchoredAdaptiveBannerAdSize)
+            testCodec.decodeMessage((ByteBuffer) data.position(0));
     assertEquals(result.size, mockAdSize);
   }
 
@@ -197,7 +197,7 @@ public class AdMessageCodecTest {
     final ByteBuffer data = testCodec.encodeMessage(new FlutterAdSize.SmartBannerAdSize());
 
     final FlutterAdSize.SmartBannerAdSize result =
-      (FlutterAdSize.SmartBannerAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
+        (FlutterAdSize.SmartBannerAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
     assertEquals(result.size, AdSize.SMART_BANNER);
   }
 }

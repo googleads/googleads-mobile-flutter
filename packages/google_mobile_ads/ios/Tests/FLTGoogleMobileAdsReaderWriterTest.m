@@ -26,7 +26,7 @@
 @end
 
 @interface FLTTestAdSizeFactory : FLTAdSizeFactory
-@property (readonly) GADAdSize testAdSize;
+@property(readonly) GADAdSize testAdSize;
 @end
 
 @implementation FLTGoogleMobileAdsReaderWriterTest {
@@ -35,7 +35,8 @@
 }
 
 - (void)setUp {
-  _readerWriter = [[FLTGoogleMobileAdsReaderWriter alloc] initWithFactory:[[FLTTestAdSizeFactory alloc] init]];
+  _readerWriter =
+      [[FLTGoogleMobileAdsReaderWriter alloc] initWithFactory:[[FLTTestAdSizeFactory alloc] init]];
   _messageCodec = [FlutterStandardMessageCodec codecWithReaderWriter:_readerWriter];
 }
 
@@ -54,9 +55,10 @@
   FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
   OCMStub([factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:@(23)]).andReturn(testAdSize);
 
-  FLTAnchoredAdaptiveBannerSize *size = [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory
-                                                                                   orientation:@"portrait"
-                                                                                         width:@(23)];
+  FLTAnchoredAdaptiveBannerSize *size =
+      [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory
+                                                 orientation:@"portrait"
+                                                       width:@(23)];
   NSData *encodedMessage = [_messageCodec encode:size];
 
   FLTAnchoredAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
@@ -66,10 +68,10 @@
 
 - (void)testEncodeDecodeSmartBannerAdSize {
   FLTSmartBannerSize *size = [[FLTSmartBannerSize alloc] initWithOrientation:@"landscape"];
-  
+
   NSData *encodedMessage = [_messageCodec encode:size];
   FLTSmartBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
-  
+
   XCTAssertTrue([decodedSize isKindOfClass:FLTSmartBannerSize.class]);
   XCTAssertEqual(decodedSize.size.size.width, kGADAdSizeSmartBannerPortrait.size.width);
   XCTAssertEqual(decodedSize.size.size.height, kGADAdSizeSmartBannerPortrait.size.height);

@@ -27,7 +27,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.app.Activity;
-
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
@@ -212,20 +211,19 @@ public class GoogleMobileAdsTest {
 
     final ArgumentCaptor<PublisherAdRequest> captor =
         ArgumentCaptor.forClass(PublisherAdRequest.class);
-    verify(mockPublisherAd)
-        .loadAd(captor.capture(), any(RewardedAdLoadCallback.class));
+    verify(mockPublisherAd).loadAd(captor.capture(), any(RewardedAdLoadCallback.class));
     ArgumentMatcher<ServerSideVerificationOptions> serverSideVerificationOptionsArgumentMatcher =
         new ArgumentMatcher<ServerSideVerificationOptions>() {
           @Override
           public boolean matches(ServerSideVerificationOptions argument) {
-            final ServerSideVerificationOptions verificationOptions = (ServerSideVerificationOptions) argument;
+            final ServerSideVerificationOptions verificationOptions =
+                (ServerSideVerificationOptions) argument;
             return verificationOptions.getCustomData().equals(options.getCustomData())
-              && verificationOptions.getUserId().equals(options.getUserId());
+                && verificationOptions.getUserId().equals(options.getUserId());
           }
         };
     verify(mockPublisherAd)
-        .setServerSideVerificationOptions(
-            argThat(serverSideVerificationOptionsArgumentMatcher));
+        .setServerSideVerificationOptions(argThat(serverSideVerificationOptionsArgumentMatcher));
     assertEquals(captor.getValue(), mockRequest);
   }
 
@@ -247,8 +245,7 @@ public class GoogleMobileAdsTest {
 
     final ArgumentCaptor<PublisherAdRequest> captor =
         ArgumentCaptor.forClass(PublisherAdRequest.class);
-    verify(mockPublisherAd)
-        .loadAd(captor.capture(), any(RewardedAdLoadCallback.class));
+    verify(mockPublisherAd).loadAd(captor.capture(), any(RewardedAdLoadCallback.class));
     ArgumentMatcher<ServerSideVerificationOptions> serverSideVerificationOptionsArgumentMatcher =
         new ArgumentMatcher<ServerSideVerificationOptions>() {
           @Override
@@ -258,8 +255,7 @@ public class GoogleMobileAdsTest {
           }
         };
     verify(mockPublisherAd)
-        .setServerSideVerificationOptions(
-            argThat(serverSideVerificationOptionsArgumentMatcher));
+        .setServerSideVerificationOptions(argThat(serverSideVerificationOptionsArgumentMatcher));
     assertEquals(captor.getValue(), mockRequest);
   }
 
