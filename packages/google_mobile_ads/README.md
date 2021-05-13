@@ -258,8 +258,6 @@ final BannerAdListener listener = BannerAdListener(
  onAdOpened: (Ad ad) => print('Ad opened.'),
  // Called when an ad removes an overlay that covers the screen.
  onAdClosed: (Ad ad) => print('Ad closed.'),
- // For iOS only. Called before dismissing a full screen view.
- onAdWillDismissScreen: (Ad ad) => print('Ad will dismiss screen.'),
  // Called when an impression occurs on the ad.
  onAdImpression: (Ad ad) => print('Ad impression.'),
 );
@@ -345,14 +343,14 @@ InterstitialAd.load(
 
 #### Interstitial Ad Events
 
-Through the use of `FullScreenContentCallback`, you can listen for lifecycle events, such as when the ad is shown or closed. 
+Through the use of `FullScreenContentCallback`, you can listen for lifecycle events, such as when the ad is shown or dismissed. 
 Set `InterstitialAd.fullScreenContentCallback` before showing the ad to receive notifications for these events. This example implements each method and logs a message to the console:
 
 
 ```dart
 interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
   onAdShowedFullScreenContent: (InterstitialAd ad) =>
-     print('ad onAdShowedFullScreenContent.'),
+     print('$ad onAdShowedFullScreenContent.'),
   onAdDismissedFullScreenContent: (InterstitialAd ad) {
     print('$ad onAdDismissedFullScreenContent.');
     ad.dispose();
@@ -362,22 +360,21 @@ interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
     ad.dispose();
   },
   onAdImpression: (InterstitialAd ad) => print('$ad impression occurred.'),
-  onAdWillDismissFullScreenContent: (InterstitialAd ad) => print('$ad onAdWillDismissFullScreenContent'),
 );
 ```
 
 
 ### Display an Interstitial Ad
 
-An `InterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the ad by calling `show()` after the ad is loaded.
+An `InterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the ad by calling `show()`.
 
 ```dart
 myInterstitial.show();
 ```
 
-This method should only be called after `InterstitialAdLoadCallback.onAdLoaded()` has been triggered. Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and requires user input. Do not call `show()` more than once for a loaded `InterstitialAd`. Instead you should load a new ad.
+Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and requires user input. An `InterstitialAd` can only be shown once. Subsequent calls to show will trigger `onAdFailedToShowFullScreenContent`.
 
-Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `InterstitialAdLoadCallback.onAdFailedtoLoad`, `FullScreenContentCallback.onAdDismissedFullScreenContent`, and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
+Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `InterstitialAdLoadCallback.onAdFailedToLoad`, `FullScreenContentCallback.onAdDismissedFullScreenContent`, and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
 
 That's it! Your app is now ready to display interstitial ads.
 
@@ -655,8 +652,6 @@ final NativeAdListener listener = NativeAdListener(
  onAdOpened: (Ad ad) => print('Ad opened.'),
  // Called when an ad removes an overlay that covers the screen.
  onAdClosed: (Ad ad) => print('Ad closed.'),
- // For iOS only. Called before dismissing a full screen view.
- onAdWillDismissScreen: (Ad ad) => print('Ad will dismiss screen.'),
  // Called when an impression occurs on the ad.
  onAdImpression: (Ad ad) => print('Ad impression.'),
  // Called when a click is recorded for a NativeAd.
@@ -748,14 +743,14 @@ RewardedAd.load(
 
 #### Rewarded Ad Events
 
-Through the use of `FullScreenContentCallback`, you can listen for lifecycle events, such as when the ad is shown or closed. 
-Set `RewardeedAd.fullScreenContentCallback` before showing the ad to receive notifications for these events. This example implements each method and logs a message to the console:
+Through the use of `FullScreenContentCallback`, you can listen for lifecycle events, such as when the ad is shown or dismissed. 
+Set `RewardedAd.fullScreenContentCallback` before showing the ad to receive notifications for these events. This example implements each method and logs a message to the console:
 
 
 ```dart
 rewardedAd.fullScreenContentCallback = FullScreenContentCallback(
   onAdShowedFullScreenContent: (RewardedAd ad) =>
-     print('ad onAdShowedFullScreenContent.'),
+     print('$ad onAdShowedFullScreenContent.'),
   onAdDismissedFullScreenContent: (RewardedAd ad) {
     print('$ad onAdDismissedFullScreenContent.');
     ad.dispose();
@@ -765,14 +760,13 @@ rewardedAd.fullScreenContentCallback = FullScreenContentCallback(
     ad.dispose();
   },
   onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
-  onAdWillDismissFullScreenContent: (RewardedAd ad) => print('$ad onAdWillDismissFullScreenContent'),
 );
 ```
 
 
 ### Display a RewardedAd
 
-A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the ad by calling `show()` after the ad is loaded.
+A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the ad by calling `show()`.
 `RewardedAd.show()` takes an `OnUserEarnedRewardCallback`, which is invoked when the user earns a reward. Be sure to implement this and reward the user for watching an ad.
 
 ```dart
@@ -781,9 +775,9 @@ myRewarded.show(onUserEarnedReward: (RewardedAd ad, RewardItem rewardItem) {
 });
 ```
 
-This method should only be called after `load()` and the `AdListener.onAdLoaded` method has been triggered. Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and require user input.  Do not call `show()` more than once for a loaded `RewardedAd`. Instead you should load a new ad.
+Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and require user input. An `RewardedAd` can only be shown once. Subsequent calls to show will trigger `onAdFailedToShowFullScreenContent`.
 
-Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `RewardedAdLoadCallback.onAdFailedtoLoad`, `FullScreenContentCallback.onAdDismissedFullScreenContent`, and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
+Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `RewardedAdLoadCallback.onAdFailedToLoad`, `FullScreenContentCallback.onAdDismissedFullScreenContent`, and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
 
 That's it! Your app is now ready to display rewarded ads.
 
@@ -944,8 +938,6 @@ final AdManagerBannerAdListener listener = AdManagerBannerAdListener(
  onAdOpened: (Ad ad) => print('Ad opened.'),
  // Called when an ad removes an overlay that covers the screen.
  onAdClosed: (Ad ad) => print('Ad closed.'),
- // For iOS only. Called before dismissing a full screen view.
- onAdWillDismissScreen: (Ad ad) => print('Ad will dismiss screen.'),
  // Called when an impression occurs on the ad.
  onAdImpression: (Ad ad) => print('Ad impression.'),
 );
@@ -1030,14 +1022,14 @@ AdManagerInterstitialAd.load(
 
 #### Interstitial Ad Events
 
-Through the use of `FullScreenContentCallback`, you can listen for lifecycle events, such as when the ad is shown or closed. 
+Through the use of `FullScreenContentCallback`, you can listen for lifecycle events, such as when the ad is shown or dismissed. 
 Set `AdManagerInterstitialAd.fullScreenContentCallback` before showing the ad to receive notifications for these events. This example implements each method and logs a message to the console:
 
 
 ```dart
 interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
   onAdShowedFullScreenContent: (InterstitialAd ad) =>
-     print('ad onAdShowedFullScreenContent.'),
+     print('$ad onAdShowedFullScreenContent.'),
   onAdDismissedFullScreenContent: (InterstitialAd ad) {
     print('$ad onAdDismissedFullScreenContent.');
     ad.dispose();
@@ -1047,22 +1039,21 @@ interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
     ad.dispose();
   },
   onAdImpression: (InterstitialAd ad) => print('$ad impression occurred.'),
-  onAdWillDismissFullScreenContent: (InterstitialAd ad) => print('$ad onAdWillDismissFullScreenContent'),
 );
 ```
 
 
 ### Display an Interstitial Ad
 
-A `AdManagerInterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the ad by calling `show()` after the ad is loaded.
+A `AdManagerInterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the ad by calling `show()`.
 
 ```dart
 myInterstitial.show();
 ```
 
-This method should only be called after `AdManagerInterstitialAdLoadCallback.onAdLoaded()` has been triggered. Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and requires user input. Do not call `show()` more than once for a loaded `InterstitialAd`. Instead you should load a new ad.
+Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and requires user input. An `InterstitialAd` can only be shown once. Subsequent calls to show will trigger `onAdFailedToShowFullScreenContent`.
 
-Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `AdManagerInterstitialAdLoadCallback.onAdFailedtoLoad`, `FullScreenContentCallback.onAdDismissedFullScreenContent`, and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
+Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `AdManagerInterstitialAdLoadCallback.onAdFailedToLoad`, `FullScreenContentCallback.onAdDismissedFullScreenContent`, and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
 
 That's it! Your app is now ready to display interstitial ads.
 
@@ -1339,8 +1330,6 @@ final NativeAdListener listener = NativeAdListener(
  onAdOpened: (Ad ad) => print('Ad opened.'),
  // Called when an ad removes an overlay that covers the screen.
  onAdClosed: (Ad ad) => print('Ad closed.'),
- // For iOS only. Called before dismissing a full screen view.
- onAdWillDismissScreen: (Ad ad) => print('Ad will dismiss screen.'),
  // Called when an impression occurs on the ad.
  onAdImpression: (Ad ad) => print('Ad impression.'),
  // Called when a click is recorded for a NativeAd.
@@ -1431,14 +1420,14 @@ RewardedAd.loadWithAdManagerAdRequest(
 
 #### Rewarded Ad Events
 
-Through the use of `FullScreenContentCallback`, you can listen for lifecycle events, such as when the ad is shown or closed. 
-Set `RewardeedAd.fullScreenContentCallback` before showing the ad to receive notifications for these events. This example implements each method and logs a message to the console:
+Through the use of `FullScreenContentCallback`, you can listen for lifecycle events, such as when the ad is shown or dismissed. 
+Set `RewardedAd.fullScreenContentCallback` before showing the ad to receive notifications for these events. This example implements each method and logs a message to the console:
 
 
 ```dart
 rewardedAd.fullScreenContentCallback = FullScreenContentCallback(
   onAdShowedFullScreenContent: (RewardedAd ad) =>
-     print('ad onAdShowedFullScreenContent.'),
+     print('$ad onAdShowedFullScreenContent.'),
   onAdDismissedFullScreenContent: (RewardedAd ad) {
     print('$ad onAdDismissedFullScreenContent.');
     ad.dispose();
@@ -1448,14 +1437,14 @@ rewardedAd.fullScreenContentCallback = FullScreenContentCallback(
     ad.dispose();
   },
   onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
-  onAdWillDismissFullScreenContent: (RewardedAd ad) => print('$ad onAdWillDismissFullScreenContent'),
 );
 ```
 
 
 ### Display a RewardedAd
 
-A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the ad by calling `show()` after the ad is loaded.
+A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the ad by calling `show()`.
+A `RewardedAd` can only be shown once. Subsequent calls to show will trigger `onAdFailedToShowFullScreenContent`.
 `RewardedAd.show()` takes an `OnUserEarnedRewardCallback`, which is invoked when the user earns a reward. Be sure to implement this and reward the user for watching an ad.
 
 
@@ -1465,9 +1454,9 @@ myRewarded.show(onUserEarnedReward: (RewardedAd ad, RewardItem rewardItem) {
 });
 ```
 
-This method should only be called after `load()` and the `AdListener.onAdLoaded` method has been triggered. Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and require user input.  Do not call `show()` more than once for a loaded `RewardedAd`. Instead you should load a new ad.
+Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and require user input.  Do not call `show()` more than once for a loaded `RewardedAd`. Instead you should load a new ad.
 
-Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `RewardedAdLoadCallback.onAdFailedtoLoad`, `FullScreenContentCallback.onAdDismissedFullScreenContent`, and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
+Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `RewardedAdLoadCallback.onAdFailedToLoad`, `FullScreenContentCallback.onAdDismissedFullScreenContent`, and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
 
 That's it! Your app is now ready to display rewarded ads.
 
@@ -1566,7 +1555,7 @@ execution.
 For each ad network in the waterfall, `AdapterResponseInfo` provides the following
 properties:
 
-<table style="max-width: 70%;">
+<table>
   <tr>
     <th>Property</th>
     <th>Description</th>
