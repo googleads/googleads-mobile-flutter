@@ -15,9 +15,12 @@
 package io.flutter.plugins.googlemobileads;
 
 import static org.hamcrest.Matchers.hasEntry;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -47,6 +50,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+/** Tests {@link AdInstanceManager}. */
 public class GoogleMobileAdsTest {
   private AdInstanceManager testManager;
   private final FlutterAdRequest request = new FlutterAdRequest.Builder().build();

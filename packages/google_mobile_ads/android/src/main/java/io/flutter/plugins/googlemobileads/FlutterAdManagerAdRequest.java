@@ -135,8 +135,11 @@ class FlutterAdManagerAdRequest {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof FlutterAdManagerAdRequest)) return false;
+    if (this == o) {
+      return true;
+    } else if (!(o instanceof FlutterAdManagerAdRequest)) {
+      return false;
+    }
 
     FlutterAdManagerAdRequest request = (FlutterAdManagerAdRequest) o;
 

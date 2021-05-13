@@ -29,6 +29,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
+/** Tests for {@link AdMessageCodec}. */
 public class AdMessageCodecTest {
   static class TestMessageCodec extends AdMessageCodec {
     TestMessageCodec(@NonNull Context context, @NonNull FlutterAdSize.AdSizeFactory adSizeFactory) {

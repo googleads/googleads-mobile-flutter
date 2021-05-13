@@ -41,6 +41,7 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+/** Tests for {@link FlutterAdManagerInterstitialAd}. */
 public class FlutterAdManagerInterstitialAdTest {
 
   private AdInstanceManager mockManager;
