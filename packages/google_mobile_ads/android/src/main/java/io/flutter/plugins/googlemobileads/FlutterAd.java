@@ -40,7 +40,7 @@ abstract class FlutterAd {
     FlutterResponseInfo(@NonNull ResponseInfo responseInfo) {
       this.responseId = responseInfo.getResponseId();
       this.mediationAdapterClassName = responseInfo.getMediationAdapterClassName();
-      List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
+      final List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
       for (AdapterResponseInfo adapterInfo: responseInfo.getAdapterResponses()) {
         adapterResponseInfos.add(new FlutterAdapterResponseInfo(adapterInfo));
       }
@@ -226,7 +226,7 @@ abstract class FlutterAd {
       message = error.getMessage();
 
       if (error.getResponseInfo() != null) {
-        List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
+        final List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
         for (AdapterResponseInfo adapterInfo: error.getResponseInfo().getAdapterResponses()) {
           adapterResponseInfos.add(new FlutterAdapterResponseInfo(adapterInfo));
         }
