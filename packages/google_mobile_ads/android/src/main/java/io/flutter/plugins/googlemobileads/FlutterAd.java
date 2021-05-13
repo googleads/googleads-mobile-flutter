@@ -98,21 +98,27 @@ abstract class FlutterAd {
     private final long latencyMillis;
     @NonNull private final String description;
     @NonNull private final String credentials;
-    @Nullable private final FlutterAdError error;
+    @Nullable private FlutterAdError error;
 
     FlutterAdapterResponseInfo(@NonNull AdapterResponseInfo responseInfo) {
       this.adapterClassName = responseInfo.getAdapterClassName();
       this.latencyMillis = responseInfo.getLatencyMillis();
       this.description = responseInfo.toString();
-      this.credentials = responseInfo.getCredentials().toString();
-      this.error = new FlutterAdError(responseInfo.getAdError());
+      if (responseInfo.getCredentials() != null) {
+        this.credentials = responseInfo.getCredentials().toString();
+      } else {
+        credentials = "unknown credentials";
+      }
+      if (responseInfo.getAdError() != null) {
+        this.error = new FlutterAdError(responseInfo.getAdError());
+      }
     }
 
     FlutterAdapterResponseInfo(
       @NonNull String adapterClassName,
       long latencyMillis,
       @NonNull String description,
-      @NonNull String credentials,
+      @Nullable String credentials,
       @Nullable FlutterAdError error
     ) {
       this.adapterClassName = adapterClassName;
@@ -226,14 +232,7 @@ abstract class FlutterAd {
       message = error.getMessage();
 
       if (error.getResponseInfo() != null) {
-        final List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
-        for (AdapterResponseInfo adapterInfo: error.getResponseInfo().getAdapterResponses()) {
-          adapterResponseInfos.add(new FlutterAdapterResponseInfo(adapterInfo));
-        }
-        responseInfo = new FlutterResponseInfo(
-            error.getResponseInfo().getResponseId(),
-            error.getResponseInfo().getMediationAdapterClassName(),
-            adapterResponseInfos);
+        responseInfo = new FlutterResponseInfo(error.getResponseInfo());
       }
     }
 

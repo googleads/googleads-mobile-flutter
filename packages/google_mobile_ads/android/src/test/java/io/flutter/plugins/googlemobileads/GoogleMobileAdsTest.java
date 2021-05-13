@@ -231,8 +231,16 @@ public class GoogleMobileAdsTest {
     doReturn(credentials).when(adapterInfo).getCredentials();
     doReturn("description").when(adapterInfo).toString();
 
+    AdapterResponseInfo adapterInfoWithNullError = mock(AdapterResponseInfo.class);
+    doReturn("adapter-class").when(adapterInfoWithNullError).getAdapterClassName();
+    doReturn(null).when(adapterInfoWithNullError).getAdError();
+    doReturn(123L).when(adapterInfoWithNullError).getLatencyMillis();
+    doReturn(null).when(adapterInfoWithNullError).getCredentials();
+    doReturn("description").when(adapterInfoWithNullError).toString();
+
     List<AdapterResponseInfo> adapterResponses = new ArrayList<>();
     adapterResponses.add(adapterInfo);
+    adapterResponses.add(adapterInfoWithNullError);
 
     ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn("response-id").when(responseInfo).getResponseId();
