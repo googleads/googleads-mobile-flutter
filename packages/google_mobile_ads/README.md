@@ -1,5 +1,7 @@
 # Google Mobile Ads for Flutter
 
+[![google_mobile_ads](https://github.com/googleads/googleads-mobile-flutter/actions/workflows/google_mobile_ads.yaml/badge.svg)](https://github.com/googleads/googleads-mobile-flutter/actions/workflows/google_mobile_ads.yaml)
+
 This guide is intended for publishers who want to monetize a [Flutter](https://flutter.dev/) app.
 
 Integrating Google Mobile Ads SDK into a Flutter app, which you will do here, is the first step towards displaying AdMob ads and earning revenue. Once the integration is complete, you can choose an ad format to get detailed implementation steps.
@@ -225,6 +227,11 @@ The table below lists the standard banner sizes.
    </td>
    <td>Use <code>getSmartBanner(Orientation)</code>
    </td>
+  </tr>
+  <tr>
+   <td>Provided width x Adaptive height</td>
+   <td><a href="https://developers.google.com/admob/android/banner/adaptive">Adaptive Banner</a></td>
+   <td>Use <code>getAnchoredAdaptiveBannerAdSize(Orientation, int)</code></td>
   </tr>
 </table>
 
