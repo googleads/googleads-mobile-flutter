@@ -369,7 +369,7 @@ interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
 
 ### Display an Interstitial Ad
 
-An `InterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the add by calling `show()` after the ad is loaded.
+An `InterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the ad by calling `show()` after the ad is loaded.
 
 ```dart
 myInterstitial.show();
@@ -409,7 +409,7 @@ Since Native Ads require UI components native to a platform, this feature requir
 
 #### Android
 
-The Android implementation of the Google Mobile Ads plugin requires a class thatNativeAdView implements a `NativeAdFactory`. A `NativeAdFactory` contains a method that takes a [NativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAd) and custom options and returns a [NativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView). The [](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView) is what will be displayed in your app.
+The Android implementation of the Google Mobile Ads plugin requires a class that implements a `NativeAdFactory`. A `NativeAdFactory` contains a method that takes a [NativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAd) and custom options and returns a [NativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView). The [NativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView) is what will be displayed in your app.
 
 You can implement this in your MainActivity.java or create a separate class in the same directory as MainActivity.java as seen below:
 
@@ -772,7 +772,7 @@ rewardedAd.fullScreenContentCallback = FullScreenContentCallback(
 
 ### Display a RewardedAd
 
-A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the add by calling `show()` after the ad is loaded.
+A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the ad by calling `show()` after the ad is loaded.
 `RewardedAd.show()` takes an `OnUserEarnedRewardCallback`, which is invoked when the user earns a reward. Be sure to implement this and reward the user for watching an ad.
 
 ```dart
@@ -1013,7 +1013,6 @@ Loading an `AdManagerInterstitialAd` requires an `adUnitId`, an `AdRequest`, and
 
 
 ```dart
-
 AdManagerInterstitialAd.load(
   adUnitId: '<ad unit id>',
   request: AdRequest(),
@@ -1055,7 +1054,7 @@ interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
 
 ### Display an Interstitial Ad
 
-A `AdManagerInterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the add by calling `show()` after the ad is loaded.
+A `AdManagerInterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the ad by calling `show()` after the ad is loaded.
 
 ```dart
 myInterstitial.show();
@@ -1456,7 +1455,7 @@ rewardedAd.fullScreenContentCallback = FullScreenContentCallback(
 
 ### Display a RewardedAd
 
-A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the add by calling `show()` after the ad is loaded.
+A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the ad by calling `show()` after the ad is loaded.
 `RewardedAd.show()` takes an `OnUserEarnedRewardCallback`, which is invoked when the user earns a reward. Be sure to implement this and reward the user for watching an ad.
 
 
@@ -1569,33 +1568,33 @@ properties:
 
 <table style="max-width: 70%;">
   <tr>
-   <th>Property</th>
-   <th>Description</th>
+    <th>Property</th>
+    <th>Description</th>
   </tr>
   <tr>
-   <td>adapterClassName</td>
-   <td>A class name that identifies the ad network.</td>
+    <td>adapterClassName</td>
+    <td>A class name that identifies the ad network.</td>
   </tr>
   <tr>
-   <td>credentials</td>
-   <td> A string description of adapter credentials specified in the AdMob or Ad 
+    <td>credentials</td>
+    <td> A string description of adapter credentials specified in the AdMob or Ad 
      Manager UI.
-   </td>
+    </td>
   </tr>
   <tr>
-   <td>adError</td>
-   <td>Error associated with the request to the network. Null if the network
-    successfully loaded an ad or if the network was not attempted.</td>
+    <td>adError</td>
+    <td>Error associated with the request to the network. Null if the network
+      successfully loaded an ad or if the network was not attempted.</td>
   </tr>
   <tr>
-   <td>latencyMillis</td>
-   <td>Amount of time the ad network spent loading an ad. <code>0</code> if the
+    <td>latencyMillis</td>
+    <td>Amount of time the ad network spent loading an ad. <code>0</code> if the
     network was not attempted.</td>
   </tr>
   <tr>
-   <td>description</td>
-   <td>A log friendly string version of the AdapterResponseInfo.</td>
-   </tr>
+    <td>description</td>
+    <td>A log friendly string version of the AdapterResponseInfo.</td>
+  </tr>
 </table>
 
 ## Ad Load Errors
