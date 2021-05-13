@@ -305,13 +305,13 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueAdapterStatus = 136;
   static const int _valueInitializationStatus = 137;
   static const int _valueServerSideVerificationOptions = 138;
+  static const int _valueAnchoredAdaptiveBannerAdSize = 139;
+  static const int _valueSmartBannerAdSize = 140;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
     if (value is AdSize) {
-      buffer.putUint8(_valueAdSize);
-      writeValue(buffer, value.width);
-      writeValue(buffer, value.height);
+      writeAdSize(buffer, value);
     } else if (value is AdRequest) {
       buffer.putUint8(_valueAdRequest);
       writeValue(buffer, value.keywords);
@@ -357,6 +357,28 @@ class AdMessageCodec extends StandardMessageCodec {
   @override
   dynamic readValueOfType(dynamic type, ReadBuffer buffer) {
     switch (type) {
+      case _valueAnchoredAdaptiveBannerAdSize:
+        final String orientationStr =
+            readValueOfType(buffer.getUint8(), buffer);
+        final num width = readValueOfType(buffer.getUint8(), buffer);
+        final num height = readValueOfType(buffer.getUint8(), buffer);
+        return AnchoredAdaptiveBannerAdSize(
+          Orientation.values.firstWhere(
+            (Orientation orientation) =>
+                describeEnum(orientation) == orientationStr,
+          ),
+          width: width.truncate(),
+          height: height.truncate(),
+        );
+      case _valueSmartBannerAdSize:
+        final String orientationStr =
+            readValueOfType(buffer.getUint8(), buffer);
+        return SmartBannerAdSize(
+          Orientation.values.firstWhere(
+            (Orientation orientation) =>
+                describeEnum(orientation) == orientationStr,
+          ),
+        );
       case _valueAdSize:
         return AdSize(
           width: readValueOfType(buffer.getUint8(), buffer),
@@ -435,6 +457,24 @@ class AdMessageCodec extends StandardMessageCodec {
         value?.cast<T>(),
       ),
     );
+  }
+
+  void writeAdSize(WriteBuffer buffer, AdSize value) {
+    if (value is AnchoredAdaptiveBannerAdSize) {
+      buffer.putUint8(_valueAnchoredAdaptiveBannerAdSize);
+      writeValue(buffer, describeEnum(value.orientation));
+      writeValue(buffer, value.width);
+      writeValue(buffer, value.height);
+    } else if (value is SmartBannerAdSize) {
+      buffer.putUint8(_valueSmartBannerAdSize);
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        writeValue(buffer, describeEnum(value.orientation));
+      }
+    } else {
+      buffer.putUint8(_valueAdSize);
+      writeValue(buffer, value.width);
+      writeValue(buffer, value.height);
+    }
   }
 }
 

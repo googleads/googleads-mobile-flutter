@@ -142,6 +142,36 @@ class PublisherAdRequest {
   }
 }
 
+/// An [AdSize] with the given width and a Google-optimized height to create a banner ad.
+///
+/// See:
+///   [AdSize.getAnchoredAdaptiveBannerAdSize].
+class AnchoredAdaptiveBannerAdSize extends AdSize {
+  /// Default constructor for [AnchoredAdaptiveBannerAdSize].
+  ///
+  /// This constructor should only be used internally.
+  ///
+  /// See:
+  ///   [AdSize.getAnchoredAdaptiveBannerAdSize].
+  AnchoredAdaptiveBannerAdSize(
+    this.orientation, {
+    required int width,
+    required int height,
+  }) : super(width: width, height: height);
+
+  /// Orientation of the device used by the SDK to automatically find the correct height.
+  final Orientation orientation;
+}
+
+/// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
+class SmartBannerAdSize extends AdSize {
+  /// Default constructor for [SmartBannerAdSize].
+  SmartBannerAdSize(this.orientation) : super(width: -1, height: -1);
+
+  /// Orientation of the device used by the SDK to automatically find the correct height.
+  final Orientation orientation;
+}
+
 /// [AdSize] represents the size of a banner ad.
 ///
 /// There are six sizes available, which are the same for both iOS and Android.
@@ -177,39 +207,46 @@ class AdSize {
   static const AdSize leaderboard = AdSize(width: 728, height: 90);
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
-  static AdSize getSmartBanner(Orientation orientation) {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      return smartBanner;
-    } else if (defaultTargetPlatform == TargetPlatform.iOS &&
-        orientation == Orientation.portrait) {
-      return smartBannerPortrait;
-    } else if (defaultTargetPlatform == TargetPlatform.iOS &&
-        orientation == Orientation.landscape) {
-      return smartBannerLandscape;
-    }
-
-    throw AssertionError('Only supported on Android and iOS.');
+  ///
+  /// Width of the current device can be found using:
+  /// `MediaQuery.of(context).size.width.truncate()`.
+  ///
+  /// Returns `null` if a proper height could not be found for the device or
+  /// window.
+  static Future<AnchoredAdaptiveBannerAdSize?> getAnchoredAdaptiveBannerAdSize(
+    Orientation orientation,
+    int width,
+  ) async {
+    return await instanceManager.channel
+        .invokeMethod<AnchoredAdaptiveBannerAdSize?>(
+      'AdSize#getAnchoredAdaptiveBannerAdSize',
+      <String, Object>{
+        'orientation': describeEnum(orientation),
+        'width': width,
+      },
+    );
   }
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in either orientation on Android.
-  // Android expects a width and height of -1 represents a smart banner.
   static AdSize get smartBanner {
     assert(defaultTargetPlatform == TargetPlatform.android);
-    return AdSize(width: -1, height: -1);
+    // Orientation is not used on Android.
+    return smartBannerPortrait;
   }
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in portrait on iOS.
-  // iOS expects a width of -1 and a height of -2 represents a portrait smart banner.
   static AdSize get smartBannerPortrait {
-    assert(defaultTargetPlatform == TargetPlatform.iOS);
-    return AdSize(width: -1, height: -2);
+    return getSmartBanner(Orientation.portrait);
   }
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in landscape on iOS.
-  // iOS expects a width of -1 and a height of -2 represents a landscape smart banner.
   static AdSize get smartBannerLandscape {
-    assert(defaultTargetPlatform == TargetPlatform.iOS);
-    return AdSize(width: -1, height: -3);
+    return getSmartBanner(Orientation.landscape);
+  }
+
+  /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
+  static SmartBannerAdSize getSmartBanner(Orientation orientation) {
+    return SmartBannerAdSize(orientation);
   }
 
   @override

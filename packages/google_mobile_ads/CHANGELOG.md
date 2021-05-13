@@ -1,3 +1,7 @@
+## 0.12.2
+
+* Add support for anchored adaptive banners.
+
 ## 0.12.1+1
 
 * Fixes a [crash with Swift based native ads](https://github.com/googleads/googleads-mobile-flutter/issues/121)
