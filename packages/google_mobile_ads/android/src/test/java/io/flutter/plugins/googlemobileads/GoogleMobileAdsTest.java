@@ -251,6 +251,27 @@ public class GoogleMobileAdsTest {
   }
 
   @Test
+  public void flutterAdListener_onAdLoaded_responseInfoNull() {
+    final FlutterBannerAd bannerAd = new FlutterBannerAd(
+        testManager,
+        "testId",
+        request,
+        new FlutterAdSize(1, 2),
+        new BannerAdCreator(testManager.activity));
+    testManager.trackAd(bannerAd, 0);
+
+    testManager.onAdLoaded(bannerAd, null);
+
+    final MethodCall call = getLastMethodCall();
+    assertEquals("onAdEvent", call.method);
+    //noinspection rawtypes
+    assertThat(call.arguments, (Matcher) hasEntry("eventName", "onAdLoaded"));
+    //noinspection rawtypes
+    assertThat(call.arguments, (Matcher) hasEntry("adId", 0));
+    assertThat(call.arguments, (Matcher) hasEntry("responseInfo", null));
+  }
+
+  @Test
   public void flutterAdListener_onAdFailedToLoad() {
     final FlutterBannerAd bannerAd = new FlutterBannerAd(
         testManager,
