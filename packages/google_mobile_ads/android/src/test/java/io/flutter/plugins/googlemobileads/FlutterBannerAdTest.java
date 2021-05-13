@@ -105,7 +105,7 @@ public class FlutterBannerAdTest {
       }
     }).when(mockAdView).setAdListener(any(AdListener.class));
 
-    ResponseInfo responseInfo = mock(ResponseInfo.class);
+    final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAdView).getResponseInfo();
 
     flutterBannerAd.load();

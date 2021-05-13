@@ -145,13 +145,13 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
       }
     };
 
-    ResponseInfoProvider responseInfoProvider = new ResponseInfoProvider() {
+    final ResponseInfoProvider responseInfoProvider = new ResponseInfoProvider() {
       @Override
       public ResponseInfo getResponseInfo() {
         return responseInfo;
       }
     };
-    AdListener adListener = new FlutterAdListener(manager, this, responseInfoProvider) {
+    final AdListener adListener = new FlutterAdListener(manager, this, responseInfoProvider) {
       @Override
       public void onAdClicked() {
         manager.onNativeAdClicked(FlutterNativeAd.this);

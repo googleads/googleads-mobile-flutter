@@ -113,7 +113,7 @@ public class FlutterAdManagerInterstitialAdTest {
         any(AdManagerAdRequest.class),
         any(AdManagerInterstitialAdLoadCallback.class));
 
-    ResponseInfo responseInfo = mock(ResponseInfo.class);
+    final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAdManagerAd).getResponseInfo();
 
     flutterAdManagerInterstitialAd.load();

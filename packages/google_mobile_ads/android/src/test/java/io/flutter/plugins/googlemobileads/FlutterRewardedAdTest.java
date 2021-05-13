@@ -140,7 +140,7 @@ public class FlutterRewardedAdTest {
         anyString(),
         any(AdManagerAdRequest.class),
         any(RewardedAdLoadCallback.class));
-    ResponseInfo responseInfo = mock(ResponseInfo.class);
+    final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAd).getResponseInfo();
     flutterRewardedAd.load();
 
@@ -229,7 +229,7 @@ public class FlutterRewardedAdTest {
         anyString(),
         any(AdManagerAdRequest.class),
         any(RewardedAdLoadCallback.class));
-    ResponseInfo responseInfo = mock(ResponseInfo.class);
+    final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAd).getResponseInfo();
 
     mockFlutterAd.load();
@@ -286,7 +286,7 @@ public class FlutterRewardedAdTest {
         anyString(),
         any(AdRequest.class),
         any(RewardedAdLoadCallback.class));
-    ResponseInfo responseInfo = mock(ResponseInfo.class);
+    final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockRewardedAd).getResponseInfo();
     flutterRewardedAd.load();
 
