@@ -45,8 +45,8 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_AD_ERROR = (byte) 139;
   private static final byte VALUE_RESPONSE_INFO = (byte) 140;
   private static final byte VALUE_ADAPTER_RESPONSE_INFO = (byte) 141;
-  private static final byte VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE = (byte) 142;
-  private static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 143;
+  static final byte VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE = (byte) 142;
+  static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 143;
 
   @NonNull final Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;

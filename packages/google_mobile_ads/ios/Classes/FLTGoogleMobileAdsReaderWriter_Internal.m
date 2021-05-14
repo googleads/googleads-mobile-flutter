@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldServerSideVerificationOptions = 138,
   FLTAdmobFieldAdError = 139,
   FLTAdmobFieldGadResponseInfo = 140,
-  FLTAdmobFieldGADAdNetworkResponseInfo = 141
+  FLTAdmobFieldGADAdNetworkResponseInfo = 141,
   FLTAdmobFieldAnchoredAdaptiveBannerAdSize = 142,
   FLTAdmobFieldSmartBannerAdSize = 143,
 };
