@@ -339,9 +339,8 @@ InterstitialAd.load(
       // Keep a reference to the ad so you can show it later.
       this._interstitialAd = ad;
     },
-    onAdFailedToLoad: (InterstitialAd ad, LoadAdError error) {
-      print('$ad failed to load: $error');
-      ad.dispose();
+    onAdFailedToLoad: (LoadAdError error) {
+      print('InterstitialAd failed to load: $error');
     },
   ));
 ```
@@ -379,7 +378,7 @@ myInterstitial.show();
 
 Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and requires user input. An `InterstitialAd` can only be shown once. Subsequent calls to show will trigger `onAdFailedToShowFullScreenContent`.
 
-Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `InterstitialAdLoadCallback.onAdFailedToLoad`, `FullScreenContentCallback.onAdDismissedFullScreenContent`, and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
+Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `FullScreenContentCallback.onAdDismissedFullScreenContent` and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
 
 That's it! Your app is now ready to display interstitial ads.
 
@@ -738,9 +737,8 @@ RewardedAd.load(
       // Keep a reference to the ad so you can show it later.
       this._rewardedAd = ad;
     },
-    onAdFailedToLoad: (RewardedAd ad, LoadAdError error) {
-      print('$ad failed to load: $error');
-      ad.dispose();
+    onAdFailedToLoad: (LoadAdError error) {
+      print('RewardedAd failed to load: $error');
     },
 );
 ```
@@ -782,7 +780,7 @@ myRewarded.show(onUserEarnedReward: (RewardedAd ad, RewardItem rewardItem) {
 
 Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and require user input. An `RewardedAd` can only be shown once. Subsequent calls to show will trigger `onAdFailedToShowFullScreenContent`.
 
-Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `RewardedAdLoadCallback.onAdFailedToLoad`, `FullScreenContentCallback.onAdDismissedFullScreenContent`, and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
+Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `FullScreenContentCallback.onAdDismissedFullScreenContent` and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
 
 That's it! Your app is now ready to display rewarded ads.
 
@@ -1018,9 +1016,8 @@ AdManagerInterstitialAd.load(
       // Keep a reference to the ad so you can show it later.
       this._interstitialAd = ad;
     },
-    onAdFailedToLoad: (AdManagerInterstitialAd ad, LoadAdError error) {
-      print('$ad failed to load: $error');
-      ad.dispose();
+    onAdFailedToLoad: (LoadAdError error) {
+      print('InterstitialAd failed to load: $error');
     },
   ));
 ```
@@ -1058,7 +1055,7 @@ myInterstitial.show();
 
 Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and requires user input. An `InterstitialAd` can only be shown once. Subsequent calls to show will trigger `onAdFailedToShowFullScreenContent`.
 
-Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `AdManagerInterstitialAdLoadCallback.onAdFailedToLoad`, `FullScreenContentCallback.onAdDismissedFullScreenContent`, and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
+Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `FullScreenContentCallback.onAdDismissedFullScreenContent` and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
 
 That's it! Your app is now ready to display interstitial ads.
 
@@ -1415,9 +1412,8 @@ RewardedAd.loadWithAdManagerAdRequest(
       // Keep a reference to the ad so you can show it later.
       this._rewardedAd = ad;
     },
-    onAdFailedToLoad: (RewardedAd ad, LoadAdError error) {
-      print('$ad failed to load: $error');
-      ad.dispose();
+    onAdFailedToLoad: (LoadAdError error) {
+      print('RewardedAd failed to load: $error');
     },
 );
 ```
@@ -1461,7 +1457,7 @@ myRewarded.show(onUserEarnedReward: (RewardedAd ad, RewardItem rewardItem) {
 
 Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and require user input.  Do not call `show()` more than once for a loaded `RewardedAd`. Instead you should load a new ad.
 
-Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `RewardedAdLoadCallback.onAdFailedToLoad`, `FullScreenContentCallback.onAdDismissedFullScreenContent`, and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
+Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `FullScreenContentCallback.onAdDismissedFullScreenContent` and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
 
 That's it! Your app is now ready to display rewarded ads.
 

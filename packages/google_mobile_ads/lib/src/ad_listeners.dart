@@ -22,9 +22,8 @@ typedef AdEventCallback = void Function(Ad ad);
 /// Generic callback type for an event occurring on an Ad.
 typedef GenericAdEventCallback<Ad> = void Function(Ad ad);
 
-/// A generic callback type for when an error occurs loading an ad.
-typedef GenericAdLoadErrorCallback<Ad> = void Function(
-    Ad ad, LoadAdError error);
+/// A callback type for when an error occurs loading a full screen ad.
+typedef FullScreenAdLoadErrorCallback = void Function(LoadAdError error);
 
 /// The callback type for when a user earns a reward from a [RewardedAd].
 typedef OnUserEarnedRewardCallback = void Function(
@@ -223,9 +222,7 @@ abstract class FullScreenAdLoadCallback<T> {
   final GenericAdEventCallback<T> onAdLoaded;
 
   /// Called when an error occurs loading the ad.
-  ///
-  /// [Ad.dispose] should be called here.
-  final GenericAdLoadErrorCallback<T> onAdFailedToLoad;
+  final FullScreenAdLoadErrorCallback onAdFailedToLoad;
 }
 
 /// This class holds callbacks for loading a [RewardedAd].
@@ -235,7 +232,7 @@ class RewardedAdLoadCallback extends FullScreenAdLoadCallback<RewardedAd> {
   /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
   const RewardedAdLoadCallback({
     required GenericAdEventCallback<RewardedAd> onAdLoaded,
-    required GenericAdLoadErrorCallback<RewardedAd> onAdFailedToLoad,
+    required FullScreenAdLoadErrorCallback onAdFailedToLoad,
   }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
 }
 
@@ -247,7 +244,7 @@ class InterstitialAdLoadCallback
   /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
   const InterstitialAdLoadCallback({
     required GenericAdEventCallback<InterstitialAd> onAdLoaded,
-    required GenericAdLoadErrorCallback<InterstitialAd> onAdFailedToLoad,
+    required FullScreenAdLoadErrorCallback onAdFailedToLoad,
   }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
 }
 
@@ -259,7 +256,6 @@ class AdManagerInterstitialAdLoadCallback
   /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
   const AdManagerInterstitialAdLoadCallback({
     required GenericAdEventCallback<AdManagerInterstitialAd> onAdLoaded,
-    required GenericAdLoadErrorCallback<AdManagerInterstitialAd>
-        onAdFailedToLoad,
+    required FullScreenAdLoadErrorCallback onAdFailedToLoad,
   }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
 }

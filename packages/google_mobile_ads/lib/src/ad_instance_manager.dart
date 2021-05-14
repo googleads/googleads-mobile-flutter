@@ -57,9 +57,6 @@ class AdInstanceManager {
 
   int _nextAdId = 0;
   final _BiMap<int, Ad> _loadedAds = _BiMap<int, Ad>();
-  final Set<Ad> _onAdLoadedAds = <Ad>{};
-
-  bool onAdLoadedCalled(Ad ad) => _onAdLoadedAds.contains(ad);
 
   /// Invokes load and dispose calls.
   final MethodChannel channel;
@@ -181,8 +178,6 @@ class AdInstanceManager {
 
   void _invokeOnAdLoaded(
       Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
-    _onAdLoadedAds.add(ad);
-
     ad.responseInfo = arguments['responseInfo'];
     if (ad is AdWithView) {
       ad.listener.onAdLoaded?.call(ad);
@@ -202,12 +197,14 @@ class AdInstanceManager {
     if (ad is AdWithView) {
       ad.listener.onAdFailedToLoad?.call(ad, arguments['loadAdError']);
     } else if (ad is RewardedAd) {
-      ad.rewardedAdLoadCallback.onAdFailedToLoad
-          .call(ad, arguments['loadAdError']);
+      ad.dispose();
+      ad.rewardedAdLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
     } else if (ad is InterstitialAd) {
-      ad.adLoadCallback.onAdFailedToLoad.call(ad, arguments['loadAdError']);
+      ad.dispose();
+      ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
     } else if (ad is AdManagerInterstitialAd) {
-      ad.adLoadCallback.onAdFailedToLoad.call(ad, arguments['loadAdError']);
+      ad.dispose();
+      ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
     } else {
       debugPrint('invalid ad: $ad, for event name: $eventName');
     }
@@ -450,8 +447,6 @@ class AdInstanceManager {
   /// Disposing a banner ad that's been shown removes it from the screen.
   /// Interstitial ads can't be programmatically removed from view.
   Future<void> disposeAd(Ad ad) {
-    _onAdLoadedAds.remove(ad);
-
     final int? adId = adIdFor(ad);
     final Ad? disposedAd = _loadedAds.remove(adId);
     if (disposedAd == null) {

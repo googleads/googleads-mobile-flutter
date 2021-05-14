@@ -424,7 +424,7 @@ void main() {
               onAdLoaded: (ad) {
                 rewarded = ad;
               },
-              onAdFailedToLoad: (ad, error) => null),
+              onAdFailedToLoad: (error) => null),
           serverSideVerificationOptions: ServerSideVerificationOptions(
             userId: 'test-user-id',
             customData: 'test-custom-data',
@@ -466,7 +466,7 @@ void main() {
               onAdLoaded: (ad) {
                 rewarded = ad;
               },
-              onAdFailedToLoad: (ad, error) => null),
+              onAdFailedToLoad: (error) => null),
           serverSideVerificationOptions: ServerSideVerificationOptions(
             userId: 'test-user-id',
             customData: 'test-custom-data',
@@ -506,7 +506,7 @@ void main() {
             onAdLoaded: (ad) {
               interstitial = ad;
             },
-            onAdFailedToLoad: (ad, error) => null),
+            onAdFailedToLoad: (error) => null),
       );
 
       InterstitialAd createdAd = (instanceManager.adFor(0) as InterstitialAd);
@@ -540,7 +540,7 @@ void main() {
             onAdLoaded: (ad) {
               interstitial = ad;
             },
-            onAdFailedToLoad: (ad, error) => null),
+            onAdFailedToLoad: (error) => null),
       );
 
       AdManagerInterstitialAd createdAd =
@@ -620,7 +620,7 @@ void main() {
       expect(adEventCompleter.future, completion(banner));
     });
 
-    test('onAdFailedToLoad', () async {
+    test('onAdFailedToLoad banner', () async {
       final Completer<List<dynamic>> resultsCompleter =
           Completer<List<dynamic>>();
 
@@ -674,6 +674,231 @@ void main() {
           responseInfo.mediationAdapterClassName);
       List<AdapterResponseInfo> responses =
           results[1].responseInfo.adapterResponses;
+      expect(responses.first.adapterClassName, 'adapter-name');
+      expect(responses.first.latencyMillis, 500);
+      expect(responses.first.description, 'message');
+      expect(responses.first.credentials, 'credentials');
+      expect(responses.first.adError!.code, 1);
+      expect(responses.first.adError!.message, 'error-message');
+      expect(responses.first.adError!.domain, 'domain');
+    });
+
+    test('onAdFailedToLoad interstitial', () async {
+      final Completer<LoadAdError> resultsCompleter = Completer<LoadAdError>();
+      final AdRequest request = AdRequest();
+      await InterstitialAd.load(
+        adUnitId: InterstitialAd.testAdUnitId,
+        request: request,
+        adLoadCallback: InterstitialAdLoadCallback(
+            onAdLoaded: (ad) => null,
+            onAdFailedToLoad: (error) => resultsCompleter.complete(error)),
+      );
+
+      expect(log, <Matcher>[
+        isMethodCall('loadInterstitialAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'adUnitId': InterstitialAd.testAdUnitId,
+          'request': request,
+        })
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+
+      // Simulate onAdFailedToLoad.
+      AdError adError = AdError(1, 'domain', 'error-message');
+      AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
+          adapterClassName: 'adapter-name',
+          latencyMillis: 500,
+          description: 'message',
+          credentials: 'credentials',
+          adError: adError);
+
+      List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
+      ResponseInfo responseInfo = ResponseInfo(
+        responseId: 'id',
+        mediationAdapterClassName: 'className',
+        adapterResponses: adapterResponses,
+      );
+
+      final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+        'adId': 0,
+        'eventName': 'onAdFailedToLoad',
+        'loadAdError': LoadAdError(1, 'domain', 'message', responseInfo),
+      });
+
+      final ByteData data =
+          instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+        'plugins.flutter.io/google_mobile_ads',
+        data,
+        (ByteData? data) {},
+      );
+
+      // The ad reference should be freed when load failure occurs.
+      expect(instanceManager.adFor(0), isNull);
+
+      // Check that load error matches.
+      final LoadAdError result = await resultsCompleter.future;
+      expect(result.code, 1);
+      expect(result.domain, 'domain');
+      expect(result.message, 'message');
+      expect(result.responseInfo!.responseId, responseInfo.responseId);
+      expect(result.responseInfo!.mediationAdapterClassName,
+          responseInfo.mediationAdapterClassName);
+      List<AdapterResponseInfo> responses =
+          result.responseInfo!.adapterResponses!;
+      expect(responses.first.adapterClassName, 'adapter-name');
+      expect(responses.first.latencyMillis, 500);
+      expect(responses.first.description, 'message');
+      expect(responses.first.credentials, 'credentials');
+      expect(responses.first.adError!.code, 1);
+      expect(responses.first.adError!.message, 'error-message');
+      expect(responses.first.adError!.domain, 'domain');
+    });
+
+    test('onAdFailedToLoad ad manager interstitial', () async {
+      final Completer<LoadAdError> resultsCompleter = Completer<LoadAdError>();
+      final AdManagerAdRequest request = AdManagerAdRequest();
+      await AdManagerInterstitialAd.load(
+        adUnitId: 'test-ad-unit',
+        request: request,
+        adLoadCallback: AdManagerInterstitialAdLoadCallback(
+            onAdLoaded: (ad) => null,
+            onAdFailedToLoad: (error) => resultsCompleter.complete(error)),
+      );
+
+      expect(log, <Matcher>[
+        isMethodCall('loadAdManagerInterstitialAd',
+            arguments: <String, dynamic>{
+              'adId': 0,
+              'adUnitId': 'test-ad-unit',
+              'request': request,
+            })
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+
+      // Simulate onAdFailedToLoad.
+      AdError adError = AdError(1, 'domain', 'error-message');
+      AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
+          adapterClassName: 'adapter-name',
+          latencyMillis: 500,
+          description: 'message',
+          credentials: 'credentials',
+          adError: adError);
+
+      List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
+      ResponseInfo responseInfo = ResponseInfo(
+        responseId: 'id',
+        mediationAdapterClassName: 'className',
+        adapterResponses: adapterResponses,
+      );
+
+      final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+        'adId': 0,
+        'eventName': 'onAdFailedToLoad',
+        'loadAdError': LoadAdError(1, 'domain', 'message', responseInfo),
+      });
+
+      final ByteData data =
+          instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+        'plugins.flutter.io/google_mobile_ads',
+        data,
+        (ByteData? data) {},
+      );
+
+      // The ad reference should be freed when load failure occurs.
+      expect(instanceManager.adFor(0), isNull);
+
+      // Check that load error matches.
+      final LoadAdError result = await resultsCompleter.future;
+      expect(result.code, 1);
+      expect(result.domain, 'domain');
+      expect(result.message, 'message');
+      expect(result.responseInfo!.responseId, responseInfo.responseId);
+      expect(result.responseInfo!.mediationAdapterClassName,
+          responseInfo.mediationAdapterClassName);
+      List<AdapterResponseInfo> responses =
+          result.responseInfo!.adapterResponses!;
+      expect(responses.first.adapterClassName, 'adapter-name');
+      expect(responses.first.latencyMillis, 500);
+      expect(responses.first.description, 'message');
+      expect(responses.first.credentials, 'credentials');
+      expect(responses.first.adError!.code, 1);
+      expect(responses.first.adError!.message, 'error-message');
+      expect(responses.first.adError!.domain, 'domain');
+    });
+
+    test('onAdFailedToLoad rewarded', () async {
+      final Completer<LoadAdError> resultsCompleter = Completer<LoadAdError>();
+      final AdRequest request = AdRequest();
+      await RewardedAd.load(
+        adUnitId: 'test-ad-unit',
+        request: request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) => null,
+            onAdFailedToLoad: (error) => resultsCompleter.complete(error)),
+      );
+
+      expect(log, <Matcher>[
+        isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'adUnitId': 'test-ad-unit',
+          'request': request,
+          'adManagerRequest': null,
+          'serverSideVerificationOptions': null,
+        })
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+
+      // Simulate onAdFailedToLoad.
+      AdError adError = AdError(1, 'domain', 'error-message');
+      AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
+          adapterClassName: 'adapter-name',
+          latencyMillis: 500,
+          description: 'message',
+          credentials: 'credentials',
+          adError: adError);
+
+      List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
+      ResponseInfo responseInfo = ResponseInfo(
+        responseId: 'id',
+        mediationAdapterClassName: 'className',
+        adapterResponses: adapterResponses,
+      );
+
+      final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+        'adId': 0,
+        'eventName': 'onAdFailedToLoad',
+        'loadAdError': LoadAdError(1, 'domain', 'message', responseInfo),
+      });
+
+      final ByteData data =
+          instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+        'plugins.flutter.io/google_mobile_ads',
+        data,
+        (ByteData? data) {},
+      );
+
+      // The ad reference should be freed when load failure occurs.
+      expect(instanceManager.adFor(0), isNull);
+
+      // Check that load error matches.
+      final LoadAdError result = await resultsCompleter.future;
+      expect(result.code, 1);
+      expect(result.domain, 'domain');
+      expect(result.message, 'message');
+      expect(result.responseInfo!.responseId, responseInfo.responseId);
+      expect(result.responseInfo!.mediationAdapterClassName,
+          responseInfo.mediationAdapterClassName);
+      List<AdapterResponseInfo> responses =
+          result.responseInfo!.adapterResponses!;
       expect(responses.first.adapterClassName, 'adapter-name');
       expect(responses.first.latencyMillis, 500);
       expect(responses.first.description, 'message');
@@ -807,7 +1032,7 @@ void main() {
               onAdLoaded: (ad) {
                 rewarded = ad;
               },
-              onAdFailedToLoad: (ad, error) => null),
+              onAdFailedToLoad: (error) => null),
           serverSideVerificationOptions: ServerSideVerificationOptions(
             userId: 'test-user-id',
             customData: 'test-custom-data',
@@ -936,42 +1161,6 @@ void main() {
           nonPersonalizedAds: true,
         ),
       );
-    });
-
-    test('isLoaded', () async {
-      final Completer<Ad> adEventCompleter = Completer<Ad>();
-
-      final BannerAd banner = BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
-        size: AdSize.banner,
-        listener: BannerAdListener(
-          onAdLoaded: (Ad ad) => adEventCompleter.complete(ad),
-        ),
-        request: AdRequest(),
-      );
-
-      await banner.load();
-
-      expect(banner.isLoaded(), completion(false));
-
-      final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
-        'adId': 0,
-        'eventName': 'onAdLoaded',
-      });
-
-      final ByteData data =
-          instanceManager.channel.codec.encodeMethodCall(methodCall);
-
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        data,
-        (ByteData? data) {},
-      );
-
-      expect(banner.isLoaded(), completion(true));
-
-      await banner.dispose();
-      expect(banner.isLoaded(), completion(false));
     });
   });
 }

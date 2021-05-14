@@ -352,12 +352,6 @@ abstract class Ad {
     return instanceManager.disposeAd(this);
   }
 
-  /// Whether this [Ad.load] has been called for this [Ad] and [AdListener.onAdLoaded] callback has been called.
-  Future<bool> isLoaded() async {
-    return instanceManager.adIdFor(this) != null &&
-        instanceManager.onAdLoadedCalled(this);
-  }
-
   /// Contains information about the loaded request.
   ///
   /// Only present if the ad has been successfully loaded.

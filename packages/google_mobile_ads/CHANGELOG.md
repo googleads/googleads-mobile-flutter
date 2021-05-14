@@ -8,6 +8,8 @@ and [NativeAdView](https://developers.google.com/android/reference/com/google/an
 * Adds support for [ResponseInfo](https://developers.google.com/admob/android/response-info).
 * Adds support for [same app key](https://developers.google.com/admob/ios/ios14#same_app_key) on iOS.
 * Removes `testDevices` from `AdRequest`. Use `MobileAds.updateRequestConfiguration` to set test device ids.
+* Removes `Ad.isLoaded()`. Instead you should use the `onAdLoaded` callback to track whether an ad is loaded.
+* Removes need to call `Ad.dispose()` for Rewarded and Interstitial ads when they fail to load.
 
 ## 0.12.2
 
