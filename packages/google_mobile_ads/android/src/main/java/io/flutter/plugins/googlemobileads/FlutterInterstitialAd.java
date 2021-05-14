@@ -58,8 +58,6 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
                   interstitialAd.getResponseInfo());
             }
 
-            }
-
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
               FlutterInterstitialAd.this.manager.onAdFailedToLoad(
