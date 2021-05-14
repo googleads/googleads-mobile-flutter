@@ -1,6 +1,6 @@
 ## 0.13.0
 
-* Updates GMA Android and iOS dependencies to 20.0.0 and 8.4.0, respectively.
+* Updates GMA Android and iOS dependencies to 20.1.0 and 8.5.0, respectively.
 * Renames APIs that use the `Publisher` prefix to `AdManager`.
 * Rewarded and Interstitial ads now provide static `load` methods and a new `FullScreenContentCallback` for full screen events.
 * Native ads use [GADNativeAdView](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/api/reference/Classes/GADNativeAdView) for iOS 
