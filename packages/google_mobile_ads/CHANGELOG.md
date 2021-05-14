@@ -1,3 +1,8 @@
+## 0.12.2+1
+
+* Fix anchored adaptive banner message corruption error.
+* Update example app with better practices and adaptive banner.
+
 ## 0.12.2
 
 * Add support for anchored adaptive banners.
