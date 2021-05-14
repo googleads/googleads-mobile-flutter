@@ -31,10 +31,10 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @NonNull private final FlutterAdLoader flutterAdLoader;
 
   public FlutterInterstitialAd(
-    @NonNull AdInstanceManager manager,
-    @NonNull String adUnitId,
-    @NonNull FlutterAdRequest request,
-    @NonNull FlutterAdLoader flutterAdLoader) {
+      @NonNull AdInstanceManager manager,
+      @NonNull String adUnitId,
+      @NonNull FlutterAdRequest request,
+      @NonNull FlutterAdLoader flutterAdLoader) {
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.request = request;
@@ -44,28 +44,24 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @Override
   void load() {
     if (manager != null && adUnitId != null && request != null)
-    flutterAdLoader.loadInterstitial(
-      manager.activity,
-      adUnitId,
-      request.asAdRequest(),
-      new InterstitialAdLoadCallback() {
-        @Override
-        public void onAdLoaded(
-          @NonNull InterstitialAd interstitialAd) {
-          FlutterInterstitialAd.this.ad = interstitialAd;
-          FlutterInterstitialAd.this.manager.onAdLoaded(
-              FlutterInterstitialAd.this,
-              interstitialAd.getResponseInfo());
-        }
+      flutterAdLoader.loadInterstitial(
+          manager.activity,
+          adUnitId,
+          request.asAdRequest(),
+          new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+              FlutterInterstitialAd.this.ad = interstitialAd;
+              FlutterInterstitialAd.this.manager.onAdLoaded(
+                  FlutterInterstitialAd.this, interstitialAd.getResponseInfo());
+            }
 
-        @Override
-        public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-          FlutterInterstitialAd.this.manager.onAdFailedToLoad(
-            FlutterInterstitialAd.this,
-            new FlutterAd.FlutterLoadAdError(loadAdError));
-        }
-      }
-    );
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+              FlutterInterstitialAd.this.manager.onAdFailedToLoad(
+                  FlutterInterstitialAd.this, new FlutterAd.FlutterLoadAdError(loadAdError));
+            }
+          });
   }
 
   @Override

@@ -41,7 +41,7 @@
  * @return a `GADNativeAdView` that is overlaid on top of the FlutterView.
  */
 - (GADNativeAdView *_Nullable)createNativeAd:(GADNativeAd *_Nonnull)nativeAd
-                                      customOptions:(NSDictionary *_Nullable)customOptions;
+                               customOptions:(NSDictionary *_Nullable)customOptions;
 @end
 
 /**

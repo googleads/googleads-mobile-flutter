@@ -26,8 +26,8 @@ import io.flutter.plugin.platform.PlatformView;
 import java.util.List;
 
 /**
- * Wrapper around {@link com.google.android.gms.ads.admanager.AdManagerAdView} for the Google
- * Mobile Ads Plugin.
+ * Wrapper around {@link com.google.android.gms.ads.admanager.AdManagerAdView} for the Google Mobile
+ * Ads Plugin.
  */
 class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
   @NonNull private final AdInstanceManager manager;
@@ -77,12 +77,16 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
       allSizes[i] = sizes.get(i).getAdSize();
     }
     view.setAdSizes(allSizes);
-    view.setAdListener(new FlutterBannerAdListener(manager, this, new ResponseInfoProvider() {
-      @Override
-      public ResponseInfo getResponseInfo() {
-        return view.getResponseInfo();
-      }
-    }));
+    view.setAdListener(
+        new FlutterBannerAdListener(
+            manager,
+            this,
+            new ResponseInfoProvider() {
+              @Override
+              public ResponseInfo getResponseInfo() {
+                return view.getResponseInfo();
+              }
+            }));
     view.loadAd(request.asAdManagerAdRequest());
   }
 

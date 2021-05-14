@@ -107,10 +107,10 @@
   if (self) {
     _responseIdentifier = responseInfo.responseIdentifier;
     _adNetworkClassName = responseInfo.adNetworkClassName;
-    NSMutableArray<FLTGADAdNetworkResponseInfo *> *infoArray =
-      [[NSMutableArray alloc] init];
-    for (GADAdNetworkResponseInfo * adNetworkInfo in responseInfo.adNetworkInfoArray) {
-      [infoArray addObject:[[FLTGADAdNetworkResponseInfo alloc] initWithResponseInfo:adNetworkInfo]];
+    NSMutableArray<FLTGADAdNetworkResponseInfo *> *infoArray = [[NSMutableArray alloc] init];
+    for (GADAdNetworkResponseInfo *adNetworkInfo in responseInfo.adNetworkInfoArray) {
+      [infoArray
+          addObject:[[FLTGADAdNetworkResponseInfo alloc] initWithResponseInfo:adNetworkInfo]];
     }
     _adNetworkInfoArray = infoArray;
   }
@@ -142,9 +142,9 @@
     _code = error.code;
     _domain = error.domain;
     _message = error.localizedDescription;
-    GADResponseInfo * responseInfo = error.userInfo[GADErrorUserInfoKeyResponseInfo];
+    GADResponseInfo *responseInfo = error.userInfo[GADErrorUserInfoKeyResponseInfo];
     if (responseInfo) {
-      _responseInfo = [[FLTGADResponseInfo alloc] initWithResponseInfo: responseInfo];
+      _responseInfo = [[FLTGADResponseInfo alloc] initWithResponseInfo:responseInfo];
     }
   }
   return self;
@@ -202,7 +202,6 @@
 }
 
 #pragma mark - GADBannerViewDelegate
-
 
 - (void)bannerViewDidReceiveAd:(GADBannerView *)bannerView {
   [_manager onAdLoaded:self responseInfo:bannerView.responseInfo];
@@ -315,14 +314,14 @@
   [GADInterstitialAd loadWithAdUnitID:_adUnitId
                               request:[_adRequest asGADRequest]
                     completionHandler:^(GADInterstitialAd *ad, NSError *error) {
-                        if (error) {
-                          [self.manager onAdFailedToLoad:self error:error];
-                          return;
-                        }
-                        ad.fullScreenContentDelegate = self;
-                        self->_interstitialView = ad;
-                        [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
-                      }];
+                      if (error) {
+                        [self.manager onAdFailedToLoad:self error:error];
+                        return;
+                      }
+                      ad.fullScreenContentDelegate = self;
+                      self->_interstitialView = ad;
+                      [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+                    }];
 }
 
 - (void)show {
@@ -336,7 +335,7 @@
 #pragma mark - GADFullScreenContentDelegate
 
 - (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
-didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
+    didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
   [self.manager didFailToPresentFullScreenContentWithError:self error:error];
 }
 
@@ -387,15 +386,15 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
   [GAMInterstitialAd loadWithAdManagerAdUnitID:_adUnitId
                                        request:[_adRequest asGAMRequest]
                              completionHandler:^(GAMInterstitialAd *ad, NSError *error) {
-     if (error) {
-       [self.manager onAdFailedToLoad:self error:error];
-       return;
-     }
-    [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
-    ad.fullScreenContentDelegate = self;
-    ad.appEventDelegate = self;
-     self->_insterstitial = ad;
-   }];
+                               if (error) {
+                                 [self.manager onAdFailedToLoad:self error:error];
+                                 return;
+                               }
+                               [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+                               ad.fullScreenContentDelegate = self;
+                               ad.appEventDelegate = self;
+                               self->_insterstitial = ad;
+                             }];
 }
 
 - (void)show {
@@ -454,36 +453,36 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
     NSLog(@"A null or invalid ad request was provided.");
     return;
   }
-  
+
   [GADRewardedAd loadWithAdUnitID:_adUnitId
                           request:request
-                completionHandler:^(GADRewardedAd * _Nullable rewardedAd, NSError * _Nullable error) {
-    if (error) {
-      [self.manager onAdFailedToLoad:self error:error];
-      return;
-    }
-    if (self->_serverSideVerificationOptions != NULL &&
-        ![self->_serverSideVerificationOptions isEqual:[NSNull null]]) {
-      rewardedAd.serverSideVerificationOptions =
-      [self->_serverSideVerificationOptions asGADServerSideVerificationOptions];
-    }
-    
-    rewardedAd.fullScreenContentDelegate = self;
-    self->_rewardedView = rewardedAd;
-    [self.manager onAdLoaded:self responseInfo:rewardedAd.responseInfo];
-  }];
+                completionHandler:^(GADRewardedAd *_Nullable rewardedAd, NSError *_Nullable error) {
+                  if (error) {
+                    [self.manager onAdFailedToLoad:self error:error];
+                    return;
+                  }
+                  if (self->_serverSideVerificationOptions != NULL &&
+                      ![self->_serverSideVerificationOptions isEqual:[NSNull null]]) {
+                    rewardedAd.serverSideVerificationOptions =
+                        [self->_serverSideVerificationOptions asGADServerSideVerificationOptions];
+                  }
+
+                  rewardedAd.fullScreenContentDelegate = self;
+                  self->_rewardedView = rewardedAd;
+                  [self.manager onAdLoaded:self responseInfo:rewardedAd.responseInfo];
+                }];
 }
-  
 
 - (void)show {
   if (self.rewardedAd) {
     [self.rewardedAd presentFromRootViewController:_rootViewController
                           userDidEarnRewardHandler:^{
-      GADAdReward *reward = self.rewardedAd.adReward;
-      FLTRewardItem *fltReward = [[FLTRewardItem alloc] initWithAmount:reward.amount
-                                                                  type:reward.type];
-      [self.manager onRewardedAdUserEarnedReward:self reward:fltReward];
-    }];
+                            GADAdReward *reward = self.rewardedAd.adReward;
+                            FLTRewardItem *fltReward =
+                                [[FLTRewardItem alloc] initWithAmount:reward.amount
+                                                                 type:reward.type];
+                            [self.manager onRewardedAdUserEarnedReward:self reward:fltReward];
+                          }];
   } else {
     NSLog(@"RewardedAd failed to show because the ad was not ready.");
   }
@@ -492,7 +491,7 @@ didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
 #pragma mark - GADFullScreenContentDelegate
 
 - (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
-didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
+    didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
   [manager didFailToPresentFullScreenContentWithError:self error:error];
 }
 

@@ -36,71 +36,74 @@
   OCMStub([request asGAMRequest]).andReturn(gadRequest);
 
   UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
-  FLTGAMInterstitialAd *ad =
-      [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
-                                          request:request
-                               rootViewController:mockRootViewController];
+  FLTGAMInterstitialAd *ad = [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                                    request:request
+                                                         rootViewController:mockRootViewController];
   ad.manager = mockManager;
-  
+
   id interstitialClassMock = OCMClassMock([GAMInterstitialAd class]);
   OCMStub(ClassMethod([interstitialClassMock loadWithAdManagerAdUnitID:[OCMArg any]
-                                                      request:[OCMArg any]
-                                            completionHandler:[OCMArg any]]))
-    .andDo(^(NSInvocation *invocation) {
-      void (^completionHandler)(GAMInterstitialAd *ad, NSError *error);
-      [invocation getArgument:&completionHandler atIndex:4];
-      completionHandler(interstitialClassMock, nil);
-    });
+                                                               request:[OCMArg any]
+                                                     completionHandler:[OCMArg any]]))
+      .andDo(^(NSInvocation *invocation) {
+        void (^completionHandler)(GAMInterstitialAd *ad, NSError *error);
+        [invocation getArgument:&completionHandler atIndex:4];
+        completionHandler(interstitialClassMock, nil);
+      });
   NSError *error = OCMClassMock([NSError class]);
   OCMStub([interstitialClassMock setFullScreenContentDelegate:[OCMArg any]])
-  .andDo(^(NSInvocation *invocation) {
-    id<GADFullScreenContentDelegate> delegate;
-    [invocation getArgument:&delegate atIndex:2];
-    XCTAssertEqual(delegate, ad);
-    [delegate adDidRecordImpression:interstitialClassMock];
-    [delegate adDidDismissFullScreenContent:interstitialClassMock];
-    [delegate adDidPresentFullScreenContent:interstitialClassMock];
-    [delegate adWillDismissFullScreenContent:interstitialClassMock];
-    [delegate ad:interstitialClassMock didFailToPresentFullScreenContentWithError:error];
-  });
+      .andDo(^(NSInvocation *invocation) {
+        id<GADFullScreenContentDelegate> delegate;
+        [invocation getArgument:&delegate atIndex:2];
+        XCTAssertEqual(delegate, ad);
+        [delegate adDidRecordImpression:interstitialClassMock];
+        [delegate adDidDismissFullScreenContent:interstitialClassMock];
+        [delegate adDidPresentFullScreenContent:interstitialClassMock];
+        [delegate adWillDismissFullScreenContent:interstitialClassMock];
+        [delegate ad:interstitialClassMock didFailToPresentFullScreenContentWithError:error];
+      });
 
   OCMStub([interstitialClassMock setAppEventDelegate:[OCMArg any]])
-  .andDo(^(NSInvocation *invocation) {
-    id<GADAppEventDelegate> delegate;
-    [invocation getArgument:&delegate atIndex:2];
-    XCTAssertEqual(delegate, ad);
-    [delegate interstitialAd:interstitialClassMock didReceiveAppEvent:@"event" withInfo:@"info"];
-  });
+      .andDo(^(NSInvocation *invocation) {
+        id<GADAppEventDelegate> delegate;
+        [invocation getArgument:&delegate atIndex:2];
+        XCTAssertEqual(delegate, ad);
+        [delegate interstitialAd:interstitialClassMock
+              didReceiveAppEvent:@"event"
+                        withInfo:@"info"];
+      });
 
   GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
   OCMStub([interstitialClassMock responseInfo]).andReturn(responseInfo);
-  
+
   [ad load];
 
   OCMVerify(ClassMethod([interstitialClassMock loadWithAdManagerAdUnitID:[OCMArg isEqual:@"testId"]
                                                                  request:[OCMArg isEqual:gadRequest]
                                                        completionHandler:[OCMArg any]]));
-  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad] responseInfo:[OCMArg isEqual:responseInfo]]);
+  OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
+                       responseInfo:[OCMArg isEqual:responseInfo]]);
   OCMVerify([interstitialClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
   XCTAssertEqual(ad.interstitial, interstitialClassMock);
-  
+
   // Show the ad
   [ad show];
-  
+
   OCMVerify([interstitialClassMock
-             presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);
-  
+      presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);
+
   // Verify full screen callbacks.
   OCMVerify([mockManager onAdDidPresentFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidRecordImpression:[OCMArg isEqual:ad]]);
-  OCMVerify([mockManager
-             didFailToPresentFullScreenContentWithError:[OCMArg isEqual:ad]
-             error: [OCMArg isEqual:error]]);
-  
+  OCMVerify([mockManager didFailToPresentFullScreenContentWithError:[OCMArg isEqual:ad]
+                                                              error:[OCMArg isEqual:error]]);
+
   // Verify app event
-  OCMVerify([mockManager onAppEvent:ad name:[OCMArg isEqual:@"event"] data:[OCMArg isEqual:@"info"]]);
+  OCMVerify([mockManager onAppEvent:ad
+                               name:[OCMArg isEqual:@"event"]
+                               data:[OCMArg isEqual:@"info"]]);
 }
 
 - (void)testFailToLoad {
@@ -110,28 +113,27 @@
   OCMStub([request asGAMRequest]).andReturn(gadRequest);
 
   UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
-  FLTGAMInterstitialAd *ad =
-      [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
-                                          request:request
-                               rootViewController:mockRootViewController];
+  FLTGAMInterstitialAd *ad = [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                                    request:request
+                                                         rootViewController:mockRootViewController];
   ad.manager = mockManager;
-  
+
   id interstitialClassMock = OCMClassMock([GAMInterstitialAd class]);
   NSError *error = OCMClassMock([NSError class]);
   OCMStub(ClassMethod([interstitialClassMock loadWithAdManagerAdUnitID:[OCMArg any]
-                                                      request:[OCMArg any]
-                                            completionHandler:[OCMArg any]]))
-    .andDo(^(NSInvocation *invocation) {
-      void (^completionHandler)(GAMInterstitialAd *ad, NSError *error);
-      [invocation getArgument:&completionHandler atIndex:4];
-      completionHandler(nil, error);
-    });
-  
+                                                               request:[OCMArg any]
+                                                     completionHandler:[OCMArg any]]))
+      .andDo(^(NSInvocation *invocation) {
+        void (^completionHandler)(GAMInterstitialAd *ad, NSError *error);
+        [invocation getArgument:&completionHandler atIndex:4];
+        completionHandler(nil, error);
+      });
+
   [ad load];
 
   OCMVerify(ClassMethod([interstitialClassMock loadWithAdManagerAdUnitID:[OCMArg isEqual:@"testId"]
-                                          request:[OCMArg isEqual:gadRequest]
-                                completionHandler:[OCMArg any]]));
+                                                                 request:[OCMArg isEqual:gadRequest]
+                                                       completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad] error:[OCMArg isEqual:error]]);
 }
 

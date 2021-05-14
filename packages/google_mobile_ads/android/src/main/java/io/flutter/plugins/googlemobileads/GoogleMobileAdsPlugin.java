@@ -79,8 +79,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    * Interface used to display a {@link com.google.android.gms.ads.nativead.NativeAd}.
    *
    * <p>Added to a {@link io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin} and creates
-   * {@link com.google.android.gms.ads.nativead.NativeAdView}s from Native Ads created in
-   * Dart.
+   * {@link com.google.android.gms.ads.nativead.NativeAdView}s from Native Ads created in Dart.
    */
   public interface NativeAdFactory {
     /**
@@ -91,8 +90,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
      *     com.google.android.gms.ads.nativead.NativeAd}
      * @param customOptions Used to pass additional custom options to create the {@link
      *     com.google.android.gms.ads.nativead.NativeAdView}. Nullable.
-     * @return a {@link com.google.android.gms.ads.nativead.NativeAdView} that is overlaid on
-     *     top of the FlutterView.
+     * @return a {@link com.google.android.gms.ads.nativead.NativeAdView} that is overlaid on top of
+     *     the FlutterView.
      */
     NativeAdView createNativeAd(NativeAd nativeAd, Map<String, Object> customOptions);
   }
@@ -105,8 +104,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    * @param engine maintains access to a GoogleMobileAdsPlugin instance.
    * @param factoryId a unique identifier for the ad factory. The Native Ad created in Dart includes
    *     a parameter that refers to this.
-   * @param nativeAdFactory creates {@link com.google.android.gms.ads.nativead.NativeAdView}s
-   *     when Flutter NativeAds are created.
+   * @param nativeAdFactory creates {@link com.google.android.gms.ads.nativead.NativeAdView}s when
+   *     Flutter NativeAds are created.
    * @return whether the factoryId is unique and the nativeAdFactory was successfully added.
    */
   public static boolean registerNativeAdFactory(
@@ -258,12 +257,13 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         result.success(null);
         break;
       case "loadBannerAd":
-        final FlutterBannerAd bannerAd = new FlutterBannerAd(
-            instanceManager,
-            call.<String>argument("adUnitId"),
-            call.<FlutterAdRequest>argument("request"),
-            call.<FlutterAdSize>argument("size"),
-            new BannerAdCreator(instanceManager.activity));
+        final FlutterBannerAd bannerAd =
+            new FlutterBannerAd(
+                instanceManager,
+                call.<String>argument("adUnitId"),
+                call.<FlutterAdRequest>argument("request"),
+                call.<FlutterAdSize>argument("size"),
+                new BannerAdCreator(instanceManager.activity));
         instanceManager.trackAd(bannerAd, call.<Integer>argument("adId"));
         bannerAd.load();
         result.success(null);
@@ -354,7 +354,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 call.<FlutterAdManagerAdRequest>argument("request"),
                 new FlutterAdLoader());
         instanceManager.trackAd(
-          adManagerInterstitialAd, requireNonNull(call.<Integer>argument("adId")));
+            adManagerInterstitialAd, requireNonNull(call.<Integer>argument("adId")));
         adManagerInterstitialAd.load();
         result.success(null);
         break;

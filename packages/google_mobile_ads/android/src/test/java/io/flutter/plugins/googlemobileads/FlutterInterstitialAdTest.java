@@ -58,8 +58,8 @@ public class FlutterInterstitialAdTest {
     mockFlutterAdLoader = mock(FlutterAdLoader.class);
     when(mockFlutterRequest.asAdRequest()).thenReturn(mockAdRequest);
 
-    flutterInterstitialAd = new FlutterInterstitialAd(
-      mockManager, "testId", mockFlutterRequest, mockFlutterAdLoader);
+    flutterInterstitialAd =
+        new FlutterInterstitialAd(mockManager, "testId", mockFlutterRequest, mockFlutterAdLoader);
   }
 
   @Test
@@ -72,73 +72,81 @@ public class FlutterInterstitialAdTest {
     doReturn("2").when(loadAdError).getDomain();
     doReturn("3").when(loadAdError).getMessage();
     doReturn(null).when(loadAdError).getResponseInfo();
-    doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        InterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
-        // Pass back null for ad
-        adLoadCallback.onAdFailedToLoad(loadAdError);
-        return null;
-      }
-    }).when(mockFlutterAdLoader)
-      .loadInterstitial(
-        any(Activity.class),
-        anyString(),
-        any(AdRequest.class),
-        any(InterstitialAdLoadCallback.class));
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                InterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                // Pass back null for ad
+                adLoadCallback.onAdFailedToLoad(loadAdError);
+                return null;
+              }
+            })
+        .when(mockFlutterAdLoader)
+        .loadInterstitial(
+            any(Activity.class),
+            anyString(),
+            any(AdRequest.class),
+            any(InterstitialAdLoadCallback.class));
 
     flutterInterstitialAd.load();
 
-    verify(mockFlutterAdLoader).loadInterstitial(
-      eq(mockManager.activity),
-      eq("testId"),
-      eq(mockAdRequest),
-      any(InterstitialAdLoadCallback.class));
+    verify(mockFlutterAdLoader)
+        .loadInterstitial(
+            eq(mockManager.activity),
+            eq("testId"),
+            eq(mockAdRequest),
+            any(InterstitialAdLoadCallback.class));
 
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
-    verify(mockManager)
-      .onAdFailedToLoad(eq(flutterInterstitialAd), eq(expectedError));
+    verify(mockManager).onAdFailedToLoad(eq(flutterInterstitialAd), eq(expectedError));
   }
 
   @Test
   public void loadInterstitialAd_showSuccess() {
     final InterstitialAd mockAd = mock(InterstitialAd.class);
-    doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        InterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
-        // Pass back null for ad
-        adLoadCallback.onAdLoaded(mockAd);
-        return null;
-      }
-    }).when(mockFlutterAdLoader)
-      .loadInterstitial(
-        any(Context.class),
-        anyString(),
-        any(AdRequest.class),
-        any(InterstitialAdLoadCallback.class));
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                InterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                // Pass back null for ad
+                adLoadCallback.onAdLoaded(mockAd);
+                return null;
+              }
+            })
+        .when(mockFlutterAdLoader)
+        .loadInterstitial(
+            any(Context.class),
+            anyString(),
+            any(AdRequest.class),
+            any(InterstitialAdLoadCallback.class));
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAd).getResponseInfo();
     flutterInterstitialAd.load();
 
-    verify(mockFlutterAdLoader).loadInterstitial(
-      eq(mockManager.activity),
-      eq("testId"),
-      eq(mockAdRequest),
-      any(InterstitialAdLoadCallback.class));
+    verify(mockFlutterAdLoader)
+        .loadInterstitial(
+            eq(mockManager.activity),
+            eq("testId"),
+            eq(mockAdRequest),
+            any(InterstitialAdLoadCallback.class));
 
     verify(mockManager).onAdLoaded(eq(flutterInterstitialAd), eq(responseInfo));
 
-    doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        FullScreenContentCallback callback = invocation.getArgument(0);
-        callback.onAdShowedFullScreenContent();
-        callback.onAdImpression();
-        callback.onAdDismissedFullScreenContent();
-        return null;
-      }
-    }).when(mockAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                FullScreenContentCallback callback = invocation.getArgument(0);
+                callback.onAdShowedFullScreenContent();
+                callback.onAdImpression();
+                callback.onAdDismissedFullScreenContent();
+                return null;
+              }
+            })
+        .when(mockAd)
+        .setFullScreenContentCallback(any(FullScreenContentCallback.class));
 
     flutterInterstitialAd.show();
     verify(mockAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
@@ -151,37 +159,39 @@ public class FlutterInterstitialAdTest {
   @Test
   public void loadInterstitialAd_showFailure() {
     final InterstitialAd mockAd = mock(InterstitialAd.class);
-    doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        InterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
-        // Pass back null for ad
-        adLoadCallback.onAdLoaded(mockAd);
-        return null;
-      }
-    }).when(mockFlutterAdLoader)
-      .loadInterstitial(
-        any(Context.class),
-        anyString(),
-        any(AdRequest.class),
-        any(InterstitialAdLoadCallback.class));
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                InterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                // Pass back null for ad
+                adLoadCallback.onAdLoaded(mockAd);
+                return null;
+              }
+            })
+        .when(mockFlutterAdLoader)
+        .loadInterstitial(
+            any(Context.class),
+            anyString(),
+            any(AdRequest.class),
+            any(InterstitialAdLoadCallback.class));
     doReturn(mock(ResponseInfo.class)).when(mockAd).getResponseInfo();
     flutterInterstitialAd.load();
     final AdError adError = new AdError(1, "2", "3");
 
-    doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        FullScreenContentCallback callback = invocation.getArgument(0);
-        callback.onAdFailedToShowFullScreenContent(adError);
-        return null;
-      }
-    }).when(mockAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                FullScreenContentCallback callback = invocation.getArgument(0);
+                callback.onAdFailedToShowFullScreenContent(adError);
+                return null;
+              }
+            })
+        .when(mockAd)
+        .setFullScreenContentCallback(any(FullScreenContentCallback.class));
 
     flutterInterstitialAd.show();
-    verify(mockManager)
-      .onFailedToShowFullScreenContent(
-        eq(flutterInterstitialAd),
-        eq(adError));
+    verify(mockManager).onFailedToShowFullScreenContent(eq(flutterInterstitialAd), eq(adError));
   }
 }

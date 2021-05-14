@@ -29,51 +29,49 @@
   mockManager = (OCMClassMock([FLTAdInstanceManager class]));
 }
 
-
 - (void)testDelegates {
   FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
   UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
-  FLTGAMBannerAd *bannerAd =
-      [[FLTGAMBannerAd alloc] initWithAdUnitId:@"testId"
-                                         sizes:@[ [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)] ]
-                                    request:[[FLTGAMAdRequest alloc] init]
-                         rootViewController:mockRootViewController];
+  FLTGAMBannerAd *bannerAd = [[FLTGAMBannerAd alloc]
+        initWithAdUnitId:@"testId"
+                   sizes:@[ [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)] ]
+                 request:[[FLTGAMAdRequest alloc] init]
+      rootViewController:mockRootViewController];
   bannerAd.manager = mockManager;
-  
+
   [bannerAd load];
   GAMBannerView *adView = (GAMBannerView *)bannerAd.bannerView;
   XCTAssertEqual(adView.appEventDelegate, bannerAd);
   XCTAssertEqual(adView.delegate, bannerAd);
-  
+
   [bannerAd.bannerView.delegate bannerViewDidReceiveAd:OCMClassMock([GADBannerView class])];
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:bannerAd]
-             responseInfo:[OCMArg isEqual:adView.responseInfo]]);
-  
+                       responseInfo:[OCMArg isEqual:adView.responseInfo]]);
+
   [bannerAd.bannerView.delegate bannerViewDidDismissScreen:OCMClassMock([GADBannerView class])];
   OCMVerify([mockManager onBannerDidDismissScreen:[OCMArg isEqual:bannerAd]]);
 
   [bannerAd.bannerView.delegate bannerViewWillDismissScreen:OCMClassMock([GADBannerView class])];
   OCMVerify([mockManager onBannerWillDismissScreen:[OCMArg isEqual:bannerAd]]);
-  
+
   [bannerAd.bannerView.delegate bannerViewWillPresentScreen:OCMClassMock([GADBannerView class])];
   OCMVerify([mockManager onBannerWillPresentScreen:[OCMArg isEqual:bannerAd]]);
-  
+
   [bannerAd.bannerView.delegate bannerViewDidRecordImpression:OCMClassMock([GADBannerView class])];
   OCMVerify([mockManager onBannerImpression:[OCMArg isEqual:bannerAd]]);
-  
+
   NSString *domain = @"domain";
-  NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"description" };
+  NSDictionary *userInfo = @{NSLocalizedDescriptionKey : @"description"};
   NSError *error = [NSError errorWithDomain:domain code:1 userInfo:userInfo];
   [bannerAd.bannerView.delegate bannerView:OCMClassMock([GADBannerView class])
                didFailToReceiveAdWithError:error];
   OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:bannerAd] error:[OCMArg isEqual:error]]);
-  
+
   [adView.appEventDelegate adView:adView didReceiveAppEvent:@"appEvent" withInfo:@"info"];
   OCMVerify([mockManager onAppEvent:[OCMArg isEqual:bannerAd]
                                name:[OCMArg isEqual:@"appEvent"]
                                data:[OCMArg isEqual:@"info"]]);
-
 }
 
 - (void)testLoad {
@@ -88,7 +86,7 @@
 
   XCTAssertEqual(ad.bannerView.adUnitID, @"testId");
   XCTAssertEqual(ad.bannerView.rootViewController, mockRootViewController);
-  
+
   FLTBannerAd *mockBannerAd = OCMPartialMock(ad);
   GADBannerView *mockView = OCMClassMock([GADBannerView class]);
   OCMStub([mockBannerAd bannerView]).andReturn(mockView);

@@ -77,8 +77,7 @@
   [ad show];
 }
 
-- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad
-      responseInfo:(GADResponseInfo *)responseInfo {
+- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad responseInfo:(GADResponseInfo *)responseInfo {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
                  @"adId" : [self adIdFor:ad],
@@ -148,7 +147,7 @@
   [self sendAdEvent:@"onBannerDidDismissScreen" ad:ad];
 }
 
-- (void)onBannerWillPresentScreen:(FLTBannerAd *_Nonnull) ad {
+- (void)onBannerWillPresentScreen:(FLTBannerAd *_Nonnull)ad {
   [self sendAdEvent:@"onBannerWillPresentScreen" ad:ad];
 }
 
@@ -171,15 +170,11 @@
 - (void)didFailToPresentFullScreenContentWithError:(id<FLTAd> _Nonnull)ad
                                              error:(NSError *_Nonnull)error {
   [_channel invokeMethod:@"didFailToPresentFullScreenContentWithError"
-               arguments:@{
-                 @"adId" : [self adIdFor:ad],
-                 @"error" : error
-               }];
+               arguments:@{@"adId" : [self adIdFor:ad], @"error" : error}];
 }
 
 /// Sends an ad event with the provided name.
-- (void)sendAdEvent:(NSString *_Nonnull)eventName
-                          ad:(id<FLTAd>)ad {
+- (void)sendAdEvent:(NSString *_Nonnull)eventName ad:(id<FLTAd>)ad {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
                  @"adId" : [self adIdFor:ad],

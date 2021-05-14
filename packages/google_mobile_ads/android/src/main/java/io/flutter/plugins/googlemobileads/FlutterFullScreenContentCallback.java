@@ -19,8 +19,8 @@ import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.FullScreenContentCallback;
 
 /**
- * Flutter implementation of {@link FullScreenContentCallback}.
- * Forwards events to AdInstanceManager.
+ * Flutter implementation of {@link FullScreenContentCallback}. Forwards events to
+ * AdInstanceManager.
  */
 class FlutterFullScreenContentCallback extends FullScreenContentCallback {
 
@@ -28,8 +28,7 @@ class FlutterFullScreenContentCallback extends FullScreenContentCallback {
   @NonNull protected final FlutterAd ad;
 
   public FlutterFullScreenContentCallback(
-    @NonNull AdInstanceManager manager,
-    @NonNull FlutterAd ad) {
+      @NonNull AdInstanceManager manager, @NonNull FlutterAd ad) {
     this.manager = manager;
     this.ad = ad;
   }

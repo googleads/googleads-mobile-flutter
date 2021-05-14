@@ -161,11 +161,10 @@
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAdManagerBannerAd"]) {
-    FLTGAMBannerAd *ad =
-        [[FLTGAMBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                 sizes:call.arguments[@"sizes"]
-                                               request:call.arguments[@"request"]
-                                    rootViewController:rootController];
+    FLTGAMBannerAd *ad = [[FLTGAMBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                                            sizes:call.arguments[@"sizes"]
+                                                          request:call.arguments[@"request"]
+                                               rootViewController:rootController];
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method isEqualToString:@"loadNativeAd"]) {
@@ -202,9 +201,9 @@
     result(nil);
   } else if ([call.method isEqualToString:@"loadAdManagerInterstitialAd"]) {
     FLTGAMInterstitialAd *ad =
-    [[FLTGAMInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                         request:call.arguments[@"request"]
-                                              rootViewController:rootController];
+        [[FLTGAMInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                               request:call.arguments[@"request"]
+                                    rootViewController:rootController];
 
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);

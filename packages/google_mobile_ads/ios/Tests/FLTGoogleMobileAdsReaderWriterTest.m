@@ -158,9 +158,9 @@
 }
 
 - (void)testEncodeDecodeNSError {
-  NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : @"message" };
+  NSDictionary *userInfo = @{NSLocalizedDescriptionKey : @"message"};
   NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
-  
+
   NSData *encodedMessage = [_messageCodec encode:error];
 
   NSError *decodedError = [_messageCodec decode:encodedMessage];
@@ -175,10 +175,8 @@
   NSString *className = @"test-class-name";
   OCMStub([mockResponseInfo responseIdentifier]).andReturn(identifier);
   OCMStub([mockResponseInfo adNetworkClassName]).andReturn(className);
-  NSDictionary *userInfo = @{
-    NSLocalizedDescriptionKey : @"message",
-    GADErrorUserInfoKeyResponseInfo: mockResponseInfo
-  };
+  NSDictionary *userInfo =
+      @{NSLocalizedDescriptionKey : @"message", GADErrorUserInfoKeyResponseInfo : mockResponseInfo};
   NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
   FLTLoadAdError *loadAdError = [[FLTLoadAdError alloc] initWithError:error];
 
@@ -203,10 +201,8 @@
   OCMStub([mockResponseInfo responseIdentifier]).andReturn(identifier);
   OCMStub([mockResponseInfo adNetworkClassName]).andReturn(className);
   OCMStub([mockResponseInfo adNetworkInfoArray]).andReturn(@[ mockNetworkResponse ]);
-  NSDictionary *userInfo = @{
-    NSLocalizedDescriptionKey : @"message",
-    GADErrorUserInfoKeyResponseInfo: mockResponseInfo
-  };
+  NSDictionary *userInfo =
+      @{NSLocalizedDescriptionKey : @"message", GADErrorUserInfoKeyResponseInfo : mockResponseInfo};
   NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
   FLTLoadAdError *loadAdError = [[FLTLoadAdError alloc] initWithError:error];
 
@@ -219,68 +215,58 @@
   XCTAssertEqualObjects(decodedError.responseInfo.adNetworkClassName, className);
   XCTAssertEqualObjects(decodedError.responseInfo.responseIdentifier, identifier);
   XCTAssertTrue(decodedError.responseInfo.adNetworkInfoArray.count == 1);
-  XCTAssertEqualObjects(
-      decodedError.responseInfo.adNetworkInfoArray.firstObject.adNetworkClassName, @"adapter-class");
+  XCTAssertEqualObjects(decodedError.responseInfo.adNetworkInfoArray.firstObject.adNetworkClassName,
+                        @"adapter-class");
 }
 
-
 - (void)testEncodeDecodeFLTGADResponseInfo {
-  NSDictionary *descriptionsDict = @{ @"descriptions" : @"dict" };
-  NSDictionary *credentialsDict = @{ @"credentials" : @"dict" };
+  NSDictionary *descriptionsDict = @{@"descriptions" : @"dict"};
+  NSDictionary *credentialsDict = @{@"credentials" : @"dict"};
 
   NSError *error = OCMClassMock([NSError class]);
   OCMStub([error domain]).andReturn(@"domain");
   OCMStub([error code]).andReturn(1);
   OCMStub([error localizedDescription]).andReturn(@"error");
-  
-  GADAdNetworkResponseInfo * mockGADResponseInfo =
-    OCMClassMock([GADAdNetworkResponseInfo class]);
+
+  GADAdNetworkResponseInfo *mockGADResponseInfo = OCMClassMock([GADAdNetworkResponseInfo class]);
   OCMStub([mockGADResponseInfo adNetworkClassName]).andReturn(@"adapter-class");
   OCMStub([mockGADResponseInfo latency]).andReturn(123.1234);
   OCMStub([mockGADResponseInfo dictionaryRepresentation]).andReturn(descriptionsDict);
   OCMStub([mockGADResponseInfo credentials]).andReturn(credentialsDict);
   OCMStub([mockGADResponseInfo error]).andReturn(error);
-  
+
   FLTGADAdNetworkResponseInfo *adNetworkResponseInfo =
-    [[FLTGADAdNetworkResponseInfo alloc] initWithResponseInfo:mockGADResponseInfo];
-  
+      [[FLTGADAdNetworkResponseInfo alloc] initWithResponseInfo:mockGADResponseInfo];
+
   FLTGADResponseInfo *responseInfo = [[FLTGADResponseInfo alloc] init];
   responseInfo.adNetworkClassName = @"class-name";
   responseInfo.responseIdentifier = @"identifier";
-  responseInfo.adNetworkInfoArray = @[adNetworkResponseInfo];
+  responseInfo.adNetworkInfoArray = @[ adNetworkResponseInfo ];
 
   NSData *encodedMessage = [_messageCodec encode:responseInfo];
   FLTGADResponseInfo *decodedResponseInfo = [_messageCodec decode:encodedMessage];
-  
-  XCTAssertEqualObjects(decodedResponseInfo.adNetworkClassName,
-                        @"class-name");
-  XCTAssertEqualObjects(decodedResponseInfo.responseIdentifier,
-                        @"identifier");
+
+  XCTAssertEqualObjects(decodedResponseInfo.adNetworkClassName, @"class-name");
+  XCTAssertEqualObjects(decodedResponseInfo.responseIdentifier, @"identifier");
   XCTAssertEqual(decodedResponseInfo.adNetworkInfoArray.count, 1);
-  
+
   FLTGADAdNetworkResponseInfo *decodedInfo = decodedResponseInfo.adNetworkInfoArray.firstObject;
 
   XCTAssertEqualObjects(decodedInfo.adNetworkClassName, @"adapter-class");
   XCTAssertEqualObjects(decodedInfo.latency, @(123123));
-  XCTAssertEqualObjects(
-                        decodedInfo.dictionaryDescription,
-                        @"{\n    descriptions = dict;\n}");
-  XCTAssertEqualObjects(decodedInfo.credentialsDescription,
-                        @"{\n    credentials = dict;\n}");
+  XCTAssertEqualObjects(decodedInfo.dictionaryDescription, @"{\n    descriptions = dict;\n}");
+  XCTAssertEqualObjects(decodedInfo.credentialsDescription, @"{\n    credentials = dict;\n}");
   XCTAssertEqual(decodedInfo.error.code, 1);
   XCTAssertEqualObjects(decodedInfo.error.domain, @"domain");
   XCTAssertEqualObjects(decodedInfo.error.localizedDescription, @"error");
 }
 
-
 - (void)testEncodeDecodeFLTGADLoadErrorWithEmptyValues {
   GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
   OCMStub([mockResponseInfo responseIdentifier]).andReturn(nil);
   OCMStub([mockResponseInfo adNetworkClassName]).andReturn(nil);
-  NSDictionary *userInfo = @{
-    NSLocalizedDescriptionKey : @"message",
-    GADErrorUserInfoKeyResponseInfo: mockResponseInfo
-  };
+  NSDictionary *userInfo =
+      @{NSLocalizedDescriptionKey : @"message", GADErrorUserInfoKeyResponseInfo : mockResponseInfo};
   NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
   FLTLoadAdError *loadAdError = [[FLTLoadAdError alloc] initWithError:error];
 

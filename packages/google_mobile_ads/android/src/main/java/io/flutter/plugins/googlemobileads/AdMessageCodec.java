@@ -177,8 +177,7 @@ class AdMessageCodec extends StandardMessageCodec {
             (long) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
-            (FlutterAdError) readValueOfType(buffer.get(), buffer)
-        );
+            (FlutterAdError) readValueOfType(buffer.get(), buffer));
       case VALUE_RESPONSE_INFO:
         return new FlutterResponseInfo(
             (String) readValueOfType(buffer.get(), buffer),

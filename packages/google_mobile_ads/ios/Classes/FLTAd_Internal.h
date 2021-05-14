@@ -140,14 +140,13 @@
 
 @end
 
-@interface FLTGAMInterstitialAd : FLTInterstitialAd<GADAppEventDelegate>
+@interface FLTGAMInterstitialAd : FLTInterstitialAd <GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTGAMAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
 @end
 
-@interface FLTRewardedAd :
-  NSObject <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTRewardedAd : NSObject <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
@@ -156,10 +155,8 @@
 - (GADRewardedAd *_Nullable)rewardedAd;
 @end
 
-@interface FLTNativeAd : NSObject <FLTAd,
-                                   FlutterPlatformView,
-                                   GADNativeAdDelegate,
-                                   GADNativeAdLoaderDelegate>
+@interface FLTNativeAd
+    : NSObject <FLTAd, FlutterPlatformView, GADNativeAdDelegate, GADNativeAdLoaderDelegate>
 @property(weak) FLTAdInstanceManager *_Nullable manager;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request

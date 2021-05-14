@@ -59,8 +59,7 @@ class FlutterAdListener extends AdListener {
 }
 
 /**
- * Ad listener for banner ads.
- * Does not override onAdClicked(), since that is only for native ads.
+ * Ad listener for banner ads. Does not override onAdClicked(), since that is only for native ads.
  */
 class FlutterBannerAdListener extends FlutterAdListener {
 

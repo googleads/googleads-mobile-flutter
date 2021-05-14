@@ -119,13 +119,14 @@
 - (void)testSetSameAppKeyEnabled {
   id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
   OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
-    .andReturn((GADMobileAds *)gadMobileAdsClassMock);
-  GADRequestConfiguration *gadRequestConfigurationMock = OCMClassMock([GADRequestConfiguration class]);
-  OCMStub([gadMobileAdsClassMock requestConfiguration])
-    .andReturn(gadRequestConfigurationMock);
-  
-  FlutterMethodCall *methodCall = [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setSameAppKeyEnabled"
-                                                                    arguments:@{@"isEnabled" : @(YES)}];
+      .andReturn((GADMobileAds *)gadMobileAdsClassMock);
+  GADRequestConfiguration *gadRequestConfigurationMock =
+      OCMClassMock([GADRequestConfiguration class]);
+  OCMStub([gadMobileAdsClassMock requestConfiguration]).andReturn(gadRequestConfigurationMock);
+
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setSameAppKeyEnabled"
+                                        arguments:@{@"isEnabled" : @(YES)}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;

@@ -41,7 +41,7 @@ abstract class FlutterAd {
       this.responseId = responseInfo.getResponseId();
       this.mediationAdapterClassName = responseInfo.getMediationAdapterClassName();
       final List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
-      for (AdapterResponseInfo adapterInfo: responseInfo.getAdapterResponses()) {
+      for (AdapterResponseInfo adapterInfo : responseInfo.getAdapterResponses()) {
         adapterResponseInfos.add(new FlutterAdapterResponseInfo(adapterInfo));
       }
       this.adapterResponses = adapterResponseInfos;
@@ -81,8 +81,8 @@ abstract class FlutterAd {
 
       FlutterResponseInfo that = (FlutterResponseInfo) obj;
       return Objects.equals(responseId, that.responseId)
-        && Objects.equals(mediationAdapterClassName, that.mediationAdapterClassName)
-        && Objects.equals(adapterResponses, that.adapterResponses);
+          && Objects.equals(mediationAdapterClassName, that.mediationAdapterClassName)
+          && Objects.equals(adapterResponses, that.adapterResponses);
     }
 
     @Override
@@ -115,12 +115,11 @@ abstract class FlutterAd {
     }
 
     FlutterAdapterResponseInfo(
-      @NonNull String adapterClassName,
-      long latencyMillis,
-      @NonNull String description,
-      @Nullable String credentials,
-      @Nullable FlutterAdError error
-    ) {
+        @NonNull String adapterClassName,
+        long latencyMillis,
+        @NonNull String description,
+        @Nullable String credentials,
+        @Nullable FlutterAdError error) {
       this.adapterClassName = adapterClassName;
       this.latencyMillis = latencyMillis;
       this.description = description;
@@ -186,10 +185,7 @@ abstract class FlutterAd {
       message = error.getMessage();
     }
 
-    FlutterAdError(
-        int code,
-        @NonNull String domain,
-        @NonNull String message) {
+    FlutterAdError(int code, @NonNull String domain, @NonNull String message) {
       this.code = code;
       this.domain = domain;
       this.message = message;

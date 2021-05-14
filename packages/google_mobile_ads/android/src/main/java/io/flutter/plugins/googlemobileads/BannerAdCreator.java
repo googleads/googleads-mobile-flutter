@@ -19,9 +19,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 
-/**
- * Creates AdView and AdManagerAdViews for banner ads.
- */
+/** Creates AdView and AdManagerAdViews for banner ads. */
 public class BannerAdCreator {
 
   @NonNull private final Context context;

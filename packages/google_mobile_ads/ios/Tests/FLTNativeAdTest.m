@@ -51,16 +51,15 @@
                                             customOptions:customOptions
                                        rootViewController:OCMClassMock([UIViewController class])];
   ad.manager = mockManager;
-  
+
   XCTAssertEqual(ad.adLoader.adUnitID, @"testAdUnitId");
   XCTAssertEqual(ad.adLoader.delegate, ad);
-  
-  
+
   FLTNativeAd *mockNativeAd = OCMPartialMock(ad);
   GADAdLoader *mockLoader = OCMPartialMock([ad adLoader]);
   OCMStub([mockNativeAd adLoader]).andReturn(mockLoader);
   [mockNativeAd load];
-  
+
   OCMVerify([mockLoader loadRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
                           GADRequest *requestArg = obj;
                           return [requestArg.keywords isEqualToArray:@[ @"apple" ]];
@@ -74,32 +73,32 @@
   if ([NSNull.null isEqual:customOptions] || customOptions == nil) {
     OCMVerify([mockNativeAdFactory createNativeAd:mockGADNativeAd customOptions:[OCMArg isNil]]);
   } else {
-    OCMVerify([mockNativeAdFactory createNativeAd:mockGADNativeAd customOptions:[OCMArg isEqual:customOptions]]);
+    OCMVerify([mockNativeAdFactory createNativeAd:mockGADNativeAd
+                                    customOptions:[OCMArg isEqual:customOptions]]);
   }
-  
+
   OCMStub([mockGADNativeAd setDelegate:[OCMArg checkWithBlock:^BOOL(id obj) {
-    id<GADNativeAdDelegate> delegate = obj;
-    [delegate nativeAdDidRecordClick:mockGADNativeAd];
-    [delegate nativeAdDidRecordImpression:mockGADNativeAd];
-    [delegate nativeAdWillPresentScreen:mockGADNativeAd];
-    [delegate nativeAdDidDismissScreen:mockGADNativeAd];
-    [delegate nativeAdWillDismissScreen:mockGADNativeAd];
-    return YES;
-  }]]);
-  
+                             id<GADNativeAdDelegate> delegate = obj;
+                             [delegate nativeAdDidRecordClick:mockGADNativeAd];
+                             [delegate nativeAdDidRecordImpression:mockGADNativeAd];
+                             [delegate nativeAdWillPresentScreen:mockGADNativeAd];
+                             [delegate nativeAdDidDismissScreen:mockGADNativeAd];
+                             [delegate nativeAdWillDismissScreen:mockGADNativeAd];
+                             return YES;
+                           }]]);
+
   // Check ad loader delegate methods forward to ad instance manager.
   [(id<GADNativeAdLoaderDelegate>)ad.adLoader.delegate adLoader:mockLoader
                                              didReceiveNativeAd:mockGADNativeAd];
-  
+
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
                        responseInfo:[OCMArg isEqual:mockResponseInfo]]);
-  
+
   NSError *error = OCMClassMock([NSError class]);
   [(id<GADNativeAdLoaderDelegate>)ad.adLoader.delegate adLoader:mockLoader
                                     didFailToReceiveAdWithError:error];
-  OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad]
-                                    error:[OCMArg isEqual:error]]);
-  
+  OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad] error:[OCMArg isEqual:error]]);
+
   // Check GADNativeAdDelegate methods forward to ad instance manager.
   OCMVerify([mockGADNativeAd setDelegate:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager onNativeAdClicked:[OCMArg isEqual:ad]]);
@@ -110,4 +109,3 @@
 }
 
 @end
-

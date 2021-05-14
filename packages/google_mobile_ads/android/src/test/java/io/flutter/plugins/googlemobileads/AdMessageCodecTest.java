@@ -139,7 +139,7 @@ public class AdMessageCodecTest {
     ByteBuffer message = testCodec.encodeMessage(flutterAdManagerAdRequest);
 
     FlutterAdManagerAdRequest decodedAdManagerAdRequest =
-      (FlutterAdManagerAdRequest) testCodec.decodeMessage((ByteBuffer) message.position(0));
+        (FlutterAdManagerAdRequest) testCodec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedAdManagerAdRequest, flutterAdManagerAdRequest);
   }
 

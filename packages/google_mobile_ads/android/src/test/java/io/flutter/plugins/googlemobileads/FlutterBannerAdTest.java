@@ -62,8 +62,9 @@ public class FlutterBannerAdTest {
     BannerAdCreator bannerAdCreator = mock(BannerAdCreator.class);
     mockAdView = mock(AdView.class);
     doReturn(mockAdView).when(bannerAdCreator).createAdView();
-    flutterBannerAd = new FlutterBannerAd(
-        mockManager, "testId", mockFlutterRequest, mockFlutterAdSize, bannerAdCreator);
+    flutterBannerAd =
+        new FlutterBannerAd(
+            mockManager, "testId", mockFlutterRequest, mockFlutterAdSize, bannerAdCreator);
   }
 
   @Test
@@ -73,14 +74,17 @@ public class FlutterBannerAdTest {
     doReturn("2").when(loadError).getDomain();
     doReturn("3").when(loadError).getMessage();
     doReturn(null).when(loadError).getResponseInfo();
-    doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        AdListener listener = invocation.getArgument(0);
-        listener.onAdFailedToLoad(loadError);
-        return null;
-      }
-    }).when(mockAdView).setAdListener(any(AdListener.class));
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                AdListener listener = invocation.getArgument(0);
+                listener.onAdFailedToLoad(loadError);
+                return null;
+              }
+            })
+        .when(mockAdView)
+        .setAdListener(any(AdListener.class));
 
     flutterBannerAd.load();
     verify(mockAdView).loadAd(eq(mockAdRequest));
@@ -93,17 +97,20 @@ public class FlutterBannerAdTest {
 
   @Test
   public void loadWithListenerCallbacks() {
-    doAnswer(new Answer() {
-      @Override
-      public Object answer(InvocationOnMock invocation) throws Throwable {
-        AdListener listener = invocation.getArgument(0);
-        listener.onAdLoaded();
-        listener.onAdImpression();
-        listener.onAdClosed();
-        listener.onAdOpened();
-        return null;
-      }
-    }).when(mockAdView).setAdListener(any(AdListener.class));
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                AdListener listener = invocation.getArgument(0);
+                listener.onAdLoaded();
+                listener.onAdImpression();
+                listener.onAdClosed();
+                listener.onAdOpened();
+                return null;
+              }
+            })
+        .when(mockAdView)
+        .setAdListener(any(AdListener.class));
 
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAdView).getResponseInfo();

@@ -31,7 +31,7 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
   @NonNull private final BannerAdCreator bannerAdCreator;
   @Nullable private AdView view;
 
-  /** Constructs the FlutterBannerAd.  */
+  /** Constructs the FlutterBannerAd. */
   public FlutterBannerAd(
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
@@ -54,12 +54,16 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
     view = bannerAdCreator.createAdView();
     view.setAdUnitId(adUnitId);
     view.setAdSize(size.getAdSize());
-    view.setAdListener(new FlutterBannerAdListener(manager, this, new ResponseInfoProvider() {
-      @Override
-      public ResponseInfo getResponseInfo() {
-        return view.getResponseInfo();
-      }
-    }));
+    view.setAdListener(
+        new FlutterBannerAdListener(
+            manager,
+            this,
+            new ResponseInfoProvider() {
+              @Override
+              public ResponseInfo getResponseInfo() {
+                return view.getResponseInfo();
+              }
+            }));
     view.loadAd(request.asAdRequest());
   }
 

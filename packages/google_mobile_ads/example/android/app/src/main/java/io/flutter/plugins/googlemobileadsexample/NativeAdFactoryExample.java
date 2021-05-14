@@ -30,10 +30,8 @@ class NativeAdFactoryExample implements NativeAdFactory {
   }
 
   @Override
-  public NativeAdView createNativeAd(
-      NativeAd nativeAd, Map<String, Object> customOptions) {
-    final NativeAdView adView =
-        (NativeAdView) layoutInflater.inflate(R.layout.my_native_ad, null);
+  public NativeAdView createNativeAd(NativeAd nativeAd, Map<String, Object> customOptions) {
+    final NativeAdView adView = (NativeAdView) layoutInflater.inflate(R.layout.my_native_ad, null);
     final TextView headlineView = adView.findViewById(R.id.ad_headline);
     final TextView bodyView = adView.findViewById(R.id.ad_body);
 

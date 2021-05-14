@@ -23,7 +23,7 @@
 // explained by https://developers.google.com/admob/ios/native/advanced.
 @implementation NativeAdFactoryExample
 - (GADNativeAdView *)createNativeAd:(GADNativeAd *)nativeAd
-                             customOptions:(NSDictionary *)customOptions {
+                      customOptions:(NSDictionary *)customOptions {
   // Create and place ad in view hierarchy.
   GADNativeAdView *adView =
       [[NSBundle mainBundle] loadNibNamed:@"NativeAdView" owner:nil options:nil].firstObject;

@@ -93,11 +93,18 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
 
       final FlutterNativeAd nativeAd;
       if (request == null) {
-        nativeAd = new FlutterNativeAd(
-          manager, adUnitId, adFactory, adManagerRequest, new FlutterAdLoader(), customOptions);
+        nativeAd =
+            new FlutterNativeAd(
+                manager,
+                adUnitId,
+                adFactory,
+                adManagerRequest,
+                new FlutterAdLoader(),
+                customOptions);
       } else {
-        nativeAd = new FlutterNativeAd(
-          manager, adUnitId, adFactory, request, new FlutterAdLoader(), customOptions);
+        nativeAd =
+            new FlutterNativeAd(
+                manager, adUnitId, adFactory, request, new FlutterAdLoader(), customOptions);
       }
       return nativeAd;
     }
@@ -137,43 +144,46 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
   void load() {
     // Note we delegate loading the ad to FlutterAdLoader mainly for testing purposes.
     // As of 20.0.0 of GMA, mockito is unable to mock AdLoader.
-    OnNativeAdLoadedListener loadedListener = new OnNativeAdLoadedListener() {
-      @Override
-      public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
-        ad = adFactory.createNativeAd(nativeAd, customOptions);
-        responseInfo = nativeAd.getResponseInfo();
-      }
-    };
+    OnNativeAdLoadedListener loadedListener =
+        new OnNativeAdLoadedListener() {
+          @Override
+          public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+            ad = adFactory.createNativeAd(nativeAd, customOptions);
+            responseInfo = nativeAd.getResponseInfo();
+          }
+        };
 
-    final ResponseInfoProvider responseInfoProvider = new ResponseInfoProvider() {
-      @Override
-      public ResponseInfo getResponseInfo() {
-        return responseInfo;
-      }
-    };
-    final AdListener adListener = new FlutterAdListener(manager, this, responseInfoProvider) {
-      @Override
-      public void onAdClicked() {
-        manager.onNativeAdClicked(FlutterNativeAd.this);
-      }
+    final ResponseInfoProvider responseInfoProvider =
+        new ResponseInfoProvider() {
+          @Override
+          public ResponseInfo getResponseInfo() {
+            return responseInfo;
+          }
+        };
+    final AdListener adListener =
+        new FlutterAdListener(manager, this, responseInfoProvider) {
+          @Override
+          public void onAdClicked() {
+            manager.onNativeAdClicked(FlutterNativeAd.this);
+          }
 
-      @Override
-      public void onAdImpression() {
-        manager.onAdImpression(FlutterNativeAd.this);
-      }
-    };
+          @Override
+          public void onAdImpression() {
+            manager.onAdImpression(FlutterNativeAd.this);
+          }
+        };
     NativeAdOptions options = new NativeAdOptions.Builder().build();
     if (request != null) {
       flutterAdLoader.loadNativeAd(
-        manager.activity, adUnitId, loadedListener, options, adListener, request.asAdRequest());
+          manager.activity, adUnitId, loadedListener, options, adListener, request.asAdRequest());
     } else if (adManagerRequest != null) {
       flutterAdLoader.loadAdManagerNativeAd(
-        manager.activity,
-        adUnitId,
-        loadedListener,
-        options,
-        adListener,
-        adManagerRequest.asAdManagerAdRequest());
+          manager.activity,
+          adUnitId,
+          loadedListener,
+          options,
+          adListener,
+          adManagerRequest.asAdManagerAdRequest());
     } else {
       Log.e(TAG, "A null or invalid ad request was provided.");
     }
