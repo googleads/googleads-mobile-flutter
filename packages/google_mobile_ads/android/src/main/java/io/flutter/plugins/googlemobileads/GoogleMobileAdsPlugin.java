@@ -19,6 +19,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -57,6 +58,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   // This is always null when not using v2 embedding.
   @Nullable private FlutterPluginBinding pluginBinding;
   @Nullable private AdInstanceManager instanceManager;
+  @Nullable private ActivityPluginBinding activityBinding;
   private final Map<String, NativeAdFactory> nativeAdFactories = new HashMap<>();
 
   /**
@@ -171,7 +173,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         new MethodChannel(
             messenger,
             "plugins.flutter.io/google_mobile_ads",
-            new StandardMethodCodec(new AdMessageCodec()));
+            new StandardMethodCodec(new AdMessageCodec(activity)));
     channel.setMethodCallHandler(this);
     instanceManager = new AdInstanceManager(activity, messenger);
     viewRegistry.registerViewFactory(
@@ -191,6 +193,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
 
   @Override
   public void onAttachedToActivity(ActivityPluginBinding binding) {
+    activityBinding = binding;
     initializePlugin(
         binding.getActivity(),
         pluginBinding.getBinaryMessenger(),
@@ -366,6 +369,19 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
           break;
         }
         result.success(null);
+        break;
+      case "AdSize#getAnchoredAdaptiveBannerAdSize":
+        final FlutterAdSize.AnchoredAdaptiveBannerAdSize size =
+            new FlutterAdSize.AnchoredAdaptiveBannerAdSize(
+                activityBinding.getActivity(),
+                new FlutterAdSize.AdSizeFactory(),
+                call.<String>argument("orientation"),
+                call.<Integer>argument("width"));
+        if (size.size == AdSize.INVALID) {
+          result.success(null);
+        } else {
+          result.success(size);
+        }
         break;
       default:
         result.notImplemented();

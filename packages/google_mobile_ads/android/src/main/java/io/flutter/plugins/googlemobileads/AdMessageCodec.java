@@ -15,7 +15,10 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.content.Context;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
@@ -28,7 +31,7 @@ import java.util.Map;
 /**
  * Encodes and decodes values by reading from a ByteBuffer and writing to a ByteArrayOutputStream.
  */
-final class AdMessageCodec extends StandardMessageCodec {
+class AdMessageCodec extends StandardMessageCodec {
   // The type values below must be consistent for each platform.
   private static final byte VALUE_AD_SIZE = (byte) 128;
   private static final byte VALUE_AD_REQUEST = (byte) 129;
@@ -42,14 +45,27 @@ final class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_AD_ERROR = (byte) 139;
   private static final byte VALUE_RESPONSE_INFO = (byte) 140;
   private static final byte VALUE_ADAPTER_RESPONSE_INFO = (byte) 141;
+  private static final byte VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE = (byte) 142;
+  private static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 143;
+
+  @NonNull final Context context;
+  @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
+
+  AdMessageCodec(@NonNull Context context) {
+    this.context = context;
+    this.adSizeFactory = new FlutterAdSize.AdSizeFactory();
+  }
+
+  @VisibleForTesting
+  AdMessageCodec(@NonNull Context context, @NonNull FlutterAdSize.AdSizeFactory adSizeFactory) {
+    this.context = context;
+    this.adSizeFactory = adSizeFactory;
+  }
 
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
     if (value instanceof FlutterAdSize) {
-      stream.write(VALUE_AD_SIZE);
-      final FlutterAdSize size = (FlutterAdSize) value;
-      writeValue(stream, size.width);
-      writeValue(stream, size.height);
+      writeAdSize(stream, (FlutterAdSize) value);
     } else if (value instanceof FlutterAdRequest) {
       stream.write(VALUE_AD_REQUEST);
       final FlutterAdRequest request = (FlutterAdRequest) value;
@@ -134,6 +150,13 @@ final class AdMessageCodec extends StandardMessageCodec {
   @Override
   protected Object readValueOfType(byte type, ByteBuffer buffer) {
     switch (type) {
+      case VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE:
+        final String orientation = (String) readValueOfType(buffer.get(), buffer);
+        final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
+        return new FlutterAdSize.AnchoredAdaptiveBannerAdSize(
+            context, adSizeFactory, orientation, width);
+      case VALUE_SMART_BANNER_AD_SIZE:
+        return new FlutterAdSize.SmartBannerAdSize();
       case VALUE_AD_SIZE:
         return new FlutterAdSize(
             (Integer) readValueOfType(buffer.get(), buffer),
@@ -206,6 +229,23 @@ final class AdMessageCodec extends StandardMessageCodec {
             (String) readValueOfType(buffer.get(), buffer));
       default:
         return super.readValueOfType(type, buffer);
+    }
+  }
+
+  protected void writeAdSize(ByteArrayOutputStream stream, FlutterAdSize value) {
+    if (value instanceof FlutterAdSize.AnchoredAdaptiveBannerAdSize) {
+      stream.write(VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE);
+      final FlutterAdSize.AnchoredAdaptiveBannerAdSize size =
+          (FlutterAdSize.AnchoredAdaptiveBannerAdSize) value;
+      writeValue(stream, size.orientation);
+      writeValue(stream, size.width);
+      writeValue(stream, size.height);
+    } else if (value instanceof FlutterAdSize.SmartBannerAdSize) {
+      stream.write(VALUE_SMART_BANNER_AD_SIZE);
+    } else if (value instanceof FlutterAdSize) {
+      stream.write(VALUE_AD_SIZE);
+      writeValue(stream, value.width);
+      writeValue(stream, value.height);
     }
   }
 

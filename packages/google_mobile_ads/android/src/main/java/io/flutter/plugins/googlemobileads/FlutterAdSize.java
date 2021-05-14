@@ -14,6 +14,7 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.content.Context;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdSize;
 
@@ -22,16 +23,62 @@ class FlutterAdSize {
   final int width;
   final int height;
 
-  FlutterAdSize(int width, int height) {
-    this.width = width;
-    this.height = height;
-
-    // These values must remain consistent with `AdSize.smartBanner` in Dart.
-    if (width == -1 && height == -1) {
-      this.size = AdSize.SMART_BANNER;
-    } else {
-      this.size = new AdSize(width, height);
+  /** Wrapper around static methods for {@link com.google.android.gms.ads.AdSize}. */
+  static class AdSizeFactory {
+    AdSize getPortraitAnchoredAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
     }
+
+    AdSize getLandscapeAnchoredAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
+    }
+  }
+
+  static class AnchoredAdaptiveBannerAdSize extends FlutterAdSize {
+    final String orientation;
+
+    @NonNull
+    private static AdSize getAdSize(
+        @NonNull Context context,
+        @NonNull AdSizeFactory factory,
+        @NonNull String orientation,
+        int width) {
+      final AdSize adSize;
+      if (orientation.equals("portrait")) {
+        adSize = factory.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
+      } else if (orientation.equals("landscape")) {
+        adSize = factory.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
+      } else {
+        throw new IllegalArgumentException(
+            "Orientation should be 'portrait' or 'landscape': " + orientation);
+      }
+      return adSize;
+    }
+
+    AnchoredAdaptiveBannerAdSize(
+        @NonNull Context context,
+        @NonNull AdSizeFactory factory,
+        @NonNull String orientation,
+        int width) {
+      super(getAdSize(context, factory, orientation, width));
+      this.orientation = orientation;
+    }
+  }
+
+  static class SmartBannerAdSize extends FlutterAdSize {
+    SmartBannerAdSize() {
+      super(AdSize.SMART_BANNER);
+    }
+  }
+
+  FlutterAdSize(int width, int height) {
+    this(new AdSize(width, height));
+  }
+
+  FlutterAdSize(@NonNull AdSize size) {
+    this.size = size;
+    this.width = size.getWidth();
+    this.height = size.getHeight();
   }
 
   @Override

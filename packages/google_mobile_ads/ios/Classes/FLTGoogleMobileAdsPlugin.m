@@ -234,6 +234,12 @@
   } else if ([call.method isEqualToString:@"showAdWithoutView"]) {
     [_manager showAdWithID:call.arguments[@"adId"]];
     result(nil);
+  } else if ([call.method isEqualToString:@"AdSize#getAnchoredAdaptiveBannerAdSize"]) {
+    FLTAnchoredAdaptiveBannerSize *size =
+        [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:[[FLTAdSizeFactory alloc] init]
+                                                   orientation:call.arguments[@"orientation"]
+                                                         width:call.arguments[@"width"]];
+    result(size);
   } else {
     result(FlutterMethodNotImplemented);
   }

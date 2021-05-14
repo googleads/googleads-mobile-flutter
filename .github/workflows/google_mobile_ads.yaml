@@ -94,4 +94,8 @@ jobs:
           cd packages/google_mobile_ads/
           flutter pub publish --dry-run
       - name: "Flutter Format"
-        run: flutter format --set-exit-if-changed packages/google_mobile_ads
+        run: |
+          flutter pub global activate flutter_plugin_tools
+          brew install clang-format
+          flutter pub global run flutter_plugin_tools format
+          ./.github/workflows/scripts/validate-formatting.sh

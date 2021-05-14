@@ -25,6 +25,27 @@
 @property(readonly) NSNumber *_Nonnull width;
 @property(readonly) NSNumber *_Nonnull height;
 - (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width height:(NSNumber *_Nonnull)height;
+- (instancetype _Nonnull)initWithAdSize:(GADAdSize)size;
+@end
+
+/**
+ * Wrapper around top level methods for `GADAdSize` for the Google Mobile Ads Plugin.
+ */
+@interface FLTAdSizeFactory : NSObject
+- (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
+- (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
+@end
+
+@interface FLTAnchoredAdaptiveBannerSize : FLTAdSize
+@property(readonly) NSString *_Nonnull orientation;
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
+                             orientation:(NSString *_Nonnull)orientation
+                                   width:(NSNumber *_Nonnull)width;
+@end
+
+@interface FLTSmartBannerSize : FLTAdSize
+@property(readonly) NSString *_Nonnull orientation;
+- (instancetype _Nonnull)initWithOrientation:(NSString *_Nonnull)orientation;
 @end
 
 @interface FLTAdRequest : NSObject

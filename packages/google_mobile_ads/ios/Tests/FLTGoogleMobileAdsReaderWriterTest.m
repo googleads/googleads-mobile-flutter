@@ -25,13 +25,19 @@
 @interface FLTGoogleMobileAdsReaderWriterTest : XCTestCase
 @end
 
+@interface FLTTestAdSizeFactory : FLTAdSizeFactory
+@property(readonly) GADAdSize testAdSize;
+@end
+
 @implementation FLTGoogleMobileAdsReaderWriterTest {
   FlutterStandardMessageCodec *_messageCodec;
+  FLTGoogleMobileAdsReaderWriter *_readerWriter;
 }
 
 - (void)setUp {
-  FLTGoogleMobileAdsReaderWriter *readerWriter = [[FLTGoogleMobileAdsReaderWriter alloc] init];
-  _messageCodec = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
+  _readerWriter =
+      [[FLTGoogleMobileAdsReaderWriter alloc] initWithFactory:[[FLTTestAdSizeFactory alloc] init]];
+  _messageCodec = [FlutterStandardMessageCodec codecWithReaderWriter:_readerWriter];
 }
 
 - (void)testEncodeDecodeAdSize {
@@ -41,6 +47,34 @@
   FLTAdSize *decodedSize = [_messageCodec decode:encodedMessage];
   XCTAssertEqualObjects(decodedSize.width, @(1));
   XCTAssertEqualObjects(decodedSize.height, @(2));
+}
+
+- (void)testEncodeDecodeAnchoredAdaptiveBannerAdSize {
+  GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(0, 0));
+
+  FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
+  OCMStub([factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:@(23)]).andReturn(testAdSize);
+
+  FLTAnchoredAdaptiveBannerSize *size =
+      [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory
+                                                 orientation:@"portrait"
+                                                       width:@(23)];
+  NSData *encodedMessage = [_messageCodec encode:size];
+
+  FLTAnchoredAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
+  XCTAssertEqual(decodedSize.size.size.height, testAdSize.size.height);
+}
+
+- (void)testEncodeDecodeSmartBannerAdSize {
+  FLTSmartBannerSize *size = [[FLTSmartBannerSize alloc] initWithOrientation:@"landscape"];
+
+  NSData *encodedMessage = [_messageCodec encode:size];
+  FLTSmartBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+
+  XCTAssertTrue([decodedSize isKindOfClass:FLTSmartBannerSize.class]);
+  XCTAssertEqual(decodedSize.size.size.width, kGADAdSizeSmartBannerPortrait.size.width);
+  XCTAssertEqual(decodedSize.size.size.height, kGADAdSizeSmartBannerPortrait.size.height);
 }
 
 - (void)testEncodeDecodeAdRequest {
@@ -288,4 +322,22 @@
   XCTAssertNil(decodedStatus.adapterStatuses.allValues[0].latency);
 }
 
+@end
+
+@implementation FLTTestAdSizeFactory
+- (instancetype)initWithAdSize:(GADAdSize)testAdSize {
+  self = [super init];
+  if (self) {
+    _testAdSize = testAdSize;
+  }
+  return self;
+}
+
+- (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *)width {
+  return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
+}
+
+- (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *)width {
+  return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
+}
 @end

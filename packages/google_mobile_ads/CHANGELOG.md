@@ -9,6 +9,10 @@ and [NativeAdView](https://developers.google.com/android/reference/com/google/an
 * Adds support for [same app key](https://developers.google.com/admob/ios/ios14#same_app_key) on iOS.
 * Removes `testDevices` from `AdRequest`. Use `MobileAds.updateRequestConfiguration` to set test device ids.
 
+## 0.12.2
+
+* Add support for anchored adaptive banners.
+
 ## 0.12.1+1
 
 * Fixes a [crash with Swift based native ads](https://github.com/googleads/googleads-mobile-flutter/issues/121)

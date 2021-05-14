@@ -43,7 +43,7 @@ class AdInstanceManager {
   AdInstanceManager(@NonNull Activity activity, @NonNull BinaryMessenger binaryMessenger) {
     this.activity = activity;
     this.ads = new HashMap<>();
-    final StandardMethodCodec methodCodec = new StandardMethodCodec(new AdMessageCodec());
+    final StandardMethodCodec methodCodec = new StandardMethodCodec(new AdMessageCodec(activity));
     this.channel =
         new MethodChannel(binaryMessenger, "plugins.flutter.io/google_mobile_ads", methodCodec);
   }

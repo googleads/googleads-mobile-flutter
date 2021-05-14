@@ -17,20 +17,68 @@
 
 @implementation FLTAdSize
 - (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width height:(NSNumber *_Nonnull)height {
+  return
+      [self initWithAdSize:GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, height.doubleValue))];
+}
+
+- (instancetype _Nonnull)initWithAdSize:(GADAdSize)size {
   self = [super init];
   if (self) {
-    _width = width;
-    _height = height;
+    _size = size;
+    _width = @(size.size.width);
+    _height = @(size.size.height);
+  }
+  return self;
+}
+@end
 
-    // These values must remain consistent with `AdSize.smartBannerPortrait` and
-    // `adSize.smartBannerLandscape` in Dart.
-    if ([_width isEqual:@(-1)] && [_height isEqual:@(-2)]) {
-      _size = kGADAdSizeSmartBannerPortrait;
-    } else if ([_width isEqual:@(-1)] && [_height isEqual:@(-3)]) {
-      _size = kGADAdSizeSmartBannerLandscape;
-    } else {
-      _size = GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, height.doubleValue));
-    }
+@implementation FLTAdSizeFactory
+- (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+  return GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
+}
+
+- (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+  return GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
+}
+@end
+
+@implementation FLTAnchoredAdaptiveBannerSize
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
+                             orientation:(NSString *_Nonnull)orientation
+                                   width:(NSNumber *_Nonnull)width {
+  GADAdSize size;
+  if ([orientation isEqualToString:@"portrait"]) {
+    size = [factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:width];
+  } else if ([orientation isEqualToString:@"landscape"]) {
+    size = [factory landscapeAnchoredAdaptiveBannerAdSizeWithWidth:width];
+  } else {
+    NSLog(@"AdaptiveBanner orientation should be 'portrait' or 'landscape': %@", orientation);
+    return nil;
+  }
+
+  self = [self initWithAdSize:size];
+  if (self) {
+    _orientation = orientation;
+  }
+  return self;
+}
+@end
+
+@implementation FLTSmartBannerSize
+- (instancetype _Nonnull)initWithOrientation:(NSString *_Nonnull)orientation {
+  GADAdSize size;
+  if ([orientation isEqualToString:@"portrait"]) {
+    size = kGADAdSizeSmartBannerPortrait;
+  } else if ([orientation isEqualToString:@"landscape"]) {
+    size = kGADAdSizeSmartBannerLandscape;
+  } else {
+    NSLog(@"SmartBanner orientation should be 'portrait' or 'landscape': %@", orientation);
+    return nil;
+  }
+
+  self = [self initWithAdSize:size];
+  if (self) {
+    _orientation = orientation;
   }
   return self;
 }
