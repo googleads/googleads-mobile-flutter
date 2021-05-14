@@ -20,6 +20,7 @@ import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Instantiates and serializes {@link com.google.android.gms.ads.admanager.AdManagerAdRequest} for
@@ -143,19 +144,11 @@ class FlutterAdManagerAdRequest {
 
     FlutterAdManagerAdRequest request = (FlutterAdManagerAdRequest) o;
 
-    return objectEquals(keywords, request.keywords)
-        && objectEquals(contentUrl, request.contentUrl)
-        && objectEquals(customTargeting, request.customTargeting)
-        && objectEquals(nonPersonalizedAds, request.nonPersonalizedAds)
-        && objectEquals(customTargetingLists, request.customTargetingLists);
-  }
-
-  /**
-   * Calculate object equality between l and r. We can't use Objects.equals() due to backwards
-   * compatibility to API 16.
-   */
-  private boolean objectEquals(Object l, Object r) {
-    return (l == null) ? (r == null) : (l.equals(r));
+    return Objects.equals(keywords, request.keywords)
+        && Objects.equals(contentUrl, request.contentUrl)
+        && Objects.equals(customTargeting, request.customTargeting)
+        && Objects.equals(nonPersonalizedAds, request.nonPersonalizedAds)
+        && Objects.equals(customTargetingLists, request.customTargetingLists);
   }
 
   @Override

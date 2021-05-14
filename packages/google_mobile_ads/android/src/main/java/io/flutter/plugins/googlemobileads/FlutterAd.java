@@ -161,7 +161,7 @@ abstract class FlutterAd {
 
       final FlutterAdapterResponseInfo that = (FlutterAdapterResponseInfo) obj;
       return Objects.equals(adapterClassName, that.adapterClassName)
-          && Objects.equals(latencyMillis, that.latencyMillis)
+          && latencyMillis == that.latencyMillis
           && Objects.equals(description, that.description)
           && Objects.equals(credentials, that.credentials)
           && Objects.equals(error, that.error);
