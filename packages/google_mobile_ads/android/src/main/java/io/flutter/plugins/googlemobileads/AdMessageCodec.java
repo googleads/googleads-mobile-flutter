@@ -241,7 +241,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, size.height);
     } else if (value instanceof FlutterAdSize.SmartBannerAdSize) {
       stream.write(VALUE_SMART_BANNER_AD_SIZE);
-    } else if (value instanceof FlutterAdSize) {
+    } else {
       stream.write(VALUE_AD_SIZE);
       writeValue(stream, value.width);
       writeValue(stream, value.height);
