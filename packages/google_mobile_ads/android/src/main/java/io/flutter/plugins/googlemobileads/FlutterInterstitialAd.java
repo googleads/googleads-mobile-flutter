@@ -50,22 +50,18 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
           request.asAdRequest(),
           new InterstitialAdLoadCallback() {
             @Override
-            public void onAdLoaded(
-                @NonNull InterstitialAd interstitialAd) {
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
               FlutterInterstitialAd.this.ad = interstitialAd;
               FlutterInterstitialAd.this.manager.onAdLoaded(
-                  FlutterInterstitialAd.this,
-                  interstitialAd.getResponseInfo());
+                  FlutterInterstitialAd.this, interstitialAd.getResponseInfo());
             }
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
               FlutterInterstitialAd.this.manager.onAdFailedToLoad(
-                  FlutterInterstitialAd.this,
-                  new FlutterAd.FlutterLoadAdError(loadAdError));
+                  FlutterInterstitialAd.this, new FlutterAd.FlutterLoadAdError(loadAdError));
             }
-          }
-      );
+          });
     }
   }
 
