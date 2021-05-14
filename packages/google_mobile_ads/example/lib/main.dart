@@ -14,6 +14,8 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -48,12 +50,54 @@ class _MyAppState extends State<MyApp> {
   late RewardedAd _rewardedAd;
   bool _rewardedReady = false;
 
+  BannerAd? _anchoredBanner;
+  bool _loadingAnchoredBanner = false;
+
   @override
   void initState() {
     super.initState();
+    _createInterstitialAd();
+    _createRewardedAd();
   }
 
-  void createInterstitialAd() {
+  Future<void> _createAnchoredBanner(BuildContext context) async {
+    final AnchoredAdaptiveBannerAdSize? size =
+        await AdSize.getAnchoredAdaptiveBannerAdSize(
+      Orientation.portrait,
+      MediaQuery.of(context).size.width.truncate(),
+    );
+
+    if (size == null) {
+      print('Unable to get height of anchored banner.');
+      return;
+    }
+
+    final BannerAd banner = BannerAd(
+      size: size,
+      request: request,
+      adUnitId: Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/6300978111'
+          : 'ca-app-pub-3940256099942544/2934735716',
+      listener: AdListener(
+        onAdLoaded: (Ad ad) {
+          print('$BannerAd loaded.');
+          setState(() {
+            _anchoredBanner = ad as BannerAd?;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('$BannerAd failedToLoad: $error');
+          ad.dispose();
+        },
+        onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
+        onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
+        onApplicationExit: (Ad ad) => print('$BannerAd onApplicationExit.'),
+      ),
+    );
+    return banner.load();
+  }
+
+  void _createInterstitialAd() {
     _interstitialAd = InterstitialAd(
       adUnitId: InterstitialAd.testAdUnitId,
       request: request,
@@ -70,7 +114,7 @@ class _MyAppState extends State<MyApp> {
         onAdClosed: (Ad ad) {
           print('$InterstitialAd closed.');
           ad.dispose();
-          createInterstitialAd();
+          _createInterstitialAd();
         },
         onApplicationExit: (Ad ad) =>
             print('$InterstitialAd onApplicationExit.'),
@@ -78,7 +122,7 @@ class _MyAppState extends State<MyApp> {
     )..load();
   }
 
-  void createRewardedAd() {
+  void _createRewardedAd() {
     _rewardedAd = RewardedAd(
       adUnitId: RewardedAd.testAdUnitId,
       request: request,
@@ -95,7 +139,7 @@ class _MyAppState extends State<MyApp> {
           onAdClosed: (Ad ad) {
             print('$RewardedAd closed.');
             ad.dispose();
-            createRewardedAd();
+            _createRewardedAd();
           },
           onApplicationExit: (Ad ad) => print('$RewardedAd onApplicationExit.'),
           onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) {
@@ -109,7 +153,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     super.dispose();
-
     _interstitialAd.dispose();
     _rewardedAd.dispose();
   }
@@ -117,8 +160,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Builder(
-        builder: (BuildContext context) => Scaffold(
+      home: Builder(builder: (BuildContext context) {
+        if (!_loadingAnchoredBanner) {
+          _loadingAnchoredBanner = true;
+          _createAnchoredBanner(context);
+        }
+        return Scaffold(
           appBar: AppBar(
             title: const Text('AdMob Plugin example app'),
             actions: <Widget>[
@@ -135,14 +182,6 @@ class _MyAppState extends State<MyApp> {
                       _rewardedAd.show();
                       _rewardedReady = false;
                       break;
-                    case 'ReusableInlineExample':
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                            builder: (BuildContext context) =>
-                                ReusableInlineExample()),
-                      );
-                      break;
                     default:
                       throw AssertionError('unexpected button: $result');
                   }
@@ -156,17 +195,27 @@ class _MyAppState extends State<MyApp> {
                     value: '$RewardedAd',
                     child: Text('$RewardedAd'),
                   ),
-                  PopupMenuItem<String>(
-                    value: '$ReusableInlineExample',
-                    child: Text('Reusable Inline Ads Object Example'),
-                  ),
                 ],
               ),
             ],
           ),
-          body: ReusableInlineExample(),
-        ),
-      ),
+          body: SafeArea(
+            child: Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: <Widget>[
+                ReusableInlineExample(),
+                if (_anchoredBanner != null)
+                  Container(
+                    color: Colors.green,
+                    width: _anchoredBanner!.size.width.toDouble(),
+                    height: _anchoredBanner!.size.height.toDouble(),
+                    child: AdWidget(ad: _anchoredBanner!),
+                  ),
+              ],
+            ),
+          ),
+        );
+      }),
     );
   }
 }

@@ -20,9 +20,7 @@ import 'constants.dart';
 import 'dart:io' show Platform;
 
 /// This example demonstrates inline ads in a list view, where the ad objects
-/// live for the lifetime of this widget. This differs from the example in
-/// [main.dart], which creates a new ad object whenever an ad is to be displayed
-/// in the ListView.
+/// live for the lifetime of this widget.
 class ReusableInlineExample extends StatefulWidget {
   @override
   _ReusableInlineExampleState createState() => _ReusableInlineExampleState();
@@ -161,10 +159,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
   void dispose() {
     super.dispose();
     _bannerAd?.dispose();
-    _bannerAd = null;
     _publisherBannerAd?.dispose();
-    _publisherBannerAd = null;
     _nativeAd?.dispose();
-    _nativeAd = null;
   }
 }

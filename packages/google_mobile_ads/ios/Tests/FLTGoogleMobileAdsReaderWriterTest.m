@@ -25,6 +25,15 @@
 @interface FLTGoogleMobileAdsReaderWriterTest : XCTestCase
 @end
 
+@interface TestGoogleMobileAdsReaderWriter : FLTGoogleMobileAdsReaderWriter
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory;
+@end
+
+@interface TestGoogleMobileAdsReader : FLTGoogleMobileAdsReader
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory
+                                    data:(NSData *_Nonnull)data;
+@end
+
 @interface FLTTestAdSizeFactory : FLTAdSizeFactory
 @property(readonly) GADAdSize testAdSize;
 @end
@@ -36,7 +45,7 @@
 
 - (void)setUp {
   _readerWriter =
-      [[FLTGoogleMobileAdsReaderWriter alloc] initWithFactory:[[FLTTestAdSizeFactory alloc] init]];
+      [[TestGoogleMobileAdsReaderWriter alloc] initWithFactory:[[FLTTestAdSizeFactory alloc] init]];
   _messageCodec = [FlutterStandardMessageCodec codecWithReaderWriter:_readerWriter];
 }
 
@@ -216,5 +225,37 @@
 
 - (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *)width {
   return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
+}
+@end
+
+@implementation TestGoogleMobileAdsReaderWriter
+
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory {
+  return [super initWithFactory:adSizeFactory];
+}
+
+- (FlutterStandardReader *_Nonnull)readerWithData:(NSData *_Nonnull)data {
+  return [[TestGoogleMobileAdsReader alloc] initWithFactory:self.adSizeFactory data:data];
+}
+@end
+
+@implementation TestGoogleMobileAdsReader
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory
+                                    data:(NSData *_Nonnull)data {
+  return [super initWithFactory:adSizeFactory data:data];
+}
+
+- (id _Nullable)readValueOfType:(UInt8)type {
+  FLTAdMobField field = (FLTAdMobField)type;
+  if (field == FLTAdmobFieldAnchoredAdaptiveBannerAdSize) {
+    NSString *orientation = [self readValueOfType:[self readByte]];
+    NSNumber *width = [self readValueOfType:[self readByte]];
+    NSNumber *height = [self readValueOfType:[self readByte]];
+    return [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:self.adSizeFactory
+                                                      orientation:orientation
+                                                            width:width];
+  }
+
+  return [super readValueOfType:type];
 }
 @end

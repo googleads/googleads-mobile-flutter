@@ -27,7 +27,7 @@ void main() {
 
   group('GoogleMobileAds', () {
     final List<MethodCall> log = <MethodCall>[];
-    final AdMessageCodec codec = AdMessageCodec();
+    final TestMessageCodec codec = TestMessageCodec();
 
     setUp(() async {
       log.clear();
@@ -879,4 +879,18 @@ void main() {
       expect(banner.isLoaded(), completion(false));
     });
   });
+}
+
+class TestMessageCodec extends AdMessageCodec {
+  @override
+  void writeValue(WriteBuffer buffer, value) {
+    if (value is AnchoredAdaptiveBannerAdSize) {
+      buffer.putUint8(AdMessageCodec.valueAnchoredAdaptiveBannerAdSize);
+      writeValue(buffer, describeEnum(value.orientation));
+      writeValue(buffer, value.width);
+      writeValue(buffer, value.height);
+    } else {
+      super.writeValue(buffer, value);
+    }
+  }
 }
