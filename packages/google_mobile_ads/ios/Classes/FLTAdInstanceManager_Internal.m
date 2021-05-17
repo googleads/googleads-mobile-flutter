@@ -77,7 +77,7 @@
   [ad show];
 }
 
-- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad responseInfo:(GADResponseInfo *)responseInfo {
+- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad responseInfo:(GADResponseInfo * _Nonnull)responseInfo {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
                  @"adId" : [self adIdFor:ad],
