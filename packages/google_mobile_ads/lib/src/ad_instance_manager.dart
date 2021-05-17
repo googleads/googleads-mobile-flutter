@@ -362,14 +362,13 @@ class AdMessageCodec extends StandardMessageCodec {
         final String orientationStr =
             readValueOfType(buffer.getUint8(), buffer);
         final num width = readValueOfType(buffer.getUint8(), buffer);
-        final num height = readValueOfType(buffer.getUint8(), buffer);
         return AnchoredAdaptiveBannerAdSize(
           Orientation.values.firstWhere(
             (Orientation orientation) =>
                 describeEnum(orientation) == orientationStr,
           ),
           width: width.truncate(),
-          height: height.truncate(),
+          height: -1,
         );
       case valueSmartBannerAdSize:
         final String orientationStr =

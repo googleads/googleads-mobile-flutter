@@ -30,17 +30,17 @@ import java.util.Map;
  */
 class AdMessageCodec extends StandardMessageCodec {
   // The type values below must be consistent for each platform.
-  static final byte VALUE_AD_SIZE = (byte) 128;
-  static final byte VALUE_AD_REQUEST = (byte) 129;
-  static final byte VALUE_REWARD_ITEM = (byte) 132;
-  static final byte VALUE_LOAD_AD_ERROR = (byte) 133;
-  static final byte VALUE_PUBLISHER_AD_REQUEST = (byte) 134;
-  static final byte VALUE_INITIALIZATION_STATE = (byte) 135;
-  static final byte VALUE_ADAPTER_STATUS = (byte) 136;
-  static final byte VALUE_INITIALIZATION_STATUS = (byte) 137;
-  static final byte VALUE_SERVER_SIDE_VERIFICATION_OPTIONS = (byte) 138;
-  static final byte VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE = (byte) 139;
-  static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 140;
+  private static final byte VALUE_AD_SIZE = (byte) 128;
+  private static final byte VALUE_AD_REQUEST = (byte) 129;
+  private static final byte VALUE_REWARD_ITEM = (byte) 132;
+  private static final byte VALUE_LOAD_AD_ERROR = (byte) 133;
+  private static final byte VALUE_PUBLISHER_AD_REQUEST = (byte) 134;
+  private static final byte VALUE_INITIALIZATION_STATE = (byte) 135;
+  private static final byte VALUE_ADAPTER_STATUS = (byte) 136;
+  private static final byte VALUE_INITIALIZATION_STATUS = (byte) 137;
+  private static final byte VALUE_SERVER_SIDE_VERIFICATION_OPTIONS = (byte) 138;
+  private static final byte VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE = (byte) 139;
+  private static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 140;
 
   @NonNull final Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
@@ -195,7 +195,6 @@ class AdMessageCodec extends StandardMessageCodec {
           (FlutterAdSize.AnchoredAdaptiveBannerAdSize) value;
       writeValue(stream, size.orientation);
       writeValue(stream, size.width);
-      writeValue(stream, size.height);
     } else if (value instanceof FlutterAdSize.SmartBannerAdSize) {
       stream.write(VALUE_SMART_BANNER_AD_SIZE);
     } else if (value instanceof FlutterAdSize) {

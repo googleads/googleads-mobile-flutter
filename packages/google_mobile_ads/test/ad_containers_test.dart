@@ -27,7 +27,7 @@ void main() {
 
   group('GoogleMobileAds', () {
     final List<MethodCall> log = <MethodCall>[];
-    final TestMessageCodec codec = TestMessageCodec();
+    final AdMessageCodec codec = AdMessageCodec();
 
     setUp(() async {
       log.clear();
@@ -795,7 +795,7 @@ void main() {
       final AnchoredAdaptiveBannerAdSize result = codec.decodeMessage(byteData);
       expect(result.orientation, Orientation.landscape);
       expect(result.width, 23);
-      expect(result.height, 34);
+      expect(result.height, -1);
     });
 
     test('encode/decode $SmartBannerAdSize', () async {
@@ -879,18 +879,4 @@ void main() {
       expect(banner.isLoaded(), completion(false));
     });
   });
-}
-
-class TestMessageCodec extends AdMessageCodec {
-  @override
-  void writeValue(WriteBuffer buffer, value) {
-    if (value is AnchoredAdaptiveBannerAdSize) {
-      buffer.putUint8(AdMessageCodec.valueAnchoredAdaptiveBannerAdSize);
-      writeValue(buffer, describeEnum(value.orientation));
-      writeValue(buffer, value.width);
-      writeValue(buffer, value.height);
-    } else {
-      super.writeValue(buffer, value);
-    }
-  }
 }

@@ -235,7 +235,11 @@
         [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:[[FLTAdSizeFactory alloc] init]
                                                    orientation:call.arguments[@"orientation"]
                                                          width:call.arguments[@"width"]];
-    result(size);
+    if (IsGADAdSizeValid(size.size)) {
+      result(size.height);
+    } else {
+      result(nil);
+    }
   } else {
     result(FlutterMethodNotImplemented);
   }

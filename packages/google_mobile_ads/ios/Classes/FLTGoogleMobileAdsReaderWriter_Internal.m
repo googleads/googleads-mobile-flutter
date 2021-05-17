@@ -14,6 +14,21 @@
 
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
 
+// The type values below must be consistent for each platform.
+typedef NS_ENUM(NSInteger, FLTAdMobField) {
+  FLTAdMobFieldAdSize = 128,
+  FLTAdMobFieldAdRequest = 129,
+  FLTAdMobFieldRewardItem = 132,
+  FLTAdMobFieldLoadAdError = 133,
+  FLTAdMobFieldPublisherAdRequest = 134,
+  FLTAdMobFieldAdapterInitializationState = 135,
+  FLTAdMobFieldAdapterStatus = 136,
+  FLTAdMobFieldInitializationStatus = 137,
+  FLTAdmobFieldServerSideVerificationOptions = 138,
+  FLTAdmobFieldAnchoredAdaptiveBannerAdSize = 139,
+  FLTAdmobFieldSmartBannerAdSize = 140,
+};
+
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
 @end
 
@@ -140,7 +155,6 @@
     FLTAnchoredAdaptiveBannerSize *size = (FLTAnchoredAdaptiveBannerSize *)value;
     [self writeValue:size.orientation];
     [self writeValue:size.width];
-    [self writeValue:size.height];
   } else if ([value isKindOfClass:[FLTSmartBannerSize class]]) {
     [self writeByte:FLTAdmobFieldSmartBannerAdSize];
     FLTSmartBannerSize *size = (FLTSmartBannerSize *)value;
