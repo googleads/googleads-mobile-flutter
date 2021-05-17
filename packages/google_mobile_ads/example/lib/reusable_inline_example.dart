@@ -41,7 +41,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: ListView.separated(
-            itemCount: 30,
+            itemCount: 20,
             separatorBuilder: (BuildContext context, int index) {
               return Container(height: 40);
             },
