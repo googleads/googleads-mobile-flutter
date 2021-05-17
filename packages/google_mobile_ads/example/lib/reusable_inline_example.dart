@@ -49,7 +49,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
             },
             itemBuilder: (BuildContext context, int index) {
               final BannerAd? bannerAd = _bannerAd;
-              if (index % 6 == 1 && _bannerAdIsLoaded && bannerAd != null) {
+              if (index == 5 && _bannerAdIsLoaded && bannerAd != null) {
                 return Container(
                     height: bannerAd.size.height.toDouble(),
                     width: bannerAd.size.width.toDouble(),
@@ -57,7 +57,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
               }
 
               final PublisherBannerAd? publisherBannerAd = _publisherBannerAd;
-              if (index % 6 == 3 &&
+              if (index == 10 &&
                   _publisherBannerAdIsLoaded &&
                   publisherBannerAd != null) {
                 return Container(
@@ -67,7 +67,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
               }
 
               final NativeAd? nativeAd = _nativeAd;
-              if (index % 6 == 5 && _nativeAdIsLoaded && nativeAd != null) {
+              if (index == 15 && _nativeAdIsLoaded && nativeAd != null) {
                 return Container(
                   width: 250,
                   height: 350,
