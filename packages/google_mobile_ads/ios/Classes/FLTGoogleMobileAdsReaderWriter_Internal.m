@@ -29,12 +29,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldSmartBannerAdSize = 140,
 };
 
-@interface FLTGoogleMobileAdsReader : FlutterStandardReader
-@property(readonly) FLTAdSizeFactory *_Nonnull adSizeFactory;
-- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory
-                                    data:(NSData *_Nonnull)data;
-@end
-
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
 @end
 
@@ -142,9 +136,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     case FLTAdmobFieldAnchoredAdaptiveBannerAdSize: {
       NSString *orientation = [self readValueOfType:[self readByte]];
       NSNumber *width = [self readValueOfType:[self readByte]];
-      // Unused to create AnchoredAdaptiveBannerAdSize, but need to clear the memory.
-      // This is for the purpose of testing the writer.
-      NSNumber *__unused height = [self readValueOfType:[self readByte]];
       return [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:_adSizeFactory
                                                         orientation:orientation
                                                               width:width];
@@ -164,7 +155,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     FLTAnchoredAdaptiveBannerSize *size = (FLTAnchoredAdaptiveBannerSize *)value;
     [self writeValue:size.orientation];
     [self writeValue:size.width];
-    [self writeValue:size.height];
   } else if ([value isKindOfClass:[FLTSmartBannerSize class]]) {
     [self writeByte:FLTAdmobFieldSmartBannerAdSize];
     FLTSmartBannerSize *size = (FLTSmartBannerSize *)value;
