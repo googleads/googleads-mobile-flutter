@@ -150,6 +150,26 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   OCMVerify([_mockMessenger sendOnChannel:channel message:data]);
 }
 
+- (void)testAdInstanceManagerOnAdFailedToShow {
+  FLTInterstitialAd *ad = OCMClassMock([FLTInterstitialAd class]);
+  [_manager loadAd:ad adId:@(1)];
+
+  NSDictionary *userInfo = @{NSLocalizedDescriptionKey : @"message"};
+  NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
+
+  [_manager didFailToPresentFullScreenContentWithError:ad error:error];
+  NSData *data = [_methodCodec
+      encodeMethodCall:[FlutterMethodCall
+                           methodCallWithMethodName:@"onAdEvent"
+                                          arguments:@{
+                                            @"adId" : @1,
+                                            @"eventName" :
+                                                @"didFailToPresentFullScreenContentWithError",
+                                            @"error" : error,
+                                          }]];
+  OCMVerify([_mockMessenger sendOnChannel:channel message:data]);
+}
+
 - (void)testAdInstanceManagerOnAppEvent {
   FLTNativeAd *ad =
       [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
