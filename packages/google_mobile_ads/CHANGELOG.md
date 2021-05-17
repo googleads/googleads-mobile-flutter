@@ -11,6 +11,11 @@ and [NativeAdView](https://developers.google.com/android/reference/com/google/an
 * Removes `Ad.isLoaded()`. Instead you should use the `onAdLoaded` callback to track whether an ad is loaded.
 * Removes need to call `Ad.dispose()` for Rewarded and Interstitial ads when they fail to load.
 
+## 0.12.2+1
+
+* Fix anchored adaptive banner message corruption error.
+* Update example app with better practices and adaptive banner.
+
 ## 0.12.2
 
 * Add support for anchored adaptive banners.

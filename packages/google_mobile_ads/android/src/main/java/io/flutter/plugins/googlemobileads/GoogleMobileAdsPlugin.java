@@ -380,7 +380,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         if (AdSize.INVALID.equals(size.size)) {
           result.success(null);
         } else {
-          result.success(size);
+          result.success(size.height);
         }
         break;
       default:

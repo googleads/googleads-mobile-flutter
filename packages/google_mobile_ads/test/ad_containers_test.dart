@@ -1115,7 +1115,7 @@ void main() {
       final AnchoredAdaptiveBannerAdSize result = codec.decodeMessage(byteData);
       expect(result.orientation, Orientation.landscape);
       expect(result.width, 23);
-      expect(result.height, 34);
+      expect(result.height, -1);
     });
 
     test('encode/decode $SmartBannerAdSize', () async {
