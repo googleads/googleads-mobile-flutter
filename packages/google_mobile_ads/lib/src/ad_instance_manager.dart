@@ -297,57 +297,57 @@ class AdMessageCodec extends StandardMessageCodec {
   const AdMessageCodec();
 
   // The type values below must be consistent for each platform.
-  static const int valueAdSize = 128;
-  static const int valueAdRequest = 129;
-  static const int valueRewardItem = 132;
-  static const int valueLoadAdError = 133;
-  static const int valuePublisherAdRequest = 134;
-  static const int valueInitializationState = 135;
-  static const int valueAdapterStatus = 136;
-  static const int valueInitializationStatus = 137;
-  static const int valueServerSideVerificationOptions = 138;
-  static const int valueAnchoredAdaptiveBannerAdSize = 139;
-  static const int valueSmartBannerAdSize = 140;
+  static const int _valueAdSize = 128;
+  static const int _valueAdRequest = 129;
+  static const int _valueRewardItem = 132;
+  static const int _valueLoadAdError = 133;
+  static const int _valuePublisherAdRequest = 134;
+  static const int _valueInitializationState = 135;
+  static const int _valueAdapterStatus = 136;
+  static const int _valueInitializationStatus = 137;
+  static const int _valueServerSideVerificationOptions = 138;
+  static const int _valueAnchoredAdaptiveBannerAdSize = 139;
+  static const int _valueSmartBannerAdSize = 140;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
     if (value is AdSize) {
       writeAdSize(buffer, value);
     } else if (value is AdRequest) {
-      buffer.putUint8(valueAdRequest);
+      buffer.putUint8(_valueAdRequest);
       writeValue(buffer, value.keywords);
       writeValue(buffer, value.contentUrl);
       writeValue(buffer, value.testDevices);
       writeValue(buffer, value.nonPersonalizedAds);
     } else if (value is RewardItem) {
-      buffer.putUint8(valueRewardItem);
+      buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
       writeValue(buffer, value.type);
     } else if (value is LoadAdError) {
-      buffer.putUint8(valueLoadAdError);
+      buffer.putUint8(_valueLoadAdError);
       writeValue(buffer, value.code);
       writeValue(buffer, value.domain);
       writeValue(buffer, value.message);
     } else if (value is PublisherAdRequest) {
-      buffer.putUint8(valuePublisherAdRequest);
+      buffer.putUint8(_valuePublisherAdRequest);
       writeValue(buffer, value.keywords);
       writeValue(buffer, value.contentUrl);
       writeValue(buffer, value.customTargeting);
       writeValue(buffer, value.customTargetingLists);
       writeValue(buffer, value.nonPersonalizedAds);
     } else if (value is AdapterInitializationState) {
-      buffer.putUint8(valueInitializationState);
+      buffer.putUint8(_valueInitializationState);
       writeValue(buffer, describeEnum(value));
     } else if (value is AdapterStatus) {
-      buffer.putUint8(valueAdapterStatus);
+      buffer.putUint8(_valueAdapterStatus);
       writeValue(buffer, value.state);
       writeValue(buffer, value.description);
       writeValue(buffer, value.latency);
     } else if (value is InitializationStatus) {
-      buffer.putUint8(valueInitializationStatus);
+      buffer.putUint8(_valueInitializationStatus);
       writeValue(buffer, value.adapterStatuses);
     } else if (value is ServerSideVerificationOptions) {
-      buffer.putUint8(valueServerSideVerificationOptions);
+      buffer.putUint8(_valueServerSideVerificationOptions);
       writeValue(buffer, value.userId);
       writeValue(buffer, value.customData);
     } else {
@@ -358,7 +358,7 @@ class AdMessageCodec extends StandardMessageCodec {
   @override
   dynamic readValueOfType(dynamic type, ReadBuffer buffer) {
     switch (type) {
-      case valueAnchoredAdaptiveBannerAdSize:
+      case _valueAnchoredAdaptiveBannerAdSize:
         final String orientationStr =
             readValueOfType(buffer.getUint8(), buffer);
         final num width = readValueOfType(buffer.getUint8(), buffer);
@@ -368,9 +368,9 @@ class AdMessageCodec extends StandardMessageCodec {
                 describeEnum(orientation) == orientationStr,
           ),
           width: width.truncate(),
-          height: -1,
+          height: -1, // Unused value
         );
-      case valueSmartBannerAdSize:
+      case _valueSmartBannerAdSize:
         final String orientationStr =
             readValueOfType(buffer.getUint8(), buffer);
         return SmartBannerAdSize(
@@ -379,12 +379,12 @@ class AdMessageCodec extends StandardMessageCodec {
                 describeEnum(orientation) == orientationStr,
           ),
         );
-      case valueAdSize:
+      case _valueAdSize:
         return AdSize(
           width: readValueOfType(buffer.getUint8(), buffer),
           height: readValueOfType(buffer.getUint8(), buffer),
         );
-      case valueAdRequest:
+      case _valueAdRequest:
         return AdRequest(
           keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
           contentUrl: readValueOfType(buffer.getUint8(), buffer),
@@ -392,18 +392,18 @@ class AdMessageCodec extends StandardMessageCodec {
               readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
           nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
         );
-      case valueRewardItem:
+      case _valueRewardItem:
         return RewardItem(
           readValueOfType(buffer.getUint8(), buffer),
           readValueOfType(buffer.getUint8(), buffer),
         );
-      case valueLoadAdError:
+      case _valueLoadAdError:
         return LoadAdError(
           readValueOfType(buffer.getUint8(), buffer),
           readValueOfType(buffer.getUint8(), buffer),
           readValueOfType(buffer.getUint8(), buffer),
         );
-      case valuePublisherAdRequest:
+      case _valuePublisherAdRequest:
         return PublisherAdRequest(
           keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
           contentUrl: readValueOfType(buffer.getUint8(), buffer),
@@ -414,7 +414,7 @@ class AdMessageCodec extends StandardMessageCodec {
           ),
           nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
         );
-      case valueInitializationState:
+      case _valueInitializationState:
         switch (readValueOfType(buffer.getUint8(), buffer)) {
           case 'notReady':
             return AdapterInitializationState.notReady;
@@ -422,7 +422,7 @@ class AdMessageCodec extends StandardMessageCodec {
             return AdapterInitializationState.ready;
         }
         throw ArgumentError();
-      case valueAdapterStatus:
+      case _valueAdapterStatus:
         final AdapterInitializationState state =
             readValueOfType(buffer.getUint8(), buffer);
         final String description = readValueOfType(buffer.getUint8(), buffer);
@@ -435,12 +435,12 @@ class AdMessageCodec extends StandardMessageCodec {
         }
 
         return AdapterStatus(state, description, latency);
-      case valueInitializationStatus:
+      case _valueInitializationStatus:
         return InitializationStatus(
           readValueOfType(buffer.getUint8(), buffer)
               .cast<String, AdapterStatus>(),
         );
-      case valueServerSideVerificationOptions:
+      case _valueServerSideVerificationOptions:
         return ServerSideVerificationOptions(
             userId: readValueOfType(buffer.getUint8(), buffer),
             customData: readValueOfType(buffer.getUint8(), buffer));
@@ -461,16 +461,16 @@ class AdMessageCodec extends StandardMessageCodec {
 
   void writeAdSize(WriteBuffer buffer, AdSize value) {
     if (value is AnchoredAdaptiveBannerAdSize) {
-      buffer.putUint8(valueAnchoredAdaptiveBannerAdSize);
+      buffer.putUint8(_valueAnchoredAdaptiveBannerAdSize);
       writeValue(buffer, describeEnum(value.orientation));
       writeValue(buffer, value.width);
     } else if (value is SmartBannerAdSize) {
-      buffer.putUint8(valueSmartBannerAdSize);
+      buffer.putUint8(_valueSmartBannerAdSize);
       if (defaultTargetPlatform == TargetPlatform.iOS) {
         writeValue(buffer, describeEnum(value.orientation));
       }
     } else {
-      buffer.putUint8(valueAdSize);
+      buffer.putUint8(_valueAdSize);
       writeValue(buffer, value.width);
       writeValue(buffer, value.height);
     }

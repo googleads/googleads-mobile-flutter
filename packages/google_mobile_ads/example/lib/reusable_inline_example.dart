@@ -43,7 +43,9 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
           child: ListView.separated(
             itemCount: 20,
             separatorBuilder: (BuildContext context, int index) {
-              return Container(height: 40);
+              return Container(
+                height: 40,
+              );
             },
             itemBuilder: (BuildContext context, int index) {
               final BannerAd? bannerAd = _bannerAd;
