@@ -155,6 +155,7 @@ class _MyAppState extends State<MyApp> {
     super.dispose();
     _interstitialAd.dispose();
     _rewardedAd.dispose();
+    _anchoredBanner?.dispose();
   }
 
   @override
