@@ -28,11 +28,22 @@ flutter:
         pluginClass: FLTGoogleMobileAdsPlugin
 
 dependencies:
+  reference:
+    git:
+      url: git@github.com:bparrishMines/penguin.git
+      ref: update_generator
+      path: packages/reference
   meta: ^1.0.4
   flutter:
     sdk: flutter
 
 dev_dependencies:
+  reference_generator:
+    git:
+      url: git@github.com:bparrishMines/penguin.git
+      ref: update_generator
+      path: packages/reference_generator
+  build_runner: ^1.12.2
   pedantic: ^1.11.0
   e2e: ^0.7.0
   flutter_driver:
