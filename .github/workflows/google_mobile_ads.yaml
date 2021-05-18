@@ -59,7 +59,7 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
-          flutter config --enable-macos-desktop
+          flutter config
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
       - name: "Unit Tests"
@@ -67,7 +67,7 @@ jobs:
           cd packages/google_mobile_ads/ios
           pod lib lint --allow-warnings
         env:
-          DEVELOPER_DIR: /Applications/Xcode_11.4.app/Contents/Developer
+          DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
   
   flutter:
     runs-on: macos-latest
@@ -94,4 +94,8 @@ jobs:
           cd packages/google_mobile_ads/
           flutter pub publish --dry-run
       - name: "Flutter Format"
-        run: flutter format --set-exit-if-changed packages/google_mobile_ads
+        run: |
+          flutter pub global activate flutter_plugin_tools
+          brew install clang-format
+          flutter pub global run flutter_plugin_tools format
+          ./.github/workflows/scripts/validate-formatting.sh

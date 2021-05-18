@@ -17,20 +17,68 @@
 
 @implementation FLTAdSize
 - (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width height:(NSNumber *_Nonnull)height {
+  return
+      [self initWithAdSize:GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, height.doubleValue))];
+}
+
+- (instancetype _Nonnull)initWithAdSize:(GADAdSize)size {
   self = [super init];
   if (self) {
-    _width = width;
-    _height = height;
+    _size = size;
+    _width = @(size.size.width);
+    _height = @(size.size.height);
+  }
+  return self;
+}
+@end
 
-    // These values must remain consistent with `AdSize.smartBannerPortrait` and
-    // `adSize.smartBannerLandscape` in Dart.
-    if ([_width isEqual:@(-1)] && [_height isEqual:@(-2)]) {
-      _size = kGADAdSizeSmartBannerPortrait;
-    } else if ([_width isEqual:@(-1)] && [_height isEqual:@(-3)]) {
-      _size = kGADAdSizeSmartBannerLandscape;
-    } else {
-      _size = GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, height.doubleValue));
-    }
+@implementation FLTAdSizeFactory
+- (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+  return GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
+}
+
+- (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+  return GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
+}
+@end
+
+@implementation FLTAnchoredAdaptiveBannerSize
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
+                             orientation:(NSString *_Nonnull)orientation
+                                   width:(NSNumber *_Nonnull)width {
+  GADAdSize size;
+  if ([orientation isEqualToString:@"portrait"]) {
+    size = [factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:width];
+  } else if ([orientation isEqualToString:@"landscape"]) {
+    size = [factory landscapeAnchoredAdaptiveBannerAdSizeWithWidth:width];
+  } else {
+    NSLog(@"AdaptiveBanner orientation should be 'portrait' or 'landscape': %@", orientation);
+    return nil;
+  }
+
+  self = [self initWithAdSize:size];
+  if (self) {
+    _orientation = orientation;
+  }
+  return self;
+}
+@end
+
+@implementation FLTSmartBannerSize
+- (instancetype _Nonnull)initWithOrientation:(NSString *_Nonnull)orientation {
+  GADAdSize size;
+  if ([orientation isEqualToString:@"portrait"]) {
+    size = kGADAdSizeSmartBannerPortrait;
+  } else if ([orientation isEqualToString:@"landscape"]) {
+    size = kGADAdSizeSmartBannerLandscape;
+  } else {
+    NSLog(@"SmartBanner orientation should be 'portrait' or 'landscape': %@", orientation);
+    return nil;
+  }
+
+  self = [self initWithAdSize:size];
+  if (self) {
+    _orientation = orientation;
   }
   return self;
 }
@@ -41,10 +89,6 @@
   GADRequest *request = [GADRequest request];
   request.keywords = _keywords;
   request.contentURL = _contentURL;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  request.testDevices = _testDevices;
-#pragma clang diagnostic pop
   if (_nonPersonalizedAds) {
     GADExtras *extras = [[GADExtras alloc] init];
     extras.additionalParameters = @{@"npa" : @"1"};
@@ -56,33 +100,60 @@
 }
 @end
 
-@implementation FLTLoadAdError
-- (instancetype _Nonnull)initWithCode:(NSNumber *_Nonnull)code
-                               domain:(NSString *_Nonnull)domain
-                              message:(NSString *_Nonnull)message {
-  self = [super init];
-  if (self) {
-    _code = code;
-    _domain = domain;
-    _message = message;
-  }
-  return self;
-}
+@implementation FLTGADResponseInfo
 
-- (instancetype _Nonnull)initWithError:(GADRequestError *_Nonnull)error {
+- (instancetype _Nonnull)initWithResponseInfo:(GADResponseInfo *_Nonnull)responseInfo {
   self = [super init];
   if (self) {
-    _code = @(error.code);
-    _domain = error.domain;
-    _message = error.localizedDescription;
+    _responseIdentifier = responseInfo.responseIdentifier;
+    _adNetworkClassName = responseInfo.adNetworkClassName;
+    NSMutableArray<FLTGADAdNetworkResponseInfo *> *infoArray = [[NSMutableArray alloc] init];
+    for (GADAdNetworkResponseInfo *adNetworkInfo in responseInfo.adNetworkInfoArray) {
+      [infoArray
+          addObject:[[FLTGADAdNetworkResponseInfo alloc] initWithResponseInfo:adNetworkInfo]];
+    }
+    _adNetworkInfoArray = infoArray;
   }
   return self;
 }
 @end
 
-@implementation FLTPublisherAdRequest
-- (GADRequest *_Nonnull)asDFPRequest {
-  DFPRequest *request = [DFPRequest request];
+@implementation FLTGADAdNetworkResponseInfo
+
+- (instancetype _Nonnull)initWithResponseInfo:(GADAdNetworkResponseInfo *_Nonnull)responseInfo {
+  self = [super init];
+  if (self) {
+    _adNetworkClassName = responseInfo.adNetworkClassName;
+    NSNumber *timeInMillis = [[NSNumber alloc] initWithDouble:responseInfo.latency * 1000];
+    _latency = @(timeInMillis.longValue);
+    _dictionaryDescription = responseInfo.dictionaryRepresentation.description;
+    _credentialsDescription = responseInfo.credentials.description;
+    _error = responseInfo.error;
+  }
+  return self;
+}
+@end
+
+@implementation FLTLoadAdError
+
+- (instancetype _Nonnull)initWithError:(NSError *_Nonnull)error {
+  self = [super init];
+  if (self) {
+    _code = error.code;
+    _domain = error.domain;
+    _message = error.localizedDescription;
+    GADResponseInfo *responseInfo = error.userInfo[GADErrorUserInfoKeyResponseInfo];
+    if (responseInfo) {
+      _responseInfo = [[FLTGADResponseInfo alloc] initWithResponseInfo:responseInfo];
+    }
+  }
+  return self;
+}
+@end
+
+@implementation FLTGAMAdRequest
+- (GADRequest *_Nonnull)asGAMRequest {
+  GAMRequest *request = [GAMRequest request];
   request.keywords = self.keywords;
   request.contentURL = self.contentURL;
 
@@ -141,48 +212,51 @@
   [self.bannerView loadRequest:_adRequest.asGADRequest];
 }
 
-- (void)adView:(GADBannerView *)adView didFailToReceiveAdWithError:(GADRequestError *)error {
-  [_manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
+#pragma mark - GADBannerViewDelegate
+
+- (void)bannerViewDidReceiveAd:(GADBannerView *)bannerView {
+  [_manager onAdLoaded:self responseInfo:bannerView.responseInfo];
 }
 
-- (void)adViewWillPresentScreen:(GADBannerView *)adView {
-  [_manager onAdOpened:self];
+- (void)bannerView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(NSError *)error {
+  [_manager onAdFailedToLoad:self error:error];
 }
 
-- (void)adViewDidDismissScreen:(GADBannerView *)adView {
-  [_manager onAdClosed:self];
+- (void)bannerViewDidRecordImpression:(GADBannerView *)bannerView {
+  [_manager onBannerImpression:self];
 }
 
-- (void)adViewWillLeaveApplication:(GADBannerView *)adView {
-  [_manager onApplicationExit:self];
+- (void)bannerViewWillPresentScreen:(GADBannerView *)bannerView {
+  [_manager onBannerWillPresentScreen:self];
 }
 
-- (void)adViewDidReceiveAd:(GADBannerView *)adView {
-  [_manager onAdLoaded:self];
+- (void)bannerViewWillDismissScreen:(GADBannerView *)bannerView {
+  [_manager onBannerWillDismissScreen:self];
 }
-- (void)adView:(nonnull GADBannerView *)banner
-    didReceiveAppEvent:(nonnull NSString *)name
-              withInfo:(nullable NSString *)info {
-  [_manager onAppEvent:self name:name data:info];
+
+- (void)bannerViewDidDismissScreen:(GADBannerView *)bannerView {
+  [_manager onBannerDidDismissScreen:self];
 }
+
+#pragma mark - FlutterPlatformView
 - (nonnull UIView *)view {
   return self.bannerView;
 }
 @end
 
-@implementation FLTPublisherBannerAd {
-  DFPBannerView *_bannerView;
-  FLTPublisherAdRequest *_adRequest;
+@implementation FLTGAMBannerAd {
+  GAMBannerView *_bannerView;
+  FLTGAMAdRequest *_adRequest;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                            sizes:(NSArray<FLTAdSize *> *_Nonnull)sizes
-                         request:(FLTPublisherAdRequest *_Nonnull)request
+                         request:(FLTGAMAdRequest *_Nonnull)request
               rootViewController:(UIViewController *_Nonnull)rootViewController {
   self = [super init];
   if (self) {
     _adRequest = request;
-    _bannerView = [[DFPBannerView alloc] initWithAdSize:sizes[0].size];
+    _bannerView = [[GAMBannerView alloc] initWithAdSize:sizes[0].size];
     _bannerView.adUnitID = adUnitId;
     _bannerView.rootViewController = rootViewController;
     _bannerView.appEventDelegate = self;
@@ -202,32 +276,29 @@
 }
 
 - (void)load {
-  [self.bannerView loadRequest:_adRequest.asDFPRequest];
+  [self.bannerView loadRequest:_adRequest.asGAMRequest];
 }
+
+#pragma mark - FlutterPlatformView
 
 - (nonnull UIView *)view {
   return self.bannerView;
 }
 
-- (void)adLoader:(nonnull GADAdLoader *)adLoader
-    didFailToReceiveAdWithError:(nonnull GADRequestError *)error {
-  [self.manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
+#pragma mark - GADAppEventDelegate
+- (void)adView:(nonnull GADBannerView *)banner
+    didReceiveAppEvent:(nonnull NSString *)name
+              withInfo:(nullable NSString *)info {
+  [self.manager onAppEvent:self name:name data:info];
 }
 
-- (void)adLoader:(nonnull GADAdLoader *)adLoader
-    didReceiveDFPBannerView:(nonnull DFPBannerView *)bannerView {
-  [self.manager onAdLoaded:self];
-}
-
-- (nonnull NSArray<NSValue *> *)validBannerSizesForAdLoader:(nonnull GADAdLoader *)adLoader {
-  return _bannerView.validAdSizes;
-}
 @end
 
 @implementation FLTInterstitialAd {
-  GADInterstitial *_interstitialView;
+  GADInterstitialAd *_interstitialView;
   FLTAdRequest *_adRequest;
   UIViewController *_rootViewController;
+  NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -236,8 +307,7 @@
   self = [super init];
   if (self) {
     _adRequest = request;
-    _interstitialView = [[GADInterstitial alloc] initWithAdUnitID:adUnitId];
-    self.interstitial.delegate = self;
+    _adUnitId = [adUnitId copy];
     _rootViewController = rootViewController;
 
     __weak FLTInterstitialAd *weakSelf = self;
@@ -254,77 +324,117 @@
   return self;
 }
 
-- (GADInterstitial *_Nonnull)interstitial {
+- (GADInterstitialAd *_Nullable)interstitial {
   return _interstitialView;
 }
 
+- (NSString *_Nonnull)adUnitId {
+  return _adUnitId;
+}
+
 - (void)load {
-  [self.interstitial loadRequest:_adRequest.asGADRequest];
+  [GADInterstitialAd loadWithAdUnitID:_adUnitId
+                              request:[_adRequest asGADRequest]
+                    completionHandler:^(GADInterstitialAd *ad, NSError *error) {
+                      if (error) {
+                        [self.manager onAdFailedToLoad:self error:error];
+                        return;
+                      }
+                      ad.fullScreenContentDelegate = self;
+                      self->_interstitialView = ad;
+                      [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+                    }];
 }
 
 - (void)show {
-  if (self.interstitial.isReady) {
+  if (self.interstitial) {
     [self.interstitial presentFromRootViewController:_rootViewController];
   } else {
     NSLog(@"InterstitialAd failed to show because the ad was not ready.");
   }
 }
 
-- (void)interstitialDidReceiveAd:(GADInterstitial *)ad {
-  [_manager onAdLoaded:self];
+#pragma mark - GADFullScreenContentDelegate
+
+- (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
+    didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
+  [self.manager didFailToPresentFullScreenContentWithError:self error:error];
 }
 
-- (void)interstitial:(GADInterstitial *)ad didFailToReceiveAdWithError:(GADRequestError *)error {
-  [_manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
+- (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager onAdDidPresentFullScreenContent:self];
 }
 
-- (void)interstitialWillPresentScreen:(GADInterstitial *)ad {
-  [_manager onAdOpened:self];
+- (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager adDidDismissFullScreenContent:self];
 }
 
-- (void)interstitialDidDismissScreen:(GADInterstitial *)ad {
-  [_manager onAdClosed:self];
+- (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager adWillDismissFullScreenContent:self];
 }
 
-- (void)interstitialWillLeaveApplication:(GADInterstitial *)ad {
-  [_manager onApplicationExit:self];
+- (void)adDidRecordImpression:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager adDidRecordImpression:self];
 }
+
+@synthesize manager;
+
 @end
 
-@implementation FLTPublisherInterstitialAd {
-  DFPInterstitial *_insterstitial;
-  FLTPublisherAdRequest *_adRequest;
+@implementation FLTGAMInterstitialAd {
+  GAMInterstitialAd *_insterstitial;
+  FLTGAMAdRequest *_adRequest;
   UIViewController *_rootViewController;
+  NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                         request:(FLTPublisherAdRequest *_Nonnull)request
+                         request:(FLTGAMAdRequest *_Nonnull)request
               rootViewController:(UIViewController *_Nonnull)rootViewController {
   self = [super init];
   if (self) {
     _adRequest = request;
-    _insterstitial = [[DFPInterstitial alloc] initWithAdUnitID:adUnitId];
-    _insterstitial.delegate = self;
+    _adUnitId = [adUnitId copy];
     _rootViewController = rootViewController;
   }
   return self;
 }
 
-- (GADInterstitial *_Nonnull)interstitial {
+- (GADInterstitialAd *_Nullable)interstitial {
   return _insterstitial;
 }
 
 - (void)load {
-  [self.interstitial loadRequest:[_adRequest asDFPRequest]];
+  [GAMInterstitialAd loadWithAdManagerAdUnitID:_adUnitId
+                                       request:[_adRequest asGAMRequest]
+                             completionHandler:^(GAMInterstitialAd *ad, NSError *error) {
+                               if (error) {
+                                 [self.manager onAdFailedToLoad:self error:error];
+                                 return;
+                               }
+                               [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+                               ad.fullScreenContentDelegate = self;
+                               ad.appEventDelegate = self;
+                               self->_insterstitial = ad;
+                             }];
 }
 
 - (void)show {
-  if (self.interstitial.isReady) {
+  if (self.interstitial) {
     [self.interstitial presentFromRootViewController:_rootViewController];
   } else {
     NSLog(@"InterstitialAd failed to show because the ad was not ready.");
   }
 }
+
+#pragma mark - GADAppEventDelegate
+
+- (void)interstitialAd:(nonnull GADInterstitialAd *)interstitialAd
+    didReceiveAppEvent:(nonnull NSString *)name
+              withInfo:(nullable NSString *)info {
+  [self.manager onAppEvent:self name:name data:info];
+}
+
 @end
 
 @implementation FLTRewardedAd {
@@ -332,6 +442,7 @@
   FLTAdRequest *_adRequest;
   UIViewController *_rootViewController;
   FLTServerSideVerificationOptions *_serverSideVerificationOptions;
+  NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -342,7 +453,6 @@
   self = [super init];
   if (self) {
     _adRequest = request;
-    _rewardedView = [[GADRewardedAd alloc] initWithAdUnitID:adUnitId];
     _rootViewController = rootViewController;
     _serverSideVerificationOptions = serverSideVerificationOptions;
     __weak FLTRewardedAd *weakSelf = self;
@@ -355,64 +465,88 @@
                                                             precision:(NSInteger)value.precision
                                                          currencyCode:value.currencyCode]];
     };
+    _adUnitId = [adUnitId copy];
   }
   return self;
 }
 
-- (GADRewardedAd *_Nonnull)rewardedAd {
+- (GADRewardedAd *_Nullable)rewardedAd {
   return _rewardedView;
 }
 
 - (void)load {
   GADRequest *request;
-  if ([_adRequest isKindOfClass:[FLTPublisherAdRequest class]]) {
-    FLTPublisherAdRequest *publisherRequest = (FLTPublisherAdRequest *)_adRequest;
-    request = publisherRequest.asDFPRequest;
+  if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
+    FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
+    request = gamRequest.asGAMRequest;
   } else if ([_adRequest isKindOfClass:[FLTAdRequest class]]) {
     request = _adRequest.asGADRequest;
   } else {
     NSLog(@"A null or invalid ad request was provided.");
     return;
   }
-  if (_serverSideVerificationOptions != NULL &&
-      ![_serverSideVerificationOptions isEqual:[NSNull null]]) {
-    _rewardedView.serverSideVerificationOptions =
-        [_serverSideVerificationOptions asGADServerSideVerificationOptions];
-  }
 
-  [self.rewardedAd loadRequest:request
-             completionHandler:^(GADRequestError *_Nullable error) {
-               if (error) {
-                 [self->_manager onAdFailedToLoad:self
-                                            error:[[FLTLoadAdError alloc] initWithError:error]];
-               } else {
-                 [self->_manager onAdLoaded:self];
-               }
-             }];
+  [GADRewardedAd loadWithAdUnitID:_adUnitId
+                          request:request
+                completionHandler:^(GADRewardedAd *_Nullable rewardedAd, NSError *_Nullable error) {
+                  if (error) {
+                    [self.manager onAdFailedToLoad:self error:error];
+                    return;
+                  }
+                  if (self->_serverSideVerificationOptions != NULL &&
+                      ![self->_serverSideVerificationOptions isEqual:[NSNull null]]) {
+                    rewardedAd.serverSideVerificationOptions =
+                        [self->_serverSideVerificationOptions asGADServerSideVerificationOptions];
+                  }
+
+                  rewardedAd.fullScreenContentDelegate = self;
+                  self->_rewardedView = rewardedAd;
+                  [self.manager onAdLoaded:self responseInfo:rewardedAd.responseInfo];
+                }];
 }
 
 - (void)show {
-  if (self.rewardedAd.isReady) {
-    [self.rewardedAd presentFromRootViewController:_rootViewController delegate:self];
+  if (self.rewardedAd) {
+    [self.rewardedAd presentFromRootViewController:_rootViewController
+                          userDidEarnRewardHandler:^{
+                            GADAdReward *reward = self.rewardedAd.adReward;
+                            FLTRewardItem *fltReward =
+                                [[FLTRewardItem alloc] initWithAmount:reward.amount
+                                                                 type:reward.type];
+                            [self.manager onRewardedAdUserEarnedReward:self reward:fltReward];
+                          }];
   } else {
     NSLog(@"RewardedAd failed to show because the ad was not ready.");
   }
 }
 
-- (void)rewardedAd:(nonnull GADRewardedAd *)rewardedAd
-    userDidEarnReward:(nonnull GADAdReward *)reward {
-  [_manager onRewardedAdUserEarnedReward:self
-                                  reward:[[FLTRewardItem alloc] initWithAmount:reward.amount
-                                                                          type:reward.type]];
+#pragma mark - GADFullScreenContentDelegate
+
+- (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
+    didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
+  [manager didFailToPresentFullScreenContentWithError:self error:error];
 }
 
-- (void)rewardedAdDidPresent:(GADRewardedAd *)rewardedAd {
-  [_manager onAdOpened:self];
+/// Tells the delegate that the ad presented full screen content.
+- (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [manager onAdDidPresentFullScreenContent:self];
 }
 
-- (void)rewardedAdDidDismiss:(GADRewardedAd *)rewardedAd {
-  [_manager onAdClosed:self];
+/// Tells the delegate that the ad dismissed full screen content.
+- (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [manager adDidDismissFullScreenContent:self];
 }
+
+- (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [manager adWillDismissFullScreenContent:self];
+}
+
+- (void)adDidRecordImpression:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [manager adDidRecordImpression:self];
+}
+
+@synthesize manager;
+
 @end
 
 @implementation FLTNativeAd {
@@ -420,7 +554,7 @@
   FLTAdRequest *_adRequest;
   NSObject<FLTNativeAdFactory> *_nativeAdFactory;
   NSDictionary<NSString *, id> *_customOptions;
-  GADUnifiedNativeAdView *_view;
+  GADNativeAdView *_view;
   GADAdLoader *_adLoader;
 }
 
@@ -437,7 +571,7 @@
     _customOptions = customOptions;
     _adLoader = [[GADAdLoader alloc] initWithAdUnitID:_adUnitId
                                    rootViewController:rootViewController
-                                              adTypes:@[ kGADAdLoaderAdTypeUnifiedNative ]
+                                              adTypes:@[ kGADAdLoaderAdTypeNative ]
                                               options:@[]];
     self.adLoader.delegate = self;
   }
@@ -450,9 +584,9 @@
 
 - (void)load {
   GADRequest *request;
-  if ([_adRequest isKindOfClass:[FLTPublisherAdRequest class]]) {
-    FLTPublisherAdRequest *publisherRequest = (FLTPublisherAdRequest *)_adRequest;
-    request = publisherRequest.asDFPRequest;
+  if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
+    FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
+    request = gamRequest.asGAMRequest;
   } else {
     request = _adRequest.asGADRequest;
   }
@@ -460,10 +594,14 @@
   [self.adLoader loadRequest:request];
 }
 
-- (void)adLoader:(GADAdLoader *)adLoader didReceiveUnifiedNativeAd:(GADUnifiedNativeAd *)nativeAd {
-  _view = [_nativeAdFactory createNativeAd:nativeAd customOptions:_customOptions];
+#pragma mark - GADNativeAdLoaderDelegate
+
+- (void)adLoader:(GADAdLoader *)adLoader didReceiveNativeAd:(GADNativeAd *)nativeAd {
+  // Use Nil instead of Null to fix crash with Swift integrations.
+  NSDictionary<NSString *, id> *customOptions =
+      [[NSNull null] isEqual:_customOptions] ? nil : _customOptions;
+  _view = [_nativeAdFactory createNativeAd:nativeAd customOptions:customOptions];
   nativeAd.delegate = self;
-  [_manager onAdLoaded:self];
 
   __weak FLTNativeAd *weakSelf = self;
   nativeAd.paidEventHandler = ^(GADAdValue * _Nonnull value) {
@@ -475,35 +613,40 @@
                                                           precision:(NSInteger)value.precision
                                                        currencyCode:value.currencyCode]];
   };
+  [_manager onAdLoaded:self responseInfo:nativeAd.responseInfo];
 }
 
-- (void)adLoader:(GADAdLoader *)adLoader didFailToReceiveAdWithError:(GADRequestError *)error {
-  [_manager onAdFailedToLoad:self error:[[FLTLoadAdError alloc] initWithError:error]];
+- (void)adLoader:(GADAdLoader *)adLoader didFailToReceiveAdWithError:(NSError *)error {
+  [_manager onAdFailedToLoad:self error:error];
 }
 
-- (void)nativeAdDidRecordClick:(GADUnifiedNativeAd *)nativeAd {
+#pragma mark - GADNativeAdDelegate
+
+- (void)nativeAdDidRecordClick:(GADNativeAd *)nativeAd {
   [_manager onNativeAdClicked:self];
 }
 
-- (void)nativeAdDidRecordImpression:(GADUnifiedNativeAd *)nativeAd {
+- (void)nativeAdDidRecordImpression:(GADNativeAd *)nativeAd {
   [_manager onNativeAdImpression:self];
 }
 
-- (void)nativeAdWillPresentScreen:(GADUnifiedNativeAd *)nativeAd {
-  [_manager onAdOpened:self];
+- (void)nativeAdWillPresentScreen:(GADNativeAd *)nativeAd {
+  [_manager onNativeAdWillPresentScreen:self];
 }
 
-- (void)nativeAdWillLeaveApplication:(GADUnifiedNativeAd *)nativeAd {
-  [_manager onApplicationExit:self];
+- (void)nativeAdWillDismissScreen:(nonnull GADNativeAd *)nativeAd {
+  [_manager onNativeAdWillDismissScreen:self];
 }
 
-- (void)nativeAdDidDismissScreen:(GADUnifiedNativeAd *)nativeAd {
-  [_manager onAdClosed:self];
+- (void)nativeAdDidDismissScreen:(GADNativeAd *)nativeAd {
+  [_manager onNativeAdDidDismissScreen:self];
 }
 
+#pragma mark - FlutterPlatformView
 - (UIView *)view {
   return _view;
 }
+
 @end
 
 @implementation FLTRewardItem

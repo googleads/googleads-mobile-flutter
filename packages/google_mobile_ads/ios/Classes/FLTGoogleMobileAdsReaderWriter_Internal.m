@@ -19,23 +19,37 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdMobFieldAdSize = 128,
   FLTAdMobFieldAdRequest = 129,
   FLTAdMobFieldRewardItem = 132,
-  FLTAdMobFieldLoadAdError = 133,
-  FLTAdMobFieldPublisherAdRequest = 134,
+  FLTAdMobFieldLoadError = 133,
+  FLTAdMobFieldAdManagerAdRequest = 134,
   FLTAdMobFieldAdapterInitializationState = 135,
   FLTAdMobFieldAdapterStatus = 136,
   FLTAdMobFieldInitializationStatus = 137,
   FLTAdmobFieldServerSideVerificationOptions = 138,
+  FLTAdmobFieldAdError = 139,
+  FLTAdmobFieldGadResponseInfo = 140,
+  FLTAdmobFieldGADAdNetworkResponseInfo = 141,
+  FLTAdmobFieldAnchoredAdaptiveBannerAdSize = 142,
+  FLTAdmobFieldSmartBannerAdSize = 143,
 };
-
-@interface FLTGoogleMobileAdsReader : FlutterStandardReader
-@end
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
 @end
 
 @implementation FLTGoogleMobileAdsReaderWriter
+- (instancetype)init {
+  return [self initWithFactory:[[FLTAdSizeFactory alloc] init]];
+}
+
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory {
+  self = [super init];
+  if (self) {
+    _adSizeFactory = adSizeFactory;
+  }
+  return self;
+}
+
 - (FlutterStandardReader *_Nonnull)readerWithData:(NSData *_Nonnull)data {
-  return [[FLTGoogleMobileAdsReader alloc] initWithData:data];
+  return [[FLTGoogleMobileAdsReader alloc] initWithFactory:_adSizeFactory data:data];
 }
 
 - (FlutterStandardWriter *_Nonnull)writerWithData:(NSMutableData *_Nonnull)data {
@@ -44,6 +58,15 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 @end
 
 @implementation FLTGoogleMobileAdsReader
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory
+                                    data:(NSData *_Nonnull)data {
+  self = [super initWithData:data];
+  if (self) {
+    _adSizeFactory = adSizeFactory;
+  }
+  return self;
+}
+
 - (id _Nullable)readValueOfType:(UInt8)type {
   FLTAdMobField field = (FLTAdMobField)type;
   switch (field) {
@@ -56,8 +79,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.keywords = [self readValueOfType:[self readByte]];
       request.contentURL = [self readValueOfType:[self readByte]];
 
-      request.testDevices = [self readValueOfType:[self readByte]];
-
       NSNumber *nonPersonalizedAds = [self readValueOfType:[self readByte]];
       request.nonPersonalizedAds = nonPersonalizedAds.boolValue;
 
@@ -67,13 +88,54 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       return [[FLTRewardItem alloc] initWithAmount:[self readValueOfType:[self readByte]]
                                               type:[self readValueOfType:[self readByte]]];
     }
-    case FLTAdMobFieldLoadAdError: {
-      return [[FLTLoadAdError alloc] initWithCode:[self readValueOfType:[self readByte]]
-                                           domain:[self readValueOfType:[self readByte]]
-                                          message:[self readValueOfType:[self readByte]]];
+    case FLTAdmobFieldGadResponseInfo: {
+      NSString *responseIdentifier = [self readValueOfType:[self readByte]];
+      NSString *adNetworkClassName = [self readValueOfType:[self readByte]];
+      NSArray<FLTGADAdNetworkResponseInfo *> *adNetworkInfoArray =
+          [self readValueOfType:[self readByte]];
+      FLTGADResponseInfo *gadResponseInfo = [[FLTGADResponseInfo alloc] init];
+      gadResponseInfo.adNetworkClassName = adNetworkClassName;
+      gadResponseInfo.responseIdentifier = responseIdentifier;
+      gadResponseInfo.adNetworkInfoArray = adNetworkInfoArray;
+      return gadResponseInfo;
     }
-    case FLTAdMobFieldPublisherAdRequest: {
-      FLTPublisherAdRequest *request = [[FLTPublisherAdRequest alloc] init];
+    case FLTAdmobFieldGADAdNetworkResponseInfo: {
+      NSString *adNetworkClassName = [self readValueOfType:[self readByte]];
+      NSNumber *latency = [self readValueOfType:[self readByte]];
+      NSString *dictionaryDescription = [self readValueOfType:[self readByte]];
+      NSString *credentialsDescription = [self readValueOfType:[self readByte]];
+      NSError *error = [self readValueOfType:[self readByte]];
+      FLTGADAdNetworkResponseInfo *adNetworkResponseInfo =
+          [[FLTGADAdNetworkResponseInfo alloc] init];
+      adNetworkResponseInfo.adNetworkClassName = adNetworkClassName;
+      adNetworkResponseInfo.latency = latency;
+      adNetworkResponseInfo.dictionaryDescription = dictionaryDescription;
+      adNetworkResponseInfo.credentialsDescription = credentialsDescription;
+      adNetworkResponseInfo.error = error;
+      return adNetworkResponseInfo;
+    }
+    case FLTAdMobFieldLoadError: {
+      NSNumber *code = [self readValueOfType:[self readByte]];
+      NSString *domain = [self readValueOfType:[self readByte]];
+      NSString *message = [self readValueOfType:[self readByte]];
+      FLTGADResponseInfo *responseInfo = [self readValueOfType:[self readByte]];
+      FLTLoadAdError *loadAdError = [[FLTLoadAdError alloc] init];
+      loadAdError.code = code.longValue;
+      loadAdError.domain = domain;
+      loadAdError.message = message;
+      loadAdError.responseInfo = responseInfo;
+      return loadAdError;
+    }
+    case FLTAdmobFieldAdError: {
+      NSNumber *code = [self readValueOfType:[self readByte]];
+      NSString *domain = [self readValueOfType:[self readByte]];
+      NSString *message = [self readValueOfType:[self readByte]];
+      return [NSError errorWithDomain:domain
+                                 code:code.longValue
+                             userInfo:@{NSLocalizedDescriptionKey : message}];
+    }
+    case FLTAdMobFieldAdManagerAdRequest: {
+      FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
 
       request.keywords = [self readValueOfType:[self readByte]];
       request.contentURL = [self readValueOfType:[self readByte]];
@@ -113,21 +175,45 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       options.customRewardString = [self readValueOfType:[self readByte]];
       return options;
     }
+    case FLTAdmobFieldAnchoredAdaptiveBannerAdSize: {
+      NSString *orientation = [self readValueOfType:[self readByte]];
+      NSNumber *width = [self readValueOfType:[self readByte]];
+      return [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:_adSizeFactory
+                                                        orientation:orientation
+                                                              width:width];
+    }
+    case FLTAdmobFieldSmartBannerAdSize:
+      return
+          [[FLTSmartBannerSize alloc] initWithOrientation:[self readValueOfType:[self readByte]]];
   }
   return [super readValueOfType:type];
 }
 @end
 
 @implementation FLTGoogleMobileAdsWriter
+- (void)writeAdSize:(FLTAdSize *_Nonnull)value {
+  if ([value isKindOfClass:[FLTAnchoredAdaptiveBannerSize class]]) {
+    [self writeByte:FLTAdmobFieldAnchoredAdaptiveBannerAdSize];
+    FLTAnchoredAdaptiveBannerSize *size = (FLTAnchoredAdaptiveBannerSize *)value;
+    [self writeValue:size.orientation];
+    [self writeValue:size.width];
+  } else if ([value isKindOfClass:[FLTSmartBannerSize class]]) {
+    [self writeByte:FLTAdmobFieldSmartBannerAdSize];
+    FLTSmartBannerSize *size = (FLTSmartBannerSize *)value;
+    [self writeValue:size.orientation];
+  } else if ([value isKindOfClass:[FLTAdSize class]]) {
+    [self writeByte:FLTAdMobFieldAdSize];
+    [self writeValue:value.width];
+    [self writeValue:value.height];
+  }
+}
+
 - (void)writeValue:(id _Nonnull)value {
   if ([value isKindOfClass:[FLTAdSize class]]) {
-    [self writeByte:FLTAdMobFieldAdSize];
-    FLTAdSize *size = value;
-    [self writeValue:size.width];
-    [self writeValue:size.height];
-  } else if ([value isKindOfClass:[FLTPublisherAdRequest class]]) {
-    [self writeByte:FLTAdMobFieldPublisherAdRequest];
-    FLTPublisherAdRequest *request = value;
+    [self writeAdSize:value];
+  } else if ([value isKindOfClass:[FLTGAMAdRequest class]]) {
+    [self writeByte:FLTAdMobFieldAdManagerAdRequest];
+    FLTGAMAdRequest *request = value;
     [self writeValue:request.keywords];
     [self writeValue:request.contentURL];
     [self writeValue:request.customTargeting];
@@ -138,20 +224,39 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     FLTAdRequest *request = value;
     [self writeValue:request.keywords];
     [self writeValue:request.contentURL];
-
-    [self writeValue:request.testDevices];
     [self writeValue:@(request.nonPersonalizedAds)];
   } else if ([value isKindOfClass:[FLTRewardItem class]]) {
     [self writeByte:FLTAdMobFieldRewardItem];
     FLTRewardItem *item = value;
     [self writeValue:item.amount];
     [self writeValue:item.type];
+  } else if ([value isKindOfClass:[FLTGADResponseInfo class]]) {
+    [self writeByte:FLTAdmobFieldGadResponseInfo];
+    GADResponseInfo *responseInfo = value;
+    [self writeValue:responseInfo.responseIdentifier];
+    [self writeValue:responseInfo.adNetworkClassName];
+    [self writeValue:responseInfo.adNetworkInfoArray];
+  } else if ([value isKindOfClass:[FLTGADAdNetworkResponseInfo class]]) {
+    [self writeByte:FLTAdmobFieldGADAdNetworkResponseInfo];
+    FLTGADAdNetworkResponseInfo *networkResponseInfo = value;
+    [self writeValue:networkResponseInfo.adNetworkClassName];
+    [self writeValue:networkResponseInfo.latency];
+    [self writeValue:networkResponseInfo.dictionaryDescription];
+    [self writeValue:networkResponseInfo.credentialsDescription];
+    [self writeValue:networkResponseInfo.error];
   } else if ([value isKindOfClass:[FLTLoadAdError class]]) {
-    [self writeByte:FLTAdMobFieldLoadAdError];
+    [self writeByte:FLTAdMobFieldLoadError];
     FLTLoadAdError *error = value;
-    [self writeValue:error.code];
+    [self writeValue:@(error.code)];
     [self writeValue:error.domain];
     [self writeValue:error.message];
+    [self writeValue:error.responseInfo];
+  } else if ([value isKindOfClass:[NSError class]]) {
+    [self writeByte:FLTAdmobFieldAdError];
+    NSError *error = value;
+    [self writeValue:@(error.code)];
+    [self writeValue:error.domain];
+    [self writeValue:error.localizedDescription];
   } else if ([value isKindOfClass:[FLTAdapterStatus class]]) {
     [self writeByte:FLTAdMobFieldAdapterStatus];
     FLTAdapterStatus *status = value;

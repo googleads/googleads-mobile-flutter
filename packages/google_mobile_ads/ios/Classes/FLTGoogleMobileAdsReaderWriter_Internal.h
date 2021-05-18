@@ -15,5 +15,15 @@
 #import <Flutter/Flutter.h>
 #import "FLTAd_Internal.h"
 
+@class FLTAdSizeFactory;
+
 @interface FLTGoogleMobileAdsReaderWriter : FlutterStandardReaderWriter
+@property(readonly) FLTAdSizeFactory *_Nonnull adSizeFactory;
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory;
+@end
+
+@interface FLTGoogleMobileAdsReader : FlutterStandardReader
+@property(readonly) FLTAdSizeFactory *_Nonnull adSizeFactory;
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory
+                                    data:(NSData *_Nonnull)data;
 @end

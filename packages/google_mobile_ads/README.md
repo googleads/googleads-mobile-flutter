@@ -1,5 +1,7 @@
 # Google Mobile Ads for Flutter
 
+[![google_mobile_ads](https://github.com/googleads/googleads-mobile-flutter/actions/workflows/google_mobile_ads.yaml/badge.svg)](https://github.com/googleads/googleads-mobile-flutter/actions/workflows/google_mobile_ads.yaml)
+
 This guide is intended for publishers who want to monetize a [Flutter](https://flutter.dev/) app.
 
 Integrating Google Mobile Ads SDK into a Flutter app, which you will do here, is the first step towards displaying AdMob ads and earning revenue. Once the integration is complete, you can choose an ad format to get detailed implementation steps.
@@ -153,7 +155,7 @@ It's been specially configured to return test ads for every request, and you're 
 
 ### Instantiate a Banner Ad
 
-A `BannerAd` requires an `adUnitId`, an `AdSize`, an `AdRequest`, and an `AdListener`. An example is shown below as well as more information on each parameter following.
+A `BannerAd` requires an `adUnitId`, an `AdSize`, an `AdRequest`, and a `BannerAdListener`. An example is shown below as well as more information on each parameter following.
 
 
 ```dart
@@ -161,7 +163,7 @@ final BannerAd myBanner = BannerAd(
   adUnitId: '<ad unit id>',
   size: AdSize.banner,
   request: AdRequest(),
-  listener: AdListener(),
+  listener: BannerAdListener(),
 );
 ```
 
@@ -226,6 +228,11 @@ The table below lists the standard banner sizes.
    <td>Use <code>getSmartBanner(Orientation)</code>
    </td>
   </tr>
+  <tr>
+   <td>Provided width x Adaptive height</td>
+   <td><a href="https://developers.google.com/admob/android/banner/adaptive">Adaptive Banner</a></td>
+   <td>Use <code>getAnchoredAdaptiveBannerAdSize(Orientation, int)</code></td>
+  </tr>
 </table>
 
 
@@ -239,15 +246,16 @@ final AdSize adSize = AdSize(300, 50);
 
 #### Banner Ad Events
 
-Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
+Through the use of `BannerAdListener`, you can listen for lifecycle events, such as when an ad is loaded. This example implements each method and logs a message to the console:
 
 
 ```dart
-final AdListener listener = AdListener(
+final BannerAdListener listener = BannerAdListener(
  // Called when an ad is successfully received.
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
+   // Dispose the ad here to free resources.
    ad.dispose();
    print('Ad failed to load: $error');
  },
@@ -255,8 +263,8 @@ final AdListener listener = AdListener(
  onAdOpened: (Ad ad) => print('Ad opened.'),
  // Called when an ad removes an overlay that covers the screen.
  onAdClosed: (Ad ad) => print('Ad closed.'),
- // Called when an ad is in the process of leaving the application.
- onApplicationExit: (Ad ad) => print('Left application.'),
+ // Called when an impression occurs on the ad.
+ onAdImpression: (Ad ad) => print('Ad impression.'),
 );
 ```
 
@@ -316,65 +324,61 @@ The easiest way to load test ads is to use our dedicated test ad unit ID for int
 It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
 
-### Instantiate an Interstitial Ad
+### Load an Interstitial Ad
 
-An `InterstitialAd` requires an `adUnitId`, an `AdRequest`, and an `AdListener`. An example is shown below as well as more information on each parameter following.
+Loading an `InterstitialAd` requires an `adUnitId`, an `AdRequest`, and an `InterstitialAdLoadCallback`. An example is shown below as well as more information on each parameter following.
 
 
 ```dart
-final InterstitialAd myInterstitial = InterstitialAd(
+
+InterstitialAd.load(
   adUnitId: '<ad unit id>',
   request: AdRequest(),
-  listener: AdListener(),
-);
+  adLoadCallback: InterstitialAdLoadCallback(
+    onAdLoaded: (InterstitialAd ad) {
+      // Keep a reference to the ad so you can show it later.
+      this._interstitialAd = ad;
+    },
+    onAdFailedToLoad: (LoadAdError error) {
+      print('InterstitialAd failed to load: $error');
+    },
+  ));
 ```
 
 #### Interstitial Ad Events
 
-Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
+Through the use of `FullScreenContentCallback`, you can listen for lifecycle events, such as when the ad is shown or dismissed. 
+Set `InterstitialAd.fullScreenContentCallback` before showing the ad to receive notifications for these events. This example implements each method and logs a message to the console:
 
 
 ```dart
-final AdListener listener = AdListener(
- // Called when an ad is successfully received.
- onAdLoaded: (Ad ad) => print('Ad loaded.'),
- // Called when an ad request failed.
- onAdFailedToLoad: (Ad ad, LoadAdError error) {
-   ad.dispose();
-   print('Ad failed to load: $error');
- },
- // Called when an ad opens an overlay that covers the screen.
- onAdOpened: (Ad ad) => print('Ad opened.'),
- // Called when an ad removes an overlay that covers the screen.
- onAdClosed: (Ad ad) {
-   ad.dispose();
-   print('Ad closed.');
- },
- // Called when an ad is in the process of leaving the application.
- onApplicationExit: (Ad ad) => print('Left application.'),
+interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+  onAdShowedFullScreenContent: (InterstitialAd ad) =>
+     print('$ad onAdShowedFullScreenContent.'),
+  onAdDismissedFullScreenContent: (InterstitialAd ad) {
+    print('$ad onAdDismissedFullScreenContent.');
+    ad.dispose();
+  },
+  onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+    print('$ad onAdFailedToShowFullScreenContent: $error');
+    ad.dispose();
+  },
+  onAdImpression: (InterstitialAd ad) => print('$ad impression occurred.'),
 );
 ```
 
-### Load Interstitial Ad
-
-After an `InterstitialAd` is instantiated, `load()` must be called before it can be shown on the screen.
-
-
-```dart
-myInterstitial.load();
-```
 
 ### Display an Interstitial Ad
 
-An `InterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the add by calling `show()` after the ad is loaded.
+An `InterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the ad by calling `show()`.
 
 ```dart
 myInterstitial.show();
 ```
 
-This method should only be called after `load()` and the `AdListener.onAdLoaded` method has been triggered. Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and requires user input. Do not call `show()` more than once for a loaded `InterstitialAd`. Instead you should load a new ad.
+Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and requires user input. An `InterstitialAd` can only be shown once. Subsequent calls to show will trigger `onAdFailedToShowFullScreenContent`.
 
-Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is  in the `AdListener.onAdFailedToLoad/AdListener.onAdClosed` callbacks.
+Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `FullScreenContentCallback.onAdDismissedFullScreenContent` and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
 
 That's it! Your app is now ready to display interstitial ads.
 
@@ -406,7 +410,7 @@ Since Native Ads require UI components native to a platform, this feature requir
 
 #### Android
 
-The Android implementation of the Google Mobile Ads plugin requires a class that implements a NativeAdFactory. A `NativeAdFactory` contains a method that takes a [UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd) and custom options and returns a [UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView). The [UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView) is what will be displayed in your app.
+The Android implementation of the Google Mobile Ads plugin requires a class that implements a `NativeAdFactory`. A `NativeAdFactory` contains a method that takes a [NativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAd) and custom options and returns a [NativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView). The [NativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView) is what will be displayed in your app.
 
 You can implement this in your MainActivity.java or create a separate class in the same directory as MainActivity.java as seen below:
 
@@ -414,16 +418,16 @@ You can implement this in your MainActivity.java or create a separate class in t
 ```java
 package my.app.path;
 
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdView;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Map;
 
 class NativeAdFactoryExample implements NativeAdFactory {
   @Override
-  public UnifiedNativeAdView createNativeAd(
-      UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
-    // Create UnifiedNativeAdView
+  public NativeAdView createNativeAd(
+      NativeAd nativeAd, Map<String, Object> customOptions) {
+    // Create NativeAdView
   }
 }
 ```
@@ -467,8 +471,8 @@ package io.flutter.plugins.googlemobileadsexample;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.widget.TextView;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdView;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Map;
 
@@ -483,10 +487,10 @@ class NativeAdFactoryExample implements NativeAdFactory {
  }
 
  @Override
- public UnifiedNativeAdView createNativeAd(
-     UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
-   final UnifiedNativeAdView adView =
-       (UnifiedNativeAdView) layoutInflater.inflate(R.layout.my_native_ad, null);
+ public NativeAdView createNativeAd(
+     NativeAd nativeAd, Map<String, Object> customOptions) {
+   final NativeAdView adView =
+       (NativeAdView) layoutInflater.inflate(R.layout.my_native_ad, null);
    final TextView headlineView = adView.findViewById(R.id.ad_headline);
    final TextView bodyView = adView.findViewById(R.id.ad_body);
 
@@ -505,7 +509,7 @@ class NativeAdFactoryExample implements NativeAdFactory {
 
 #### iOS
 
-The iOS implementation of the Google Mobile Ads plugin requires a class that implements a `FLTNativeAdFactory`. A `FLTNativeAdFactory` contains a method that takes a `GADUnifiedNativeAd` and custom options and returns a `GADUnifiedNativeAdView`. The `GADUnifiedNativeAdView` is what will be displayed in your app.
+The iOS implementation of the Google Mobile Ads plugin requires a class that implements a `FLTNativeAdFactory`. A `FLTNativeAdFactory` contains a method that takes a `GADNativeAd` and custom options and returns a `GADNativeAdView`. The `GADNativeAdView` is what will be displayed in your app.
 
 The `FLTNativeAdFactory` protocol can be implemented by `AppDelegate` or a separate class could be created as seen below:
 
@@ -517,9 +521,9 @@ The `FLTNativeAdFactory` protocol can be implemented by `AppDelegate` or a separ
 @end
 
 @implementation NativeAdFactoryExample
-- (GADUnifiedNativeAdView *)createNativeAd:(GADUnifiedNativeAd *)nativeAd
+- (GADNativeAdView *)createNativeAd:(GADNativeAd *)nativeAd
                              customOptions:(NSDictionary *)customOptions {
-  // Create GADUnifiedNativeAdView
+  // Create GADNativeAdView
 }
 @end
 ```
@@ -552,18 +556,18 @@ When creating the `NativeAd` in Dart, the `factoryID` will need to match the one
 
 
 ```objectivec
-// The example UnifiedNativeAdView.xib can be found at
-/* https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/ios/Runner/UnifiedNativeAdView.xib
+// The example NativeAdView.xib can be found at
+/* https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/ios/Runner/NativeAdView.xib
 */
 @interface NativeAdFactoryExample : NSObject <FLTNativeAdFactory>
 @end
 
 @implementation NativeAdFactoryExample
-- (GADUnifiedNativeAdView *)createNativeAd:(GADUnifiedNativeAd *)nativeAd
+- (GADNativeAdView *)createNativeAd:(GADNativeAd *)nativeAd
                             customOptions:(NSDictionary *)customOptions {
  // Create and place ad in view hierarchy.
- GADUnifiedNativeAdView *adView =
-     [[NSBundle mainBundle] loadNibNamed:@"UnifiedNativeAdView" owner:nil options:nil].firstObject;
+ GADNativeAdView *adView =
+     [[NSBundle mainBundle] loadNibNamed:@"NativeAdView" owner:nil options:nil].firstObject;
 
  // Associate the native ad view with the native ad object. This is
  // required to make the ad clickable.
@@ -617,7 +621,7 @@ It's been specially configured to return test ads for every request, and you're 
 
 ### Instantiate a Native Ad
 
-A `NativeAd` requires an `adUnitId`, a `factoryId`, an `AdRequest`, and an `AdListener`. An example is shown below as well as more information on each parameter following.
+A `NativeAd` requires an `adUnitId`, a `factoryId`, an `AdRequest`, and a `NativeAdListener`. An example is shown below as well as more information on each parameter following.
 
 
 ```dart
@@ -625,7 +629,7 @@ final NativeAd myNative = NativeAd(
   adUnitId: '<test id or account id>',
   factoryId: 'adFactoryExample',
   request: AdRequest(),
-  listener: AdListener(),
+  listener: NativeAdListener(),
 );
 ```
 
@@ -636,14 +640,15 @@ The `factoryId` will need to match the one used to add the factory to `GoogleMob
 
 #### Native Ad Events
 
-Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
+Through the use of `NativeAdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
 
 ```dart
-final AdListener listener = AdListener(
+final NativeAdListener listener = NativeAdListener(
  // Called when an ad is successfully received.
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
+   // Dispose the ad here to free resources.
    ad.dispose();
    print('Ad failed to load: $error');
  },
@@ -651,12 +656,10 @@ final AdListener listener = AdListener(
  onAdOpened: (Ad ad) => print('Ad opened.'),
  // Called when an ad removes an overlay that covers the screen.
  onAdClosed: (Ad ad) => print('Ad closed.'),
- // Called when an ad is in the process of leaving the application.
- onApplicationExit: (Ad ad) => print('Left application.'),
+ // Called when an impression occurs on the ad.
+ onAdImpression: (Ad ad) => print('Ad impression.'),
  // Called when a click is recorded for a NativeAd.
  onNativeAdClicked: (NativeAd ad) => print('Ad clicked.'),
- // Called when an impression is recorded for a NativeAd.
- onNativeAdImpression: (NativeAd ad) => print('Ad impression.'),
 );
 ```
 
@@ -719,79 +722,65 @@ The easiest way to load test ads is to use our dedicated test ad unit ID for rew
 It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
 
-### Instantiate a Rewarded Ad
+### Load a Rewarded Ad
 
-A `RewardedAd` requires an `adUnitId`, an `AdRequest`, and an `AdListener` with the `onRewardedAdUserEarnedReward` callback implemented. An example is shown below as well as more information on each parameter following.
+Loading a `RewardedAd` requires an `adUnitId`, an `AdRequest`, and a `RewardedAdLoadCallback`. An example is shown below as well as more information on each parameter following.
 
 
 ```dart
-final RewardedAd myRewarded = RewardedAd(
- adUnitId: '<test id or account id>',
- request: AdRequest(),
- listener: AdListener(
-   onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) {
-     print(reward.type);
-     print(reward.amount);
-   },
- ),
+RewardedAd.load(
+  adUnitId: '<test id or account id>',
+  request: AdRequest(),
+  rewardedAdLoadCallback: RewardedAdLoadCallback(
+    onAdLoaded: (RewardedAd ad) {
+      print('$ad loaded.');
+      // Keep a reference to the ad so you can show it later.
+      this._rewardedAd = ad;
+    },
+    onAdFailedToLoad: (LoadAdError error) {
+      print('RewardedAd failed to load: $error');
+    },
 );
 ```
 
 
 #### Rewarded Ad Events
 
-Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
+Through the use of `FullScreenContentCallback`, you can listen for lifecycle events, such as when the ad is shown or dismissed. 
+Set `RewardedAd.fullScreenContentCallback` before showing the ad to receive notifications for these events. This example implements each method and logs a message to the console:
 
 
 ```dart
-final AdListener listener = AdListener(
- // Called when an ad is successfully received.
- onAdLoaded: (Ad ad) => print('Ad loaded.'),
- // Called when an ad request failed.
- onAdFailedToLoad: (Ad ad, LoadAdError error) {
-   ad.dispose();
-   print('Ad failed to load: $error');
- },
- // Called when an ad opens an overlay that covers the screen.
- onAdOpened: (Ad ad) => print('Ad opened.'),
- // Called when an ad removes an overlay that covers the screen.
- onAdClosed: (Ad ad) {
-   ad.dispose();
-   print('Ad closed.');
- },
- // Called when an ad is in the process of leaving the application.
- onApplicationExit: (Ad ad) => print('Left application.'),
- // Called when a RewardedAd triggers a reward.
- onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) {
-   print('Reward earned: $reward');
- },
+rewardedAd.fullScreenContentCallback = FullScreenContentCallback(
+  onAdShowedFullScreenContent: (RewardedAd ad) =>
+     print('$ad onAdShowedFullScreenContent.'),
+  onAdDismissedFullScreenContent: (RewardedAd ad) {
+    print('$ad onAdDismissedFullScreenContent.');
+    ad.dispose();
+  },
+  onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+    print('$ad onAdFailedToShowFullScreenContent: $error');
+    ad.dispose();
+  },
+  onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
 );
 ```
 
-Key Point: Make sure to implement the `onRewardedAdUserEarnedReward` event to
-reward the user for watching an ad.
-
-### Load Rewarded Ad
-
-After a `RewardedAd` is instantiated, `load()` must be called before it can be shown on the screen.
-
-
-```dart
-myRewarded.load();
-```
 
 ### Display a RewardedAd
 
-A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the add by calling `show()` after the ad is loaded.
-
+A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the ad by calling `show()`.
+`RewardedAd.show()` takes an `OnUserEarnedRewardCallback`, which is invoked when the user earns a reward. Be sure to implement this and reward the user for watching an ad.
 
 ```dart
-myRewarded.show();
+myRewarded.show(onUserEarnedReward: (RewardedAd ad, RewardItem rewardItem) {
+  // Reward the user for watching an ad.
+});
 ```
 
-This method should only be called after `load()` and the `AdListener.onAdLoaded` method has been triggered. Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and require user input.  Do not call `show()` more than once for a loaded `RewardedAd`. Instead you should load a new ad.
+Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and require user input. An `RewardedAd` can only be shown once. Subsequent calls to show will trigger `onAdFailedToShowFullScreenContent`.
 
-Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `AdListener.onAdFailedToLoad` and  `AdListener.onAdClosed` and  callbacks.
+Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `FullScreenContentCallback.onAdDismissedFullScreenContent` and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
 
 That's it! Your app is now ready to display rewarded ads.
 
@@ -811,14 +800,14 @@ This section shows how to create and load ads with [Google Ad Manager](https://a
 *   Rewarded
     *   Ads that reward users for watching short videos and interacting with playable ads and surveys. Good for monetizing free-to-play users.
 
-### PublisherAdRequest
+### AdManagerAdRequest
 
-For Ad Manager you will be using `PublisherAdRequest` instead of `AdRequest`.
-`PublisherAdRequest` is similar to `AdRequest` but has two additional properties: `customTargeting` and `customTargetingLists`,
+For Ad Manager you will be using `AdManagerAdRequest` instead of `AdRequest`.
+`AdManagerAdRequest` is similar to `AdRequest` but has two additional properties: `customTargeting` and `customTargetingLists`,
 which are used to support [custom targeting](https://support.google.com/admanager/answer/188092?hl=en).
 
 ```
-final PublisherAdRequest request = PublisherAdRequest(
+final AdManagerAdRequest request = AdManagerAdRequest(
   keywords: <String>['flutterio', 'beautiful apps'],
   contentUrl: 'https://flutter.dev',
   customTargeting: <String, String>{'some', 'targeting'},
@@ -849,15 +838,15 @@ It's been specially configured to return test ads for every request, and you're 
 
 ### Instantiate a Banner Ad
 
-A `PublisherBannerAd` requires an `adUnitId`, an `AdSize`, an `AdRequest`, and an `AdListener`. An example is shown below as well as more information on each parameter following.
+A `AdManagerBannerAd` requires an `adUnitId`, an `AdSize`, an `AdRequest`, and an `AdListener`. An example is shown below as well as more information on each parameter following.
 
 
 ```dart
-final PublisherBannerAd myBanner = PublisherBannerAd(
+final AdManagerBannerAd myBanner = AdManagerBannerAd(
   adUnitId: '<ad unit id>',
   size: AdSize.banner,
-  request: PublisherAdRequest(),
-  listener: AdListener(),
+  request: AdManagerAdRequest(),
+  listener: AdManagerBannerAdListener(),
 );
 ```
 
@@ -935,15 +924,16 @@ final AdSize adSize = AdSize(300, 50);
 
 #### Banner Ad Events
 
-Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
+Through the use of `AdManagerBannerAdListener`, you can listen for lifecycle events, such as when an ad is closed. This example implements each method and logs a message to the console:
 
 
 ```dart
-final AdListener listener = AdListener(
+final AdManagerBannerAdListener listener = AdManagerBannerAdListener(
  // Called when an ad is successfully received.
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
+   // Dispose the ad here to free resources.
    ad.dispose();
    print('Ad failed to load: $error');
  },
@@ -951,14 +941,14 @@ final AdListener listener = AdListener(
  onAdOpened: (Ad ad) => print('Ad opened.'),
  // Called when an ad removes an overlay that covers the screen.
  onAdClosed: (Ad ad) => print('Ad closed.'),
- // Called when an ad is in the process of leaving the application.
- onApplicationExit: (Ad ad) => print('Left application.'),
+ // Called when an impression occurs on the ad.
+ onAdImpression: (Ad ad) => print('Ad impression.'),
 );
 ```
 
 ### Load Banner Ad
 
-After a `PublisherBannerAd` is instantiated, `load()` must be called before it can be shown on the screen.
+After a `AdManagerBannerAd` is instantiated, `load()` must be called before it can be shown on the screen.
 
 
 ```dart
@@ -967,7 +957,7 @@ myBanner.load();
 
 ### Display a Banner Ad
 
-To display a `PublisherBannerAd` as a widget, you must instantiate an `AdWidget` with a supported ad after calling `load()`. You can create the widget before calling `load()`, but `load()` must be called before adding it to the widget tree.
+To display a `AdManagerBannerAd` as a widget, you must instantiate an `AdWidget` with a supported ad after calling `load()`. You can create the widget before calling `load()`, but `load()` must be called before adding it to the widget tree.
 
 
 ```dart
@@ -975,7 +965,7 @@ final AdWidget adWidget = AdWidget(ad: myBanner);
 ```
 
 
-`AdWidget` inherits from Flutter's Widget class and can be used as any other widget. On iOS, make sure you place the widget in a widget with a specified width and height. Otherwise, your Ad may not be displayed. A `PublisherBannerAd` can be placed in a container with a size that matches the ad:
+`AdWidget` inherits from Flutter's Widget class and can be used as any other widget. On iOS, make sure you place the widget in a widget with a specified width and height. Otherwise, your Ad may not be displayed. A `AdManagerBannerAd` can be placed in a container with a size that matches the ad:
 
 
 ```dart
@@ -987,7 +977,7 @@ final Container adContainer = Container(
 );
 ```
 
-Once an Ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is either after the `AdWidget` is removed from the widget tree or in the `AdListener.onAdFailedToLoad` callback.
+Once an Ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is either after the `AdWidget` is removed from the widget tree or in the `AdManagerBannerAdListener.onAdFailedToLoad` callback.
 
 That's it! Your app is now ready to display banner ads.
 
@@ -1012,65 +1002,60 @@ The easiest way to load test ads is to use our dedicated test ad unit ID for int
 It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
 
-### Instantiate an Interstitial Ad
+### Load an Interstitial Ad
 
-A `PublisherInterstitialAd` requires an `adUnitId`, an `AdRequest`, and an `AdListener`. An example is shown below as well as more information on each parameter following.
+Loading an `AdManagerInterstitialAd` requires an `adUnitId`, an `AdRequest`, and an `AdManagerInterstitialAdLoadCallback`. An example is shown below as well as more information on each parameter following.
 
 
 ```dart
-final PublisherInterstitialAd myInterstitial = PublisherInterstitialAd(
+AdManagerInterstitialAd.load(
   adUnitId: '<ad unit id>',
-  request: PublisherAdRequest(),
-  listener: AdListener(),
-);
+  request: AdRequest(),
+  adLoadCallback: AdManagerInterstitialAdLoadCallback(
+    onAdLoaded: (AdManagerInterstitialAd ad) {
+      // Keep a reference to the ad so you can show it later.
+      this._interstitialAd = ad;
+    },
+    onAdFailedToLoad: (LoadAdError error) {
+      print('InterstitialAd failed to load: $error');
+    },
+  ));
 ```
 
 #### Interstitial Ad Events
 
-Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
+Through the use of `FullScreenContentCallback`, you can listen for lifecycle events, such as when the ad is shown or dismissed. 
+Set `AdManagerInterstitialAd.fullScreenContentCallback` before showing the ad to receive notifications for these events. This example implements each method and logs a message to the console:
 
 
 ```dart
-final AdListener listener = AdListener(
- // Called when an ad is successfully received.
- onAdLoaded: (Ad ad) => print('Ad loaded.'),
- // Called when an ad request failed.
- onAdFailedToLoad: (Ad ad, LoadAdError error) {
-   ad.dispose();
-   print('Ad failed to load: $error');
- },
- // Called when an ad opens an overlay that covers the screen.
- onAdOpened: (Ad ad) => print('Ad opened.'),
- // Called when an ad removes an overlay that covers the screen.
- onAdClosed: (Ad ad) {
-   ad.dispose();
-   print('Ad closed.');
- },
- // Called when an ad is in the process of leaving the application.
- onApplicationExit: (Ad ad) => print('Left application.'),
+interstitialAd.fullScreenContentCallback = FullScreenContentCallback(
+  onAdShowedFullScreenContent: (InterstitialAd ad) =>
+     print('$ad onAdShowedFullScreenContent.'),
+  onAdDismissedFullScreenContent: (InterstitialAd ad) {
+    print('$ad onAdDismissedFullScreenContent.');
+    ad.dispose();
+  },
+  onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+    print('$ad onAdFailedToShowFullScreenContent: $error');
+    ad.dispose();
+  },
+  onAdImpression: (InterstitialAd ad) => print('$ad impression occurred.'),
 );
 ```
 
-### Load Interstitial Ad
-
-After a `PublisherInterstitialAd` is instantiated, `load()` must be called before it can be shown on the screen.
-
-
-```dart
-myInterstitial.load();
-```
 
 ### Display an Interstitial Ad
 
-A `PublisherInterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the add by calling `show()` after the ad is loaded.
+A `AdManagerInterstitialAd` is displayed as an Overlay on top of all app content and is statically placed. Which means it can not be added to the Flutter widget tree. You can choose when to show the ad by calling `show()`.
 
 ```dart
 myInterstitial.show();
 ```
 
-This method should only be called after `load()` and the `AdListener.onAdLoaded` method has been triggered. Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and requires user input. Do not call `show()` more than once for a loaded `PublisherInterstitialAd`. Instead you should load a new ad.
+Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and requires user input. An `InterstitialAd` can only be shown once. Subsequent calls to show will trigger `onAdFailedToShowFullScreenContent`.
 
-Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is  in the `AdListener.onAdFailedToLoad/AdListener.onAdClosed` callbacks.
+Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `FullScreenContentCallback.onAdDismissedFullScreenContent` and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
 
 That's it! Your app is now ready to display interstitial ads.
 
@@ -1101,7 +1086,7 @@ Since Native Ads require UI components native to a platform, this feature requir
 
 #### Android
 
-The Android implementation of the Google Mobile Ads plugin requires a class that implements a NativeAdFactory. A `NativeAdFactory` contains a method that takes a [UnifiedNativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAd) and custom options and returns a [UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView). The [UnifiedNativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/formats/UnifiedNativeAdView) is what will be displayed in your app.
+The Android implementation of the Google Mobile Ads plugin requires a class that implements a NativeAdFactory. A `NativeAdFactory` contains a method that takes a [NativeAd](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAd) and custom options and returns a [NativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView). The [NativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView) is what will be displayed in your app.
 
 You can implement this in your MainActivity.java or create a separate class in the same directory as MainActivity.java as seen below:
 
@@ -1109,16 +1094,16 @@ You can implement this in your MainActivity.java or create a separate class in t
 ```java
 package my.app.path;
 
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdView;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Map;
 
 class NativeAdFactoryExample implements NativeAdFactory {
   @Override
-  public UnifiedNativeAdView createNativeAd(
-      UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
-    // Create UnifiedNativeAdView
+  public NativeAdView createNativeAd(
+      NativeAd nativeAd, Map<String, Object> customOptions) {
+    // Create NativeAdView
   }
 }
 ```
@@ -1162,8 +1147,8 @@ package io.flutter.plugins.googlemobileadsexample;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.widget.TextView;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdView;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Map;
 
@@ -1178,10 +1163,10 @@ class NativeAdFactoryExample implements NativeAdFactory {
  }
 
  @Override
- public UnifiedNativeAdView createNativeAd(
-     UnifiedNativeAd nativeAd, Map<String, Object> customOptions) {
-   final UnifiedNativeAdView adView =
-       (UnifiedNativeAdView) layoutInflater.inflate(R.layout.my_native_ad, null);
+ public NativeAdView createNativeAd(
+     NativeAd nativeAd, Map<String, Object> customOptions) {
+   final NativeAdView adView =
+       (NativeAdView) layoutInflater.inflate(R.layout.my_native_ad, null);
    final TextView headlineView = adView.findViewById(R.id.ad_headline);
    final TextView bodyView = adView.findViewById(R.id.ad_body);
 
@@ -1200,7 +1185,7 @@ class NativeAdFactoryExample implements NativeAdFactory {
 
 #### iOS
 
-The iOS implementation of the Google Mobile Ads plugin requires a class that implements a `FLTNativeAdFactory`. A `FLTNativeAdFactory` contains a method that takes a `GADUnifiedNativeAd` and custom options and returns a `GADUnifiedNativeAdView`. The `GADUnifiedNativeAdView` is what will be displayed in your app.
+The iOS implementation of the Google Mobile Ads plugin requires a class that implements a `FLTNativeAdFactory`. A `FLTNativeAdFactory` contains a method that takes a `GADNativeAd` and custom options and returns a `GADNativeAdView`. The `GADNativeAdView` is what will be displayed in your app.
 
 The `FLTNativeAdFactory` protocol can be implemented by `AppDelegate` or a separate class could be created as seen below:
 
@@ -1212,9 +1197,9 @@ The `FLTNativeAdFactory` protocol can be implemented by `AppDelegate` or a separ
 @end
 
 @implementation NativeAdFactoryExample
-- (GADUnifiedNativeAdView *)createNativeAd:(GADUnifiedNativeAd *)nativeAd
+- (GADNativeAdView *)createNativeAd:(GADNativeAd *)nativeAd
                              customOptions:(NSDictionary *)customOptions {
-  // Create GADUnifiedNativeAdView
+  // Create GADNativeAdView
 }
 @end
 ```
@@ -1247,18 +1232,18 @@ When creating the `NativeAd` in Dart, the `factoryID` will need to match the one
 
 
 ```objectivec
-// The example UnifiedNativeAdView.xib can be found at
-/* https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/ios/Runner/UnifiedNativeAdView.xib
+// The example NativeAdView.xib can be found at
+/* https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/ios/Runner/NativeAdView.xib
 */
 @interface NativeAdFactoryExample : NSObject <FLTNativeAdFactory>
 @end
 
 @implementation NativeAdFactoryExample
-- (GADUnifiedNativeAdView *)createNativeAd:(GADUnifiedNativeAd *)nativeAd
+- (GADNativeAdView *)createNativeAd:(GADNativeAd *)nativeAd
                             customOptions:(NSDictionary *)customOptions {
  // Create and place ad in view hierarchy.
- GADUnifiedNativeAdView *adView =
-     [[NSBundle mainBundle] loadNibNamed:@"UnifiedNativeAdView" owner:nil options:nil].firstObject;
+ GADNativeAdView *adView =
+     [[NSBundle mainBundle] loadNibNamed:@"NativeAdView" owner:nil options:nil].firstObject;
 
  // Associate the native ad view with the native ad object. This is
  // required to make the ad clickable.
@@ -1316,11 +1301,11 @@ A `NativeAd` requires an `adUnitId`, a `factoryId`, an `AdRequest`, and an `AdLi
 
 
 ```dart
-final NativeAd myNative = NativeAd.fromPublisherRequest(
+final NativeAd myNative = NativeAd.fromAdManagerRequest(
   adUnitId: '<test id or account id>',
   factoryId: 'adFactoryExample',
-  request: PublisherAdRequest(),
-  listener: AdListener(),
+  adManagerRequest: AdManagerAdRequest(),
+  listener: NativeAdListener(),
 );
 ```
 
@@ -1331,14 +1316,15 @@ The `factoryId` will need to match the one used to add the factory to `GoogleMob
 
 #### Native Ad Events
 
-Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
+Through the use of `NativeAdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
 
 ```dart
-final AdListener listener = AdListener(
+final NativeAdListener listener = NativeAdListener(
  // Called when an ad is successfully received.
  onAdLoaded: (Ad ad) => print('Ad loaded.'),
  // Called when an ad request failed.
  onAdFailedToLoad: (Ad ad, LoadAdError error) {
+   // Dispose the ad here to free resources.
    ad.dispose();
    print('Ad failed to load: $error');
  },
@@ -1346,12 +1332,10 @@ final AdListener listener = AdListener(
  onAdOpened: (Ad ad) => print('Ad opened.'),
  // Called when an ad removes an overlay that covers the screen.
  onAdClosed: (Ad ad) => print('Ad closed.'),
- // Called when an ad is in the process of leaving the application.
- onApplicationExit: (Ad ad) => print('Left application.'),
+ // Called when an impression occurs on the ad.
+ onAdImpression: (Ad ad) => print('Ad impression.'),
  // Called when a click is recorded for a NativeAd.
  onNativeAdClicked: (NativeAd ad) => print('Ad clicked.'),
- // Called when an impression is recorded for a NativeAd.
- onNativeAdImpression: (NativeAd ad) => print('Ad impression.'),
 );
 ```
 
@@ -1413,79 +1397,67 @@ The easiest way to load test ads is to use our dedicated test ad unit ID for rew
 It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
 
-### Instantiate a Rewarded Ad
+### Load a Rewarded Ad
 
-A `RewardedAd` requires an `adUnitId`, an `AdRequest`, and an `AdListener` with the `onRewardedAdUserEarnedReward` callback implemented. An example is shown below as well as more information on each parameter following.
+Loading a `RewardedAd` requires an `adUnitId`, an `AdManagerAdRequest`, and a `RewardedAdLoadCallback`. An example is shown below as well as more information on each parameter following.
 
 
 ```dart
-final RewardedAd myRewarded = RewardedAd.fromPublisherRequest(
- adUnitId: '<test id or account id>',
- request: PublisherAdRequest(),
- listener: AdListener(
-   onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) {
-     print(reward.type);
-     print(reward.amount);
-   },
- ),
+RewardedAd.loadWithAdManagerAdRequest(
+  adUnitId: '<test id or account id>',
+  adManagerRequest: AdManagerAdRequest(),
+  rewardedAdLoadCallback: RewardedAdLoadCallback(
+    onAdLoaded: (RewardedAd ad) {
+      print('$ad loaded.');
+      // Keep a reference to the ad so you can show it later.
+      this._rewardedAd = ad;
+    },
+    onAdFailedToLoad: (LoadAdError error) {
+      print('RewardedAd failed to load: $error');
+    },
 );
 ```
 
 
 #### Rewarded Ad Events
 
-Through the use of `AdListener`, you can listen for lifecycle events, such as when an ad is closed or the user leaves the app. This example implements each method and logs a message to the console:
+Through the use of `FullScreenContentCallback`, you can listen for lifecycle events, such as when the ad is shown or dismissed. 
+Set `RewardedAd.fullScreenContentCallback` before showing the ad to receive notifications for these events. This example implements each method and logs a message to the console:
 
 
 ```dart
-final AdListener listener = AdListener(
- // Called when an ad is successfully received.
- onAdLoaded: (Ad ad) => print('Ad loaded.'),
- // Called when an ad request failed.
- onAdFailedToLoad: (Ad ad, LoadAdError error) {
-   ad.dispose();
-   print('Ad failed to load: $error');
- },
- // Called when an ad opens an overlay that covers the screen.
- onAdOpened: (Ad ad) => print('Ad opened.'),
- // Called when an ad removes an overlay that covers the screen.
- onAdClosed: (Ad ad) {
-   ad.dispose();
-   print('Ad closed.');
- },
- // Called when an ad is in the process of leaving the application.
- onApplicationExit: (Ad ad) => print('Left application.'),
- // Called when a RewardedAd triggers a reward.
- onRewardedAdUserEarnedReward: (RewardedAd ad, RewardItem reward) {
-   print('Reward earned: $reward');
- },
+rewardedAd.fullScreenContentCallback = FullScreenContentCallback(
+  onAdShowedFullScreenContent: (RewardedAd ad) =>
+     print('$ad onAdShowedFullScreenContent.'),
+  onAdDismissedFullScreenContent: (RewardedAd ad) {
+    print('$ad onAdDismissedFullScreenContent.');
+    ad.dispose();
+  },
+  onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+    print('$ad onAdFailedToShowFullScreenContent: $error');
+    ad.dispose();
+  },
+  onAdImpression: (RewardedAd ad) => print('$ad impression occurred.'),
 );
 ```
 
-Key Point: Make sure to implement the `onRewardedAdUserEarnedReward` event to
-reward the user for watching an ad.
-
-### Load Rewarded Ad
-
-After a `RewardedAd` is instantiated, `load()` must be called before it can be shown on the screen.
-
-
-```dart
-myRewarded.load();
-```
 
 ### Display a RewardedAd
 
-A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the add by calling `show()` after the ad is loaded.
+A `RewardedAd` is displayed as an Overlay is displayed on top of all app content and is statically placed. Which means it can not be displayed this way can't be added to the Flutter widget tree. You can choose when to show the ad by calling `show()`.
+A `RewardedAd` can only be shown once. Subsequent calls to show will trigger `onAdFailedToShowFullScreenContent`.
+`RewardedAd.show()` takes an `OnUserEarnedRewardCallback`, which is invoked when the user earns a reward. Be sure to implement this and reward the user for watching an ad.
 
 
 ```dart
-myRewarded.show();
+myRewarded.show(onUserEarnedReward: (RewardedAd ad, RewardItem rewardItem) {
+  // Reward the user for watching an ad.
+});
 ```
 
-This method should only be called after `load()` and the `AdListener.onAdLoaded` method has been triggered. Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and require user input.  Do not call `show()` more than once for a loaded `RewardedAd`. Instead you should load a new ad.
+Once `show()` is called, an `Ad` displayed this way can't be removed programmatically and require user input.  Do not call `show()` more than once for a loaded `RewardedAd`. Instead you should load a new ad.
 
-Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `AdListener.onAdFailedToLoad` and  `AdListener.onAdClosed` and  callbacks.
+Once an ad has called `load()`, it must call `dispose()` when access to it is no longer needed. The best practice for when to call `dispose()` is in the `FullScreenContentCallback.onAdDismissedFullScreenContent` and `FullScreenContentCallback.onAdFailedToShowFullScreenContent` callbacks.
 
 That's it! Your app is now ready to display rewarded ads.
 
@@ -1557,3 +1529,94 @@ final RequestConfiguration requestConfiguration = RequestConfiguration(
   maxAdContentRating: MaxAdContentRating.g);
 MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 ```
+
+## Response Info
+
+For debugging and logging purposes, `LoadAdError`s and successfully loaded ads
+provide a `ResponseInfo` object. This object contains information about the ad 
+it loaded. Each ad format class has a property `Ad.responseInfo` which is
+populated after it loads.
+
+Properties on the `ResponseInfo` object include:
+
+`mediationAdapterClassName`
+:  The class name of the ad network that fetched the current ad.
+
+
+`responseId`
+:  The response identifier is a unique identifier for the ad response. This
+identifier can be used to identify and block the ad in the Ads Review Center
+(ARC).
+
+`adapterResponses`
+:  The list of `AdapterResponseInfo` containing metadata for each adapter 
+included in the ad response. Can be used to debug the mediation waterfall 
+execution.
+
+For each ad network in the waterfall, `AdapterResponseInfo` provides the following
+properties:
+
+<table>
+  <tr>
+    <th>Property</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>adapterClassName</td>
+    <td>A class name that identifies the ad network.</td>
+  </tr>
+  <tr>
+    <td>credentials</td>
+    <td> A string description of adapter credentials specified in the AdMob or Ad 
+     Manager UI.
+    </td>
+  </tr>
+  <tr>
+    <td>adError</td>
+    <td>Error associated with the request to the network. Null if the network
+      successfully loaded an ad or if the network was not attempted.</td>
+  </tr>
+  <tr>
+    <td>latencyMillis</td>
+    <td>Amount of time the ad network spent loading an ad. <code>0</code> if the
+    network was not attempted.</td>
+  </tr>
+  <tr>
+    <td>description</td>
+    <td>A log friendly string version of the AdapterResponseInfo.</td>
+  </tr>
+</table>
+
+## Ad Load Errors
+
+When an ad fails to load, a failure callback is called which provides a
+`LoadAdError` object.
+
+The following code snippet retrieves error information when a rewarded ad fails
+to load:
+
+```dart
+onAdFailedToLoad: (ad, loadAdError) {
+  // Gets the domain from which the error came.
+  String domain = loadAdError.domain;
+
+  // Gets the error code. See
+  // https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest
+  // and https://developers.google.com/admob/ios/api/reference/Enums/GADErrorCode
+  // for a list of possible codes.
+  int code = loadAdError.code;
+  
+  // A log friendly string summarizing the error.
+  String message = loadAdError.message;
+  
+  // Get response information, which may include results of mediation requests.
+  ResponseInfo? responseInfo = loadAdError.responseInfo;
+}
+```
+
+This information can be used to more accurately determine what caused the ad
+load to fail. In particular, for errors under the domain `com.google.admob` on
+iOS and `com.google.android.gms.ads` on Android, the `GetMessage()` can be
+looked up in [this help center
+article](//support.google.com/admob/answer/9905175) for a more detailed
+explanation and possible actions that can be taken to resolve the issue.

@@ -9,10 +9,9 @@
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
-		6E7652AC066122B9412700C4 /* libPods-google_mobile_ads_exampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C099CEFFFD5550FC343D00 /* libPods-google_mobile_ads_exampleTests.a */; };
 		8FB13CDD248F07D90011A72F /* FLTGoogleMobileAdsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB13CDC248F07D90011A72F /* FLTGoogleMobileAdsTest.m */; };
 		8FB13CE22498136E0011A72F /* FLTGoogleMobileAdsReaderWriterTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB13CE12498136E0011A72F /* FLTGoogleMobileAdsReaderWriterTest.m */; };
-		8FC897F52411A9F100415930 /* UnifiedNativeAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FC897F42411A9F100415930 /* UnifiedNativeAdView.xib */; };
+		8FC897F52411A9F100415930 /* NativeAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FC897F42411A9F100415930 /* NativeAdView.xib */; };
 		9740EEB41CF90195004384FC /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9740EEB21CF90195004384FC /* Debug.xcconfig */; };
 		9740EEB51CF90195004384FC /* Generated.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 9740EEB31CF90195004384FC /* Generated.xcconfig */; };
 		978B8F6F1D3862AE00F588F7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AFFD8EE1D35381100E5BB4D /* AppDelegate.m */; };
@@ -22,7 +21,27 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		9EA7213725BB6517008D57E3 /* GoogleMobileAds.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */; };
 		9EA7213825BB6530008D57E3 /* GoogleMobileAds.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */; };
+		9EA7474E2637CD6800E0B0E4 /* FLTBannerAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA7474C2637CD6800E0B0E4 /* FLTBannerAdTest.m */; };
+		9EA7474F2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA7474D2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m */; };
+		9EA747532637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA747512637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m */; };
+		9EA747542637EC7000E0B0E4 /* FLTInterstitialAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA747522637EC7000E0B0E4 /* FLTInterstitialAdTest.m */; };
 		9EF1F00025F8351A0017A440 /* FLTGoogleMobileAdsPluginMethodCallsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF1EFFF25F8351A0017A440 /* FLTGoogleMobileAdsPluginMethodCallsTest.m */; };
+		9EF4E70026392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.h in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6F326392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.h */; };
+		9EF4E70126392B230007E4FE /* FLTAd_Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6F426392B230007E4FE /* FLTAd_Internal.m */; };
+		9EF4E70226392B230007E4FE /* FLTConstants.h in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6F526392B230007E4FE /* FLTConstants.h */; };
+		9EF4E70326392B230007E4FE /* FLTMobileAds_Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6F626392B230007E4FE /* FLTMobileAds_Internal.m */; };
+		9EF4E70426392B230007E4FE /* FLTGoogleMobileAdsPlugin.h in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6F726392B230007E4FE /* FLTGoogleMobileAdsPlugin.h */; };
+		9EF4E70526392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.h in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6F826392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.h */; };
+		9EF4E70626392B230007E4FE /* FLTAdInstanceManager_Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6F926392B230007E4FE /* FLTAdInstanceManager_Internal.m */; };
+		9EF4E70726392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6FA26392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.m */; };
+		9EF4E70826392B230007E4FE /* FLTAd_Internal.h in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6FB26392B230007E4FE /* FLTAd_Internal.h */; };
+		9EF4E70926392B230007E4FE /* FLTGoogleMobileAdsPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6FC26392B230007E4FE /* FLTGoogleMobileAdsPlugin.m */; };
+		9EF4E70A26392B230007E4FE /* FLTAdInstanceManager_Internal.h in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6FD26392B230007E4FE /* FLTAdInstanceManager_Internal.h */; };
+		9EF4E70B26392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6FE26392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.m */; };
+		9EF4E70C26392B230007E4FE /* FLTMobileAds_Internal.h in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6FF26392B230007E4FE /* FLTMobileAds_Internal.h */; };
+		9EF4E7102639410D0007E4FE /* FLTRewardedAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E70F2639410D0007E4FE /* FLTRewardedAdTest.m */; };
+		9EF4E7142639D4B30007E4FE /* FLTNativeAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E7132639D4B30007E4FE /* FLTNativeAdTest.m */; };
+		D2CF0978BD94BAEAD9E443C4 /* libPods-google_mobile_ads_exampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F8AB4520D15662F521C33C38 /* libPods-google_mobile_ads_exampleTests.a */; };
 		FBE669D215209F1F44CEEB21 /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F369F228D3A43519CEE308 /* libPods-Runner.a */; };
 /* End PBXBuildFile section */
 
@@ -53,8 +72,6 @@
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
-		40133ECDF4BFD2526D0D4138 /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-google_mobile_ads_exampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-google_mobile_ads_exampleTests/Pods-google_mobile_ads_exampleTests.debug.xcconfig"; sourceTree = "<group>"; };
-		50AA9D496F538C2EBA6B1F1A /* Pods-google_mobile_ads_exampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-google_mobile_ads_exampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-google_mobile_ads_exampleTests/Pods-google_mobile_ads_exampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		7AFFD8ED1D35381100E5BB4D /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7AFFD8EE1D35381100E5BB4D /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -63,7 +80,7 @@
 		8FB13CD6248F07B80011A72F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8FB13CDC248F07D90011A72F /* FLTGoogleMobileAdsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsTest.m; path = ../../../ios/Tests/FLTGoogleMobileAdsTest.m; sourceTree = "<group>"; };
 		8FB13CE12498136E0011A72F /* FLTGoogleMobileAdsReaderWriterTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsReaderWriterTest.m; path = ../../../ios/Tests/FLTGoogleMobileAdsReaderWriterTest.m; sourceTree = "<group>"; };
-		8FC897F42411A9F100415930 /* UnifiedNativeAdView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UnifiedNativeAdView.xib; sourceTree = "<group>"; };
+		8FC897F42411A9F100415930 /* NativeAdView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NativeAdView.xib; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,10 +90,31 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleMobileAds.xcframework; path = "Pods/Google-Mobile-Ads-SDK/Frameworks/GoogleMobileAdsFramework-Current/GoogleMobileAds.xcframework"; sourceTree = "<group>"; };
+		9EA7474C2637CD6800E0B0E4 /* FLTBannerAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTBannerAdTest.m; path = ../../../ios/Tests/FLTBannerAdTest.m; sourceTree = "<group>"; };
+		9EA7474D2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGAMBannerAdTest.m; path = ../../../ios/Tests/FLTGAMBannerAdTest.m; sourceTree = "<group>"; };
+		9EA747512637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGamInterstitialAdTest.m; path = ../../../ios/Tests/FLTGamInterstitialAdTest.m; sourceTree = "<group>"; };
+		9EA747522637EC7000E0B0E4 /* FLTInterstitialAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTInterstitialAdTest.m; path = ../../../ios/Tests/FLTInterstitialAdTest.m; sourceTree = "<group>"; };
 		9EF1EFFF25F8351A0017A440 /* FLTGoogleMobileAdsPluginMethodCallsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsPluginMethodCallsTest.m; path = ../../../ios/Tests/FLTGoogleMobileAdsPluginMethodCallsTest.m; sourceTree = "<group>"; };
+		9EF4E6F326392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FLTGoogleMobileAdsCollection_Internal.h; path = ../../ios/Classes/FLTGoogleMobileAdsCollection_Internal.h; sourceTree = "<group>"; };
+		9EF4E6F426392B230007E4FE /* FLTAd_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTAd_Internal.m; path = ../../ios/Classes/FLTAd_Internal.m; sourceTree = "<group>"; };
+		9EF4E6F526392B230007E4FE /* FLTConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FLTConstants.h; path = ../../ios/Classes/FLTConstants.h; sourceTree = "<group>"; };
+		9EF4E6F626392B230007E4FE /* FLTMobileAds_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTMobileAds_Internal.m; path = ../../ios/Classes/FLTMobileAds_Internal.m; sourceTree = "<group>"; };
+		9EF4E6F726392B230007E4FE /* FLTGoogleMobileAdsPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FLTGoogleMobileAdsPlugin.h; path = ../../ios/Classes/FLTGoogleMobileAdsPlugin.h; sourceTree = "<group>"; };
+		9EF4E6F826392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FLTGoogleMobileAdsReaderWriter_Internal.h; path = ../../ios/Classes/FLTGoogleMobileAdsReaderWriter_Internal.h; sourceTree = "<group>"; };
+		9EF4E6F926392B230007E4FE /* FLTAdInstanceManager_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTAdInstanceManager_Internal.m; path = ../../ios/Classes/FLTAdInstanceManager_Internal.m; sourceTree = "<group>"; };
+		9EF4E6FA26392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsReaderWriter_Internal.m; path = ../../ios/Classes/FLTGoogleMobileAdsReaderWriter_Internal.m; sourceTree = "<group>"; };
+		9EF4E6FB26392B230007E4FE /* FLTAd_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FLTAd_Internal.h; path = ../../ios/Classes/FLTAd_Internal.h; sourceTree = "<group>"; };
+		9EF4E6FC26392B230007E4FE /* FLTGoogleMobileAdsPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsPlugin.m; path = ../../ios/Classes/FLTGoogleMobileAdsPlugin.m; sourceTree = "<group>"; };
+		9EF4E6FD26392B230007E4FE /* FLTAdInstanceManager_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FLTAdInstanceManager_Internal.h; path = ../../ios/Classes/FLTAdInstanceManager_Internal.h; sourceTree = "<group>"; };
+		9EF4E6FE26392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsCollection_Internal.m; path = ../../ios/Classes/FLTGoogleMobileAdsCollection_Internal.m; sourceTree = "<group>"; };
+		9EF4E6FF26392B230007E4FE /* FLTMobileAds_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FLTMobileAds_Internal.h; path = ../../ios/Classes/FLTMobileAds_Internal.h; sourceTree = "<group>"; };
+		9EF4E70F2639410D0007E4FE /* FLTRewardedAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTRewardedAdTest.m; path = ../../../ios/Tests/FLTRewardedAdTest.m; sourceTree = "<group>"; };
+		9EF4E7132639D4B30007E4FE /* FLTNativeAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTNativeAdTest.m; path = ../../../ios/Tests/FLTNativeAdTest.m; sourceTree = "<group>"; };
+		BC01F2AA74ECDC9497A31EF6 /* Pods-google_mobile_ads_exampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-google_mobile_ads_exampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-google_mobile_ads_exampleTests/Pods-google_mobile_ads_exampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		CE82265EF05E2A9632B25E60 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
-		F1C099CEFFFD5550FC343D00 /* libPods-google_mobile_ads_exampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-google_mobile_ads_exampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F74051031B69F8124E38352E /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		F8AB4520D15662F521C33C38 /* libPods-google_mobile_ads_exampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-google_mobile_ads_exampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC33B87979513A77136D4557 /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-google_mobile_ads_exampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-google_mobile_ads_exampleTests/Pods-google_mobile_ads_exampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,7 +123,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EA7213725BB6517008D57E3 /* GoogleMobileAds.xcframework in Frameworks */,
-				6E7652AC066122B9412700C4 /* libPods-google_mobile_ads_exampleTests.a in Frameworks */,
+				D2CF0978BD94BAEAD9E443C4 /* libPods-google_mobile_ads_exampleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -106,8 +144,8 @@
 			children = (
 				CE82265EF05E2A9632B25E60 /* Pods-Runner.debug.xcconfig */,
 				F74051031B69F8124E38352E /* Pods-Runner.release.xcconfig */,
-				40133ECDF4BFD2526D0D4138 /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */,
-				50AA9D496F538C2EBA6B1F1A /* Pods-google_mobile_ads_exampleTests.release.xcconfig */,
+				FC33B87979513A77136D4557 /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */,
+				BC01F2AA74ECDC9497A31EF6 /* Pods-google_mobile_ads_exampleTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -117,7 +155,7 @@
 			children = (
 				9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */,
 				83F369F228D3A43519CEE308 /* libPods-Runner.a */,
-				F1C099CEFFFD5550FC343D00 /* libPods-google_mobile_ads_exampleTests.a */,
+				F8AB4520D15662F521C33C38 /* libPods-google_mobile_ads_exampleTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -125,6 +163,12 @@
 		8FB13CD3248F07B80011A72F /* google_mobile_ads_exampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				9EF4E7132639D4B30007E4FE /* FLTNativeAdTest.m */,
+				9EF4E70F2639410D0007E4FE /* FLTRewardedAdTest.m */,
+				9EA747512637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m */,
+				9EA747522637EC7000E0B0E4 /* FLTInterstitialAdTest.m */,
+				9EA7474C2637CD6800E0B0E4 /* FLTBannerAdTest.m */,
+				9EA7474D2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m */,
 				9EF1EFFF25F8351A0017A440 /* FLTGoogleMobileAdsPluginMethodCallsTest.m */,
 				8FB13CE12498136E0011A72F /* FLTGoogleMobileAdsReaderWriterTest.m */,
 				8FB13CDC248F07D90011A72F /* FLTGoogleMobileAdsTest.m */,
@@ -147,6 +191,19 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				9EF4E6FB26392B230007E4FE /* FLTAd_Internal.h */,
+				9EF4E6F426392B230007E4FE /* FLTAd_Internal.m */,
+				9EF4E6FD26392B230007E4FE /* FLTAdInstanceManager_Internal.h */,
+				9EF4E6F926392B230007E4FE /* FLTAdInstanceManager_Internal.m */,
+				9EF4E6F526392B230007E4FE /* FLTConstants.h */,
+				9EF4E6F326392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.h */,
+				9EF4E6FE26392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.m */,
+				9EF4E6F726392B230007E4FE /* FLTGoogleMobileAdsPlugin.h */,
+				9EF4E6FC26392B230007E4FE /* FLTGoogleMobileAdsPlugin.m */,
+				9EF4E6F826392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.h */,
+				9EF4E6FA26392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.m */,
+				9EF4E6FF26392B230007E4FE /* FLTMobileAds_Internal.h */,
+				9EF4E6F626392B230007E4FE /* FLTMobileAds_Internal.m */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				8FB13CD3248F07B80011A72F /* google_mobile_ads_exampleTests */,
@@ -168,7 +225,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
-				8FC897F42411A9F100415930 /* UnifiedNativeAdView.xib */,
+				8FC897F42411A9F100415930 /* NativeAdView.xib */,
 				7AFFD8ED1D35381100E5BB4D /* AppDelegate.h */,
 				7AFFD8EE1D35381100E5BB4D /* AppDelegate.m */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
@@ -197,7 +254,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8FB13CDB248F07B80011A72F /* Build configuration list for PBXNativeTarget "google_mobile_ads_exampleTests" */;
 			buildPhases = (
-				DE268ADAEB64213DF5E1876D /* [CP] Check Pods Manifest.lock */,
+				58394F97FF6A7510BAED57E1 /* [CP] Check Pods Manifest.lock */,
 				8FB13CCE248F07B80011A72F /* Sources */,
 				8FB13CCF248F07B80011A72F /* Frameworks */,
 				8FB13CD0248F07B80011A72F /* Resources */,
@@ -223,7 +280,6 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
-				69A003A7C40C6B630425E11F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -288,7 +344,7 @@
 			files = (
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				9740EEB51CF90195004384FC /* Generated.xcconfig in Resources */,
-				8FC897F52411A9F100415930 /* UnifiedNativeAdView.xib in Resources */,
+				8FC897F52411A9F100415930 /* NativeAdView.xib in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				9740EEB41CF90195004384FC /* Debug.xcconfig in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
@@ -331,39 +387,7 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed\n/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" thin\n";
 		};
-		69A003A7C40C6B630425E11F /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh",
-				"${PODS_ROOT}/../Flutter/Flutter.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Flutter.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9740EEB61CF901F6004384FC /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
-		};
-		DE268ADAEB64213DF5E1876D /* [CP] Check Pods Manifest.lock */ = {
+		58394F97FF6A7510BAED57E1 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -385,6 +409,20 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		9740EEB61CF901F6004384FC /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -392,9 +430,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EF4E70026392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.h in Sources */,
+				9EF4E70126392B230007E4FE /* FLTAd_Internal.m in Sources */,
+				9EF4E70226392B230007E4FE /* FLTConstants.h in Sources */,
+				9EF4E70326392B230007E4FE /* FLTMobileAds_Internal.m in Sources */,
+				9EF4E70426392B230007E4FE /* FLTGoogleMobileAdsPlugin.h in Sources */,
+				9EF4E7102639410D0007E4FE /* FLTRewardedAdTest.m in Sources */,
+				9EF4E70526392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.h in Sources */,
+				9EF4E70626392B230007E4FE /* FLTAdInstanceManager_Internal.m in Sources */,
+				9EF4E70726392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.m in Sources */,
+				9EF4E70826392B230007E4FE /* FLTAd_Internal.h in Sources */,
+				9EF4E70926392B230007E4FE /* FLTGoogleMobileAdsPlugin.m in Sources */,
+				9EF4E70A26392B230007E4FE /* FLTAdInstanceManager_Internal.h in Sources */,
+				9EF4E70B26392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.m in Sources */,
+				9EF4E70C26392B230007E4FE /* FLTMobileAds_Internal.h in Sources */,
+				9EA7474F2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m in Sources */,
 				8FB13CDD248F07D90011A72F /* FLTGoogleMobileAdsTest.m in Sources */,
+				9EF4E7142639D4B30007E4FE /* FLTNativeAdTest.m in Sources */,
+				9EA7474E2637CD6800E0B0E4 /* FLTBannerAdTest.m in Sources */,
 				8FB13CE22498136E0011A72F /* FLTGoogleMobileAdsReaderWriterTest.m in Sources */,
+				9EA747542637EC7000E0B0E4 /* FLTInterstitialAdTest.m in Sources */,
 				9EF1F00025F8351A0017A440 /* FLTGoogleMobileAdsPluginMethodCallsTest.m in Sources */,
+				9EA747532637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,7 +497,7 @@
 /* Begin XCBuildConfiguration section */
 		8FB13CD9248F07B80011A72F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 40133ECDF4BFD2526D0D4138 /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */;
+			baseConfigurationReference = FC33B87979513A77136D4557 /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -477,7 +534,7 @@
 		};
 		8FB13CDA248F07B80011A72F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50AA9D496F538C2EBA6B1F1A /* Pods-google_mobile_ads_exampleTests.release.xcconfig */;
+			baseConfigurationReference = BC01F2AA74ECDC9497A31EF6 /* Pods-google_mobile_ads_exampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
