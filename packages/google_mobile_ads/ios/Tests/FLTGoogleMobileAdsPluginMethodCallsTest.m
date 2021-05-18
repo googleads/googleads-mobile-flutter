@@ -68,6 +68,7 @@
   FlutterMethodCall *methodCall = [FlutterMethodCall
       methodCallWithMethodName:@"loadRewardedAd"
                      arguments:@{
+                       @"adId" : @2,
                        @"adUnitId" : @"testId",
                        @"request" : request,
                        @"serverSideVerificationOptions" : serverSideVerificationOptions
@@ -86,15 +87,15 @@
   XCTAssertNil(returnedResult);
   BOOL (^verificationBlock)(FLTRewardedAd *) = ^BOOL(FLTRewardedAd *ad) {
     FLTAdRequest *adRequest = [ad valueForKey:@"_adRequest"];
-    GADRewardedAd *rewardedAd = [ad valueForKey:@"_rewardedView"];
+    NSString *adUnit = [ad valueForKey:@"_adUnitId"];
     FLTServerSideVerificationOptions *options = [ad valueForKey:@"_serverSideVerificationOptions"];
     XCTAssertEqualObjects(adRequest, request);
-    XCTAssertEqualObjects(rewardedAd.adUnitID, @"testId");
+    XCTAssertEqualObjects(adUnit, @"testId");
     XCTAssertEqualObjects(options, serverSideVerificationOptions);
     return YES;
   };
   OCMVerify([_mockAdInstanceManager loadAd:[OCMArg checkWithBlock:verificationBlock]
-                                      adId:[OCMArg any]]);
+                                      adId:[OCMArg isEqual:@2]]);
 }
 
 - (void)testInternalInit {
@@ -113,6 +114,75 @@
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
   OCMVerify([_mockAdInstanceManager disposeAllAds]);
+}
+
+- (void)testSetSameAppKeyEnabledYes {
+  id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
+  OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
+      .andReturn((GADMobileAds *)gadMobileAdsClassMock);
+  GADRequestConfiguration *gadRequestConfigurationMock =
+      OCMClassMock([GADRequestConfiguration class]);
+  OCMStub([gadMobileAdsClassMock requestConfiguration]).andReturn(gadRequestConfigurationMock);
+
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setSameAppKeyEnabled"
+                                        arguments:@{@"isEnabled" : @(YES)}];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertNil(returnedResult);
+  OCMVerify([gadRequestConfigurationMock setSameAppKeyEnabled:[OCMArg isEqual:@(YES)]]);
+}
+
+- (void)testSetSameAppKeyEnabledNo {
+  id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
+  OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
+      .andReturn((GADMobileAds *)gadMobileAdsClassMock);
+  GADRequestConfiguration *gadRequestConfigurationMock =
+      OCMClassMock([GADRequestConfiguration class]);
+  OCMStub([gadMobileAdsClassMock requestConfiguration]).andReturn(gadRequestConfigurationMock);
+
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setSameAppKeyEnabled"
+                                        arguments:@{@"isEnabled" : @0}];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertNil(returnedResult);
+  OCMVerify([gadRequestConfigurationMock setSameAppKeyEnabled:NO]);
+
+  FlutterMethodCall *methodCallWithBool =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setSameAppKeyEnabled"
+                                        arguments:@{@"isEnabled" : @NO}];
+
+  __block bool resultInvokedWithBool = false;
+  __block id _Nullable returnedResultWithBool;
+  FlutterResult resultWithBool = ^(id _Nullable result) {
+    resultInvokedWithBool = true;
+    returnedResultWithBool = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCallWithBool result:resultWithBool];
+
+  XCTAssertTrue(resultInvokedWithBool);
+  XCTAssertNil(returnedResultWithBool);
+  OCMVerify([gadRequestConfigurationMock setSameAppKeyEnabled:NO]);
 }
 
 @end

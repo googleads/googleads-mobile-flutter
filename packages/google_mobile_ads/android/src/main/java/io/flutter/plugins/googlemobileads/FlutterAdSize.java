@@ -103,4 +103,8 @@ class FlutterAdSize {
     result = 31 * result + height;
     return result;
   }
+
+  public AdSize getAdSize() {
+    return size;
+  }
 }

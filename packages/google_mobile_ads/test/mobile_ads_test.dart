@@ -47,6 +47,8 @@ void main() {
             });
           case '_init':
             return null;
+          case 'MobileAds#setSameAppKeyEnabled':
+            return null;
           default:
             assert(false);
             return null;
@@ -128,6 +130,24 @@ void main() {
       expect(status.state, AdapterInitializationState.notReady);
       expect(status.description, 'desc');
       expect(status.latency, 0);
+    });
+
+    test('$MobileAds.setSameAppKeyEnabled', () async {
+      await MobileAds.instance.setSameAppKeyEnabled(true);
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#setSameAppKeyEnabled',
+            arguments: {'isEnabled': true})
+      ]);
+
+      await MobileAds.instance.setSameAppKeyEnabled(false);
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#setSameAppKeyEnabled',
+            arguments: {'isEnabled': true}),
+        isMethodCall('MobileAds#setSameAppKeyEnabled',
+            arguments: {'isEnabled': false})
+      ]);
     });
   });
 }

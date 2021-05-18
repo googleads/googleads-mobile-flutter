@@ -17,9 +17,13 @@ package io.flutter.plugins.googlemobileads;
 import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.ResponseInfo;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.StandardMethodCodec;
+import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
+import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,10 +96,13 @@ class AdInstanceManager {
     ads.clear();
   }
 
-  void onAdLoaded(@NonNull FlutterAd ad) {
+  void onAdLoaded(@NonNull FlutterAd ad, @Nullable ResponseInfo responseInfo) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
     arguments.put("eventName", "onAdLoaded");
+    FlutterResponseInfo flutterResponseInfo =
+        (responseInfo == null) ? null : new FlutterResponseInfo(responseInfo);
+    arguments.put("responseInfo", flutterResponseInfo);
     channel.invokeMethod("onAdEvent", arguments);
   }
 
@@ -116,6 +123,13 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
+  void onAdImpression(@NonNull FlutterAd ad) {
+    Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onAdImpression");
+    channel.invokeMethod("onAdEvent", arguments);
+  }
+
   void onNativeAdClicked(@NonNull FlutterNativeAd ad) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
@@ -123,24 +137,10 @@ class AdInstanceManager {
     channel.invokeMethod("onAdEvent", arguments);
   }
 
-  void onNativeAdImpression(@NonNull FlutterNativeAd ad) {
-    Map<Object, Object> arguments = new HashMap<>();
-    arguments.put("adId", adIdFor(ad));
-    arguments.put("eventName", "onNativeAdImpression");
-    channel.invokeMethod("onAdEvent", arguments);
-  }
-
   void onAdOpened(@NonNull FlutterAd ad) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));
     arguments.put("eventName", "onAdOpened");
-    channel.invokeMethod("onAdEvent", arguments);
-  }
-
-  void onApplicationExit(@NonNull FlutterAd ad) {
-    Map<Object, Object> arguments = new HashMap<>();
-    arguments.put("adId", adIdFor(ad));
-    arguments.put("eventName", "onApplicationExit");
     channel.invokeMethod("onAdEvent", arguments);
   }
 
@@ -157,6 +157,35 @@ class AdInstanceManager {
     arguments.put("adId", adIdFor(ad));
     arguments.put("eventName", "onRewardedAdUserEarnedReward");
     arguments.put("rewardItem", reward);
+    channel.invokeMethod("onAdEvent", arguments);
+  }
+
+  void onFailedToShowFullScreenContent(@NonNull FlutterAd ad, @NonNull AdError error) {
+    final Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onFailedToShowFullScreenContent");
+    arguments.put("error", new FlutterAdError(error));
+    channel.invokeMethod("onAdEvent", arguments);
+  }
+
+  void onAdShowedFullScreenContent(@NonNull FlutterAd ad) {
+    final Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onAdShowedFullScreenContent");
+    channel.invokeMethod("onAdEvent", arguments);
+  }
+
+  void onAdDismissedFullScreenContent(@NonNull FlutterAd ad) {
+    final Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onAdDismissedFullScreenContent");
+    channel.invokeMethod("onAdEvent", arguments);
+  }
+
+  void onAdMetadataChanged(@NonNull FlutterAd ad) {
+    final Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onAdMetadataChanged");
     channel.invokeMethod("onAdEvent", arguments);
   }
 

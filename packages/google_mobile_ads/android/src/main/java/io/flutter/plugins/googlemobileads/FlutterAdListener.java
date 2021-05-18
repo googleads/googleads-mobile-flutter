@@ -16,14 +16,25 @@ package io.flutter.plugins.googlemobileads;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.ResponseInfo;
+
+/** A type for retrieving {@link ResponseInfo} from an ad after it is loaded. */
+interface ResponseInfoProvider {
+  ResponseInfo getResponseInfo();
+}
 
 class FlutterAdListener extends AdListener {
-  @NonNull private final AdInstanceManager manager;
-  @NonNull private final FlutterAd ad;
+  @NonNull protected final AdInstanceManager manager;
+  @NonNull protected final FlutterAd ad;
+  @NonNull protected final ResponseInfoProvider responseInfoProvider;
 
-  FlutterAdListener(@NonNull AdInstanceManager manager, @NonNull FlutterAd ad) {
+  FlutterAdListener(
+      @NonNull AdInstanceManager manager,
+      @NonNull FlutterAd ad,
+      @NonNull ResponseInfoProvider responseInfoProvider) {
     this.manager = manager;
     this.ad = ad;
+    this.responseInfoProvider = responseInfoProvider;
   }
 
   @Override
@@ -37,17 +48,30 @@ class FlutterAdListener extends AdListener {
   }
 
   @Override
-  public void onAdLeftApplication() {
-    manager.onApplicationExit(ad);
-  }
-
-  @Override
   public void onAdOpened() {
     manager.onAdOpened(ad);
   }
 
   @Override
   public void onAdLoaded() {
-    manager.onAdLoaded(ad);
+    manager.onAdLoaded(ad, responseInfoProvider.getResponseInfo());
+  }
+}
+
+/**
+ * Ad listener for banner ads. Does not override onAdClicked(), since that is only for native ads.
+ */
+class FlutterBannerAdListener extends FlutterAdListener {
+
+  FlutterBannerAdListener(
+      @NonNull AdInstanceManager manager,
+      @NonNull FlutterAd ad,
+      ResponseInfoProvider responseInfoProvider) {
+    super(manager, ad, responseInfoProvider);
+  }
+
+  @Override
+  public void onAdImpression() {
+    manager.onAdImpression(ad);
   }
 }
