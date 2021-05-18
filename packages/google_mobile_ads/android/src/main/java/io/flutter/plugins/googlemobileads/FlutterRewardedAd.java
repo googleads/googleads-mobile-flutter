@@ -111,6 +111,9 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
                   serverSideVerificationOptions.asServerSideVerificationOptions());
             }
             manager.onAdLoaded(FlutterRewardedAd.this, rewardedAd.getResponseInfo());
+            rewardedAd.setOnPaidEventListener(
+                new FlutterPaidEventListener(manager, FlutterRewardedAd.this));
+
             super.onAdLoaded(rewardedAd);
           }
 
@@ -119,8 +122,6 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
             manager.onAdFailedToLoad(FlutterRewardedAd.this, new FlutterLoadAdError(loadAdError));
           }
         };
-
-    rewardedAd.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
 
     if (request != null) {
       flutterAdLoader.loadRewarded(
