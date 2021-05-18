@@ -52,9 +52,9 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
             @Override
             public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
               FlutterInterstitialAd.this.ad = interstitialAd;
-    	      interstitialAd.setOnPaidEventListener(
-		          new FlutterPaidEventListener(manager, FlutterInterstitialAd.this));
-                FlutterInterstitialAd.this.manager.onAdLoaded(
+              interstitialAd.setOnPaidEventListener(
+                  new FlutterPaidEventListener(manager, FlutterInterstitialAd.this));
+              FlutterInterstitialAd.this.manager.onAdLoaded(
                   FlutterInterstitialAd.this, interstitialAd.getResponseInfo());
             }
 

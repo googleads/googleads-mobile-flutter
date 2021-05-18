@@ -190,7 +190,7 @@
     self.bannerView.rootViewController = rootViewController;
 
     __weak FLTBannerAd *weakSelf = self;
-    self.bannerView.paidEventHandler = ^(GADAdValue * _Nonnull value) {
+    self.bannerView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
       if (weakSelf.manager == nil) {
         return;
       }
@@ -311,7 +311,7 @@
     _rootViewController = rootViewController;
 
     __weak FLTInterstitialAd *weakSelf = self;
-    _interstitialView.paidEventHandler = ^(GADAdValue * _Nonnull value) {
+    _interstitialView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
       if (weakSelf.manager == nil) {
         return;
       }
@@ -446,7 +446,7 @@
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                         request:(FLTAdRequest *_Nonnull)request
+                          request:(FLTAdRequest *_Nonnull)request
                rootViewController:(UIViewController *_Nonnull)rootViewController
     serverSideVerificationOptions:
         (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions {
@@ -456,7 +456,7 @@
     _rootViewController = rootViewController;
     _serverSideVerificationOptions = serverSideVerificationOptions;
     __weak FLTRewardedAd *weakSelf = self;
-    _rewardedView.paidEventHandler = ^(GADAdValue * _Nonnull value) {
+    _rewardedView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
       if (weakSelf.manager == nil) {
         return;
       }
@@ -604,7 +604,7 @@
   nativeAd.delegate = self;
 
   __weak FLTNativeAd *weakSelf = self;
-  nativeAd.paidEventHandler = ^(GADAdValue * _Nonnull value) {
+  nativeAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
     if (weakSelf.manager == nil) {
       return;
     }
@@ -679,12 +679,13 @@
 - (instancetype _Nonnull)initWithValue:(NSDecimalNumber *_Nonnull)value
                              precision:(NSInteger)precision
                           currencyCode:(NSString *_Nonnull)currencyCode {
-    self = [super init];
-    if (self) {
-        _valueMicros = [value decimalNumberByMultiplyingBy:[[NSDecimalNumber alloc] initWithInteger:1000000]];
-        _precision = precision;
-        _currencyCode = currencyCode;
-    }
-    return self;
+  self = [super init];
+  if (self) {
+    _valueMicros =
+        [value decimalNumberByMultiplyingBy:[[NSDecimalNumber alloc] initWithInteger:1000000]];
+    _precision = precision;
+    _currencyCode = currencyCode;
+  }
+  return self;
 }
 @end

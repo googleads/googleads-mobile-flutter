@@ -168,7 +168,7 @@ class AdInstanceManager {
     arguments.put("precision", adValue.precisionType);
     arguments.put("currencyCode", adValue.currencyCode);
   }
-  
+
   void onFailedToShowFullScreenContent(@NonNull FlutterAd ad, @NonNull AdError error) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adIdFor(ad));

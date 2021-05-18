@@ -65,7 +65,6 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
                 return view.getResponseInfo();
               }
             }));
-    
     view.loadAd(request.asAdRequest());
   }
 

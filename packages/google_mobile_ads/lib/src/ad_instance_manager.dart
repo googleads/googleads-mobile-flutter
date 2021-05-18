@@ -309,8 +309,7 @@ class AdInstanceManager {
 
   void _invokePaidEvent(
       Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
-    assert(arguments['valueMicros'] != null &&
-        arguments['valueMicros'] is num);
+    assert(arguments['valueMicros'] != null && arguments['valueMicros'] is num);
 
     if (ad is AdWithView) {
       ad.listener.onPaidEvent?.call(

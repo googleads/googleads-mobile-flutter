@@ -32,12 +32,9 @@ typedef OnUserEarnedRewardCallback = void Function(
 /// The callback type to handle an error loading an [Ad].
 typedef AdLoadErrorCallback = void Function(Ad ad, LoadAdError error);
 
-/// Called when an ad receives revenue value.
+/// The callback type for when an ad receives revenue value.
 typedef OnPaidEventCallback = void Function(
-    Ad ad,
-    double value,
-    int precision,
-    String currencyCode);
+    Ad ad, double value, int precision, String currencyCode);
 
 /// Listener for app events.
 class AppEventListener {

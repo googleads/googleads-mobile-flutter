@@ -151,8 +151,7 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
             ad = adFactory.createNativeAd(nativeAd, customOptions);
             responseInfo = nativeAd.getResponseInfo();
             nativeAd.setOnPaidEventListener(
-              new FlutterPaidEventListener(manager, FlutterNativeAd.this)
-            );
+                new FlutterPaidEventListener(manager, FlutterNativeAd.this));
           }
         };
 
