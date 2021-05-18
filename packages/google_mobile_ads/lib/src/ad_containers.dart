@@ -217,13 +217,19 @@ class AdSize {
     Orientation orientation,
     int width,
   ) async {
-    return await instanceManager.channel
-        .invokeMethod<AnchoredAdaptiveBannerAdSize?>(
+    final num? height = await instanceManager.channel.invokeMethod<num?>(
       'AdSize#getAnchoredAdaptiveBannerAdSize',
       <String, Object>{
         'orientation': describeEnum(orientation),
         'width': width,
       },
+    );
+
+    if (height == null) return null;
+    return AnchoredAdaptiveBannerAdSize(
+      orientation,
+      width: width,
+      height: height.truncate(),
     );
   }
 
