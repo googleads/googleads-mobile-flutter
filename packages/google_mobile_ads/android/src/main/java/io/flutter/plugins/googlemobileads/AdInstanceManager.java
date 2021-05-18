@@ -113,6 +113,9 @@ class AdInstanceManager {
     arguments.put("eventName", "onAppEvent");
     arguments.put("name", name);
     arguments.put("data", data);
+    if(ad.getClass() == FlutterPublisherBannerAd.class){
+      ((FlutterPublisherBannerAd) ad).recordImpression();
+    }
     channel.invokeMethod("onAdEvent", arguments);
   }
 

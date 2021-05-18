@@ -109,6 +109,10 @@ class FlutterPublisherBannerAd extends FlutterAd implements PlatformView, Flutte
     }
     view.setAdSizes(allSizes);
 
+    if(allSizes[0].getWidth() == 1) {
+      view.setManualImpressionsEnabled(true);
+    }
+
     view.setAdListener(new FlutterAdListener(manager, this));
 
     if (request != null) {
@@ -116,6 +120,10 @@ class FlutterPublisherBannerAd extends FlutterAd implements PlatformView, Flutte
     } else {
       view.loadAd(new FlutterPublisherAdRequest.Builder().build().asPublisherAdRequest());
     }
+  }
+
+  public void recordImpression() {
+    view.recordManualImpression();
   }
 
   @Override
