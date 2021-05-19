@@ -1073,7 +1073,7 @@ void main() {
       final BannerAd banner = BannerAd(
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
-        listener: AdListener(
+        listener: BannerAdListener(
           onPaidEvent:
               (Ad ad, double value, int precision, String currencyCode) =>
                   resultCompleter
