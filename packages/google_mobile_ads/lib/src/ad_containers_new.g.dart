@@ -8,190 +8,212 @@ import 'package:reference/reference.dart';
 
 mixin $LoadAdError {
   int get code;
-  String get domain;
-  String get message;
+String get domain;
+String get message;
+  
 }
 
 mixin $AdRequest {
+  
   Future<void> addKeyword(String keyword);
 
-  Future<void> setContentUrl(String url);
+Future<void> setContentUrl(String url);
 
-  Future<void> setNonPersonalizedAds(bool nonPersonalizedAds);
+Future<void> setNonPersonalizedAds(bool nonPersonalizedAds);
 }
 
 mixin $PublisherAdRequest {
+  
   Future<void> addCustomTargeting(String key, String value);
 
-  Future<void> addCustomTargetingList(String key, List<String> values);
+Future<void> addCustomTargetingList(String key, List<String> values);
 }
 
 mixin $AdSize {
   int get width;
-  int get height;
-  String? get constant;
+int get height;
+String? get constant;
+  
 }
 
 mixin $AdListener {
+  
   void onAdLoaded();
 
-  void onAdFailedToLoad($LoadAdError error);
+void onAdFailedToLoad($LoadAdError error);
 
-  void onAppEvent(String name, String data);
+void onAppEvent(String name, String data);
 
-  void onNativeAdClicked();
+void onNativeAdClicked();
 
-  void onNativeAdImpression();
+void onNativeAdImpression();
 
-  void onAdOpened();
+void onAdOpened();
 
-  void onApplicationExit();
+void onApplicationExit();
 
-  void onAdClosed();
+void onAdClosed();
 
-  void onRewardedAdUserEarnedReward($RewardItem reward);
+void onRewardedAdUserEarnedReward($RewardItem reward);
 }
 
 mixin $BannerAd {
   $AdSize get size;
-  String get adUnitId;
-  $AdListener get listener;
-  $AdRequest get request;
+String get adUnitId;
+$AdListener get listener;
+$AdRequest get request;
   Future<void> load();
 }
 
 mixin $PublisherBannerAd {
   List<$AdSize> get sizes;
-  String get adUnitId;
-  $AdListener get listener;
-  $PublisherAdRequest get request;
+String get adUnitId;
+$AdListener get listener;
+$PublisherAdRequest get request;
   Future<void> load();
 }
 
 mixin $NativeAd {
   String get adUnitId;
-  String get factoryId;
-  $AdListener get listener;
-  $AdRequest get request;
-  Map<String, Object> get customOptions;
+String get factoryId;
+$AdListener get listener;
+$AdRequest get request;
+Map<String,Object> get customOptions;
   Future<void> load();
 }
 
 mixin $InterstitialAd {
   String get adUnitId;
-  $AdListener get listener;
-  $AdRequest get request;
+$AdListener get listener;
+$AdRequest get request;
   Future<void> load();
 
-  Future<void> show();
+Future<void> show();
 }
 
 mixin $PublisherInterstitialAd {
   String get adUnitId;
-  $AdListener get listener;
-  $PublisherAdRequest get request;
+$AdListener get listener;
+$PublisherAdRequest get request;
   Future<void> load();
 
-  Future<void> show();
+Future<void> show();
 }
 
 mixin $RewardedAd {
   String get adUnitId;
-  $AdListener get listener;
-  $AdRequest get request;
-  $ServerSideVerificationOptions? get serverSideVerificationOptions;
+$AdListener get listener;
+$AdRequest get request;
+$ServerSideVerificationOptions? get serverSideVerificationOptions;
   Future<void> load();
 
-  Future<void> show();
+Future<void> show();
 }
 
 mixin $RewardItem {
   num get amount;
-  String get type;
+String get type;
+  
 }
 
 mixin $ServerSideVerificationOptions {
+  
   Future<void> setUserId(String userId);
 
-  Future<void> setCustomData(String customData);
+Future<void> setCustomData(String customData);
 }
 
 class $LoadAdErrorCreationArgs {
   late int code;
-  late String domain;
-  late String message;
+late String domain;
+late String message;
 }
 
-class $AdRequestCreationArgs {}
+class $AdRequestCreationArgs {
+  
+}
 
-class $PublisherAdRequestCreationArgs {}
+class $PublisherAdRequestCreationArgs {
+  
+}
 
 class $AdSizeCreationArgs {
   late int width;
-  late int height;
-  late String? constant;
+late int height;
+late String? constant;
 }
 
-class $AdListenerCreationArgs {}
+class $AdListenerCreationArgs {
+  
+}
 
 class $BannerAdCreationArgs {
   late $AdSize size;
-  late String adUnitId;
-  late $AdListener listener;
-  late $AdRequest request;
+late String adUnitId;
+late $AdListener listener;
+late $AdRequest request;
 }
 
 class $PublisherBannerAdCreationArgs {
   late List<$AdSize> sizes;
-  late String adUnitId;
-  late $AdListener listener;
-  late $PublisherAdRequest request;
+late String adUnitId;
+late $AdListener listener;
+late $PublisherAdRequest request;
 }
 
 class $NativeAdCreationArgs {
   late String adUnitId;
-  late String factoryId;
-  late $AdListener listener;
-  late $AdRequest request;
-  late Map<String, Object> customOptions;
+late String factoryId;
+late $AdListener listener;
+late $AdRequest request;
+late Map<String,Object> customOptions;
 }
 
 class $InterstitialAdCreationArgs {
   late String adUnitId;
-  late $AdListener listener;
-  late $AdRequest request;
+late $AdListener listener;
+late $AdRequest request;
 }
 
 class $PublisherInterstitialAdCreationArgs {
   late String adUnitId;
-  late $AdListener listener;
-  late $PublisherAdRequest request;
+late $AdListener listener;
+late $PublisherAdRequest request;
 }
 
 class $RewardedAdCreationArgs {
   late String adUnitId;
-  late $AdListener listener;
-  late $AdRequest request;
-  late $ServerSideVerificationOptions? serverSideVerificationOptions;
+late $AdListener listener;
+late $AdRequest request;
+late $ServerSideVerificationOptions? serverSideVerificationOptions;
 }
 
 class $RewardItemCreationArgs {
   late num amount;
-  late String type;
+late String type;
 }
 
-class $ServerSideVerificationOptionsCreationArgs {}
+class $ServerSideVerificationOptionsCreationArgs {
+  
+}
 
 class $LoadAdErrorChannel extends TypeChannel<$LoadAdError> {
   $LoadAdErrorChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.LoadAdError');
+
+  
+
+  
 }
 
 class $AdRequestChannel extends TypeChannel<$AdRequest> {
   $AdRequestChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.AdRequest');
 
-  Future<Object?> $invokeAddKeyword($AdRequest instance, String keyword) {
+  
+
+  Future<Object?> $invokeAddKeyword(
+      $AdRequest instance, String keyword) {
     return sendInvokeMethod(
       instance,
       'addKeyword',
@@ -199,7 +221,8 @@ class $AdRequestChannel extends TypeChannel<$AdRequest> {
     );
   }
 
-  Future<Object?> $invokeSetContentUrl($AdRequest instance, String url) {
+Future<Object?> $invokeSetContentUrl(
+      $AdRequest instance, String url) {
     return sendInvokeMethod(
       instance,
       'setContentUrl',
@@ -207,7 +230,7 @@ class $AdRequestChannel extends TypeChannel<$AdRequest> {
     );
   }
 
-  Future<Object?> $invokeSetNonPersonalizedAds(
+Future<Object?> $invokeSetNonPersonalizedAds(
       $AdRequest instance, bool nonPersonalizedAds) {
     return sendInvokeMethod(
       instance,
@@ -221,6 +244,8 @@ class $PublisherAdRequestChannel extends TypeChannel<$PublisherAdRequest> {
   $PublisherAdRequestChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.PublisherAdRequest');
 
+  
+
   Future<Object?> $invokeAddCustomTargeting(
       $PublisherAdRequest instance, String key, String value) {
     return sendInvokeMethod(
@@ -230,7 +255,7 @@ class $PublisherAdRequestChannel extends TypeChannel<$PublisherAdRequest> {
     );
   }
 
-  Future<Object?> $invokeAddCustomTargetingList(
+Future<Object?> $invokeAddCustomTargetingList(
       $PublisherAdRequest instance, String key, List<String> values) {
     return sendInvokeMethod(
       instance,
@@ -251,21 +276,24 @@ class $AdSizeChannel extends TypeChannel<$AdSize> {
     );
   }
 
-  Future<Object?> $invokeGetLandscapeAnchoredAdaptiveBannerAdSize(int width) {
+Future<Object?> $invokeGetLandscapeAnchoredAdaptiveBannerAdSize(int width) {
     return sendInvokeStaticMethod(
       'getLandscapeAnchoredAdaptiveBannerAdSize',
       <Object?>[width],
     );
   }
+
+  
 }
 
 class $AdListenerChannel extends TypeChannel<$AdListener> {
   $AdListenerChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.AdListener');
 
+  
+
   Future<Object?> $invokeOnAdLoaded(
-    $AdListener instance,
-  ) {
+      $AdListener instance, ) {
     return sendInvokeMethod(
       instance,
       'onAdLoaded',
@@ -273,7 +301,7 @@ class $AdListenerChannel extends TypeChannel<$AdListener> {
     );
   }
 
-  Future<Object?> $invokeOnAdFailedToLoad(
+Future<Object?> $invokeOnAdFailedToLoad(
       $AdListener instance, $LoadAdError error) {
     return sendInvokeMethod(
       instance,
@@ -282,7 +310,7 @@ class $AdListenerChannel extends TypeChannel<$AdListener> {
     );
   }
 
-  Future<Object?> $invokeOnAppEvent(
+Future<Object?> $invokeOnAppEvent(
       $AdListener instance, String name, String data) {
     return sendInvokeMethod(
       instance,
@@ -291,9 +319,8 @@ class $AdListenerChannel extends TypeChannel<$AdListener> {
     );
   }
 
-  Future<Object?> $invokeOnNativeAdClicked(
-    $AdListener instance,
-  ) {
+Future<Object?> $invokeOnNativeAdClicked(
+      $AdListener instance, ) {
     return sendInvokeMethod(
       instance,
       'onNativeAdClicked',
@@ -301,9 +328,8 @@ class $AdListenerChannel extends TypeChannel<$AdListener> {
     );
   }
 
-  Future<Object?> $invokeOnNativeAdImpression(
-    $AdListener instance,
-  ) {
+Future<Object?> $invokeOnNativeAdImpression(
+      $AdListener instance, ) {
     return sendInvokeMethod(
       instance,
       'onNativeAdImpression',
@@ -311,9 +337,8 @@ class $AdListenerChannel extends TypeChannel<$AdListener> {
     );
   }
 
-  Future<Object?> $invokeOnAdOpened(
-    $AdListener instance,
-  ) {
+Future<Object?> $invokeOnAdOpened(
+      $AdListener instance, ) {
     return sendInvokeMethod(
       instance,
       'onAdOpened',
@@ -321,9 +346,8 @@ class $AdListenerChannel extends TypeChannel<$AdListener> {
     );
   }
 
-  Future<Object?> $invokeOnApplicationExit(
-    $AdListener instance,
-  ) {
+Future<Object?> $invokeOnApplicationExit(
+      $AdListener instance, ) {
     return sendInvokeMethod(
       instance,
       'onApplicationExit',
@@ -331,9 +355,8 @@ class $AdListenerChannel extends TypeChannel<$AdListener> {
     );
   }
 
-  Future<Object?> $invokeOnAdClosed(
-    $AdListener instance,
-  ) {
+Future<Object?> $invokeOnAdClosed(
+      $AdListener instance, ) {
     return sendInvokeMethod(
       instance,
       'onAdClosed',
@@ -341,7 +364,7 @@ class $AdListenerChannel extends TypeChannel<$AdListener> {
     );
   }
 
-  Future<Object?> $invokeOnRewardedAdUserEarnedReward(
+Future<Object?> $invokeOnRewardedAdUserEarnedReward(
       $AdListener instance, $RewardItem reward) {
     return sendInvokeMethod(
       instance,
@@ -355,9 +378,10 @@ class $BannerAdChannel extends TypeChannel<$BannerAd> {
   $BannerAdChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.BannerAd');
 
+  
+
   Future<Object?> $invokeLoad(
-    $BannerAd instance,
-  ) {
+      $BannerAd instance, ) {
     return sendInvokeMethod(
       instance,
       'load',
@@ -370,9 +394,10 @@ class $PublisherBannerAdChannel extends TypeChannel<$PublisherBannerAd> {
   $PublisherBannerAdChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.PublisherBannerAd');
 
+  
+
   Future<Object?> $invokeLoad(
-    $PublisherBannerAd instance,
-  ) {
+      $PublisherBannerAd instance, ) {
     return sendInvokeMethod(
       instance,
       'load',
@@ -385,9 +410,10 @@ class $NativeAdChannel extends TypeChannel<$NativeAd> {
   $NativeAdChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.NativeAd');
 
+  
+
   Future<Object?> $invokeLoad(
-    $NativeAd instance,
-  ) {
+      $NativeAd instance, ) {
     return sendInvokeMethod(
       instance,
       'load',
@@ -400,9 +426,10 @@ class $InterstitialAdChannel extends TypeChannel<$InterstitialAd> {
   $InterstitialAdChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.InterstitialAd');
 
+  
+
   Future<Object?> $invokeLoad(
-    $InterstitialAd instance,
-  ) {
+      $InterstitialAd instance, ) {
     return sendInvokeMethod(
       instance,
       'load',
@@ -410,9 +437,8 @@ class $InterstitialAdChannel extends TypeChannel<$InterstitialAd> {
     );
   }
 
-  Future<Object?> $invokeShow(
-    $InterstitialAd instance,
-  ) {
+Future<Object?> $invokeShow(
+      $InterstitialAd instance, ) {
     return sendInvokeMethod(
       instance,
       'show',
@@ -421,14 +447,14 @@ class $InterstitialAdChannel extends TypeChannel<$InterstitialAd> {
   }
 }
 
-class $PublisherInterstitialAdChannel
-    extends TypeChannel<$PublisherInterstitialAd> {
+class $PublisherInterstitialAdChannel extends TypeChannel<$PublisherInterstitialAd> {
   $PublisherInterstitialAdChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.PublisherInterstitialAd');
 
+  
+
   Future<Object?> $invokeLoad(
-    $PublisherInterstitialAd instance,
-  ) {
+      $PublisherInterstitialAd instance, ) {
     return sendInvokeMethod(
       instance,
       'load',
@@ -436,9 +462,8 @@ class $PublisherInterstitialAdChannel
     );
   }
 
-  Future<Object?> $invokeShow(
-    $PublisherInterstitialAd instance,
-  ) {
+Future<Object?> $invokeShow(
+      $PublisherInterstitialAd instance, ) {
     return sendInvokeMethod(
       instance,
       'show',
@@ -451,9 +476,10 @@ class $RewardedAdChannel extends TypeChannel<$RewardedAd> {
   $RewardedAdChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.RewardedAd');
 
+  
+
   Future<Object?> $invokeLoad(
-    $RewardedAd instance,
-  ) {
+      $RewardedAd instance, ) {
     return sendInvokeMethod(
       instance,
       'load',
@@ -461,9 +487,8 @@ class $RewardedAdChannel extends TypeChannel<$RewardedAd> {
     );
   }
 
-  Future<Object?> $invokeShow(
-    $RewardedAd instance,
-  ) {
+Future<Object?> $invokeShow(
+      $RewardedAd instance, ) {
     return sendInvokeMethod(
       instance,
       'show',
@@ -475,12 +500,17 @@ class $RewardedAdChannel extends TypeChannel<$RewardedAd> {
 class $RewardItemChannel extends TypeChannel<$RewardItem> {
   $RewardItemChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.RewardItem');
+
+  
+
+  
 }
 
-class $ServerSideVerificationOptionsChannel
-    extends TypeChannel<$ServerSideVerificationOptions> {
+class $ServerSideVerificationOptionsChannel extends TypeChannel<$ServerSideVerificationOptions> {
   $ServerSideVerificationOptionsChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.ServerSideVerificationOptions');
+
+  
 
   Future<Object?> $invokeSetUserId(
       $ServerSideVerificationOptions instance, String userId) {
@@ -491,7 +521,7 @@ class $ServerSideVerificationOptionsChannel
     );
   }
 
-  Future<Object?> $invokeSetCustomData(
+Future<Object?> $invokeSetCustomData(
       $ServerSideVerificationOptions instance, String customData) {
     return sendInvokeMethod(
       instance,
@@ -509,6 +539,8 @@ class $LoadAdErrorHandler implements TypeChannelHandler<$LoadAdError> {
     throw UnimplementedError();
   }
 
+  
+
   @override
   Object? invokeStaticMethod(
     TypeChannelMessenger messenger,
@@ -518,6 +550,7 @@ class $LoadAdErrorHandler implements TypeChannelHandler<$LoadAdError> {
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           methodName,
@@ -545,10 +578,9 @@ class $LoadAdErrorHandler implements TypeChannelHandler<$LoadAdError> {
   ) {
     return onCreate(
       messenger,
-      $LoadAdErrorCreationArgs()
-        ..code = arguments[0] as int
-        ..domain = arguments[1] as String
-        ..message = arguments[2] as String,
+      $LoadAdErrorCreationArgs()..code = arguments[0] as int
+..domain = arguments[1] as String
+..message = arguments[2] as String,
     );
   }
 
@@ -562,6 +594,7 @@ class $LoadAdErrorHandler implements TypeChannelHandler<$LoadAdError> {
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           instance,
@@ -573,15 +606,15 @@ class $LoadAdErrorHandler implements TypeChannelHandler<$LoadAdError> {
     // ignore: dead_code
     return method();
   }
-}
-
-class $AdRequestHandler implements TypeChannelHandler<$AdRequest> {
+}class $AdRequestHandler implements TypeChannelHandler<$AdRequest> {
   $AdRequest onCreate(
     TypeChannelMessenger messenger,
     $AdRequestCreationArgs args,
   ) {
     throw UnimplementedError();
   }
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -592,6 +625,7 @@ class $AdRequestHandler implements TypeChannelHandler<$AdRequest> {
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           methodName,
@@ -636,10 +670,10 @@ class $AdRequestHandler implements TypeChannelHandler<$AdRequest> {
       case 'addKeyword':
         method = () => instance.addKeyword(arguments[0] as String);
         break;
-      case 'setContentUrl':
+case 'setContentUrl':
         method = () => instance.setContentUrl(arguments[0] as String);
         break;
-      case 'setNonPersonalizedAds':
+case 'setNonPersonalizedAds':
         method = () => instance.setNonPersonalizedAds(arguments[0] as bool);
         break;
       default:
@@ -653,16 +687,15 @@ class $AdRequestHandler implements TypeChannelHandler<$AdRequest> {
     // ignore: dead_code
     return method();
   }
-}
-
-class $PublisherAdRequestHandler
-    implements TypeChannelHandler<$PublisherAdRequest> {
+}class $PublisherAdRequestHandler implements TypeChannelHandler<$PublisherAdRequest> {
   $PublisherAdRequest onCreate(
     TypeChannelMessenger messenger,
     $PublisherAdRequestCreationArgs args,
   ) {
     throw UnimplementedError();
   }
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -673,6 +706,7 @@ class $PublisherAdRequestHandler
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           methodName,
@@ -715,12 +749,10 @@ class $PublisherAdRequestHandler
     Function method = () {};
     switch (methodName) {
       case 'addCustomTargeting':
-        method = () => instance.addCustomTargeting(
-            arguments[0] as String, arguments[1] as String);
+        method = () => instance.addCustomTargeting(arguments[0] as String,arguments[1] as String);
         break;
-      case 'addCustomTargetingList':
-        method = () => instance.addCustomTargetingList(
-            arguments[0] as String, arguments[1] as List<String>);
+case 'addCustomTargetingList':
+        method = () => instance.addCustomTargetingList(arguments[0] as String,arguments[1] as List<String>);
         break;
       default:
         throw ArgumentError.value(
@@ -733,9 +765,7 @@ class $PublisherAdRequestHandler
     // ignore: dead_code
     return method();
   }
-}
-
-class $AdSizeHandler implements TypeChannelHandler<$AdSize> {
+}class $AdSizeHandler implements TypeChannelHandler<$AdSize> {
   $AdSize onCreate(
     TypeChannelMessenger messenger,
     $AdSizeCreationArgs args,
@@ -747,8 +777,7 @@ class $AdSizeHandler implements TypeChannelHandler<$AdSize> {
       TypeChannelMessenger messenger, int width) {
     throw UnimplementedError();
   }
-
-  double $onGetLandscapeAnchoredAdaptiveBannerAdSize(
+double $onGetLandscapeAnchoredAdaptiveBannerAdSize(
       TypeChannelMessenger messenger, int width) {
     throw UnimplementedError();
   }
@@ -763,12 +792,12 @@ class $AdSizeHandler implements TypeChannelHandler<$AdSize> {
     Function method = () {};
     switch (methodName) {
       case 'getPortraitAnchoredAdaptiveBannerAdSize':
-        method = () => $onGetPortraitAnchoredAdaptiveBannerAdSize(
-            messenger, arguments[0] as int);
+        method =
+            () => $onGetPortraitAnchoredAdaptiveBannerAdSize(messenger, arguments[0] as int);
         break;
-      case 'getLandscapeAnchoredAdaptiveBannerAdSize':
-        method = () => $onGetLandscapeAnchoredAdaptiveBannerAdSize(
-            messenger, arguments[0] as int);
+case 'getLandscapeAnchoredAdaptiveBannerAdSize':
+        method =
+            () => $onGetLandscapeAnchoredAdaptiveBannerAdSize(messenger, arguments[0] as int);
         break;
       default:
         throw ArgumentError.value(
@@ -797,10 +826,9 @@ class $AdSizeHandler implements TypeChannelHandler<$AdSize> {
   ) {
     return onCreate(
       messenger,
-      $AdSizeCreationArgs()
-        ..width = arguments[0] as int
-        ..height = arguments[1] as int
-        ..constant = arguments[2] as String?,
+      $AdSizeCreationArgs()..width = arguments[0] as int
+..height = arguments[1] as int
+..constant = arguments[2] as String?,
     );
   }
 
@@ -814,6 +842,7 @@ class $AdSizeHandler implements TypeChannelHandler<$AdSize> {
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           instance,
@@ -825,15 +854,15 @@ class $AdSizeHandler implements TypeChannelHandler<$AdSize> {
     // ignore: dead_code
     return method();
   }
-}
-
-class $AdListenerHandler implements TypeChannelHandler<$AdListener> {
+}class $AdListenerHandler implements TypeChannelHandler<$AdListener> {
   $AdListener onCreate(
     TypeChannelMessenger messenger,
     $AdListenerCreationArgs args,
   ) {
     throw UnimplementedError();
   }
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -844,6 +873,7 @@ class $AdListenerHandler implements TypeChannelHandler<$AdListener> {
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           methodName,
@@ -888,31 +918,29 @@ class $AdListenerHandler implements TypeChannelHandler<$AdListener> {
       case 'onAdLoaded':
         method = () => instance.onAdLoaded();
         break;
-      case 'onAdFailedToLoad':
+case 'onAdFailedToLoad':
         method = () => instance.onAdFailedToLoad(arguments[0] as $LoadAdError);
         break;
-      case 'onAppEvent':
-        method = () =>
-            instance.onAppEvent(arguments[0] as String, arguments[1] as String);
+case 'onAppEvent':
+        method = () => instance.onAppEvent(arguments[0] as String,arguments[1] as String);
         break;
-      case 'onNativeAdClicked':
+case 'onNativeAdClicked':
         method = () => instance.onNativeAdClicked();
         break;
-      case 'onNativeAdImpression':
+case 'onNativeAdImpression':
         method = () => instance.onNativeAdImpression();
         break;
-      case 'onAdOpened':
+case 'onAdOpened':
         method = () => instance.onAdOpened();
         break;
-      case 'onApplicationExit':
+case 'onApplicationExit':
         method = () => instance.onApplicationExit();
         break;
-      case 'onAdClosed':
+case 'onAdClosed':
         method = () => instance.onAdClosed();
         break;
-      case 'onRewardedAdUserEarnedReward':
-        method = () =>
-            instance.onRewardedAdUserEarnedReward(arguments[0] as $RewardItem);
+case 'onRewardedAdUserEarnedReward':
+        method = () => instance.onRewardedAdUserEarnedReward(arguments[0] as $RewardItem);
         break;
       default:
         throw ArgumentError.value(
@@ -925,15 +953,15 @@ class $AdListenerHandler implements TypeChannelHandler<$AdListener> {
     // ignore: dead_code
     return method();
   }
-}
-
-class $BannerAdHandler implements TypeChannelHandler<$BannerAd> {
+}class $BannerAdHandler implements TypeChannelHandler<$BannerAd> {
   $BannerAd onCreate(
     TypeChannelMessenger messenger,
     $BannerAdCreationArgs args,
   ) {
     throw UnimplementedError();
   }
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -944,6 +972,7 @@ class $BannerAdHandler implements TypeChannelHandler<$BannerAd> {
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           methodName,
@@ -961,12 +990,7 @@ class $BannerAdHandler implements TypeChannelHandler<$BannerAd> {
     TypeChannelMessenger messenger,
     $BannerAd instance,
   ) {
-    return <Object?>[
-      instance.size,
-      instance.adUnitId,
-      instance.listener,
-      instance.request
-    ];
+    return <Object?>[instance.size, instance.adUnitId, instance.listener, instance.request];
   }
 
   @override
@@ -976,11 +1000,10 @@ class $BannerAdHandler implements TypeChannelHandler<$BannerAd> {
   ) {
     return onCreate(
       messenger,
-      $BannerAdCreationArgs()
-        ..size = arguments[0] as $AdSize
-        ..adUnitId = arguments[1] as String
-        ..listener = arguments[2] as $AdListener
-        ..request = arguments[3] as $AdRequest,
+      $BannerAdCreationArgs()..size = arguments[0] as $AdSize
+..adUnitId = arguments[1] as String
+..listener = arguments[2] as $AdListener
+..request = arguments[3] as $AdRequest,
     );
   }
 
@@ -1008,16 +1031,15 @@ class $BannerAdHandler implements TypeChannelHandler<$BannerAd> {
     // ignore: dead_code
     return method();
   }
-}
-
-class $PublisherBannerAdHandler
-    implements TypeChannelHandler<$PublisherBannerAd> {
+}class $PublisherBannerAdHandler implements TypeChannelHandler<$PublisherBannerAd> {
   $PublisherBannerAd onCreate(
     TypeChannelMessenger messenger,
     $PublisherBannerAdCreationArgs args,
   ) {
     throw UnimplementedError();
   }
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1028,6 +1050,7 @@ class $PublisherBannerAdHandler
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           methodName,
@@ -1045,12 +1068,7 @@ class $PublisherBannerAdHandler
     TypeChannelMessenger messenger,
     $PublisherBannerAd instance,
   ) {
-    return <Object?>[
-      instance.sizes,
-      instance.adUnitId,
-      instance.listener,
-      instance.request
-    ];
+    return <Object?>[instance.sizes, instance.adUnitId, instance.listener, instance.request];
   }
 
   @override
@@ -1060,11 +1078,10 @@ class $PublisherBannerAdHandler
   ) {
     return onCreate(
       messenger,
-      $PublisherBannerAdCreationArgs()
-        ..sizes = arguments[0] as List<$AdSize>
-        ..adUnitId = arguments[1] as String
-        ..listener = arguments[2] as $AdListener
-        ..request = arguments[3] as $PublisherAdRequest,
+      $PublisherBannerAdCreationArgs()..sizes = arguments[0] as List<$AdSize>
+..adUnitId = arguments[1] as String
+..listener = arguments[2] as $AdListener
+..request = arguments[3] as $PublisherAdRequest,
     );
   }
 
@@ -1092,15 +1109,15 @@ class $PublisherBannerAdHandler
     // ignore: dead_code
     return method();
   }
-}
-
-class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
+}class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
   $NativeAd onCreate(
     TypeChannelMessenger messenger,
     $NativeAdCreationArgs args,
   ) {
     throw UnimplementedError();
   }
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1111,6 +1128,7 @@ class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           methodName,
@@ -1128,13 +1146,7 @@ class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
     TypeChannelMessenger messenger,
     $NativeAd instance,
   ) {
-    return <Object?>[
-      instance.adUnitId,
-      instance.factoryId,
-      instance.listener,
-      instance.request,
-      instance.customOptions
-    ];
+    return <Object?>[instance.adUnitId, instance.factoryId, instance.listener, instance.request, instance.customOptions];
   }
 
   @override
@@ -1144,12 +1156,11 @@ class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
   ) {
     return onCreate(
       messenger,
-      $NativeAdCreationArgs()
-        ..adUnitId = arguments[0] as String
-        ..factoryId = arguments[1] as String
-        ..listener = arguments[2] as $AdListener
-        ..request = arguments[3] as $AdRequest
-        ..customOptions = arguments[4] as Map<String, Object>,
+      $NativeAdCreationArgs()..adUnitId = arguments[0] as String
+..factoryId = arguments[1] as String
+..listener = arguments[2] as $AdListener
+..request = arguments[3] as $AdRequest
+..customOptions = arguments[4] as Map<String,Object>,
     );
   }
 
@@ -1177,15 +1188,15 @@ class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
     // ignore: dead_code
     return method();
   }
-}
-
-class $InterstitialAdHandler implements TypeChannelHandler<$InterstitialAd> {
+}class $InterstitialAdHandler implements TypeChannelHandler<$InterstitialAd> {
   $InterstitialAd onCreate(
     TypeChannelMessenger messenger,
     $InterstitialAdCreationArgs args,
   ) {
     throw UnimplementedError();
   }
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1196,6 +1207,7 @@ class $InterstitialAdHandler implements TypeChannelHandler<$InterstitialAd> {
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           methodName,
@@ -1223,10 +1235,9 @@ class $InterstitialAdHandler implements TypeChannelHandler<$InterstitialAd> {
   ) {
     return onCreate(
       messenger,
-      $InterstitialAdCreationArgs()
-        ..adUnitId = arguments[0] as String
-        ..listener = arguments[1] as $AdListener
-        ..request = arguments[2] as $AdRequest,
+      $InterstitialAdCreationArgs()..adUnitId = arguments[0] as String
+..listener = arguments[1] as $AdListener
+..request = arguments[2] as $AdRequest,
     );
   }
 
@@ -1243,7 +1254,7 @@ class $InterstitialAdHandler implements TypeChannelHandler<$InterstitialAd> {
       case 'load':
         method = () => instance.load();
         break;
-      case 'show':
+case 'show':
         method = () => instance.show();
         break;
       default:
@@ -1257,16 +1268,15 @@ class $InterstitialAdHandler implements TypeChannelHandler<$InterstitialAd> {
     // ignore: dead_code
     return method();
   }
-}
-
-class $PublisherInterstitialAdHandler
-    implements TypeChannelHandler<$PublisherInterstitialAd> {
+}class $PublisherInterstitialAdHandler implements TypeChannelHandler<$PublisherInterstitialAd> {
   $PublisherInterstitialAd onCreate(
     TypeChannelMessenger messenger,
     $PublisherInterstitialAdCreationArgs args,
   ) {
     throw UnimplementedError();
   }
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1277,6 +1287,7 @@ class $PublisherInterstitialAdHandler
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           methodName,
@@ -1304,10 +1315,9 @@ class $PublisherInterstitialAdHandler
   ) {
     return onCreate(
       messenger,
-      $PublisherInterstitialAdCreationArgs()
-        ..adUnitId = arguments[0] as String
-        ..listener = arguments[1] as $AdListener
-        ..request = arguments[2] as $PublisherAdRequest,
+      $PublisherInterstitialAdCreationArgs()..adUnitId = arguments[0] as String
+..listener = arguments[1] as $AdListener
+..request = arguments[2] as $PublisherAdRequest,
     );
   }
 
@@ -1324,7 +1334,7 @@ class $PublisherInterstitialAdHandler
       case 'load':
         method = () => instance.load();
         break;
-      case 'show':
+case 'show':
         method = () => instance.show();
         break;
       default:
@@ -1338,15 +1348,15 @@ class $PublisherInterstitialAdHandler
     // ignore: dead_code
     return method();
   }
-}
-
-class $RewardedAdHandler implements TypeChannelHandler<$RewardedAd> {
+}class $RewardedAdHandler implements TypeChannelHandler<$RewardedAd> {
   $RewardedAd onCreate(
     TypeChannelMessenger messenger,
     $RewardedAdCreationArgs args,
   ) {
     throw UnimplementedError();
   }
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1357,6 +1367,7 @@ class $RewardedAdHandler implements TypeChannelHandler<$RewardedAd> {
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           methodName,
@@ -1374,12 +1385,7 @@ class $RewardedAdHandler implements TypeChannelHandler<$RewardedAd> {
     TypeChannelMessenger messenger,
     $RewardedAd instance,
   ) {
-    return <Object?>[
-      instance.adUnitId,
-      instance.listener,
-      instance.request,
-      instance.serverSideVerificationOptions
-    ];
+    return <Object?>[instance.adUnitId, instance.listener, instance.request, instance.serverSideVerificationOptions];
   }
 
   @override
@@ -1389,12 +1395,10 @@ class $RewardedAdHandler implements TypeChannelHandler<$RewardedAd> {
   ) {
     return onCreate(
       messenger,
-      $RewardedAdCreationArgs()
-        ..adUnitId = arguments[0] as String
-        ..listener = arguments[1] as $AdListener
-        ..request = arguments[2] as $AdRequest
-        ..serverSideVerificationOptions =
-            arguments[3] as $ServerSideVerificationOptions?,
+      $RewardedAdCreationArgs()..adUnitId = arguments[0] as String
+..listener = arguments[1] as $AdListener
+..request = arguments[2] as $AdRequest
+..serverSideVerificationOptions = arguments[3] as $ServerSideVerificationOptions?,
     );
   }
 
@@ -1411,7 +1415,7 @@ class $RewardedAdHandler implements TypeChannelHandler<$RewardedAd> {
       case 'load':
         method = () => instance.load();
         break;
-      case 'show':
+case 'show':
         method = () => instance.show();
         break;
       default:
@@ -1425,15 +1429,15 @@ class $RewardedAdHandler implements TypeChannelHandler<$RewardedAd> {
     // ignore: dead_code
     return method();
   }
-}
-
-class $RewardItemHandler implements TypeChannelHandler<$RewardItem> {
+}class $RewardItemHandler implements TypeChannelHandler<$RewardItem> {
   $RewardItem onCreate(
     TypeChannelMessenger messenger,
     $RewardItemCreationArgs args,
   ) {
     throw UnimplementedError();
   }
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1444,6 +1448,7 @@ class $RewardItemHandler implements TypeChannelHandler<$RewardItem> {
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           methodName,
@@ -1471,9 +1476,8 @@ class $RewardItemHandler implements TypeChannelHandler<$RewardItem> {
   ) {
     return onCreate(
       messenger,
-      $RewardItemCreationArgs()
-        ..amount = arguments[0] as num
-        ..type = arguments[1] as String,
+      $RewardItemCreationArgs()..amount = arguments[0] as num
+..type = arguments[1] as String,
     );
   }
 
@@ -1487,6 +1491,7 @@ class $RewardItemHandler implements TypeChannelHandler<$RewardItem> {
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           instance,
@@ -1498,16 +1503,15 @@ class $RewardItemHandler implements TypeChannelHandler<$RewardItem> {
     // ignore: dead_code
     return method();
   }
-}
-
-class $ServerSideVerificationOptionsHandler
-    implements TypeChannelHandler<$ServerSideVerificationOptions> {
+}class $ServerSideVerificationOptionsHandler implements TypeChannelHandler<$ServerSideVerificationOptions> {
   $ServerSideVerificationOptions onCreate(
     TypeChannelMessenger messenger,
     $ServerSideVerificationOptionsCreationArgs args,
   ) {
     throw UnimplementedError();
   }
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1518,6 +1522,7 @@ class $ServerSideVerificationOptionsHandler
     // ignore: prefer_final_locals, prefer_function_declarations_over_variables
     Function method = () {};
     switch (methodName) {
+      
       default:
         throw ArgumentError.value(
           methodName,
@@ -1562,7 +1567,7 @@ class $ServerSideVerificationOptionsHandler
       case 'setUserId':
         method = () => instance.setUserId(arguments[0] as String);
         break;
-      case 'setCustomData':
+case 'setCustomData':
         method = () => instance.setCustomData(arguments[0] as String);
         break;
       default:
@@ -1583,43 +1588,45 @@ class $LibraryImplementations {
 
   final TypeChannelMessenger messenger;
 
-  $LoadAdErrorChannel get loadAdErrorChannel => $LoadAdErrorChannel(messenger);
-  $AdRequestChannel get adRequestChannel => $AdRequestChannel(messenger);
-  $PublisherAdRequestChannel get publisherAdRequestChannel =>
+  $LoadAdErrorChannel get loadAdErrorChannel =>
+      $LoadAdErrorChannel(messenger);
+$AdRequestChannel get adRequestChannel =>
+      $AdRequestChannel(messenger);
+$PublisherAdRequestChannel get publisherAdRequestChannel =>
       $PublisherAdRequestChannel(messenger);
-  $AdSizeChannel get adSizeChannel => $AdSizeChannel(messenger);
-  $AdListenerChannel get adListenerChannel => $AdListenerChannel(messenger);
-  $BannerAdChannel get bannerAdChannel => $BannerAdChannel(messenger);
-  $PublisherBannerAdChannel get publisherBannerAdChannel =>
+$AdSizeChannel get adSizeChannel =>
+      $AdSizeChannel(messenger);
+$AdListenerChannel get adListenerChannel =>
+      $AdListenerChannel(messenger);
+$BannerAdChannel get bannerAdChannel =>
+      $BannerAdChannel(messenger);
+$PublisherBannerAdChannel get publisherBannerAdChannel =>
       $PublisherBannerAdChannel(messenger);
-  $NativeAdChannel get nativeAdChannel => $NativeAdChannel(messenger);
-  $InterstitialAdChannel get interstitialAdChannel =>
+$NativeAdChannel get nativeAdChannel =>
+      $NativeAdChannel(messenger);
+$InterstitialAdChannel get interstitialAdChannel =>
       $InterstitialAdChannel(messenger);
-  $PublisherInterstitialAdChannel get publisherInterstitialAdChannel =>
+$PublisherInterstitialAdChannel get publisherInterstitialAdChannel =>
       $PublisherInterstitialAdChannel(messenger);
-  $RewardedAdChannel get rewardedAdChannel => $RewardedAdChannel(messenger);
-  $RewardItemChannel get rewardItemChannel => $RewardItemChannel(messenger);
-  $ServerSideVerificationOptionsChannel
-      get serverSideVerificationOptionsChannel =>
-          $ServerSideVerificationOptionsChannel(messenger);
+$RewardedAdChannel get rewardedAdChannel =>
+      $RewardedAdChannel(messenger);
+$RewardItemChannel get rewardItemChannel =>
+      $RewardItemChannel(messenger);
+$ServerSideVerificationOptionsChannel get serverSideVerificationOptionsChannel =>
+      $ServerSideVerificationOptionsChannel(messenger);
   $LoadAdErrorHandler get loadAdErrorHandler => $LoadAdErrorHandler();
-  $AdRequestHandler get adRequestHandler => $AdRequestHandler();
-  $PublisherAdRequestHandler get publisherAdRequestHandler =>
-      $PublisherAdRequestHandler();
-  $AdSizeHandler get adSizeHandler => $AdSizeHandler();
-  $AdListenerHandler get adListenerHandler => $AdListenerHandler();
-  $BannerAdHandler get bannerAdHandler => $BannerAdHandler();
-  $PublisherBannerAdHandler get publisherBannerAdHandler =>
-      $PublisherBannerAdHandler();
-  $NativeAdHandler get nativeAdHandler => $NativeAdHandler();
-  $InterstitialAdHandler get interstitialAdHandler => $InterstitialAdHandler();
-  $PublisherInterstitialAdHandler get publisherInterstitialAdHandler =>
-      $PublisherInterstitialAdHandler();
-  $RewardedAdHandler get rewardedAdHandler => $RewardedAdHandler();
-  $RewardItemHandler get rewardItemHandler => $RewardItemHandler();
-  $ServerSideVerificationOptionsHandler
-      get serverSideVerificationOptionsHandler =>
-          $ServerSideVerificationOptionsHandler();
+$AdRequestHandler get adRequestHandler => $AdRequestHandler();
+$PublisherAdRequestHandler get publisherAdRequestHandler => $PublisherAdRequestHandler();
+$AdSizeHandler get adSizeHandler => $AdSizeHandler();
+$AdListenerHandler get adListenerHandler => $AdListenerHandler();
+$BannerAdHandler get bannerAdHandler => $BannerAdHandler();
+$PublisherBannerAdHandler get publisherBannerAdHandler => $PublisherBannerAdHandler();
+$NativeAdHandler get nativeAdHandler => $NativeAdHandler();
+$InterstitialAdHandler get interstitialAdHandler => $InterstitialAdHandler();
+$PublisherInterstitialAdHandler get publisherInterstitialAdHandler => $PublisherInterstitialAdHandler();
+$RewardedAdHandler get rewardedAdHandler => $RewardedAdHandler();
+$RewardItemHandler get rewardItemHandler => $RewardItemHandler();
+$ServerSideVerificationOptionsHandler get serverSideVerificationOptionsHandler => $ServerSideVerificationOptionsHandler();
 }
 
 class $ChannelRegistrar {
@@ -1631,57 +1638,57 @@ class $ChannelRegistrar {
     implementations.loadAdErrorChannel.setHandler(
       implementations.loadAdErrorHandler,
     );
-    implementations.adRequestChannel.setHandler(
+implementations.adRequestChannel.setHandler(
       implementations.adRequestHandler,
     );
-    implementations.publisherAdRequestChannel.setHandler(
+implementations.publisherAdRequestChannel.setHandler(
       implementations.publisherAdRequestHandler,
     );
-    implementations.adSizeChannel.setHandler(
+implementations.adSizeChannel.setHandler(
       implementations.adSizeHandler,
     );
-    implementations.adListenerChannel.setHandler(
+implementations.adListenerChannel.setHandler(
       implementations.adListenerHandler,
     );
-    implementations.bannerAdChannel.setHandler(
+implementations.bannerAdChannel.setHandler(
       implementations.bannerAdHandler,
     );
-    implementations.publisherBannerAdChannel.setHandler(
+implementations.publisherBannerAdChannel.setHandler(
       implementations.publisherBannerAdHandler,
     );
-    implementations.nativeAdChannel.setHandler(
+implementations.nativeAdChannel.setHandler(
       implementations.nativeAdHandler,
     );
-    implementations.interstitialAdChannel.setHandler(
+implementations.interstitialAdChannel.setHandler(
       implementations.interstitialAdHandler,
     );
-    implementations.publisherInterstitialAdChannel.setHandler(
+implementations.publisherInterstitialAdChannel.setHandler(
       implementations.publisherInterstitialAdHandler,
     );
-    implementations.rewardedAdChannel.setHandler(
+implementations.rewardedAdChannel.setHandler(
       implementations.rewardedAdHandler,
     );
-    implementations.rewardItemChannel.setHandler(
+implementations.rewardItemChannel.setHandler(
       implementations.rewardItemHandler,
     );
-    implementations.serverSideVerificationOptionsChannel.setHandler(
+implementations.serverSideVerificationOptionsChannel.setHandler(
       implementations.serverSideVerificationOptionsHandler,
     );
   }
 
   void unregisterHandlers() {
     implementations.loadAdErrorChannel.removeHandler();
-    implementations.adRequestChannel.removeHandler();
-    implementations.publisherAdRequestChannel.removeHandler();
-    implementations.adSizeChannel.removeHandler();
-    implementations.adListenerChannel.removeHandler();
-    implementations.bannerAdChannel.removeHandler();
-    implementations.publisherBannerAdChannel.removeHandler();
-    implementations.nativeAdChannel.removeHandler();
-    implementations.interstitialAdChannel.removeHandler();
-    implementations.publisherInterstitialAdChannel.removeHandler();
-    implementations.rewardedAdChannel.removeHandler();
-    implementations.rewardItemChannel.removeHandler();
-    implementations.serverSideVerificationOptionsChannel.removeHandler();
+implementations.adRequestChannel.removeHandler();
+implementations.publisherAdRequestChannel.removeHandler();
+implementations.adSizeChannel.removeHandler();
+implementations.adListenerChannel.removeHandler();
+implementations.bannerAdChannel.removeHandler();
+implementations.publisherBannerAdChannel.removeHandler();
+implementations.nativeAdChannel.removeHandler();
+implementations.interstitialAdChannel.removeHandler();
+implementations.publisherInterstitialAdChannel.removeHandler();
+implementations.rewardedAdChannel.removeHandler();
+implementations.rewardItemChannel.removeHandler();
+implementations.serverSideVerificationOptionsChannel.removeHandler();
   }
 }
