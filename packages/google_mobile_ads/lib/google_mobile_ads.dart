@@ -13,5 +13,6 @@
 // limitations under the License.
 
 export 'src/ad_containers.dart';
+export 'src/ad_listeners.dart';
 export 'src/mobile_ads.dart';
 export 'src/request_configuration.dart';

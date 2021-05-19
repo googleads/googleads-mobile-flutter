@@ -77,17 +77,21 @@
   [ad show];
 }
 
-- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad {
+- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad responseInfo:(GADResponseInfo *_Nonnull)responseInfo {
   [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdLoaded"}];
+               arguments:@{
+                 @"adId" : [self adIdFor:ad],
+                 @"eventName" : @"onAdLoaded",
+                 @"responseInfo" : [[FLTGADResponseInfo alloc] initWithResponseInfo:responseInfo]
+               }];
 }
 
-- (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(FLTLoadAdError *_Nonnull)error {
+- (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(NSError *_Nonnull)error {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
                  @"adId" : [self adIdFor:ad],
                  @"eventName" : @"onAdFailedToLoad",
-                 @"loadAdError" : error
+                 @"loadAdError" : [[FLTLoadAdError alloc] initWithError:error]
                }];
 }
 
@@ -102,28 +106,23 @@
 }
 
 - (void)onNativeAdClicked:(FLTNativeAd *_Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdClicked"}];
+  [self sendAdEvent:@"onNativeAdClicked" ad:ad];
 }
 
 - (void)onNativeAdImpression:(FLTNativeAd *_Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onNativeAdImpression"}];
+  [self sendAdEvent:@"onNativeAdImpression" ad:ad];
 }
 
-- (void)onAdOpened:(id<FLTAd> _Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdOpened"}];
+- (void)onNativeAdWillPresentScreen:(FLTNativeAd *_Nonnull)ad {
+  [self sendAdEvent:@"onNativeAdWillPresentScreen" ad:ad];
 }
 
-- (void)onApplicationExit:(id<FLTAd> _Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onApplicationExit"}];
+- (void)onNativeAdDidDismissScreen:(FLTNativeAd *_Nonnull)ad {
+  [self sendAdEvent:@"onNativeAdDidDismissScreen" ad:ad];
 }
 
-- (void)onAdClosed:(id<FLTAd> _Nonnull)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{@"adId" : [self adIdFor:ad], @"eventName" : @"onAdClosed"}];
+- (void)onNativeAdWillDismissScreen:(FLTNativeAd *_Nonnull)ad {
+  [self sendAdEvent:@"onNativeAdWillDismissScreen" ad:ad];
 }
 
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
@@ -135,6 +134,58 @@
                  @"rewardItem" : reward,
                }];
 }
+
+- (void)onBannerImpression:(FLTBannerAd *_Nonnull)ad {
+  [self sendAdEvent:@"onBannerImpression" ad:ad];
+}
+
+- (void)onBannerWillDismissScreen:(FLTBannerAd *)ad {
+  [self sendAdEvent:@"onBannerWillDismissScreen" ad:ad];
+}
+
+- (void)onBannerDidDismissScreen:(FLTBannerAd *)ad {
+  [self sendAdEvent:@"onBannerDidDismissScreen" ad:ad];
+}
+
+- (void)onBannerWillPresentScreen:(FLTBannerAd *_Nonnull)ad {
+  [self sendAdEvent:@"onBannerWillPresentScreen" ad:ad];
+}
+
+- (void)onAdDidPresentFullScreenContent:(id<FLTAd> _Nonnull)ad {
+  [self sendAdEvent:@"onAdDidPresentFullScreenContent" ad:ad];
+}
+
+- (void)adDidDismissFullScreenContent:(id<FLTAd> _Nonnull)ad {
+  [self sendAdEvent:@"adDidDismissFullScreenContent" ad:ad];
+}
+
+- (void)adWillDismissFullScreenContent:(id<FLTAd> _Nonnull)ad {
+  [self sendAdEvent:@"adWillDismissFullScreenContent" ad:ad];
+}
+
+- (void)adDidRecordImpression:(id<FLTAd> _Nonnull)ad {
+  [self sendAdEvent:@"adDidRecordImpression" ad:ad];
+}
+
+- (void)didFailToPresentFullScreenContentWithError:(id<FLTAd> _Nonnull)ad
+                                             error:(NSError *_Nonnull)error {
+  [_channel invokeMethod:@"onAdEvent"
+               arguments:@{
+                 @"adId" : [self adIdFor:ad],
+                 @"eventName" : @"didFailToPresentFullScreenContentWithError",
+                 @"error" : error
+               }];
+}
+
+/// Sends an ad event with the provided name.
+- (void)sendAdEvent:(NSString *_Nonnull)eventName ad:(id<FLTAd>)ad {
+  [_channel invokeMethod:@"onAdEvent"
+               arguments:@{
+                 @"adId" : [self adIdFor:ad],
+                 @"eventName" : eventName,
+               }];
+}
+
 @end
 
 @implementation FLTNewGoogleMobileAdsViewFactory

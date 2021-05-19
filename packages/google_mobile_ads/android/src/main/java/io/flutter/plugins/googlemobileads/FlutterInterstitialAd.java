@@ -17,73 +17,61 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   private static final String TAG = "FlutterInterstitialAd";
 
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
-  @Nullable private FlutterAdRequest request;
+  @NonNull private final FlutterAdRequest request;
   @Nullable private InterstitialAd ad;
+  @NonNull private final FlutterAdLoader flutterAdLoader;
 
-  static class Builder {
-    @Nullable private AdInstanceManager manager;
-    @Nullable private String adUnitId;
-    @Nullable private FlutterAdRequest request;
-
-    public Builder setManager(@NonNull AdInstanceManager manager) {
-      this.manager = manager;
-      return this;
-    }
-
-    public Builder setAdUnitId(@NonNull String adUnitId) {
-      this.adUnitId = adUnitId;
-      return this;
-    }
-
-    public Builder setRequest(@Nullable FlutterAdRequest request) {
-      this.request = request;
-      return this;
-    }
-
-    FlutterInterstitialAd build() {
-      if (manager == null) {
-        throw new IllegalStateException("AdInstanceManager cannot not be null.");
-      } else if (adUnitId == null) {
-        throw new IllegalStateException("AdUnitId cannot not be null.");
-      }
-
-      final FlutterInterstitialAd interstitialAd = new FlutterInterstitialAd(manager, adUnitId);
-      interstitialAd.request = request;
-      return interstitialAd;
-    }
-  }
-
-  private FlutterInterstitialAd(@NonNull AdInstanceManager manager, @NonNull String adUnitId) {
+  public FlutterInterstitialAd(
+      @NonNull AdInstanceManager manager,
+      @NonNull String adUnitId,
+      @NonNull FlutterAdRequest request,
+      @NonNull FlutterAdLoader flutterAdLoader) {
     this.manager = manager;
     this.adUnitId = adUnitId;
+    this.request = request;
+    this.flutterAdLoader = flutterAdLoader;
   }
 
   @Override
   void load() {
-    ad = new InterstitialAd(manager.activity);
-    ad.setAdUnitId(adUnitId);
-    ad.setAdListener(new FlutterAdListener(manager, this));
+    if (manager != null && adUnitId != null && request != null) {
+      flutterAdLoader.loadInterstitial(
+          manager.activity,
+          adUnitId,
+          request.asAdRequest(),
+          new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+              FlutterInterstitialAd.this.ad = interstitialAd;
+              FlutterInterstitialAd.this.manager.onAdLoaded(
+                  FlutterInterstitialAd.this, interstitialAd.getResponseInfo());
+            }
 
-    if (request != null) {
-      ad.loadAd(request.asAdRequest());
-    } else {
-      ad.loadAd(new FlutterAdRequest.Builder().build().asAdRequest());
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+              FlutterInterstitialAd.this.manager.onAdFailedToLoad(
+                  FlutterInterstitialAd.this, new FlutterAd.FlutterLoadAdError(loadAdError));
+            }
+          });
     }
   }
 
   @Override
   public void show() {
-    if (ad == null || !ad.isLoaded()) {
+    if (ad == null) {
       Log.e(TAG, "The interstitial wasn't loaded yet.");
       return;
     }
-    ad.show();
+    ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, this));
+    ad.show(manager.activity);
   }
 }
