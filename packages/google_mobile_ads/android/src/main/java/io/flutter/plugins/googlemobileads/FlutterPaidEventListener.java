@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.OnPaidEventListener;
 
-/** Implementation of {@link OnPaidEventListener} that sends events to {@link AdInstanceManager}, */
+/** Implementation of {@link OnPaidEventListener} that sends events to {@link AdInstanceManager}. */
 public class FlutterPaidEventListener implements OnPaidEventListener {
   @NonNull private final AdInstanceManager manager;
   @NonNull private final FlutterAd ad;

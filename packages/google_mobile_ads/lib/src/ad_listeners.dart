@@ -78,6 +78,7 @@ abstract class AdWithViewListener {
   final AdEventCallback? onAdImpression;
 
   /// Callback to be invoked when an ad is estimated to have earned money.
+  /// Available for allowlisted accounts only.
   final OnPaidEventCallback? onPaidEvent;
 }
 
