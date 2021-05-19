@@ -267,6 +267,17 @@
       [validAdSizes addObject:NSValueFromGADAdSize(size.size)];
     }
     _bannerView.validAdSizes = validAdSizes;
+
+    __weak FLTGAMBannerAd *weakSelf = self;
+    self.bannerView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+      if (weakSelf.manager == nil) {
+        return;
+      }
+      [weakSelf.manager onPaidEvent:weakSelf
+                              value:[[FLTAdValue alloc] initWithValue:value.value
+                                                            precision:(NSInteger)value.precision
+                                                         currencyCode:value.currencyCode]];
+    };
   }
   return self;
 }
@@ -309,17 +320,6 @@
     _adRequest = request;
     _adUnitId = [adUnitId copy];
     _rootViewController = rootViewController;
-
-    __weak FLTInterstitialAd *weakSelf = self;
-    _interstitialView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-      if (weakSelf.manager == nil) {
-        return;
-      }
-      [weakSelf.manager onPaidEvent:weakSelf
-                              value:[[FLTAdValue alloc] initWithValue:value.value
-                                                            precision:(NSInteger)value.precision
-                                                         currencyCode:value.currencyCode]];
-    };
   }
   return self;
 }
@@ -342,6 +342,18 @@
                       }
                       ad.fullScreenContentDelegate = self;
                       self->_interstitialView = ad;
+                      __weak FLTInterstitialAd *weakSelf = self;
+                      ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+                        if (weakSelf.manager == nil) {
+                          return;
+                        }
+                        [weakSelf.manager
+                            onPaidEvent:weakSelf
+                                  value:[[FLTAdValue alloc] initWithValue:value.value
+                                                                precision:(NSInteger)value.precision
+                                                             currencyCode:value.currencyCode]];
+                      };
+
                       [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
                     }];
 }
@@ -405,18 +417,31 @@
 }
 
 - (void)load {
-  [GAMInterstitialAd loadWithAdManagerAdUnitID:_adUnitId
-                                       request:[_adRequest asGAMRequest]
-                             completionHandler:^(GAMInterstitialAd *ad, NSError *error) {
-                               if (error) {
-                                 [self.manager onAdFailedToLoad:self error:error];
-                                 return;
-                               }
-                               [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
-                               ad.fullScreenContentDelegate = self;
-                               ad.appEventDelegate = self;
-                               self->_insterstitial = ad;
-                             }];
+  [GAMInterstitialAd
+      loadWithAdManagerAdUnitID:_adUnitId
+                        request:[_adRequest asGAMRequest]
+              completionHandler:^(GAMInterstitialAd *ad, NSError *error) {
+                if (error) {
+                  [self.manager onAdFailedToLoad:self error:error];
+                  return;
+                }
+                [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+                ad.fullScreenContentDelegate = self;
+                ad.appEventDelegate = self;
+                __weak FLTGAMInterstitialAd *weakSelf = self;
+                ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+                  if (weakSelf.manager == nil) {
+                    return;
+                  }
+                  [weakSelf.manager
+                      onPaidEvent:weakSelf
+                            value:[[FLTAdValue alloc] initWithValue:value.value
+                                                          precision:(NSInteger)value.precision
+                                                       currencyCode:value.currencyCode]];
+                };
+
+                self->_insterstitial = ad;
+              }];
 }
 
 - (void)show {
@@ -455,16 +480,6 @@
     _adRequest = request;
     _rootViewController = rootViewController;
     _serverSideVerificationOptions = serverSideVerificationOptions;
-    __weak FLTRewardedAd *weakSelf = self;
-    _rewardedView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-      if (weakSelf.manager == nil) {
-        return;
-      }
-      [weakSelf.manager onPaidEvent:weakSelf
-                              value:[[FLTAdValue alloc] initWithValue:value.value
-                                                            precision:(NSInteger)value.precision
-                                                         currencyCode:value.currencyCode]];
-    };
     _adUnitId = [adUnitId copy];
   }
   return self;
@@ -498,7 +513,17 @@
                     rewardedAd.serverSideVerificationOptions =
                         [self->_serverSideVerificationOptions asGADServerSideVerificationOptions];
                   }
-
+                  __weak FLTRewardedAd *weakSelf = self;
+                  rewardedAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+                    if (weakSelf.manager == nil) {
+                      return;
+                    }
+                    [weakSelf.manager
+                        onPaidEvent:weakSelf
+                              value:[[FLTAdValue alloc] initWithValue:value.value
+                                                            precision:(NSInteger)value.precision
+                                                         currencyCode:value.currencyCode]];
+                  };
                   rewardedAd.fullScreenContentDelegate = self;
                   self->_rewardedView = rewardedAd;
                   [self.manager onAdLoaded:self responseInfo:rewardedAd.responseInfo];
