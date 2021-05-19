@@ -250,7 +250,9 @@
     _bannerView.rootViewController = rootViewController;
     _bannerView.appEventDelegate = self;
     _bannerView.delegate = self;
-
+    if (sizes[0].size.size.width == 1){
+        _bannerView.enableManualImpressions = YES;
+    }
     NSMutableArray<NSValue *> *validAdSizes = [NSMutableArray arrayWithCapacity:sizes.count];
     for (FLTAdSize *size in sizes) {
       [validAdSizes addObject:NSValueFromGADAdSize(size.size)];
@@ -278,7 +280,8 @@
 - (void)adView:(nonnull GADBannerView *)banner
     didReceiveAppEvent:(nonnull NSString *)name
               withInfo:(nullable NSString *)info {
-  [self.manager onAppEvent:self name:name data:info];
+    [_bannerView recordImpression];
+    [self.manager onAppEvent:self name:name data:info];
 }
 
 @end
