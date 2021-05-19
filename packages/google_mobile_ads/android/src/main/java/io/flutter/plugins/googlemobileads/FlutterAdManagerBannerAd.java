@@ -76,6 +76,9 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
     for (int i = 0; i < sizes.size(); i++) {
       allSizes[i] = sizes.get(i).getAdSize();
     }
+    if(allSizes[0].getWidth() == 1) {
+      view.setManualImpressionsEnabled(true);
+    }
     view.setAdSizes(allSizes);
     view.setAdListener(
         new FlutterBannerAdListener(
@@ -88,6 +91,10 @@ class FlutterAdManagerBannerAd extends FlutterAd implements PlatformView, Flutte
               }
             }));
     view.loadAd(request.asAdManagerAdRequest());
+  }
+
+  public void recordImpression() {
+    view.recordManualImpression();
   }
 
   @Override
