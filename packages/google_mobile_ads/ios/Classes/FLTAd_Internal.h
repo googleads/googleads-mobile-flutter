@@ -51,33 +51,60 @@
 @interface FLTAdRequest : NSObject
 @property NSArray<NSString *> *_Nullable keywords;
 @property NSString *_Nullable contentURL;
-@property NSArray<NSString *> *_Nullable testDevices;
 @property BOOL nonPersonalizedAds;
 - (GADRequest *_Nonnull)asGADRequest;
 @end
 
 /**
- * Wrapper around `DFPRequest` for the Google Mobile Ads Plugin.
+ * Wrapper around `GADAdNetworkResponseInfo`.
  */
-@interface FLTPublisherAdRequest : FLTAdRequest
+@interface FLTGADAdNetworkResponseInfo : NSObject
+
+@property NSString *_Nullable adNetworkClassName;
+@property NSNumber *_Nullable latency;
+@property NSString *_Nullable dictionaryDescription;
+@property NSString *_Nullable credentialsDescription;
+@property NSError *_Nullable error;
+
+- (instancetype _Nonnull)initWithResponseInfo:(GADAdNetworkResponseInfo *_Nonnull)responseInfo;
+@end
+
+/**
+ * Wrapper around `GADResponseInfo`.
+ */
+@interface FLTGADResponseInfo : NSObject
+@property NSString *_Nullable responseIdentifier;
+@property NSString *_Nullable adNetworkClassName;
+@property NSArray<FLTGADAdNetworkResponseInfo *> *_Nullable adNetworkInfoArray;
+
+- (instancetype _Nonnull)initWithResponseInfo:(GADResponseInfo *_Nonnull)responseInfo;
+@end
+
+/**
+ * Wrapper around `GAMRequest` for the Google Mobile Ads Plugin.
+ * Extracts response info from the userInfo dict.
+ */
+@interface FLTLoadAdError : NSObject
+@property NSInteger code;
+@property NSString *_Nullable domain;
+@property NSString *_Nullable message;
+@property FLTGADResponseInfo *_Nullable responseInfo;
+
+- (instancetype _Nonnull)initWithError:(NSError *_Nonnull)error;
+@end
+
+/**
+ * Wrapper around `GAMRequest` for the Google Mobile Ads Plugin.
+ */
+@interface FLTGAMAdRequest : FLTAdRequest
 @property NSDictionary<NSString *, NSString *> *_Nullable customTargeting;
 @property NSDictionary<NSString *, NSArray<NSString *> *> *_Nullable customTargetingLists;
-- (DFPRequest *_Nonnull)asDFPRequest;
+- (GAMRequest *_Nonnull)asGAMRequest;
 @end
 
 @protocol FLTAd <NSObject>
 @property(weak) FLTAdInstanceManager *_Nullable manager;
 - (void)load;
-@end
-
-@interface FLTLoadAdError : NSObject
-@property(readonly) NSNumber *_Nonnull code;
-@property(readonly) NSString *_Nonnull domain;
-@property(readonly) NSString *_Nonnull message;
-- (instancetype _Nonnull)initWithCode:(NSNumber *_Nonnull)code
-                               domain:(NSString *_Nonnull)domain
-                              message:(NSString *_Nonnull)message;
-- (instancetype _Nonnull)initWithError:(GADRequestError *_Nonnull)error;
 @end
 
 @protocol FLTAdWithoutView
@@ -94,43 +121,42 @@
 @end
 
 /**
- * Wrapper around `DFPBannerAd` for the Google Mobile Ads Plugin.
+ * Wrapper around `GAMBannerAd` for the Google Mobile Ads Plugin.
  */
-@interface FLTPublisherBannerAd : FLTBannerAd <DFPBannerAdLoaderDelegate, GADAppEventDelegate>
+@interface FLTGAMBannerAd : FLTBannerAd <GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                     sizes:(NSArray<FLTAdSize *> *_Nonnull)sizes
-                                  request:(FLTPublisherAdRequest *_Nonnull)request
+                                  request:(FLTGAMAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
 @end
 
-@interface FLTInterstitialAd : NSObject <FLTAd, FLTAdWithoutView, GADInterstitialDelegate>
-@property(weak) FLTAdInstanceManager *_Nullable manager;
+@interface FLTInterstitialAd : NSObject <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
-- (GADInterstitial *_Nonnull)interstitial;
+- (GADInterstitialAd *_Nullable)interstitial;
+- (NSString *_Nonnull)adUnitId;
+- (void)load;
+
 @end
 
-@interface FLTPublisherInterstitialAd : FLTInterstitialAd
+@interface FLTGAMInterstitialAd : FLTInterstitialAd <GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                                  request:(FLTPublisherAdRequest *_Nonnull)request
+                                  request:(FLTGAMAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController;
 @end
 
-@interface FLTRewardedAd : NSObject <FLTAd, FLTAdWithoutView, GADRewardedAdDelegate>
-@property(weak) FLTAdInstanceManager *_Nullable manager;
+@interface FLTRewardedAd : NSObject <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
             serverSideVerificationOptions:
                 (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
-- (GADRewardedAd *_Nonnull)rewardedAd;
+- (GADRewardedAd *_Nullable)rewardedAd;
 @end
 
-@interface FLTNativeAd : NSObject <FLTAd,
-                                   FlutterPlatformView,
-                                   GADUnifiedNativeAdDelegate,
-                                   GADUnifiedNativeAdLoaderDelegate>
+@interface FLTNativeAd
+    : NSObject <FLTAd, FlutterPlatformView, GADNativeAdDelegate, GADNativeAdLoaderDelegate>
 @property(weak) FLTAdInstanceManager *_Nullable manager;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request

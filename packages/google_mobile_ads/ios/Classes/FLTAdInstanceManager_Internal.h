@@ -17,10 +17,10 @@
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
 
 @protocol FLTAd;
+@class FLTBannerAd;
 @class FLTNativeAd;
 @class FLTRewardedAd;
 @class FLTRewardItem;
-@class FLTLoadAdError;
 
 @interface FLTAdInstanceManager : NSObject
 - (instancetype _Nonnull)initWithBinaryMessenger:
@@ -30,18 +30,29 @@
 - (void)loadAd:(id<FLTAd> _Nonnull)ad adId:(NSNumber *_Nonnull)adId;
 - (void)dispose:(NSNumber *_Nonnull)adId;
 - (void)showAdWithID:(NSNumber *_Nonnull)adId;
-- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad;
-- (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(FLTLoadAdError *_Nonnull)error;
+- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad responseInfo:(GADResponseInfo *_Nonnull)responseInfo;
+- (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(NSError *_Nonnull)error;
 - (void)onAppEvent:(id<FLTAd> _Nonnull)ad
               name:(NSString *_Nullable)name
               data:(NSString *_Nullable)data;
 - (void)onNativeAdClicked:(FLTNativeAd *_Nonnull)ad;
 - (void)onNativeAdImpression:(FLTNativeAd *_Nonnull)ad;
-- (void)onAdOpened:(id<FLTAd> _Nonnull)ad;
-- (void)onApplicationExit:(id<FLTAd> _Nonnull)ad;
-- (void)onAdClosed:(id<FLTAd> _Nonnull)ad;
+- (void)onNativeAdWillPresentScreen:(FLTNativeAd *_Nonnull)ad;
+- (void)onNativeAdDidDismissScreen:(FLTNativeAd *_Nonnull)ad;
+- (void)onNativeAdWillDismissScreen:(FLTNativeAd *_Nonnull)ad;
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward;
+- (void)onBannerImpression:(FLTBannerAd *_Nonnull)ad;
+- (void)onBannerWillDismissScreen:(FLTBannerAd *_Nonnull)ad;
+- (void)onBannerDidDismissScreen:(FLTBannerAd *_Nonnull)ad;
+- (void)onBannerWillPresentScreen:(FLTBannerAd *_Nonnull)ad;
+
+- (void)onAdDidPresentFullScreenContent:(id<FLTAd> _Nonnull)ad;
+- (void)adDidDismissFullScreenContent:(id<FLTAd> _Nonnull)ad;
+- (void)adWillDismissFullScreenContent:(id<FLTAd> _Nonnull)ad;
+- (void)adDidRecordImpression:(id<FLTAd> _Nonnull)ad;
+- (void)didFailToPresentFullScreenContentWithError:(id<FLTAd> _Nonnull)ad
+                                             error:(NSError *_Nonnull)error;
 - (void)disposeAllAds;
 @end
 

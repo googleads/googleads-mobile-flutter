@@ -104,6 +104,11 @@
   } else if ([call.method isEqualToString:@"_init"]) {
     [_manager disposeAllAds];
     result(nil);
+  } else if ([call.method isEqualToString:@"MobileAds#setSameAppKeyEnabled"]) {
+    GADRequestConfiguration *requestConfig = GADMobileAds.sharedInstance.requestConfiguration;
+    NSNumber *isEnabled = call.arguments[@"isEnabled"];
+    [requestConfig setSameAppKeyEnabled:isEnabled.boolValue];
+    result(nil);
   } else if ([call.method isEqualToString:@"MobileAds#updateRequestConfiguration"]) {
     NSString *maxAdContentRating = call.arguments[@"maxAdContentRating"];
     NSNumber *tagForChildDirectedTreatment = call.arguments[@"tagForChildDirectedTreatment"];
@@ -156,12 +161,11 @@
                                          rootViewController:rootController];
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
-  } else if ([call.method isEqualToString:@"loadPublisherBannerAd"]) {
-    FLTPublisherBannerAd *ad =
-        [[FLTPublisherBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                 sizes:call.arguments[@"sizes"]
-                                               request:call.arguments[@"request"]
-                                    rootViewController:rootController];
+  } else if ([call.method isEqualToString:@"loadAdManagerBannerAd"]) {
+    FLTGAMBannerAd *ad = [[FLTGAMBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                                            sizes:call.arguments[@"sizes"]
+                                                          request:call.arguments[@"request"]
+                                               rootViewController:rootController];
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method isEqualToString:@"loadNativeAd"]) {
@@ -178,8 +182,8 @@
     FLTAdRequest *request;
     if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
       request = call.arguments[@"request"];
-    } else if (![call.arguments[@"publisherRequest"] isEqual:[NSNull null]]) {
-      request = call.arguments[@"publisherRequest"];
+    } else if (![call.arguments[@"adManagerRequest"] isEqual:[NSNull null]]) {
+      request = call.arguments[@"adManagerRequest"];
     }
 
     FLTNativeAd *ad = [[FLTNativeAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
@@ -196,11 +200,11 @@
 
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
-  } else if ([call.method isEqualToString:@"loadPublisherInterstitialAd"]) {
-    FLTPublisherInterstitialAd *ad =
-        [[FLTPublisherInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                     request:call.arguments[@"request"]
-                                          rootViewController:rootController];
+  } else if ([call.method isEqualToString:@"loadAdManagerInterstitialAd"]) {
+    FLTGAMInterstitialAd *ad =
+        [[FLTGAMInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                               request:call.arguments[@"request"]
+                                    rootViewController:rootController];
 
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
@@ -208,8 +212,8 @@
     FLTAdRequest *request;
     if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
       request = call.arguments[@"request"];
-    } else if (![call.arguments[@"publisherRequest"] isEqual:[NSNull null]]) {
-      request = call.arguments[@"publisherRequest"];
+    } else if (![call.arguments[@"adManagerRequest"] isEqual:[NSNull null]]) {
+      request = call.arguments[@"adManagerRequest"];
     } else {
       result([FlutterError errorWithCode:@"InvalidRequest"
                                  message:@"A null or invalid ad request was provided."
