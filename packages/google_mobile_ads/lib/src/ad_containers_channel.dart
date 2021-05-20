@@ -14,8 +14,8 @@
 
 import 'package:reference/reference.dart';
 
-import 'ad_containers_new.dart';
-import 'ad_containers_new.g.dart';
+import 'ad_containers.dart';
+import 'ad_containers.g.dart';
 
 class ChannelRegistrar extends $ChannelRegistrar {
   ChannelRegistrar($LibraryImplementations implementations)

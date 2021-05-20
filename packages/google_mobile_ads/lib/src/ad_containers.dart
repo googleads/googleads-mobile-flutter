@@ -14,6 +14,8 @@
 
 // ignore_for_file: deprecated_member_use_from_same_package
 
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
@@ -23,7 +25,7 @@ import 'package:reference/annotations.dart';
 import 'package:reference/reference.dart';
 
 import 'ad_containers_channel.dart';
-import 'ad_containers_new.g.dart';
+import 'ad_containers.g.dart';
 
 /// Error information about why an ad load operation failed.
 @Reference('google_mobile_ads.LoadAdError')
@@ -378,6 +380,18 @@ class BannerAd with $BannerAd {
   static $BannerAdChannel get _channel =>
       ChannelRegistrar.instance.implementations.bannerAdChannel;
 
+  /// {@template google_mobile_ads.testAdUnitId}
+  /// A platform-specific AdMob test ad unit ID.
+  /// Start loading this ad.
+  ///
+  /// This ad unit has been specially configured to always return test ads, and
+  /// developers are encouraged to use it while building and testing their apps.
+  /// {@endtemplate}
+  /// {@macro google_mobile_ads.testAdUnitId}
+  static final String testAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/6300978111'
+      : 'ca-app-pub-3940256099942544/2934735716';
+
   /// Receive callbacks from [Ad] lifecycle events.
   @override
   final AdListener listener;
@@ -498,6 +512,18 @@ class NativeAd with AdWithView, $NativeAd {
 
   static $NativeAdChannel get _channel =>
       ChannelRegistrar.instance.implementations.nativeAdChannel;
+
+  /// {@template google_mobile_ads.testAdUnitId}
+  /// A platform-specific AdMob test ad unit ID.
+  /// Start loading this ad.
+  ///
+  /// This ad unit has been specially configured to always return test ads, and
+  /// developers are encouraged to use it while building and testing their apps.
+  /// {@endtemplate}
+  /// {@macro google_mobile_ads.testAdUnitId}
+  static final String testAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/2247696110'
+      : 'ca-app-pub-3940256099942544/3986624511';
 
   /// An identifier for the factory that creates the Platform view.
   @override
@@ -644,6 +670,18 @@ class RewardedAd with $RewardedAd {
 
   static $RewardedAdChannel get _channel =>
       ChannelRegistrar.instance.implementations.rewardedAdChannel;
+
+  /// {@template google_mobile_ads.testAdUnitId}
+  /// A platform-specific AdMob test ad unit ID.
+  /// Identifies the source of [Ad]s for your application.
+  ///
+  /// This ad unit has been specially configured to always return test ads, and
+  /// developers are encouraged to use it while building and testing their apps.
+  /// {@endtemplate}
+  /// {@macro google_mobile_ads.testAdUnitId}
+  static final String testAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/5224354917'
+      : 'ca-app-pub-3940256099942544/1712485313';
 
   /// Receive callbacks from [Ad] lifecycle events.
   @override
