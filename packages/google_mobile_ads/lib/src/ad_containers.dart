@@ -191,6 +191,20 @@ class AdSize with $AdSize {
     constant: 'leaderboard',
   );
 
+  /// Ad units that render screen-width banner ads on any screen size across different devices in portrait on iOS.
+  static final AdSize smartBannerPortrait = AdSize(
+    width: -1,
+    height: -1,
+    constant: 'smartBannerPortrait',
+  );
+
+  /// Ad units that render screen-width banner ads on any screen size across different devices in landscape on iOS.
+  static final AdSize smartBannerLandscape = AdSize(
+    width: -1,
+    height: -1,
+    constant: 'smartBannerLandscape',
+  );
+
   /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
   ///
   /// Width of the current device can be found using:
