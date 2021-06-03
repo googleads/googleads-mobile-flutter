@@ -12,18 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:reference/annotations.dart';
+
+import 'request_configuration.g.dart';
+import 'request_configuration_channels.dart';
+
 /// Contains targeting information that can be applied to all ad requests.
 ///
 /// See relevant documentation at
 /// https://developers.google.com/ad-manager/mobile-ads-sdk/android/targeting#requestconfiguration.
-class RequestConfiguration {
+@Reference('google_mobile_ads.RequestConfiguration')
+class RequestConfiguration implements $RequestConfiguration {
   /// Creates a [RequestConfiguration].
   RequestConfiguration({
     this.maxAdContentRating,
     this.tagForChildDirectedTreatment,
     this.tagForUnderAgeOfConsent,
     this.testDeviceIds,
-  });
+  }) {
+    _channel.$$create(
+      this,
+      $owner: true,
+      maxAdContentRating: maxAdContentRating,
+      tagForChildDirectedTreatment: tagForChildDirectedTreatment,
+      tagForUnderAgeOfConsent: tagForUnderAgeOfConsent,
+      testDeviceIds: testDeviceIds,
+    );
+  }
+
+  static $RequestConfigurationChannel get _channel =>
+      ChannelRegistrar.instance.implementations.channelRequestConfiguration;
 
   /// Maximum content rating that will be shown.
   final String? maxAdContentRating;

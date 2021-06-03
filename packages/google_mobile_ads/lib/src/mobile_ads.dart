@@ -12,17 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'ad_instance_manager.dart';
-import 'request_configuration.dart';
 import 'package:flutter/foundation.dart';
+import 'package:reference/annotations.dart';
+
+import 'mobile_ads.g.dart';
+import 'mobile_ads_channels.dart';
+import 'request_configuration.dart';
 
 /// The initialization state of the mediation adapter.
-enum AdapterInitializationState {
+@Reference('google_mobile_ads.AdapterInitializationState')
+class AdapterInitializationState implements $AdapterInitializationState {
+  /// Construct an [AdapterInitializationState].
+  ///
+  /// This should only be used by the API or for testing.
+  @visibleForTesting
+  const AdapterInitializationState(String value) : _value = value;
+
+  final String _value;
+
   /// The mediation adapter is less likely to fill ad requests.
-  notReady,
+  static const AdapterInitializationState notReady = AdapterInitializationState(
+    'notReady',
+  );
 
   /// The mediation adapter is ready to service ad requests.
-  ready,
+  static const AdapterInitializationState ready = AdapterInitializationState(
+    'ready',
+  );
+
+  @override
+  bool operator ==(other) {
+    return other is AdapterInitializationState && other._value == _value;
+  }
 }
 
 /// Class contains logic that applies to the Google Mobile Ads SDK as a whole.
@@ -30,13 +51,20 @@ enum AdapterInitializationState {
 /// Right now, the only methods in it are used for initialization.
 ///
 /// See [instance].
-class MobileAds {
-  MobileAds._();
+@Reference('google_mobile_ads.MobileAds')
+class MobileAds implements $MobileAds {
+  @protected
+  MobileAds._() {
+    _channel.$$create(this, $owner: true);
+  }
 
-  static final MobileAds _instance = MobileAds._().._init();
+  static final MobileAds _instance = MobileAds._();
 
   /// Shared instance to initialize the AdMob SDK.
   static MobileAds get instance => _instance;
+
+  static $MobileAdsChannel get _channel =>
+      ChannelRegistrar.instance.implementations.channelMobileAds;
 
   /// Initializes the Google Mobile Ads SDK.
   ///
@@ -46,15 +74,14 @@ class MobileAds {
   /// If this method is not called, the first ad request automatically
   /// initializes the Google Mobile Ads SDK.
   Future<InitializationStatus> initialize() async {
-    return (await instanceManager.channel.invokeMethod<InitializationStatus>(
-      'MobileAds#initialize',
-    ))!;
+    return await _channel.$initialize(this) as InitializationStatus;
   }
 
   /// Update the [RequestConfiguration] to apply for future ad requests.
   Future<void> updateRequestConfiguration(
-      RequestConfiguration requestConfiguration) {
-    return instanceManager.updateRequestConfiguration(requestConfiguration);
+    RequestConfiguration requestConfiguration,
+  ) {
+    return _channel.$updateRequestConfiguration(this, requestConfiguration);
   }
 
   /// Set whether the Google Mobile Ads SDK Same App Key is enabled (iOS only).
@@ -65,21 +92,16 @@ class MobileAds {
   /// https://developers.google.com/admob/ios/global-settings#same_app_key.
   Future<void> setSameAppKeyEnabled(bool isEnabled) {
     if (defaultTargetPlatform == TargetPlatform.iOS) {
-      return instanceManager.setSameAppKeyEnabled(isEnabled);
+      return _channel.$setSameAppKeyEnabled(this, isEnabled);
     } else {
       return Future.value();
     }
   }
-
-  /// Internal init to cleanup state for hot restart.
-  /// This is a workaround for https://github.com/flutter/flutter/issues/7160.
-  void _init() {
-    instanceManager.channel.invokeMethod('_init');
-  }
 }
 
 /// The status of the SDK initialization.
-class InitializationStatus {
+@Reference('google_mobile_ads.InitializationStatus')
+class InitializationStatus implements $InitializationStatus {
   /// Default constructor to create an [InitializationStatus].
   ///
   /// Returned when calling [MobileAds.initialize];
@@ -93,7 +115,8 @@ class InitializationStatus {
 }
 
 /// An immutable snapshot of a mediation adapter's initialization status.
-class AdapterStatus {
+@Reference('google_mobile_ads.AdapterStatus')
+class AdapterStatus implements $AdapterStatus {
   /// Default constructor to create an [AdapterStatus].
   ///
   /// Returned when calling [MobileAds.initialize].

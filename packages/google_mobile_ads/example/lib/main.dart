@@ -188,14 +188,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    _interstitialAd?.dispose();
-    _rewardedAd?.dispose();
-    _anchoredBanner?.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Builder(builder: (BuildContext context) {

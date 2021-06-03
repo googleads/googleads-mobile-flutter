@@ -18,7 +18,6 @@ import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -27,8 +26,6 @@ import 'package:reference/reference.dart';
 
 import 'ad_containers.g.dart';
 import 'ad_containers_channels.dart';
-import 'ad_instance_manager.dart';
-import 'ad_listeners.dart';
 
 /// Error information about why an ad operation failed.
 @Reference('google_mobile_ads.AdError')
@@ -267,6 +264,7 @@ class AdSize implements $AdSize {
   );
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in portrait on iOS.
+  @Deprecated('Please use getPortraitAnchoredAdaptiveBannerAdSize.')
   static final AdSize smartBannerPortrait = AdSize(
     width: -1,
     height: -1,
@@ -274,6 +272,7 @@ class AdSize implements $AdSize {
   );
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in landscape on iOS.
+  @Deprecated('Please use getLandscapeAnchoredAdaptiveBannerAdSize.')
   static final AdSize smartBannerLandscape = AdSize(
     width: -1,
     height: -1,
@@ -454,6 +453,7 @@ class BannerAd implements AdWithView, $BannerAd {
     required this.listener,
     required this.request,
   }) {
+    BannerAdListener._channel.$$create(listener, $owner: false);
     _channel.$$create(
       this,
       $owner: true,
@@ -523,6 +523,7 @@ class AdManagerBannerAd implements AdWithView, $AdManagerBannerAd {
     required this.listener,
     required this.request,
   }) : assert(sizes.isNotEmpty) {
+    AdManagerBannerAdListener._channel.$$create(listener, $owner: false);
     _channel.$$create(
       this,
       $owner: true,
@@ -601,6 +602,7 @@ class NativeAd implements AdWithView, $NativeAd {
     required this.request,
     this.customOptions,
   }) {
+    NativeAdListener._channel.$$create(listener, $owner: false);
     _channel.$$create(
       this,
       $owner: true,
@@ -683,6 +685,13 @@ class InterstitialAd implements $InterstitialAd {
   }) {
     // InterstitialAd ad = InterstitialAd(
     //     adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
+    InterstitialAdLoadCallback._channel.$$create(adLoadCallback, $owner: false);
+    if (fullScreenContentCallback != null) {
+      FullScreenContentCallback._channel.$$create(
+        fullScreenContentCallback,
+        $owner: false,
+      );
+    }
     return _channel.$load(
       adUnitId,
       request,
@@ -758,6 +767,22 @@ class AdManagerInterstitialAd implements $AdManagerInterstitialAd {
   }) {
     // AdManagerInterstitialAd ad = AdManagerInterstitialAd._(
     //     adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
+    AdManagerInterstitialAdLoadCallback._channel.$$create(
+      adLoadCallback,
+      $owner: false,
+    );
+    if (appEventListener != null) {
+      AppEventListener._channel.$$create(
+        appEventListener,
+        $owner: false,
+      );
+    }
+    if (fullScreenContentCallback != null) {
+      FullScreenContentCallback._channel.$$create(
+        fullScreenContentCallback,
+        $owner: false,
+      );
+    }
     return _channel.$load(
       adUnitId,
       request,
@@ -840,7 +865,16 @@ class RewardedAd implements $RewardedAd {
     //     request: request,
     //     rewardedAdLoadCallback: rewardedAdLoadCallback,
     //     serverSideVerificationOptions: serverSideVerificationOptions);
-
+    RewardedAdLoadCallback._channel.$$create(
+      rewardedAdLoadCallback,
+      $owner: false,
+    );
+    if (fullScreenContentCallback != null) {
+      FullScreenContentCallback._channel.$$create(
+        fullScreenContentCallback,
+        $owner: false,
+      );
+    }
     return _channel.$load(
       adUnitId,
       request,
@@ -872,6 +906,10 @@ class RewardedAd implements $RewardedAd {
   /// notified of events that occur when showing the ad.
   /// [onUserEarnedReward] will be invoked when the user earns a reward.
   Future<void> show({required OnUserEarnedRewardListener onUserEarnedReward}) {
+    OnUserEarnedRewardListener._channel.$$create(
+      onUserEarnedReward,
+      $owner: false,
+    );
     return _channel.$show(this, onUserEarnedReward);
   }
 }
@@ -915,4 +953,288 @@ class ServerSideVerificationOptions implements $ServerSideVerificationOptions {
         userId == other.userId &&
         customData == other.customData;
   }
+}
+
+/// Listen for when a user earns a reward from a [RewardedAd].
+@Reference('google_mobile_ads.OnUserEarnedRewardListener')
+mixin OnUserEarnedRewardListener implements $OnUserEarnedRewardListener {
+  static $OnUserEarnedRewardListenerChannel get _channel => ChannelRegistrar
+      .instance.implementations.channelOnUserEarnedRewardListener;
+
+  /// When a user earns a reward from a [RewardedAd].
+  @override
+  void onUserEarnedRewardCallback(covariant RewardItem reward);
+}
+
+/// Listener for app events.
+@Reference('google_mobile_ads.AppEventListener')
+mixin AppEventListener implements $AppEventListener {
+  static $AppEventListenerChannel get _channel =>
+      ChannelRegistrar.instance.implementations.channelAppEventListener;
+
+  /// Called when an app event is received.
+  @override
+  void onAppEvent(String name, String data);
+}
+
+/// Shared event callbacks used in Native and Banner ads.
+@Reference('google_mobile_ads.AdWithViewListener')
+mixin AdWithViewListener implements $AdWithViewListener {
+  // /// Default constructor for [AdWithViewListener], meant to be used by subclasses.
+  // @protected
+  // const AdWithViewListener({
+  //   this.onAdLoaded,
+  //   this.onAdFailedToLoad,
+  //   this.onAdOpened,
+  //   this.onAdWillDismissScreen,
+  //   this.onAdImpression,
+  //   this.onAdClosed,
+  // });
+  /// Called when an ad is successfully received.
+  @override
+  void onAdLoaded();
+
+  /// Called when an ad request failed.
+  @override
+  void onAdFailedToLoad(covariant LoadAdError error);
+
+  /// A full screen view/overlay is presented in response to the user clicking
+  /// on an ad. You may want to pause animations and time sensitive
+  /// interactions.
+  @override
+  void onAdOpened();
+
+  /// For iOS only. Called before dismissing a full screen view.
+  @override
+  void onAdWillDismissScreen();
+
+  /// Called when the full screen view has been closed. You should restart
+  /// anything paused while handling onAdOpened.
+  @override
+  void onAdClosed();
+
+  /// Called when an impression occurs on the ad.
+  @override
+  void onAdImpression();
+}
+
+/// A listener for receiving notifications for the lifecycle of a [BannerAd].
+@Reference('google_mobile_ads.BannerAdListener')
+mixin BannerAdListener implements AdWithViewListener, $BannerAdListener {
+  static $BannerAdListenerChannel get _channel =>
+      ChannelRegistrar.instance.implementations.channelBannerAdListener;
+//   /// Constructs a [BannerAdListener] that notifies for the provided event callbacks.
+//   ///
+//   /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
+//   /// ```dart
+//   /// BannerAdListener(
+//   ///   onAdLoaded: (ad) {
+//   ///     // Ad successfully loaded - display an AdWidget with the banner ad.
+//   ///   },
+//   ///   onAdFailedToLoad: (ad, error) {
+//   ///     // Ad failed to load - log the error and dispose the ad.
+//   ///   },
+//   ///   ...
+//   /// )
+//   /// ```
+//   const BannerAdListener({
+//     AdEventCallback? onAdLoaded,
+//     AdLoadErrorCallback? onAdFailedToLoad,
+//     AdEventCallback? onAdOpened,
+//     AdEventCallback? onAdClosed,
+//     AdEventCallback? onAdWillDismissScreen,
+//     AdEventCallback? onAdImpression,
+//   }) : super(
+//           onAdLoaded: onAdLoaded,
+//           onAdFailedToLoad: onAdFailedToLoad,
+//           onAdOpened: onAdOpened,
+//           onAdClosed: onAdClosed,
+//           onAdWillDismissScreen: onAdWillDismissScreen,
+//           onAdImpression: onAdImpression,
+//         );
+}
+
+/// A listener for receiving notifications for the lifecycle of an [AdManagerBannerAd].
+@Reference('google_mobile_ads.AdManagerBannerAdListener')
+abstract class AdManagerBannerAdListener
+    implements BannerAdListener, AppEventListener, $AdManagerBannerAdListener {
+  static $AdManagerBannerAdListenerChannel get _channel => ChannelRegistrar
+      .instance.implementations.channelAdManagerBannerAdListener;
+
+  /// Constructs an [AdManagerBannerAdListener] with the provided event callbacks.
+  ///
+  /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
+  /// ```dart
+  /// AdManagerBannerAdListener(
+  ///   onAdLoaded: (ad) {
+  ///     // Ad successfully loaded - display an AdWidget with the banner ad.
+  ///   },
+  ///   onAdFailedToLoad: (ad, error) {
+  ///     // Ad failed to load - log the error and dispose the ad.
+  ///   },
+  ///   ...
+  /// )
+  /// ```
+  // AdManagerBannerAdListener({
+  //   AdEventCallback? onAdLoaded,
+  //   Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
+  //   AdEventCallback? onAdOpened,
+  //   AdEventCallback? onAdWillDismissScreen,
+  //   AdEventCallback? onAdClosed,
+  //   AdEventCallback? onAdImpression,
+  //   this.onAppEvent,
+  // }) : super(
+  //           onAdLoaded: onAdLoaded,
+  //           onAdFailedToLoad: onAdFailedToLoad,
+  //           onAdOpened: onAdOpened,
+  //           onAdWillDismissScreen: onAdWillDismissScreen,
+  //           onAdClosed: onAdClosed,
+  //           onAdImpression: onAdImpression);
+  //
+  // /// Called when an app event is received.
+  // @override
+  // void onAppEvent(String name, String data);
+}
+
+/// A listener for receiving notifications for the lifecycle of a [NativeAd].
+@Reference('google_mobile_ads.NativeAdListener')
+abstract class NativeAdListener
+    implements AdWithViewListener, $NativeAdListener {
+  static $NativeAdListenerChannel get _channel =>
+      ChannelRegistrar.instance.implementations.channelNativeAdListener;
+  // /// Constructs a [NativeAdListener] with the provided event callbacks.
+  // ///
+  // /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
+  // /// ```dart
+  // /// NativeAdListener(
+  // ///   onAdLoaded: (ad) {
+  // ///     // Ad successfully loaded - display an AdWidget with the native ad.
+  // ///   },
+  // ///   onAdFailedToLoad: (ad, error) {
+  // ///     // Ad failed to load - log the error and dispose the ad.
+  // ///   },
+  // ///   ...
+  // /// )
+  // /// ```
+  // NativeAdListener({
+  //   AdEventCallback? onAdLoaded,
+  //   Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
+  //   AdEventCallback? onAdOpened,
+  //   AdEventCallback? onAdWillDismissScreen,
+  //   AdEventCallback? onAdClosed,
+  //   AdEventCallback? onAdImpression,
+  //   this.onNativeAdClicked,
+  // }) : super(
+  //           onAdLoaded: onAdLoaded,
+  //           onAdFailedToLoad: onAdFailedToLoad,
+  //           onAdOpened: onAdOpened,
+  //           onAdWillDismissScreen: onAdWillDismissScreen,
+  //           onAdClosed: onAdClosed,
+  //           onAdImpression: onAdImpression);
+
+  /// Called when a click is recorded for a [NativeAd].
+  @override
+  void onAdClicked();
+}
+
+/// Callback events for for full screen ads, such as Rewarded and Interstitial.
+@Reference('google_mobile_ads.FullScreenContentCallback')
+abstract class FullScreenContentCallback implements $FullScreenContentCallback {
+  static $FullScreenContentCallbackChannel get _channel => ChannelRegistrar
+      .instance.implementations.channelFullScreenContentCallback;
+  // /// Construct a new [FullScreenContentCallback].
+  // ///
+  // /// [Ad.dispose] should be called from [onAdFailedToShowFullScreenContent]
+  // /// and [onAdDismissedFullScreenContent], in order to free up resources.
+  // const FullScreenContentCallback({
+  //   this.onAdShowedFullScreenContent,
+  //   this.onAdImpression,
+  //   this.onAdFailedToShowFullScreenContent,
+  //   this.onAdWillDismissFullScreenContent,
+  //   this.onAdDismissedFullScreenContent,
+  // });
+
+  /// Called when an ad shows full screen content.
+  @override
+  void onAdShowedFullScreenContent();
+
+  /// Called when an ad dismisses full screen content.
+  @override
+  void onAdDismissedFullScreenContent();
+
+  /// For iOS only. Called before dismissing a full screen view.
+  @override
+  void onAdWillDismissFullScreenContent();
+
+  /// Called when an ad impression occurs.
+  @override
+  void onAdImpression();
+
+  /// Called when ad fails to show full screen content.
+  @override
+  void onAdFailedToShowFullScreenContent();
+}
+
+/// Generic parent class for ad load callbacks.
+@Reference('google_mobile_ads.FullScreenAdLoadCallback')
+abstract class FullScreenAdLoadCallback implements $FullScreenAdLoadCallback {
+  // /// Default constructor for [FullScreenAdLoadCallback[, used by subclasses.
+  // const FullScreenAdLoadCallback({
+  //   required this.onAdLoaded,
+  //   required this.onAdFailedToLoad,
+  // });
+
+  /// Called when the ad successfully loads.
+  @override
+  void onAdLoaded();
+
+  /// Called when an error occurs loading the ad.
+  @override
+  void onAdFailedToLoad(covariant LoadAdError error);
+}
+
+/// This class holds callbacks for loading a [RewardedAd].
+@Reference('google_mobile_ads.RewardedAdLoadCallback')
+abstract class RewardedAdLoadCallback
+    implements FullScreenAdLoadCallback, $RewardedAdLoadCallback {
+  static $RewardedAdLoadCallbackChannel get _channel =>
+      ChannelRegistrar.instance.implementations.channelRewardedAdLoadCallback;
+  // /// Construct a [RewardedAdLoadCallback].
+  // ///
+  // /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
+  // const RewardedAdLoadCallback({
+  //   required GenericAdEventCallback<RewardedAd> onAdLoaded,
+  //   required FullScreenAdLoadErrorCallback onAdFailedToLoad,
+  // }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
+}
+
+/// This class holds callbacks for loading an [InterstitialAd].
+@Reference('google_mobile_ads.InterstitialAdLoadCallback')
+abstract class InterstitialAdLoadCallback
+    implements FullScreenAdLoadCallback, $InterstitialAdLoadCallback {
+  static $InterstitialAdLoadCallbackChannel get _channel => ChannelRegistrar
+      .instance.implementations.channelInterstitialAdLoadCallback;
+  // /// Construct a [InterstitialAdLoadCallback].
+  // ///
+  // /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
+  // const InterstitialAdLoadCallback({
+  //   required GenericAdEventCallback<InterstitialAd> onAdLoaded,
+  //   required FullScreenAdLoadErrorCallback onAdFailedToLoad,
+  // }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
+}
+
+/// This class holds callbacks for loading an [AdManagerInterstitialAd].
+@Reference('google_mobile_ads.AdManagerInterstitialAdLoadCallback')
+abstract class AdManagerInterstitialAdLoadCallback
+    implements FullScreenAdLoadCallback, $AdManagerInterstitialAdLoadCallback {
+  static $AdManagerInterstitialAdLoadCallbackChannel get _channel =>
+      ChannelRegistrar
+          .instance.implementations.channelAdManagerInterstitialAdLoadCallback;
+  // /// Construct a [AdManagerInterstitialAdLoadCallback].
+  // ///
+  // /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
+  // const AdManagerInterstitialAdLoadCallback({
+  //   required GenericAdEventCallback<AdManagerInterstitialAd> onAdLoaded,
+  //   required FullScreenAdLoadErrorCallback onAdFailedToLoad,
+  // }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
 }

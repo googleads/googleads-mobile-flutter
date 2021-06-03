@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:reference/reference.dart';
 
+import 'ad_containers.dart';
 import 'ad_containers.g.dart';
 
 /// Register channels for ad container classes.
