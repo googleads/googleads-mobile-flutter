@@ -14,9 +14,6 @@
 
 package io.flutter.plugins.googlemobileads;
 
-/** Interface for a destroyable ad. */
-public interface FlutterDestroyableAd {
+import io.flutter.plugin.platform.PlatformView;
 
-  /** Destroy any ads and free up references. */
-  void destroy();
-}
+public interface FlutterDestroyablePlatformView extends PlatformView, FlutterDestroyableAd {}

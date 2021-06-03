@@ -15,7 +15,7 @@
 package io.flutter.plugins.googlemobileads;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -124,17 +124,17 @@ public class FlutterBannerAdTest {
     verify(mockManager).onAdImpression(eq(flutterBannerAd));
     verify(mockManager).onAdClosed(eq(flutterBannerAd));
     verify(mockManager).onAdOpened(eq(flutterBannerAd));
-    assertEquals(flutterBannerAd.getView(), mockAdView);
+    assertEquals(flutterBannerAd.getPlatformView().getView(), mockAdView);
   }
 
   @Test
   public void destroy() {
     flutterBannerAd.load();
 
-    assertEquals(flutterBannerAd.getView(), mockAdView);
+    assertEquals(flutterBannerAd.getPlatformView().getView(), mockAdView);
 
-    flutterBannerAd.destroy();
+    flutterBannerAd.getPlatformView().destroy();
     verify(mockAdView).destroy();
-    assertNull(flutterBannerAd.getView());
+    assertNotNull(flutterBannerAd.getPlatformView().getView());
   }
 }

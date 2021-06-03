@@ -24,12 +24,11 @@ import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.google.android.gms.ads.nativead.NativeAdView;
-import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Map;
 
 /** A wrapper for {@link NativeAd}. */
-class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
+class FlutterNativeAd extends FlutterAd {
   private static final String TAG = "FlutterNativeAd";
 
   @NonNull private final AdInstanceManager manager;
@@ -39,8 +38,8 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
   @Nullable private FlutterAdRequest request;
   @Nullable private FlutterAdManagerAdRequest adManagerRequest;
   @Nullable private Map<String, Object> customOptions;
-  @Nullable private NativeAdView ad;
   @Nullable private ResponseInfo responseInfo;
+  @Nullable private FlutterDestroyablePlatformView platformView;
 
   static class Builder {
     @Nullable private AdInstanceManager manager;
@@ -148,7 +147,26 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
         new OnNativeAdLoadedListener() {
           @Override
           public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
-            ad = adFactory.createNativeAd(nativeAd, customOptions);
+            final NativeAdView ad = adFactory.createNativeAd(nativeAd, customOptions);
+            platformView =
+                new FlutterDestroyablePlatformView() {
+                  @Override
+                  public View getView() {
+                    return ad;
+                  }
+
+                  @Override
+                  public void dispose() {
+                    // Do nothing. Cleanup is handled in destroy() below, which is triggered from dispose() being
+                    // called on the flutter ad object. This is allows for reuse of the ad view, for example
+                    // in a scrolling list view.
+                  }
+
+                  @Override
+                  public void destroy() {
+                    ad.destroy();
+                  }
+                };
             responseInfo = nativeAd.getResponseInfo();
           }
         };
@@ -189,24 +207,9 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
     }
   }
 
-  @Override
   @Nullable
-  public View getView() {
-    return ad;
-  }
-
   @Override
-  public void dispose() {
-    // Do nothing. Cleanup is handled in destroy() below, which is triggered from dispose() being
-    // called on the flutter ad object. This is allows for reuse of the ad view, for example
-    // in a scrolling list view.
-  }
-
-  @Override
-  public void destroy() {
-    if (ad != null) {
-      ad.destroy();
-      ad = null;
-    }
+  public FlutterDestroyablePlatformView getPlatformView() {
+    return platformView;
   }
 }

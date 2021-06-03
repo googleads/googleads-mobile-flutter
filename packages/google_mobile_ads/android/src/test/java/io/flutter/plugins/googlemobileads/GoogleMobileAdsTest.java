@@ -93,11 +93,14 @@ public class GoogleMobileAdsTest {
   @Test
   public void disposeAd_banner() {
     FlutterBannerAd bannerAd = mock(FlutterBannerAd.class);
+    FlutterDestroyablePlatformView mockPlatformView = mock(FlutterDestroyablePlatformView.class);
+    doReturn(mockPlatformView).when(bannerAd).getPlatformView();
+
     testManager.trackAd(bannerAd, 2);
     assertNotNull(testManager.adForId(2));
     assertNotNull(testManager.adIdFor(bannerAd));
     testManager.disposeAd(2);
-    verify(bannerAd).destroy();
+    verify(mockPlatformView).destroy();
     assertNull(testManager.adForId(2));
     assertNull(testManager.adIdFor(bannerAd));
   }
@@ -105,11 +108,14 @@ public class GoogleMobileAdsTest {
   @Test
   public void disposeAd_adManagerBanner() {
     FlutterAdManagerBannerAd adManagerBannerAd = mock(FlutterAdManagerBannerAd.class);
+    FlutterDestroyablePlatformView mockPlatformView = mock(FlutterDestroyablePlatformView.class);
+    doReturn(mockPlatformView).when(adManagerBannerAd).getPlatformView();
+
     testManager.trackAd(adManagerBannerAd, 2);
     assertNotNull(testManager.adForId(2));
     assertNotNull(testManager.adIdFor(adManagerBannerAd));
     testManager.disposeAd(2);
-    verify(adManagerBannerAd).destroy();
+    verify(mockPlatformView).destroy();
     assertNull(testManager.adForId(2));
     assertNull(testManager.adIdFor(adManagerBannerAd));
   }
@@ -117,11 +123,14 @@ public class GoogleMobileAdsTest {
   @Test
   public void disposeAd_native() {
     FlutterNativeAd flutterNativeAd = mock(FlutterNativeAd.class);
+    FlutterDestroyablePlatformView mockPlatformView = mock(FlutterDestroyablePlatformView.class);
+    doReturn(mockPlatformView).when(flutterNativeAd).getPlatformView();
+
     testManager.trackAd(flutterNativeAd, 2);
     assertNotNull(testManager.adForId(2));
     assertNotNull(testManager.adIdFor(flutterNativeAd));
     testManager.disposeAd(2);
-    verify(flutterNativeAd).destroy();
+    verify(mockPlatformView).destroy();
     assertNull(testManager.adForId(2));
     assertNull(testManager.adIdFor(flutterNativeAd));
   }
@@ -460,6 +469,9 @@ public class GoogleMobileAdsTest {
     // Set up testManager so that two ads have already been loaded and tracked.
     final FlutterRewardedAd rewarded = mock(FlutterRewardedAd.class);
     final FlutterBannerAd banner = mock(FlutterBannerAd.class);
+    final FlutterDestroyablePlatformView platformView = mock(FlutterDestroyablePlatformView.class);
+    doReturn(platformView).when(banner).getPlatformView();
+
     testManager.trackAd(rewarded, 0);
     testManager.trackAd(banner, 1);
 
@@ -477,7 +489,7 @@ public class GoogleMobileAdsTest {
 
     verify(testManagerSpy).disposeAllAds();
     verify(result).success(null);
-    verify(banner).destroy();
+    verify(platformView).destroy();
     assertNull(testManager.adForId(0));
     assertNull(testManager.adForId(1));
     assertNull(testManager.adIdFor(rewarded));

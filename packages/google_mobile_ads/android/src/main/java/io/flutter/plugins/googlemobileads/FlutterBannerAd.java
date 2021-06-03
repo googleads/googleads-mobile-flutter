@@ -19,17 +19,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.ResponseInfo;
-import io.flutter.plugin.platform.PlatformView;
 import io.flutter.util.Preconditions;
 
 /** A wrapper for {@link AdView}. */
-class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
+class FlutterBannerAd extends FlutterAd {
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final FlutterAdSize size;
   @NonNull private final FlutterAdRequest request;
   @NonNull private final BannerAdCreator bannerAdCreator;
-  @Nullable private AdView view;
+  @Nullable private FlutterDestroyablePlatformView platformView;
 
   /** Constructs the FlutterBannerAd. */
   public FlutterBannerAd(
@@ -51,7 +50,7 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
 
   @Override
   void load() {
-    view = bannerAdCreator.createAdView();
+    final AdView view = bannerAdCreator.createAdView();
     view.setAdUnitId(adUnitId);
     view.setAdSize(size.getAdSize());
     view.setAdListener(
@@ -65,26 +64,31 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
               }
             }));
     view.loadAd(request.asAdRequest());
+
+    platformView =
+        new FlutterDestroyablePlatformView() {
+          @Override
+          public View getView() {
+            return view;
+          }
+
+          @Override
+          public void dispose() {
+            // Do nothing. Cleanup is handled in destroy() below, which is triggered from dispose() being
+            // called on the flutter ad object. This is allows for reuse of the  ad view, for example
+            // in a scrolling list view.
+          }
+
+          @Override
+          public void destroy() {
+            view.destroy();
+          }
+        };
   }
 
-  @Override
   @Nullable
-  public View getView() {
-    return view;
-  }
-
   @Override
-  public void dispose() {
-    // Do nothing. Cleanup is handled in destroy() below, which is triggered from dispose() being
-    // called on the flutter ad object. This is allows for reuse of the  ad view, for example
-    // in a scrolling list view.
-  }
-
-  @Override
-  public void destroy() {
-    if (view != null) {
-      view.destroy();
-      view = null;
-    }
+  public FlutterDestroyablePlatformView getPlatformView() {
+    return platformView;
   }
 }

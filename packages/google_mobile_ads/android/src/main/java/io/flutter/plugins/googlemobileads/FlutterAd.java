@@ -270,4 +270,13 @@ abstract class FlutterAd {
   }
 
   abstract void load();
+
+  /**
+   * Gets the PlatformView for the ad. Default behavior is to return null. Should be overridden by
+   * ads with platform views, such as banner and native ads.
+   */
+  @Nullable
+  FlutterDestroyablePlatformView getPlatformView() {
+    return null;
+  };
 }

@@ -79,18 +79,17 @@ class AdInstanceManager {
     if (!ads.containsKey(adId)) {
       return;
     }
-    Object adObject = ads.get(adId);
-    if (adObject instanceof FlutterDestroyableAd) {
-      ((FlutterDestroyableAd) adObject).destroy();
+    FlutterAd ad = ads.get(adId);
+    if (ad != null && ad.getPlatformView() != null) {
+      ad.getPlatformView().destroy();
     }
     ads.remove(adId);
   }
 
   void disposeAllAds() {
     for (Map.Entry<Integer, FlutterAd> entry : ads.entrySet()) {
-      if (entry.getValue() != null && entry.getValue() instanceof FlutterDestroyableAd) {
-        FlutterDestroyableAd destroyableAd = (FlutterDestroyableAd) entry.getValue();
-        destroyableAd.destroy();
+      if (entry.getValue() != null && entry.getValue().getPlatformView() != null) {
+        entry.getValue().getPlatformView().destroy();
       }
     }
     ads.clear();
