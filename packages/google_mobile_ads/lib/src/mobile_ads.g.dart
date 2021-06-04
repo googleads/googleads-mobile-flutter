@@ -2,8 +2,6 @@
 
 import 'package:reference/reference.dart';
 
-import 'request_configuration.dart';
-
 // **************************************************************************
 // ReferenceGenerator
 // **************************************************************************
@@ -15,6 +13,8 @@ mixin $MobileAds {}
 mixin $InitializationStatus {}
 
 mixin $AdapterStatus {}
+
+mixin $RequestConfiguration {}
 
 class $AdapterInitializationStateChannel
     extends TypeChannel<$AdapterInitializationState> {
@@ -63,7 +63,7 @@ class $MobileAdsChannel extends TypeChannel<$MobileAds> {
 
   Future<Object?> $updateRequestConfiguration(
     $MobileAds $instance,
-    RequestConfiguration requestConfiguration,
+    $RequestConfiguration requestConfiguration,
   ) {
     return sendInvokeMethod(
       $instance,
@@ -124,6 +124,31 @@ class $AdapterStatusChannel extends TypeChannel<$AdapterStatus> {
         state,
         description,
         latency,
+      ],
+      owner: $owner,
+    );
+  }
+}
+
+class $RequestConfigurationChannel extends TypeChannel<$RequestConfiguration> {
+  $RequestConfigurationChannel(TypeChannelMessenger messenger)
+      : super(messenger, 'google_mobile_ads.RequestConfiguration');
+
+  Future<PairedInstance?> $$create(
+    $RequestConfiguration $instance, {
+    required bool $owner,
+    required String? maxAdContentRating,
+    required int? tagForChildDirectedTreatment,
+    required int? tagForUnderAgeOfConsent,
+    required List<String>? testDeviceIds,
+  }) {
+    return createNewInstancePair(
+      $instance,
+      <Object?>[
+        maxAdContentRating,
+        tagForChildDirectedTreatment,
+        tagForUnderAgeOfConsent,
+        testDeviceIds,
       ],
       owner: $owner,
     );
@@ -346,6 +371,66 @@ class $AdapterStatusHandler implements TypeChannelHandler<$AdapterStatus> {
   }
 }
 
+class $RequestConfigurationHandler
+    implements TypeChannelHandler<$RequestConfiguration> {
+  $RequestConfiguration $$create(
+    TypeChannelMessenger messenger,
+    String? maxAdContentRating,
+    int? tagForChildDirectedTreatment,
+    int? tagForUnderAgeOfConsent,
+    List<String>? testDeviceIds,
+  ) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Object? invokeStaticMethod(
+    TypeChannelMessenger messenger,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+    }
+
+    throw ArgumentError.value(
+      methodName,
+      'methodName',
+      'Unable to invoke static method `$methodName`',
+    );
+  }
+
+  @override
+  $RequestConfiguration createInstance(
+    TypeChannelMessenger messenger,
+    List<Object?> arguments,
+  ) {
+    return $$create(
+      messenger,
+      arguments[0] as String?,
+      arguments[1] as int?,
+      arguments[2] as int?,
+      arguments[3] as List<String>?,
+    );
+  }
+
+  @override
+  Object? invokeMethod(
+    TypeChannelMessenger messenger,
+    $RequestConfiguration instance,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+    }
+
+    throw ArgumentError.value(
+      instance,
+      'instance',
+      'Unable to invoke method `$methodName` on',
+    );
+  }
+}
+
 class $LibraryImplementations {
   $LibraryImplementations(this.messenger);
 
@@ -367,6 +452,11 @@ class $LibraryImplementations {
   $AdapterStatusChannel get channelAdapterStatus =>
       $AdapterStatusChannel(messenger);
   $AdapterStatusHandler get handlerAdapterStatus => $AdapterStatusHandler();
+
+  $RequestConfigurationChannel get channelRequestConfiguration =>
+      $RequestConfigurationChannel(messenger);
+  $RequestConfigurationHandler get handlerRequestConfiguration =>
+      $RequestConfigurationHandler();
 }
 
 class $ChannelRegistrar {
@@ -390,6 +480,10 @@ class $ChannelRegistrar {
     implementations.channelAdapterStatus.setHandler(
       implementations.handlerAdapterStatus,
     );
+
+    implementations.channelRequestConfiguration.setHandler(
+      implementations.handlerRequestConfiguration,
+    );
   }
 
   void unregisterHandlers() {
@@ -400,5 +494,7 @@ class $ChannelRegistrar {
     implementations.channelInitializationStatus.removeHandler();
 
     implementations.channelAdapterStatus.removeHandler();
+
+    implementations.channelRequestConfiguration.removeHandler();
   }
 }

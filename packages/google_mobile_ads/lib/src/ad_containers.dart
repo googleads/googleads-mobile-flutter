@@ -485,6 +485,7 @@ class BannerAd implements AdWithView, $BannerAd {
   /// and [iOS](https://developers.google.com/admob/ios/banner#banner_sizes) for additional details.
   final AdSize size;
 
+  // TODO: This should be passed outside of the constructor.
   /// A listener for receiving events in the ad lifecycle.
   final BannerAdListener listener;
 
@@ -856,7 +857,7 @@ class RewardedAd implements $RewardedAd {
   static Future<void> load({
     required String adUnitId,
     required AdRequest request,
-    required RewardedAdLoadCallback rewardedAdLoadCallback,
+    required RewardedAdLoadCallback adLoadCallback,
     ServerSideVerificationOptions? serverSideVerificationOptions,
     FullScreenContentCallback? fullScreenContentCallback,
   }) {
@@ -866,7 +867,7 @@ class RewardedAd implements $RewardedAd {
     //     rewardedAdLoadCallback: rewardedAdLoadCallback,
     //     serverSideVerificationOptions: serverSideVerificationOptions);
     RewardedAdLoadCallback._channel.$$create(
-      rewardedAdLoadCallback,
+      adLoadCallback,
       $owner: false,
     );
     if (fullScreenContentCallback != null) {
@@ -878,7 +879,7 @@ class RewardedAd implements $RewardedAd {
     return _channel.$load(
       adUnitId,
       request,
-      rewardedAdLoadCallback,
+      adLoadCallback,
       serverSideVerificationOptions,
       fullScreenContentCallback,
     );
@@ -1056,7 +1057,7 @@ mixin BannerAdListener implements AdWithViewListener, $BannerAdListener {
 
 /// A listener for receiving notifications for the lifecycle of an [AdManagerBannerAd].
 @Reference('google_mobile_ads.AdManagerBannerAdListener')
-abstract class AdManagerBannerAdListener
+mixin AdManagerBannerAdListener
     implements BannerAdListener, AppEventListener, $AdManagerBannerAdListener {
   static $AdManagerBannerAdListenerChannel get _channel => ChannelRegistrar
       .instance.implementations.channelAdManagerBannerAdListener;
@@ -1098,7 +1099,7 @@ abstract class AdManagerBannerAdListener
 
 /// A listener for receiving notifications for the lifecycle of a [NativeAd].
 @Reference('google_mobile_ads.NativeAdListener')
-abstract class NativeAdListener
+mixin NativeAdListener
     implements AdWithViewListener, $NativeAdListener {
   static $NativeAdListenerChannel get _channel =>
       ChannelRegistrar.instance.implementations.channelNativeAdListener;
@@ -1139,7 +1140,7 @@ abstract class NativeAdListener
 
 /// Callback events for for full screen ads, such as Rewarded and Interstitial.
 @Reference('google_mobile_ads.FullScreenContentCallback')
-abstract class FullScreenContentCallback implements $FullScreenContentCallback {
+mixin FullScreenContentCallback implements $FullScreenContentCallback {
   static $FullScreenContentCallbackChannel get _channel => ChannelRegistrar
       .instance.implementations.channelFullScreenContentCallback;
   // /// Construct a new [FullScreenContentCallback].
@@ -1176,8 +1177,7 @@ abstract class FullScreenContentCallback implements $FullScreenContentCallback {
 }
 
 /// Generic parent class for ad load callbacks.
-@Reference('google_mobile_ads.FullScreenAdLoadCallback')
-abstract class FullScreenAdLoadCallback implements $FullScreenAdLoadCallback {
+mixin FullScreenAdLoadCallback<T> {
   // /// Default constructor for [FullScreenAdLoadCallback[, used by subclasses.
   // const FullScreenAdLoadCallback({
   //   required this.onAdLoaded,
@@ -1185,18 +1185,16 @@ abstract class FullScreenAdLoadCallback implements $FullScreenAdLoadCallback {
   // });
 
   /// Called when the ad successfully loads.
-  @override
-  void onAdLoaded();
+  void onAdLoaded(T ad);
 
   /// Called when an error occurs loading the ad.
-  @override
   void onAdFailedToLoad(covariant LoadAdError error);
 }
 
 /// This class holds callbacks for loading a [RewardedAd].
 @Reference('google_mobile_ads.RewardedAdLoadCallback')
-abstract class RewardedAdLoadCallback
-    implements FullScreenAdLoadCallback, $RewardedAdLoadCallback {
+mixin RewardedAdLoadCallback
+    implements FullScreenAdLoadCallback<RewardedAd>, $RewardedAdLoadCallback {
   static $RewardedAdLoadCallbackChannel get _channel =>
       ChannelRegistrar.instance.implementations.channelRewardedAdLoadCallback;
   // /// Construct a [RewardedAdLoadCallback].
@@ -1206,12 +1204,20 @@ abstract class RewardedAdLoadCallback
   //   required GenericAdEventCallback<RewardedAd> onAdLoaded,
   //   required FullScreenAdLoadErrorCallback onAdFailedToLoad,
   // }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
+
+  @override
+  void onAdLoaded(covariant RewardedAd ad);
+
+  @override
+  void onAdFailedToLoad(covariant LoadAdError error);
 }
 
 /// This class holds callbacks for loading an [InterstitialAd].
 @Reference('google_mobile_ads.InterstitialAdLoadCallback')
-abstract class InterstitialAdLoadCallback
-    implements FullScreenAdLoadCallback, $InterstitialAdLoadCallback {
+mixin InterstitialAdLoadCallback
+    implements
+        FullScreenAdLoadCallback<InterstitialAd>,
+        $InterstitialAdLoadCallback {
   static $InterstitialAdLoadCallbackChannel get _channel => ChannelRegistrar
       .instance.implementations.channelInterstitialAdLoadCallback;
   // /// Construct a [InterstitialAdLoadCallback].
@@ -1221,12 +1227,20 @@ abstract class InterstitialAdLoadCallback
   //   required GenericAdEventCallback<InterstitialAd> onAdLoaded,
   //   required FullScreenAdLoadErrorCallback onAdFailedToLoad,
   // }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
+
+  @override
+  void onAdLoaded(covariant InterstitialAd ad);
+
+  @override
+  void onAdFailedToLoad(covariant LoadAdError error);
 }
 
 /// This class holds callbacks for loading an [AdManagerInterstitialAd].
 @Reference('google_mobile_ads.AdManagerInterstitialAdLoadCallback')
-abstract class AdManagerInterstitialAdLoadCallback
-    implements FullScreenAdLoadCallback, $AdManagerInterstitialAdLoadCallback {
+mixin AdManagerInterstitialAdLoadCallback
+    implements
+        FullScreenAdLoadCallback<AdManagerInterstitialAd>,
+        $AdManagerInterstitialAdLoadCallback {
   static $AdManagerInterstitialAdLoadCallbackChannel get _channel =>
       ChannelRegistrar
           .instance.implementations.channelAdManagerInterstitialAdLoadCallback;
@@ -1237,4 +1251,10 @@ abstract class AdManagerInterstitialAdLoadCallback
   //   required GenericAdEventCallback<AdManagerInterstitialAd> onAdLoaded,
   //   required FullScreenAdLoadErrorCallback onAdFailedToLoad,
   // }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
+
+  @override
+  void onAdLoaded(covariant AdManagerInterstitialAd ad);
+
+  @override
+  void onAdFailedToLoad(covariant LoadAdError error);
 }

@@ -39,11 +39,27 @@ class LibraryImplementations extends $LibraryImplementations {
   LibraryImplementations(TypeChannelMessenger messenger) : super(messenger);
 
   @override
+  $AdapterInitializationStateHandler get handlerAdapterInitializationState =>
+      AdapterInitializationStateHandler();
+
+  @override
   InitializationStatusHandler get handlerInitializationStatus =>
       InitializationStatusHandler();
 
   @override
   AdapterStatusHandler get handlerAdapterStatus => AdapterStatusHandler();
+}
+
+class AdapterInitializationStateHandler
+    extends $AdapterInitializationStateHandler {
+  @override
+  AdapterInitializationState $$create(
+    TypeChannelMessenger messenger,
+    String value,
+  ) {
+    // ignore: invalid_use_of_visible_for_testing_member
+    return AdapterInitializationState(value);
+  }
 }
 
 class InitializationStatusHandler extends $InitializationStatusHandler {

@@ -37,6 +37,54 @@ mixin $AdWithViewListener {
 
 mixin $BannerAdListener {}
 
+mixin $AdManagerBannerAdListener {}
+
+mixin $NativeAdListener {
+  dynamic onAdClicked();
+}
+
+mixin $FullScreenContentCallback {
+  dynamic onAdShowedFullScreenContent();
+
+  dynamic onAdDismissedFullScreenContent();
+
+  dynamic onAdWillDismissFullScreenContent();
+
+  dynamic onAdImpression();
+
+  dynamic onAdFailedToShowFullScreenContent();
+}
+
+mixin $RewardedAdLoadCallback {
+  dynamic onAdLoaded(
+    $RewardedAd ad,
+  );
+
+  dynamic onAdFailedToLoad(
+    $LoadAdError error,
+  );
+}
+
+mixin $InterstitialAdLoadCallback {
+  dynamic onAdLoaded(
+    $InterstitialAd ad,
+  );
+
+  dynamic onAdFailedToLoad(
+    $LoadAdError error,
+  );
+}
+
+mixin $AdManagerInterstitialAdLoadCallback {
+  dynamic onAdLoaded(
+    $AdManagerInterstitialAd ad,
+  );
+
+  dynamic onAdFailedToLoad(
+    $LoadAdError error,
+  );
+}
+
 mixin $AdError {}
 
 mixin $ResponseInfo {}
@@ -66,38 +114,6 @@ mixin $RewardedAd {}
 mixin $RewardItem {}
 
 mixin $ServerSideVerificationOptions {}
-
-mixin $AdManagerBannerAdListener {}
-
-mixin $NativeAdListener {
-  dynamic onAdClicked();
-}
-
-mixin $FullScreenContentCallback {
-  dynamic onAdShowedFullScreenContent();
-
-  dynamic onAdDismissedFullScreenContent();
-
-  dynamic onAdWillDismissFullScreenContent();
-
-  dynamic onAdImpression();
-
-  dynamic onAdFailedToShowFullScreenContent();
-}
-
-mixin $FullScreenAdLoadCallback {
-  dynamic onAdLoaded();
-
-  dynamic onAdFailedToLoad(
-    $LoadAdError error,
-  );
-}
-
-mixin $RewardedAdLoadCallback {}
-
-mixin $InterstitialAdLoadCallback {}
-
-mixin $AdManagerInterstitialAdLoadCallback {}
 
 class $OnUserEarnedRewardListenerChannel
     extends TypeChannel<$OnUserEarnedRewardListener> {
@@ -154,6 +170,108 @@ class $BannerAdListenerChannel extends TypeChannel<$BannerAdListener> {
 
   Future<PairedInstance?> $$create(
     $BannerAdListener $instance, {
+    required bool $owner,
+  }) {
+    return createNewInstancePair(
+      $instance,
+      <Object?>[],
+      owner: $owner,
+    );
+  }
+}
+
+class $AdManagerBannerAdListenerChannel
+    extends TypeChannel<$AdManagerBannerAdListener> {
+  $AdManagerBannerAdListenerChannel(TypeChannelMessenger messenger)
+      : super(messenger, 'google_mobile_ads.AdManagerBannerAdListener');
+
+  Future<PairedInstance?> $$create(
+    $AdManagerBannerAdListener $instance, {
+    required bool $owner,
+  }) {
+    return createNewInstancePair(
+      $instance,
+      <Object?>[],
+      owner: $owner,
+    );
+  }
+}
+
+class $NativeAdListenerChannel extends TypeChannel<$NativeAdListener> {
+  $NativeAdListenerChannel(TypeChannelMessenger messenger)
+      : super(messenger, 'google_mobile_ads.NativeAdListener');
+
+  Future<PairedInstance?> $$create(
+    $NativeAdListener $instance, {
+    required bool $owner,
+  }) {
+    return createNewInstancePair(
+      $instance,
+      <Object?>[],
+      owner: $owner,
+    );
+  }
+}
+
+class $FullScreenContentCallbackChannel
+    extends TypeChannel<$FullScreenContentCallback> {
+  $FullScreenContentCallbackChannel(TypeChannelMessenger messenger)
+      : super(messenger, 'google_mobile_ads.FullScreenContentCallback');
+
+  Future<PairedInstance?> $$create(
+    $FullScreenContentCallback $instance, {
+    required bool $owner,
+  }) {
+    return createNewInstancePair(
+      $instance,
+      <Object?>[],
+      owner: $owner,
+    );
+  }
+}
+
+class $RewardedAdLoadCallbackChannel
+    extends TypeChannel<$RewardedAdLoadCallback> {
+  $RewardedAdLoadCallbackChannel(TypeChannelMessenger messenger)
+      : super(messenger, 'google_mobile_ads.RewardedAdLoadCallback');
+
+  Future<PairedInstance?> $$create(
+    $RewardedAdLoadCallback $instance, {
+    required bool $owner,
+  }) {
+    return createNewInstancePair(
+      $instance,
+      <Object?>[],
+      owner: $owner,
+    );
+  }
+}
+
+class $InterstitialAdLoadCallbackChannel
+    extends TypeChannel<$InterstitialAdLoadCallback> {
+  $InterstitialAdLoadCallbackChannel(TypeChannelMessenger messenger)
+      : super(messenger, 'google_mobile_ads.InterstitialAdLoadCallback');
+
+  Future<PairedInstance?> $$create(
+    $InterstitialAdLoadCallback $instance, {
+    required bool $owner,
+  }) {
+    return createNewInstancePair(
+      $instance,
+      <Object?>[],
+      owner: $owner,
+    );
+  }
+}
+
+class $AdManagerInterstitialAdLoadCallbackChannel
+    extends TypeChannel<$AdManagerInterstitialAdLoadCallback> {
+  $AdManagerInterstitialAdLoadCallbackChannel(TypeChannelMessenger messenger)
+      : super(
+            messenger, 'google_mobile_ads.AdManagerInterstitialAdLoadCallback');
+
+  Future<PairedInstance?> $$create(
+    $AdManagerInterstitialAdLoadCallback $instance, {
     required bool $owner,
   }) {
     return createNewInstancePair(
@@ -622,7 +740,7 @@ class $RewardedAdChannel extends TypeChannel<$RewardedAd> {
   Future<Object?> $load(
     String adUnitId,
     $AdRequest request,
-    $RewardedAdLoadCallback rewardedAdLoadCallback,
+    $RewardedAdLoadCallback adLoadCallback,
     $ServerSideVerificationOptions? serverSideVerificationOptions,
     $FullScreenContentCallback? fullScreenContentCallback,
   ) {
@@ -631,7 +749,7 @@ class $RewardedAdChannel extends TypeChannel<$RewardedAd> {
       <Object?>[
         adUnitId,
         request,
-        rewardedAdLoadCallback,
+        adLoadCallback,
         serverSideVerificationOptions,
         fullScreenContentCallback,
       ],
@@ -690,125 +808,6 @@ class $ServerSideVerificationOptionsChannel
         userId,
         customData,
       ],
-      owner: $owner,
-    );
-  }
-}
-
-class $AdManagerBannerAdListenerChannel
-    extends TypeChannel<$AdManagerBannerAdListener> {
-  $AdManagerBannerAdListenerChannel(TypeChannelMessenger messenger)
-      : super(messenger, 'google_mobile_ads.AdManagerBannerAdListener');
-
-  Future<PairedInstance?> $$create(
-    $AdManagerBannerAdListener $instance, {
-    required bool $owner,
-  }) {
-    return createNewInstancePair(
-      $instance,
-      <Object?>[],
-      owner: $owner,
-    );
-  }
-}
-
-class $NativeAdListenerChannel extends TypeChannel<$NativeAdListener> {
-  $NativeAdListenerChannel(TypeChannelMessenger messenger)
-      : super(messenger, 'google_mobile_ads.NativeAdListener');
-
-  Future<PairedInstance?> $$create(
-    $NativeAdListener $instance, {
-    required bool $owner,
-  }) {
-    return createNewInstancePair(
-      $instance,
-      <Object?>[],
-      owner: $owner,
-    );
-  }
-}
-
-class $FullScreenContentCallbackChannel
-    extends TypeChannel<$FullScreenContentCallback> {
-  $FullScreenContentCallbackChannel(TypeChannelMessenger messenger)
-      : super(messenger, 'google_mobile_ads.FullScreenContentCallback');
-
-  Future<PairedInstance?> $$create(
-    $FullScreenContentCallback $instance, {
-    required bool $owner,
-  }) {
-    return createNewInstancePair(
-      $instance,
-      <Object?>[],
-      owner: $owner,
-    );
-  }
-}
-
-class $FullScreenAdLoadCallbackChannel
-    extends TypeChannel<$FullScreenAdLoadCallback> {
-  $FullScreenAdLoadCallbackChannel(TypeChannelMessenger messenger)
-      : super(messenger, 'google_mobile_ads.FullScreenAdLoadCallback');
-
-  Future<PairedInstance?> $$create(
-    $FullScreenAdLoadCallback $instance, {
-    required bool $owner,
-  }) {
-    return createNewInstancePair(
-      $instance,
-      <Object?>[],
-      owner: $owner,
-    );
-  }
-}
-
-class $RewardedAdLoadCallbackChannel
-    extends TypeChannel<$RewardedAdLoadCallback> {
-  $RewardedAdLoadCallbackChannel(TypeChannelMessenger messenger)
-      : super(messenger, 'google_mobile_ads.RewardedAdLoadCallback');
-
-  Future<PairedInstance?> $$create(
-    $RewardedAdLoadCallback $instance, {
-    required bool $owner,
-  }) {
-    return createNewInstancePair(
-      $instance,
-      <Object?>[],
-      owner: $owner,
-    );
-  }
-}
-
-class $InterstitialAdLoadCallbackChannel
-    extends TypeChannel<$InterstitialAdLoadCallback> {
-  $InterstitialAdLoadCallbackChannel(TypeChannelMessenger messenger)
-      : super(messenger, 'google_mobile_ads.InterstitialAdLoadCallback');
-
-  Future<PairedInstance?> $$create(
-    $InterstitialAdLoadCallback $instance, {
-    required bool $owner,
-  }) {
-    return createNewInstancePair(
-      $instance,
-      <Object?>[],
-      owner: $owner,
-    );
-  }
-}
-
-class $AdManagerInterstitialAdLoadCallbackChannel
-    extends TypeChannel<$AdManagerInterstitialAdLoadCallback> {
-  $AdManagerInterstitialAdLoadCallbackChannel(TypeChannelMessenger messenger)
-      : super(
-            messenger, 'google_mobile_ads.AdManagerInterstitialAdLoadCallback');
-
-  Future<PairedInstance?> $$create(
-    $AdManagerInterstitialAdLoadCallback $instance, {
-    required bool $owner,
-  }) {
-    return createNewInstancePair(
-      $instance,
-      <Object?>[],
       owner: $owner,
     );
   }
@@ -1112,6 +1111,469 @@ class $BannerAdListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+    }
+
+    throw ArgumentError.value(
+      instance,
+      'instance',
+      'Unable to invoke method `$methodName` on',
+    );
+  }
+}
+
+class $AdManagerBannerAdListenerHandler
+    implements TypeChannelHandler<$AdManagerBannerAdListener> {
+  $AdManagerBannerAdListener $$create(
+    TypeChannelMessenger messenger,
+  ) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Object? invokeStaticMethod(
+    TypeChannelMessenger messenger,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+    }
+
+    throw ArgumentError.value(
+      methodName,
+      'methodName',
+      'Unable to invoke static method `$methodName`',
+    );
+  }
+
+  @override
+  $AdManagerBannerAdListener createInstance(
+    TypeChannelMessenger messenger,
+    List<Object?> arguments,
+  ) {
+    return $$create(
+      messenger,
+    );
+  }
+
+  @override
+  Object? invokeMethod(
+    TypeChannelMessenger messenger,
+    $AdManagerBannerAdListener instance,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+    }
+
+    throw ArgumentError.value(
+      instance,
+      'instance',
+      'Unable to invoke method `$methodName` on',
+    );
+  }
+}
+
+class $NativeAdListenerHandler
+    implements TypeChannelHandler<$NativeAdListener> {
+  $NativeAdListener $$create(
+    TypeChannelMessenger messenger,
+  ) {
+    throw UnimplementedError();
+  }
+
+  dynamic $onAdClicked(
+    $NativeAdListener $instance,
+  ) {
+    return $instance.onAdClicked();
+  }
+
+  @override
+  Object? invokeStaticMethod(
+    TypeChannelMessenger messenger,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+    }
+
+    throw ArgumentError.value(
+      methodName,
+      'methodName',
+      'Unable to invoke static method `$methodName`',
+    );
+  }
+
+  @override
+  $NativeAdListener createInstance(
+    TypeChannelMessenger messenger,
+    List<Object?> arguments,
+  ) {
+    return $$create(
+      messenger,
+    );
+  }
+
+  @override
+  Object? invokeMethod(
+    TypeChannelMessenger messenger,
+    $NativeAdListener instance,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+      case 'onAdClicked':
+        return $onAdClicked(
+          instance,
+        );
+    }
+
+    throw ArgumentError.value(
+      instance,
+      'instance',
+      'Unable to invoke method `$methodName` on',
+    );
+  }
+}
+
+class $FullScreenContentCallbackHandler
+    implements TypeChannelHandler<$FullScreenContentCallback> {
+  $FullScreenContentCallback $$create(
+    TypeChannelMessenger messenger,
+  ) {
+    throw UnimplementedError();
+  }
+
+  dynamic $onAdShowedFullScreenContent(
+    $FullScreenContentCallback $instance,
+  ) {
+    return $instance.onAdShowedFullScreenContent();
+  }
+
+  dynamic $onAdDismissedFullScreenContent(
+    $FullScreenContentCallback $instance,
+  ) {
+    return $instance.onAdDismissedFullScreenContent();
+  }
+
+  dynamic $onAdWillDismissFullScreenContent(
+    $FullScreenContentCallback $instance,
+  ) {
+    return $instance.onAdWillDismissFullScreenContent();
+  }
+
+  dynamic $onAdImpression(
+    $FullScreenContentCallback $instance,
+  ) {
+    return $instance.onAdImpression();
+  }
+
+  dynamic $onAdFailedToShowFullScreenContent(
+    $FullScreenContentCallback $instance,
+  ) {
+    return $instance.onAdFailedToShowFullScreenContent();
+  }
+
+  @override
+  Object? invokeStaticMethod(
+    TypeChannelMessenger messenger,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+    }
+
+    throw ArgumentError.value(
+      methodName,
+      'methodName',
+      'Unable to invoke static method `$methodName`',
+    );
+  }
+
+  @override
+  $FullScreenContentCallback createInstance(
+    TypeChannelMessenger messenger,
+    List<Object?> arguments,
+  ) {
+    return $$create(
+      messenger,
+    );
+  }
+
+  @override
+  Object? invokeMethod(
+    TypeChannelMessenger messenger,
+    $FullScreenContentCallback instance,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+      case 'onAdShowedFullScreenContent':
+        return $onAdShowedFullScreenContent(
+          instance,
+        );
+
+      case 'onAdDismissedFullScreenContent':
+        return $onAdDismissedFullScreenContent(
+          instance,
+        );
+
+      case 'onAdWillDismissFullScreenContent':
+        return $onAdWillDismissFullScreenContent(
+          instance,
+        );
+
+      case 'onAdImpression':
+        return $onAdImpression(
+          instance,
+        );
+
+      case 'onAdFailedToShowFullScreenContent':
+        return $onAdFailedToShowFullScreenContent(
+          instance,
+        );
+    }
+
+    throw ArgumentError.value(
+      instance,
+      'instance',
+      'Unable to invoke method `$methodName` on',
+    );
+  }
+}
+
+class $RewardedAdLoadCallbackHandler
+    implements TypeChannelHandler<$RewardedAdLoadCallback> {
+  $RewardedAdLoadCallback $$create(
+    TypeChannelMessenger messenger,
+  ) {
+    throw UnimplementedError();
+  }
+
+  dynamic $onAdLoaded(
+    $RewardedAdLoadCallback $instance,
+    $RewardedAd ad,
+  ) {
+    return $instance.onAdLoaded(
+      ad,
+    );
+  }
+
+  dynamic $onAdFailedToLoad(
+    $RewardedAdLoadCallback $instance,
+    $LoadAdError error,
+  ) {
+    return $instance.onAdFailedToLoad(
+      error,
+    );
+  }
+
+  @override
+  Object? invokeStaticMethod(
+    TypeChannelMessenger messenger,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+    }
+
+    throw ArgumentError.value(
+      methodName,
+      'methodName',
+      'Unable to invoke static method `$methodName`',
+    );
+  }
+
+  @override
+  $RewardedAdLoadCallback createInstance(
+    TypeChannelMessenger messenger,
+    List<Object?> arguments,
+  ) {
+    return $$create(
+      messenger,
+    );
+  }
+
+  @override
+  Object? invokeMethod(
+    TypeChannelMessenger messenger,
+    $RewardedAdLoadCallback instance,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+      case 'onAdLoaded':
+        return $onAdLoaded(
+          instance,
+          arguments[0] as $RewardedAd,
+        );
+
+      case 'onAdFailedToLoad':
+        return $onAdFailedToLoad(
+          instance,
+          arguments[0] as $LoadAdError,
+        );
+    }
+
+    throw ArgumentError.value(
+      instance,
+      'instance',
+      'Unable to invoke method `$methodName` on',
+    );
+  }
+}
+
+class $InterstitialAdLoadCallbackHandler
+    implements TypeChannelHandler<$InterstitialAdLoadCallback> {
+  $InterstitialAdLoadCallback $$create(
+    TypeChannelMessenger messenger,
+  ) {
+    throw UnimplementedError();
+  }
+
+  dynamic $onAdLoaded(
+    $InterstitialAdLoadCallback $instance,
+    $InterstitialAd ad,
+  ) {
+    return $instance.onAdLoaded(
+      ad,
+    );
+  }
+
+  dynamic $onAdFailedToLoad(
+    $InterstitialAdLoadCallback $instance,
+    $LoadAdError error,
+  ) {
+    return $instance.onAdFailedToLoad(
+      error,
+    );
+  }
+
+  @override
+  Object? invokeStaticMethod(
+    TypeChannelMessenger messenger,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+    }
+
+    throw ArgumentError.value(
+      methodName,
+      'methodName',
+      'Unable to invoke static method `$methodName`',
+    );
+  }
+
+  @override
+  $InterstitialAdLoadCallback createInstance(
+    TypeChannelMessenger messenger,
+    List<Object?> arguments,
+  ) {
+    return $$create(
+      messenger,
+    );
+  }
+
+  @override
+  Object? invokeMethod(
+    TypeChannelMessenger messenger,
+    $InterstitialAdLoadCallback instance,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+      case 'onAdLoaded':
+        return $onAdLoaded(
+          instance,
+          arguments[0] as $InterstitialAd,
+        );
+
+      case 'onAdFailedToLoad':
+        return $onAdFailedToLoad(
+          instance,
+          arguments[0] as $LoadAdError,
+        );
+    }
+
+    throw ArgumentError.value(
+      instance,
+      'instance',
+      'Unable to invoke method `$methodName` on',
+    );
+  }
+}
+
+class $AdManagerInterstitialAdLoadCallbackHandler
+    implements TypeChannelHandler<$AdManagerInterstitialAdLoadCallback> {
+  $AdManagerInterstitialAdLoadCallback $$create(
+    TypeChannelMessenger messenger,
+  ) {
+    throw UnimplementedError();
+  }
+
+  dynamic $onAdLoaded(
+    $AdManagerInterstitialAdLoadCallback $instance,
+    $AdManagerInterstitialAd ad,
+  ) {
+    return $instance.onAdLoaded(
+      ad,
+    );
+  }
+
+  dynamic $onAdFailedToLoad(
+    $AdManagerInterstitialAdLoadCallback $instance,
+    $LoadAdError error,
+  ) {
+    return $instance.onAdFailedToLoad(
+      error,
+    );
+  }
+
+  @override
+  Object? invokeStaticMethod(
+    TypeChannelMessenger messenger,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+    }
+
+    throw ArgumentError.value(
+      methodName,
+      'methodName',
+      'Unable to invoke static method `$methodName`',
+    );
+  }
+
+  @override
+  $AdManagerInterstitialAdLoadCallback createInstance(
+    TypeChannelMessenger messenger,
+    List<Object?> arguments,
+  ) {
+    return $$create(
+      messenger,
+    );
+  }
+
+  @override
+  Object? invokeMethod(
+    TypeChannelMessenger messenger,
+    $AdManagerInterstitialAdLoadCallback instance,
+    String methodName,
+    List<Object?> arguments,
+  ) {
+    switch (methodName) {
+      case 'onAdLoaded':
+        return $onAdLoaded(
+          instance,
+          arguments[0] as $AdManagerInterstitialAd,
+        );
+
+      case 'onAdFailedToLoad':
+        return $onAdFailedToLoad(
+          instance,
+          arguments[0] as $LoadAdError,
+        );
     }
 
     throw ArgumentError.value(
@@ -1962,459 +2424,6 @@ class $ServerSideVerificationOptionsHandler
   }
 }
 
-class $AdManagerBannerAdListenerHandler
-    implements TypeChannelHandler<$AdManagerBannerAdListener> {
-  $AdManagerBannerAdListener $$create(
-    TypeChannelMessenger messenger,
-  ) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Object? invokeStaticMethod(
-    TypeChannelMessenger messenger,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-    }
-
-    throw ArgumentError.value(
-      methodName,
-      'methodName',
-      'Unable to invoke static method `$methodName`',
-    );
-  }
-
-  @override
-  $AdManagerBannerAdListener createInstance(
-    TypeChannelMessenger messenger,
-    List<Object?> arguments,
-  ) {
-    return $$create(
-      messenger,
-    );
-  }
-
-  @override
-  Object? invokeMethod(
-    TypeChannelMessenger messenger,
-    $AdManagerBannerAdListener instance,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-    }
-
-    throw ArgumentError.value(
-      instance,
-      'instance',
-      'Unable to invoke method `$methodName` on',
-    );
-  }
-}
-
-class $NativeAdListenerHandler
-    implements TypeChannelHandler<$NativeAdListener> {
-  $NativeAdListener $$create(
-    TypeChannelMessenger messenger,
-  ) {
-    throw UnimplementedError();
-  }
-
-  dynamic $onAdClicked(
-    $NativeAdListener $instance,
-  ) {
-    return $instance.onAdClicked();
-  }
-
-  @override
-  Object? invokeStaticMethod(
-    TypeChannelMessenger messenger,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-    }
-
-    throw ArgumentError.value(
-      methodName,
-      'methodName',
-      'Unable to invoke static method `$methodName`',
-    );
-  }
-
-  @override
-  $NativeAdListener createInstance(
-    TypeChannelMessenger messenger,
-    List<Object?> arguments,
-  ) {
-    return $$create(
-      messenger,
-    );
-  }
-
-  @override
-  Object? invokeMethod(
-    TypeChannelMessenger messenger,
-    $NativeAdListener instance,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-      case 'onAdClicked':
-        return $onAdClicked(
-          instance,
-        );
-    }
-
-    throw ArgumentError.value(
-      instance,
-      'instance',
-      'Unable to invoke method `$methodName` on',
-    );
-  }
-}
-
-class $FullScreenContentCallbackHandler
-    implements TypeChannelHandler<$FullScreenContentCallback> {
-  $FullScreenContentCallback $$create(
-    TypeChannelMessenger messenger,
-  ) {
-    throw UnimplementedError();
-  }
-
-  dynamic $onAdShowedFullScreenContent(
-    $FullScreenContentCallback $instance,
-  ) {
-    return $instance.onAdShowedFullScreenContent();
-  }
-
-  dynamic $onAdDismissedFullScreenContent(
-    $FullScreenContentCallback $instance,
-  ) {
-    return $instance.onAdDismissedFullScreenContent();
-  }
-
-  dynamic $onAdWillDismissFullScreenContent(
-    $FullScreenContentCallback $instance,
-  ) {
-    return $instance.onAdWillDismissFullScreenContent();
-  }
-
-  dynamic $onAdImpression(
-    $FullScreenContentCallback $instance,
-  ) {
-    return $instance.onAdImpression();
-  }
-
-  dynamic $onAdFailedToShowFullScreenContent(
-    $FullScreenContentCallback $instance,
-  ) {
-    return $instance.onAdFailedToShowFullScreenContent();
-  }
-
-  @override
-  Object? invokeStaticMethod(
-    TypeChannelMessenger messenger,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-    }
-
-    throw ArgumentError.value(
-      methodName,
-      'methodName',
-      'Unable to invoke static method `$methodName`',
-    );
-  }
-
-  @override
-  $FullScreenContentCallback createInstance(
-    TypeChannelMessenger messenger,
-    List<Object?> arguments,
-  ) {
-    return $$create(
-      messenger,
-    );
-  }
-
-  @override
-  Object? invokeMethod(
-    TypeChannelMessenger messenger,
-    $FullScreenContentCallback instance,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-      case 'onAdShowedFullScreenContent':
-        return $onAdShowedFullScreenContent(
-          instance,
-        );
-
-      case 'onAdDismissedFullScreenContent':
-        return $onAdDismissedFullScreenContent(
-          instance,
-        );
-
-      case 'onAdWillDismissFullScreenContent':
-        return $onAdWillDismissFullScreenContent(
-          instance,
-        );
-
-      case 'onAdImpression':
-        return $onAdImpression(
-          instance,
-        );
-
-      case 'onAdFailedToShowFullScreenContent':
-        return $onAdFailedToShowFullScreenContent(
-          instance,
-        );
-    }
-
-    throw ArgumentError.value(
-      instance,
-      'instance',
-      'Unable to invoke method `$methodName` on',
-    );
-  }
-}
-
-class $FullScreenAdLoadCallbackHandler
-    implements TypeChannelHandler<$FullScreenAdLoadCallback> {
-  $FullScreenAdLoadCallback $$create(
-    TypeChannelMessenger messenger,
-  ) {
-    throw UnimplementedError();
-  }
-
-  dynamic $onAdLoaded(
-    $FullScreenAdLoadCallback $instance,
-  ) {
-    return $instance.onAdLoaded();
-  }
-
-  dynamic $onAdFailedToLoad(
-    $FullScreenAdLoadCallback $instance,
-    $LoadAdError error,
-  ) {
-    return $instance.onAdFailedToLoad(
-      error,
-    );
-  }
-
-  @override
-  Object? invokeStaticMethod(
-    TypeChannelMessenger messenger,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-    }
-
-    throw ArgumentError.value(
-      methodName,
-      'methodName',
-      'Unable to invoke static method `$methodName`',
-    );
-  }
-
-  @override
-  $FullScreenAdLoadCallback createInstance(
-    TypeChannelMessenger messenger,
-    List<Object?> arguments,
-  ) {
-    return $$create(
-      messenger,
-    );
-  }
-
-  @override
-  Object? invokeMethod(
-    TypeChannelMessenger messenger,
-    $FullScreenAdLoadCallback instance,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-      case 'onAdLoaded':
-        return $onAdLoaded(
-          instance,
-        );
-
-      case 'onAdFailedToLoad':
-        return $onAdFailedToLoad(
-          instance,
-          arguments[0] as $LoadAdError,
-        );
-    }
-
-    throw ArgumentError.value(
-      instance,
-      'instance',
-      'Unable to invoke method `$methodName` on',
-    );
-  }
-}
-
-class $RewardedAdLoadCallbackHandler
-    implements TypeChannelHandler<$RewardedAdLoadCallback> {
-  $RewardedAdLoadCallback $$create(
-    TypeChannelMessenger messenger,
-  ) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Object? invokeStaticMethod(
-    TypeChannelMessenger messenger,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-    }
-
-    throw ArgumentError.value(
-      methodName,
-      'methodName',
-      'Unable to invoke static method `$methodName`',
-    );
-  }
-
-  @override
-  $RewardedAdLoadCallback createInstance(
-    TypeChannelMessenger messenger,
-    List<Object?> arguments,
-  ) {
-    return $$create(
-      messenger,
-    );
-  }
-
-  @override
-  Object? invokeMethod(
-    TypeChannelMessenger messenger,
-    $RewardedAdLoadCallback instance,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-    }
-
-    throw ArgumentError.value(
-      instance,
-      'instance',
-      'Unable to invoke method `$methodName` on',
-    );
-  }
-}
-
-class $InterstitialAdLoadCallbackHandler
-    implements TypeChannelHandler<$InterstitialAdLoadCallback> {
-  $InterstitialAdLoadCallback $$create(
-    TypeChannelMessenger messenger,
-  ) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Object? invokeStaticMethod(
-    TypeChannelMessenger messenger,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-    }
-
-    throw ArgumentError.value(
-      methodName,
-      'methodName',
-      'Unable to invoke static method `$methodName`',
-    );
-  }
-
-  @override
-  $InterstitialAdLoadCallback createInstance(
-    TypeChannelMessenger messenger,
-    List<Object?> arguments,
-  ) {
-    return $$create(
-      messenger,
-    );
-  }
-
-  @override
-  Object? invokeMethod(
-    TypeChannelMessenger messenger,
-    $InterstitialAdLoadCallback instance,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-    }
-
-    throw ArgumentError.value(
-      instance,
-      'instance',
-      'Unable to invoke method `$methodName` on',
-    );
-  }
-}
-
-class $AdManagerInterstitialAdLoadCallbackHandler
-    implements TypeChannelHandler<$AdManagerInterstitialAdLoadCallback> {
-  $AdManagerInterstitialAdLoadCallback $$create(
-    TypeChannelMessenger messenger,
-  ) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Object? invokeStaticMethod(
-    TypeChannelMessenger messenger,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-    }
-
-    throw ArgumentError.value(
-      methodName,
-      'methodName',
-      'Unable to invoke static method `$methodName`',
-    );
-  }
-
-  @override
-  $AdManagerInterstitialAdLoadCallback createInstance(
-    TypeChannelMessenger messenger,
-    List<Object?> arguments,
-  ) {
-    return $$create(
-      messenger,
-    );
-  }
-
-  @override
-  Object? invokeMethod(
-    TypeChannelMessenger messenger,
-    $AdManagerInterstitialAdLoadCallback instance,
-    String methodName,
-    List<Object?> arguments,
-  ) {
-    switch (methodName) {
-    }
-
-    throw ArgumentError.value(
-      instance,
-      'instance',
-      'Unable to invoke method `$methodName` on',
-    );
-  }
-}
-
 class $LibraryImplementations {
   $LibraryImplementations(this.messenger);
 
@@ -2439,6 +2448,38 @@ class $LibraryImplementations {
       $BannerAdListenerChannel(messenger);
   $BannerAdListenerHandler get handlerBannerAdListener =>
       $BannerAdListenerHandler();
+
+  $AdManagerBannerAdListenerChannel get channelAdManagerBannerAdListener =>
+      $AdManagerBannerAdListenerChannel(messenger);
+  $AdManagerBannerAdListenerHandler get handlerAdManagerBannerAdListener =>
+      $AdManagerBannerAdListenerHandler();
+
+  $NativeAdListenerChannel get channelNativeAdListener =>
+      $NativeAdListenerChannel(messenger);
+  $NativeAdListenerHandler get handlerNativeAdListener =>
+      $NativeAdListenerHandler();
+
+  $FullScreenContentCallbackChannel get channelFullScreenContentCallback =>
+      $FullScreenContentCallbackChannel(messenger);
+  $FullScreenContentCallbackHandler get handlerFullScreenContentCallback =>
+      $FullScreenContentCallbackHandler();
+
+  $RewardedAdLoadCallbackChannel get channelRewardedAdLoadCallback =>
+      $RewardedAdLoadCallbackChannel(messenger);
+  $RewardedAdLoadCallbackHandler get handlerRewardedAdLoadCallback =>
+      $RewardedAdLoadCallbackHandler();
+
+  $InterstitialAdLoadCallbackChannel get channelInterstitialAdLoadCallback =>
+      $InterstitialAdLoadCallbackChannel(messenger);
+  $InterstitialAdLoadCallbackHandler get handlerInterstitialAdLoadCallback =>
+      $InterstitialAdLoadCallbackHandler();
+
+  $AdManagerInterstitialAdLoadCallbackChannel
+      get channelAdManagerInterstitialAdLoadCallback =>
+          $AdManagerInterstitialAdLoadCallbackChannel(messenger);
+  $AdManagerInterstitialAdLoadCallbackHandler
+      get handlerAdManagerInterstitialAdLoadCallback =>
+          $AdManagerInterstitialAdLoadCallbackHandler();
 
   $AdErrorChannel get channelAdError => $AdErrorChannel(messenger);
   $AdErrorHandler get handlerAdError => $AdErrorHandler();
@@ -2498,43 +2539,6 @@ class $LibraryImplementations {
   $ServerSideVerificationOptionsHandler
       get handlerServerSideVerificationOptions =>
           $ServerSideVerificationOptionsHandler();
-
-  $AdManagerBannerAdListenerChannel get channelAdManagerBannerAdListener =>
-      $AdManagerBannerAdListenerChannel(messenger);
-  $AdManagerBannerAdListenerHandler get handlerAdManagerBannerAdListener =>
-      $AdManagerBannerAdListenerHandler();
-
-  $NativeAdListenerChannel get channelNativeAdListener =>
-      $NativeAdListenerChannel(messenger);
-  $NativeAdListenerHandler get handlerNativeAdListener =>
-      $NativeAdListenerHandler();
-
-  $FullScreenContentCallbackChannel get channelFullScreenContentCallback =>
-      $FullScreenContentCallbackChannel(messenger);
-  $FullScreenContentCallbackHandler get handlerFullScreenContentCallback =>
-      $FullScreenContentCallbackHandler();
-
-  $FullScreenAdLoadCallbackChannel get channelFullScreenAdLoadCallback =>
-      $FullScreenAdLoadCallbackChannel(messenger);
-  $FullScreenAdLoadCallbackHandler get handlerFullScreenAdLoadCallback =>
-      $FullScreenAdLoadCallbackHandler();
-
-  $RewardedAdLoadCallbackChannel get channelRewardedAdLoadCallback =>
-      $RewardedAdLoadCallbackChannel(messenger);
-  $RewardedAdLoadCallbackHandler get handlerRewardedAdLoadCallback =>
-      $RewardedAdLoadCallbackHandler();
-
-  $InterstitialAdLoadCallbackChannel get channelInterstitialAdLoadCallback =>
-      $InterstitialAdLoadCallbackChannel(messenger);
-  $InterstitialAdLoadCallbackHandler get handlerInterstitialAdLoadCallback =>
-      $InterstitialAdLoadCallbackHandler();
-
-  $AdManagerInterstitialAdLoadCallbackChannel
-      get channelAdManagerInterstitialAdLoadCallback =>
-          $AdManagerInterstitialAdLoadCallbackChannel(messenger);
-  $AdManagerInterstitialAdLoadCallbackHandler
-      get handlerAdManagerInterstitialAdLoadCallback =>
-          $AdManagerInterstitialAdLoadCallbackHandler();
 }
 
 class $ChannelRegistrar {
@@ -2557,6 +2561,30 @@ class $ChannelRegistrar {
 
     implementations.channelBannerAdListener.setHandler(
       implementations.handlerBannerAdListener,
+    );
+
+    implementations.channelAdManagerBannerAdListener.setHandler(
+      implementations.handlerAdManagerBannerAdListener,
+    );
+
+    implementations.channelNativeAdListener.setHandler(
+      implementations.handlerNativeAdListener,
+    );
+
+    implementations.channelFullScreenContentCallback.setHandler(
+      implementations.handlerFullScreenContentCallback,
+    );
+
+    implementations.channelRewardedAdLoadCallback.setHandler(
+      implementations.handlerRewardedAdLoadCallback,
+    );
+
+    implementations.channelInterstitialAdLoadCallback.setHandler(
+      implementations.handlerInterstitialAdLoadCallback,
+    );
+
+    implementations.channelAdManagerInterstitialAdLoadCallback.setHandler(
+      implementations.handlerAdManagerInterstitialAdLoadCallback,
     );
 
     implementations.channelAdError.setHandler(
@@ -2618,34 +2646,6 @@ class $ChannelRegistrar {
     implementations.channelServerSideVerificationOptions.setHandler(
       implementations.handlerServerSideVerificationOptions,
     );
-
-    implementations.channelAdManagerBannerAdListener.setHandler(
-      implementations.handlerAdManagerBannerAdListener,
-    );
-
-    implementations.channelNativeAdListener.setHandler(
-      implementations.handlerNativeAdListener,
-    );
-
-    implementations.channelFullScreenContentCallback.setHandler(
-      implementations.handlerFullScreenContentCallback,
-    );
-
-    implementations.channelFullScreenAdLoadCallback.setHandler(
-      implementations.handlerFullScreenAdLoadCallback,
-    );
-
-    implementations.channelRewardedAdLoadCallback.setHandler(
-      implementations.handlerRewardedAdLoadCallback,
-    );
-
-    implementations.channelInterstitialAdLoadCallback.setHandler(
-      implementations.handlerInterstitialAdLoadCallback,
-    );
-
-    implementations.channelAdManagerInterstitialAdLoadCallback.setHandler(
-      implementations.handlerAdManagerInterstitialAdLoadCallback,
-    );
   }
 
   void unregisterHandlers() {
@@ -2656,6 +2656,18 @@ class $ChannelRegistrar {
     implementations.channelAdWithViewListener.removeHandler();
 
     implementations.channelBannerAdListener.removeHandler();
+
+    implementations.channelAdManagerBannerAdListener.removeHandler();
+
+    implementations.channelNativeAdListener.removeHandler();
+
+    implementations.channelFullScreenContentCallback.removeHandler();
+
+    implementations.channelRewardedAdLoadCallback.removeHandler();
+
+    implementations.channelInterstitialAdLoadCallback.removeHandler();
+
+    implementations.channelAdManagerInterstitialAdLoadCallback.removeHandler();
 
     implementations.channelAdError.removeHandler();
 
@@ -2686,19 +2698,5 @@ class $ChannelRegistrar {
     implementations.channelRewardItem.removeHandler();
 
     implementations.channelServerSideVerificationOptions.removeHandler();
-
-    implementations.channelAdManagerBannerAdListener.removeHandler();
-
-    implementations.channelNativeAdListener.removeHandler();
-
-    implementations.channelFullScreenContentCallback.removeHandler();
-
-    implementations.channelFullScreenAdLoadCallback.removeHandler();
-
-    implementations.channelRewardedAdLoadCallback.removeHandler();
-
-    implementations.channelInterstitialAdLoadCallback.removeHandler();
-
-    implementations.channelAdManagerInterstitialAdLoadCallback.removeHandler();
   }
 }
