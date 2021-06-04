@@ -5,6 +5,8 @@ import android.os.Bundle;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
 
+import io.flutter.plugins.googlemobileads.Constants;
+
 public class AdRequestProxy implements AdContainersChannelLibrary.$AdRequest {
   public final AdRequest.Builder adRequest;
 
@@ -14,6 +16,7 @@ public class AdRequestProxy implements AdContainersChannelLibrary.$AdRequest {
 
   public AdRequestProxy(AdRequest.Builder adRequest) {
     this.adRequest = adRequest;
+    this.adRequest.setRequestAgent(Constants.REQUEST_AGENT_PREFIX_VERSIONED);
   }
 
   @Override

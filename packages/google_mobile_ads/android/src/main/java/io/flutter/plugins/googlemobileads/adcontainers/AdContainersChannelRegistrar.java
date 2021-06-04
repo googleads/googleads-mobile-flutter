@@ -3,6 +3,7 @@ package io.flutter.plugins.googlemobileads.adcontainers;
 import android.content.Context;
 
 import java.util.List;
+import java.util.Map;
 
 import github.penguin.reference.reference.TypeChannelMessenger;
 
@@ -52,6 +53,16 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     @Override
     public AdManagerBannerAdHandler getHandlerAdManagerBannerAd() {
       return new AdManagerBannerAdHandler(this);
+    }
+
+    @Override
+    public NativeAdListenerHandler getHandlerNativeAdListener() {
+      return new NativeAdListenerHandler(this);
+    }
+
+    @Override
+    public NativeAdHandler getHandlerNativeAd() {
+      return new NativeAdHandler(this);
     }
   }
 
@@ -141,6 +152,32 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     @Override
     public AdManagerBannerAdProxy $$create(TypeChannelMessenger messenger, List<AdContainersChannelLibrary.$AdSize> sizes, String adUnitId, AdContainersChannelLibrary.$AdManagerBannerAdListener listener, AdContainersChannelLibrary.$AdManagerAdRequest request) throws Exception {
       return new AdManagerBannerAdProxy(sizes, adUnitId, (AdManagerBannerAdListenerProxy) listener, (AdManagerAdRequestProxy) request, implementations);
+    }
+  }
+  
+  public static class NativeAdListenerHandler extends AdContainersChannelLibrary.$NativeAdListenerHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public NativeAdListenerHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public NativeAdListenerProxy $$create(TypeChannelMessenger messenger) {
+      return new NativeAdListenerProxy(implementations);
+    }
+  }
+  
+  public static class NativeAdHandler extends AdContainersChannelLibrary.$NativeAdHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public NativeAdHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public NativeAdProxy $$create(TypeChannelMessenger messenger, String adUnitId, String factoryId, AdContainersChannelLibrary.$NativeAdListener listener, AdContainersChannelLibrary.$AdRequest request, Map<String, Object> customOptions) {
+      return new NativeAdProxy(adUnitId, factoryId, (NativeAdListenerProxy) listener, (AdRequestProxy) request, customOptions, implementations);
     }
   }
 }
