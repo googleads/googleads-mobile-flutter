@@ -16,4 +16,5 @@ package io.flutter.plugins.googlemobileads;
 
 import io.flutter.plugin.platform.PlatformView;
 
+/** The platform view type used in this plugin. */
 public interface FlutterDestroyablePlatformView extends PlatformView, FlutterDestroyableAd {}
