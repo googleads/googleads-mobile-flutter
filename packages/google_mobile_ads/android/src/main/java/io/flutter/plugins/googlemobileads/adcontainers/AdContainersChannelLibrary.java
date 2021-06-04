@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import github.penguin.reference.async.Completable;
 import github.penguin.reference.reference.PairedInstance;
@@ -500,7 +501,7 @@ public class AdContainersChannelLibrary {
       super(messenger, "google_mobile_ads.AdapterResponseInfo");
     }
 
-    public Completable<PairedInstance> $$create($AdapterResponseInfo $instance, boolean $owner,String adapterClassName,Integer latencyMillis,String description,String credentials,$AdError adError) {
+    public Completable<PairedInstance> $$create($AdapterResponseInfo $instance, boolean $owner,String adapterClassName,Long latencyMillis,String description,String credentials,$AdError adError) {
       return createNewInstancePair($instance, Arrays.<Object>asList(adapterClassName,latencyMillis,description,credentials,adError), $owner);
     }
 
@@ -1729,7 +1730,7 @@ public class AdContainersChannelLibrary {
   }
   
   public static class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
-    public $NativeAd $$create(TypeChannelMessenger messenger,String adUnitId,String factoryId,$NativeAdListener listener,$AdRequest request,Map<String,Object> customOptions)
+    public $NativeAd $$create(TypeChannelMessenger messenger,String adUnitId,String factoryId,$NativeAdListener listener,$AdRequest request, Map<String,Object> customOptions)
         throws Exception {
       throw new UnsupportedOperationException();
     }
