@@ -2,6 +2,8 @@ package io.flutter.plugins.googlemobileads.adcontainers;
 
 import android.content.Context;
 
+import java.util.List;
+
 import github.penguin.reference.reference.TypeChannelMessenger;
 
 public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$ChannelRegistrar {
@@ -40,6 +42,16 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     @Override
     public BannerAdHandler getHandlerBannerAd() {
       return new BannerAdHandler(this);
+    }
+
+    @Override
+    public AdManagerBannerAdListenerHandler getHandlerAdManagerBannerAdListener() {
+      return new AdManagerBannerAdListenerHandler(this);
+    }
+
+    @Override
+    public AdManagerBannerAdHandler getHandlerAdManagerBannerAd() {
+      return new AdManagerBannerAdHandler(this);
     }
   }
 
@@ -103,6 +115,32 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     @Override
     public BannerAdProxy $$create(TypeChannelMessenger messenger, AdContainersChannelLibrary.$AdSize size, String adUnitId, AdContainersChannelLibrary.$BannerAdListener listener, AdContainersChannelLibrary.$AdRequest request) {
       return new BannerAdProxy((AdSizeProxy) size, adUnitId, (BannerAdListenerProxy) listener, (AdRequestProxy) request, implementations);
+    }
+  }
+  
+  public static class AdManagerBannerAdListenerHandler extends AdContainersChannelLibrary.$AdManagerBannerAdListenerHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public AdManagerBannerAdListenerHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+    
+    @Override
+    public AdManagerBannerAdListenerProxy $$create(TypeChannelMessenger messenger) {
+      return new AdManagerBannerAdListenerProxy(implementations);
+    }
+  }
+
+  public static class AdManagerBannerAdHandler extends AdContainersChannelLibrary.$AdManagerBannerAdHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public AdManagerBannerAdHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public AdManagerBannerAdProxy $$create(TypeChannelMessenger messenger, List<AdContainersChannelLibrary.$AdSize> sizes, String adUnitId, AdContainersChannelLibrary.$AdManagerBannerAdListener listener, AdContainersChannelLibrary.$AdManagerAdRequest request) throws Exception {
+      return new AdManagerBannerAdProxy(sizes, adUnitId, (AdManagerBannerAdListenerProxy) listener, (AdManagerAdRequestProxy) request, implementations);
     }
   }
 }

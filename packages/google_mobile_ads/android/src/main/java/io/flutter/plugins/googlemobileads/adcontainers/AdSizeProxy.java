@@ -4,8 +4,19 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.ads.AdSize;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AdSizeProxy implements AdContainersChannelLibrary.$AdSize {
   public final AdSize adSize;
+  
+  public static List<AdSize> fromList(List<AdContainersChannelLibrary.$AdSize> adSizes) {
+    final List<AdSize> newSizeList = new ArrayList<>();
+    for (AdContainersChannelLibrary.$AdSize adSize : adSizes) {
+      newSizeList.add(((AdSizeProxy)adSize).adSize);
+    }
+    return newSizeList;
+  }
 
   public static AdSizeProxy getPortraitAnchoredAdaptiveBannerAdSize(Integer width, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
     return new AdSizeProxy(AdSize.getPortraitAnchoredAdaptiveBannerAdSize(implementations.context, width), implementations);
