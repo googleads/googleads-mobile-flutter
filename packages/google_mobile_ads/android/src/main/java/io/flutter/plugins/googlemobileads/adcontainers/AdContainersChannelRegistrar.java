@@ -31,6 +31,16 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     public AdSizeHandler getHandlerAdSize() {
       return new AdSizeHandler(this);
     }
+
+    @Override
+    public BannerAdListenerHandler getHandlerBannerAdListener() {
+      return new BannerAdListenerHandler(this);
+    }
+
+    @Override
+    public BannerAdHandler getHandlerBannerAd() {
+      return new BannerAdHandler(this);
+    }
   }
 
   public static class AdRequestHandler extends AdContainersChannelLibrary.$AdRequestHandler {
@@ -67,6 +77,32 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     @Override
     public AdSizeProxy $getPortraitAnchoredAdaptiveBannerAdSize(TypeChannelMessenger messenger, Integer width) {
       return AdSizeProxy.getPortraitAnchoredAdaptiveBannerAdSize(width, implementations);
+    }
+  }
+
+  public static class BannerAdListenerHandler extends AdContainersChannelLibrary.$BannerAdListenerHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public BannerAdListenerHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public BannerAdListenerProxy $$create(TypeChannelMessenger messenger) throws Exception {
+      return new BannerAdListenerProxy(implementations);
+    }
+  }
+
+  public static class BannerAdHandler extends AdContainersChannelLibrary.$BannerAdHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public BannerAdHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public BannerAdProxy $$create(TypeChannelMessenger messenger, AdContainersChannelLibrary.$AdSize size, String adUnitId, AdContainersChannelLibrary.$BannerAdListener listener, AdContainersChannelLibrary.$AdRequest request) {
+      return new BannerAdProxy((AdSizeProxy) size, adUnitId, (BannerAdListenerProxy) listener, (AdRequestProxy) request, implementations);
     }
   }
 }
