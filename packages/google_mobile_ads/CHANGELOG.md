@@ -1,3 +1,6 @@
+## 0.13.0+1
+* Fixes a crash where [PlatformView.getView() returns null](https://github.com/googleads/googleads-mobile-flutter/issues/46)
+
 ## 0.13.0
 
 * Updates GMA Android and iOS dependencies to 20.1.0 and 8.5.0, respectively.
