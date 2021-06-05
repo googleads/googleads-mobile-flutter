@@ -23,7 +23,7 @@ public class NativeAdProxy implements AdContainersChannelLibrary.$NativeAd, Plat
                        String factoryId,
                        NativeAdListenerProxy listener,
                        AdRequestProxy request, Map<String, Object> customOptions, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
-    this(new AdLoader.Builder(implementations.context, adUnitId), factoryId, listener, request, customOptions, implementations);
+    this(new AdLoader.Builder(implementations.activity, adUnitId), factoryId, listener, request, customOptions, implementations);
   }
 
   public NativeAdProxy(AdLoader.Builder nativeAd,

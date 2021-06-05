@@ -14,7 +14,7 @@ public class AdManagerBannerAdProxy implements AdContainersChannelLibrary.$AdMan
   private final AdManagerAdRequestProxy request;
 
   public AdManagerBannerAdProxy(List<AdContainersChannelLibrary.$AdSize> sizes, String adUnitId, AdManagerBannerAdListenerProxy listener, AdManagerAdRequestProxy request, AppEventListenerProxy appEventListener, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
-    this(new AdManagerAdView(implementations.context), sizes, adUnitId, listener, request, appEventListener);
+    this(new AdManagerAdView(implementations.activity), sizes, adUnitId, listener, request, appEventListener);
   }
 
   public AdManagerBannerAdProxy(AdManagerAdView adManagerAdView, List<AdContainersChannelLibrary.$AdSize> sizes, String adUnitId, AdManagerBannerAdListenerProxy listener, AdManagerAdRequestProxy request, AppEventListenerProxy appEventListener) {

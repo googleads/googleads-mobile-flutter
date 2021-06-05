@@ -15,4 +15,10 @@ public class AppEventListenerProxy implements AppEventListener, AdContainersChan
   public void onAppEvent(@NonNull String name, @NonNull String data) {
     implementations.getChannelAppEventListener().$onAppEvent(this, name, data);
   }
+
+  @Override
+  protected void finalize() throws Throwable {
+    implementations.getChannelAppEventListener().disposeInstancePair(this);
+    super.finalize();
+  }
 }

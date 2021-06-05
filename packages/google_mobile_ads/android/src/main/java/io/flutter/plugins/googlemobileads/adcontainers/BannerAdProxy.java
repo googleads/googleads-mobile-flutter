@@ -11,7 +11,7 @@ public class BannerAdProxy implements AdContainersChannelLibrary.$BannerAd, Plat
   private final AdRequestProxy request;
   
   public BannerAdProxy(AdSizeProxy size, String adUnitId, BannerAdListenerProxy listener, AdRequestProxy request, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
-    this(new AdView(implementations.context), size, adUnitId, listener, request);
+    this(new AdView(implementations.activity), size, adUnitId, listener, request);
   }
 
   public BannerAdProxy(AdView bannerAd, AdSizeProxy size, String adUnitId, BannerAdListenerProxy listener, AdRequestProxy request) {

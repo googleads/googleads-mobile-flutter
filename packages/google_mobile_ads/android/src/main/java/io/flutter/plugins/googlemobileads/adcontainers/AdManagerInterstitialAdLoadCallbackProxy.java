@@ -24,4 +24,10 @@ public class AdManagerInterstitialAdLoadCallbackProxy extends AdManagerInterstit
     final LoadAdErrorProxy loadAdErrorProxy = new LoadAdErrorProxy(loadAdError, implementations);
     implementations.getChannelAdManagerInterstitialAdLoadCallback().$onAdFailedToLoad(this, loadAdErrorProxy);
   }
+
+  @Override
+  protected void finalize() throws Throwable {
+    implementations.getChannelAdManagerInterstitialAdLoadCallback().disposeInstancePair(this);
+    super.finalize();
+  }
 }

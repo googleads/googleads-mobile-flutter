@@ -31,4 +31,10 @@ public class AdViewWithListenerProxy extends AdListener implements AdContainersC
   public void onAdClosed() {
     implementations.getChannelAdWithViewListener().$onAdClosed(this);
   }
+
+  @Override
+  protected void finalize() throws Throwable {
+    implementations.getChannelAdWithViewListener().disposeInstancePair(this);
+    super.finalize();
+  }
 }

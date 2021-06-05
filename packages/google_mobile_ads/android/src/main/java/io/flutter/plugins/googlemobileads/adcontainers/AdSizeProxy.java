@@ -19,11 +19,11 @@ public class AdSizeProxy implements AdContainersChannelLibrary.$AdSize {
   }
 
   public static AdSizeProxy getPortraitAnchoredAdaptiveBannerAdSize(Integer width, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
-    return new AdSizeProxy(AdSize.getPortraitAnchoredAdaptiveBannerAdSize(implementations.context, width), implementations);
+    return new AdSizeProxy(AdSize.getPortraitAnchoredAdaptiveBannerAdSize(implementations.activity, width), implementations);
   }
 
   public static AdSizeProxy getLandscapeAnchoredAdaptiveBannerAdSize(Integer width, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
-    return new AdSizeProxy(AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(implementations.context, width), implementations);
+    return new AdSizeProxy(AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(implementations.activity, width), implementations);
   }
 
   private static AdSize getAdSizeConstant(String constant) {

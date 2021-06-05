@@ -9,7 +9,7 @@ public class InterstitialAdProxy implements AdContainersChannelLibrary.$Intersti
                           AdRequestProxy request,
                           InterstitialAdLoadCallbackProxy adLoadCallback,
                           AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
-    InterstitialAd.load(implementations.context, adUnitId, request.adRequest.build(), adLoadCallback);
+    InterstitialAd.load(implementations.activity, adUnitId, request.adRequest.build(), adLoadCallback);
   }
 
   public InterstitialAdProxy(InterstitialAd interstitialAd) {

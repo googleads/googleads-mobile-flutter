@@ -10,7 +10,7 @@ public class AdManagerInterstitialAdProxy implements AdContainersChannelLibrary.
                           AdManagerAdRequestProxy request,
                           AdManagerInterstitialAdLoadCallbackProxy adLoadCallback,
                           AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
-    AdManagerInterstitialAd.load(implementations.context, adUnitId, ((AdManagerAdRequest.Builder)request.adRequest).build(), adLoadCallback);
+    AdManagerInterstitialAd.load(implementations.activity, adUnitId, ((AdManagerAdRequest.Builder)request.adRequest).build(), adLoadCallback);
   }
 
   public AdManagerInterstitialAdProxy(AdManagerInterstitialAd adManagerInterstitialAd) {

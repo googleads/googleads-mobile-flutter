@@ -1,6 +1,6 @@
 package io.flutter.plugins.googlemobileads.adcontainers;
 
-import android.content.Context;
+import android.app.Activity;
 
 import java.util.List;
 import java.util.Map;
@@ -13,11 +13,11 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
   }
 
   public static class AdContainersLibraryImplementations extends AdContainersChannelLibrary.$LibraryImplementations {
-    public final Context context;
+    public final Activity activity;
 
-    public AdContainersLibraryImplementations(TypeChannelMessenger messenger, Context context) {
+    public AdContainersLibraryImplementations(TypeChannelMessenger messenger, Activity activity) {
       super(messenger);
-      this.context = context;
+      this.activity = activity;
     }
 
     @Override
@@ -88,6 +88,26 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     @Override
     public AdManagerInterstitialAdHandler getHandlerAdManagerInterstitialAd() {
       return new AdManagerInterstitialAdHandler(this);
+    }
+
+    @Override
+    public ServerSideVerificationOptionsHandler getHandlerServerSideVerificationOptions() {
+      return new ServerSideVerificationOptionsHandler();
+    }
+
+    @Override
+    public OnUserEarnedRewardListenerHandler getHandlerOnUserEarnedRewardListener() {
+      return new OnUserEarnedRewardListenerHandler(this);
+    }
+
+    @Override
+    public RewardedAdLoadCallbackHandler getHandlerRewardedAdLoadCallback() {
+      return new RewardedAdLoadCallbackHandler(this);
+    }
+
+    @Override
+    public AdContainersChannelLibrary.$RewardedAdHandler getHandlerRewardedAd() {
+      return new RewardedAdHandler(this);
     }
   }
 
@@ -269,6 +289,53 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     @Override
     public Void $load(TypeChannelMessenger messenger, String adUnitId, AdContainersChannelLibrary.$AdManagerAdRequest request, AdContainersChannelLibrary.$AdManagerInterstitialAdLoadCallback adLoadCallback) {
       AdManagerInterstitialAdProxy.load(adUnitId, (AdManagerAdRequestProxy) request, (AdManagerInterstitialAdLoadCallbackProxy) adLoadCallback, implementations);
+      return null;
+    }
+  }
+
+  public static class ServerSideVerificationOptionsHandler extends AdContainersChannelLibrary.$ServerSideVerificationOptionsHandler {
+    @Override
+    public ServerSideVerificationOptionsProxy $$create(TypeChannelMessenger messenger, String userId, String customData) {
+      return new ServerSideVerificationOptionsProxy(userId, customData);
+    }
+  }
+
+  public static class OnUserEarnedRewardListenerHandler extends AdContainersChannelLibrary.$OnUserEarnedRewardListenerHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public OnUserEarnedRewardListenerHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public OnUserEarnedRewardListenerProxy $$create(TypeChannelMessenger messenger) {
+      return new OnUserEarnedRewardListenerProxy(implementations);
+    }
+  }
+
+  public static class RewardedAdLoadCallbackHandler extends AdContainersChannelLibrary.$RewardedAdLoadCallbackHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public RewardedAdLoadCallbackHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public RewardedAdLoadCallbackProxy $$create(TypeChannelMessenger messenger) {
+      return new RewardedAdLoadCallbackProxy(implementations);
+    }
+  }
+
+  public static class RewardedAdHandler extends AdContainersChannelLibrary.$RewardedAdHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public RewardedAdHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public Void $load(TypeChannelMessenger messenger, String adUnitId, AdContainersChannelLibrary.$AdRequest request, AdContainersChannelLibrary.$RewardedAdLoadCallback adLoadCallback) {
+      RewardedAdProxy.load(adUnitId, (AdRequestProxy) request, (RewardedAdLoadCallbackProxy) adLoadCallback, implementations);
       return null;
     }
   }

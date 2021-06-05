@@ -31,4 +31,10 @@ public class FullScreenContentCallbackProxy extends FullScreenContentCallback im
   public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
     implementations.getChannelFullScreenContentCallback().$onAdFailedToShowFullScreenContent(this);
   }
+
+  @Override
+  protected void finalize() throws Throwable {
+    implementations.getChannelFullScreenContentCallback().disposeInstancePair(this);
+    super.finalize();
+  }
 }

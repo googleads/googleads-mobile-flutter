@@ -9,4 +9,10 @@ public class BannerAdListenerProxy extends AdViewWithListenerProxy implements Ad
   public void onAdImpression() {
     implementations.getChannelAdWithViewListener().$onAdImpression(this);
   }
+
+  @Override
+  protected void finalize() throws Throwable {
+    implementations.getChannelBannerAdListener().disposeInstancePair(this);
+    super.finalize();
+  }
 }

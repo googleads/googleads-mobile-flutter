@@ -14,4 +14,10 @@ public class NativeAdListenerProxy extends AdViewWithListenerProxy implements Ad
   public void onAdClicked() {
     implementations.getChannelNativeAdListener().$onAdClicked(this);
   }
+
+  @Override
+  protected void finalize() throws Throwable {
+    implementations.getChannelNativeAdListener().disposeInstancePair(this);
+    super.finalize();
+  }
 }
