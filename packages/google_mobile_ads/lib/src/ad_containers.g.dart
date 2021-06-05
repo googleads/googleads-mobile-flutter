@@ -572,6 +572,7 @@ class $AdManagerBannerAdChannel extends TypeChannel<$AdManagerBannerAd> {
     required String adUnitId,
     required $AdManagerBannerAdListener listener,
     required $AdManagerAdRequest request,
+    required $AppEventListener? appEventListener,
   }) {
     return createNewInstancePair(
       $instance,
@@ -580,6 +581,7 @@ class $AdManagerBannerAdChannel extends TypeChannel<$AdManagerBannerAd> {
         adUnitId,
         listener,
         request,
+        appEventListener,
       ],
       owner: $owner,
     );
@@ -2048,6 +2050,7 @@ class $AdManagerBannerAdHandler
     String adUnitId,
     $AdManagerBannerAdListener listener,
     $AdManagerAdRequest request,
+    $AppEventListener? appEventListener,
   ) {
     throw UnimplementedError();
   }
@@ -2079,6 +2082,7 @@ class $AdManagerBannerAdHandler
       arguments[1] as String,
       arguments[2] as $AdManagerBannerAdListener,
       arguments[3] as $AdManagerAdRequest,
+      arguments[4] as $AppEventListener?,
     );
   }
 

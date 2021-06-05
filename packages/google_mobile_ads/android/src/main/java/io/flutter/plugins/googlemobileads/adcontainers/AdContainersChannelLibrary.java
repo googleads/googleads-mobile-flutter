@@ -601,8 +601,8 @@ public class AdContainersChannelLibrary {
       super(messenger, "google_mobile_ads.AdManagerBannerAd");
     }
 
-    public Completable<PairedInstance> $$create($AdManagerBannerAd $instance, boolean $owner,List<$AdSize> sizes,String adUnitId,$AdManagerBannerAdListener listener,$AdManagerAdRequest request) {
-      return createNewInstancePair($instance, Arrays.<Object>asList(sizes,adUnitId,listener,request), $owner);
+    public Completable<PairedInstance> $$create($AdManagerBannerAd $instance, boolean $owner,List<$AdSize> sizes,String adUnitId,$AdManagerBannerAdListener listener,$AdManagerAdRequest request,$AppEventListener appEventListener) {
+      return createNewInstancePair($instance, Arrays.<Object>asList(sizes,adUnitId,listener,request,appEventListener), $owner);
     }
 
     
@@ -1675,7 +1675,7 @@ public class AdContainersChannelLibrary {
   }
   
   public static class $AdManagerBannerAdHandler implements TypeChannelHandler<$AdManagerBannerAd> {
-    public $AdManagerBannerAd $$create(TypeChannelMessenger messenger,List<$AdSize> sizes,String adUnitId,$AdManagerBannerAdListener listener,$AdManagerAdRequest request)
+    public $AdManagerBannerAd $$create(TypeChannelMessenger messenger,List<$AdSize> sizes,String adUnitId,$AdManagerBannerAdListener listener,$AdManagerAdRequest request,$AppEventListener appEventListener)
         throws Exception {
       throw new UnsupportedOperationException();
     }
@@ -1705,7 +1705,7 @@ public class AdContainersChannelLibrary {
     @Override
     public $AdManagerBannerAd createInstance(TypeChannelMessenger messenger, List<Object> arguments)
         throws Exception {
-      return $$create(messenger,(List<$AdSize>) arguments.get(0),(String) arguments.get(1),($AdManagerBannerAdListener) arguments.get(2),($AdManagerAdRequest) arguments.get(3));
+      return $$create(messenger,(List<$AdSize>) arguments.get(0),(String) arguments.get(1),($AdManagerBannerAdListener) arguments.get(2),($AdManagerAdRequest) arguments.get(3),($AppEventListener) arguments.get(4));
     }
 
     @Override

@@ -13,17 +13,17 @@ public class AdManagerBannerAdProxy implements AdContainersChannelLibrary.$AdMan
   public final AdManagerAdView adManagerAdView;
   private final AdManagerAdRequestProxy request;
 
-  public AdManagerBannerAdProxy(List<AdContainersChannelLibrary.$AdSize> sizes, String adUnitId, AdManagerBannerAdListenerProxy listener, AdManagerAdRequestProxy request, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
-    this(new AdManagerAdView(implementations.context), sizes, adUnitId, listener, request);
+  public AdManagerBannerAdProxy(List<AdContainersChannelLibrary.$AdSize> sizes, String adUnitId, AdManagerBannerAdListenerProxy listener, AdManagerAdRequestProxy request, AppEventListenerProxy appEventListener, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
+    this(new AdManagerAdView(implementations.context), sizes, adUnitId, listener, request, appEventListener);
   }
 
-  public AdManagerBannerAdProxy(AdManagerAdView adManagerAdView, List<AdContainersChannelLibrary.$AdSize> sizes, String adUnitId, AdManagerBannerAdListenerProxy listener, AdManagerAdRequestProxy request) {
+  public AdManagerBannerAdProxy(AdManagerAdView adManagerAdView, List<AdContainersChannelLibrary.$AdSize> sizes, String adUnitId, AdManagerBannerAdListenerProxy listener, AdManagerAdRequestProxy request, AppEventListenerProxy appEventListener) {
     this.adManagerAdView = adManagerAdView;
     this.request = request;
     adManagerAdView.setAdSizes((AdSize[]) AdSizeProxy.fromList(sizes).toArray());
     adManagerAdView.setAdUnitId(adUnitId);
     adManagerAdView.setAdListener(listener);
-    adManagerAdView.setAppEventListener(listener);
+    adManagerAdView.setAppEventListener(appEventListener);
   }
   
   @Override

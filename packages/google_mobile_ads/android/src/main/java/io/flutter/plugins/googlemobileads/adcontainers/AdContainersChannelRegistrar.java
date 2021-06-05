@@ -79,6 +79,16 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     public InterstitialAdHandler getHandlerInterstitialAd() {
       return new InterstitialAdHandler(this);
     }
+
+    @Override
+    public AppEventListenerHandler getHandlerAppEventListener() {
+      return new AppEventListenerHandler(this);
+    }
+
+    @Override
+    public AdManagerInterstitialAdHandler getHandlerAdManagerInterstitialAd() {
+      return new AdManagerInterstitialAdHandler(this);
+    }
   }
 
   public static class AdRequestHandler extends AdContainersChannelLibrary.$AdRequestHandler {
@@ -165,8 +175,8 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     }
 
     @Override
-    public AdManagerBannerAdProxy $$create(TypeChannelMessenger messenger, List<AdContainersChannelLibrary.$AdSize> sizes, String adUnitId, AdContainersChannelLibrary.$AdManagerBannerAdListener listener, AdContainersChannelLibrary.$AdManagerAdRequest request) throws Exception {
-      return new AdManagerBannerAdProxy(sizes, adUnitId, (AdManagerBannerAdListenerProxy) listener, (AdManagerAdRequestProxy) request, implementations);
+    public AdManagerBannerAdProxy $$create(TypeChannelMessenger messenger, List<AdContainersChannelLibrary.$AdSize> sizes, String adUnitId, AdContainersChannelLibrary.$AdManagerBannerAdListener listener, AdContainersChannelLibrary.$AdManagerAdRequest request, AdContainersChannelLibrary.$AppEventListener appEventListener) {
+      return new AdManagerBannerAdProxy(sizes, adUnitId, (AdManagerBannerAdListenerProxy) listener, (AdManagerAdRequestProxy) request, (AppEventListenerProxy) appEventListener, implementations);
     }
   }
   
@@ -232,6 +242,33 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     @Override
     public Void $load(TypeChannelMessenger messenger, String adUnitId, AdContainersChannelLibrary.$AdRequest request, AdContainersChannelLibrary.$InterstitialAdLoadCallback adLoadCallback) {
       InterstitialAdProxy.load(adUnitId, (AdRequestProxy) request, (InterstitialAdLoadCallbackProxy) adLoadCallback, implementations);
+      return null;
+    }
+  }
+
+  public static class AppEventListenerHandler extends AdContainersChannelLibrary.$AppEventListenerHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public AppEventListenerHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public AppEventListenerProxy $$create(TypeChannelMessenger messenger) {
+      return new AppEventListenerProxy(implementations);
+    }
+  }
+
+  public static class AdManagerInterstitialAdHandler extends AdContainersChannelLibrary.$AdManagerInterstitialAdHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public AdManagerInterstitialAdHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public Void $load(TypeChannelMessenger messenger, String adUnitId, AdContainersChannelLibrary.$AdManagerAdRequest request, AdContainersChannelLibrary.$AdManagerInterstitialAdLoadCallback adLoadCallback) {
+      AdManagerInterstitialAdProxy.load(adUnitId, (AdManagerAdRequestProxy) request, (AdManagerInterstitialAdLoadCallbackProxy) adLoadCallback, implementations);
       return null;
     }
   }
