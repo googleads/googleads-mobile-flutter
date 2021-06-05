@@ -64,6 +64,21 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     public NativeAdHandler getHandlerNativeAd() {
       return new NativeAdHandler(this);
     }
+
+    @Override
+    public FullScreenContentCallbackHandler getHandlerFullScreenContentCallback() {
+      return new FullScreenContentCallbackHandler(this);
+    }
+
+    @Override
+    public InterstitialAdLoadCallbackHandler getHandlerInterstitialAdLoadCallback() {
+      return new InterstitialAdLoadCallbackHandler(this);
+    }
+
+    @Override
+    public InterstitialAdHandler getHandlerInterstitialAd() {
+      return new InterstitialAdHandler(this);
+    }
   }
 
   public static class AdRequestHandler extends AdContainersChannelLibrary.$AdRequestHandler {
@@ -178,6 +193,46 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     @Override
     public NativeAdProxy $$create(TypeChannelMessenger messenger, String adUnitId, String factoryId, AdContainersChannelLibrary.$NativeAdListener listener, AdContainersChannelLibrary.$AdRequest request, Map<String, Object> customOptions) {
       return new NativeAdProxy(adUnitId, factoryId, (NativeAdListenerProxy) listener, (AdRequestProxy) request, customOptions, implementations);
+    }
+  }
+  
+  public static class FullScreenContentCallbackHandler extends AdContainersChannelLibrary.$FullScreenContentCallbackHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public FullScreenContentCallbackHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public FullScreenContentCallbackProxy $$create(TypeChannelMessenger messenger) {
+      return new FullScreenContentCallbackProxy(implementations);
+    }
+  }
+
+  public static class InterstitialAdLoadCallbackHandler extends AdContainersChannelLibrary.$InterstitialAdLoadCallbackHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public InterstitialAdLoadCallbackHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public InterstitialAdLoadCallbackProxy $$create(TypeChannelMessenger messenger) {
+      return new InterstitialAdLoadCallbackProxy(implementations);
+    }
+  }
+
+  public static class InterstitialAdHandler extends AdContainersChannelLibrary.$InterstitialAdHandler {
+    public final AdContainersLibraryImplementations implementations;
+
+    public InterstitialAdHandler(AdContainersLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public Void $load(TypeChannelMessenger messenger, String adUnitId, AdContainersChannelLibrary.$AdRequest request, AdContainersChannelLibrary.$InterstitialAdLoadCallback adLoadCallback) {
+      InterstitialAdProxy.load(adUnitId, (AdRequestProxy) request, (InterstitialAdLoadCallbackProxy) adLoadCallback, implementations);
+      return null;
     }
   }
 }

@@ -652,7 +652,6 @@ class $InterstitialAdChannel extends TypeChannel<$InterstitialAd> {
     String adUnitId,
     $AdRequest request,
     $InterstitialAdLoadCallback adLoadCallback,
-    $FullScreenContentCallback? fullScreenContentCallback,
   ) {
     return sendInvokeStaticMethod(
       'load',
@@ -660,18 +659,20 @@ class $InterstitialAdChannel extends TypeChannel<$InterstitialAd> {
         adUnitId,
         request,
         adLoadCallback,
-        fullScreenContentCallback,
       ],
     );
   }
 
   Future<Object?> $show(
     $InterstitialAd $instance,
+    $FullScreenContentCallback? fullScreenContentCallback,
   ) {
     return sendInvokeMethod(
       $instance,
       'show',
-      <Object?>[],
+      <Object?>[
+        fullScreenContentCallback,
+      ],
     );
   }
 }
@@ -696,8 +697,6 @@ class $AdManagerInterstitialAdChannel
     String adUnitId,
     $AdManagerAdRequest request,
     $AdManagerInterstitialAdLoadCallback adLoadCallback,
-    $AppEventListener? appEventListener,
-    $FullScreenContentCallback? fullScreenContentCallback,
   ) {
     return sendInvokeStaticMethod(
       'load',
@@ -705,19 +704,22 @@ class $AdManagerInterstitialAdChannel
         adUnitId,
         request,
         adLoadCallback,
-        appEventListener,
-        fullScreenContentCallback,
       ],
     );
   }
 
   Future<Object?> $show(
     $AdManagerInterstitialAd $instance,
+    $AppEventListener? appEventListener,
+    $FullScreenContentCallback? fullScreenContentCallback,
   ) {
     return sendInvokeMethod(
       $instance,
       'show',
-      <Object?>[],
+      <Object?>[
+        appEventListener,
+        fullScreenContentCallback,
+      ],
     );
   }
 }
@@ -741,8 +743,6 @@ class $RewardedAdChannel extends TypeChannel<$RewardedAd> {
     String adUnitId,
     $AdRequest request,
     $RewardedAdLoadCallback adLoadCallback,
-    $ServerSideVerificationOptions? serverSideVerificationOptions,
-    $FullScreenContentCallback? fullScreenContentCallback,
   ) {
     return sendInvokeStaticMethod(
       'load',
@@ -750,8 +750,6 @@ class $RewardedAdChannel extends TypeChannel<$RewardedAd> {
         adUnitId,
         request,
         adLoadCallback,
-        serverSideVerificationOptions,
-        fullScreenContentCallback,
       ],
     );
   }
@@ -759,12 +757,16 @@ class $RewardedAdChannel extends TypeChannel<$RewardedAd> {
   Future<Object?> $show(
     $RewardedAd $instance,
     $OnUserEarnedRewardListener onUserEarnedReward,
+    $ServerSideVerificationOptions? serverSideVerificationOptions,
+    $FullScreenContentCallback? fullScreenContentCallback,
   ) {
     return sendInvokeMethod(
       $instance,
       'show',
       <Object?>[
         onUserEarnedReward,
+        serverSideVerificationOptions,
+        fullScreenContentCallback,
       ],
     );
   }

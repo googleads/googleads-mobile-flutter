@@ -682,22 +682,14 @@ class InterstitialAd implements $InterstitialAd {
     required String adUnitId,
     required AdRequest request,
     required InterstitialAdLoadCallback adLoadCallback,
-    FullScreenContentCallback? fullScreenContentCallback,
   }) {
     // InterstitialAd ad = InterstitialAd(
     //     adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
     InterstitialAdLoadCallback._channel.$$create(adLoadCallback, $owner: false);
-    if (fullScreenContentCallback != null) {
-      FullScreenContentCallback._channel.$$create(
-        fullScreenContentCallback,
-        $owner: false,
-      );
-    }
     return _channel.$load(
       adUnitId,
       request,
       adLoadCallback,
-      fullScreenContentCallback,
     );
   }
 
@@ -724,7 +716,15 @@ class InterstitialAd implements $InterstitialAd {
   ///
   /// Set [fullScreenContentCallback] before calling this method to be
   /// notified of events that occur when showing the ad.
-  Future<void> show() => _channel.$show(this);
+  Future<void> show(FullScreenContentCallback? fullScreenContentCallback) {
+    if (fullScreenContentCallback != null) {
+      FullScreenContentCallback._channel.$$create(
+        fullScreenContentCallback,
+        $owner: false,
+      );
+    }
+    return _channel.$show(this, fullScreenContentCallback);
+  }
 }
 
 /// A full-screen interstitial ad for use with Ad Manager.
@@ -763,8 +763,6 @@ class AdManagerInterstitialAd implements $AdManagerInterstitialAd {
     required String adUnitId,
     required AdManagerAdRequest request,
     required AdManagerInterstitialAdLoadCallback adLoadCallback,
-    AppEventListener? appEventListener,
-    FullScreenContentCallback? fullScreenContentCallback,
   }) {
     // AdManagerInterstitialAd ad = AdManagerInterstitialAd._(
     //     adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
@@ -772,32 +770,31 @@ class AdManagerInterstitialAd implements $AdManagerInterstitialAd {
       adLoadCallback,
       $owner: false,
     );
-    if (appEventListener != null) {
-      AppEventListener._channel.$$create(
-        appEventListener,
-        $owner: false,
-      );
-    }
-    if (fullScreenContentCallback != null) {
-      FullScreenContentCallback._channel.$$create(
-        fullScreenContentCallback,
-        $owner: false,
-      );
-    }
-    return _channel.$load(
-      adUnitId,
-      request,
-      adLoadCallback,
-      appEventListener,
-      fullScreenContentCallback,
-    );
+    return _channel.$load(adUnitId, request, adLoadCallback);
   }
 
   /// Displays this on top of the application.
   ///
   /// Set [fullScreenContentCallback] before calling this method to be
   /// notified of events that occur when showing the ad.
-  Future<void> show() => _channel.$show(this);
+  Future<void> show({
+    AppEventListener? appEventListener,
+    FullScreenContentCallback? fullScreenContentCallback,
+  }) {
+    if (fullScreenContentCallback != null) {
+      FullScreenContentCallback._channel.$$create(
+        fullScreenContentCallback,
+        $owner: false,
+      );
+    }
+    if (appEventListener != null) {
+      AppEventListener._channel.$$create(
+        appEventListener,
+        $owner: false,
+      );
+    }
+    return _channel.$show(this, appEventListener, fullScreenContentCallback);
+  }
 }
 
 /// An [Ad] where a user has the option of interacting with in exchange for in-app rewards.
@@ -858,8 +855,6 @@ class RewardedAd implements $RewardedAd {
     required String adUnitId,
     required AdRequest request,
     required RewardedAdLoadCallback adLoadCallback,
-    ServerSideVerificationOptions? serverSideVerificationOptions,
-    FullScreenContentCallback? fullScreenContentCallback,
   }) {
     // RewardedAd rewardedAd = RewardedAd._(
     //     adUnitId: adUnitId,
@@ -870,18 +865,10 @@ class RewardedAd implements $RewardedAd {
       adLoadCallback,
       $owner: false,
     );
-    if (fullScreenContentCallback != null) {
-      FullScreenContentCallback._channel.$$create(
-        fullScreenContentCallback,
-        $owner: false,
-      );
-    }
     return _channel.$load(
       adUnitId,
       request,
       adLoadCallback,
-      serverSideVerificationOptions,
-      fullScreenContentCallback,
     );
   }
 
@@ -906,12 +893,27 @@ class RewardedAd implements $RewardedAd {
   /// Set [fullScreenContentCallback] before calling this method to be
   /// notified of events that occur when showing the ad.
   /// [onUserEarnedReward] will be invoked when the user earns a reward.
-  Future<void> show({required OnUserEarnedRewardListener onUserEarnedReward}) {
+  Future<void> show({
+    required OnUserEarnedRewardListener onUserEarnedReward,
+    ServerSideVerificationOptions? serverSideVerificationOptions,
+    FullScreenContentCallback? fullScreenContentCallback,
+  }) {
+    if (fullScreenContentCallback != null) {
+      FullScreenContentCallback._channel.$$create(
+        fullScreenContentCallback,
+        $owner: false,
+      );
+    }
     OnUserEarnedRewardListener._channel.$$create(
       onUserEarnedReward,
       $owner: false,
     );
-    return _channel.$show(this, onUserEarnedReward);
+    return _channel.$show(
+      this,
+      onUserEarnedReward,
+      serverSideVerificationOptions,
+      fullScreenContentCallback,
+    );
   }
 }
 
@@ -1099,8 +1101,7 @@ mixin AdManagerBannerAdListener
 
 /// A listener for receiving notifications for the lifecycle of a [NativeAd].
 @Reference('google_mobile_ads.NativeAdListener')
-mixin NativeAdListener
-    implements AdWithViewListener, $NativeAdListener {
+mixin NativeAdListener implements AdWithViewListener, $NativeAdListener {
   static $NativeAdListenerChannel get _channel =>
       ChannelRegistrar.instance.implementations.channelNativeAdListener;
   // /// Constructs a [NativeAdListener] with the provided event callbacks.

@@ -177,7 +177,7 @@ public class AdContainersChannelLibrary {
   public interface $InterstitialAd {
     
     
-    Object show() throws Exception;
+    Object show($FullScreenContentCallback fullScreenContentCallback) throws Exception;
     
     
   }
@@ -185,7 +185,7 @@ public class AdContainersChannelLibrary {
   public interface $AdManagerInterstitialAd {
     
     
-    Object show() throws Exception;
+    Object show($AppEventListener appEventListener,$FullScreenContentCallback fullScreenContentCallback) throws Exception;
     
     
   }
@@ -193,7 +193,7 @@ public class AdContainersChannelLibrary {
   public interface $RewardedAd {
     
     
-    Object show($OnUserEarnedRewardListener onUserEarnedReward) throws Exception;
+    Object show($OnUserEarnedRewardListener onUserEarnedReward,$ServerSideVerificationOptions serverSideVerificationOptions,$FullScreenContentCallback fullScreenContentCallback) throws Exception;
     
     
   }
@@ -1730,7 +1730,7 @@ public class AdContainersChannelLibrary {
   }
   
   public static class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
-    public $NativeAd $$create(TypeChannelMessenger messenger,String adUnitId,String factoryId,$NativeAdListener listener,$AdRequest request, Map<String,Object> customOptions)
+    public $NativeAd $$create(TypeChannelMessenger messenger,String adUnitId,String factoryId,$NativeAdListener listener,$AdRequest request,Map<String,Object> customOptions)
         throws Exception {
       throw new UnsupportedOperationException();
     }
@@ -1792,7 +1792,7 @@ public class AdContainersChannelLibrary {
 
     
     
-    public Object $load(TypeChannelMessenger messenger,String adUnitId,$AdRequest request,$InterstitialAdLoadCallback adLoadCallback,$FullScreenContentCallback fullScreenContentCallback)
+    public Object $load(TypeChannelMessenger messenger,String adUnitId,$AdRequest request,$InterstitialAdLoadCallback adLoadCallback)
         throws Exception {
       throw new UnsupportedOperationException();
     }
@@ -1801,8 +1801,8 @@ public class AdContainersChannelLibrary {
 
     
     
-    public Object $show($InterstitialAd $instance) throws Exception {
-      return $instance.show();
+    public Object $show($InterstitialAd $instance,$FullScreenContentCallback fullScreenContentCallback) throws Exception {
+      return $instance.show( fullScreenContentCallback );
     }
     
     
@@ -1815,7 +1815,7 @@ public class AdContainersChannelLibrary {
         
         
         case "load":
-          return $load(messenger,(String) arguments.get(0),($AdRequest) arguments.get(1),($InterstitialAdLoadCallback) arguments.get(2),($FullScreenContentCallback) arguments.get(3));
+          return $load(messenger,(String) arguments.get(0),($AdRequest) arguments.get(1),($InterstitialAdLoadCallback) arguments.get(2));
         
         
       }
@@ -1841,7 +1841,7 @@ public class AdContainersChannelLibrary {
         
         
         case "show":
-          return $show(instance);
+          return $show(instance,($FullScreenContentCallback) arguments.get(0));
         
         
       }
@@ -1859,7 +1859,7 @@ public class AdContainersChannelLibrary {
 
     
     
-    public Object $load(TypeChannelMessenger messenger,String adUnitId,$AdManagerAdRequest request,$AdManagerInterstitialAdLoadCallback adLoadCallback,$AppEventListener appEventListener,$FullScreenContentCallback fullScreenContentCallback)
+    public Object $load(TypeChannelMessenger messenger,String adUnitId,$AdManagerAdRequest request,$AdManagerInterstitialAdLoadCallback adLoadCallback)
         throws Exception {
       throw new UnsupportedOperationException();
     }
@@ -1868,8 +1868,8 @@ public class AdContainersChannelLibrary {
 
     
     
-    public Object $show($AdManagerInterstitialAd $instance) throws Exception {
-      return $instance.show();
+    public Object $show($AdManagerInterstitialAd $instance,$AppEventListener appEventListener,$FullScreenContentCallback fullScreenContentCallback) throws Exception {
+      return $instance.show( appEventListener , fullScreenContentCallback );
     }
     
     
@@ -1882,7 +1882,7 @@ public class AdContainersChannelLibrary {
         
         
         case "load":
-          return $load(messenger,(String) arguments.get(0),($AdManagerAdRequest) arguments.get(1),($AdManagerInterstitialAdLoadCallback) arguments.get(2),($AppEventListener) arguments.get(3),($FullScreenContentCallback) arguments.get(4));
+          return $load(messenger,(String) arguments.get(0),($AdManagerAdRequest) arguments.get(1),($AdManagerInterstitialAdLoadCallback) arguments.get(2));
         
         
       }
@@ -1908,7 +1908,7 @@ public class AdContainersChannelLibrary {
         
         
         case "show":
-          return $show(instance);
+          return $show(instance,($AppEventListener) arguments.get(0),($FullScreenContentCallback) arguments.get(1));
         
         
       }
@@ -1926,7 +1926,7 @@ public class AdContainersChannelLibrary {
 
     
     
-    public Object $load(TypeChannelMessenger messenger,String adUnitId,$AdRequest request,$RewardedAdLoadCallback adLoadCallback,$ServerSideVerificationOptions serverSideVerificationOptions,$FullScreenContentCallback fullScreenContentCallback)
+    public Object $load(TypeChannelMessenger messenger,String adUnitId,$AdRequest request,$RewardedAdLoadCallback adLoadCallback)
         throws Exception {
       throw new UnsupportedOperationException();
     }
@@ -1935,8 +1935,8 @@ public class AdContainersChannelLibrary {
 
     
     
-    public Object $show($RewardedAd $instance,$OnUserEarnedRewardListener onUserEarnedReward) throws Exception {
-      return $instance.show( onUserEarnedReward );
+    public Object $show($RewardedAd $instance,$OnUserEarnedRewardListener onUserEarnedReward,$ServerSideVerificationOptions serverSideVerificationOptions,$FullScreenContentCallback fullScreenContentCallback) throws Exception {
+      return $instance.show( onUserEarnedReward , serverSideVerificationOptions , fullScreenContentCallback );
     }
     
     
@@ -1949,7 +1949,7 @@ public class AdContainersChannelLibrary {
         
         
         case "load":
-          return $load(messenger,(String) arguments.get(0),($AdRequest) arguments.get(1),($RewardedAdLoadCallback) arguments.get(2),($ServerSideVerificationOptions) arguments.get(3),($FullScreenContentCallback) arguments.get(4));
+          return $load(messenger,(String) arguments.get(0),($AdRequest) arguments.get(1),($RewardedAdLoadCallback) arguments.get(2));
         
         
       }
@@ -1975,7 +1975,7 @@ public class AdContainersChannelLibrary {
         
         
         case "show":
-          return $show(instance,($OnUserEarnedRewardListener) arguments.get(0));
+          return $show(instance,($OnUserEarnedRewardListener) arguments.get(0),($ServerSideVerificationOptions) arguments.get(1),($FullScreenContentCallback) arguments.get(2));
         
         
       }
