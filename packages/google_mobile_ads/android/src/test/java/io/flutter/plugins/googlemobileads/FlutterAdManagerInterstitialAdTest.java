@@ -35,7 +35,7 @@ import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 import com.google.android.gms.ads.admanager.AppEventListener;
 import io.flutter.plugin.common.BinaryMessenger;
-import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;

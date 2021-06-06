@@ -546,7 +546,7 @@ public class AdContainersChannelLibrary {
   
   public static class $AdManagerAdRequestChannel extends TypeChannel<$AdManagerAdRequest> {
     public $AdManagerAdRequestChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "google_mobile_ads.AdRequest");
+      super(messenger, "google_mobile_ads.AdManagerAdRequest");
     }
 
     public Completable<PairedInstance> $$create($AdManagerAdRequest $instance, boolean $owner) {

@@ -437,7 +437,7 @@ class $AdRequestChannel extends TypeChannel<$AdRequest> {
 
 class $AdManagerAdRequestChannel extends TypeChannel<$AdManagerAdRequest> {
   $AdManagerAdRequestChannel(TypeChannelMessenger messenger)
-      : super(messenger, 'google_mobile_ads.AdRequest');
+      : super(messenger, 'google_mobile_ads.AdManagerAdRequest');
 
   Future<PairedInstance?> $$create(
     $AdManagerAdRequest $instance, {

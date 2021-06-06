@@ -10,12 +10,12 @@ import java.util.List;
 public class AdSizeProxy implements AdContainersChannelLibrary.$AdSize {
   public final AdSize adSize;
   
-  public static List<AdSize> fromList(List<AdContainersChannelLibrary.$AdSize> adSizes) {
-    final List<AdSize> newSizeList = new ArrayList<>();
-    for (AdContainersChannelLibrary.$AdSize adSize : adSizes) {
-      newSizeList.add(((AdSizeProxy)adSize).adSize);
+  public static AdSize[] fromList(List<AdContainersChannelLibrary.$AdSize> adSizes) {
+    final AdSize[] newSizeArray = new AdSize[adSizes.size()];
+    for (int i = 0; i < adSizes.size(); i++) {
+      newSizeArray[i] = ((AdSizeProxy)adSizes.get(0)).adSize;
     }
-    return newSizeList;
+    return newSizeArray;
   }
 
   public static AdSizeProxy getPortraitAnchoredAdaptiveBannerAdSize(Integer width, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {

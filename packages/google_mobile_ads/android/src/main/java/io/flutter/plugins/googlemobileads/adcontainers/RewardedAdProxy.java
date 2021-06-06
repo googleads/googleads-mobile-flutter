@@ -13,6 +13,7 @@ public class RewardedAdProxy implements AdContainersChannelLibrary.$RewardedAd {
   public RewardedAdProxy(RewardedAd rewardedAd, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
     this.rewardedAd = rewardedAd;
     this.implementations = implementations;
+    implementations.getChannelRewardedAd().$$create(this, false);
   }
 
   @Override

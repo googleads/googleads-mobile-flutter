@@ -157,7 +157,12 @@ class AdSizeHandler extends $AdSizeHandler {
     int height,
     String? constant,
   ) {
-    return AdSize(width: width, height: height, constant: constant);
+    return AdSize(
+      width: width,
+      height: height,
+      constant: constant,
+      creator: false,
+    );
   }
 }
 

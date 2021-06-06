@@ -158,6 +158,11 @@ class LoadAdError extends AdError implements $LoadAdError {
 /// [AdRequest.Builder for Android](https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest.Builder).
 @Reference('google_mobile_ads.AdRequest')
 class AdRequest implements $AdRequest {
+  /// Construct an [AdRequest].
+  AdRequest({@ignoreParam bool creator = true}) {
+    if (creator) _channel.$$create(this, $owner: true);
+  }
+
   static $AdRequestChannel get _channel =>
       ChannelRegistrar.instance.implementations.channelAdRequest;
 
@@ -183,8 +188,13 @@ class AdRequest implements $AdRequest {
 }
 
 /// Targeting info per the Ad Manager API.
-@Reference('google_mobile_ads.AdRequest')
+@Reference('google_mobile_ads.AdManagerAdRequest')
 class AdManagerAdRequest extends AdRequest implements $AdManagerAdRequest {
+  /// Construct an [AdRequest].
+  AdManagerAdRequest() : super(creator: false) {
+    _channel.$$create(this, $owner: true);
+  }
+
   static $AdManagerAdRequestChannel get _channel =>
       ChannelRegistrar.instance.implementations.channelAdManagerAdRequest;
 
@@ -388,19 +398,14 @@ class AdWidget extends StatefulWidget {
 
 class _AdWidgetState extends State<AdWidget> {
   bool _adIdAlreadyMounted = false;
-  bool _adLoadNotCalled = false;
 
   @override
   void initState() {
     super.initState();
-    if (!widget.ad._adLoaded) {
-      if (ChannelRegistrar.instance.isAdMounted(widget.ad)) {
-        _adIdAlreadyMounted = true;
-      }
-      ChannelRegistrar.instance.mountAd(widget.ad);
-    } else {
-      _adLoadNotCalled = true;
+    if (ChannelRegistrar.instance.isAdMounted(widget.ad)) {
+      _adIdAlreadyMounted = true;
     }
+    ChannelRegistrar.instance.mountAd(widget.ad);
   }
 
   @override
@@ -421,7 +426,7 @@ class _AdWidgetState extends State<AdWidget> {
             'Make sure you are not using the same ad object in more than one AdWidget.'),
       ]);
     }
-    if (_adLoadNotCalled) {
+    if (!widget.ad._adLoaded) {
       throw FlutterError.fromParts(<DiagnosticsNode>[
         ErrorSummary(
             'AdWidget requires Ad.load to be called before AdWidget is inserted into the tree'),
@@ -946,7 +951,13 @@ class RewardItem implements $RewardItem {
 @Reference('google_mobile_ads.ServerSideVerificationOptions')
 class ServerSideVerificationOptions implements $ServerSideVerificationOptions {
   /// Create [ServerSideVerificationOptions] with the userId or customData.
-  const ServerSideVerificationOptions({this.userId, this.customData});
+  ServerSideVerificationOptions({this.userId, this.customData}) {
+    _channel.$$create(this, $owner: true, userId: userId, customData: customData,);
+  }
+
+  static $ServerSideVerificationOptionsChannel get _channel =>
+      ChannelRegistrar
+          .instance.implementations.channelServerSideVerificationOptions;
 
   /// The user id to be used in server-to-server reward callbacks.
   final String? userId;

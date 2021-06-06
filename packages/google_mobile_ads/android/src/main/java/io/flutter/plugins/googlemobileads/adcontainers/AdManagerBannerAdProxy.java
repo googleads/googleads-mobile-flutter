@@ -2,7 +2,6 @@ package io.flutter.plugins.googlemobileads.adcontainers;
 
 import android.view.View;
 
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class AdManagerBannerAdProxy implements AdContainersChannelLibrary.$AdMan
   public AdManagerBannerAdProxy(AdManagerAdView adManagerAdView, List<AdContainersChannelLibrary.$AdSize> sizes, String adUnitId, AdManagerBannerAdListenerProxy listener, AdManagerAdRequestProxy request, AppEventListenerProxy appEventListener) {
     this.adManagerAdView = adManagerAdView;
     this.request = request;
-    adManagerAdView.setAdSizes((AdSize[]) AdSizeProxy.fromList(sizes).toArray());
+    adManagerAdView.setAdSizes(AdSizeProxy.fromList(sizes));
     adManagerAdView.setAdUnitId(adUnitId);
     adManagerAdView.setAdListener(listener);
     adManagerAdView.setAppEventListener(appEventListener);

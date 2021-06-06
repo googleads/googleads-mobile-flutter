@@ -34,7 +34,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
 import io.flutter.plugin.common.BinaryMessenger;
-import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;

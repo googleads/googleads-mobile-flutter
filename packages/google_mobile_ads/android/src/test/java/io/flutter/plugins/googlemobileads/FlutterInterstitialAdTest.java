@@ -34,7 +34,7 @@ import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import io.flutter.plugin.common.BinaryMessenger;
-import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;

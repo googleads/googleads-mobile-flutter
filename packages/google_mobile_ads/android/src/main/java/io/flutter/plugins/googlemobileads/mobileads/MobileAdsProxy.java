@@ -11,8 +11,11 @@ public class MobileAdsProxy implements MobileAdsChannelLibrary.$MobileAds {
 
   @Override
   public Void initialize(MobileAdsChannelLibrary.$OnInitializationCompleteListener listener) {
-    final OnInitializationCompleteListenerProxy listenerProxy = new OnInitializationCompleteListenerProxy(implementations);
-    MobileAds.initialize(implementations.activity, listenerProxy);
+    if (listener == null) {
+      MobileAds.initialize(implementations.activity);
+    } else {
+      MobileAds.initialize(implementations.activity, (OnInitializationCompleteListenerProxy) listener);
+    }
     return null;
   }
 
