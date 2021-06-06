@@ -523,7 +523,7 @@ class AdManagerBannerAd implements AdWithView, $AdManagerBannerAd {
     required this.adUnitId,
     required this.listener,
     required this.request,
-    required this.appEventListener,
+    this.appEventListener,
   }) : assert(sizes.isNotEmpty) {
     AdManagerBannerAdListener._channel.$$create(listener, $owner: false);
     _channel.$$create(

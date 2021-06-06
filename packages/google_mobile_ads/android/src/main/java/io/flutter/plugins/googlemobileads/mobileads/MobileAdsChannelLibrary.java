@@ -22,6 +22,12 @@ import github.penguin.reference.reference.TypeChannelMessenger;
 
 public class MobileAdsChannelLibrary {
   
+  public interface $OnInitializationCompleteListener {
+    
+    
+    
+  }
+  
   public interface $AdapterInitializationState {
     
   }
@@ -29,7 +35,7 @@ public class MobileAdsChannelLibrary {
   public interface $MobileAds {
     
     
-    Object initialize() throws Exception;
+    Object initialize($OnInitializationCompleteListener listener) throws Exception;
     
     
     
@@ -55,6 +61,26 @@ public class MobileAdsChannelLibrary {
   }
   
 
+  
+  public static class $OnInitializationCompleteListenerChannel extends TypeChannel<$OnInitializationCompleteListener> {
+    public $OnInitializationCompleteListenerChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "google_mobile_ads.OnInitializationCompleteListener");
+    }
+
+    public Completable<PairedInstance> $$create($OnInitializationCompleteListener $instance, boolean $owner) {
+      return createNewInstancePair($instance, Arrays.<Object>asList(), $owner);
+    }
+
+    
+
+    
+    
+    public Completable<Object> $onInitializationComplete($OnInitializationCompleteListener $instance,$InitializationStatus initializationStatus) {
+      return invokeMethod($instance, "onInitializationComplete", Arrays.<Object>asList(initializationStatus));
+    }
+    
+    
+  }
   
   public static class $AdapterInitializationStateChannel extends TypeChannel<$AdapterInitializationState> {
     public $AdapterInitializationStateChannel(@NonNull TypeChannelMessenger messenger) {
@@ -134,6 +160,54 @@ public class MobileAdsChannelLibrary {
   
 
   
+  public static class $OnInitializationCompleteListenerHandler implements TypeChannelHandler<$OnInitializationCompleteListener> {
+    public $OnInitializationCompleteListener $$create(TypeChannelMessenger messenger)
+        throws Exception {
+      throw new UnsupportedOperationException();
+    }
+
+    
+
+    
+    
+    
+
+    @Override
+    public Object invokeStaticMethod(
+        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
+        throws Exception {
+      switch (methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("Unable to invoke static method %s", methodName));
+    }
+
+    @Override
+    public $OnInitializationCompleteListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
+        throws Exception {
+      return $$create(messenger);
+    }
+
+    @Override
+    public Object invokeMethod(
+        TypeChannelMessenger messenger,
+        $OnInitializationCompleteListener instance,
+        String methodName,
+        List<Object> arguments)
+        throws Exception {
+      switch(methodName) {
+        
+        
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("%s.%s not supported.", instance, methodName));
+    }
+  }
+  
   public static class $AdapterInitializationStateHandler implements TypeChannelHandler<$AdapterInitializationState> {
     public $AdapterInitializationState $$create(TypeChannelMessenger messenger,String value)
         throws Exception {
@@ -188,8 +262,8 @@ public class MobileAdsChannelLibrary {
 
     
     
-    public Object $initialize($MobileAds $instance) throws Exception {
-      return $instance.initialize();
+    public Object $initialize($MobileAds $instance,$OnInitializationCompleteListener listener) throws Exception {
+      return $instance.initialize( listener );
     }
     
     
@@ -235,7 +309,7 @@ public class MobileAdsChannelLibrary {
         
         
         case "initialize":
-          return $initialize(instance);
+          return $initialize(instance,($OnInitializationCompleteListener) arguments.get(0));
         
         
         
@@ -396,6 +470,14 @@ public class MobileAdsChannelLibrary {
     }
 
     
+    public $OnInitializationCompleteListenerChannel getChannelOnInitializationCompleteListener() {
+      return new $OnInitializationCompleteListenerChannel(messenger);
+    }
+
+    public $OnInitializationCompleteListenerHandler getHandlerOnInitializationCompleteListener() {
+      return new $OnInitializationCompleteListenerHandler();
+    }
+    
     public $AdapterInitializationStateChannel getChannelAdapterInitializationState() {
       return new $AdapterInitializationStateChannel(messenger);
     }
@@ -448,6 +530,8 @@ public class MobileAdsChannelLibrary {
 
     public void registerHandlers() {
       
+      implementations.getChannelOnInitializationCompleteListener().setHandler(implementations.getHandlerOnInitializationCompleteListener());
+      
       implementations.getChannelAdapterInitializationState().setHandler(implementations.getHandlerAdapterInitializationState());
       
       implementations.getChannelMobileAds().setHandler(implementations.getHandlerMobileAds());
@@ -461,6 +545,8 @@ public class MobileAdsChannelLibrary {
     }
 
     public void unregisterHandlers() {
+      
+      implementations.getChannelOnInitializationCompleteListener().removeHandler();
       
       implementations.getChannelAdapterInitializationState().removeHandler();
       

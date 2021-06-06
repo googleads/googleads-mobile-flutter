@@ -77,8 +77,14 @@ class MobileAds implements $MobileAds {
   ///
   /// If this method is not called, the first ad request automatically
   /// initializes the Google Mobile Ads SDK.
-  Future<InitializationStatus> initialize() async {
-    return await _channel.$initialize(this) as InitializationStatus;
+  Future<void> initialize({OnInitializationCompleteListener? listener}) {
+    if (listener != null) {
+      OnInitializationCompleteListener._channel.$$create(
+        listener,
+        $owner: false,
+      );
+    }
+    return _channel.$initialize(this, listener);
   }
 
   /// Update the [RequestConfiguration] to apply for future ad requests.
@@ -101,6 +107,20 @@ class MobileAds implements $MobileAds {
       return Future.value();
     }
   }
+}
+
+///
+@Reference('google_mobile_ads.OnInitializationCompleteListener')
+mixin OnInitializationCompleteListener
+    implements $OnInitializationCompleteListener {
+  static $OnInitializationCompleteListenerChannel get _channel =>
+      ChannelRegistrar
+          .instance.implementations.channelOnInitializationCompleteListener;
+
+  @override
+  void onInitializationComplete(
+    covariant InitializationStatus initializationStatus,
+  );
 }
 
 /// The status of the SDK initialization.

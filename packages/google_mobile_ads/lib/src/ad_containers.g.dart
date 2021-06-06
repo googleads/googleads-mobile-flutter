@@ -2,134 +2,289 @@
 
 import 'package:reference/reference.dart';
 
+
 // **************************************************************************
 // ReferenceGenerator
 // **************************************************************************
 
+
 mixin $OnUserEarnedRewardListener {
+  
+  
   dynamic onUserEarnedRewardCallback(
-    $RewardItem reward,
+     $RewardItem reward,
+    
   );
+  
+  
 }
 
 mixin $AppEventListener {
+  
+  
   dynamic onAppEvent(
-    String name,
-    String data,
+     String name,
+     String data,
+    
   );
+  
+  
 }
 
 mixin $AdWithViewListener {
-  dynamic onAdLoaded();
-
-  dynamic onAdFailedToLoad(
-    $LoadAdError error,
+  
+  
+  dynamic onAdLoaded(
+    
   );
-
-  dynamic onAdOpened();
-
-  dynamic onAdWillDismissScreen();
-
-  dynamic onAdClosed();
-
-  dynamic onAdImpression();
+  
+  
+  
+  dynamic onAdFailedToLoad(
+     $LoadAdError error,
+    
+  );
+  
+  
+  
+  dynamic onAdOpened(
+    
+  );
+  
+  
+  
+  dynamic onAdWillDismissScreen(
+    
+  );
+  
+  
+  
+  dynamic onAdClosed(
+    
+  );
+  
+  
+  
+  dynamic onAdImpression(
+    
+  );
+  
+  
 }
 
-mixin $BannerAdListener {}
+mixin $BannerAdListener {
+  
+}
 
-mixin $AdManagerBannerAdListener {}
+mixin $AdManagerBannerAdListener {
+  
+}
 
 mixin $NativeAdListener {
-  dynamic onAdClicked();
+  
+  
+  dynamic onAdClicked(
+    
+  );
+  
+  
 }
 
 mixin $FullScreenContentCallback {
-  dynamic onAdShowedFullScreenContent();
-
-  dynamic onAdDismissedFullScreenContent();
-
-  dynamic onAdWillDismissFullScreenContent();
-
-  dynamic onAdImpression();
-
-  dynamic onAdFailedToShowFullScreenContent();
+  
+  
+  dynamic onAdShowedFullScreenContent(
+    
+  );
+  
+  
+  
+  dynamic onAdDismissedFullScreenContent(
+    
+  );
+  
+  
+  
+  dynamic onAdWillDismissFullScreenContent(
+    
+  );
+  
+  
+  
+  dynamic onAdImpression(
+    
+  );
+  
+  
+  
+  dynamic onAdFailedToShowFullScreenContent(
+    
+  );
+  
+  
 }
 
 mixin $RewardedAdLoadCallback {
+  
+  
   dynamic onAdLoaded(
-    $RewardedAd ad,
+     $RewardedAd ad,
+    
   );
-
+  
+  
+  
   dynamic onAdFailedToLoad(
-    $LoadAdError error,
+     $LoadAdError error,
+    
   );
+  
+  
 }
 
 mixin $InterstitialAdLoadCallback {
+  
+  
   dynamic onAdLoaded(
-    $InterstitialAd ad,
+     $InterstitialAd ad,
+    
   );
-
+  
+  
+  
   dynamic onAdFailedToLoad(
-    $LoadAdError error,
+     $LoadAdError error,
+    
   );
+  
+  
 }
 
 mixin $AdManagerInterstitialAdLoadCallback {
+  
+  
   dynamic onAdLoaded(
-    $AdManagerInterstitialAd ad,
+     $AdManagerInterstitialAd ad,
+    
   );
-
+  
+  
+  
   dynamic onAdFailedToLoad(
-    $LoadAdError error,
+     $LoadAdError error,
+    
   );
+  
+  
 }
 
-mixin $AdError {}
+mixin $AdError {
+  
+}
 
-mixin $ResponseInfo {}
+mixin $ResponseInfo {
+  
+}
 
-mixin $AdapterResponseInfo {}
+mixin $AdapterResponseInfo {
+  
+}
 
-mixin $LoadAdError {}
+mixin $LoadAdError {
+  
+}
 
-mixin $AdRequest {}
+mixin $AdRequest {
+  
+  
+  
+  
+  
+  
+  
+}
 
-mixin $AdManagerAdRequest {}
+mixin $AdManagerAdRequest {
+  
+  
+  
+  
+  
+}
 
-mixin $AdSize {}
+mixin $AdSize {
+  
+}
 
-mixin $BannerAd {}
+mixin $BannerAd {
+  
+  
+  
+}
 
-mixin $AdManagerBannerAd {}
+mixin $AdManagerBannerAd {
+  
+  
+  
+}
 
-mixin $NativeAd {}
+mixin $NativeAd {
+  
+  
+  
+}
 
-mixin $InterstitialAd {}
+mixin $InterstitialAd {
+  
+  
+  
+}
 
-mixin $AdManagerInterstitialAd {}
+mixin $AdManagerInterstitialAd {
+  
+  
+  
+}
 
-mixin $RewardedAd {}
+mixin $RewardedAd {
+  
+  
+  
+}
 
-mixin $RewardItem {}
+mixin $RewardItem {
+  
+}
 
-mixin $ServerSideVerificationOptions {}
+mixin $ServerSideVerificationOptions {
+  
+}
 
-class $OnUserEarnedRewardListenerChannel
-    extends TypeChannel<$OnUserEarnedRewardListener> {
+
+
+class $OnUserEarnedRewardListenerChannel extends TypeChannel<$OnUserEarnedRewardListener> {
   $OnUserEarnedRewardListenerChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.OnUserEarnedRewardListener');
 
   Future<PairedInstance?> $$create(
     $OnUserEarnedRewardListener $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
+
+  
+
+  
+  
+  
 }
 
 class $AppEventListenerChannel extends TypeChannel<$AppEventListener> {
@@ -139,13 +294,22 @@ class $AppEventListenerChannel extends TypeChannel<$AppEventListener> {
   Future<PairedInstance?> $$create(
     $AppEventListener $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
+
+  
+
+  
+  
+  
 }
 
 class $AdWithViewListenerChannel extends TypeChannel<$AdWithViewListener> {
@@ -155,13 +319,32 @@ class $AdWithViewListenerChannel extends TypeChannel<$AdWithViewListener> {
   Future<PairedInstance?> $$create(
     $AdWithViewListener $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }
 
 class $BannerAdListenerChannel extends TypeChannel<$BannerAdListener> {
@@ -171,30 +354,43 @@ class $BannerAdListenerChannel extends TypeChannel<$BannerAdListener> {
   Future<PairedInstance?> $$create(
     $BannerAdListener $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
+
+  
+
+  
 }
 
-class $AdManagerBannerAdListenerChannel
-    extends TypeChannel<$AdManagerBannerAdListener> {
+class $AdManagerBannerAdListenerChannel extends TypeChannel<$AdManagerBannerAdListener> {
   $AdManagerBannerAdListenerChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.AdManagerBannerAdListener');
 
   Future<PairedInstance?> $$create(
     $AdManagerBannerAdListener $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
+
+  
+
+  
 }
 
 class $NativeAdListenerChannel extends TypeChannel<$NativeAdListener> {
@@ -204,82 +400,136 @@ class $NativeAdListenerChannel extends TypeChannel<$NativeAdListener> {
   Future<PairedInstance?> $$create(
     $NativeAdListener $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
+
+  
+
+  
+  
+  
 }
 
-class $FullScreenContentCallbackChannel
-    extends TypeChannel<$FullScreenContentCallback> {
+class $FullScreenContentCallbackChannel extends TypeChannel<$FullScreenContentCallback> {
   $FullScreenContentCallbackChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.FullScreenContentCallback');
 
   Future<PairedInstance?> $$create(
     $FullScreenContentCallback $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }
 
-class $RewardedAdLoadCallbackChannel
-    extends TypeChannel<$RewardedAdLoadCallback> {
+class $RewardedAdLoadCallbackChannel extends TypeChannel<$RewardedAdLoadCallback> {
   $RewardedAdLoadCallbackChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.RewardedAdLoadCallback');
 
   Future<PairedInstance?> $$create(
     $RewardedAdLoadCallback $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
+
+  
+
+  
+  
+  
+  
+  
 }
 
-class $InterstitialAdLoadCallbackChannel
-    extends TypeChannel<$InterstitialAdLoadCallback> {
+class $InterstitialAdLoadCallbackChannel extends TypeChannel<$InterstitialAdLoadCallback> {
   $InterstitialAdLoadCallbackChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.InterstitialAdLoadCallback');
 
   Future<PairedInstance?> $$create(
     $InterstitialAdLoadCallback $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
+
+  
+
+  
+  
+  
+  
+  
 }
 
-class $AdManagerInterstitialAdLoadCallbackChannel
-    extends TypeChannel<$AdManagerInterstitialAdLoadCallback> {
+class $AdManagerInterstitialAdLoadCallbackChannel extends TypeChannel<$AdManagerInterstitialAdLoadCallback> {
   $AdManagerInterstitialAdLoadCallbackChannel(TypeChannelMessenger messenger)
-      : super(
-            messenger, 'google_mobile_ads.AdManagerInterstitialAdLoadCallback');
+      : super(messenger, 'google_mobile_ads.AdManagerInterstitialAdLoadCallback');
 
   Future<PairedInstance?> $$create(
     $AdManagerInterstitialAdLoadCallback $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
+
+  
+
+  
+  
+  
+  
+  
 }
 
 class $AdErrorChannel extends TypeChannel<$AdError> {
@@ -289,20 +539,26 @@ class $AdErrorChannel extends TypeChannel<$AdError> {
   Future<PairedInstance?> $$create(
     $AdError $instance, {
     required bool $owner,
+    
     required int code,
+    
     required String domain,
+    
     required String message,
+    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-        code,
-        domain,
-        message,
+         code,  domain,  message, 
       ],
       owner: $owner,
     );
   }
+
+  
+
+  
 }
 
 class $ResponseInfoChannel extends TypeChannel<$ResponseInfo> {
@@ -312,20 +568,26 @@ class $ResponseInfoChannel extends TypeChannel<$ResponseInfo> {
   Future<PairedInstance?> $$create(
     $ResponseInfo $instance, {
     required bool $owner,
+    
     required String? responseId,
+    
     required String? mediationAdapterClassName,
+    
     required List<$AdapterResponseInfo>? adapterResponses,
+    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-        responseId,
-        mediationAdapterClassName,
-        adapterResponses,
+         responseId,  mediationAdapterClassName,  adapterResponses, 
       ],
       owner: $owner,
     );
   }
+
+  
+
+  
 }
 
 class $AdapterResponseInfoChannel extends TypeChannel<$AdapterResponseInfo> {
@@ -335,24 +597,30 @@ class $AdapterResponseInfoChannel extends TypeChannel<$AdapterResponseInfo> {
   Future<PairedInstance?> $$create(
     $AdapterResponseInfo $instance, {
     required bool $owner,
+    
     required String adapterClassName,
+    
     required int latencyMillis,
+    
     required String description,
+    
     required String credentials,
+    
     required $AdError? adError,
+    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-        adapterClassName,
-        latencyMillis,
-        description,
-        credentials,
-        adError,
+         adapterClassName,  latencyMillis,  description,  credentials,  adError, 
       ],
       owner: $owner,
     );
   }
+
+  
+
+  
 }
 
 class $LoadAdErrorChannel extends TypeChannel<$LoadAdError> {
@@ -362,22 +630,28 @@ class $LoadAdErrorChannel extends TypeChannel<$LoadAdError> {
   Future<PairedInstance?> $$create(
     $LoadAdError $instance, {
     required bool $owner,
+    
     required int code,
+    
     required String domain,
+    
     required String message,
+    
     required $ResponseInfo? responseInfo,
+    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-        code,
-        domain,
-        message,
-        responseInfo,
+         code,  domain,  message,  responseInfo, 
       ],
       owner: $owner,
     );
   }
+
+  
+
+  
 }
 
 class $AdRequestChannel extends TypeChannel<$AdRequest> {
@@ -387,52 +661,68 @@ class $AdRequestChannel extends TypeChannel<$AdRequest> {
   Future<PairedInstance?> $$create(
     $AdRequest $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
 
+  
+
+  
+  
   Future<Object?> $addKeyword(
     $AdRequest $instance,
-    String keyword,
+     String keyword,
+    
   ) {
     return sendInvokeMethod(
       $instance,
       'addKeyword',
       <Object?>[
-        keyword,
+         keyword, 
       ],
     );
   }
-
+  
+  
+  
   Future<Object?> $setContentUrl(
     $AdRequest $instance,
-    String url,
+     String url,
+    
   ) {
     return sendInvokeMethod(
       $instance,
       'setContentUrl',
       <Object?>[
-        url,
+         url, 
       ],
     );
   }
-
+  
+  
+  
   Future<Object?> $setNonPersonalizedAds(
     $AdRequest $instance,
-    bool nonPersonalizedAds,
+     bool nonPersonalizedAds,
+    
   ) {
     return sendInvokeMethod(
       $instance,
       'setNonPersonalizedAds',
       <Object?>[
-        nonPersonalizedAds,
+         nonPersonalizedAds, 
       ],
     );
   }
+  
+  
 }
 
 class $AdManagerAdRequestChannel extends TypeChannel<$AdManagerAdRequest> {
@@ -442,43 +732,54 @@ class $AdManagerAdRequestChannel extends TypeChannel<$AdManagerAdRequest> {
   Future<PairedInstance?> $$create(
     $AdManagerAdRequest $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
 
+  
+
+  
+  
   Future<Object?> $addCustomTargeting(
     $AdManagerAdRequest $instance,
-    String key,
-    String value,
+     String key,
+     String value,
+    
   ) {
     return sendInvokeMethod(
       $instance,
       'addCustomTargeting',
       <Object?>[
-        key,
-        value,
+         key,  value, 
       ],
     );
   }
-
+  
+  
+  
   Future<Object?> $addCustomTargetingList(
     $AdManagerAdRequest $instance,
-    String key,
-    List<String> values,
+     String key,
+     List<String> values,
+    
   ) {
     return sendInvokeMethod(
       $instance,
       'addCustomTargetingList',
       <Object?>[
-        key,
-        values,
+         key,  values, 
       ],
     );
   }
+  
+  
 }
 
 class $AdSizeChannel extends TypeChannel<$AdSize> {
@@ -488,42 +789,54 @@ class $AdSizeChannel extends TypeChannel<$AdSize> {
   Future<PairedInstance?> $$create(
     $AdSize $instance, {
     required bool $owner,
+    
     required int width,
+    
     required int height,
+    
     required String? constant,
+    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-        width,
-        height,
-        constant,
+         width,  height,  constant, 
       ],
       owner: $owner,
     );
   }
 
+  
+  
   Future<Object?> $getPortraitAnchoredAdaptiveBannerAdSize(
-    int width,
+     int width,
+    
   ) {
     return sendInvokeStaticMethod(
       'getPortraitAnchoredAdaptiveBannerAdSize',
       <Object?>[
-        width,
+         width, 
       ],
     );
   }
-
+  
+  
+  
   Future<Object?> $getLandscapeAnchoredAdaptiveBannerAdSize(
-    int width,
+     int width,
+    
   ) {
     return sendInvokeStaticMethod(
       'getLandscapeAnchoredAdaptiveBannerAdSize',
       <Object?>[
-        width,
+         width, 
       ],
     );
   }
+  
+  
+
+  
 }
 
 class $BannerAdChannel extends TypeChannel<$BannerAd> {
@@ -533,32 +846,43 @@ class $BannerAdChannel extends TypeChannel<$BannerAd> {
   Future<PairedInstance?> $$create(
     $BannerAd $instance, {
     required bool $owner,
+    
     required $AdSize size,
+    
     required String adUnitId,
+    
     required $BannerAdListener listener,
+    
     required $AdRequest request,
+    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-        size,
-        adUnitId,
-        listener,
-        request,
+         size,  adUnitId,  listener,  request, 
       ],
       owner: $owner,
     );
   }
 
+  
+
+  
+  
   Future<Object?> $load(
     $BannerAd $instance,
+    
   ) {
     return sendInvokeMethod(
       $instance,
       'load',
-      <Object?>[],
+      <Object?>[
+        
+      ],
     );
   }
+  
+  
 }
 
 class $AdManagerBannerAdChannel extends TypeChannel<$AdManagerBannerAd> {
@@ -568,34 +892,45 @@ class $AdManagerBannerAdChannel extends TypeChannel<$AdManagerBannerAd> {
   Future<PairedInstance?> $$create(
     $AdManagerBannerAd $instance, {
     required bool $owner,
+    
     required List<$AdSize> sizes,
+    
     required String adUnitId,
+    
     required $AdManagerBannerAdListener listener,
+    
     required $AdManagerAdRequest request,
+    
     required $AppEventListener? appEventListener,
+    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-        sizes,
-        adUnitId,
-        listener,
-        request,
-        appEventListener,
+         sizes,  adUnitId,  listener,  request,  appEventListener, 
       ],
       owner: $owner,
     );
   }
 
+  
+
+  
+  
   Future<Object?> $load(
     $AdManagerBannerAd $instance,
+    
   ) {
     return sendInvokeMethod(
       $instance,
       'load',
-      <Object?>[],
+      <Object?>[
+        
+      ],
     );
   }
+  
+  
 }
 
 class $NativeAdChannel extends TypeChannel<$NativeAd> {
@@ -605,34 +940,45 @@ class $NativeAdChannel extends TypeChannel<$NativeAd> {
   Future<PairedInstance?> $$create(
     $NativeAd $instance, {
     required bool $owner,
+    
     required String adUnitId,
+    
     required String factoryId,
+    
     required $NativeAdListener listener,
+    
     required $AdRequest request,
-    required Map<String, Object>? customOptions,
+    
+    required Map<String,Object>? customOptions,
+    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-        adUnitId,
-        factoryId,
-        listener,
-        request,
-        customOptions,
+         adUnitId,  factoryId,  listener,  request,  customOptions, 
       ],
       owner: $owner,
     );
   }
 
+  
+
+  
+  
   Future<Object?> $load(
     $NativeAd $instance,
+    
   ) {
     return sendInvokeMethod(
       $instance,
       'load',
-      <Object?>[],
+      <Object?>[
+        
+      ],
     );
   }
+  
+  
 }
 
 class $InterstitialAdChannel extends TypeChannel<$InterstitialAd> {
@@ -642,88 +988,108 @@ class $InterstitialAdChannel extends TypeChannel<$InterstitialAd> {
   Future<PairedInstance?> $$create(
     $InterstitialAd $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
 
+  
+  
   Future<Object?> $load(
-    String adUnitId,
-    $AdRequest request,
-    $InterstitialAdLoadCallback adLoadCallback,
+     String adUnitId,
+     $AdRequest request,
+     $InterstitialAdLoadCallback adLoadCallback,
+    
   ) {
     return sendInvokeStaticMethod(
       'load',
       <Object?>[
-        adUnitId,
-        request,
-        adLoadCallback,
+         adUnitId,  request,  adLoadCallback, 
       ],
     );
   }
+  
+  
 
+  
+  
   Future<Object?> $show(
     $InterstitialAd $instance,
-    $FullScreenContentCallback? fullScreenContentCallback,
+     $FullScreenContentCallback? fullScreenContentCallback,
+    
   ) {
     return sendInvokeMethod(
       $instance,
       'show',
       <Object?>[
-        fullScreenContentCallback,
+         fullScreenContentCallback, 
       ],
     );
   }
+  
+  
 }
 
-class $AdManagerInterstitialAdChannel
-    extends TypeChannel<$AdManagerInterstitialAd> {
+class $AdManagerInterstitialAdChannel extends TypeChannel<$AdManagerInterstitialAd> {
   $AdManagerInterstitialAdChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.AdManagerInterstitialAd');
 
   Future<PairedInstance?> $$create(
     $AdManagerInterstitialAd $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
 
+  
+  
   Future<Object?> $load(
-    String adUnitId,
-    $AdManagerAdRequest request,
-    $AdManagerInterstitialAdLoadCallback adLoadCallback,
+     String adUnitId,
+     $AdManagerAdRequest request,
+     $AdManagerInterstitialAdLoadCallback adLoadCallback,
+    
   ) {
     return sendInvokeStaticMethod(
       'load',
       <Object?>[
-        adUnitId,
-        request,
-        adLoadCallback,
+         adUnitId,  request,  adLoadCallback, 
       ],
     );
   }
+  
+  
 
+  
+  
   Future<Object?> $show(
     $AdManagerInterstitialAd $instance,
-    $AppEventListener? appEventListener,
-    $FullScreenContentCallback? fullScreenContentCallback,
+     $AppEventListener? appEventListener,
+     $FullScreenContentCallback? fullScreenContentCallback,
+    
   ) {
     return sendInvokeMethod(
       $instance,
       'show',
       <Object?>[
-        appEventListener,
-        fullScreenContentCallback,
+         appEventListener,  fullScreenContentCallback, 
       ],
     );
   }
+  
+  
 }
 
 class $RewardedAdChannel extends TypeChannel<$RewardedAd> {
@@ -733,45 +1099,54 @@ class $RewardedAdChannel extends TypeChannel<$RewardedAd> {
   Future<PairedInstance?> $$create(
     $RewardedAd $instance, {
     required bool $owner,
+    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[],
+      <Object?>[
+        
+      ],
       owner: $owner,
     );
   }
 
+  
+  
   Future<Object?> $load(
-    String adUnitId,
-    $AdRequest request,
-    $RewardedAdLoadCallback adLoadCallback,
+     String adUnitId,
+     $AdRequest request,
+     $RewardedAdLoadCallback adLoadCallback,
+    
   ) {
     return sendInvokeStaticMethod(
       'load',
       <Object?>[
-        adUnitId,
-        request,
-        adLoadCallback,
+         adUnitId,  request,  adLoadCallback, 
       ],
     );
   }
+  
+  
 
+  
+  
   Future<Object?> $show(
     $RewardedAd $instance,
-    $OnUserEarnedRewardListener onUserEarnedReward,
-    $ServerSideVerificationOptions? serverSideVerificationOptions,
-    $FullScreenContentCallback? fullScreenContentCallback,
+     $OnUserEarnedRewardListener onUserEarnedReward,
+     $ServerSideVerificationOptions? serverSideVerificationOptions,
+     $FullScreenContentCallback? fullScreenContentCallback,
+    
   ) {
     return sendInvokeMethod(
       $instance,
       'show',
       <Object?>[
-        onUserEarnedReward,
-        serverSideVerificationOptions,
-        fullScreenContentCallback,
+         onUserEarnedReward,  serverSideVerificationOptions,  fullScreenContentCallback, 
       ],
     );
   }
+  
+  
 }
 
 class $RewardItemChannel extends TypeChannel<$RewardItem> {
@@ -781,58 +1156,79 @@ class $RewardItemChannel extends TypeChannel<$RewardItem> {
   Future<PairedInstance?> $$create(
     $RewardItem $instance, {
     required bool $owner,
+    
     required num amount,
+    
     required String type,
+    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-        amount,
-        type,
+         amount,  type, 
       ],
       owner: $owner,
     );
   }
+
+  
+
+  
 }
 
-class $ServerSideVerificationOptionsChannel
-    extends TypeChannel<$ServerSideVerificationOptions> {
+class $ServerSideVerificationOptionsChannel extends TypeChannel<$ServerSideVerificationOptions> {
   $ServerSideVerificationOptionsChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.ServerSideVerificationOptions');
 
   Future<PairedInstance?> $$create(
     $ServerSideVerificationOptions $instance, {
     required bool $owner,
+    
     required String? userId,
+    
     required String? customData,
+    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-        userId,
-        customData,
+         userId,  customData, 
       ],
       owner: $owner,
     );
   }
+
+  
+
+  
 }
 
-class $OnUserEarnedRewardListenerHandler
-    implements TypeChannelHandler<$OnUserEarnedRewardListener> {
+
+
+class $OnUserEarnedRewardListenerHandler implements TypeChannelHandler<$OnUserEarnedRewardListener> {
   $OnUserEarnedRewardListener $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
 
+  
+
+  
+  
   dynamic $onUserEarnedRewardCallback(
     $OnUserEarnedRewardListener $instance,
+    
     $RewardItem reward,
+    
   ) {
     return $instance.onUserEarnedRewardCallback(
-      reward,
+       reward, 
     );
   }
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -841,6 +1237,7 @@ class $OnUserEarnedRewardListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -857,6 +1254,7 @@ class $OnUserEarnedRewardListenerHandler
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -868,11 +1266,17 @@ class $OnUserEarnedRewardListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
       case 'onUserEarnedRewardCallback':
         return $onUserEarnedRewardCallback(
           instance,
-          arguments[0] as $RewardItem,
+           arguments[
+                  0]
+              as $RewardItem, 
         );
+      
+      
     }
 
     throw ArgumentError.value(
@@ -883,24 +1287,32 @@ class $OnUserEarnedRewardListenerHandler
   }
 }
 
-class $AppEventListenerHandler
-    implements TypeChannelHandler<$AppEventListener> {
+class $AppEventListenerHandler implements TypeChannelHandler<$AppEventListener> {
   $AppEventListener $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
 
+  
+
+  
+  
   dynamic $onAppEvent(
     $AppEventListener $instance,
+    
     String name,
+    
     String data,
+    
   ) {
     return $instance.onAppEvent(
-      name,
-      data,
+       name,  data, 
     );
   }
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -909,6 +1321,7 @@ class $AppEventListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -925,6 +1338,7 @@ class $AppEventListenerHandler
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -936,12 +1350,19 @@ class $AppEventListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
       case 'onAppEvent':
         return $onAppEvent(
           instance,
-          arguments[0] as String,
-          arguments[1] as String,
+           arguments[
+                  0]
+              as String,  arguments[
+                  1]
+              as String, 
         );
+      
+      
     }
 
     throw ArgumentError.value(
@@ -952,52 +1373,85 @@ class $AppEventListenerHandler
   }
 }
 
-class $AdWithViewListenerHandler
-    implements TypeChannelHandler<$AdWithViewListener> {
+class $AdWithViewListenerHandler implements TypeChannelHandler<$AdWithViewListener> {
   $AdWithViewListener $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
 
+  
+
+  
+  
   dynamic $onAdLoaded(
     $AdWithViewListener $instance,
+    
   ) {
-    return $instance.onAdLoaded();
-  }
-
-  dynamic $onAdFailedToLoad(
-    $AdWithViewListener $instance,
-    $LoadAdError error,
-  ) {
-    return $instance.onAdFailedToLoad(
-      error,
+    return $instance.onAdLoaded(
+      
     );
   }
-
+  
+  
+  
+  dynamic $onAdFailedToLoad(
+    $AdWithViewListener $instance,
+    
+    $LoadAdError error,
+    
+  ) {
+    return $instance.onAdFailedToLoad(
+       error, 
+    );
+  }
+  
+  
+  
   dynamic $onAdOpened(
     $AdWithViewListener $instance,
+    
   ) {
-    return $instance.onAdOpened();
+    return $instance.onAdOpened(
+      
+    );
   }
-
+  
+  
+  
   dynamic $onAdWillDismissScreen(
     $AdWithViewListener $instance,
+    
   ) {
-    return $instance.onAdWillDismissScreen();
+    return $instance.onAdWillDismissScreen(
+      
+    );
   }
-
+  
+  
+  
   dynamic $onAdClosed(
     $AdWithViewListener $instance,
+    
   ) {
-    return $instance.onAdClosed();
+    return $instance.onAdClosed(
+      
+    );
   }
-
+  
+  
+  
   dynamic $onAdImpression(
     $AdWithViewListener $instance,
+    
   ) {
-    return $instance.onAdImpression();
+    return $instance.onAdImpression(
+      
+    );
   }
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1006,6 +1460,7 @@ class $AdWithViewListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1022,6 +1477,7 @@ class $AdWithViewListenerHandler
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -1033,36 +1489,57 @@ class $AdWithViewListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
       case 'onAdLoaded':
         return $onAdLoaded(
           instance,
+          
         );
-
+      
+      
+      
       case 'onAdFailedToLoad':
         return $onAdFailedToLoad(
           instance,
-          arguments[0] as $LoadAdError,
+           arguments[
+                  0]
+              as $LoadAdError, 
         );
-
+      
+      
+      
       case 'onAdOpened':
         return $onAdOpened(
           instance,
+          
         );
-
+      
+      
+      
       case 'onAdWillDismissScreen':
         return $onAdWillDismissScreen(
           instance,
+          
         );
-
+      
+      
+      
       case 'onAdClosed':
         return $onAdClosed(
           instance,
+          
         );
-
+      
+      
+      
       case 'onAdImpression':
         return $onAdImpression(
           instance,
+          
         );
+      
+      
     }
 
     throw ArgumentError.value(
@@ -1073,13 +1550,17 @@ class $AdWithViewListenerHandler
   }
 }
 
-class $BannerAdListenerHandler
-    implements TypeChannelHandler<$BannerAdListener> {
+class $BannerAdListenerHandler implements TypeChannelHandler<$BannerAdListener> {
   $BannerAdListener $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1088,6 +1569,7 @@ class $BannerAdListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1104,6 +1586,7 @@ class $BannerAdListenerHandler
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -1115,6 +1598,7 @@ class $BannerAdListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1125,13 +1609,17 @@ class $BannerAdListenerHandler
   }
 }
 
-class $AdManagerBannerAdListenerHandler
-    implements TypeChannelHandler<$AdManagerBannerAdListener> {
+class $AdManagerBannerAdListenerHandler implements TypeChannelHandler<$AdManagerBannerAdListener> {
   $AdManagerBannerAdListener $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1140,6 +1628,7 @@ class $AdManagerBannerAdListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1156,6 +1645,7 @@ class $AdManagerBannerAdListenerHandler
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -1167,6 +1657,7 @@ class $AdManagerBannerAdListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1177,19 +1668,28 @@ class $AdManagerBannerAdListenerHandler
   }
 }
 
-class $NativeAdListenerHandler
-    implements TypeChannelHandler<$NativeAdListener> {
+class $NativeAdListenerHandler implements TypeChannelHandler<$NativeAdListener> {
   $NativeAdListener $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
 
+  
+
+  
+  
   dynamic $onAdClicked(
     $NativeAdListener $instance,
+    
   ) {
-    return $instance.onAdClicked();
+    return $instance.onAdClicked(
+      
+    );
   }
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1198,6 +1698,7 @@ class $NativeAdListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1214,6 +1715,7 @@ class $NativeAdListenerHandler
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -1225,10 +1727,15 @@ class $NativeAdListenerHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
       case 'onAdClicked':
         return $onAdClicked(
           instance,
+          
         );
+      
+      
     }
 
     throw ArgumentError.value(
@@ -1239,43 +1746,72 @@ class $NativeAdListenerHandler
   }
 }
 
-class $FullScreenContentCallbackHandler
-    implements TypeChannelHandler<$FullScreenContentCallback> {
+class $FullScreenContentCallbackHandler implements TypeChannelHandler<$FullScreenContentCallback> {
   $FullScreenContentCallback $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
 
+  
+
+  
+  
   dynamic $onAdShowedFullScreenContent(
     $FullScreenContentCallback $instance,
+    
   ) {
-    return $instance.onAdShowedFullScreenContent();
+    return $instance.onAdShowedFullScreenContent(
+      
+    );
   }
-
+  
+  
+  
   dynamic $onAdDismissedFullScreenContent(
     $FullScreenContentCallback $instance,
+    
   ) {
-    return $instance.onAdDismissedFullScreenContent();
+    return $instance.onAdDismissedFullScreenContent(
+      
+    );
   }
-
+  
+  
+  
   dynamic $onAdWillDismissFullScreenContent(
     $FullScreenContentCallback $instance,
+    
   ) {
-    return $instance.onAdWillDismissFullScreenContent();
+    return $instance.onAdWillDismissFullScreenContent(
+      
+    );
   }
-
+  
+  
+  
   dynamic $onAdImpression(
     $FullScreenContentCallback $instance,
+    
   ) {
-    return $instance.onAdImpression();
+    return $instance.onAdImpression(
+      
+    );
   }
-
+  
+  
+  
   dynamic $onAdFailedToShowFullScreenContent(
     $FullScreenContentCallback $instance,
+    
   ) {
-    return $instance.onAdFailedToShowFullScreenContent();
+    return $instance.onAdFailedToShowFullScreenContent(
+      
+    );
   }
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1284,6 +1820,7 @@ class $FullScreenContentCallbackHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1300,6 +1837,7 @@ class $FullScreenContentCallbackHandler
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -1311,30 +1849,47 @@ class $FullScreenContentCallbackHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
       case 'onAdShowedFullScreenContent':
         return $onAdShowedFullScreenContent(
           instance,
+          
         );
-
+      
+      
+      
       case 'onAdDismissedFullScreenContent':
         return $onAdDismissedFullScreenContent(
           instance,
+          
         );
-
+      
+      
+      
       case 'onAdWillDismissFullScreenContent':
         return $onAdWillDismissFullScreenContent(
           instance,
+          
         );
-
+      
+      
+      
       case 'onAdImpression':
         return $onAdImpression(
           instance,
+          
         );
-
+      
+      
+      
       case 'onAdFailedToShowFullScreenContent':
         return $onAdFailedToShowFullScreenContent(
           instance,
+          
         );
+      
+      
     }
 
     throw ArgumentError.value(
@@ -1345,31 +1900,43 @@ class $FullScreenContentCallbackHandler
   }
 }
 
-class $RewardedAdLoadCallbackHandler
-    implements TypeChannelHandler<$RewardedAdLoadCallback> {
+class $RewardedAdLoadCallbackHandler implements TypeChannelHandler<$RewardedAdLoadCallback> {
   $RewardedAdLoadCallback $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
 
+  
+
+  
+  
   dynamic $onAdLoaded(
     $RewardedAdLoadCallback $instance,
+    
     $RewardedAd ad,
+    
   ) {
     return $instance.onAdLoaded(
-      ad,
+       ad, 
     );
   }
-
+  
+  
+  
   dynamic $onAdFailedToLoad(
     $RewardedAdLoadCallback $instance,
+    
     $LoadAdError error,
+    
   ) {
     return $instance.onAdFailedToLoad(
-      error,
+       error, 
     );
   }
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1378,6 +1945,7 @@ class $RewardedAdLoadCallbackHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1394,6 +1962,7 @@ class $RewardedAdLoadCallbackHandler
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -1405,17 +1974,27 @@ class $RewardedAdLoadCallbackHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
       case 'onAdLoaded':
         return $onAdLoaded(
           instance,
-          arguments[0] as $RewardedAd,
+           arguments[
+                  0]
+              as $RewardedAd, 
         );
-
+      
+      
+      
       case 'onAdFailedToLoad':
         return $onAdFailedToLoad(
           instance,
-          arguments[0] as $LoadAdError,
+           arguments[
+                  0]
+              as $LoadAdError, 
         );
+      
+      
     }
 
     throw ArgumentError.value(
@@ -1426,31 +2005,43 @@ class $RewardedAdLoadCallbackHandler
   }
 }
 
-class $InterstitialAdLoadCallbackHandler
-    implements TypeChannelHandler<$InterstitialAdLoadCallback> {
+class $InterstitialAdLoadCallbackHandler implements TypeChannelHandler<$InterstitialAdLoadCallback> {
   $InterstitialAdLoadCallback $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
 
+  
+
+  
+  
   dynamic $onAdLoaded(
     $InterstitialAdLoadCallback $instance,
+    
     $InterstitialAd ad,
+    
   ) {
     return $instance.onAdLoaded(
-      ad,
+       ad, 
     );
   }
-
+  
+  
+  
   dynamic $onAdFailedToLoad(
     $InterstitialAdLoadCallback $instance,
+    
     $LoadAdError error,
+    
   ) {
     return $instance.onAdFailedToLoad(
-      error,
+       error, 
     );
   }
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1459,6 +2050,7 @@ class $InterstitialAdLoadCallbackHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1475,6 +2067,7 @@ class $InterstitialAdLoadCallbackHandler
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -1486,17 +2079,27 @@ class $InterstitialAdLoadCallbackHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
       case 'onAdLoaded':
         return $onAdLoaded(
           instance,
-          arguments[0] as $InterstitialAd,
+           arguments[
+                  0]
+              as $InterstitialAd, 
         );
-
+      
+      
+      
       case 'onAdFailedToLoad':
         return $onAdFailedToLoad(
           instance,
-          arguments[0] as $LoadAdError,
+           arguments[
+                  0]
+              as $LoadAdError, 
         );
+      
+      
     }
 
     throw ArgumentError.value(
@@ -1507,31 +2110,43 @@ class $InterstitialAdLoadCallbackHandler
   }
 }
 
-class $AdManagerInterstitialAdLoadCallbackHandler
-    implements TypeChannelHandler<$AdManagerInterstitialAdLoadCallback> {
+class $AdManagerInterstitialAdLoadCallbackHandler implements TypeChannelHandler<$AdManagerInterstitialAdLoadCallback> {
   $AdManagerInterstitialAdLoadCallback $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
 
+  
+
+  
+  
   dynamic $onAdLoaded(
     $AdManagerInterstitialAdLoadCallback $instance,
+    
     $AdManagerInterstitialAd ad,
+    
   ) {
     return $instance.onAdLoaded(
-      ad,
+       ad, 
     );
   }
-
+  
+  
+  
   dynamic $onAdFailedToLoad(
     $AdManagerInterstitialAdLoadCallback $instance,
+    
     $LoadAdError error,
+    
   ) {
     return $instance.onAdFailedToLoad(
-      error,
+       error, 
     );
   }
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1540,6 +2155,7 @@ class $AdManagerInterstitialAdLoadCallbackHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1556,6 +2172,7 @@ class $AdManagerInterstitialAdLoadCallbackHandler
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -1567,17 +2184,27 @@ class $AdManagerInterstitialAdLoadCallbackHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
       case 'onAdLoaded':
         return $onAdLoaded(
           instance,
-          arguments[0] as $AdManagerInterstitialAd,
+           arguments[
+                  0]
+              as $AdManagerInterstitialAd, 
         );
-
+      
+      
+      
       case 'onAdFailedToLoad':
         return $onAdFailedToLoad(
           instance,
-          arguments[0] as $LoadAdError,
+           arguments[
+                  0]
+              as $LoadAdError, 
         );
+      
+      
     }
 
     throw ArgumentError.value(
@@ -1591,12 +2218,20 @@ class $AdManagerInterstitialAdLoadCallbackHandler
 class $AdErrorHandler implements TypeChannelHandler<$AdError> {
   $AdError $$create(
     TypeChannelMessenger messenger,
+    
     int code,
+    
     String domain,
+    
     String message,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1605,6 +2240,7 @@ class $AdErrorHandler implements TypeChannelHandler<$AdError> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1621,9 +2257,10 @@ class $AdErrorHandler implements TypeChannelHandler<$AdError> {
   ) {
     return $$create(
       messenger,
-      arguments[0] as int,
-      arguments[1] as String,
-      arguments[2] as String,
+       arguments[0]
+          as int,  arguments[1]
+          as String,  arguments[2]
+          as String, 
     );
   }
 
@@ -1635,6 +2272,7 @@ class $AdErrorHandler implements TypeChannelHandler<$AdError> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1648,12 +2286,20 @@ class $AdErrorHandler implements TypeChannelHandler<$AdError> {
 class $ResponseInfoHandler implements TypeChannelHandler<$ResponseInfo> {
   $ResponseInfo $$create(
     TypeChannelMessenger messenger,
+    
     String? responseId,
+    
     String? mediationAdapterClassName,
+    
     List<$AdapterResponseInfo>? adapterResponses,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1662,6 +2308,7 @@ class $ResponseInfoHandler implements TypeChannelHandler<$ResponseInfo> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1678,9 +2325,10 @@ class $ResponseInfoHandler implements TypeChannelHandler<$ResponseInfo> {
   ) {
     return $$create(
       messenger,
-      arguments[0] as String?,
-      arguments[1] as String?,
-      arguments[2] as List<$AdapterResponseInfo>?,
+       arguments[0]
+          as String?,  arguments[1]
+          as String?,  arguments[2]
+          as List<$AdapterResponseInfo>?, 
     );
   }
 
@@ -1692,6 +2340,7 @@ class $ResponseInfoHandler implements TypeChannelHandler<$ResponseInfo> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1702,18 +2351,27 @@ class $ResponseInfoHandler implements TypeChannelHandler<$ResponseInfo> {
   }
 }
 
-class $AdapterResponseInfoHandler
-    implements TypeChannelHandler<$AdapterResponseInfo> {
+class $AdapterResponseInfoHandler implements TypeChannelHandler<$AdapterResponseInfo> {
   $AdapterResponseInfo $$create(
     TypeChannelMessenger messenger,
+    
     String adapterClassName,
+    
     int latencyMillis,
+    
     String description,
+    
     String credentials,
+    
     $AdError? adError,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1722,6 +2380,7 @@ class $AdapterResponseInfoHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1738,11 +2397,12 @@ class $AdapterResponseInfoHandler
   ) {
     return $$create(
       messenger,
-      arguments[0] as String,
-      arguments[1] as int,
-      arguments[2] as String,
-      arguments[3] as String,
-      arguments[4] as $AdError?,
+       arguments[0]
+          as String,  arguments[1]
+          as int,  arguments[2]
+          as String,  arguments[3]
+          as String,  arguments[4]
+          as $AdError?, 
     );
   }
 
@@ -1754,6 +2414,7 @@ class $AdapterResponseInfoHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1767,13 +2428,22 @@ class $AdapterResponseInfoHandler
 class $LoadAdErrorHandler implements TypeChannelHandler<$LoadAdError> {
   $LoadAdError $$create(
     TypeChannelMessenger messenger,
+    
     int code,
+    
     String domain,
+    
     String message,
+    
     $ResponseInfo? responseInfo,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1782,6 +2452,7 @@ class $LoadAdErrorHandler implements TypeChannelHandler<$LoadAdError> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1798,10 +2469,11 @@ class $LoadAdErrorHandler implements TypeChannelHandler<$LoadAdError> {
   ) {
     return $$create(
       messenger,
-      arguments[0] as int,
-      arguments[1] as String,
-      arguments[2] as String,
-      arguments[3] as $ResponseInfo?,
+       arguments[0]
+          as int,  arguments[1]
+          as String,  arguments[2]
+          as String,  arguments[3]
+          as $ResponseInfo?, 
     );
   }
 
@@ -1813,6 +2485,7 @@ class $LoadAdErrorHandler implements TypeChannelHandler<$LoadAdError> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1826,9 +2499,20 @@ class $LoadAdErrorHandler implements TypeChannelHandler<$LoadAdError> {
 class $AdRequestHandler implements TypeChannelHandler<$AdRequest> {
   $AdRequest $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
+  
+  
+  
+  
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1837,6 +2521,7 @@ class $AdRequestHandler implements TypeChannelHandler<$AdRequest> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1853,6 +2538,7 @@ class $AdRequestHandler implements TypeChannelHandler<$AdRequest> {
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -1864,6 +2550,13 @@ class $AdRequestHandler implements TypeChannelHandler<$AdRequest> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
+      
+      
+      
+      
+      
     }
 
     throw ArgumentError.value(
@@ -1874,13 +2567,21 @@ class $AdRequestHandler implements TypeChannelHandler<$AdRequest> {
   }
 }
 
-class $AdManagerAdRequestHandler
-    implements TypeChannelHandler<$AdManagerAdRequest> {
+class $AdManagerAdRequestHandler implements TypeChannelHandler<$AdManagerAdRequest> {
   $AdManagerAdRequest $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
+  
+  
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1889,6 +2590,7 @@ class $AdManagerAdRequestHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1905,6 +2607,7 @@ class $AdManagerAdRequestHandler
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -1916,6 +2619,11 @@ class $AdManagerAdRequestHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
+      
+      
+      
     }
 
     throw ArgumentError.value(
@@ -1929,12 +2637,24 @@ class $AdManagerAdRequestHandler
 class $AdSizeHandler implements TypeChannelHandler<$AdSize> {
   $AdSize $$create(
     TypeChannelMessenger messenger,
+    
     int width,
+    
     int height,
+    
     String? constant,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+  
+  
+  
+  
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -1943,6 +2663,11 @@ class $AdSizeHandler implements TypeChannelHandler<$AdSize> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
+      
+      
+      
     }
 
     throw ArgumentError.value(
@@ -1959,9 +2684,10 @@ class $AdSizeHandler implements TypeChannelHandler<$AdSize> {
   ) {
     return $$create(
       messenger,
-      arguments[0] as int,
-      arguments[1] as int,
-      arguments[2] as String?,
+       arguments[0]
+          as int,  arguments[1]
+          as int,  arguments[2]
+          as String?, 
     );
   }
 
@@ -1973,6 +2699,7 @@ class $AdSizeHandler implements TypeChannelHandler<$AdSize> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -1986,13 +2713,24 @@ class $AdSizeHandler implements TypeChannelHandler<$AdSize> {
 class $BannerAdHandler implements TypeChannelHandler<$BannerAd> {
   $BannerAd $$create(
     TypeChannelMessenger messenger,
+    
     $AdSize size,
+    
     String adUnitId,
+    
     $BannerAdListener listener,
+    
     $AdRequest request,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -2001,6 +2739,7 @@ class $BannerAdHandler implements TypeChannelHandler<$BannerAd> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -2017,10 +2756,11 @@ class $BannerAdHandler implements TypeChannelHandler<$BannerAd> {
   ) {
     return $$create(
       messenger,
-      arguments[0] as $AdSize,
-      arguments[1] as String,
-      arguments[2] as $BannerAdListener,
-      arguments[3] as $AdRequest,
+       arguments[0]
+          as $AdSize,  arguments[1]
+          as String,  arguments[2]
+          as $BannerAdListener,  arguments[3]
+          as $AdRequest, 
     );
   }
 
@@ -2032,6 +2772,9 @@ class $BannerAdHandler implements TypeChannelHandler<$BannerAd> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
+      
     }
 
     throw ArgumentError.value(
@@ -2042,18 +2785,29 @@ class $BannerAdHandler implements TypeChannelHandler<$BannerAd> {
   }
 }
 
-class $AdManagerBannerAdHandler
-    implements TypeChannelHandler<$AdManagerBannerAd> {
+class $AdManagerBannerAdHandler implements TypeChannelHandler<$AdManagerBannerAd> {
   $AdManagerBannerAd $$create(
     TypeChannelMessenger messenger,
+    
     List<$AdSize> sizes,
+    
     String adUnitId,
+    
     $AdManagerBannerAdListener listener,
+    
     $AdManagerAdRequest request,
+    
     $AppEventListener? appEventListener,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -2062,6 +2816,7 @@ class $AdManagerBannerAdHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -2078,11 +2833,12 @@ class $AdManagerBannerAdHandler
   ) {
     return $$create(
       messenger,
-      arguments[0] as List<$AdSize>,
-      arguments[1] as String,
-      arguments[2] as $AdManagerBannerAdListener,
-      arguments[3] as $AdManagerAdRequest,
-      arguments[4] as $AppEventListener?,
+       arguments[0]
+          as List<$AdSize>,  arguments[1]
+          as String,  arguments[2]
+          as $AdManagerBannerAdListener,  arguments[3]
+          as $AdManagerAdRequest,  arguments[4]
+          as $AppEventListener?, 
     );
   }
 
@@ -2094,6 +2850,9 @@ class $AdManagerBannerAdHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
+      
     }
 
     throw ArgumentError.value(
@@ -2107,14 +2866,26 @@ class $AdManagerBannerAdHandler
 class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
   $NativeAd $$create(
     TypeChannelMessenger messenger,
+    
     String adUnitId,
+    
     String factoryId,
+    
     $NativeAdListener listener,
+    
     $AdRequest request,
-    Map<String, Object>? customOptions,
+    
+    Map<String,Object>? customOptions,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -2123,6 +2894,7 @@ class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -2139,11 +2911,12 @@ class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
   ) {
     return $$create(
       messenger,
-      arguments[0] as String,
-      arguments[1] as String,
-      arguments[2] as $NativeAdListener,
-      arguments[3] as $AdRequest,
-      arguments[4] as Map<String, Object>?,
+       arguments[0]
+          as String,  arguments[1]
+          as String,  arguments[2]
+          as $NativeAdListener,  arguments[3]
+          as $AdRequest,  arguments[4]
+          as Map<String,Object>?, 
     );
   }
 
@@ -2155,6 +2928,9 @@ class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
+      
     }
 
     throw ArgumentError.value(
@@ -2168,9 +2944,18 @@ class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
 class $InterstitialAdHandler implements TypeChannelHandler<$InterstitialAd> {
   $InterstitialAd $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+  
+  
+
+  
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -2179,6 +2964,9 @@ class $InterstitialAdHandler implements TypeChannelHandler<$InterstitialAd> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
+      
     }
 
     throw ArgumentError.value(
@@ -2195,6 +2983,7 @@ class $InterstitialAdHandler implements TypeChannelHandler<$InterstitialAd> {
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -2206,6 +2995,9 @@ class $InterstitialAdHandler implements TypeChannelHandler<$InterstitialAd> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
+      
     }
 
     throw ArgumentError.value(
@@ -2216,13 +3008,21 @@ class $InterstitialAdHandler implements TypeChannelHandler<$InterstitialAd> {
   }
 }
 
-class $AdManagerInterstitialAdHandler
-    implements TypeChannelHandler<$AdManagerInterstitialAd> {
+class $AdManagerInterstitialAdHandler implements TypeChannelHandler<$AdManagerInterstitialAd> {
   $AdManagerInterstitialAd $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+  
+  
+
+  
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -2231,6 +3031,9 @@ class $AdManagerInterstitialAdHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
+      
     }
 
     throw ArgumentError.value(
@@ -2247,6 +3050,7 @@ class $AdManagerInterstitialAdHandler
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -2258,6 +3062,9 @@ class $AdManagerInterstitialAdHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
+      
     }
 
     throw ArgumentError.value(
@@ -2271,9 +3078,18 @@ class $AdManagerInterstitialAdHandler
 class $RewardedAdHandler implements TypeChannelHandler<$RewardedAd> {
   $RewardedAd $$create(
     TypeChannelMessenger messenger,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+  
+  
+
+  
+  
+  
 
   @override
   Object? invokeStaticMethod(
@@ -2282,6 +3098,9 @@ class $RewardedAdHandler implements TypeChannelHandler<$RewardedAd> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
+      
     }
 
     throw ArgumentError.value(
@@ -2298,6 +3117,7 @@ class $RewardedAdHandler implements TypeChannelHandler<$RewardedAd> {
   ) {
     return $$create(
       messenger,
+      
     );
   }
 
@@ -2309,6 +3129,9 @@ class $RewardedAdHandler implements TypeChannelHandler<$RewardedAd> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
+      
+      
     }
 
     throw ArgumentError.value(
@@ -2322,11 +3145,18 @@ class $RewardedAdHandler implements TypeChannelHandler<$RewardedAd> {
 class $RewardItemHandler implements TypeChannelHandler<$RewardItem> {
   $RewardItem $$create(
     TypeChannelMessenger messenger,
+    
     num amount,
+    
     String type,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -2335,6 +3165,7 @@ class $RewardItemHandler implements TypeChannelHandler<$RewardItem> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -2351,8 +3182,9 @@ class $RewardItemHandler implements TypeChannelHandler<$RewardItem> {
   ) {
     return $$create(
       messenger,
-      arguments[0] as num,
-      arguments[1] as String,
+       arguments[0]
+          as num,  arguments[1]
+          as String, 
     );
   }
 
@@ -2364,6 +3196,7 @@ class $RewardItemHandler implements TypeChannelHandler<$RewardItem> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -2374,15 +3207,21 @@ class $RewardItemHandler implements TypeChannelHandler<$RewardItem> {
   }
 }
 
-class $ServerSideVerificationOptionsHandler
-    implements TypeChannelHandler<$ServerSideVerificationOptions> {
+class $ServerSideVerificationOptionsHandler implements TypeChannelHandler<$ServerSideVerificationOptions> {
   $ServerSideVerificationOptions $$create(
     TypeChannelMessenger messenger,
+    
     String? userId,
+    
     String? customData,
+    
   ) {
     throw UnimplementedError();
   }
+
+  
+
+  
 
   @override
   Object? invokeStaticMethod(
@@ -2391,6 +3230,7 @@ class $ServerSideVerificationOptionsHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -2407,8 +3247,9 @@ class $ServerSideVerificationOptionsHandler
   ) {
     return $$create(
       messenger,
-      arguments[0] as String?,
-      arguments[1] as String?,
+       arguments[0]
+          as String?,  arguments[1]
+          as String?, 
     );
   }
 
@@ -2420,6 +3261,7 @@ class $ServerSideVerificationOptionsHandler
     List<Object?> arguments,
   ) {
     switch (methodName) {
+      
     }
 
     throw ArgumentError.value(
@@ -2430,121 +3272,113 @@ class $ServerSideVerificationOptionsHandler
   }
 }
 
+
 class $LibraryImplementations {
   $LibraryImplementations(this.messenger);
 
   final TypeChannelMessenger messenger;
 
+  
   $OnUserEarnedRewardListenerChannel get channelOnUserEarnedRewardListener =>
       $OnUserEarnedRewardListenerChannel(messenger);
-  $OnUserEarnedRewardListenerHandler get handlerOnUserEarnedRewardListener =>
-      $OnUserEarnedRewardListenerHandler();
-
+  $OnUserEarnedRewardListenerHandler get handlerOnUserEarnedRewardListener => $OnUserEarnedRewardListenerHandler();
+  
   $AppEventListenerChannel get channelAppEventListener =>
       $AppEventListenerChannel(messenger);
-  $AppEventListenerHandler get handlerAppEventListener =>
-      $AppEventListenerHandler();
-
+  $AppEventListenerHandler get handlerAppEventListener => $AppEventListenerHandler();
+  
   $AdWithViewListenerChannel get channelAdWithViewListener =>
       $AdWithViewListenerChannel(messenger);
-  $AdWithViewListenerHandler get handlerAdWithViewListener =>
-      $AdWithViewListenerHandler();
-
+  $AdWithViewListenerHandler get handlerAdWithViewListener => $AdWithViewListenerHandler();
+  
   $BannerAdListenerChannel get channelBannerAdListener =>
       $BannerAdListenerChannel(messenger);
-  $BannerAdListenerHandler get handlerBannerAdListener =>
-      $BannerAdListenerHandler();
-
+  $BannerAdListenerHandler get handlerBannerAdListener => $BannerAdListenerHandler();
+  
   $AdManagerBannerAdListenerChannel get channelAdManagerBannerAdListener =>
       $AdManagerBannerAdListenerChannel(messenger);
-  $AdManagerBannerAdListenerHandler get handlerAdManagerBannerAdListener =>
-      $AdManagerBannerAdListenerHandler();
-
+  $AdManagerBannerAdListenerHandler get handlerAdManagerBannerAdListener => $AdManagerBannerAdListenerHandler();
+  
   $NativeAdListenerChannel get channelNativeAdListener =>
       $NativeAdListenerChannel(messenger);
-  $NativeAdListenerHandler get handlerNativeAdListener =>
-      $NativeAdListenerHandler();
-
+  $NativeAdListenerHandler get handlerNativeAdListener => $NativeAdListenerHandler();
+  
   $FullScreenContentCallbackChannel get channelFullScreenContentCallback =>
       $FullScreenContentCallbackChannel(messenger);
-  $FullScreenContentCallbackHandler get handlerFullScreenContentCallback =>
-      $FullScreenContentCallbackHandler();
-
+  $FullScreenContentCallbackHandler get handlerFullScreenContentCallback => $FullScreenContentCallbackHandler();
+  
   $RewardedAdLoadCallbackChannel get channelRewardedAdLoadCallback =>
       $RewardedAdLoadCallbackChannel(messenger);
-  $RewardedAdLoadCallbackHandler get handlerRewardedAdLoadCallback =>
-      $RewardedAdLoadCallbackHandler();
-
+  $RewardedAdLoadCallbackHandler get handlerRewardedAdLoadCallback => $RewardedAdLoadCallbackHandler();
+  
   $InterstitialAdLoadCallbackChannel get channelInterstitialAdLoadCallback =>
       $InterstitialAdLoadCallbackChannel(messenger);
-  $InterstitialAdLoadCallbackHandler get handlerInterstitialAdLoadCallback =>
-      $InterstitialAdLoadCallbackHandler();
-
-  $AdManagerInterstitialAdLoadCallbackChannel
-      get channelAdManagerInterstitialAdLoadCallback =>
-          $AdManagerInterstitialAdLoadCallbackChannel(messenger);
-  $AdManagerInterstitialAdLoadCallbackHandler
-      get handlerAdManagerInterstitialAdLoadCallback =>
-          $AdManagerInterstitialAdLoadCallbackHandler();
-
-  $AdErrorChannel get channelAdError => $AdErrorChannel(messenger);
+  $InterstitialAdLoadCallbackHandler get handlerInterstitialAdLoadCallback => $InterstitialAdLoadCallbackHandler();
+  
+  $AdManagerInterstitialAdLoadCallbackChannel get channelAdManagerInterstitialAdLoadCallback =>
+      $AdManagerInterstitialAdLoadCallbackChannel(messenger);
+  $AdManagerInterstitialAdLoadCallbackHandler get handlerAdManagerInterstitialAdLoadCallback => $AdManagerInterstitialAdLoadCallbackHandler();
+  
+  $AdErrorChannel get channelAdError =>
+      $AdErrorChannel(messenger);
   $AdErrorHandler get handlerAdError => $AdErrorHandler();
-
+  
   $ResponseInfoChannel get channelResponseInfo =>
       $ResponseInfoChannel(messenger);
   $ResponseInfoHandler get handlerResponseInfo => $ResponseInfoHandler();
-
+  
   $AdapterResponseInfoChannel get channelAdapterResponseInfo =>
       $AdapterResponseInfoChannel(messenger);
-  $AdapterResponseInfoHandler get handlerAdapterResponseInfo =>
-      $AdapterResponseInfoHandler();
-
-  $LoadAdErrorChannel get channelLoadAdError => $LoadAdErrorChannel(messenger);
+  $AdapterResponseInfoHandler get handlerAdapterResponseInfo => $AdapterResponseInfoHandler();
+  
+  $LoadAdErrorChannel get channelLoadAdError =>
+      $LoadAdErrorChannel(messenger);
   $LoadAdErrorHandler get handlerLoadAdError => $LoadAdErrorHandler();
-
-  $AdRequestChannel get channelAdRequest => $AdRequestChannel(messenger);
+  
+  $AdRequestChannel get channelAdRequest =>
+      $AdRequestChannel(messenger);
   $AdRequestHandler get handlerAdRequest => $AdRequestHandler();
-
+  
   $AdManagerAdRequestChannel get channelAdManagerAdRequest =>
       $AdManagerAdRequestChannel(messenger);
-  $AdManagerAdRequestHandler get handlerAdManagerAdRequest =>
-      $AdManagerAdRequestHandler();
-
-  $AdSizeChannel get channelAdSize => $AdSizeChannel(messenger);
+  $AdManagerAdRequestHandler get handlerAdManagerAdRequest => $AdManagerAdRequestHandler();
+  
+  $AdSizeChannel get channelAdSize =>
+      $AdSizeChannel(messenger);
   $AdSizeHandler get handlerAdSize => $AdSizeHandler();
-
-  $BannerAdChannel get channelBannerAd => $BannerAdChannel(messenger);
+  
+  $BannerAdChannel get channelBannerAd =>
+      $BannerAdChannel(messenger);
   $BannerAdHandler get handlerBannerAd => $BannerAdHandler();
-
+  
   $AdManagerBannerAdChannel get channelAdManagerBannerAd =>
       $AdManagerBannerAdChannel(messenger);
-  $AdManagerBannerAdHandler get handlerAdManagerBannerAd =>
-      $AdManagerBannerAdHandler();
-
-  $NativeAdChannel get channelNativeAd => $NativeAdChannel(messenger);
+  $AdManagerBannerAdHandler get handlerAdManagerBannerAd => $AdManagerBannerAdHandler();
+  
+  $NativeAdChannel get channelNativeAd =>
+      $NativeAdChannel(messenger);
   $NativeAdHandler get handlerNativeAd => $NativeAdHandler();
-
+  
   $InterstitialAdChannel get channelInterstitialAd =>
       $InterstitialAdChannel(messenger);
   $InterstitialAdHandler get handlerInterstitialAd => $InterstitialAdHandler();
-
+  
   $AdManagerInterstitialAdChannel get channelAdManagerInterstitialAd =>
       $AdManagerInterstitialAdChannel(messenger);
-  $AdManagerInterstitialAdHandler get handlerAdManagerInterstitialAd =>
-      $AdManagerInterstitialAdHandler();
-
-  $RewardedAdChannel get channelRewardedAd => $RewardedAdChannel(messenger);
+  $AdManagerInterstitialAdHandler get handlerAdManagerInterstitialAd => $AdManagerInterstitialAdHandler();
+  
+  $RewardedAdChannel get channelRewardedAd =>
+      $RewardedAdChannel(messenger);
   $RewardedAdHandler get handlerRewardedAd => $RewardedAdHandler();
-
-  $RewardItemChannel get channelRewardItem => $RewardItemChannel(messenger);
+  
+  $RewardItemChannel get channelRewardItem =>
+      $RewardItemChannel(messenger);
   $RewardItemHandler get handlerRewardItem => $RewardItemHandler();
-
-  $ServerSideVerificationOptionsChannel
-      get channelServerSideVerificationOptions =>
-          $ServerSideVerificationOptionsChannel(messenger);
-  $ServerSideVerificationOptionsHandler
-      get handlerServerSideVerificationOptions =>
-          $ServerSideVerificationOptionsHandler();
+  
+  $ServerSideVerificationOptionsChannel get channelServerSideVerificationOptions =>
+      $ServerSideVerificationOptionsChannel(messenger);
+  $ServerSideVerificationOptionsHandler get handlerServerSideVerificationOptions => $ServerSideVerificationOptionsHandler();
+  
 }
 
 class $ChannelRegistrar {
@@ -2553,156 +3387,160 @@ class $ChannelRegistrar {
   final $LibraryImplementations implementations;
 
   void registerHandlers() {
+    
     implementations.channelOnUserEarnedRewardListener.setHandler(
       implementations.handlerOnUserEarnedRewardListener,
     );
-
+    
     implementations.channelAppEventListener.setHandler(
       implementations.handlerAppEventListener,
     );
-
+    
     implementations.channelAdWithViewListener.setHandler(
       implementations.handlerAdWithViewListener,
     );
-
+    
     implementations.channelBannerAdListener.setHandler(
       implementations.handlerBannerAdListener,
     );
-
+    
     implementations.channelAdManagerBannerAdListener.setHandler(
       implementations.handlerAdManagerBannerAdListener,
     );
-
+    
     implementations.channelNativeAdListener.setHandler(
       implementations.handlerNativeAdListener,
     );
-
+    
     implementations.channelFullScreenContentCallback.setHandler(
       implementations.handlerFullScreenContentCallback,
     );
-
+    
     implementations.channelRewardedAdLoadCallback.setHandler(
       implementations.handlerRewardedAdLoadCallback,
     );
-
+    
     implementations.channelInterstitialAdLoadCallback.setHandler(
       implementations.handlerInterstitialAdLoadCallback,
     );
-
+    
     implementations.channelAdManagerInterstitialAdLoadCallback.setHandler(
       implementations.handlerAdManagerInterstitialAdLoadCallback,
     );
-
+    
     implementations.channelAdError.setHandler(
       implementations.handlerAdError,
     );
-
+    
     implementations.channelResponseInfo.setHandler(
       implementations.handlerResponseInfo,
     );
-
+    
     implementations.channelAdapterResponseInfo.setHandler(
       implementations.handlerAdapterResponseInfo,
     );
-
+    
     implementations.channelLoadAdError.setHandler(
       implementations.handlerLoadAdError,
     );
-
+    
     implementations.channelAdRequest.setHandler(
       implementations.handlerAdRequest,
     );
-
+    
     implementations.channelAdManagerAdRequest.setHandler(
       implementations.handlerAdManagerAdRequest,
     );
-
+    
     implementations.channelAdSize.setHandler(
       implementations.handlerAdSize,
     );
-
+    
     implementations.channelBannerAd.setHandler(
       implementations.handlerBannerAd,
     );
-
+    
     implementations.channelAdManagerBannerAd.setHandler(
       implementations.handlerAdManagerBannerAd,
     );
-
+    
     implementations.channelNativeAd.setHandler(
       implementations.handlerNativeAd,
     );
-
+    
     implementations.channelInterstitialAd.setHandler(
       implementations.handlerInterstitialAd,
     );
-
+    
     implementations.channelAdManagerInterstitialAd.setHandler(
       implementations.handlerAdManagerInterstitialAd,
     );
-
+    
     implementations.channelRewardedAd.setHandler(
       implementations.handlerRewardedAd,
     );
-
+    
     implementations.channelRewardItem.setHandler(
       implementations.handlerRewardItem,
     );
-
+    
     implementations.channelServerSideVerificationOptions.setHandler(
       implementations.handlerServerSideVerificationOptions,
     );
+    
   }
 
   void unregisterHandlers() {
+    
     implementations.channelOnUserEarnedRewardListener.removeHandler();
-
+    
     implementations.channelAppEventListener.removeHandler();
-
+    
     implementations.channelAdWithViewListener.removeHandler();
-
+    
     implementations.channelBannerAdListener.removeHandler();
-
+    
     implementations.channelAdManagerBannerAdListener.removeHandler();
-
+    
     implementations.channelNativeAdListener.removeHandler();
-
+    
     implementations.channelFullScreenContentCallback.removeHandler();
-
+    
     implementations.channelRewardedAdLoadCallback.removeHandler();
-
+    
     implementations.channelInterstitialAdLoadCallback.removeHandler();
-
+    
     implementations.channelAdManagerInterstitialAdLoadCallback.removeHandler();
-
+    
     implementations.channelAdError.removeHandler();
-
+    
     implementations.channelResponseInfo.removeHandler();
-
+    
     implementations.channelAdapterResponseInfo.removeHandler();
-
+    
     implementations.channelLoadAdError.removeHandler();
-
+    
     implementations.channelAdRequest.removeHandler();
-
+    
     implementations.channelAdManagerAdRequest.removeHandler();
-
+    
     implementations.channelAdSize.removeHandler();
-
+    
     implementations.channelBannerAd.removeHandler();
-
+    
     implementations.channelAdManagerBannerAd.removeHandler();
-
+    
     implementations.channelNativeAd.removeHandler();
-
+    
     implementations.channelInterstitialAd.removeHandler();
-
+    
     implementations.channelAdManagerInterstitialAd.removeHandler();
-
+    
     implementations.channelRewardedAd.removeHandler();
-
+    
     implementations.channelRewardItem.removeHandler();
-
+    
     implementations.channelServerSideVerificationOptions.removeHandler();
+    
   }
 }

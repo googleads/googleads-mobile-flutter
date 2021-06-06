@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
       print('Warning: attempt to show interstitial before loaded.');
       return;
     }
-    interstitialAd.show();
+    interstitialAd.show(_interstitialLoader);
     _interstitialAd = null;
   }
 
@@ -73,7 +73,13 @@ class _MyAppState extends State<MyApp> {
       print('Warning: attempt to show interstitial before loaded.');
       return;
     }
-    rewardedAd.show(onUserEarnedReward: _rewardedAdLoader);
+    rewardedAd.show(
+      onUserEarnedReward: _rewardedAdLoader,
+      serverSideVerificationOptions: ServerSideVerificationOptions(
+        userId: '23',
+        customData: 'hi',
+      ),
+    );
     _rewardedAd = null;
   }
 
@@ -182,7 +188,6 @@ class InterstitialRetryLoader
         ..setContentUrl('http://foo.com/bar.html')
         ..setNonPersonalizedAds(true),
       adLoadCallback: this,
-      fullScreenContentCallback: this,
     );
   }
 
@@ -248,11 +253,6 @@ class RewardedAdRetryLoader
         ..setContentUrl('http://foo.com/bar.html')
         ..setNonPersonalizedAds(true),
       adLoadCallback: this,
-      serverSideVerificationOptions: ServerSideVerificationOptions(
-        userId: '23',
-        customData: 'hi',
-      ),
-      fullScreenContentCallback: this,
     );
   }
 
