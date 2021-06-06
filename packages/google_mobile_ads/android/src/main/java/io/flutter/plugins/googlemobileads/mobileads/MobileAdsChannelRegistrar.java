@@ -1,10 +1,8 @@
 package io.flutter.plugins.googlemobileads.mobileads;
 
-import androidx.annotation.NonNull;
+import android.app.Activity;
 
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import java.util.List;
 
 import github.penguin.reference.reference.TypeChannelMessenger;
 
@@ -14,15 +12,59 @@ public class MobileAdsChannelRegistrar extends MobileAdsChannelLibrary.$ChannelR
   }
 
   public static class MobileAdsLibraryImplementations extends MobileAdsChannelLibrary.$LibraryImplementations {
-    public MobileAdsLibraryImplementations(TypeChannelMessenger messenger) {
-      MobileAds.initialize(im, new OnInitializationCompleteListener() {
-        @Override
-        public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
+    public final Activity activity;
 
-        }
-      });
-      MobileAds.getInitializationStatus();
+    public MobileAdsLibraryImplementations(TypeChannelMessenger messenger, Activity activity) {
       super(messenger);
+      this.activity = activity;
+    }
+
+    @Override
+    public OnInitializationCompleteListenerHandler getHandlerOnInitializationCompleteListener() {
+      return new OnInitializationCompleteListenerHandler(this);
+    }
+
+    @Override
+    public RequestConfigurationHandler getHandlerRequestConfiguration() {
+      return new RequestConfigurationHandler();
+    }
+
+    @Override
+    public MobileAdsHandler getHandlerMobileAds() {
+      return new MobileAdsHandler(this);
+    }
+  }
+
+  public static class OnInitializationCompleteListenerHandler extends MobileAdsChannelLibrary.$OnInitializationCompleteListenerHandler {
+    public final MobileAdsLibraryImplementations implementations;
+
+    public OnInitializationCompleteListenerHandler(MobileAdsLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public OnInitializationCompleteListenerProxy $$create(TypeChannelMessenger messenger) {
+      return new OnInitializationCompleteListenerProxy(implementations);
+    }
+  }
+
+  public static class RequestConfigurationHandler extends MobileAdsChannelLibrary.$RequestConfigurationHandler {
+    @Override
+    public RequestConfigurationProxy $$create(TypeChannelMessenger messenger, String maxAdContentRating, Integer tagForChildDirectedTreatment, Integer tagForUnderAgeOfConsent, List<String> testDeviceIds) {
+      return new RequestConfigurationProxy(maxAdContentRating, tagForChildDirectedTreatment, tagForUnderAgeOfConsent, testDeviceIds);
+    }
+  }
+
+  public static class MobileAdsHandler extends MobileAdsChannelLibrary.$MobileAdsHandler {
+    public final MobileAdsLibraryImplementations implementations;
+
+    public MobileAdsHandler(MobileAdsLibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public MobileAdsProxy $$create(TypeChannelMessenger messenger) {
+      return new MobileAdsProxy(implementations);
     }
   }
 }

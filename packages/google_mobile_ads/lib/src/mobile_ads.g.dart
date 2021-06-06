@@ -2,99 +2,61 @@
 
 import 'package:reference/reference.dart';
 
-
 // **************************************************************************
 // ReferenceGenerator
 // **************************************************************************
 
-
 mixin $OnInitializationCompleteListener {
-  
-  
   dynamic onInitializationComplete(
-     $InitializationStatus initializationStatus,
-    
+    $InitializationStatus initializationStatus,
   );
-  
-  
 }
 
-mixin $AdapterInitializationState {
-  
-}
+mixin $AdapterInitializationState {}
 
-mixin $MobileAds {
-  
-  
-  
-  
-  
-  
-  
-}
+mixin $MobileAds {}
 
-mixin $InitializationStatus {
-  
-}
+mixin $InitializationStatus {}
 
-mixin $AdapterStatus {
-  
-}
+mixin $AdapterStatus {}
 
-mixin $RequestConfiguration {
-  
-}
+mixin $RequestConfiguration {}
 
-
-
-class $OnInitializationCompleteListenerChannel extends TypeChannel<$OnInitializationCompleteListener> {
+class $OnInitializationCompleteListenerChannel
+    extends TypeChannel<$OnInitializationCompleteListener> {
   $OnInitializationCompleteListenerChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.OnInitializationCompleteListener');
 
   Future<PairedInstance?> $$create(
     $OnInitializationCompleteListener $instance, {
     required bool $owner,
-    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[
-        
-      ],
+      <Object?>[],
       owner: $owner,
     );
   }
-
-  
-
-  
-  
-  
 }
 
-class $AdapterInitializationStateChannel extends TypeChannel<$AdapterInitializationState> {
+class $AdapterInitializationStateChannel
+    extends TypeChannel<$AdapterInitializationState> {
   $AdapterInitializationStateChannel(TypeChannelMessenger messenger)
       : super(messenger, 'google_mobile_ads.AdapterInitializationState');
 
   Future<PairedInstance?> $$create(
     $AdapterInitializationState $instance, {
     required bool $owner,
-    
     required String value,
-    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-         value, 
+        value,
       ],
       owner: $owner,
     );
   }
-
-  
-
-  
 }
 
 class $MobileAdsChannel extends TypeChannel<$MobileAds> {
@@ -104,68 +66,52 @@ class $MobileAdsChannel extends TypeChannel<$MobileAds> {
   Future<PairedInstance?> $$create(
     $MobileAds $instance, {
     required bool $owner,
-    
   }) {
     return createNewInstancePair(
       $instance,
-      <Object?>[
-        
-      ],
+      <Object?>[],
       owner: $owner,
     );
   }
 
-  
-
-  
-  
   Future<Object?> $initialize(
     $MobileAds $instance,
-     $OnInitializationCompleteListener? listener,
-    
+    $OnInitializationCompleteListener? listener,
   ) {
     return sendInvokeMethod(
       $instance,
       'initialize',
       <Object?>[
-         listener, 
+        listener,
       ],
     );
   }
-  
-  
-  
+
   Future<Object?> $updateRequestConfiguration(
     $MobileAds $instance,
-     $RequestConfiguration requestConfiguration,
-    
+    $RequestConfiguration requestConfiguration,
   ) {
     return sendInvokeMethod(
       $instance,
       'updateRequestConfiguration',
       <Object?>[
-         requestConfiguration, 
+        requestConfiguration,
       ],
     );
   }
-  
-  
-  
+
   Future<Object?> $setSameAppKeyEnabled(
     $MobileAds $instance,
-     bool isEnabled,
-    
+    bool isEnabled,
   ) {
     return sendInvokeMethod(
       $instance,
       'setSameAppKeyEnabled',
       <Object?>[
-         isEnabled, 
+        isEnabled,
       ],
     );
   }
-  
-  
 }
 
 class $InitializationStatusChannel extends TypeChannel<$InitializationStatus> {
@@ -175,22 +121,16 @@ class $InitializationStatusChannel extends TypeChannel<$InitializationStatus> {
   Future<PairedInstance?> $$create(
     $InitializationStatus $instance, {
     required bool $owner,
-    
-    required Map<String,$AdapterStatus> adapterStatuses,
-    
+    required Map<String, $AdapterStatus> adapterStatuses,
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-         adapterStatuses, 
+        adapterStatuses,
       ],
       owner: $owner,
     );
   }
-
-  
-
-  
 }
 
 class $AdapterStatusChannel extends TypeChannel<$AdapterStatus> {
@@ -200,26 +140,20 @@ class $AdapterStatusChannel extends TypeChannel<$AdapterStatus> {
   Future<PairedInstance?> $$create(
     $AdapterStatus $instance, {
     required bool $owner,
-    
     required $AdapterInitializationState state,
-    
     required String description,
-    
     required double latency,
-    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-         state,  description,  latency, 
+        state,
+        description,
+        latency,
       ],
       owner: $owner,
     );
   }
-
-  
-
-  
 }
 
 class $RequestConfigurationChannel extends TypeChannel<$RequestConfiguration> {
@@ -229,56 +163,40 @@ class $RequestConfigurationChannel extends TypeChannel<$RequestConfiguration> {
   Future<PairedInstance?> $$create(
     $RequestConfiguration $instance, {
     required bool $owner,
-    
     required String? maxAdContentRating,
-    
     required int? tagForChildDirectedTreatment,
-    
     required int? tagForUnderAgeOfConsent,
-    
     required List<String>? testDeviceIds,
-    
   }) {
     return createNewInstancePair(
       $instance,
       <Object?>[
-         maxAdContentRating,  tagForChildDirectedTreatment,  tagForUnderAgeOfConsent,  testDeviceIds, 
+        maxAdContentRating,
+        tagForChildDirectedTreatment,
+        tagForUnderAgeOfConsent,
+        testDeviceIds,
       ],
       owner: $owner,
     );
   }
-
-  
-
-  
 }
 
-
-
-class $OnInitializationCompleteListenerHandler implements TypeChannelHandler<$OnInitializationCompleteListener> {
+class $OnInitializationCompleteListenerHandler
+    implements TypeChannelHandler<$OnInitializationCompleteListener> {
   $OnInitializationCompleteListener $$create(
     TypeChannelMessenger messenger,
-    
   ) {
     throw UnimplementedError();
   }
 
-  
-
-  
-  
   dynamic $onInitializationComplete(
     $OnInitializationCompleteListener $instance,
-    
     $InitializationStatus initializationStatus,
-    
   ) {
     return $instance.onInitializationComplete(
-       initializationStatus, 
+      initializationStatus,
     );
   }
-  
-  
 
   @override
   Object? invokeStaticMethod(
@@ -287,7 +205,6 @@ class $OnInitializationCompleteListenerHandler implements TypeChannelHandler<$On
     List<Object?> arguments,
   ) {
     switch (methodName) {
-      
     }
 
     throw ArgumentError.value(
@@ -304,7 +221,6 @@ class $OnInitializationCompleteListenerHandler implements TypeChannelHandler<$On
   ) {
     return $$create(
       messenger,
-      
     );
   }
 
@@ -316,17 +232,11 @@ class $OnInitializationCompleteListenerHandler implements TypeChannelHandler<$On
     List<Object?> arguments,
   ) {
     switch (methodName) {
-      
-      
       case 'onInitializationComplete':
         return $onInitializationComplete(
           instance,
-           arguments[
-                  0]
-              as $InitializationStatus, 
+          arguments[0] as $InitializationStatus,
         );
-      
-      
     }
 
     throw ArgumentError.value(
@@ -337,19 +247,14 @@ class $OnInitializationCompleteListenerHandler implements TypeChannelHandler<$On
   }
 }
 
-class $AdapterInitializationStateHandler implements TypeChannelHandler<$AdapterInitializationState> {
+class $AdapterInitializationStateHandler
+    implements TypeChannelHandler<$AdapterInitializationState> {
   $AdapterInitializationState $$create(
     TypeChannelMessenger messenger,
-    
     String value,
-    
   ) {
     throw UnimplementedError();
   }
-
-  
-
-  
 
   @override
   Object? invokeStaticMethod(
@@ -358,7 +263,6 @@ class $AdapterInitializationStateHandler implements TypeChannelHandler<$AdapterI
     List<Object?> arguments,
   ) {
     switch (methodName) {
-      
     }
 
     throw ArgumentError.value(
@@ -375,8 +279,7 @@ class $AdapterInitializationStateHandler implements TypeChannelHandler<$AdapterI
   ) {
     return $$create(
       messenger,
-       arguments[0]
-          as String, 
+      arguments[0] as String,
     );
   }
 
@@ -388,7 +291,6 @@ class $AdapterInitializationStateHandler implements TypeChannelHandler<$AdapterI
     List<Object?> arguments,
   ) {
     switch (methodName) {
-      
     }
 
     throw ArgumentError.value(
@@ -402,20 +304,9 @@ class $AdapterInitializationStateHandler implements TypeChannelHandler<$AdapterI
 class $MobileAdsHandler implements TypeChannelHandler<$MobileAds> {
   $MobileAds $$create(
     TypeChannelMessenger messenger,
-    
   ) {
     throw UnimplementedError();
   }
-
-  
-
-  
-  
-  
-  
-  
-  
-  
 
   @override
   Object? invokeStaticMethod(
@@ -424,7 +315,6 @@ class $MobileAdsHandler implements TypeChannelHandler<$MobileAds> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
-      
     }
 
     throw ArgumentError.value(
@@ -441,7 +331,6 @@ class $MobileAdsHandler implements TypeChannelHandler<$MobileAds> {
   ) {
     return $$create(
       messenger,
-      
     );
   }
 
@@ -453,13 +342,6 @@ class $MobileAdsHandler implements TypeChannelHandler<$MobileAds> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
-      
-      
-      
-      
-      
-      
-      
     }
 
     throw ArgumentError.value(
@@ -470,19 +352,14 @@ class $MobileAdsHandler implements TypeChannelHandler<$MobileAds> {
   }
 }
 
-class $InitializationStatusHandler implements TypeChannelHandler<$InitializationStatus> {
+class $InitializationStatusHandler
+    implements TypeChannelHandler<$InitializationStatus> {
   $InitializationStatus $$create(
     TypeChannelMessenger messenger,
-    
-    Map<String,$AdapterStatus> adapterStatuses,
-    
+    Map<String, $AdapterStatus> adapterStatuses,
   ) {
     throw UnimplementedError();
   }
-
-  
-
-  
 
   @override
   Object? invokeStaticMethod(
@@ -491,7 +368,6 @@ class $InitializationStatusHandler implements TypeChannelHandler<$Initialization
     List<Object?> arguments,
   ) {
     switch (methodName) {
-      
     }
 
     throw ArgumentError.value(
@@ -508,8 +384,7 @@ class $InitializationStatusHandler implements TypeChannelHandler<$Initialization
   ) {
     return $$create(
       messenger,
-       arguments[0]
-          as Map<String,$AdapterStatus>, 
+      arguments[0] as Map<String, $AdapterStatus>,
     );
   }
 
@@ -521,7 +396,6 @@ class $InitializationStatusHandler implements TypeChannelHandler<$Initialization
     List<Object?> arguments,
   ) {
     switch (methodName) {
-      
     }
 
     throw ArgumentError.value(
@@ -535,20 +409,12 @@ class $InitializationStatusHandler implements TypeChannelHandler<$Initialization
 class $AdapterStatusHandler implements TypeChannelHandler<$AdapterStatus> {
   $AdapterStatus $$create(
     TypeChannelMessenger messenger,
-    
     $AdapterInitializationState state,
-    
     String description,
-    
     double latency,
-    
   ) {
     throw UnimplementedError();
   }
-
-  
-
-  
 
   @override
   Object? invokeStaticMethod(
@@ -557,7 +423,6 @@ class $AdapterStatusHandler implements TypeChannelHandler<$AdapterStatus> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
-      
     }
 
     throw ArgumentError.value(
@@ -574,10 +439,9 @@ class $AdapterStatusHandler implements TypeChannelHandler<$AdapterStatus> {
   ) {
     return $$create(
       messenger,
-       arguments[0]
-          as $AdapterInitializationState,  arguments[1]
-          as String,  arguments[2]
-          as double, 
+      arguments[0] as $AdapterInitializationState,
+      arguments[1] as String,
+      arguments[2] as double,
     );
   }
 
@@ -589,7 +453,6 @@ class $AdapterStatusHandler implements TypeChannelHandler<$AdapterStatus> {
     List<Object?> arguments,
   ) {
     switch (methodName) {
-      
     }
 
     throw ArgumentError.value(
@@ -600,25 +463,17 @@ class $AdapterStatusHandler implements TypeChannelHandler<$AdapterStatus> {
   }
 }
 
-class $RequestConfigurationHandler implements TypeChannelHandler<$RequestConfiguration> {
+class $RequestConfigurationHandler
+    implements TypeChannelHandler<$RequestConfiguration> {
   $RequestConfiguration $$create(
     TypeChannelMessenger messenger,
-    
     String? maxAdContentRating,
-    
     int? tagForChildDirectedTreatment,
-    
     int? tagForUnderAgeOfConsent,
-    
     List<String>? testDeviceIds,
-    
   ) {
     throw UnimplementedError();
   }
-
-  
-
-  
 
   @override
   Object? invokeStaticMethod(
@@ -627,7 +482,6 @@ class $RequestConfigurationHandler implements TypeChannelHandler<$RequestConfigu
     List<Object?> arguments,
   ) {
     switch (methodName) {
-      
     }
 
     throw ArgumentError.value(
@@ -644,11 +498,10 @@ class $RequestConfigurationHandler implements TypeChannelHandler<$RequestConfigu
   ) {
     return $$create(
       messenger,
-       arguments[0]
-          as String?,  arguments[1]
-          as int?,  arguments[2]
-          as int?,  arguments[3]
-          as List<String>?, 
+      arguments[0] as String?,
+      arguments[1] as int?,
+      arguments[2] as int?,
+      arguments[3] as List<String>?,
     );
   }
 
@@ -660,7 +513,6 @@ class $RequestConfigurationHandler implements TypeChannelHandler<$RequestConfigu
     List<Object?> arguments,
   ) {
     switch (methodName) {
-      
     }
 
     throw ArgumentError.value(
@@ -671,37 +523,39 @@ class $RequestConfigurationHandler implements TypeChannelHandler<$RequestConfigu
   }
 }
 
-
 class $LibraryImplementations {
   $LibraryImplementations(this.messenger);
 
   final TypeChannelMessenger messenger;
 
-  
-  $OnInitializationCompleteListenerChannel get channelOnInitializationCompleteListener =>
-      $OnInitializationCompleteListenerChannel(messenger);
-  $OnInitializationCompleteListenerHandler get handlerOnInitializationCompleteListener => $OnInitializationCompleteListenerHandler();
-  
+  $OnInitializationCompleteListenerChannel
+      get channelOnInitializationCompleteListener =>
+          $OnInitializationCompleteListenerChannel(messenger);
+  $OnInitializationCompleteListenerHandler
+      get handlerOnInitializationCompleteListener =>
+          $OnInitializationCompleteListenerHandler();
+
   $AdapterInitializationStateChannel get channelAdapterInitializationState =>
       $AdapterInitializationStateChannel(messenger);
-  $AdapterInitializationStateHandler get handlerAdapterInitializationState => $AdapterInitializationStateHandler();
-  
-  $MobileAdsChannel get channelMobileAds =>
-      $MobileAdsChannel(messenger);
+  $AdapterInitializationStateHandler get handlerAdapterInitializationState =>
+      $AdapterInitializationStateHandler();
+
+  $MobileAdsChannel get channelMobileAds => $MobileAdsChannel(messenger);
   $MobileAdsHandler get handlerMobileAds => $MobileAdsHandler();
-  
+
   $InitializationStatusChannel get channelInitializationStatus =>
       $InitializationStatusChannel(messenger);
-  $InitializationStatusHandler get handlerInitializationStatus => $InitializationStatusHandler();
-  
+  $InitializationStatusHandler get handlerInitializationStatus =>
+      $InitializationStatusHandler();
+
   $AdapterStatusChannel get channelAdapterStatus =>
       $AdapterStatusChannel(messenger);
   $AdapterStatusHandler get handlerAdapterStatus => $AdapterStatusHandler();
-  
+
   $RequestConfigurationChannel get channelRequestConfiguration =>
       $RequestConfigurationChannel(messenger);
-  $RequestConfigurationHandler get handlerRequestConfiguration => $RequestConfigurationHandler();
-  
+  $RequestConfigurationHandler get handlerRequestConfiguration =>
+      $RequestConfigurationHandler();
 }
 
 class $ChannelRegistrar {
@@ -710,46 +564,42 @@ class $ChannelRegistrar {
   final $LibraryImplementations implementations;
 
   void registerHandlers() {
-    
     implementations.channelOnInitializationCompleteListener.setHandler(
       implementations.handlerOnInitializationCompleteListener,
     );
-    
+
     implementations.channelAdapterInitializationState.setHandler(
       implementations.handlerAdapterInitializationState,
     );
-    
+
     implementations.channelMobileAds.setHandler(
       implementations.handlerMobileAds,
     );
-    
+
     implementations.channelInitializationStatus.setHandler(
       implementations.handlerInitializationStatus,
     );
-    
+
     implementations.channelAdapterStatus.setHandler(
       implementations.handlerAdapterStatus,
     );
-    
+
     implementations.channelRequestConfiguration.setHandler(
       implementations.handlerRequestConfiguration,
     );
-    
   }
 
   void unregisterHandlers() {
-    
     implementations.channelOnInitializationCompleteListener.removeHandler();
-    
+
     implementations.channelAdapterInitializationState.removeHandler();
-    
+
     implementations.channelMobileAds.removeHandler();
-    
+
     implementations.channelInitializationStatus.removeHandler();
-    
+
     implementations.channelAdapterStatus.removeHandler();
-    
+
     implementations.channelRequestConfiguration.removeHandler();
-    
   }
 }
