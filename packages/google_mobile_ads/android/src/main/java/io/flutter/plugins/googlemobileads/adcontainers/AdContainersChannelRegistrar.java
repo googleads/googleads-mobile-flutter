@@ -8,7 +8,7 @@ import java.util.Map;
 import github.penguin.reference.reference.TypeChannelMessenger;
 
 public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$ChannelRegistrar {
-  public AdContainersChannelRegistrar(AdContainersChannelLibrary.$LibraryImplementations implementations) {
+  public AdContainersChannelRegistrar(AdContainersLibraryImplementations implementations) {
     super(implementations);
   }
 

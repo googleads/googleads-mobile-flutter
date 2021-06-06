@@ -44,6 +44,10 @@ class AdapterInitializationState implements $AdapterInitializationState {
   bool operator ==(other) {
     return other is AdapterInitializationState && other._value == _value;
   }
+
+  @ReferenceMethod(ignore: true)
+  @override
+  int get hashCode => _value.hashCode;
 }
 
 /// Class contains logic that applies to the Google Mobile Ads SDK as a whole.
