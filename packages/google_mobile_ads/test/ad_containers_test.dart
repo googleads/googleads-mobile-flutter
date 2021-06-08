@@ -46,6 +46,8 @@ void main() {
           case 'loadRewardedAd':
           case 'loadInterstitialAd':
           case 'loadAdManagerInterstitialAd':
+          case 'loadAppOpenAd':
+          case 'loadAdManagerAppOpenAd':
           case 'loadAdManagerBannerAd':
             return Future<void>.value();
           default:
@@ -565,6 +567,62 @@ void main() {
           'adId': 0,
         })
       ]);
+    });
+
+    test('load app open ad', () async {
+      AppOpenAd? appOpenAd;
+      await AppOpenAd.initialise(
+        adUnitId: AppOpenAd.testAdUnitId,
+        request: AdRequest(),
+        adLoadCallback: AppOpenAdLoadCallback(
+            onAdLoaded: (ad) {
+              appOpenAd = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
+
+      AppOpenAd createdAd = (instanceManager.adFor(0) as AppOpenAd);
+      (createdAd).adLoadCallback.onAdLoaded(createdAd);
+
+      expect(log, <Matcher>[
+        isMethodCall('loadAppOpenAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'orientation': 1,
+          'adUnitId': AppOpenAd.testAdUnitId,
+          'request': appOpenAd!.request,
+        })
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+      expect(instanceManager.adIdFor(appOpenAd!), 0);
+    });
+
+    test('load app open ad', () async {
+      AdManagerAppOpenAd? appOpenAd;
+      await AdManagerAppOpenAd.initialise(
+        adUnitId: AdManagerAppOpenAd.testAdUnitId,
+        request: AdManagerAdRequest(),
+        adLoadCallback: AdManagerAppOpenAdLoadCallback(
+            onAdLoaded: (ad) {
+              appOpenAd = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
+
+      AdManagerAppOpenAd createdAd = (instanceManager.adFor(0) as AdManagerAppOpenAd);
+      (createdAd).adLoadCallback.onAdLoaded(createdAd);
+
+      expect(log, <Matcher>[
+        isMethodCall('loadAdManagerAppOpenAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'orientation': 1,
+          'adUnitId': AdManagerAppOpenAd.testAdUnitId,
+          'request': appOpenAd!.request,
+        })
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+      expect(instanceManager.adIdFor(appOpenAd!), 0);
     });
 
     test('load ad manager banner', () async {
