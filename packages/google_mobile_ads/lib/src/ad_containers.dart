@@ -709,12 +709,12 @@ class AppOpenAd extends AdWithoutView {
   ///
   /// A valid [adUnitId] from the AdMob dashboard, a nonnull [listener], and a
   /// nonnull [request] is required.
-  AppOpenAd._({
-    required String adUnitId,
-    required this.request,
-    required this.adLoadCallback,
-    this.orientation = APP_OPEN_AD_ORIENTATION_PORTRAIT
-  }) : super(adUnitId: adUnitId);
+  AppOpenAd._(
+      {required String adUnitId,
+      required this.request,
+      required this.adLoadCallback,
+      required this.orientation})
+      : super(adUnitId: adUnitId);
 
   /// Targeting information used to fetch an [Ad].
   final AdRequest request;
@@ -740,13 +740,16 @@ class AppOpenAd extends AdWithoutView {
       : 'ca-app-pub-3940256099942544/5662855259';
 
   /// Loads an [AppOpenAd] with the given [adUnitId] and [request].
-  static Future<void> initialise({
-    required String adUnitId,
-    required AdRequest request,
-    required AppOpenAdLoadCallback adLoadCallback,
-  }) async {
+  static Future<void> initialise(
+      {required String adUnitId,
+      required AdRequest request,
+      required AppOpenAdLoadCallback adLoadCallback,
+      int orientation = APP_OPEN_AD_ORIENTATION_PORTRAIT}) async {
     AppOpenAd ad = AppOpenAd._(
-        adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
+        adUnitId: adUnitId,
+        adLoadCallback: adLoadCallback,
+        request: request,
+        orientation: orientation);
 
     await instanceManager.loadAppOpenAd(ad);
   }
@@ -758,11 +761,12 @@ class AdManagerAppOpenAd extends AdWithoutView {
   ///
   /// A valid [adUnitId] from the AdMob dashboard, a nonnull [listener], and a
   /// nonnull [request] is required.
-  AdManagerAppOpenAd._({
-    required String adUnitId,
-    required this.request,
-    required this.adLoadCallback,
-  }) : super(adUnitId: adUnitId);
+  AdManagerAppOpenAd._(
+      {required String adUnitId,
+      required this.request,
+      required this.adLoadCallback,
+      required this.orientation})
+      : super(adUnitId: adUnitId);
 
   /// Targeting information used to fetch an [Ad].
   final AdManagerAdRequest request;
@@ -770,8 +774,17 @@ class AdManagerAppOpenAd extends AdWithoutView {
   /// Callback to be invoked when the ad finishes loading.
   final AdManagerAppOpenAdLoadCallback adLoadCallback;
 
+  /// Orientation for the AppOpenAd
+  final int orientation;
+
   /// Callbacks to be invoked when ads show and dismiss full screen content.
   FullScreenContentCallback<AdManagerAppOpenAd>? fullScreenContentCallback;
+
+  /// Constant for Portrait Orientation on AppOpenAd
+  static const int APP_OPEN_AD_ORIENTATION_PORTRAIT = 1;
+
+  /// Constant for Landscape Orientation on AppOpenAd
+  static const int APP_OPEN_AD_ORIENTATION_LANDSCAPE = 2;
 
   /// {@macro google_mobile_ads.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
@@ -779,13 +792,16 @@ class AdManagerAppOpenAd extends AdWithoutView {
       : 'ca-app-pub-3940256099942544/5662855259';
 
   /// Loads an [AdManagerAppOpenAd] with the given [adUnitId] and [request].
-  static Future<void> initialise({
-    required String adUnitId,
-    required AdManagerAdRequest request,
-    required AdManagerAppOpenAdLoadCallback adLoadCallback,
-  }) async {
+  static Future<void> initialise(
+      {required String adUnitId,
+      required AdManagerAdRequest request,
+      required AdManagerAppOpenAdLoadCallback adLoadCallback,
+      int orientation = APP_OPEN_AD_ORIENTATION_PORTRAIT}) async {
     AdManagerAppOpenAd ad = AdManagerAppOpenAd._(
-        adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
+        adUnitId: adUnitId,
+        adLoadCallback: adLoadCallback,
+        orientation: orientation,
+        request: request);
 
     await instanceManager.loadAdManagerAppOpenAd(ad);
   }
