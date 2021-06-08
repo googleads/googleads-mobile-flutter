@@ -140,6 +140,18 @@
 
 @end
 
+@interface FLTAppOpenAd : NSObject <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                                  request:(FLTAdRequest *_Nullable)request
+                                  gamRequest:(FLTGAMAdRequest *_Nullable)request
+                        orientation: (UIInterfaceOrientation)orientation
+                       rootViewController:(UIViewController *_Nonnull)rootViewController;
+- (GADAppOpenAd *_Nullable)appOpenAd;
+- (NSString *_Nonnull)adUnitId;
+- (void)load;
+
+@end
+
 @interface FLTGAMInterstitialAd : FLTInterstitialAd <GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTGAMAdRequest *_Nonnull)request

@@ -200,7 +200,49 @@
 
     [_manager loadAd:ad adId:call.arguments[@"adId"]];
     result(nil);
-  } else if ([call.method isEqualToString:@"loadAdManagerInterstitialAd"]) {
+  } else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
+      NSNumber *orientationFromArguments = call.arguments[@"orientation"];
+      UIInterfaceOrientation adOrientation = UIInterfaceOrientationPortrait;
+      if (orientationFromArguments == [NSNumber numberWithInt:2]) {
+          UIDeviceOrientation currentOrientation = UIDevice.currentDevice.orientation;
+          if (currentOrientation == UIInterfaceOrientationLandscapeLeft) {
+              adOrientation = UIInterfaceOrientationLandscapeLeft;
+          }
+          else{
+              adOrientation = UIInterfaceOrientationLandscapeRight;
+          }
+      }
+      
+      FLTAppOpenAd *ad = [[FLTAppOpenAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                                                  request:call.arguments[@"request"]
+                                                                  gamRequest:nil
+                                                                  orientation: adOrientation
+                                                       rootViewController:rootController];
+
+      [_manager loadAd:ad adId:call.arguments[@"adId"]];
+      result(nil);
+    } else if ([call.method isEqualToString:@"loadAdManagerAppOpenAd"]) {
+        NSNumber *orientationFromArguments = call.arguments[@"orientation"];
+        UIInterfaceOrientation adOrientation = UIInterfaceOrientationPortrait;
+        if (orientationFromArguments == [NSNumber numberWithInt:2]) {
+            UIDeviceOrientation currentOrientation = UIDevice.currentDevice.orientation;
+            if (currentOrientation == UIInterfaceOrientationLandscapeLeft) {
+                adOrientation = UIInterfaceOrientationLandscapeLeft;
+            }
+            else{
+                adOrientation = UIInterfaceOrientationLandscapeRight;
+            }
+        }
+        
+        FLTAppOpenAd *ad = [[FLTAppOpenAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                                                    request:nil
+                                                                    gamRequest:call.arguments[@"request"]
+                                                                    orientation: adOrientation
+                                                         rootViewController:rootController];
+
+        [_manager loadAd:ad adId:call.arguments[@"adId"]];
+        result(nil);
+      } else if ([call.method isEqualToString:@"loadAdManagerInterstitialAd"]) {
     FLTGAMInterstitialAd *ad =
         [[FLTGAMInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                request:call.arguments[@"request"]

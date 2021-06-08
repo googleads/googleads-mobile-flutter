@@ -359,6 +359,131 @@
 
 @end
 
+@implementation FLTAppOpenAd {
+  GADAppOpenAd *_appOpenView;
+  FLTAdRequest *_adRequest;
+  FLTGAMAdRequest *_gamAdRequest;
+  UIViewController *_rootViewController;
+  UIInterfaceOrientation _orientation;
+  NSString *_adUnitId;
+  NSDate *loadTime;
+}
+
+- (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                         request:(FLTAdRequest* _Nullable)request
+                      gamRequest:(FLTGAMAdRequest* _Nullable)gamRequest
+                     orientation:(UIInterfaceOrientation) adOrientation
+              rootViewController:(UIViewController *_Nonnull)rootViewController {
+  self = [super init];
+  if (self) {
+    _adRequest = request;
+    _gamAdRequest = gamRequest;
+    _adUnitId = [adUnitId copy];
+    _orientation = adOrientation;
+    _rootViewController = rootViewController;
+      
+    [self attachForegroundListener];
+  }
+  return self;
+}
+
+- (BOOL) wasLoadTimeLessThanNHoursAgo {
+  NSDate *now = [NSDate date];
+  NSTimeInterval timeIntervalBetweenNowAndLoadTime = [now timeIntervalSinceDate:self->loadTime];
+  double secondsPerHour = 3600.0;
+  double intervalInHours = timeIntervalBetweenNowAndLoadTime / secondsPerHour;
+  return intervalInHours < 4;
+}
+
+- (void) attachForegroundListener {
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showAppOpenAd) name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+- (GADAppOpenAd *_Nullable)appOpenAd {
+  return _appOpenView;
+}
+
+- (NSString *_Nonnull)adUnitId {
+  return _adUnitId;
+}
+
+- (void)load {
+    // AdRequest
+    if (_adRequest != nil) {
+        [GADAppOpenAd loadWithAdUnitID:_adUnitId
+                               request:[_adRequest asGADRequest]
+                           orientation: _orientation
+                     completionHandler:^(GADAppOpenAd *ad, NSError *error) {
+                      if (error) {
+                        [self.manager onAdFailedToLoad:self error:error];
+                        return;
+                      }
+                      ad.fullScreenContentDelegate = self;
+                      self->_appOpenView = ad;
+                      [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+                      self->loadTime = [NSDate date];
+                    }];
+    }
+    
+    // AdManagerRequest
+    else if (_gamAdRequest != nil) {
+        [GADAppOpenAd loadWithAdUnitID:_adUnitId
+                            request:[_gamAdRequest asGAMRequest]
+                    orientation: _orientation
+                    completionHandler:^(GADAppOpenAd *ad, NSError *error) {
+                      if (error) {
+                        [self.manager onAdFailedToLoad:self error:error];
+                        return;
+                      }
+                      ad.fullScreenContentDelegate = self;
+                      self->_appOpenView = ad;
+                      [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+                      self->loadTime = [NSDate date];
+            }];
+        }
+}
+
+- (void) reload {
+    self->_appOpenView = nil;
+    [self load];
+}
+
+- (void)showAppOpenAd {
+  if (self.appOpenAd && [self wasLoadTimeLessThanNHoursAgo]) {
+    [self.appOpenAd presentFromRootViewController:_rootViewController];
+  } else {
+    [self load];
+  }
+}
+
+#pragma mark - GADFullScreenContentDelegate
+
+- (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
+    didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
+  [self.manager didFailToPresentFullScreenContentWithError:self error:error];
+}
+
+- (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager onAdDidPresentFullScreenContent:self];
+}
+
+- (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager adDidDismissFullScreenContent:self];
+  [self reload];
+}
+
+- (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager adWillDismissFullScreenContent:self];
+}
+
+- (void)adDidRecordImpression:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager adDidRecordImpression:self];
+}
+
+@synthesize manager;
+
+@end
+
 @implementation FLTGAMInterstitialAd {
   GAMInterstitialAd *_insterstitial;
   FLTGAMAdRequest *_adRequest;
