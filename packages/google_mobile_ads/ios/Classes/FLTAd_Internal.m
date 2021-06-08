@@ -395,8 +395,17 @@
   return intervalInHours < 4;
 }
 
+// For observing the Foreground state
 - (void) attachForegroundListener {
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showAppOpenAd) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self selector:@selector(showAppOpenAd) name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+// Important to detach the listeners / observers.
+- (void) detachForegroundListener {
+    [[NSNotificationCenter defaultCenter]
+     removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    NSLog(@"AppOpenAd Foreground Listener Detached");
 }
 
 - (GADAppOpenAd *_Nullable)appOpenAd {

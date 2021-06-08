@@ -273,7 +273,10 @@
   } else if ([call.method isEqualToString:@"disposeAd"]) {
     [_manager dispose:call.arguments[@"adId"]];
     result(nil);
-  } else if ([call.method isEqualToString:@"showAdWithoutView"]) {
+  } else if ([call.method isEqualToString:@"disposeAppOpenAds"]) {
+      [_manager disposeAppOpenAds];
+      result(nil);
+    } else if ([call.method isEqualToString:@"showAdWithoutView"]) {
     [_manager showAdWithID:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method isEqualToString:@"AdSize#getAnchoredAdaptiveBannerAdSize"]) {

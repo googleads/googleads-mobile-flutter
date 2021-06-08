@@ -62,6 +62,15 @@
   [_ads removeObjectForKey:adId];
 }
 
+- (void)disposeAppOpenAds {
+    NSArray * appOpenAdsArray = [_ads appOpenAdObjects];
+    // If the object is an AppOpenAd then remove all active listeners
+    for (id appOpenAd in appOpenAdsArray) {
+        [appOpenAd detachForegroundListener];
+        [_ads removeObjects:appOpenAd];
+    }
+}
+
 - (void)disposeAllAds {
   [_ads removeAllObjects];
 }

@@ -149,6 +149,7 @@
 - (GADAppOpenAd *_Nullable)appOpenAd;
 - (NSString *_Nonnull)adUnitId;
 - (void)load;
+- (void) detachForegroundListener;
 
 @end
 
