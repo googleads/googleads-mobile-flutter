@@ -739,6 +739,11 @@ class AppOpenAd extends AdWithoutView {
       ? 'ca-app-pub-3940256099942544/3419835294'
       : 'ca-app-pub-3940256099942544/5662855259';
 
+  /// Disposes all AppOpenAds
+  static Future<void> disposeAppOpenAds() async {
+    return await instanceManager.disposeAppOpenAds();
+  }
+
   /// Loads an [AppOpenAd] with the given [adUnitId] and [request].
   static Future<void> initialise(
       {required String adUnitId,

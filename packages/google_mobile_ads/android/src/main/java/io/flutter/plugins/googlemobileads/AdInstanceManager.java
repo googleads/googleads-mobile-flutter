@@ -24,6 +24,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,6 +85,13 @@ class AdInstanceManager {
       ((FlutterDestroyableAd) adObject).destroy();
     }
     ads.remove(adId);
+  }
+
+  void disposeAppOpenAds() {
+    for (Map.Entry<Integer, FlutterAd> entry : ads.entrySet()) {
+      if (entry.getValue() instanceof FlutterAppOpenAd)
+        ads.remove(entry.getKey());
+    }
   }
 
   void disposeAllAds() {

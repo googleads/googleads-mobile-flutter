@@ -17,7 +17,6 @@ package io.flutter.plugins.googlemobileads;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.FullScreenContentCallback;
-import com.google.android.gms.ads.appopen.AppOpenAd;
 
 /**
  * Flutter implementation of {@link FullScreenContentCallback}. Forwards events to

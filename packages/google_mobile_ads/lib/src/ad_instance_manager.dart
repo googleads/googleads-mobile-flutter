@@ -19,13 +19,13 @@
 import 'dart:async';
 import 'dart:collection';
 
-import 'package:google_mobile_ads/src/mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/src/mobile_ads.dart';
 
-import 'request_configuration.dart';
 import 'ad_containers.dart';
+import 'request_configuration.dart';
 
 /// Loads and disposes [BannerAds] and [InterstitialAds].
 AdInstanceManager instanceManager = AdInstanceManager(
@@ -126,8 +126,7 @@ class AdInstanceManager {
         } else if (ad is AdManagerAppOpenAd) {
           ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
               ?.call(ad);
-        }
-        else if (ad is AdManagerInterstitialAd) {
+        } else if (ad is AdManagerInterstitialAd) {
           ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
               ?.call(ad);
         } else {
@@ -219,8 +218,7 @@ class AdInstanceManager {
     } else if (ad is AdManagerAppOpenAd) {
       ad.dispose();
       ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
-    }
-    else if (ad is AdManagerInterstitialAd) {
+    } else if (ad is AdManagerInterstitialAd) {
       ad.dispose();
       ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
     } else {
@@ -537,6 +535,12 @@ class AdInstanceManager {
         'adId': adId,
       },
     );
+  }
+
+  /// Mainly required for iOS to remove the Foreground Observers in FLTAppOpenAd.
+  /// Removes the listener / observers in iOS, removes from Ads list in both.
+  Future<void> disposeAppOpenAds() {
+    return channel.invokeMethod<void>('disposeAppOpenAds');
   }
 
   /// Display an [AdWithoutView] that is overlaid on top of the application.
