@@ -129,19 +129,20 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _createAppOpenAd() {
-    AppOpenAd.initialise(adUnitId: AppOpenAd.testAdUnitId, request: request, adLoadCallback: AppOpenAdLoadCallback(
-      onAdLoaded: (AppOpenAd appOpenAd) {
-        print('$appOpenAd loaded.');
-        _numAppOpenAdLoadAttempts = 0;
-      },
-      onAdFailedToLoad: (LoadAdError error) {
-        print('AppOpenAd failed to load: $error');
-        _numAppOpenAdLoadAttempts += 1;
-        if (_numAppOpenAdLoadAttempts <= maxFailedLoadAttempts) {
-          _createAppOpenAd();
-        }
-      }
-    ));
+    AppOpenAd.initialise(
+        adUnitId: AppOpenAd.testAdUnitId,
+        request: request,
+        adLoadCallback:
+            AppOpenAdLoadCallback(onAdLoaded: (AppOpenAd appOpenAd) {
+          print('$appOpenAd loaded.');
+          _numAppOpenAdLoadAttempts = 0;
+        }, onAdFailedToLoad: (LoadAdError error) {
+          print('AppOpenAd failed to load: $error');
+          _numAppOpenAdLoadAttempts += 1;
+          if (_numAppOpenAdLoadAttempts <= maxFailedLoadAttempts) {
+            _createAppOpenAd();
+          }
+        }));
   }
 
   void _showRewardedAd() {
