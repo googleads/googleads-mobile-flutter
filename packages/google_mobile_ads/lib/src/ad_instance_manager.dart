@@ -120,7 +120,14 @@ class AdInstanceManager {
         } else if (ad is InterstitialAd) {
           ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
               ?.call(ad);
-        } else if (ad is AdManagerInterstitialAd) {
+        } else if (ad is AppOpenAd) {
+          ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
+              ?.call(ad);
+        } else if (ad is AdManagerAppOpenAd) {
+          ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
+              ?.call(ad);
+        }
+        else if (ad is AdManagerInterstitialAd) {
           ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
               ?.call(ad);
         } else {
@@ -185,6 +192,10 @@ class AdInstanceManager {
       ad.rewardedAdLoadCallback.onAdLoaded.call(ad);
     } else if (ad is InterstitialAd) {
       ad.adLoadCallback.onAdLoaded.call(ad);
+    } else if (ad is AppOpenAd) {
+      ad.adLoadCallback.onAdLoaded.call(ad);
+    } else if (ad is AdManagerAppOpenAd) {
+      ad.adLoadCallback.onAdLoaded.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
       ad.adLoadCallback.onAdLoaded.call(ad);
     } else {
@@ -202,7 +213,14 @@ class AdInstanceManager {
     } else if (ad is InterstitialAd) {
       ad.dispose();
       ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
-    } else if (ad is AdManagerInterstitialAd) {
+    } else if (ad is AppOpenAd) {
+      ad.dispose();
+      ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
+    } else if (ad is AdManagerAppOpenAd) {
+      ad.dispose();
+      ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
+    }
+    else if (ad is AdManagerInterstitialAd) {
       ad.dispose();
       ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
     } else {
@@ -252,6 +270,10 @@ class AdInstanceManager {
       ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
     } else if (ad is InterstitialAd) {
       ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
+    } else if (ad is AppOpenAd) {
+      ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
+    } else if (ad is AdManagerAppOpenAd) {
+      ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
       ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
     } else {
@@ -264,7 +286,15 @@ class AdInstanceManager {
       ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
     } else if (ad is InterstitialAd) {
       ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+    } else if (ad is AppOpenAd) {
+      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+    } else if (ad is AdManagerAppOpenAd) {
+      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
+      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+    } else if (ad is AppOpenAd) {
+      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+    } else if (ad is AdManagerAppOpenAd) {
       ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
     } else {
       debugPrint('invalid ad: $ad, for event name: $eventName');
@@ -277,6 +307,12 @@ class AdInstanceManager {
       ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
           ?.call(ad, arguments['error']);
     } else if (ad is InterstitialAd) {
+      ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
+          ?.call(ad, arguments['error']);
+    } else if (ad is AppOpenAd) {
+      ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
+          ?.call(ad, arguments['error']);
+    } else if (ad is AdManagerAppOpenAd) {
       ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
           ?.call(ad, arguments['error']);
     } else if (ad is AdManagerInterstitialAd) {
@@ -293,6 +329,10 @@ class AdInstanceManager {
     } else if (ad is RewardedAd) {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
     } else if (ad is InterstitialAd) {
+      ad.fullScreenContentCallback?.onAdImpression?.call(ad);
+    } else if (ad is AppOpenAd) {
+      ad.fullScreenContentCallback?.onAdImpression?.call(ad);
+    } else if (ad is AdManagerAppOpenAd) {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
@@ -335,6 +375,24 @@ class AdInstanceManager {
         'adUnitId': ad.adUnitId,
         'request': ad.request,
         'size': ad.size,
+      },
+    );
+  }
+
+  Future<void> loadAppOpenAd(AppOpenAd ad) {
+    if (adIdFor(ad) != null) {
+      return Future<void>.value();
+    }
+
+    final int adId = _nextAdId++;
+    _loadedAds[adId] = ad;
+    return channel.invokeMethod<void>(
+      'loadAppOpenAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'orientation': ad.orientation,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
       },
     );
   }
@@ -434,6 +492,26 @@ class AdInstanceManager {
     _loadedAds[adId] = ad;
     return channel.invokeMethod<void>(
       'loadAdManagerInterstitialAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+      },
+    );
+  }
+
+  /// Loads an app open ad if not currently loading or loaded.
+  ///
+  /// Loading also terminates if ad is already in the process of loading.
+  Future<void> loadAdManagerAppOpenAd(AdManagerAppOpenAd ad) {
+    if (adIdFor(ad) != null) {
+      return Future<void>.value();
+    }
+
+    final int adId = _nextAdId++;
+    _loadedAds[adId] = ad;
+    return channel.invokeMethod<void>(
+      'loadAdManagerAppOpenAd',
       <dynamic, dynamic>{
         'adId': adId,
         'adUnitId': ad.adUnitId,

@@ -703,6 +703,94 @@ class InterstitialAd extends AdWithoutView {
   }
 }
 
+/// A full-screen app open ad for the Google Mobile Ads Plugin.
+class AppOpenAd extends AdWithoutView {
+  /// Creates an [AppOpenAd].
+  ///
+  /// A valid [adUnitId] from the AdMob dashboard, a nonnull [listener], and a
+  /// nonnull [request] is required.
+  AppOpenAd._({
+    required String adUnitId,
+    required this.request,
+    required this.adLoadCallback,
+    this.orientation = APP_OPEN_AD_ORIENTATION_PORTRAIT
+  }) : super(adUnitId: adUnitId);
+
+  /// Targeting information used to fetch an [Ad].
+  final AdRequest request;
+
+  /// Callback to be invoked when the ad finishes loading.
+  final AppOpenAdLoadCallback adLoadCallback;
+
+  /// Orientation for the AppOpenAd
+  final int orientation;
+
+  /// Callbacks to be invoked when ads show and dismiss full screen content.
+  FullScreenContentCallback<AppOpenAd>? fullScreenContentCallback;
+
+  /// Constant for Portrait Orientation on AppOpenAd
+  static const int APP_OPEN_AD_ORIENTATION_PORTRAIT = 1;
+
+  /// Constant for Landscape Orientation on AppOpenAd
+  static const int APP_OPEN_AD_ORIENTATION_LANDSCAPE = 2;
+
+  /// {@macro google_mobile_ads.testAdUnitId}
+  static final String testAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/3419835294'
+      : 'ca-app-pub-3940256099942544/5662855259';
+
+  /// Loads an [AppOpenAd] with the given [adUnitId] and [request].
+  static Future<void> initialise({
+    required String adUnitId,
+    required AdRequest request,
+    required AppOpenAdLoadCallback adLoadCallback,
+  }) async {
+    AppOpenAd ad = AppOpenAd._(
+        adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
+
+    await instanceManager.loadAppOpenAd(ad);
+  }
+}
+
+/// A full-screen app open ad for the Google Mobile Ads Plugin.
+class AdManagerAppOpenAd extends AdWithoutView {
+  /// Creates an [AppOpenAd].
+  ///
+  /// A valid [adUnitId] from the AdMob dashboard, a nonnull [listener], and a
+  /// nonnull [request] is required.
+  AdManagerAppOpenAd._({
+    required String adUnitId,
+    required this.request,
+    required this.adLoadCallback,
+  }) : super(adUnitId: adUnitId);
+
+  /// Targeting information used to fetch an [Ad].
+  final AdManagerAdRequest request;
+
+  /// Callback to be invoked when the ad finishes loading.
+  final AdManagerAppOpenAdLoadCallback adLoadCallback;
+
+  /// Callbacks to be invoked when ads show and dismiss full screen content.
+  FullScreenContentCallback<AdManagerAppOpenAd>? fullScreenContentCallback;
+
+  /// {@macro google_mobile_ads.testAdUnitId}
+  static final String testAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/3419835294'
+      : 'ca-app-pub-3940256099942544/5662855259';
+
+  /// Loads an [AdManagerAppOpenAd] with the given [adUnitId] and [request].
+  static Future<void> initialise({
+    required String adUnitId,
+    required AdManagerAdRequest request,
+    required AdManagerAppOpenAdLoadCallback adLoadCallback,
+  }) async {
+    AdManagerAppOpenAd ad = AdManagerAppOpenAd._(
+        adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
+
+    await instanceManager.loadAdManagerAppOpenAd(ad);
+  }
+}
+
 /// A full-screen interstitial ad for use with Ad Manager.
 class AdManagerInterstitialAd extends AdWithoutView {
   /// Creates an [AdManagerInterstitialAd].

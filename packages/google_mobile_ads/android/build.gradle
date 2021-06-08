@@ -63,3 +63,7 @@ afterEvaluate {
         }
     }
 }
+
+dependencies {
+    implementation 'androidx.lifecycle:lifecycle-process:2.3.1'
+}
