@@ -514,6 +514,7 @@ class AdInstanceManager {
       'loadAdManagerAppOpenAd',
       <dynamic, dynamic>{
         'adId': adId,
+        'orientation': ad.orientation,
         'adUnitId': ad.adUnitId,
         'request': ad.request,
       },

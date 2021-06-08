@@ -757,7 +757,7 @@ class AppOpenAd extends AdWithoutView {
 
 /// A full-screen app open ad for the Google Mobile Ads Plugin.
 class AdManagerAppOpenAd extends AdWithoutView {
-  /// Creates an [AppOpenAd].
+  /// Creates an [AppOpenAd] with [AdManagerAdRequest].
   ///
   /// A valid [adUnitId] from the AdMob dashboard, a nonnull [listener], and a
   /// nonnull [request] is required.
