@@ -18,22 +18,22 @@ public class FullScreenContentListenerProxy implements AdContainersChannelLibrar
     this(new FullScreenContentCallback() {
       @Override
       public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-        onAdFailedToShowFullScreenContent.invoke();
+        if (onAdFailedToShowFullScreenContent != null) onAdFailedToShowFullScreenContent.invoke();
       }
 
       @Override
       public void onAdShowedFullScreenContent() {
-        onAdShowedFullScreenContent.invoke();
+        if (onAdShowedFullScreenContent != null) onAdShowedFullScreenContent.invoke();
       }
 
       @Override
       public void onAdDismissedFullScreenContent() {
-        onAdDismissedFullScreenContent.invoke();
+        if (onAdDismissedFullScreenContent != null) onAdDismissedFullScreenContent.invoke();
       }
 
       @Override
       public void onAdImpression() {
-        onAdImpression.invoke();
+        if (onAdImpression != null) onAdImpression.invoke();
       }
     }, implementations);
   }

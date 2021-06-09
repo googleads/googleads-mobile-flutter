@@ -47,10 +47,12 @@ public class AdContainersChannelLibrary {
   public static abstract class $LoadFailCallback {
     public abstract Object invoke($LoadAdError error);
   }
+  
 
+  
   public static class $UserEarnedRewardCallbackChannel extends TypeChannel<$UserEarnedRewardCallback> {
     public $UserEarnedRewardCallbackChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "__function_channel__");
+      super(messenger, "google_mobile_ads.UserEarnedRewardCallback");
     }
 
     public Completable<PairedInstance> $$create($UserEarnedRewardCallback $instance, boolean $owner) {
@@ -65,7 +67,7 @@ public class AdContainersChannelLibrary {
   
   public static class $AppEventCallbackChannel extends TypeChannel<$AppEventCallback> {
     public $AppEventCallbackChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "__function_channel__");
+      super(messenger, "google_mobile_ads.AppEventCallback");
     }
 
     public Completable<PairedInstance> $$create($AppEventCallback $instance, boolean $owner) {
@@ -80,7 +82,7 @@ public class AdContainersChannelLibrary {
   
   public static class $AdVoidCallbackChannel extends TypeChannel<$AdVoidCallback> {
     public $AdVoidCallbackChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "__function_channel__");
+      super(messenger, "google_mobile_ads.AdVoidCallback");
     }
 
     public Completable<PairedInstance> $$create($AdVoidCallback $instance, boolean $owner) {
@@ -89,13 +91,13 @@ public class AdContainersChannelLibrary {
 
     private Completable<Object> invoke($AdVoidCallback $instance
         ) {
-      return invokeMethod($instance, "", Arrays.asList());
+      return invokeMethod($instance, "", Arrays.<Object>asList());
     }
   }
   
   public static class $InterstitialAdLoadCallbackChannel extends TypeChannel<$InterstitialAdLoadCallback> {
     public $InterstitialAdLoadCallbackChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "__function_channel__");
+      super(messenger, "google_mobile_ads.InterstitialAdLoadCallback");
     }
 
     public Completable<PairedInstance> $$create($InterstitialAdLoadCallback $instance, boolean $owner) {
@@ -110,7 +112,7 @@ public class AdContainersChannelLibrary {
   
   public static class $AdManagerInterstitialAdLoadCallbackChannel extends TypeChannel<$AdManagerInterstitialAdLoadCallback> {
     public $AdManagerInterstitialAdLoadCallbackChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "__function_channel__");
+      super(messenger, "google_mobile_ads.AdManagerInterstitialAdLoadCallback");
     }
 
     public Completable<PairedInstance> $$create($AdManagerInterstitialAdLoadCallback $instance, boolean $owner) {
@@ -125,7 +127,7 @@ public class AdContainersChannelLibrary {
   
   public static class $RewardedAdLoadCallbackChannel extends TypeChannel<$RewardedAdLoadCallback> {
     public $RewardedAdLoadCallbackChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "__function_channel__");
+      super(messenger, "google_mobile_ads.RewardedAdLoadCallback");
     }
 
     public Completable<PairedInstance> $$create($RewardedAdLoadCallback $instance, boolean $owner) {
@@ -140,7 +142,7 @@ public class AdContainersChannelLibrary {
   
   public static class $LoadFailCallbackChannel extends TypeChannel<$LoadFailCallback> {
     public $LoadFailCallbackChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "__function_channel__");
+      super(messenger, "google_mobile_ads.LoadFailCallback");
     }
 
     public Completable<PairedInstance> $$create($LoadFailCallback $instance, boolean $owner) {
@@ -644,7 +646,7 @@ public class AdContainersChannelLibrary {
       super(messenger, "google_mobile_ads.NativeAd");
     }
 
-    public Completable<PairedInstance> $$create($NativeAd $instance, boolean $owner,String adUnitId,String factoryId,$NativeAdListener listener,$AdRequest request,Map customOptions) {
+    public Completable<PairedInstance> $$create($NativeAd $instance, boolean $owner,String adUnitId,String factoryId,$NativeAdListener listener,$AdRequest request,Map<String,Object> customOptions) {
       return createNewInstancePair($instance, Arrays.<Object>asList(adUnitId,factoryId,listener,request,customOptions), $owner);
     }
 
@@ -1363,7 +1365,7 @@ public class AdContainersChannelLibrary {
   }
   
   public static class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
-    public $NativeAd $$create(TypeChannelMessenger messenger,String adUnitId,String factoryId,$NativeAdListener listener,$AdRequest request,Map customOptions)
+    public $NativeAd $$create(TypeChannelMessenger messenger,String adUnitId,String factoryId,$NativeAdListener listener,$AdRequest request,Map<String,Object> customOptions)
         throws Exception {
       throw new UnsupportedOperationException();
     }
@@ -1393,7 +1395,7 @@ public class AdContainersChannelLibrary {
     @Override
     public $NativeAd createInstance(TypeChannelMessenger messenger, List<Object> arguments)
         throws Exception {
-      return $$create(messenger,(String) arguments.get(0),(String) arguments.get(1),($NativeAdListener) arguments.get(2),($AdRequest) arguments.get(3),(Map) arguments.get(4));
+      return $$create(messenger,(String) arguments.get(0),(String) arguments.get(1),($NativeAdListener) arguments.get(2),($AdRequest) arguments.get(3),(Map<String,Object>) arguments.get(4));
     }
 
     @Override

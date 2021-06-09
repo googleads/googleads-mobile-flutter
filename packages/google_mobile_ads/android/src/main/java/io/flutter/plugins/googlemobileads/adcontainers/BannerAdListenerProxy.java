@@ -18,18 +18,19 @@ public class BannerAdListenerProxy implements AdContainersChannelLibrary.$Banner
     this(new AdListener() {
       @Override
       public void onAdClosed() {
-        onAdClosed.invoke();
+        if (onAdClosed != null) onAdClosed.invoke();
       }
 
       @Override
       public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+        if (onAdFailedToLoad == null) return;
         final LoadAdErrorProxy loadAdErrorProxy = new LoadAdErrorProxy(loadAdError, implementations);
         onAdFailedToLoad.invoke(loadAdErrorProxy);
       }
 
       @Override
       public void onAdOpened() {
-        onAdOpened.invoke();
+        if (onAdOpened != null) onAdOpened.invoke();
       }
 
       @Override

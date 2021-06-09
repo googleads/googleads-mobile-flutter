@@ -458,6 +458,15 @@ class BannerAd implements AdWithView, $BannerAd {
     required this.listener,
     required this.request,
   }) {
+    BannerAdListener._channel.$$create(
+      listener,
+      $owner: false,
+      onAdLoaded: listener.onAdLoaded,
+      onAdFailedToLoad: listener.onAdFailedToLoad,
+      onAdOpened: listener.onAdOpened,
+      onAdWillDismissScreen: listener.onAdWillDismissScreen,
+      onAdClosed: listener.onAdClosed,
+    );
     _channel.$$create(
       this,
       $owner: true,
@@ -509,15 +518,6 @@ class BannerAd implements AdWithView, $BannerAd {
   /// Loading callbacks are sent to this ad's [listener].
   Future<void> load() {
     _adLoaded = true;
-    BannerAdListener._channel.$$create(
-      listener,
-      $owner: false,
-      onAdLoaded: listener.onAdLoaded,
-      onAdFailedToLoad: listener.onAdFailedToLoad,
-      onAdOpened: listener.onAdOpened,
-      onAdWillDismissScreen: listener.onAdWillDismissScreen,
-      onAdClosed: listener.onAdClosed,
-    );
     return _channel.$load(this);
   }
 }
@@ -538,6 +538,15 @@ class AdManagerBannerAd implements AdWithView, $AdManagerBannerAd {
     required this.request,
     this.appEventListener,
   }) : assert(sizes.isNotEmpty) {
+    AdManagerBannerAdListener._channel.$$create(
+      listener,
+      $owner: false,
+      onAdLoaded: listener.onAdLoaded,
+      onAdFailedToLoad: listener.onAdFailedToLoad,
+      onAdOpened: listener.onAdOpened,
+      onAdWillDismissScreen: listener.onAdWillDismissScreen,
+      onAdClosed: listener.onAdClosed,
+    );
     _channel.$$create(
       this,
       $owner: true,
@@ -583,15 +592,6 @@ class AdManagerBannerAd implements AdWithView, $AdManagerBannerAd {
   /// Loading callbacks are sent to this ad's [listener].
   Future<void> load() {
     _adLoaded = true;
-    AdManagerBannerAdListener._channel.$$create(
-      listener,
-      $owner: false,
-      onAdLoaded: listener.onAdLoaded,
-      onAdFailedToLoad: listener.onAdFailedToLoad,
-      onAdOpened: listener.onAdOpened,
-      onAdWillDismissScreen: listener.onAdWillDismissScreen,
-      onAdClosed: listener.onAdClosed,
-    );
     return _channel.$load(this);
   }
 }
@@ -629,6 +629,17 @@ class NativeAd implements AdWithView, $NativeAd {
     required this.request,
     this.customOptions,
   }) {
+    NativeAdListener._channel.$$create(
+      listener,
+      $owner: false,
+      onAdLoaded: listener.onAdLoaded,
+      onAdFailedToLoad: listener.onAdFailedToLoad,
+      onAdOpened: listener.onAdOpened,
+      onAdWillDismissScreen: listener.onAdWillDismissScreen,
+      onAdClosed: listener.onAdClosed,
+      onAdClicked: listener.onAdClicked,
+      onAdImpression: listener.onAdImpression,
+    );
     _channel.$$create(
       this,
       $owner: true,
@@ -681,17 +692,6 @@ class NativeAd implements AdWithView, $NativeAd {
   /// Loading callbacks are sent to this ad's [listener].
   Future<void> load() {
     _adLoaded = true;
-    NativeAdListener._channel.$$create(
-      listener,
-      $owner: false,
-      onAdLoaded: listener.onAdLoaded,
-      onAdFailedToLoad: listener.onAdFailedToLoad,
-      onAdOpened: listener.onAdOpened,
-      onAdWillDismissScreen: listener.onAdWillDismissScreen,
-      onAdClosed: listener.onAdClosed,
-      onAdClicked: listener.onAdClicked,
-      onAdImpression: listener.onAdImpression,
-    );
     return _channel.$load(this);
   }
 }

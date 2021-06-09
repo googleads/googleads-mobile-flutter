@@ -5,6 +5,7 @@ import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 
 public class AdManagerInterstitialAdProxy implements AdContainersChannelLibrary.$AdManagerInterstitialAd {
   public final AdManagerInterstitialAd adManagerInterstitialAd;
+  private AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations;
 
   public static void load(String adUnitId,
                           AdManagerAdRequestProxy request,
@@ -15,6 +16,7 @@ public class AdManagerInterstitialAdProxy implements AdContainersChannelLibrary.
 
   public AdManagerInterstitialAdProxy(AdManagerInterstitialAd adManagerInterstitialAd, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
     this.adManagerInterstitialAd = adManagerInterstitialAd;
+    this.implementations = implementations;
     implementations.getChannelAdManagerInterstitialAd().$$create(this, false);
   }
 
@@ -26,6 +28,7 @@ public class AdManagerInterstitialAdProxy implements AdContainersChannelLibrary.
     if (fullScreenContentListener != null) {
       adManagerInterstitialAd.setFullScreenContentCallback(((FullScreenContentListenerProxy) fullScreenContentListener).fullScreenContentCallback);
     }
+    adManagerInterstitialAd.show(implementations.activity);
     return null;
   }
 }

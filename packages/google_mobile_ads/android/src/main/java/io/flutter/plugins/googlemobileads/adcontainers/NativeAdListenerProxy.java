@@ -20,18 +20,19 @@ public class NativeAdListenerProxy implements AdContainersChannelLibrary.$Native
     this(new AdListener() {
       @Override
       public void onAdClosed() {
-        onAdClosed.invoke();
+        if (onAdClosed != null) onAdClosed.invoke();
       }
 
       @Override
       public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+        if (onAdFailedToLoad == null) return;
         final LoadAdErrorProxy loadAdErrorProxy = new LoadAdErrorProxy(loadAdError, implementations);
         onAdFailedToLoad.invoke(loadAdErrorProxy);
       }
 
       @Override
       public void onAdOpened() {
-        onAdOpened.invoke();
+        if (onAdOpened != null) onAdOpened.invoke();
       }
 
       @Override
@@ -41,12 +42,12 @@ public class NativeAdListenerProxy implements AdContainersChannelLibrary.$Native
 
       @Override
       public void onAdClicked() {
-        onAdClicked.invoke();
+        if (onAdClicked != null) onAdClicked.invoke();
       }
 
       @Override
       public void onAdImpression() {
-        onAdImpression.invoke();
+        if (onAdImpression != null) onAdImpression.invoke();
       }
     }, implementations);
   }

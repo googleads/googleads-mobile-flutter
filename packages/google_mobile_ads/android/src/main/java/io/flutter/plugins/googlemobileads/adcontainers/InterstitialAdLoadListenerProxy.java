@@ -20,6 +20,7 @@ public class InterstitialAdLoadListenerProxy implements AdContainersChannelLibra
 
       @Override
       public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+        if (onAdFailedToLoad == null) return;
         final LoadAdErrorProxy loadAdErrorProxy = new LoadAdErrorProxy(loadAdError, implementations);
         onAdFailedToLoad.invoke(loadAdErrorProxy);
       }

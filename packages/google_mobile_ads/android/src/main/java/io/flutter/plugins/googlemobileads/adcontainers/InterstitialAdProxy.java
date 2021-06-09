@@ -4,6 +4,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd;
 
 public class InterstitialAdProxy implements AdContainersChannelLibrary.$InterstitialAd {
   public final InterstitialAd interstitialAd;
+  private AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations;
   
   public static void load(String adUnitId,
                           AdRequestProxy request,
@@ -14,6 +15,7 @@ public class InterstitialAdProxy implements AdContainersChannelLibrary.$Intersti
 
   public InterstitialAdProxy(InterstitialAd interstitialAd, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
     this.interstitialAd = interstitialAd;
+    this.implementations = implementations;
     implementations.getChannelInterstitialAd().$$create(this, false);
   }
 
@@ -22,6 +24,7 @@ public class InterstitialAdProxy implements AdContainersChannelLibrary.$Intersti
     if (fullScreenContentListener != null) {
       interstitialAd.setFullScreenContentCallback(((FullScreenContentListenerProxy) fullScreenContentListener).fullScreenContentCallback);
     }
+    interstitialAd.show(implementations.activity);
     return null;
   }
 }

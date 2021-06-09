@@ -132,7 +132,7 @@ class _MyAppState extends State<MyApp> {
       onUserEarnedReward: OnUserEarnedRewardListener(
         (RewardItem reward) {
           print(
-            'RewardedAd with reward $RewardItem(${reward.amount}, ${reward.type}',
+            'RewardedAd with reward $RewardItem(${reward.amount}, ${reward.type})',
           );
         },
       ),
