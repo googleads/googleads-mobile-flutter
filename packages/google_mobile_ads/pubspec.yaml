@@ -39,6 +39,7 @@ dev_dependencies:
     git:
       url: git@github.com:bparrishMines/penguin.git
       path: packages/reference_generator
+      ref: functions
   pedantic: ^1.11.0
   e2e: ^0.7.0
   flutter_driver:

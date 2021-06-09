@@ -6,9 +6,7 @@ package io.flutter.plugins.googlemobileads.adcontainers;
 
 import androidx.annotation.NonNull;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import github.penguin.reference.async.Completable;
 import github.penguin.reference.reference.PairedInstance;
@@ -22,85 +20,340 @@ import github.penguin.reference.reference.TypeChannelMessenger;
 
 public class AdContainersChannelLibrary {
   
-  public interface $OnUserEarnedRewardListener {
-    
-    
-    
+  public static abstract class $UserEarnedRewardCallback {
+    public abstract Object invoke($RewardItem reward) throws Exception;
   }
   
-  public interface $AppEventListener {
-    
-    
-    
+  public static abstract class $AppEventCallback {
+    public abstract Object invoke(String name,String data) throws Exception;
   }
   
-  public interface $AdWithViewListener {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+  public static abstract class $AdVoidCallback {
+    public abstract Object invoke() throws Exception;
   }
   
-  public interface $BannerAdListener {
-    
+  public static abstract class $InterstitialAdLoadCallback {
+    public abstract Object invoke($InterstitialAd ad) throws Exception;
   }
   
-  public interface $AdManagerBannerAdListener {
-    
+  public static abstract class $AdManagerInterstitialAdLoadCallback {
+    public abstract Object invoke($AdManagerInterstitialAd ad) throws Exception;
   }
   
-  public interface $NativeAdListener {
-    
-    
-    
+  public static abstract class $RewardedAdLoadCallback {
+    public abstract Object invoke($RewardedAd ad) throws Exception;
   }
   
-  public interface $FullScreenContentCallback {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+  public static abstract class $LoadFailCallback {
+    public abstract Object invoke($LoadAdError error) throws Exception;
   }
   
-  public interface $RewardedAdLoadCallback {
-    
-    
-    
-    
-    
+
+  
+  public static class $UserEarnedRewardCallbackChannel extends TypeChannel<$UserEarnedRewardCallback> {
+    public $UserEarnedRewardCallbackChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "__function_channel__");
+    }
+
+    public Completable<PairedInstance> $$create($UserEarnedRewardCallback $instance, boolean $owner) {
+      return createNewInstancePair($instance, Collections.emptyList(), $owner);
+    }
+
+    private Completable<Object> invoke($UserEarnedRewardCallback $instance
+        ,$RewardItem reward) {
+      return invokeMethod($instance, "", Arrays.asList(reward));
+    }
   }
   
-  public interface $InterstitialAdLoadCallback {
-    
-    
-    
-    
-    
+  public static class $AppEventCallbackChannel extends TypeChannel<$AppEventCallback> {
+    public $AppEventCallbackChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "__function_channel__");
+    }
+
+    public Completable<PairedInstance> $$create($AppEventCallback $instance, boolean $owner) {
+      return createNewInstancePair($instance, Collections.emptyList(), $owner);
+    }
+
+    private Completable<Object> invoke($AppEventCallback $instance
+        ,String name,String data) {
+      return invokeMethod($instance, "", Arrays.asList(name,data));
+    }
   }
   
-  public interface $AdManagerInterstitialAdLoadCallback {
-    
-    
-    
-    
-    
+  public static class $AdVoidCallbackChannel extends TypeChannel<$AdVoidCallback> {
+    public $AdVoidCallbackChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "__function_channel__");
+    }
+
+    public Completable<PairedInstance> $$create($AdVoidCallback $instance, boolean $owner) {
+      return createNewInstancePair($instance, Collections.emptyList(), $owner);
+    }
+
+    private Completable<Object> invoke($AdVoidCallback $instance
+        ) {
+      return invokeMethod($instance, "", Arrays.asList());
+    }
   }
+  
+  public static class $InterstitialAdLoadCallbackChannel extends TypeChannel<$InterstitialAdLoadCallback> {
+    public $InterstitialAdLoadCallbackChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "__function_channel__");
+    }
+
+    public Completable<PairedInstance> $$create($InterstitialAdLoadCallback $instance, boolean $owner) {
+      return createNewInstancePair($instance, Collections.emptyList(), $owner);
+    }
+
+    private Completable<Object> invoke($InterstitialAdLoadCallback $instance
+        ,$InterstitialAd ad) {
+      return invokeMethod($instance, "", Arrays.asList(ad));
+    }
+  }
+  
+  public static class $AdManagerInterstitialAdLoadCallbackChannel extends TypeChannel<$AdManagerInterstitialAdLoadCallback> {
+    public $AdManagerInterstitialAdLoadCallbackChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "__function_channel__");
+    }
+
+    public Completable<PairedInstance> $$create($AdManagerInterstitialAdLoadCallback $instance, boolean $owner) {
+      return createNewInstancePair($instance, Collections.emptyList(), $owner);
+    }
+
+    private Completable<Object> invoke($AdManagerInterstitialAdLoadCallback $instance
+        ,$AdManagerInterstitialAd ad) {
+      return invokeMethod($instance, "", Arrays.asList(ad));
+    }
+  }
+  
+  public static class $RewardedAdLoadCallbackChannel extends TypeChannel<$RewardedAdLoadCallback> {
+    public $RewardedAdLoadCallbackChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "__function_channel__");
+    }
+
+    public Completable<PairedInstance> $$create($RewardedAdLoadCallback $instance, boolean $owner) {
+      return createNewInstancePair($instance, Collections.emptyList(), $owner);
+    }
+
+    private Completable<Object> invoke($RewardedAdLoadCallback $instance
+        ,$RewardedAd ad) {
+      return invokeMethod($instance, "", Arrays.asList(ad));
+    }
+  }
+  
+  public static class $LoadFailCallbackChannel extends TypeChannel<$LoadFailCallback> {
+    public $LoadFailCallbackChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "__function_channel__");
+    }
+
+    public Completable<PairedInstance> $$create($LoadFailCallback $instance, boolean $owner) {
+      return createNewInstancePair($instance, Collections.emptyList(), $owner);
+    }
+
+    private Completable<Object> invoke($LoadFailCallback $instance
+        ,$LoadAdError error) {
+      return invokeMethod($instance, "", Arrays.asList(error));
+    }
+  }
+  
+
+  
+  public static class $UserEarnedRewardCallbackHandler implements TypeChannelHandler<$UserEarnedRewardCallback> {
+    public final $LibraryImplementations implementations;
+
+    public $UserEarnedRewardCallbackHandler($LibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public $UserEarnedRewardCallback createInstance(TypeChannelMessenger messenger, List<Object> arguments) {
+      return new $UserEarnedRewardCallback() {
+        @Override
+        public Object invoke($RewardItem reward) {
+          return implementations.getChannelUserEarnedRewardCallback().invoke(this,reward);
+        }
+      };
+    }
+
+    @Override
+    public Void invokeStaticMethod(TypeChannelMessenger messenger, String methodName, List<Object> arguments) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object invokeMethod(TypeChannelMessenger messenger, $UserEarnedRewardCallback instance, String methodName, List<Object> arguments) throws Exception {
+      return instance.invoke(($RewardItem) arguments.get(0));
+    }
+  }
+  
+  public static class $AppEventCallbackHandler implements TypeChannelHandler<$AppEventCallback> {
+    public final $LibraryImplementations implementations;
+
+    public $AppEventCallbackHandler($LibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public $AppEventCallback createInstance(TypeChannelMessenger messenger, List<Object> arguments) {
+      return new $AppEventCallback() {
+        @Override
+        public Object invoke(String name,String data) {
+          return implementations.getChannelAppEventCallback().invoke(this,name,data);
+        }
+      };
+    }
+
+    @Override
+    public Void invokeStaticMethod(TypeChannelMessenger messenger, String methodName, List<Object> arguments) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object invokeMethod(TypeChannelMessenger messenger, $AppEventCallback instance, String methodName, List<Object> arguments) throws Exception {
+      return instance.invoke((String) arguments.get(0),(String) arguments.get(1));
+    }
+  }
+  
+  public static class $AdVoidCallbackHandler implements TypeChannelHandler<$AdVoidCallback> {
+    public final $LibraryImplementations implementations;
+
+    public $AdVoidCallbackHandler($LibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public $AdVoidCallback createInstance(TypeChannelMessenger messenger, List<Object> arguments) {
+      return new $AdVoidCallback() {
+        @Override
+        public Object invoke() {
+          return implementations.getChannelAdVoidCallback().invoke(this);
+        }
+      };
+    }
+
+    @Override
+    public Void invokeStaticMethod(TypeChannelMessenger messenger, String methodName, List<Object> arguments) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object invokeMethod(TypeChannelMessenger messenger, $AdVoidCallback instance, String methodName, List<Object> arguments) throws Exception {
+      return instance.invoke();
+    }
+  }
+  
+  public static class $InterstitialAdLoadCallbackHandler implements TypeChannelHandler<$InterstitialAdLoadCallback> {
+    public final $LibraryImplementations implementations;
+
+    public $InterstitialAdLoadCallbackHandler($LibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public $InterstitialAdLoadCallback createInstance(TypeChannelMessenger messenger, List<Object> arguments) {
+      return new $InterstitialAdLoadCallback() {
+        @Override
+        public Object invoke($InterstitialAd ad) {
+          return implementations.getChannelInterstitialAdLoadCallback().invoke(this,ad);
+        }
+      };
+    }
+
+    @Override
+    public Void invokeStaticMethod(TypeChannelMessenger messenger, String methodName, List<Object> arguments) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object invokeMethod(TypeChannelMessenger messenger, $InterstitialAdLoadCallback instance, String methodName, List<Object> arguments) throws Exception {
+      return instance.invoke(($InterstitialAd) arguments.get(0));
+    }
+  }
+  
+  public static class $AdManagerInterstitialAdLoadCallbackHandler implements TypeChannelHandler<$AdManagerInterstitialAdLoadCallback> {
+    public final $LibraryImplementations implementations;
+
+    public $AdManagerInterstitialAdLoadCallbackHandler($LibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public $AdManagerInterstitialAdLoadCallback createInstance(TypeChannelMessenger messenger, List<Object> arguments) {
+      return new $AdManagerInterstitialAdLoadCallback() {
+        @Override
+        public Object invoke($AdManagerInterstitialAd ad) {
+          return implementations.getChannelAdManagerInterstitialAdLoadCallback().invoke(this,ad);
+        }
+      };
+    }
+
+    @Override
+    public Void invokeStaticMethod(TypeChannelMessenger messenger, String methodName, List<Object> arguments) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object invokeMethod(TypeChannelMessenger messenger, $AdManagerInterstitialAdLoadCallback instance, String methodName, List<Object> arguments) throws Exception {
+      return instance.invoke(($AdManagerInterstitialAd) arguments.get(0));
+    }
+  }
+  
+  public static class $RewardedAdLoadCallbackHandler implements TypeChannelHandler<$RewardedAdLoadCallback> {
+    public final $LibraryImplementations implementations;
+
+    public $RewardedAdLoadCallbackHandler($LibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public $RewardedAdLoadCallback createInstance(TypeChannelMessenger messenger, List<Object> arguments) {
+      return new $RewardedAdLoadCallback() {
+        @Override
+        public Object invoke($RewardedAd ad) {
+          return implementations.getChannelRewardedAdLoadCallback().invoke(this,ad);
+        }
+      };
+    }
+
+    @Override
+    public Void invokeStaticMethod(TypeChannelMessenger messenger, String methodName, List<Object> arguments) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object invokeMethod(TypeChannelMessenger messenger, $RewardedAdLoadCallback instance, String methodName, List<Object> arguments) throws Exception {
+      return instance.invoke(($RewardedAd) arguments.get(0));
+    }
+  }
+  
+  public static class $LoadFailCallbackHandler implements TypeChannelHandler<$LoadFailCallback> {
+    public final $LibraryImplementations implementations;
+
+    public $LoadFailCallbackHandler($LibraryImplementations implementations) {
+      this.implementations = implementations;
+    }
+
+    @Override
+    public $LoadFailCallback createInstance(TypeChannelMessenger messenger, List<Object> arguments) {
+      return new $LoadFailCallback() {
+        @Override
+        public Object invoke($LoadAdError error) {
+          return implementations.getChannelLoadFailCallback().invoke(this,error);
+        }
+      };
+    }
+
+    @Override
+    public Void invokeStaticMethod(TypeChannelMessenger messenger, String methodName, List<Object> arguments) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object invokeMethod(TypeChannelMessenger messenger, $LoadFailCallback instance, String methodName, List<Object> arguments) throws Exception {
+      return instance.invoke(($LoadAdError) arguments.get(0));
+    }
+  }
+  
+
   
   public interface $AdError {
     
@@ -177,7 +430,7 @@ public class AdContainersChannelLibrary {
   public interface $InterstitialAd {
     
     
-    Object show($FullScreenContentCallback fullScreenContentCallback) throws Exception;
+    Object show($FullScreenContentListener fullScreenContentListener) throws Exception;
     
     
   }
@@ -185,7 +438,7 @@ public class AdContainersChannelLibrary {
   public interface $AdManagerInterstitialAd {
     
     
-    Object show($AppEventListener appEventListener,$FullScreenContentCallback fullScreenContentCallback) throws Exception;
+    Object show($AppEventListener appEventListener,$FullScreenContentListener fullScreenContentListener) throws Exception;
     
     
   }
@@ -193,7 +446,7 @@ public class AdContainersChannelLibrary {
   public interface $RewardedAd {
     
     
-    Object show($OnUserEarnedRewardListener onUserEarnedReward,$ServerSideVerificationOptions serverSideVerificationOptions,$FullScreenContentCallback fullScreenContentCallback) throws Exception;
+    Object show($OnUserEarnedRewardListener onUserEarnedReward,$ServerSideVerificationOptions serverSideVerificationOptions,$FullScreenContentListener fullScreenContentListener) throws Exception;
     
     
   }
@@ -206,267 +459,43 @@ public class AdContainersChannelLibrary {
     
   }
   
-
-  
-  public static class $OnUserEarnedRewardListenerChannel extends TypeChannel<$OnUserEarnedRewardListener> {
-    public $OnUserEarnedRewardListenerChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "google_mobile_ads.OnUserEarnedRewardListener");
-    }
-
-    public Completable<PairedInstance> $$create($OnUserEarnedRewardListener $instance, boolean $owner) {
-      return createNewInstancePair($instance, Arrays.<Object>asList(), $owner);
-    }
-
-    
-
-    
-    
-    public Completable<Object> $onUserEarnedRewardCallback($OnUserEarnedRewardListener $instance,$RewardItem reward) {
-      return invokeMethod($instance, "onUserEarnedRewardCallback", Arrays.<Object>asList(reward));
-    }
-    
+  public interface $OnUserEarnedRewardListener {
     
   }
   
-  public static class $AppEventListenerChannel extends TypeChannel<$AppEventListener> {
-    public $AppEventListenerChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "google_mobile_ads.AppEventListener");
-    }
-
-    public Completable<PairedInstance> $$create($AppEventListener $instance, boolean $owner) {
-      return createNewInstancePair($instance, Arrays.<Object>asList(), $owner);
-    }
-
-    
-
-    
-    
-    public Completable<Object> $onAppEvent($AppEventListener $instance,String name,String data) {
-      return invokeMethod($instance, "onAppEvent", Arrays.<Object>asList(name,data));
-    }
-    
+  public interface $AppEventListener {
     
   }
   
-  public static class $AdWithViewListenerChannel extends TypeChannel<$AdWithViewListener> {
-    public $AdWithViewListenerChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "google_mobile_ads.AdWithViewListener");
-    }
-
-    public Completable<PairedInstance> $$create($AdWithViewListener $instance, boolean $owner) {
-      return createNewInstancePair($instance, Arrays.<Object>asList(), $owner);
-    }
-
-    
-
-    
-    
-    public Completable<Object> $onAdLoaded($AdWithViewListener $instance) {
-      return invokeMethod($instance, "onAdLoaded", Arrays.<Object>asList());
-    }
-    
-    
-    
-    public Completable<Object> $onAdFailedToLoad($AdWithViewListener $instance,$LoadAdError error) {
-      return invokeMethod($instance, "onAdFailedToLoad", Arrays.<Object>asList(error));
-    }
-    
-    
-    
-    public Completable<Object> $onAdOpened($AdWithViewListener $instance) {
-      return invokeMethod($instance, "onAdOpened", Arrays.<Object>asList());
-    }
-    
-    
-    
-    public Completable<Object> $onAdWillDismissScreen($AdWithViewListener $instance) {
-      return invokeMethod($instance, "onAdWillDismissScreen", Arrays.<Object>asList());
-    }
-    
-    
-    
-    public Completable<Object> $onAdClosed($AdWithViewListener $instance) {
-      return invokeMethod($instance, "onAdClosed", Arrays.<Object>asList());
-    }
-    
-    
-    
-    public Completable<Object> $onAdImpression($AdWithViewListener $instance) {
-      return invokeMethod($instance, "onAdImpression", Arrays.<Object>asList());
-    }
-    
+  public interface $BannerAdListener {
     
   }
   
-  public static class $BannerAdListenerChannel extends TypeChannel<$BannerAdListener> {
-    public $BannerAdListenerChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "google_mobile_ads.BannerAdListener");
-    }
-
-    public Completable<PairedInstance> $$create($BannerAdListener $instance, boolean $owner) {
-      return createNewInstancePair($instance, Arrays.<Object>asList(), $owner);
-    }
-
-    
-
+  public interface $AdManagerBannerAdListener {
     
   }
   
-  public static class $AdManagerBannerAdListenerChannel extends TypeChannel<$AdManagerBannerAdListener> {
-    public $AdManagerBannerAdListenerChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "google_mobile_ads.AdManagerBannerAdListener");
-    }
-
-    public Completable<PairedInstance> $$create($AdManagerBannerAdListener $instance, boolean $owner) {
-      return createNewInstancePair($instance, Arrays.<Object>asList(), $owner);
-    }
-
-    
-
+  public interface $NativeAdListener {
     
   }
   
-  public static class $NativeAdListenerChannel extends TypeChannel<$NativeAdListener> {
-    public $NativeAdListenerChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "google_mobile_ads.NativeAdListener");
-    }
-
-    public Completable<PairedInstance> $$create($NativeAdListener $instance, boolean $owner) {
-      return createNewInstancePair($instance, Arrays.<Object>asList(), $owner);
-    }
-
-    
-
-    
-    
-    public Completable<Object> $onAdClicked($NativeAdListener $instance) {
-      return invokeMethod($instance, "onAdClicked", Arrays.<Object>asList());
-    }
-    
+  public interface $FullScreenContentListener {
     
   }
   
-  public static class $FullScreenContentCallbackChannel extends TypeChannel<$FullScreenContentCallback> {
-    public $FullScreenContentCallbackChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "google_mobile_ads.FullScreenContentCallback");
-    }
-
-    public Completable<PairedInstance> $$create($FullScreenContentCallback $instance, boolean $owner) {
-      return createNewInstancePair($instance, Arrays.<Object>asList(), $owner);
-    }
-
-    
-
-    
-    
-    public Completable<Object> $onAdShowedFullScreenContent($FullScreenContentCallback $instance) {
-      return invokeMethod($instance, "onAdShowedFullScreenContent", Arrays.<Object>asList());
-    }
-    
-    
-    
-    public Completable<Object> $onAdDismissedFullScreenContent($FullScreenContentCallback $instance) {
-      return invokeMethod($instance, "onAdDismissedFullScreenContent", Arrays.<Object>asList());
-    }
-    
-    
-    
-    public Completable<Object> $onAdWillDismissFullScreenContent($FullScreenContentCallback $instance) {
-      return invokeMethod($instance, "onAdWillDismissFullScreenContent", Arrays.<Object>asList());
-    }
-    
-    
-    
-    public Completable<Object> $onAdImpression($FullScreenContentCallback $instance) {
-      return invokeMethod($instance, "onAdImpression", Arrays.<Object>asList());
-    }
-    
-    
-    
-    public Completable<Object> $onAdFailedToShowFullScreenContent($FullScreenContentCallback $instance) {
-      return invokeMethod($instance, "onAdFailedToShowFullScreenContent", Arrays.<Object>asList());
-    }
-    
+  public interface $InterstitialAdLoadListener {
     
   }
   
-  public static class $RewardedAdLoadCallbackChannel extends TypeChannel<$RewardedAdLoadCallback> {
-    public $RewardedAdLoadCallbackChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "google_mobile_ads.RewardedAdLoadCallback");
-    }
-
-    public Completable<PairedInstance> $$create($RewardedAdLoadCallback $instance, boolean $owner) {
-      return createNewInstancePair($instance, Arrays.<Object>asList(), $owner);
-    }
-
-    
-
-    
-    
-    public Completable<Object> $onAdLoaded($RewardedAdLoadCallback $instance,$RewardedAd ad) {
-      return invokeMethod($instance, "onAdLoaded", Arrays.<Object>asList(ad));
-    }
-    
-    
-    
-    public Completable<Object> $onAdFailedToLoad($RewardedAdLoadCallback $instance,$LoadAdError error) {
-      return invokeMethod($instance, "onAdFailedToLoad", Arrays.<Object>asList(error));
-    }
-    
+  public interface $AdManagerInterstitialAdLoadListener {
     
   }
   
-  public static class $InterstitialAdLoadCallbackChannel extends TypeChannel<$InterstitialAdLoadCallback> {
-    public $InterstitialAdLoadCallbackChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "google_mobile_ads.InterstitialAdLoadCallback");
-    }
-
-    public Completable<PairedInstance> $$create($InterstitialAdLoadCallback $instance, boolean $owner) {
-      return createNewInstancePair($instance, Arrays.<Object>asList(), $owner);
-    }
-
-    
-
-    
-    
-    public Completable<Object> $onAdLoaded($InterstitialAdLoadCallback $instance,$InterstitialAd ad) {
-      return invokeMethod($instance, "onAdLoaded", Arrays.<Object>asList(ad));
-    }
-    
-    
-    
-    public Completable<Object> $onAdFailedToLoad($InterstitialAdLoadCallback $instance,$LoadAdError error) {
-      return invokeMethod($instance, "onAdFailedToLoad", Arrays.<Object>asList(error));
-    }
-    
+  public interface $RewardedAdLoadListener {
     
   }
   
-  public static class $AdManagerInterstitialAdLoadCallbackChannel extends TypeChannel<$AdManagerInterstitialAdLoadCallback> {
-    public $AdManagerInterstitialAdLoadCallbackChannel(@NonNull TypeChannelMessenger messenger) {
-      super(messenger, "google_mobile_ads.AdManagerInterstitialAdLoadCallback");
-    }
 
-    public Completable<PairedInstance> $$create($AdManagerInterstitialAdLoadCallback $instance, boolean $owner) {
-      return createNewInstancePair($instance, Arrays.<Object>asList(), $owner);
-    }
-
-    
-
-    
-    
-    public Completable<Object> $onAdLoaded($AdManagerInterstitialAdLoadCallback $instance,$AdManagerInterstitialAd ad) {
-      return invokeMethod($instance, "onAdLoaded", Arrays.<Object>asList(ad));
-    }
-    
-    
-    
-    public Completable<Object> $onAdFailedToLoad($AdManagerInterstitialAdLoadCallback $instance,$LoadAdError error) {
-      return invokeMethod($instance, "onAdFailedToLoad", Arrays.<Object>asList(error));
-    }
-    
-    
-  }
   
   public static class $AdErrorChannel extends TypeChannel<$AdError> {
     public $AdErrorChannel(@NonNull TypeChannelMessenger messenger) {
@@ -501,7 +530,7 @@ public class AdContainersChannelLibrary {
       super(messenger, "google_mobile_ads.AdapterResponseInfo");
     }
 
-    public Completable<PairedInstance> $$create($AdapterResponseInfo $instance, boolean $owner,String adapterClassName,Long latencyMillis,String description,String credentials,$AdError adError) {
+    public Completable<PairedInstance> $$create($AdapterResponseInfo $instance, boolean $owner,String adapterClassName,Integer latencyMillis,String description,String credentials,$AdError adError) {
       return createNewInstancePair($instance, Arrays.<Object>asList(adapterClassName,latencyMillis,description,credentials,adError), $owner);
     }
 
@@ -617,7 +646,7 @@ public class AdContainersChannelLibrary {
       super(messenger, "google_mobile_ads.NativeAd");
     }
 
-    public Completable<PairedInstance> $$create($NativeAd $instance, boolean $owner,String adUnitId,String factoryId,$NativeAdListener listener,$AdRequest request,Map<String,Object> customOptions) {
+    public Completable<PairedInstance> $$create($NativeAd $instance, boolean $owner,String adUnitId,String factoryId,$NativeAdListener listener,$AdRequest request,Map customOptions) {
       return createNewInstancePair($instance, Arrays.<Object>asList(adUnitId,factoryId,listener,request,customOptions), $owner);
     }
 
@@ -710,527 +739,133 @@ public class AdContainersChannelLibrary {
     
   }
   
+  public static class $OnUserEarnedRewardListenerChannel extends TypeChannel<$OnUserEarnedRewardListener> {
+    public $OnUserEarnedRewardListenerChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "google_mobile_ads.OnUserEarnedRewardListener");
+    }
 
-  
-  public static class $OnUserEarnedRewardListenerHandler implements TypeChannelHandler<$OnUserEarnedRewardListener> {
-    public $OnUserEarnedRewardListener $$create(TypeChannelMessenger messenger)
-        throws Exception {
-      throw new UnsupportedOperationException();
+    public Completable<PairedInstance> $$create($OnUserEarnedRewardListener $instance, boolean $owner,$UserEarnedRewardCallback onUserEarnedRewardCallback) {
+      return createNewInstancePair($instance, Arrays.<Object>asList(onUserEarnedRewardCallback), $owner);
     }
 
     
 
     
-    
-    
-
-    @Override
-    public Object invokeStaticMethod(
-        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
-        throws Exception {
-      switch (methodName) {
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("Unable to invoke static method %s", methodName));
-    }
-
-    @Override
-    public $OnUserEarnedRewardListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
-        throws Exception {
-      return $$create(messenger);
-    }
-
-    @Override
-    public Object invokeMethod(
-        TypeChannelMessenger messenger,
-        $OnUserEarnedRewardListener instance,
-        String methodName,
-        List<Object> arguments)
-        throws Exception {
-      switch(methodName) {
-        
-        
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("%s.%s not supported.", instance, methodName));
-    }
   }
   
-  public static class $AppEventListenerHandler implements TypeChannelHandler<$AppEventListener> {
-    public $AppEventListener $$create(TypeChannelMessenger messenger)
-        throws Exception {
-      throw new UnsupportedOperationException();
+  public static class $AppEventListenerChannel extends TypeChannel<$AppEventListener> {
+    public $AppEventListenerChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "google_mobile_ads.AppEventListener");
+    }
+
+    public Completable<PairedInstance> $$create($AppEventListener $instance, boolean $owner,$AppEventCallback onAppEvent) {
+      return createNewInstancePair($instance, Arrays.<Object>asList(onAppEvent), $owner);
     }
 
     
 
     
-    
-    
-
-    @Override
-    public Object invokeStaticMethod(
-        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
-        throws Exception {
-      switch (methodName) {
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("Unable to invoke static method %s", methodName));
-    }
-
-    @Override
-    public $AppEventListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
-        throws Exception {
-      return $$create(messenger);
-    }
-
-    @Override
-    public Object invokeMethod(
-        TypeChannelMessenger messenger,
-        $AppEventListener instance,
-        String methodName,
-        List<Object> arguments)
-        throws Exception {
-      switch(methodName) {
-        
-        
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("%s.%s not supported.", instance, methodName));
-    }
   }
   
-  public static class $AdWithViewListenerHandler implements TypeChannelHandler<$AdWithViewListener> {
-    public $AdWithViewListener $$create(TypeChannelMessenger messenger)
-        throws Exception {
-      throw new UnsupportedOperationException();
+  public static class $BannerAdListenerChannel extends TypeChannel<$BannerAdListener> {
+    public $BannerAdListenerChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "google_mobile_ads.BannerAdListener");
+    }
+
+    public Completable<PairedInstance> $$create($BannerAdListener $instance, boolean $owner,$AdVoidCallback onAdLoaded,$LoadFailCallback onAdFailedToLoad,$AdVoidCallback onAdOpened,$AdVoidCallback onAdWillDismissScreen,$AdVoidCallback onAdClosed) {
+      return createNewInstancePair($instance, Arrays.<Object>asList(onAdLoaded,onAdFailedToLoad,onAdOpened,onAdWillDismissScreen,onAdClosed), $owner);
     }
 
     
 
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    @Override
-    public Object invokeStaticMethod(
-        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
-        throws Exception {
-      switch (methodName) {
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("Unable to invoke static method %s", methodName));
-    }
-
-    @Override
-    public $AdWithViewListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
-        throws Exception {
-      return $$create(messenger);
-    }
-
-    @Override
-    public Object invokeMethod(
-        TypeChannelMessenger messenger,
-        $AdWithViewListener instance,
-        String methodName,
-        List<Object> arguments)
-        throws Exception {
-      switch(methodName) {
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("%s.%s not supported.", instance, methodName));
-    }
   }
   
-  public static class $BannerAdListenerHandler implements TypeChannelHandler<$BannerAdListener> {
-    public $BannerAdListener $$create(TypeChannelMessenger messenger)
-        throws Exception {
-      throw new UnsupportedOperationException();
+  public static class $AdManagerBannerAdListenerChannel extends TypeChannel<$AdManagerBannerAdListener> {
+    public $AdManagerBannerAdListenerChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "google_mobile_ads.AdManagerBannerAdListener");
+    }
+
+    public Completable<PairedInstance> $$create($AdManagerBannerAdListener $instance, boolean $owner,$AdVoidCallback onAdLoaded,$LoadFailCallback onAdFailedToLoad,$AdVoidCallback onAdOpened,$AdVoidCallback onAdWillDismissScreen,$AdVoidCallback onAdClosed) {
+      return createNewInstancePair($instance, Arrays.<Object>asList(onAdLoaded,onAdFailedToLoad,onAdOpened,onAdWillDismissScreen,onAdClosed), $owner);
     }
 
     
 
     
-
-    @Override
-    public Object invokeStaticMethod(
-        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
-        throws Exception {
-      switch (methodName) {
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("Unable to invoke static method %s", methodName));
-    }
-
-    @Override
-    public $BannerAdListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
-        throws Exception {
-      return $$create(messenger);
-    }
-
-    @Override
-    public Object invokeMethod(
-        TypeChannelMessenger messenger,
-        $BannerAdListener instance,
-        String methodName,
-        List<Object> arguments)
-        throws Exception {
-      switch(methodName) {
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("%s.%s not supported.", instance, methodName));
-    }
   }
   
-  public static class $AdManagerBannerAdListenerHandler implements TypeChannelHandler<$AdManagerBannerAdListener> {
-    public $AdManagerBannerAdListener $$create(TypeChannelMessenger messenger)
-        throws Exception {
-      throw new UnsupportedOperationException();
+  public static class $NativeAdListenerChannel extends TypeChannel<$NativeAdListener> {
+    public $NativeAdListenerChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "google_mobile_ads.NativeAdListener");
+    }
+
+    public Completable<PairedInstance> $$create($NativeAdListener $instance, boolean $owner,$AdVoidCallback onAdLoaded,$LoadFailCallback onAdFailedToLoad,$AdVoidCallback onAdOpened,$AdVoidCallback onAdWillDismissScreen,$AdVoidCallback onAdImpression,$AdVoidCallback onAdClosed,$AdVoidCallback onAdClicked) {
+      return createNewInstancePair($instance, Arrays.<Object>asList(onAdLoaded,onAdFailedToLoad,onAdOpened,onAdWillDismissScreen,onAdImpression,onAdClosed,onAdClicked), $owner);
     }
 
     
 
     
-
-    @Override
-    public Object invokeStaticMethod(
-        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
-        throws Exception {
-      switch (methodName) {
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("Unable to invoke static method %s", methodName));
-    }
-
-    @Override
-    public $AdManagerBannerAdListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
-        throws Exception {
-      return $$create(messenger);
-    }
-
-    @Override
-    public Object invokeMethod(
-        TypeChannelMessenger messenger,
-        $AdManagerBannerAdListener instance,
-        String methodName,
-        List<Object> arguments)
-        throws Exception {
-      switch(methodName) {
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("%s.%s not supported.", instance, methodName));
-    }
   }
   
-  public static class $NativeAdListenerHandler implements TypeChannelHandler<$NativeAdListener> {
-    public $NativeAdListener $$create(TypeChannelMessenger messenger)
-        throws Exception {
-      throw new UnsupportedOperationException();
+  public static class $FullScreenContentListenerChannel extends TypeChannel<$FullScreenContentListener> {
+    public $FullScreenContentListenerChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "google_mobile_ads.FullScreenContentCallback");
+    }
+
+    public Completable<PairedInstance> $$create($FullScreenContentListener $instance, boolean $owner,$AdVoidCallback onAdShowedFullScreenContent,$AdVoidCallback onAdImpression,$AdVoidCallback onAdFailedToShowFullScreenContent,$AdVoidCallback onAdWillDismissFullScreenContent,$AdVoidCallback onAdDismissedFullScreenContent) {
+      return createNewInstancePair($instance, Arrays.<Object>asList(onAdShowedFullScreenContent,onAdImpression,onAdFailedToShowFullScreenContent,onAdWillDismissFullScreenContent,onAdDismissedFullScreenContent), $owner);
     }
 
     
 
     
-    
-    
-
-    @Override
-    public Object invokeStaticMethod(
-        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
-        throws Exception {
-      switch (methodName) {
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("Unable to invoke static method %s", methodName));
-    }
-
-    @Override
-    public $NativeAdListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
-        throws Exception {
-      return $$create(messenger);
-    }
-
-    @Override
-    public Object invokeMethod(
-        TypeChannelMessenger messenger,
-        $NativeAdListener instance,
-        String methodName,
-        List<Object> arguments)
-        throws Exception {
-      switch(methodName) {
-        
-        
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("%s.%s not supported.", instance, methodName));
-    }
   }
   
-  public static class $FullScreenContentCallbackHandler implements TypeChannelHandler<$FullScreenContentCallback> {
-    public $FullScreenContentCallback $$create(TypeChannelMessenger messenger)
-        throws Exception {
-      throw new UnsupportedOperationException();
+  public static class $InterstitialAdLoadListenerChannel extends TypeChannel<$InterstitialAdLoadListener> {
+    public $InterstitialAdLoadListenerChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "google_mobile_ads.InterstitialAdLoadListener");
+    }
+
+    public Completable<PairedInstance> $$create($InterstitialAdLoadListener $instance, boolean $owner,$InterstitialAdLoadCallback onAdLoaded,$LoadFailCallback onAdFailedToLoad) {
+      return createNewInstancePair($instance, Arrays.<Object>asList(onAdLoaded,onAdFailedToLoad), $owner);
     }
 
     
 
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    @Override
-    public Object invokeStaticMethod(
-        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
-        throws Exception {
-      switch (methodName) {
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("Unable to invoke static method %s", methodName));
-    }
-
-    @Override
-    public $FullScreenContentCallback createInstance(TypeChannelMessenger messenger, List<Object> arguments)
-        throws Exception {
-      return $$create(messenger);
-    }
-
-    @Override
-    public Object invokeMethod(
-        TypeChannelMessenger messenger,
-        $FullScreenContentCallback instance,
-        String methodName,
-        List<Object> arguments)
-        throws Exception {
-      switch(methodName) {
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("%s.%s not supported.", instance, methodName));
-    }
   }
   
-  public static class $RewardedAdLoadCallbackHandler implements TypeChannelHandler<$RewardedAdLoadCallback> {
-    public $RewardedAdLoadCallback $$create(TypeChannelMessenger messenger)
-        throws Exception {
-      throw new UnsupportedOperationException();
+  public static class $AdManagerInterstitialAdLoadListenerChannel extends TypeChannel<$AdManagerInterstitialAdLoadListener> {
+    public $AdManagerInterstitialAdLoadListenerChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "google_mobile_ads.AdManagerInterstitialAdLoadListener");
+    }
+
+    public Completable<PairedInstance> $$create($AdManagerInterstitialAdLoadListener $instance, boolean $owner,$AdManagerInterstitialAdLoadCallback onAdLoaded,$LoadFailCallback onAdFailedToLoad) {
+      return createNewInstancePair($instance, Arrays.<Object>asList(onAdLoaded,onAdFailedToLoad), $owner);
     }
 
     
 
     
-    
-    
-    
-    
-
-    @Override
-    public Object invokeStaticMethod(
-        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
-        throws Exception {
-      switch (methodName) {
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("Unable to invoke static method %s", methodName));
-    }
-
-    @Override
-    public $RewardedAdLoadCallback createInstance(TypeChannelMessenger messenger, List<Object> arguments)
-        throws Exception {
-      return $$create(messenger);
-    }
-
-    @Override
-    public Object invokeMethod(
-        TypeChannelMessenger messenger,
-        $RewardedAdLoadCallback instance,
-        String methodName,
-        List<Object> arguments)
-        throws Exception {
-      switch(methodName) {
-        
-        
-        
-        
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("%s.%s not supported.", instance, methodName));
-    }
   }
   
-  public static class $InterstitialAdLoadCallbackHandler implements TypeChannelHandler<$InterstitialAdLoadCallback> {
-    public $InterstitialAdLoadCallback $$create(TypeChannelMessenger messenger)
-        throws Exception {
-      throw new UnsupportedOperationException();
+  public static class $RewardedAdLoadListenerChannel extends TypeChannel<$RewardedAdLoadListener> {
+    public $RewardedAdLoadListenerChannel(@NonNull TypeChannelMessenger messenger) {
+      super(messenger, "google_mobile_ads.RewardedAdAdLoadListener");
+    }
+
+    public Completable<PairedInstance> $$create($RewardedAdLoadListener $instance, boolean $owner,$RewardedAdLoadCallback onAdLoaded,$LoadFailCallback onAdFailedToLoad) {
+      return createNewInstancePair($instance, Arrays.<Object>asList(onAdLoaded,onAdFailedToLoad), $owner);
     }
 
     
 
     
-    
-    
-    
-    
-
-    @Override
-    public Object invokeStaticMethod(
-        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
-        throws Exception {
-      switch (methodName) {
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("Unable to invoke static method %s", methodName));
-    }
-
-    @Override
-    public $InterstitialAdLoadCallback createInstance(TypeChannelMessenger messenger, List<Object> arguments)
-        throws Exception {
-      return $$create(messenger);
-    }
-
-    @Override
-    public Object invokeMethod(
-        TypeChannelMessenger messenger,
-        $InterstitialAdLoadCallback instance,
-        String methodName,
-        List<Object> arguments)
-        throws Exception {
-      switch(methodName) {
-        
-        
-        
-        
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("%s.%s not supported.", instance, methodName));
-    }
   }
   
-  public static class $AdManagerInterstitialAdLoadCallbackHandler implements TypeChannelHandler<$AdManagerInterstitialAdLoadCallback> {
-    public $AdManagerInterstitialAdLoadCallback $$create(TypeChannelMessenger messenger)
-        throws Exception {
-      throw new UnsupportedOperationException();
-    }
 
-    
-
-    
-    
-    
-    
-    
-
-    @Override
-    public Object invokeStaticMethod(
-        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
-        throws Exception {
-      switch (methodName) {
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("Unable to invoke static method %s", methodName));
-    }
-
-    @Override
-    public $AdManagerInterstitialAdLoadCallback createInstance(TypeChannelMessenger messenger, List<Object> arguments)
-        throws Exception {
-      return $$create(messenger);
-    }
-
-    @Override
-    public Object invokeMethod(
-        TypeChannelMessenger messenger,
-        $AdManagerInterstitialAdLoadCallback instance,
-        String methodName,
-        List<Object> arguments)
-        throws Exception {
-      switch(methodName) {
-        
-        
-        
-        
-        
-      }
-
-      throw new UnsupportedOperationException(
-          String.format("%s.%s not supported.", instance, methodName));
-    }
-  }
   
   public static class $AdErrorHandler implements TypeChannelHandler<$AdError> {
     public $AdError $$create(TypeChannelMessenger messenger,Integer code,String domain,String message)
@@ -1730,7 +1365,7 @@ public class AdContainersChannelLibrary {
   }
   
   public static class $NativeAdHandler implements TypeChannelHandler<$NativeAd> {
-    public $NativeAd $$create(TypeChannelMessenger messenger,String adUnitId,String factoryId,$NativeAdListener listener,$AdRequest request,Map<String,Object> customOptions)
+    public $NativeAd $$create(TypeChannelMessenger messenger,String adUnitId,String factoryId,$NativeAdListener listener,$AdRequest request,Map customOptions)
         throws Exception {
       throw new UnsupportedOperationException();
     }
@@ -1760,7 +1395,7 @@ public class AdContainersChannelLibrary {
     @Override
     public $NativeAd createInstance(TypeChannelMessenger messenger, List<Object> arguments)
         throws Exception {
-      return $$create(messenger,(String) arguments.get(0),(String) arguments.get(1),($NativeAdListener) arguments.get(2),($AdRequest) arguments.get(3),(Map<String,Object>) arguments.get(4));
+      return $$create(messenger,(String) arguments.get(0),(String) arguments.get(1),($NativeAdListener) arguments.get(2),($AdRequest) arguments.get(3),(Map) arguments.get(4));
     }
 
     @Override
@@ -1792,7 +1427,7 @@ public class AdContainersChannelLibrary {
 
     
     
-    public Object $load(TypeChannelMessenger messenger,String adUnitId,$AdRequest request,$InterstitialAdLoadCallback adLoadCallback)
+    public Object $load(TypeChannelMessenger messenger,String adUnitId,$AdRequest request,$InterstitialAdLoadListener listener)
         throws Exception {
       throw new UnsupportedOperationException();
     }
@@ -1801,8 +1436,8 @@ public class AdContainersChannelLibrary {
 
     
     
-    public Object $show($InterstitialAd $instance,$FullScreenContentCallback fullScreenContentCallback) throws Exception {
-      return $instance.show( fullScreenContentCallback );
+    public Object $show($InterstitialAd $instance,$FullScreenContentListener fullScreenContentListener) throws Exception {
+      return $instance.show( fullScreenContentListener );
     }
     
     
@@ -1815,7 +1450,7 @@ public class AdContainersChannelLibrary {
         
         
         case "load":
-          return $load(messenger,(String) arguments.get(0),($AdRequest) arguments.get(1),($InterstitialAdLoadCallback) arguments.get(2));
+          return $load(messenger,(String) arguments.get(0),($AdRequest) arguments.get(1),($InterstitialAdLoadListener) arguments.get(2));
         
         
       }
@@ -1841,7 +1476,7 @@ public class AdContainersChannelLibrary {
         
         
         case "show":
-          return $show(instance,($FullScreenContentCallback) arguments.get(0));
+          return $show(instance,($FullScreenContentListener) arguments.get(0));
         
         
       }
@@ -1859,7 +1494,7 @@ public class AdContainersChannelLibrary {
 
     
     
-    public Object $load(TypeChannelMessenger messenger,String adUnitId,$AdManagerAdRequest request,$AdManagerInterstitialAdLoadCallback adLoadCallback)
+    public Object $load(TypeChannelMessenger messenger,String adUnitId,$AdManagerAdRequest request,$AdManagerInterstitialAdLoadListener listener)
         throws Exception {
       throw new UnsupportedOperationException();
     }
@@ -1868,8 +1503,8 @@ public class AdContainersChannelLibrary {
 
     
     
-    public Object $show($AdManagerInterstitialAd $instance,$AppEventListener appEventListener,$FullScreenContentCallback fullScreenContentCallback) throws Exception {
-      return $instance.show( appEventListener , fullScreenContentCallback );
+    public Object $show($AdManagerInterstitialAd $instance,$AppEventListener appEventListener,$FullScreenContentListener fullScreenContentListener) throws Exception {
+      return $instance.show( appEventListener , fullScreenContentListener );
     }
     
     
@@ -1882,7 +1517,7 @@ public class AdContainersChannelLibrary {
         
         
         case "load":
-          return $load(messenger,(String) arguments.get(0),($AdManagerAdRequest) arguments.get(1),($AdManagerInterstitialAdLoadCallback) arguments.get(2));
+          return $load(messenger,(String) arguments.get(0),($AdManagerAdRequest) arguments.get(1),($AdManagerInterstitialAdLoadListener) arguments.get(2));
         
         
       }
@@ -1908,7 +1543,7 @@ public class AdContainersChannelLibrary {
         
         
         case "show":
-          return $show(instance,($AppEventListener) arguments.get(0),($FullScreenContentCallback) arguments.get(1));
+          return $show(instance,($AppEventListener) arguments.get(0),($FullScreenContentListener) arguments.get(1));
         
         
       }
@@ -1926,7 +1561,7 @@ public class AdContainersChannelLibrary {
 
     
     
-    public Object $load(TypeChannelMessenger messenger,String adUnitId,$AdRequest request,$RewardedAdLoadCallback adLoadCallback)
+    public Object $load(TypeChannelMessenger messenger,String adUnitId,$AdRequest request,$RewardedAdLoadListener listener)
         throws Exception {
       throw new UnsupportedOperationException();
     }
@@ -1935,8 +1570,8 @@ public class AdContainersChannelLibrary {
 
     
     
-    public Object $show($RewardedAd $instance,$OnUserEarnedRewardListener onUserEarnedReward,$ServerSideVerificationOptions serverSideVerificationOptions,$FullScreenContentCallback fullScreenContentCallback) throws Exception {
-      return $instance.show( onUserEarnedReward , serverSideVerificationOptions , fullScreenContentCallback );
+    public Object $show($RewardedAd $instance,$OnUserEarnedRewardListener onUserEarnedReward,$ServerSideVerificationOptions serverSideVerificationOptions,$FullScreenContentListener fullScreenContentListener) throws Exception {
+      return $instance.show( onUserEarnedReward , serverSideVerificationOptions , fullScreenContentListener );
     }
     
     
@@ -1949,7 +1584,7 @@ public class AdContainersChannelLibrary {
         
         
         case "load":
-          return $load(messenger,(String) arguments.get(0),($AdRequest) arguments.get(1),($RewardedAdLoadCallback) arguments.get(2));
+          return $load(messenger,(String) arguments.get(0),($AdRequest) arguments.get(1),($RewardedAdLoadListener) arguments.get(2));
         
         
       }
@@ -1975,7 +1610,7 @@ public class AdContainersChannelLibrary {
         
         
         case "show":
-          return $show(instance,($OnUserEarnedRewardListener) arguments.get(0),($ServerSideVerificationOptions) arguments.get(1),($FullScreenContentCallback) arguments.get(2));
+          return $show(instance,($OnUserEarnedRewardListener) arguments.get(0),($ServerSideVerificationOptions) arguments.get(1),($FullScreenContentListener) arguments.get(2));
         
         
       }
@@ -2073,6 +1708,402 @@ public class AdContainersChannelLibrary {
     }
   }
   
+  public static class $OnUserEarnedRewardListenerHandler implements TypeChannelHandler<$OnUserEarnedRewardListener> {
+    public $OnUserEarnedRewardListener $$create(TypeChannelMessenger messenger,$UserEarnedRewardCallback onUserEarnedRewardCallback)
+        throws Exception {
+      throw new UnsupportedOperationException();
+    }
+
+    
+
+    
+
+    @Override
+    public Object invokeStaticMethod(
+        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
+        throws Exception {
+      switch (methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("Unable to invoke static method %s", methodName));
+    }
+
+    @Override
+    public $OnUserEarnedRewardListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
+        throws Exception {
+      return $$create(messenger,($UserEarnedRewardCallback) arguments.get(0));
+    }
+
+    @Override
+    public Object invokeMethod(
+        TypeChannelMessenger messenger,
+        $OnUserEarnedRewardListener instance,
+        String methodName,
+        List<Object> arguments)
+        throws Exception {
+      switch(methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("%s.%s not supported.", instance, methodName));
+    }
+  }
+  
+  public static class $AppEventListenerHandler implements TypeChannelHandler<$AppEventListener> {
+    public $AppEventListener $$create(TypeChannelMessenger messenger,$AppEventCallback onAppEvent)
+        throws Exception {
+      throw new UnsupportedOperationException();
+    }
+
+    
+
+    
+
+    @Override
+    public Object invokeStaticMethod(
+        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
+        throws Exception {
+      switch (methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("Unable to invoke static method %s", methodName));
+    }
+
+    @Override
+    public $AppEventListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
+        throws Exception {
+      return $$create(messenger,($AppEventCallback) arguments.get(0));
+    }
+
+    @Override
+    public Object invokeMethod(
+        TypeChannelMessenger messenger,
+        $AppEventListener instance,
+        String methodName,
+        List<Object> arguments)
+        throws Exception {
+      switch(methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("%s.%s not supported.", instance, methodName));
+    }
+  }
+  
+  public static class $BannerAdListenerHandler implements TypeChannelHandler<$BannerAdListener> {
+    public $BannerAdListener $$create(TypeChannelMessenger messenger,$AdVoidCallback onAdLoaded,$LoadFailCallback onAdFailedToLoad,$AdVoidCallback onAdOpened,$AdVoidCallback onAdWillDismissScreen,$AdVoidCallback onAdClosed)
+        throws Exception {
+      throw new UnsupportedOperationException();
+    }
+
+    
+
+    
+
+    @Override
+    public Object invokeStaticMethod(
+        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
+        throws Exception {
+      switch (methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("Unable to invoke static method %s", methodName));
+    }
+
+    @Override
+    public $BannerAdListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
+        throws Exception {
+      return $$create(messenger,($AdVoidCallback) arguments.get(0),($LoadFailCallback) arguments.get(1),($AdVoidCallback) arguments.get(2),($AdVoidCallback) arguments.get(3),($AdVoidCallback) arguments.get(4));
+    }
+
+    @Override
+    public Object invokeMethod(
+        TypeChannelMessenger messenger,
+        $BannerAdListener instance,
+        String methodName,
+        List<Object> arguments)
+        throws Exception {
+      switch(methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("%s.%s not supported.", instance, methodName));
+    }
+  }
+  
+  public static class $AdManagerBannerAdListenerHandler implements TypeChannelHandler<$AdManagerBannerAdListener> {
+    public $AdManagerBannerAdListener $$create(TypeChannelMessenger messenger,$AdVoidCallback onAdLoaded,$LoadFailCallback onAdFailedToLoad,$AdVoidCallback onAdOpened,$AdVoidCallback onAdWillDismissScreen,$AdVoidCallback onAdClosed)
+        throws Exception {
+      throw new UnsupportedOperationException();
+    }
+
+    
+
+    
+
+    @Override
+    public Object invokeStaticMethod(
+        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
+        throws Exception {
+      switch (methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("Unable to invoke static method %s", methodName));
+    }
+
+    @Override
+    public $AdManagerBannerAdListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
+        throws Exception {
+      return $$create(messenger,($AdVoidCallback) arguments.get(0),($LoadFailCallback) arguments.get(1),($AdVoidCallback) arguments.get(2),($AdVoidCallback) arguments.get(3),($AdVoidCallback) arguments.get(4));
+    }
+
+    @Override
+    public Object invokeMethod(
+        TypeChannelMessenger messenger,
+        $AdManagerBannerAdListener instance,
+        String methodName,
+        List<Object> arguments)
+        throws Exception {
+      switch(methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("%s.%s not supported.", instance, methodName));
+    }
+  }
+  
+  public static class $NativeAdListenerHandler implements TypeChannelHandler<$NativeAdListener> {
+    public $NativeAdListener $$create(TypeChannelMessenger messenger,$AdVoidCallback onAdLoaded,$LoadFailCallback onAdFailedToLoad,$AdVoidCallback onAdOpened,$AdVoidCallback onAdWillDismissScreen,$AdVoidCallback onAdImpression,$AdVoidCallback onAdClosed,$AdVoidCallback onAdClicked)
+        throws Exception {
+      throw new UnsupportedOperationException();
+    }
+
+    
+
+    
+
+    @Override
+    public Object invokeStaticMethod(
+        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
+        throws Exception {
+      switch (methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("Unable to invoke static method %s", methodName));
+    }
+
+    @Override
+    public $NativeAdListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
+        throws Exception {
+      return $$create(messenger,($AdVoidCallback) arguments.get(0),($LoadFailCallback) arguments.get(1),($AdVoidCallback) arguments.get(2),($AdVoidCallback) arguments.get(3),($AdVoidCallback) arguments.get(4),($AdVoidCallback) arguments.get(5),($AdVoidCallback) arguments.get(6));
+    }
+
+    @Override
+    public Object invokeMethod(
+        TypeChannelMessenger messenger,
+        $NativeAdListener instance,
+        String methodName,
+        List<Object> arguments)
+        throws Exception {
+      switch(methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("%s.%s not supported.", instance, methodName));
+    }
+  }
+  
+  public static class $FullScreenContentListenerHandler implements TypeChannelHandler<$FullScreenContentListener> {
+    public $FullScreenContentListener $$create(TypeChannelMessenger messenger,$AdVoidCallback onAdShowedFullScreenContent,$AdVoidCallback onAdImpression,$AdVoidCallback onAdFailedToShowFullScreenContent,$AdVoidCallback onAdWillDismissFullScreenContent,$AdVoidCallback onAdDismissedFullScreenContent)
+        throws Exception {
+      throw new UnsupportedOperationException();
+    }
+
+    
+
+    
+
+    @Override
+    public Object invokeStaticMethod(
+        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
+        throws Exception {
+      switch (methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("Unable to invoke static method %s", methodName));
+    }
+
+    @Override
+    public $FullScreenContentListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
+        throws Exception {
+      return $$create(messenger,($AdVoidCallback) arguments.get(0),($AdVoidCallback) arguments.get(1),($AdVoidCallback) arguments.get(2),($AdVoidCallback) arguments.get(3),($AdVoidCallback) arguments.get(4));
+    }
+
+    @Override
+    public Object invokeMethod(
+        TypeChannelMessenger messenger,
+        $FullScreenContentListener instance,
+        String methodName,
+        List<Object> arguments)
+        throws Exception {
+      switch(methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("%s.%s not supported.", instance, methodName));
+    }
+  }
+  
+  public static class $InterstitialAdLoadListenerHandler implements TypeChannelHandler<$InterstitialAdLoadListener> {
+    public $InterstitialAdLoadListener $$create(TypeChannelMessenger messenger,$InterstitialAdLoadCallback onAdLoaded,$LoadFailCallback onAdFailedToLoad)
+        throws Exception {
+      throw new UnsupportedOperationException();
+    }
+
+    
+
+    
+
+    @Override
+    public Object invokeStaticMethod(
+        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
+        throws Exception {
+      switch (methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("Unable to invoke static method %s", methodName));
+    }
+
+    @Override
+    public $InterstitialAdLoadListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
+        throws Exception {
+      return $$create(messenger,($InterstitialAdLoadCallback) arguments.get(0),($LoadFailCallback) arguments.get(1));
+    }
+
+    @Override
+    public Object invokeMethod(
+        TypeChannelMessenger messenger,
+        $InterstitialAdLoadListener instance,
+        String methodName,
+        List<Object> arguments)
+        throws Exception {
+      switch(methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("%s.%s not supported.", instance, methodName));
+    }
+  }
+  
+  public static class $AdManagerInterstitialAdLoadListenerHandler implements TypeChannelHandler<$AdManagerInterstitialAdLoadListener> {
+    public $AdManagerInterstitialAdLoadListener $$create(TypeChannelMessenger messenger,$AdManagerInterstitialAdLoadCallback onAdLoaded,$LoadFailCallback onAdFailedToLoad)
+        throws Exception {
+      throw new UnsupportedOperationException();
+    }
+
+    
+
+    
+
+    @Override
+    public Object invokeStaticMethod(
+        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
+        throws Exception {
+      switch (methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("Unable to invoke static method %s", methodName));
+    }
+
+    @Override
+    public $AdManagerInterstitialAdLoadListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
+        throws Exception {
+      return $$create(messenger,($AdManagerInterstitialAdLoadCallback) arguments.get(0),($LoadFailCallback) arguments.get(1));
+    }
+
+    @Override
+    public Object invokeMethod(
+        TypeChannelMessenger messenger,
+        $AdManagerInterstitialAdLoadListener instance,
+        String methodName,
+        List<Object> arguments)
+        throws Exception {
+      switch(methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("%s.%s not supported.", instance, methodName));
+    }
+  }
+  
+  public static class $RewardedAdLoadListenerHandler implements TypeChannelHandler<$RewardedAdLoadListener> {
+    public $RewardedAdLoadListener $$create(TypeChannelMessenger messenger,$RewardedAdLoadCallback onAdLoaded,$LoadFailCallback onAdFailedToLoad)
+        throws Exception {
+      throw new UnsupportedOperationException();
+    }
+
+    
+
+    
+
+    @Override
+    public Object invokeStaticMethod(
+        TypeChannelMessenger messenger, String methodName, List<Object> arguments)
+        throws Exception {
+      switch (methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("Unable to invoke static method %s", methodName));
+    }
+
+    @Override
+    public $RewardedAdLoadListener createInstance(TypeChannelMessenger messenger, List<Object> arguments)
+        throws Exception {
+      return $$create(messenger,($RewardedAdLoadCallback) arguments.get(0),($LoadFailCallback) arguments.get(1));
+    }
+
+    @Override
+    public Object invokeMethod(
+        TypeChannelMessenger messenger,
+        $RewardedAdLoadListener instance,
+        String methodName,
+        List<Object> arguments)
+        throws Exception {
+      switch(methodName) {
+        
+      }
+
+      throw new UnsupportedOperationException(
+          String.format("%s.%s not supported.", instance, methodName));
+    }
+  }
+  
 
   public static class $LibraryImplementations {
     public final TypeChannelMessenger messenger;
@@ -2081,86 +2112,6 @@ public class AdContainersChannelLibrary {
       this.messenger = messenger;
     }
 
-    
-    public $OnUserEarnedRewardListenerChannel getChannelOnUserEarnedRewardListener() {
-      return new $OnUserEarnedRewardListenerChannel(messenger);
-    }
-
-    public $OnUserEarnedRewardListenerHandler getHandlerOnUserEarnedRewardListener() {
-      return new $OnUserEarnedRewardListenerHandler();
-    }
-    
-    public $AppEventListenerChannel getChannelAppEventListener() {
-      return new $AppEventListenerChannel(messenger);
-    }
-
-    public $AppEventListenerHandler getHandlerAppEventListener() {
-      return new $AppEventListenerHandler();
-    }
-    
-    public $AdWithViewListenerChannel getChannelAdWithViewListener() {
-      return new $AdWithViewListenerChannel(messenger);
-    }
-
-    public $AdWithViewListenerHandler getHandlerAdWithViewListener() {
-      return new $AdWithViewListenerHandler();
-    }
-    
-    public $BannerAdListenerChannel getChannelBannerAdListener() {
-      return new $BannerAdListenerChannel(messenger);
-    }
-
-    public $BannerAdListenerHandler getHandlerBannerAdListener() {
-      return new $BannerAdListenerHandler();
-    }
-    
-    public $AdManagerBannerAdListenerChannel getChannelAdManagerBannerAdListener() {
-      return new $AdManagerBannerAdListenerChannel(messenger);
-    }
-
-    public $AdManagerBannerAdListenerHandler getHandlerAdManagerBannerAdListener() {
-      return new $AdManagerBannerAdListenerHandler();
-    }
-    
-    public $NativeAdListenerChannel getChannelNativeAdListener() {
-      return new $NativeAdListenerChannel(messenger);
-    }
-
-    public $NativeAdListenerHandler getHandlerNativeAdListener() {
-      return new $NativeAdListenerHandler();
-    }
-    
-    public $FullScreenContentCallbackChannel getChannelFullScreenContentCallback() {
-      return new $FullScreenContentCallbackChannel(messenger);
-    }
-
-    public $FullScreenContentCallbackHandler getHandlerFullScreenContentCallback() {
-      return new $FullScreenContentCallbackHandler();
-    }
-    
-    public $RewardedAdLoadCallbackChannel getChannelRewardedAdLoadCallback() {
-      return new $RewardedAdLoadCallbackChannel(messenger);
-    }
-
-    public $RewardedAdLoadCallbackHandler getHandlerRewardedAdLoadCallback() {
-      return new $RewardedAdLoadCallbackHandler();
-    }
-    
-    public $InterstitialAdLoadCallbackChannel getChannelInterstitialAdLoadCallback() {
-      return new $InterstitialAdLoadCallbackChannel(messenger);
-    }
-
-    public $InterstitialAdLoadCallbackHandler getHandlerInterstitialAdLoadCallback() {
-      return new $InterstitialAdLoadCallbackHandler();
-    }
-    
-    public $AdManagerInterstitialAdLoadCallbackChannel getChannelAdManagerInterstitialAdLoadCallback() {
-      return new $AdManagerInterstitialAdLoadCallbackChannel(messenger);
-    }
-
-    public $AdManagerInterstitialAdLoadCallbackHandler getHandlerAdManagerInterstitialAdLoadCallback() {
-      return new $AdManagerInterstitialAdLoadCallbackHandler();
-    }
     
     public $AdErrorChannel getChannelAdError() {
       return new $AdErrorChannel(messenger);
@@ -2282,6 +2233,136 @@ public class AdContainersChannelLibrary {
       return new $ServerSideVerificationOptionsHandler();
     }
     
+    public $OnUserEarnedRewardListenerChannel getChannelOnUserEarnedRewardListener() {
+      return new $OnUserEarnedRewardListenerChannel(messenger);
+    }
+
+    public $OnUserEarnedRewardListenerHandler getHandlerOnUserEarnedRewardListener() {
+      return new $OnUserEarnedRewardListenerHandler();
+    }
+    
+    public $AppEventListenerChannel getChannelAppEventListener() {
+      return new $AppEventListenerChannel(messenger);
+    }
+
+    public $AppEventListenerHandler getHandlerAppEventListener() {
+      return new $AppEventListenerHandler();
+    }
+    
+    public $BannerAdListenerChannel getChannelBannerAdListener() {
+      return new $BannerAdListenerChannel(messenger);
+    }
+
+    public $BannerAdListenerHandler getHandlerBannerAdListener() {
+      return new $BannerAdListenerHandler();
+    }
+    
+    public $AdManagerBannerAdListenerChannel getChannelAdManagerBannerAdListener() {
+      return new $AdManagerBannerAdListenerChannel(messenger);
+    }
+
+    public $AdManagerBannerAdListenerHandler getHandlerAdManagerBannerAdListener() {
+      return new $AdManagerBannerAdListenerHandler();
+    }
+    
+    public $NativeAdListenerChannel getChannelNativeAdListener() {
+      return new $NativeAdListenerChannel(messenger);
+    }
+
+    public $NativeAdListenerHandler getHandlerNativeAdListener() {
+      return new $NativeAdListenerHandler();
+    }
+    
+    public $FullScreenContentListenerChannel getChannelFullScreenContentListener() {
+      return new $FullScreenContentListenerChannel(messenger);
+    }
+
+    public $FullScreenContentListenerHandler getHandlerFullScreenContentListener() {
+      return new $FullScreenContentListenerHandler();
+    }
+    
+    public $InterstitialAdLoadListenerChannel getChannelInterstitialAdLoadListener() {
+      return new $InterstitialAdLoadListenerChannel(messenger);
+    }
+
+    public $InterstitialAdLoadListenerHandler getHandlerInterstitialAdLoadListener() {
+      return new $InterstitialAdLoadListenerHandler();
+    }
+    
+    public $AdManagerInterstitialAdLoadListenerChannel getChannelAdManagerInterstitialAdLoadListener() {
+      return new $AdManagerInterstitialAdLoadListenerChannel(messenger);
+    }
+
+    public $AdManagerInterstitialAdLoadListenerHandler getHandlerAdManagerInterstitialAdLoadListener() {
+      return new $AdManagerInterstitialAdLoadListenerHandler();
+    }
+    
+    public $RewardedAdLoadListenerChannel getChannelRewardedAdLoadListener() {
+      return new $RewardedAdLoadListenerChannel(messenger);
+    }
+
+    public $RewardedAdLoadListenerHandler getHandlerRewardedAdLoadListener() {
+      return new $RewardedAdLoadListenerHandler();
+    }
+    
+
+    
+    public $UserEarnedRewardCallbackChannel getChannelUserEarnedRewardCallback() {
+      return new $UserEarnedRewardCallbackChannel(messenger);
+    }
+
+    public $UserEarnedRewardCallbackHandler getHandlerUserEarnedRewardCallback() {
+      return new $UserEarnedRewardCallbackHandler(this);
+    }
+    
+    public $AppEventCallbackChannel getChannelAppEventCallback() {
+      return new $AppEventCallbackChannel(messenger);
+    }
+
+    public $AppEventCallbackHandler getHandlerAppEventCallback() {
+      return new $AppEventCallbackHandler(this);
+    }
+    
+    public $AdVoidCallbackChannel getChannelAdVoidCallback() {
+      return new $AdVoidCallbackChannel(messenger);
+    }
+
+    public $AdVoidCallbackHandler getHandlerAdVoidCallback() {
+      return new $AdVoidCallbackHandler(this);
+    }
+    
+    public $InterstitialAdLoadCallbackChannel getChannelInterstitialAdLoadCallback() {
+      return new $InterstitialAdLoadCallbackChannel(messenger);
+    }
+
+    public $InterstitialAdLoadCallbackHandler getHandlerInterstitialAdLoadCallback() {
+      return new $InterstitialAdLoadCallbackHandler(this);
+    }
+    
+    public $AdManagerInterstitialAdLoadCallbackChannel getChannelAdManagerInterstitialAdLoadCallback() {
+      return new $AdManagerInterstitialAdLoadCallbackChannel(messenger);
+    }
+
+    public $AdManagerInterstitialAdLoadCallbackHandler getHandlerAdManagerInterstitialAdLoadCallback() {
+      return new $AdManagerInterstitialAdLoadCallbackHandler(this);
+    }
+    
+    public $RewardedAdLoadCallbackChannel getChannelRewardedAdLoadCallback() {
+      return new $RewardedAdLoadCallbackChannel(messenger);
+    }
+
+    public $RewardedAdLoadCallbackHandler getHandlerRewardedAdLoadCallback() {
+      return new $RewardedAdLoadCallbackHandler(this);
+    }
+    
+    public $LoadFailCallbackChannel getChannelLoadFailCallback() {
+      return new $LoadFailCallbackChannel(messenger);
+    }
+
+    public $LoadFailCallbackHandler getHandlerLoadFailCallback() {
+      return new $LoadFailCallbackHandler(this);
+    }
+    
   }
 
   public static class $ChannelRegistrar {
@@ -2291,28 +2372,7 @@ public class AdContainersChannelLibrary {
       this.implementations = implementations;
     }
 
-
     public void registerHandlers() {
-      
-      implementations.getChannelOnUserEarnedRewardListener().setHandler(implementations.getHandlerOnUserEarnedRewardListener());
-      
-      implementations.getChannelAppEventListener().setHandler(implementations.getHandlerAppEventListener());
-      
-      implementations.getChannelAdWithViewListener().setHandler(implementations.getHandlerAdWithViewListener());
-      
-      implementations.getChannelBannerAdListener().setHandler(implementations.getHandlerBannerAdListener());
-      
-      implementations.getChannelAdManagerBannerAdListener().setHandler(implementations.getHandlerAdManagerBannerAdListener());
-      
-      implementations.getChannelNativeAdListener().setHandler(implementations.getHandlerNativeAdListener());
-      
-      implementations.getChannelFullScreenContentCallback().setHandler(implementations.getHandlerFullScreenContentCallback());
-      
-      implementations.getChannelRewardedAdLoadCallback().setHandler(implementations.getHandlerRewardedAdLoadCallback());
-      
-      implementations.getChannelInterstitialAdLoadCallback().setHandler(implementations.getHandlerInterstitialAdLoadCallback());
-      
-      implementations.getChannelAdManagerInterstitialAdLoadCallback().setHandler(implementations.getHandlerAdManagerInterstitialAdLoadCallback());
       
       implementations.getChannelAdError().setHandler(implementations.getHandlerAdError());
       
@@ -2344,29 +2404,42 @@ public class AdContainersChannelLibrary {
       
       implementations.getChannelServerSideVerificationOptions().setHandler(implementations.getHandlerServerSideVerificationOptions());
       
+      implementations.getChannelOnUserEarnedRewardListener().setHandler(implementations.getHandlerOnUserEarnedRewardListener());
+      
+      implementations.getChannelAppEventListener().setHandler(implementations.getHandlerAppEventListener());
+      
+      implementations.getChannelBannerAdListener().setHandler(implementations.getHandlerBannerAdListener());
+      
+      implementations.getChannelAdManagerBannerAdListener().setHandler(implementations.getHandlerAdManagerBannerAdListener());
+      
+      implementations.getChannelNativeAdListener().setHandler(implementations.getHandlerNativeAdListener());
+      
+      implementations.getChannelFullScreenContentListener().setHandler(implementations.getHandlerFullScreenContentListener());
+      
+      implementations.getChannelInterstitialAdLoadListener().setHandler(implementations.getHandlerInterstitialAdLoadListener());
+      
+      implementations.getChannelAdManagerInterstitialAdLoadListener().setHandler(implementations.getHandlerAdManagerInterstitialAdLoadListener());
+      
+      implementations.getChannelRewardedAdLoadListener().setHandler(implementations.getHandlerRewardedAdLoadListener());
+      
+      
+      implementations.getChannelUserEarnedRewardCallback().setHandler(implementations.getHandlerUserEarnedRewardCallback());
+      
+      implementations.getChannelAppEventCallback().setHandler(implementations.getHandlerAppEventCallback());
+      
+      implementations.getChannelAdVoidCallback().setHandler(implementations.getHandlerAdVoidCallback());
+      
+      implementations.getChannelInterstitialAdLoadCallback().setHandler(implementations.getHandlerInterstitialAdLoadCallback());
+      
+      implementations.getChannelAdManagerInterstitialAdLoadCallback().setHandler(implementations.getHandlerAdManagerInterstitialAdLoadCallback());
+      
+      implementations.getChannelRewardedAdLoadCallback().setHandler(implementations.getHandlerRewardedAdLoadCallback());
+      
+      implementations.getChannelLoadFailCallback().setHandler(implementations.getHandlerLoadFailCallback());
+      
     }
 
     public void unregisterHandlers() {
-      
-      implementations.getChannelOnUserEarnedRewardListener().removeHandler();
-      
-      implementations.getChannelAppEventListener().removeHandler();
-      
-      implementations.getChannelAdWithViewListener().removeHandler();
-      
-      implementations.getChannelBannerAdListener().removeHandler();
-      
-      implementations.getChannelAdManagerBannerAdListener().removeHandler();
-      
-      implementations.getChannelNativeAdListener().removeHandler();
-      
-      implementations.getChannelFullScreenContentCallback().removeHandler();
-      
-      implementations.getChannelRewardedAdLoadCallback().removeHandler();
-      
-      implementations.getChannelInterstitialAdLoadCallback().removeHandler();
-      
-      implementations.getChannelAdManagerInterstitialAdLoadCallback().removeHandler();
       
       implementations.getChannelAdError().removeHandler();
       
@@ -2397,6 +2470,39 @@ public class AdContainersChannelLibrary {
       implementations.getChannelRewardItem().removeHandler();
       
       implementations.getChannelServerSideVerificationOptions().removeHandler();
+      
+      implementations.getChannelOnUserEarnedRewardListener().removeHandler();
+      
+      implementations.getChannelAppEventListener().removeHandler();
+      
+      implementations.getChannelBannerAdListener().removeHandler();
+      
+      implementations.getChannelAdManagerBannerAdListener().removeHandler();
+      
+      implementations.getChannelNativeAdListener().removeHandler();
+      
+      implementations.getChannelFullScreenContentListener().removeHandler();
+      
+      implementations.getChannelInterstitialAdLoadListener().removeHandler();
+      
+      implementations.getChannelAdManagerInterstitialAdLoadListener().removeHandler();
+      
+      implementations.getChannelRewardedAdLoadListener().removeHandler();
+      
+      
+      implementations.getChannelUserEarnedRewardCallback().removeHandler();
+      
+      implementations.getChannelAppEventCallback().removeHandler();
+      
+      implementations.getChannelAdVoidCallback().removeHandler();
+      
+      implementations.getChannelInterstitialAdLoadCallback().removeHandler();
+      
+      implementations.getChannelAdManagerInterstitialAdLoadCallback().removeHandler();
+      
+      implementations.getChannelRewardedAdLoadCallback().removeHandler();
+      
+      implementations.getChannelLoadFailCallback().removeHandler();
       
     }
   }

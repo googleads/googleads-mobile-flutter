@@ -458,7 +458,6 @@ class BannerAd implements AdWithView, $BannerAd {
     required this.listener,
     required this.request,
   }) {
-    BannerAdListener._channel.$$create(listener, $owner: false);
     _channel.$$create(
       this,
       $owner: true,
@@ -510,6 +509,15 @@ class BannerAd implements AdWithView, $BannerAd {
   /// Loading callbacks are sent to this ad's [listener].
   Future<void> load() {
     _adLoaded = true;
+    BannerAdListener._channel.$$create(
+      listener,
+      $owner: false,
+      onAdLoaded: listener.onAdLoaded,
+      onAdFailedToLoad: listener.onAdFailedToLoad,
+      onAdOpened: listener.onAdOpened,
+      onAdWillDismissScreen: listener.onAdWillDismissScreen,
+      onAdClosed: listener.onAdClosed,
+    );
     return _channel.$load(this);
   }
 }
@@ -530,7 +538,6 @@ class AdManagerBannerAd implements AdWithView, $AdManagerBannerAd {
     required this.request,
     this.appEventListener,
   }) : assert(sizes.isNotEmpty) {
-    AdManagerBannerAdListener._channel.$$create(listener, $owner: false);
     _channel.$$create(
       this,
       $owner: true,
@@ -576,6 +583,15 @@ class AdManagerBannerAd implements AdWithView, $AdManagerBannerAd {
   /// Loading callbacks are sent to this ad's [listener].
   Future<void> load() {
     _adLoaded = true;
+    AdManagerBannerAdListener._channel.$$create(
+      listener,
+      $owner: false,
+      onAdLoaded: listener.onAdLoaded,
+      onAdFailedToLoad: listener.onAdFailedToLoad,
+      onAdOpened: listener.onAdOpened,
+      onAdWillDismissScreen: listener.onAdWillDismissScreen,
+      onAdClosed: listener.onAdClosed,
+    );
     return _channel.$load(this);
   }
 }
@@ -613,7 +629,6 @@ class NativeAd implements AdWithView, $NativeAd {
     required this.request,
     this.customOptions,
   }) {
-    NativeAdListener._channel.$$create(listener, $owner: false);
     _channel.$$create(
       this,
       $owner: true,
@@ -666,6 +681,17 @@ class NativeAd implements AdWithView, $NativeAd {
   /// Loading callbacks are sent to this ad's [listener].
   Future<void> load() {
     _adLoaded = true;
+    NativeAdListener._channel.$$create(
+      listener,
+      $owner: false,
+      onAdLoaded: listener.onAdLoaded,
+      onAdFailedToLoad: listener.onAdFailedToLoad,
+      onAdOpened: listener.onAdOpened,
+      onAdWillDismissScreen: listener.onAdWillDismissScreen,
+      onAdClosed: listener.onAdClosed,
+      onAdClicked: listener.onAdClicked,
+      onAdImpression: listener.onAdImpression,
+    );
     return _channel.$load(this);
   }
 }
@@ -673,17 +699,6 @@ class NativeAd implements AdWithView, $NativeAd {
 /// A full-screen interstitial ad for the Google Mobile Ads Plugin.
 @Reference('google_mobile_ads.InterstitialAd')
 class InterstitialAd implements $InterstitialAd {
-  // /// Creates an [InterstitialAd].
-  // ///
-  // /// A valid [adUnitId] from the AdMob dashboard, a nonnull [listener], and a
-  // /// nonnull [request] is required.
-  // @visibleForTesting
-  // InterstitialAd({
-  //   required this.adUnitId,
-  //   required this.request,
-  //   this.fullScreenContentCallback,
-  // });
-
   static $InterstitialAdChannel get _channel =>
       ChannelRegistrar.instance.implementations.channelInterstitialAd;
 
@@ -691,15 +706,18 @@ class InterstitialAd implements $InterstitialAd {
   static Future<void> load({
     required String adUnitId,
     required AdRequest request,
-    required InterstitialAdLoadCallback adLoadCallback,
+    required InterstitialAdLoadListener listener,
   }) {
-    // InterstitialAd ad = InterstitialAd(
-    //     adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
-    InterstitialAdLoadCallback._channel.$$create(adLoadCallback, $owner: false);
+    InterstitialAdLoadListener._channel.$$create(
+      listener,
+      $owner: false,
+      onAdLoaded: listener.onAdLoaded,
+      onAdFailedToLoad: listener.onAdFailedToLoad,
+    );
     return _channel.$load(
       adUnitId,
       request,
-      adLoadCallback,
+      listener,
     );
   }
 
@@ -726,45 +744,29 @@ class InterstitialAd implements $InterstitialAd {
   ///
   /// Set [fullScreenContentCallback] before calling this method to be
   /// notified of events that occur when showing the ad.
-  Future<void> show(FullScreenContentCallback? fullScreenContentCallback) {
-    if (fullScreenContentCallback != null) {
-      FullScreenContentCallback._channel.$$create(
-        fullScreenContentCallback,
+  Future<void> show(FullScreenContentListener? fullScreenContentListener) {
+    if (fullScreenContentListener != null) {
+      FullScreenContentListener._channel.$$create(
+        fullScreenContentListener,
         $owner: false,
+        onAdShowedFullScreenContent:
+            fullScreenContentListener.onAdShowedFullScreenContent,
+        onAdImpression: fullScreenContentListener.onAdImpression,
+        onAdFailedToShowFullScreenContent:
+            fullScreenContentListener.onAdFailedToShowFullScreenContent,
+        onAdWillDismissFullScreenContent:
+            fullScreenContentListener.onAdWillDismissFullScreenContent,
+        onAdDismissedFullScreenContent:
+            fullScreenContentListener.onAdDismissedFullScreenContent,
       );
     }
-    return _channel.$show(this, fullScreenContentCallback);
+    return _channel.$show(this, fullScreenContentListener);
   }
 }
 
 /// A full-screen interstitial ad for use with Ad Manager.
 @Reference('google_mobile_ads.AdManagerInterstitialAd')
 class AdManagerInterstitialAd implements $AdManagerInterstitialAd {
-  // /// Creates an [AdManagerInterstitialAd].
-  // ///
-  // /// A valid [adUnitId] from the Ad Manager dashboard, a nonnull [listener],
-  // /// and nonnull [request] is required.
-  // AdManagerInterstitialAd({
-  //   required this.adUnitId,
-  //   required this.request,
-  //   this.fullScreenContentCallback,
-  //   this.appEventListener,
-  // });
-
-  // /// Identifies the source of [Ad]s for your application.
-  // ///
-  // /// For testing use a [sample ad unit](https://developers.google.com/admob/ios/test-ads#sample_ad_units).
-  // final String adUnitId;
-  //
-  // /// Targeting information used to fetch an [Ad].
-  // final AdManagerAdRequest request;
-
-  // /// Callbacks to be invoked when ads show and dismiss full screen content.
-  // FullScreenContentCallback<AdManagerInterstitialAd>? fullScreenContentCallback;
-  //
-  // /// An optional listener for app events.
-  // AppEventListener? appEventListener;
-
   static $AdManagerInterstitialAdChannel get _channel =>
       ChannelRegistrar.instance.implementations.channelAdManagerInterstitialAd;
 
@@ -772,15 +774,15 @@ class AdManagerInterstitialAd implements $AdManagerInterstitialAd {
   static Future<void> load({
     required String adUnitId,
     required AdManagerAdRequest request,
-    required AdManagerInterstitialAdLoadCallback adLoadCallback,
+    required AdManagerInterstitialAdLoadListener listener,
   }) {
-    // AdManagerInterstitialAd ad = AdManagerInterstitialAd._(
-    //     adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
-    AdManagerInterstitialAdLoadCallback._channel.$$create(
-      adLoadCallback,
+    AdManagerInterstitialAdLoadListener._channel.$$create(
+      listener,
       $owner: false,
+      onAdLoaded: listener.onAdLoaded,
+      onAdFailedToLoad: listener.onAdFailedToLoad,
     );
-    return _channel.$load(adUnitId, request, adLoadCallback);
+    return _channel.$load(adUnitId, request, listener);
   }
 
   /// Displays this on top of the application.
@@ -789,21 +791,31 @@ class AdManagerInterstitialAd implements $AdManagerInterstitialAd {
   /// notified of events that occur when showing the ad.
   Future<void> show({
     AppEventListener? appEventListener,
-    FullScreenContentCallback? fullScreenContentCallback,
+    FullScreenContentListener? fullScreenContentListener,
   }) {
-    if (fullScreenContentCallback != null) {
-      FullScreenContentCallback._channel.$$create(
-        fullScreenContentCallback,
+    if (fullScreenContentListener != null) {
+      FullScreenContentListener._channel.$$create(
+        fullScreenContentListener,
         $owner: false,
+        onAdShowedFullScreenContent:
+            fullScreenContentListener.onAdShowedFullScreenContent,
+        onAdImpression: fullScreenContentListener.onAdImpression,
+        onAdFailedToShowFullScreenContent:
+            fullScreenContentListener.onAdFailedToShowFullScreenContent,
+        onAdWillDismissFullScreenContent:
+            fullScreenContentListener.onAdWillDismissFullScreenContent,
+        onAdDismissedFullScreenContent:
+            fullScreenContentListener.onAdDismissedFullScreenContent,
       );
     }
     if (appEventListener != null) {
       AppEventListener._channel.$$create(
         appEventListener,
         $owner: false,
+        onAppEvent: appEventListener.onAppEvent,
       );
     }
-    return _channel.$show(this, appEventListener, fullScreenContentCallback);
+    return _channel.$show(this, appEventListener, fullScreenContentListener);
   }
 }
 
@@ -864,21 +876,23 @@ class RewardedAd implements $RewardedAd {
   static Future<void> load({
     required String adUnitId,
     required AdRequest request,
-    required RewardedAdLoadCallback adLoadCallback,
+    required RewardedAdLoadListener listener,
   }) {
     // RewardedAd rewardedAd = RewardedAd._(
     //     adUnitId: adUnitId,
     //     request: request,
     //     rewardedAdLoadCallback: rewardedAdLoadCallback,
     //     serverSideVerificationOptions: serverSideVerificationOptions);
-    RewardedAdLoadCallback._channel.$$create(
-      adLoadCallback,
+    RewardedAdLoadListener._channel.$$create(
+      listener,
       $owner: false,
+      onAdLoaded: listener.onAdLoaded,
+      onAdFailedToLoad: listener.onAdFailedToLoad,
     );
     return _channel.$load(
       adUnitId,
       request,
-      adLoadCallback,
+      listener,
     );
   }
 
@@ -906,23 +920,33 @@ class RewardedAd implements $RewardedAd {
   Future<void> show({
     required OnUserEarnedRewardListener onUserEarnedReward,
     ServerSideVerificationOptions? serverSideVerificationOptions,
-    FullScreenContentCallback? fullScreenContentCallback,
+    FullScreenContentListener? fullScreenContentListener,
   }) {
-    if (fullScreenContentCallback != null) {
-      FullScreenContentCallback._channel.$$create(
-        fullScreenContentCallback,
+    if (fullScreenContentListener != null) {
+      FullScreenContentListener._channel.$$create(
+        fullScreenContentListener,
         $owner: false,
+        onAdShowedFullScreenContent:
+            fullScreenContentListener.onAdShowedFullScreenContent,
+        onAdImpression: fullScreenContentListener.onAdImpression,
+        onAdFailedToShowFullScreenContent:
+            fullScreenContentListener.onAdFailedToShowFullScreenContent,
+        onAdWillDismissFullScreenContent:
+            fullScreenContentListener.onAdWillDismissFullScreenContent,
+        onAdDismissedFullScreenContent:
+            fullScreenContentListener.onAdDismissedFullScreenContent,
       );
     }
     OnUserEarnedRewardListener._channel.$$create(
       onUserEarnedReward,
       $owner: false,
+      onUserEarnedRewardCallback: onUserEarnedReward.onUserEarnedRewardCallback,
     );
     return _channel.$show(
       this,
       onUserEarnedReward,
       serverSideVerificationOptions,
-      fullScreenContentCallback,
+      fullScreenContentListener,
     );
   }
 }
@@ -952,12 +976,16 @@ class RewardItem implements $RewardItem {
 class ServerSideVerificationOptions implements $ServerSideVerificationOptions {
   /// Create [ServerSideVerificationOptions] with the userId or customData.
   ServerSideVerificationOptions({this.userId, this.customData}) {
-    _channel.$$create(this, $owner: true, userId: userId, customData: customData,);
+    _channel.$$create(
+      this,
+      $owner: true,
+      userId: userId,
+      customData: customData,
+    );
   }
 
-  static $ServerSideVerificationOptionsChannel get _channel =>
-      ChannelRegistrar
-          .instance.implementations.channelServerSideVerificationOptions;
+  static $ServerSideVerificationOptionsChannel get _channel => ChannelRegistrar
+      .instance.implementations.channelServerSideVerificationOptions;
 
   /// The user id to be used in server-to-server reward callbacks.
   final String? userId;
@@ -974,304 +1002,333 @@ class ServerSideVerificationOptions implements $ServerSideVerificationOptions {
   }
 }
 
+@Reference('google_mobile_ads.UserEarnedRewardCallback')
+typedef UserEarnedRewardCallback = void Function(RewardItem reward);
+
+@Reference('google_mobile_ads.AppEventCallback')
+typedef AppEventCallback = void Function(String name, String data);
+
+@Reference('google_mobile_ads.AdVoidCallback')
+typedef AdVoidCallback = void Function();
+
+@Reference('google_mobile_ads.InterstitialAdLoadCallback')
+typedef InterstitialAdLoadCallback = void Function(InterstitialAd ad);
+
+@Reference('google_mobile_ads.AdManagerInterstitialAdLoadCallback')
+typedef AdManagerInterstitialAdLoadCallback = void Function(
+    AdManagerInterstitialAd ad);
+
+@Reference('google_mobile_ads.RewardedAdLoadCallback')
+typedef RewardedAdLoadCallback = void Function(RewardedAd ad);
+
+@Reference('google_mobile_ads.LoadFailCallback')
+typedef LoadFailCallback = void Function(LoadAdError error);
+
 /// Listen for when a user earns a reward from a [RewardedAd].
 @Reference('google_mobile_ads.OnUserEarnedRewardListener')
-mixin OnUserEarnedRewardListener implements $OnUserEarnedRewardListener {
+class OnUserEarnedRewardListener implements $OnUserEarnedRewardListener {
+  OnUserEarnedRewardListener(this.onUserEarnedRewardCallback) {
+    ChannelRegistrar.instance.implementations.channelUserEarnedRewardCallback
+        .$$create(
+      onUserEarnedRewardCallback,
+      $owner: true,
+    );
+  }
+
   static $OnUserEarnedRewardListenerChannel get _channel => ChannelRegistrar
       .instance.implementations.channelOnUserEarnedRewardListener;
 
   /// When a user earns a reward from a [RewardedAd].
-  @override
-  void onUserEarnedRewardCallback(covariant RewardItem reward);
+  final UserEarnedRewardCallback onUserEarnedRewardCallback;
 }
 
 /// Listener for app events.
 @Reference('google_mobile_ads.AppEventListener')
-mixin AppEventListener implements $AppEventListener {
+class AppEventListener implements $AppEventListener {
+  AppEventListener(this.onAppEvent) {
+    ChannelRegistrar.instance.implementations.channelAppEventCallback.$$create(
+      onAppEvent,
+      $owner: true,
+    );
+  }
+
   static $AppEventListenerChannel get _channel =>
       ChannelRegistrar.instance.implementations.channelAppEventListener;
 
   /// Called when an app event is received.
-  @override
-  void onAppEvent(String name, String data);
-}
-
-/// Shared event callbacks used in Native and Banner ads.
-@Reference('google_mobile_ads.AdWithViewListener')
-mixin AdWithViewListener implements $AdWithViewListener {
-  // /// Default constructor for [AdWithViewListener], meant to be used by subclasses.
-  // @protected
-  // const AdWithViewListener({
-  //   this.onAdLoaded,
-  //   this.onAdFailedToLoad,
-  //   this.onAdOpened,
-  //   this.onAdWillDismissScreen,
-  //   this.onAdImpression,
-  //   this.onAdClosed,
-  // });
-  /// Called when an ad is successfully received.
-  @override
-  void onAdLoaded();
-
-  /// Called when an ad request failed.
-  @override
-  void onAdFailedToLoad(covariant LoadAdError error);
-
-  /// A full screen view/overlay is presented in response to the user clicking
-  /// on an ad. You may want to pause animations and time sensitive
-  /// interactions.
-  @override
-  void onAdOpened();
-
-  /// For iOS only. Called before dismissing a full screen view.
-  @override
-  void onAdWillDismissScreen();
-
-  /// Called when the full screen view has been closed. You should restart
-  /// anything paused while handling onAdOpened.
-  @override
-  void onAdClosed();
-
-  /// Called when an impression occurs on the ad.
-  @override
-  void onAdImpression();
+  final AppEventCallback onAppEvent;
 }
 
 /// A listener for receiving notifications for the lifecycle of a [BannerAd].
 @Reference('google_mobile_ads.BannerAdListener')
-mixin BannerAdListener implements AdWithViewListener, $BannerAdListener {
+class BannerAdListener implements $BannerAdListener {
+  BannerAdListener({
+    required this.onAdLoaded,
+    this.onAdFailedToLoad,
+    this.onAdOpened,
+    this.onAdWillDismissScreen,
+    this.onAdClosed,
+  }) {
+    final $AdVoidCallbackChannel adVoidCallbackChannel =
+        ChannelRegistrar.instance.implementations.channelAdVoidCallback;
+    adVoidCallbackChannel.$$create(onAdLoaded, $owner: true);
+    if (onAdOpened != null) {
+      adVoidCallbackChannel.$$create(onAdOpened!, $owner: true);
+    }
+    if (onAdWillDismissScreen != null) {
+      adVoidCallbackChannel.$$create(onAdWillDismissScreen!, $owner: true);
+    }
+    if (onAdClosed != null) {
+      adVoidCallbackChannel.$$create(onAdClosed!, $owner: true);
+    }
+    final $LoadFailCallbackChannel loadFailCallbackChannel =
+        ChannelRegistrar.instance.implementations.channelLoadFailCallback;
+    if (onAdFailedToLoad != null) {
+      loadFailCallbackChannel.$$create(onAdFailedToLoad!, $owner: true);
+    }
+  }
+
   static $BannerAdListenerChannel get _channel =>
       ChannelRegistrar.instance.implementations.channelBannerAdListener;
-//   /// Constructs a [BannerAdListener] that notifies for the provided event callbacks.
-//   ///
-//   /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
-//   /// ```dart
-//   /// BannerAdListener(
-//   ///   onAdLoaded: (ad) {
-//   ///     // Ad successfully loaded - display an AdWidget with the banner ad.
-//   ///   },
-//   ///   onAdFailedToLoad: (ad, error) {
-//   ///     // Ad failed to load - log the error and dispose the ad.
-//   ///   },
-//   ///   ...
-//   /// )
-//   /// ```
-//   const BannerAdListener({
-//     AdEventCallback? onAdLoaded,
-//     AdLoadErrorCallback? onAdFailedToLoad,
-//     AdEventCallback? onAdOpened,
-//     AdEventCallback? onAdClosed,
-//     AdEventCallback? onAdWillDismissScreen,
-//     AdEventCallback? onAdImpression,
-//   }) : super(
-//           onAdLoaded: onAdLoaded,
-//           onAdFailedToLoad: onAdFailedToLoad,
-//           onAdOpened: onAdOpened,
-//           onAdClosed: onAdClosed,
-//           onAdWillDismissScreen: onAdWillDismissScreen,
-//           onAdImpression: onAdImpression,
-//         );
+
+  final AdVoidCallback onAdLoaded;
+
+  final LoadFailCallback? onAdFailedToLoad;
+
+  final AdVoidCallback? onAdOpened;
+
+  final AdVoidCallback? onAdWillDismissScreen;
+
+  final AdVoidCallback? onAdClosed;
 }
 
-/// A listener for receiving notifications for the lifecycle of an [AdManagerBannerAd].
+/// A listener for receiving notifications for the lifecycle of a [BannerAd].
 @Reference('google_mobile_ads.AdManagerBannerAdListener')
-mixin AdManagerBannerAdListener
-    implements BannerAdListener, AppEventListener, $AdManagerBannerAdListener {
+class AdManagerBannerAdListener extends BannerAdListener
+    implements $AdManagerBannerAdListener {
+  AdManagerBannerAdListener({
+    required AdVoidCallback onAdLoaded,
+    LoadFailCallback? onAdFailedToLoad,
+    AdVoidCallback? onAdOpened,
+    AdVoidCallback? onAdWillDismissScreen,
+    AdVoidCallback? onAdClosed,
+  }) : super(
+          onAdLoaded: onAdLoaded,
+          onAdFailedToLoad: onAdFailedToLoad,
+          onAdOpened: onAdOpened,
+          onAdWillDismissScreen: onAdWillDismissScreen,
+          onAdClosed: onAdClosed,
+        );
+
   static $AdManagerBannerAdListenerChannel get _channel => ChannelRegistrar
       .instance.implementations.channelAdManagerBannerAdListener;
-
-  /// Constructs an [AdManagerBannerAdListener] with the provided event callbacks.
-  ///
-  /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
-  /// ```dart
-  /// AdManagerBannerAdListener(
-  ///   onAdLoaded: (ad) {
-  ///     // Ad successfully loaded - display an AdWidget with the banner ad.
-  ///   },
-  ///   onAdFailedToLoad: (ad, error) {
-  ///     // Ad failed to load - log the error and dispose the ad.
-  ///   },
-  ///   ...
-  /// )
-  /// ```
-  // AdManagerBannerAdListener({
-  //   AdEventCallback? onAdLoaded,
-  //   Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
-  //   AdEventCallback? onAdOpened,
-  //   AdEventCallback? onAdWillDismissScreen,
-  //   AdEventCallback? onAdClosed,
-  //   AdEventCallback? onAdImpression,
-  //   this.onAppEvent,
-  // }) : super(
-  //           onAdLoaded: onAdLoaded,
-  //           onAdFailedToLoad: onAdFailedToLoad,
-  //           onAdOpened: onAdOpened,
-  //           onAdWillDismissScreen: onAdWillDismissScreen,
-  //           onAdClosed: onAdClosed,
-  //           onAdImpression: onAdImpression);
-  //
-  // /// Called when an app event is received.
-  // @override
-  // void onAppEvent(String name, String data);
 }
 
-/// A listener for receiving notifications for the lifecycle of a [NativeAd].
 @Reference('google_mobile_ads.NativeAdListener')
-mixin NativeAdListener implements AdWithViewListener, $NativeAdListener {
+class NativeAdListener implements $NativeAdListener {
+  NativeAdListener({
+    required this.onAdLoaded,
+    this.onAdFailedToLoad,
+    this.onAdOpened,
+    this.onAdWillDismissScreen,
+    this.onAdImpression,
+    this.onAdClosed,
+    this.onAdClicked,
+  }) {
+    final $AdVoidCallbackChannel adVoidCallbackChannel =
+        ChannelRegistrar.instance.implementations.channelAdVoidCallback;
+    adVoidCallbackChannel.$$create(onAdLoaded, $owner: true);
+    if (onAdOpened != null) {
+      adVoidCallbackChannel.$$create(onAdOpened!, $owner: true);
+    }
+    if (onAdWillDismissScreen != null) {
+      adVoidCallbackChannel.$$create(onAdWillDismissScreen!, $owner: true);
+    }
+    if (onAdClosed != null) {
+      adVoidCallbackChannel.$$create(onAdClosed!, $owner: true);
+    }
+    if (onAdImpression != null) {
+      adVoidCallbackChannel.$$create(onAdImpression!, $owner: true);
+    }
+    if (onAdClicked != null) {
+      adVoidCallbackChannel.$$create(onAdClicked!, $owner: true);
+    }
+
+    final $LoadFailCallbackChannel loadFailCallbackChannel =
+        ChannelRegistrar.instance.implementations.channelLoadFailCallback;
+    if (onAdFailedToLoad != null) {
+      loadFailCallbackChannel.$$create(onAdFailedToLoad!, $owner: true);
+    }
+  }
+
   static $NativeAdListenerChannel get _channel =>
       ChannelRegistrar.instance.implementations.channelNativeAdListener;
-  // /// Constructs a [NativeAdListener] with the provided event callbacks.
-  // ///
-  // /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
-  // /// ```dart
-  // /// NativeAdListener(
-  // ///   onAdLoaded: (ad) {
-  // ///     // Ad successfully loaded - display an AdWidget with the native ad.
-  // ///   },
-  // ///   onAdFailedToLoad: (ad, error) {
-  // ///     // Ad failed to load - log the error and dispose the ad.
-  // ///   },
-  // ///   ...
-  // /// )
-  // /// ```
-  // NativeAdListener({
-  //   AdEventCallback? onAdLoaded,
-  //   Function(Ad ad, LoadAdError error)? onAdFailedToLoad,
-  //   AdEventCallback? onAdOpened,
-  //   AdEventCallback? onAdWillDismissScreen,
-  //   AdEventCallback? onAdClosed,
-  //   AdEventCallback? onAdImpression,
-  //   this.onNativeAdClicked,
-  // }) : super(
-  //           onAdLoaded: onAdLoaded,
-  //           onAdFailedToLoad: onAdFailedToLoad,
-  //           onAdOpened: onAdOpened,
-  //           onAdWillDismissScreen: onAdWillDismissScreen,
-  //           onAdClosed: onAdClosed,
-  //           onAdImpression: onAdImpression);
 
-  /// Called when a click is recorded for a [NativeAd].
-  @override
-  void onAdClicked();
+  final AdVoidCallback onAdLoaded;
+
+  final LoadFailCallback? onAdFailedToLoad;
+
+  final AdVoidCallback? onAdOpened;
+
+  final AdVoidCallback? onAdWillDismissScreen;
+
+  final AdVoidCallback? onAdImpression;
+
+  final AdVoidCallback? onAdClosed;
+
+  final AdVoidCallback? onAdClicked;
 }
 
 /// Callback events for for full screen ads, such as Rewarded and Interstitial.
 @Reference('google_mobile_ads.FullScreenContentCallback')
-mixin FullScreenContentCallback implements $FullScreenContentCallback {
-  static $FullScreenContentCallbackChannel get _channel => ChannelRegistrar
-      .instance.implementations.channelFullScreenContentCallback;
-  // /// Construct a new [FullScreenContentCallback].
-  // ///
-  // /// [Ad.dispose] should be called from [onAdFailedToShowFullScreenContent]
-  // /// and [onAdDismissedFullScreenContent], in order to free up resources.
-  // const FullScreenContentCallback({
-  //   this.onAdShowedFullScreenContent,
-  //   this.onAdImpression,
-  //   this.onAdFailedToShowFullScreenContent,
-  //   this.onAdWillDismissFullScreenContent,
-  //   this.onAdDismissedFullScreenContent,
-  // });
+class FullScreenContentListener implements $FullScreenContentListener {
+  /// Construct a new [FullScreenContentCallback].
+  ///
+  /// [Ad.dispose] should be called from [onAdFailedToShowFullScreenContent]
+  /// and [onAdDismissedFullScreenContent], in order to free up resources.
+  FullScreenContentListener({
+    this.onAdShowedFullScreenContent,
+    this.onAdImpression,
+    this.onAdFailedToShowFullScreenContent,
+    this.onAdWillDismissFullScreenContent,
+    this.onAdDismissedFullScreenContent,
+  }) {
+    final $AdVoidCallbackChannel adVoidCallbackChannel =
+        ChannelRegistrar.instance.implementations.channelAdVoidCallback;
+    if (onAdShowedFullScreenContent != null) {
+      adVoidCallbackChannel.$$create(onAdShowedFullScreenContent!,
+          $owner: true);
+    }
+    if (onAdImpression != null) {
+      adVoidCallbackChannel.$$create(onAdImpression!, $owner: true);
+    }
+    if (onAdFailedToShowFullScreenContent != null) {
+      adVoidCallbackChannel.$$create(onAdFailedToShowFullScreenContent!,
+          $owner: true);
+    }
+    if (onAdWillDismissFullScreenContent != null) {
+      adVoidCallbackChannel.$$create(onAdWillDismissFullScreenContent!,
+          $owner: true);
+    }
+    if (onAdDismissedFullScreenContent != null) {
+      adVoidCallbackChannel.$$create(onAdDismissedFullScreenContent!,
+          $owner: true);
+    }
+  }
+
+  static $FullScreenContentListenerChannel get _channel => ChannelRegistrar
+      .instance.implementations.channelFullScreenContentListener;
 
   /// Called when an ad shows full screen content.
-  @override
-  void onAdShowedFullScreenContent();
+  final AdVoidCallback? onAdShowedFullScreenContent;
 
   /// Called when an ad dismisses full screen content.
-  @override
-  void onAdDismissedFullScreenContent();
+  final AdVoidCallback? onAdDismissedFullScreenContent;
 
   /// For iOS only. Called before dismissing a full screen view.
-  @override
-  void onAdWillDismissFullScreenContent();
+  final AdVoidCallback? onAdWillDismissFullScreenContent;
 
   /// Called when an ad impression occurs.
-  @override
-  void onAdImpression();
+  final AdVoidCallback? onAdImpression;
 
   /// Called when ad fails to show full screen content.
-  @override
-  void onAdFailedToShowFullScreenContent();
+  final AdVoidCallback? onAdFailedToShowFullScreenContent;
 }
 
 /// Generic parent class for ad load callbacks.
-mixin FullScreenAdLoadCallback<T> {
-  // /// Default constructor for [FullScreenAdLoadCallback[, used by subclasses.
-  // const FullScreenAdLoadCallback({
-  //   required this.onAdLoaded,
-  //   required this.onAdFailedToLoad,
-  // });
+@Reference('google_mobile_ads.InterstitialAdLoadListener')
+class InterstitialAdLoadListener implements $InterstitialAdLoadListener {
+  /// Default constructor for [InterstitialLoadListener], used by subclasses.
+  InterstitialAdLoadListener({
+    required this.onAdLoaded,
+    required this.onAdFailedToLoad,
+  }) {
+    ChannelRegistrar.instance.implementations.channelInterstitialAdLoadCallback
+        .$$create(
+      onAdLoaded,
+      $owner: true,
+    );
+    if (onAdFailedToLoad != null) {
+      ChannelRegistrar.instance.implementations.channelLoadFailCallback
+          .$$create(
+        onAdFailedToLoad!,
+        $owner: true,
+      );
+    }
+  }
+
+  static $InterstitialAdLoadListenerChannel get _channel => ChannelRegistrar
+      .instance.implementations.channelInterstitialAdLoadListener;
 
   /// Called when the ad successfully loads.
-  void onAdLoaded(T ad);
+  final InterstitialAdLoadCallback onAdLoaded;
 
   /// Called when an error occurs loading the ad.
-  void onAdFailedToLoad(covariant LoadAdError error);
+  final LoadFailCallback? onAdFailedToLoad;
 }
 
-/// This class holds callbacks for loading a [RewardedAd].
-@Reference('google_mobile_ads.RewardedAdLoadCallback')
-mixin RewardedAdLoadCallback
-    implements FullScreenAdLoadCallback<RewardedAd>, $RewardedAdLoadCallback {
-  static $RewardedAdLoadCallbackChannel get _channel =>
-      ChannelRegistrar.instance.implementations.channelRewardedAdLoadCallback;
-  // /// Construct a [RewardedAdLoadCallback].
-  // ///
-  // /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
-  // const RewardedAdLoadCallback({
-  //   required GenericAdEventCallback<RewardedAd> onAdLoaded,
-  //   required FullScreenAdLoadErrorCallback onAdFailedToLoad,
-  // }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
+/// Generic parent class for ad load callbacks.
+@Reference('google_mobile_ads.AdManagerInterstitialAdLoadListener')
+class AdManagerInterstitialAdLoadListener
+    implements $AdManagerInterstitialAdLoadListener {
+  /// Default constructor for [InterstitialLoadListener], used by subclasses.
+  AdManagerInterstitialAdLoadListener({
+    required this.onAdLoaded,
+    required this.onAdFailedToLoad,
+  }) {
+    ChannelRegistrar
+        .instance.implementations.channelAdManagerInterstitialAdLoadCallback
+        .$$create(
+      onAdLoaded,
+      $owner: true,
+    );
+    if (onAdFailedToLoad != null) {
+      ChannelRegistrar.instance.implementations.channelLoadFailCallback
+          .$$create(
+        onAdFailedToLoad!,
+        $owner: true,
+      );
+    }
+  }
 
-  @override
-  void onAdLoaded(covariant RewardedAd ad);
-
-  @override
-  void onAdFailedToLoad(covariant LoadAdError error);
-}
-
-/// This class holds callbacks for loading an [InterstitialAd].
-@Reference('google_mobile_ads.InterstitialAdLoadCallback')
-mixin InterstitialAdLoadCallback
-    implements
-        FullScreenAdLoadCallback<InterstitialAd>,
-        $InterstitialAdLoadCallback {
-  static $InterstitialAdLoadCallbackChannel get _channel => ChannelRegistrar
-      .instance.implementations.channelInterstitialAdLoadCallback;
-  // /// Construct a [InterstitialAdLoadCallback].
-  // ///
-  // /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
-  // const InterstitialAdLoadCallback({
-  //   required GenericAdEventCallback<InterstitialAd> onAdLoaded,
-  //   required FullScreenAdLoadErrorCallback onAdFailedToLoad,
-  // }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
-
-  @override
-  void onAdLoaded(covariant InterstitialAd ad);
-
-  @override
-  void onAdFailedToLoad(covariant LoadAdError error);
-}
-
-/// This class holds callbacks for loading an [AdManagerInterstitialAd].
-@Reference('google_mobile_ads.AdManagerInterstitialAdLoadCallback')
-mixin AdManagerInterstitialAdLoadCallback
-    implements
-        FullScreenAdLoadCallback<AdManagerInterstitialAd>,
-        $AdManagerInterstitialAdLoadCallback {
-  static $AdManagerInterstitialAdLoadCallbackChannel get _channel =>
+  static $AdManagerInterstitialAdLoadListenerChannel get _channel =>
       ChannelRegistrar
-          .instance.implementations.channelAdManagerInterstitialAdLoadCallback;
-  // /// Construct a [AdManagerInterstitialAdLoadCallback].
-  // ///
-  // /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
-  // const AdManagerInterstitialAdLoadCallback({
-  //   required GenericAdEventCallback<AdManagerInterstitialAd> onAdLoaded,
-  //   required FullScreenAdLoadErrorCallback onAdFailedToLoad,
-  // }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
+          .instance.implementations.channelAdManagerInterstitialAdLoadListener;
 
-  @override
-  void onAdLoaded(covariant AdManagerInterstitialAd ad);
+  /// Called when the ad successfully loads.
+  final AdManagerInterstitialAdLoadCallback onAdLoaded;
 
-  @override
-  void onAdFailedToLoad(covariant LoadAdError error);
+  /// Called when an error occurs loading the ad.
+  final LoadFailCallback? onAdFailedToLoad;
+}
+
+@Reference('google_mobile_ads.RewardedAdAdLoadListener')
+class RewardedAdLoadListener implements $RewardedAdLoadListener {
+  /// Default constructor for [InterstitialLoadListener], used by subclasses.
+  RewardedAdLoadListener({
+    required this.onAdLoaded,
+    required this.onAdFailedToLoad,
+  }) {
+    ChannelRegistrar.instance.implementations.channelRewardedAdLoadCallback
+        .$$create(
+      onAdLoaded,
+      $owner: true,
+    );
+    if (onAdFailedToLoad != null) {
+      ChannelRegistrar.instance.implementations.channelLoadFailCallback
+          .$$create(
+        onAdFailedToLoad!,
+        $owner: true,
+      );
+    }
+  }
+
+  static $RewardedAdLoadListenerChannel get _channel =>
+      ChannelRegistrar.instance.implementations.channelRewardedAdLoadListener;
+
+  /// Called when the ad successfully loads.
+  final RewardedAdLoadCallback onAdLoaded;
+
+  /// Called when an error occurs loading the ad.
+  final LoadFailCallback? onAdFailedToLoad;
 }
