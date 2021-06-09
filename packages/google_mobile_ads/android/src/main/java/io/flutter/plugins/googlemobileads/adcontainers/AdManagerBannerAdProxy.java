@@ -21,8 +21,8 @@ public class AdManagerBannerAdProxy implements AdContainersChannelLibrary.$AdMan
     this.request = request;
     adManagerAdView.setAdSizes(AdSizeProxy.fromList(sizes));
     adManagerAdView.setAdUnitId(adUnitId);
-    adManagerAdView.setAdListener(listener);
-    adManagerAdView.setAppEventListener(appEventListener);
+    adManagerAdView.setAdListener(listener.adListener);
+    adManagerAdView.setAppEventListener(appEventListener.appEventListener);
   }
   
   @Override

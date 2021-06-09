@@ -19,7 +19,7 @@ public class BannerAdProxy implements AdContainersChannelLibrary.$BannerAd, Plat
     this.request = request;
     bannerAd.setAdSize(size.adSize);
     bannerAd.setAdUnitId(adUnitId);
-    bannerAd.setAdListener(listener);
+    bannerAd.setAdListener(listener.adListener);
   }
 
   @Override

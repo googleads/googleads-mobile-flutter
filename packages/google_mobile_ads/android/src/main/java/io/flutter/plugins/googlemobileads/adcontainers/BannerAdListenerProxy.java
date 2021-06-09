@@ -1,13 +1,47 @@
 package io.flutter.plugins.googlemobileads.adcontainers;
 
-public class BannerAdListenerProxy extends AdViewWithListenerProxy implements AdContainersChannelLibrary.$BannerAdListener {
-  public BannerAdListenerProxy(AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
-    super(implementations);
-  }
+import androidx.annotation.NonNull;
 
-  @Override
-  public void onAdImpression() {
-    implementations.getChannelAdWithViewListener().$onAdImpression(this);
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.LoadAdError;
+
+public class BannerAdListenerProxy implements AdContainersChannelLibrary.$BannerAdListener {
+  public final AdListener adListener;
+  private final AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations;
+  
+  public BannerAdListenerProxy(final AdContainersChannelLibrary.$AdVoidCallback onAdLoaded,
+                               final AdContainersChannelLibrary.$LoadFailCallback onAdFailedToLoad,
+                               final AdContainersChannelLibrary.$AdVoidCallback onAdOpened,
+                               AdContainersChannelLibrary.$AdVoidCallback onAdWillDismissScreen,
+                               final AdContainersChannelLibrary.$AdVoidCallback onAdClosed,
+                               final AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
+    this(new AdListener() {
+      @Override
+      public void onAdClosed() {
+        onAdClosed.invoke();
+      }
+
+      @Override
+      public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+        final LoadAdErrorProxy loadAdErrorProxy = new LoadAdErrorProxy(loadAdError, implementations);
+        onAdFailedToLoad.invoke(loadAdErrorProxy);
+      }
+
+      @Override
+      public void onAdOpened() {
+        onAdOpened.invoke();
+      }
+
+      @Override
+      public void onAdLoaded() {
+        onAdLoaded.invoke();
+      }
+    }, implementations);
+  }
+  
+  public BannerAdListenerProxy(AdListener adListener, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
+    this.adListener = adListener;
+    this.implementations = implementations;
   }
 
   @Override

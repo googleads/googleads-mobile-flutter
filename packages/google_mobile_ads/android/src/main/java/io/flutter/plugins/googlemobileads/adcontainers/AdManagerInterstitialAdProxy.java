@@ -8,22 +8,23 @@ public class AdManagerInterstitialAdProxy implements AdContainersChannelLibrary.
 
   public static void load(String adUnitId,
                           AdManagerAdRequestProxy request,
-                          AdManagerInterstitialAdLoadCallbackProxy adLoadCallback,
+                          AdManagerInterstitialAdLoadListenerProxy listener,
                           AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
-    AdManagerInterstitialAd.load(implementations.activity, adUnitId, ((AdManagerAdRequest.Builder)request.adRequest).build(), adLoadCallback);
+    AdManagerInterstitialAd.load(implementations.activity, adUnitId, ((AdManagerAdRequest.Builder)request.adRequest).build(), listener.adManagerInterstitialAdLoadCallback);
   }
 
-  public AdManagerInterstitialAdProxy(AdManagerInterstitialAd adManagerInterstitialAd) {
+  public AdManagerInterstitialAdProxy(AdManagerInterstitialAd adManagerInterstitialAd, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
     this.adManagerInterstitialAd = adManagerInterstitialAd;
+    implementations.getChannelAdManagerInterstitialAd().$$create(this, false);
   }
 
   @Override
-  public Void show(AdContainersChannelLibrary.$AppEventListener appEventListener, AdContainersChannelLibrary.$FullScreenContentCallback fullScreenContentCallback) {
+  public Void show(AdContainersChannelLibrary.$AppEventListener appEventListener, AdContainersChannelLibrary.$FullScreenContentListener fullScreenContentListener) {
     if (appEventListener != null) {
-      adManagerInterstitialAd.setAppEventListener((AppEventListenerProxy) appEventListener);
+      adManagerInterstitialAd.setAppEventListener(((AppEventListenerProxy) appEventListener).appEventListener);
     }
-    if (fullScreenContentCallback != null) {
-      adManagerInterstitialAd.setFullScreenContentCallback((FullScreenContentCallbackProxy) fullScreenContentCallback);
+    if (fullScreenContentListener != null) {
+      adManagerInterstitialAd.setFullScreenContentCallback(((FullScreenContentListenerProxy) fullScreenContentListener).fullScreenContentCallback);
     }
     return null;
   }

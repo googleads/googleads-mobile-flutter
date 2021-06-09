@@ -66,13 +66,13 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     }
 
     @Override
-    public FullScreenContentCallbackHandler getHandlerFullScreenContentCallback() {
-      return new FullScreenContentCallbackHandler(this);
+    public FullScreenContentListenerHandler getHandlerFullScreenContentListener() {
+      return new FullScreenContentListenerHandler(this);
     }
 
     @Override
-    public InterstitialAdLoadCallbackHandler getHandlerInterstitialAdLoadCallback() {
-      return new InterstitialAdLoadCallbackHandler(this);
+    public InterstitialAdLoadListenerHandler getHandlerInterstitialAdLoadListener() {
+      return new InterstitialAdLoadListenerHandler(this);
     }
 
     @Override
@@ -101,8 +101,8 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     }
 
     @Override
-    public RewardedAdLoadCallbackHandler getHandlerRewardedAdLoadCallback() {
-      return new RewardedAdLoadCallbackHandler(this);
+    public RewardedAdLoadListenerHandler getHandlerRewardedAdLoadListener() {
+      return new RewardedAdLoadListenerHandler(this);
     }
 
     @Override
@@ -156,8 +156,13 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     }
 
     @Override
-    public BannerAdListenerProxy $$create(TypeChannelMessenger messenger) throws Exception {
-      return new BannerAdListenerProxy(implementations);
+    public BannerAdListenerProxy $$create(TypeChannelMessenger messenger,
+                                                                 AdContainersChannelLibrary.$AdVoidCallback onAdLoaded,
+                                                                 AdContainersChannelLibrary.$LoadFailCallback onAdFailedToLoad,
+                                                                 AdContainersChannelLibrary.$AdVoidCallback onAdOpened,
+                                                                 AdContainersChannelLibrary.$AdVoidCallback onAdWillDismissScreen,
+                                                                 AdContainersChannelLibrary.$AdVoidCallback onAdClosed) throws Exception {
+      return new BannerAdListenerProxy(onAdLoaded, onAdFailedToLoad, onAdOpened, onAdWillDismissScreen, onAdClosed, implementations);
     }
   }
 
@@ -180,10 +185,15 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     public AdManagerBannerAdListenerHandler(AdContainersLibraryImplementations implementations) {
       this.implementations = implementations;
     }
-    
+
     @Override
-    public AdManagerBannerAdListenerProxy $$create(TypeChannelMessenger messenger) {
-      return new AdManagerBannerAdListenerProxy(implementations);
+    public AdManagerBannerAdListenerProxy $$create(TypeChannelMessenger messenger,
+                                          AdContainersChannelLibrary.$AdVoidCallback onAdLoaded,
+                                          AdContainersChannelLibrary.$LoadFailCallback onAdFailedToLoad,
+                                          AdContainersChannelLibrary.$AdVoidCallback onAdOpened,
+                                          AdContainersChannelLibrary.$AdVoidCallback onAdWillDismissScreen,
+                                          AdContainersChannelLibrary.$AdVoidCallback onAdClosed) throws Exception {
+      return new AdManagerBannerAdListenerProxy(onAdLoaded, onAdFailedToLoad, onAdOpened, onAdWillDismissScreen, onAdClosed, implementations);
     }
   }
 
@@ -208,8 +218,8 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     }
 
     @Override
-    public NativeAdListenerProxy $$create(TypeChannelMessenger messenger) {
-      return new NativeAdListenerProxy(implementations);
+    public NativeAdListenerProxy $$create(TypeChannelMessenger messenger, AdContainersChannelLibrary.$AdVoidCallback onAdLoaded, AdContainersChannelLibrary.$LoadFailCallback onAdFailedToLoad, AdContainersChannelLibrary.$AdVoidCallback onAdOpened, AdContainersChannelLibrary.$AdVoidCallback onAdWillDismissScreen, AdContainersChannelLibrary.$AdVoidCallback onAdImpression, AdContainersChannelLibrary.$AdVoidCallback onAdClosed, AdContainersChannelLibrary.$AdVoidCallback onAdClicked) throws Exception {
+      return new NativeAdListenerProxy(onAdLoaded, onAdFailedToLoad, onAdOpened, onAdWillDismissScreen, onAdImpression, onAdClosed, onAdClicked, implementations);
     }
   }
   
@@ -221,34 +231,39 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     }
 
     @Override
-    public NativeAdProxy $$create(TypeChannelMessenger messenger, String adUnitId, String factoryId, AdContainersChannelLibrary.$NativeAdListener listener, AdContainersChannelLibrary.$AdRequest request, Map<String, Object> customOptions) {
+    public AdContainersChannelLibrary.$NativeAd $$create(TypeChannelMessenger messenger, String adUnitId, String factoryId, AdContainersChannelLibrary.$NativeAdListener listener, AdContainersChannelLibrary.$AdRequest request, Map customOptions) throws Exception {
       return new NativeAdProxy(adUnitId, factoryId, (NativeAdListenerProxy) listener, (AdRequestProxy) request, customOptions, implementations);
     }
   }
   
-  public static class FullScreenContentCallbackHandler extends AdContainersChannelLibrary.$FullScreenContentCallbackHandler {
+  public static class FullScreenContentListenerHandler extends AdContainersChannelLibrary.$FullScreenContentListenerHandler {
     public final AdContainersLibraryImplementations implementations;
 
-    public FullScreenContentCallbackHandler(AdContainersLibraryImplementations implementations) {
+    public FullScreenContentListenerHandler(AdContainersLibraryImplementations implementations) {
       this.implementations = implementations;
     }
 
     @Override
-    public FullScreenContentCallbackProxy $$create(TypeChannelMessenger messenger) {
-      return new FullScreenContentCallbackProxy(implementations);
+    public FullScreenContentListenerProxy $$create(TypeChannelMessenger messenger,
+                                                   AdContainersChannelLibrary.$AdVoidCallback onAdShowedFullScreenContent,
+                                                   AdContainersChannelLibrary.$AdVoidCallback onAdImpression,
+                                                   AdContainersChannelLibrary.$AdVoidCallback onAdFailedToShowFullScreenContent,
+                                                   AdContainersChannelLibrary.$AdVoidCallback onAdWillDismissFullScreenContent,
+                                                   AdContainersChannelLibrary.$AdVoidCallback onAdDismissedFullScreenContent) throws Exception {
+      return new FullScreenContentListenerProxy(onAdShowedFullScreenContent, onAdImpression, onAdFailedToShowFullScreenContent, onAdWillDismissFullScreenContent, onAdDismissedFullScreenContent, implementations);
     }
   }
 
-  public static class InterstitialAdLoadCallbackHandler extends AdContainersChannelLibrary.$InterstitialAdLoadCallbackHandler {
+  public static class InterstitialAdLoadListenerHandler extends AdContainersChannelLibrary.$InterstitialAdLoadListenerHandler {
     public final AdContainersLibraryImplementations implementations;
 
-    public InterstitialAdLoadCallbackHandler(AdContainersLibraryImplementations implementations) {
+    public InterstitialAdLoadListenerHandler(AdContainersLibraryImplementations implementations) {
       this.implementations = implementations;
     }
 
     @Override
-    public InterstitialAdLoadCallbackProxy $$create(TypeChannelMessenger messenger) {
-      return new InterstitialAdLoadCallbackProxy(implementations);
+    public AdContainersChannelLibrary.$InterstitialAdLoadListener $$create(TypeChannelMessenger messenger, AdContainersChannelLibrary.$InterstitialAdLoadCallback onAdLoaded, AdContainersChannelLibrary.$LoadFailCallback onAdFailedToLoad) throws Exception {
+      return new InterstitialAdLoadListenerProxy(onAdLoaded, onAdFailedToLoad, implementations);
     }
   }
 
@@ -260,8 +275,8 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     }
 
     @Override
-    public Void $load(TypeChannelMessenger messenger, String adUnitId, AdContainersChannelLibrary.$AdRequest request, AdContainersChannelLibrary.$InterstitialAdLoadCallback adLoadCallback) {
-      InterstitialAdProxy.load(adUnitId, (AdRequestProxy) request, (InterstitialAdLoadCallbackProxy) adLoadCallback, implementations);
+    public Void $load(TypeChannelMessenger messenger, String adUnitId, AdContainersChannelLibrary.$AdRequest request, AdContainersChannelLibrary.$InterstitialAdLoadListener listener) {
+      InterstitialAdProxy.load(adUnitId, (AdRequestProxy) request, (InterstitialAdLoadListenerProxy) listener, implementations);
       return null;
     }
   }
@@ -274,8 +289,8 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     }
 
     @Override
-    public AppEventListenerProxy $$create(TypeChannelMessenger messenger) {
-      return new AppEventListenerProxy(implementations);
+    public AdContainersChannelLibrary.$AppEventListener $$create(TypeChannelMessenger messenger, AdContainersChannelLibrary.$AppEventCallback onAppEvent) throws Exception {
+      return new AppEventListenerProxy(onAppEvent, implementations);
     }
   }
 
@@ -287,8 +302,8 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     }
 
     @Override
-    public Void $load(TypeChannelMessenger messenger, String adUnitId, AdContainersChannelLibrary.$AdManagerAdRequest request, AdContainersChannelLibrary.$AdManagerInterstitialAdLoadCallback adLoadCallback) {
-      AdManagerInterstitialAdProxy.load(adUnitId, (AdManagerAdRequestProxy) request, (AdManagerInterstitialAdLoadCallbackProxy) adLoadCallback, implementations);
+    public Void $load(TypeChannelMessenger messenger, String adUnitId, AdContainersChannelLibrary.$AdManagerAdRequest request, AdContainersChannelLibrary.$AdManagerInterstitialAdLoadListener listener) {
+      AdManagerInterstitialAdProxy.load(adUnitId, (AdManagerAdRequestProxy) request, (AdManagerInterstitialAdLoadListenerProxy) listener, implementations);
       return null;
     }
   }
@@ -308,21 +323,21 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     }
 
     @Override
-    public OnUserEarnedRewardListenerProxy $$create(TypeChannelMessenger messenger) {
-      return new OnUserEarnedRewardListenerProxy(implementations);
+    public AdContainersChannelLibrary.$OnUserEarnedRewardListener $$create(TypeChannelMessenger messenger, AdContainersChannelLibrary.$UserEarnedRewardCallback onUserEarnedRewardCallback) throws Exception {
+      return new OnUserEarnedRewardListenerProxy(onUserEarnedRewardCallback, implementations);
     }
   }
 
-  public static class RewardedAdLoadCallbackHandler extends AdContainersChannelLibrary.$RewardedAdLoadCallbackHandler {
+  public static class RewardedAdLoadListenerHandler extends AdContainersChannelLibrary.$RewardedAdLoadListenerHandler {
     public final AdContainersLibraryImplementations implementations;
 
-    public RewardedAdLoadCallbackHandler(AdContainersLibraryImplementations implementations) {
+    public RewardedAdLoadListenerHandler(AdContainersLibraryImplementations implementations) {
       this.implementations = implementations;
     }
 
     @Override
-    public RewardedAdLoadCallbackProxy $$create(TypeChannelMessenger messenger) {
-      return new RewardedAdLoadCallbackProxy(implementations);
+    public AdContainersChannelLibrary.$RewardedAdLoadListener $$create(TypeChannelMessenger messenger, AdContainersChannelLibrary.$RewardedAdLoadCallback onAdLoaded, AdContainersChannelLibrary.$LoadFailCallback onAdFailedToLoad) throws Exception {
+      return new RewardedAdLoadListenerProxy(onAdLoaded, onAdFailedToLoad, implementations);
     }
   }
 
@@ -334,8 +349,8 @@ public class AdContainersChannelRegistrar extends AdContainersChannelLibrary.$Ch
     }
 
     @Override
-    public Void $load(TypeChannelMessenger messenger, String adUnitId, AdContainersChannelLibrary.$AdRequest request, AdContainersChannelLibrary.$RewardedAdLoadCallback adLoadCallback) {
-      RewardedAdProxy.load(adUnitId, (AdRequestProxy) request, (RewardedAdLoadCallbackProxy) adLoadCallback, implementations);
+    public Void $load(TypeChannelMessenger messenger, String adUnitId, AdContainersChannelLibrary.$AdRequest request, AdContainersChannelLibrary.$RewardedAdLoadListener listener) {
+      RewardedAdProxy.load(adUnitId, (AdRequestProxy) request, (RewardedAdLoadListenerProxy) listener, implementations);
       return null;
     }
   }

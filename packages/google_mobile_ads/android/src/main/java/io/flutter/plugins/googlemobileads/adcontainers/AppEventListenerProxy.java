@@ -4,16 +4,22 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.ads.admanager.AppEventListener;
 
-public class AppEventListenerProxy implements AppEventListener, AdContainersChannelLibrary.$AppEventListener {
-  public final AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations;
+public class AppEventListenerProxy implements AdContainersChannelLibrary.$AppEventListener {
+  public final AppEventListener appEventListener;
+  private final AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations;
 
-  public AppEventListenerProxy(AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
-    this.implementations = implementations;
+  public AppEventListenerProxy(final AdContainersChannelLibrary.$AppEventCallback onAppEvent, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
+    this(new AppEventListener() {
+      @Override
+      public void onAppEvent(@NonNull String s, @NonNull String s1) {
+        onAppEvent.invoke(s, s1);
+      }
+    }, implementations);
   }
 
-  @Override
-  public void onAppEvent(@NonNull String name, @NonNull String data) {
-    implementations.getChannelAppEventListener().$onAppEvent(this, name, data);
+  public AppEventListenerProxy(AppEventListener appEventListener, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
+    this.appEventListener = appEventListener;
+    this.implementations = implementations;
   }
 
   @Override

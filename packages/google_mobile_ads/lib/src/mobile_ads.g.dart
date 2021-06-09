@@ -356,7 +356,7 @@ class $InitializationStatusHandler
     implements TypeChannelHandler<$InitializationStatus> {
   $InitializationStatus $$create(
     TypeChannelMessenger messenger,
-    Map<String, $AdapterStatus> adapterStatuses,
+    Map adapterStatuses,
   ) {
     throw UnimplementedError();
   }
@@ -384,7 +384,7 @@ class $InitializationStatusHandler
   ) {
     return $$create(
       messenger,
-      arguments[0] as Map<String, $AdapterStatus>,
+      arguments[0] as Map,
     );
   }
 

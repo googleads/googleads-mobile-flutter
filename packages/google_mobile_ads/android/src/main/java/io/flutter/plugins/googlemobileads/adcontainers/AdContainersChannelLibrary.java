@@ -21,35 +21,33 @@ import github.penguin.reference.reference.TypeChannelMessenger;
 public class AdContainersChannelLibrary {
   
   public static abstract class $UserEarnedRewardCallback {
-    public abstract Object invoke($RewardItem reward) throws Exception;
+    public abstract Object invoke($RewardItem reward);
   }
   
   public static abstract class $AppEventCallback {
-    public abstract Object invoke(String name,String data) throws Exception;
+    public abstract Object invoke(String name,String data);
   }
   
   public static abstract class $AdVoidCallback {
-    public abstract Object invoke() throws Exception;
+    public abstract Object invoke();
   }
   
   public static abstract class $InterstitialAdLoadCallback {
-    public abstract Object invoke($InterstitialAd ad) throws Exception;
+    public abstract Object invoke($InterstitialAd ad);
   }
   
   public static abstract class $AdManagerInterstitialAdLoadCallback {
-    public abstract Object invoke($AdManagerInterstitialAd ad) throws Exception;
+    public abstract Object invoke($AdManagerInterstitialAd ad);
   }
   
   public static abstract class $RewardedAdLoadCallback {
-    public abstract Object invoke($RewardedAd ad) throws Exception;
+    public abstract Object invoke($RewardedAd ad);
   }
   
   public static abstract class $LoadFailCallback {
-    public abstract Object invoke($LoadAdError error) throws Exception;
+    public abstract Object invoke($LoadAdError error);
   }
-  
 
-  
   public static class $UserEarnedRewardCallbackChannel extends TypeChannel<$UserEarnedRewardCallback> {
     public $UserEarnedRewardCallbackChannel(@NonNull TypeChannelMessenger messenger) {
       super(messenger, "__function_channel__");
@@ -61,7 +59,7 @@ public class AdContainersChannelLibrary {
 
     private Completable<Object> invoke($UserEarnedRewardCallback $instance
         ,$RewardItem reward) {
-      return invokeMethod($instance, "", Arrays.asList(reward));
+      return invokeMethod($instance, "", Arrays.<Object>asList(reward));
     }
   }
   
@@ -76,7 +74,7 @@ public class AdContainersChannelLibrary {
 
     private Completable<Object> invoke($AppEventCallback $instance
         ,String name,String data) {
-      return invokeMethod($instance, "", Arrays.asList(name,data));
+      return invokeMethod($instance, "", Arrays.<Object>asList(name,data));
     }
   }
   
@@ -106,7 +104,7 @@ public class AdContainersChannelLibrary {
 
     private Completable<Object> invoke($InterstitialAdLoadCallback $instance
         ,$InterstitialAd ad) {
-      return invokeMethod($instance, "", Arrays.asList(ad));
+      return invokeMethod($instance, "", Arrays.<Object>asList(ad));
     }
   }
   
@@ -121,7 +119,7 @@ public class AdContainersChannelLibrary {
 
     private Completable<Object> invoke($AdManagerInterstitialAdLoadCallback $instance
         ,$AdManagerInterstitialAd ad) {
-      return invokeMethod($instance, "", Arrays.asList(ad));
+      return invokeMethod($instance, "", Arrays.<Object>asList(ad));
     }
   }
   
@@ -136,7 +134,7 @@ public class AdContainersChannelLibrary {
 
     private Completable<Object> invoke($RewardedAdLoadCallback $instance
         ,$RewardedAd ad) {
-      return invokeMethod($instance, "", Arrays.asList(ad));
+      return invokeMethod($instance, "", Arrays.<Object>asList(ad));
     }
   }
   
@@ -151,7 +149,7 @@ public class AdContainersChannelLibrary {
 
     private Completable<Object> invoke($LoadFailCallback $instance
         ,$LoadAdError error) {
-      return invokeMethod($instance, "", Arrays.asList(error));
+      return invokeMethod($instance, "", Arrays.<Object>asList(error));
     }
   }
   
@@ -530,7 +528,7 @@ public class AdContainersChannelLibrary {
       super(messenger, "google_mobile_ads.AdapterResponseInfo");
     }
 
-    public Completable<PairedInstance> $$create($AdapterResponseInfo $instance, boolean $owner,String adapterClassName,Integer latencyMillis,String description,String credentials,$AdError adError) {
+    public Completable<PairedInstance> $$create($AdapterResponseInfo $instance, boolean $owner,String adapterClassName,Long latencyMillis,String description,String credentials,$AdError adError) {
       return createNewInstancePair($instance, Arrays.<Object>asList(adapterClassName,latencyMillis,description,credentials,adError), $owner);
     }
 

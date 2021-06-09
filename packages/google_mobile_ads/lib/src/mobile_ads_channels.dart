@@ -66,9 +66,9 @@ class InitializationStatusHandler extends $InitializationStatusHandler {
   @override
   InitializationStatus $$create(
     TypeChannelMessenger messenger,
-    covariant Map<String, AdapterStatus> adapterStatuses,
+    covariant Map adapterStatuses,
   ) {
-    return InitializationStatus(adapterStatuses);
+    return InitializationStatus(adapterStatuses.cast<String, AdapterStatus>());
   }
 }
 

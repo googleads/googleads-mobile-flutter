@@ -4,7 +4,6 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.ads.AdSize;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AdSizeProxy implements AdContainersChannelLibrary.$AdSize {

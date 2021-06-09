@@ -45,7 +45,7 @@ public class NativeAdProxy implements AdContainersChannelLibrary.$NativeAd, Plat
           }
         })
         .withNativeAdOptions(new NativeAdOptions.Builder().build())
-        .withAdListener(listener)
+        .withAdListener(listener.adListener)
         .build();
     this.request = request;
   }

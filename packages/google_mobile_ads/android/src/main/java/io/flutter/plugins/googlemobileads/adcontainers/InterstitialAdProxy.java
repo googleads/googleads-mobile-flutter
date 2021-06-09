@@ -7,19 +7,20 @@ public class InterstitialAdProxy implements AdContainersChannelLibrary.$Intersti
   
   public static void load(String adUnitId,
                           AdRequestProxy request,
-                          InterstitialAdLoadCallbackProxy adLoadCallback,
+                          InterstitialAdLoadListenerProxy listener,
                           AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
-    InterstitialAd.load(implementations.activity, adUnitId, request.adRequest.build(), adLoadCallback);
+    InterstitialAd.load(implementations.activity, adUnitId, request.adRequest.build(), listener.callback);
   }
 
-  public InterstitialAdProxy(InterstitialAd interstitialAd) {
+  public InterstitialAdProxy(InterstitialAd interstitialAd, AdContainersChannelRegistrar.AdContainersLibraryImplementations implementations) {
     this.interstitialAd = interstitialAd;
+    implementations.getChannelInterstitialAd().$$create(this, false);
   }
 
   @Override
-  public Void show(AdContainersChannelLibrary.$FullScreenContentCallback fullScreenContentCallback) {
-    if (fullScreenContentCallback != null) {
-      interstitialAd.setFullScreenContentCallback((FullScreenContentCallbackProxy) fullScreenContentCallback);
+  public Void show(AdContainersChannelLibrary.$FullScreenContentListener fullScreenContentListener) {
+    if (fullScreenContentListener != null) {
+      interstitialAd.setFullScreenContentCallback(((FullScreenContentListenerProxy) fullScreenContentListener).fullScreenContentCallback);
     }
     return null;
   }
