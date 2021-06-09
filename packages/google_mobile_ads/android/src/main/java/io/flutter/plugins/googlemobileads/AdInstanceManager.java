@@ -167,6 +167,7 @@ class AdInstanceManager {
     arguments.put("valueMicros", adValue.valueMicros);
     arguments.put("precision", adValue.precisionType);
     arguments.put("currencyCode", adValue.currencyCode);
+    channel.invokeMethod("onAdEvent", arguments);
   }
 
   void onFailedToShowFullScreenContent(@NonNull FlutterAd ad, @NonNull AdError error) {

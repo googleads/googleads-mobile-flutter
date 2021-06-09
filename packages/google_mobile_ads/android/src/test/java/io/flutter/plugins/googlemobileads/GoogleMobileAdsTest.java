@@ -490,4 +490,21 @@ public class GoogleMobileAdsTest {
     testManager.trackAd(banner, 0);
     testManager.trackAd(banner, 0);
   }
+
+  @Test
+  public void testOnPaidEvent() {
+    final FlutterBannerAd banner = mock(FlutterBannerAd.class);
+    final FlutterAdValue flutterAdValue = new FlutterAdValue(1, "code", 1L);
+    testManager.trackAd(banner, 1);
+    testManager.onPaidEvent(banner, flutterAdValue);
+    final MethodCall call = getLastMethodCall();
+    assertEquals("onAdEvent", call.method);
+    //noinspection rawtypes
+    Map args = (Map) call.arguments;
+    assertEquals(args.get("eventName"), "onPaidEvent");
+    assertEquals(args.get("adId"), 1);
+    assertEquals(args.get("valueMicros"), 1L);
+    assertEquals(args.get("precision"), 1);
+    assertEquals(args.get("currencyCode"), "code");
+  }
 }
