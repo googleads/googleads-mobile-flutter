@@ -38,13 +38,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late final InterstitialRetryLoader _interstitialLoader =
-      InterstitialRetryLoader((InterstitialAd ad) => _interstitialAd = ad);
-  InterstitialAd? _interstitialAd;
+  static final AdRequest request = AdRequest()
+    ..addKeyword('foo')
+    ..addKeyword('bar')
+    ..setContentUrl('http://foo.com/bar.html')
+    ..setNonPersonalizedAds(true);
 
-  late final RewardedAdRetryLoader _rewardedAdLoader =
-      RewardedAdRetryLoader((RewardedAd ad) => _rewardedAd = ad);
+  InterstitialAd? _interstitialAd;
+  int _numInterstitialLoadAttempts = 0;
+
   RewardedAd? _rewardedAd;
+  int _numRewardedLoadAttempts = 0;
 
   BannerAd? _anchoredBanner;
   bool _loadingAnchoredBanner = false;
@@ -53,31 +57,96 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _interstitialLoader.load();
-    _rewardedAdLoader.load();
+    _createInterstitialAd();
+    _createRewardedAd();
+  }
+
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: InterstitialAd.testAdUnitId,
+        request: request,
+        listener: InterstitialAdLoadListener(
+          onAdLoaded: (InterstitialAd ad) {
+            print('$ad loaded');
+            _interstitialAd = ad;
+            _numInterstitialLoadAttempts = 0;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('InterstitialAd failed to load: $error.');
+            _numInterstitialLoadAttempts += 1;
+            _interstitialAd = null;
+            if (_numInterstitialLoadAttempts <= maxFailedLoadAttempts) {
+              _createInterstitialAd();
+            }
+          },
+        ));
   }
 
   void _showInterstitialAd() {
-    final InterstitialAd? interstitialAd = _interstitialAd;
-    if (interstitialAd == null) {
+    if (_interstitialAd == null) {
       print('Warning: attempt to show interstitial before loaded.');
       return;
     }
-    interstitialAd.show(_interstitialLoader);
+    _interstitialAd!.show(FullScreenContentListener(
+      onAdShowedFullScreenContent: () =>
+          print('ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: () {
+        print('ad onAdDismissedFullScreenContent.');
+        _createInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: () {
+        print('ad onAdFailedToShowFullScreenContent');
+        _createInterstitialAd();
+      },
+    ));
     _interstitialAd = null;
   }
 
+  void _createRewardedAd() {
+    RewardedAd.load(
+        adUnitId: RewardedAd.testAdUnitId,
+        request: request,
+        listener: RewardedAdLoadListener(
+          onAdLoaded: (RewardedAd ad) {
+            print('$ad loaded.');
+            _rewardedAd = ad;
+            _numRewardedLoadAttempts = 0;
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('RewardedAd failed to load: $error');
+            _rewardedAd = null;
+            _numRewardedLoadAttempts += 1;
+            if (_numRewardedLoadAttempts <= maxFailedLoadAttempts) {
+              _createRewardedAd();
+            }
+          },
+        ));
+  }
+
   void _showRewardedAd() {
-    final RewardedAd? rewardedAd = _rewardedAd;
-    if (rewardedAd == null) {
-      print('Warning: attempt to show interstitial before loaded.');
+    if (_rewardedAd == null) {
+      print('Warning: attempt to show rewarded before loaded.');
       return;
     }
-    rewardedAd.show(
-      onUserEarnedReward: _rewardedAdLoader,
-      serverSideVerificationOptions: ServerSideVerificationOptions(
-        userId: '23',
-        customData: 'hi',
+    _rewardedAd!.show(
+      onUserEarnedReward: OnUserEarnedRewardListener(
+        (RewardItem reward) {
+          print(
+            'RewardedAd with reward $RewardItem(${reward.amount}, ${reward.type}',
+          );
+        },
+      ),
+      fullScreenContentListener: FullScreenContentListener(
+        onAdShowedFullScreenContent: () =>
+            print('ad onAdShowedFullScreenContent.'),
+        onAdDismissedFullScreenContent: () {
+          print('ad onAdDismissedFullScreenContent.');
+          _createRewardedAd();
+        },
+        onAdFailedToShowFullScreenContent: () {
+          print('ad onAdFailedToShowFullScreenContent');
+          _createRewardedAd();
+        },
       ),
     );
     _rewardedAd = null;
@@ -95,19 +164,23 @@ class _MyAppState extends State<MyApp> {
 
     _anchoredBanner = BannerAd(
       size: size,
-      request: AdRequest()
-        // ignore: unawaited_futures
-        ..addKeyword('foo')
-        // ignore: unawaited_futures
-        ..addKeyword('bar')
-        // ignore: unawaited_futures
-        ..setContentUrl('http://foo.com/bar.html'),
+      request: request,
       adUnitId: Platform.isAndroid
           ? 'ca-app-pub-3940256099942544/6300978111'
           : 'ca-app-pub-3940256099942544/2934735716',
-      listener: MyAdListener(onAdReadyToShow: () {
-        _anchoredBannerAdLoaded = true;
-      }),
+      listener: BannerAdListener(
+        onAdLoaded: () {
+          print('$BannerAd loaded.');
+          setState(() {
+            _anchoredBannerAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('$BannerAd failedToLoad: $error');
+        },
+        onAdOpened: () => print('$BannerAd onAdOpened.'),
+        onAdClosed: () => print('$BannerAd onAdClosed.'),
+      ),
     );
     return _anchoredBanner!.load();
   }
@@ -168,137 +241,5 @@ class _MyAppState extends State<MyApp> {
         );
       }),
     );
-  }
-}
-
-class InterstitialRetryLoader
-    implements InterstitialAdLoadCallback, FullScreenContentCallback {
-  InterstitialRetryLoader(this.onAdReadyToShow);
-
-  final Function(InterstitialAd ad) onAdReadyToShow;
-
-  int _numLoadAttempts = 0;
-
-  void load() {
-    InterstitialAd.load(
-      adUnitId: InterstitialAd.testAdUnitId,
-      request: AdRequest()
-        ..addKeyword('foo')
-        ..addKeyword('bar')
-        ..setContentUrl('http://foo.com/bar.html')
-        ..setNonPersonalizedAds(true),
-      adLoadCallback: this,
-    );
-  }
-
-  @override
-  void onAdFailedToLoad(covariant LoadAdError error) {
-    _numLoadAttempts += 1;
-    if (_numLoadAttempts <= maxFailedLoadAttempts) {
-      load();
-    }
-  }
-
-  @override
-  void onAdLoaded(covariant InterstitialAd ad) {
-    _numLoadAttempts = 0;
-    onAdReadyToShow(ad);
-  }
-
-  @override
-  void onAdDismissedFullScreenContent() {
-    print('Ad dismissed full screen content');
-    load();
-  }
-
-  @override
-  void onAdFailedToShowFullScreenContent() {
-    print('Ad dismissed full screen content.');
-    load();
-  }
-
-  @override
-  void onAdImpression() {
-    print('Ad impression.');
-  }
-
-  @override
-  void onAdShowedFullScreenContent() {
-    print('Ad showed full screen content.');
-  }
-
-  @override
-  void onAdWillDismissFullScreenContent() {
-    print('Ad will dismiss full screen content');
-  }
-}
-
-class RewardedAdRetryLoader
-    implements
-        RewardedAdLoadCallback,
-        FullScreenContentCallback,
-        OnUserEarnedRewardListener {
-  RewardedAdRetryLoader(this.onAdReadyToShow);
-
-  final Function(RewardedAd ad) onAdReadyToShow;
-
-  int _numLoadAttempts = 0;
-
-  void load() {
-    RewardedAd.load(
-      adUnitId: InterstitialAd.testAdUnitId,
-      request: AdRequest()
-        ..addKeyword('foo')
-        ..addKeyword('bar')
-        ..setContentUrl('http://foo.com/bar.html')
-        ..setNonPersonalizedAds(true),
-      adLoadCallback: this,
-    );
-  }
-
-  @override
-  void onAdFailedToLoad(covariant LoadAdError error) {
-    _numLoadAttempts += 1;
-    if (_numLoadAttempts <= maxFailedLoadAttempts) {
-      load();
-    }
-  }
-
-  @override
-  void onAdLoaded(covariant RewardedAd ad) {
-    _numLoadAttempts = 0;
-    onAdReadyToShow(ad);
-  }
-
-  @override
-  void onAdDismissedFullScreenContent() {
-    print('Ad dismissed full screen content');
-    load();
-  }
-
-  @override
-  void onAdFailedToShowFullScreenContent() {
-    print('Ad dismissed full screen content.');
-    load();
-  }
-
-  @override
-  void onAdImpression() {
-    print('Ad impression.');
-  }
-
-  @override
-  void onAdShowedFullScreenContent() {
-    print('Ad showed full screen content.');
-  }
-
-  @override
-  void onAdWillDismissFullScreenContent() {
-    print('Ad will dismiss full screen content');
-  }
-
-  @override
-  void onUserEarnedRewardCallback(covariant RewardItem reward) {
-    print('User earned reward callback: $reward.');
   }
 }
