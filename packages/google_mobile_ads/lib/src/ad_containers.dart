@@ -324,56 +324,10 @@ class AdSize implements $AdSize {
   final int height;
 }
 
-// /// The base class for all ads.
-// ///
-// /// A valid [adUnitId] is required.
-// ///
-// abstract class Ad {
-//   /// Default constructor, used by subclasses.
-//   Ad({required this.adUnitId, this.responseInfo});
-//
-//   /// Identifies the source of [Ad]s for your application.
-//   ///
-//   /// For testing use a [sample ad unit](https://developers.google.com/admob/ios/test-ads#sample_ad_units).
-//   final String adUnitId;
-//
-//   /// Frees the plugin resources associated with this ad.
-//   Future<void> dispose() {
-//     return instanceManager.disposeAd(this);
-//   }
-//
-//   /// Contains information about the loaded request.
-//   ///
-//   /// Only present if the ad has been successfully loaded.
-//   ResponseInfo? responseInfo;
-// }
-
-// /// Base class for mobile [Ad] that has an in-line view.
-// ///
-// /// A valid [adUnitId] and [size] are required.
-// abstract class AdWithView extends Ad {
-//   /// Default constructor, used by subclasses.
-//   AdWithView({required String adUnitId, required this.listener})
-//       : super(adUnitId: adUnitId);
-//
-//   /// The [AdWithViewListener] for the ad.
-//   final AdWithViewListener listener;
-//
-//   /// Starts loading this ad.
-//   ///
-//   /// Loading callbacks are sent to this [Ad]'s [listener].
-//   Future<void> load();
-// }
 /// Mixin for a mobile ad that has an in-line view.
 mixin AdWithView {
   bool get _adLoaded;
 }
-
-// /// An [Ad] that is overlaid on top of the UI.
-// abstract class AdWithoutView extends Ad {
-//   /// Default constructor used by subclasses.
-//   AdWithoutView({required String adUnitId}) : super(adUnitId: adUnitId);
-// }
 
 /// Displays an [Ad] as a Flutter widget.
 ///
@@ -721,20 +675,6 @@ class InterstitialAd implements $InterstitialAd {
     );
   }
 
-  // /// Identifies the source of [Ad]s for your application.
-  // ///
-  // /// For testing use a [sample ad unit](https://developers.google.com/admob/ios/test-ads#sample_ad_units).
-  // final String adUnitId;
-  //
-  // /// Targeting information used to fetch an [Ad].
-  // final AdRequest request;
-
-  // /// Callback to be invoked when the ad finishes loading.
-  // final InterstitialAdLoadCallback adLoadCallback;
-
-  // /// Callbacks to be invoked when ads show and dismiss full screen content.
-  // FullScreenContentCallback<InterstitialAd>? fullScreenContentCallback;
-
   /// {@macro google_mobile_ads.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/1033173712'
@@ -825,30 +765,6 @@ class AdManagerInterstitialAd implements $AdManagerInterstitialAd {
 /// ad well in advance of when it's likely to be needed.
 @Reference('google_mobile_ads.RewardedAd')
 class RewardedAd implements $RewardedAd {
-  // /// Creates a [RewardedAd] with an [AdRequest].
-  // ///
-  // /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
-  // @visibleForTesting
-  // RewardedAd({
-  //   required this.adUnitId,
-  //   required this.rewardedAdLoadCallback,
-  //   required this.request,
-  //   this.serverSideVerificationOptions,
-  //   this.fullScreenContentCallback,
-  //   this.onUserEarnedRewardCallback,
-  // });
-
-  // /// Identifies the source of [Ad]s for your application.
-  // ///
-  // /// For testing use a [sample ad unit](https://developers.google.com/admob/ios/test-ads#sample_ad_units).
-  // final String adUnitId;
-  //
-  // /// Targeting information used to fetch an [Ad].
-  // final AdRequest request;
-  //
-  // /// Callbacks for events that occur when attempting to load an ad.
-  // final RewardedAdLoadCallback rewardedAdLoadCallback;
-
   static $RewardedAdChannel get _channel =>
       ChannelRegistrar.instance.implementations.channelRewardedAd;
 
@@ -863,26 +779,12 @@ class RewardedAd implements $RewardedAd {
       ? 'ca-app-pub-3940256099942544/5224354917'
       : 'ca-app-pub-3940256099942544/1712485313';
 
-  // /// Optional [ServerSideVerificationOptions].
-  // ServerSideVerificationOptions? serverSideVerificationOptions;
-  //
-  // /// Callbacks to be invoked when ads show and dismiss full screen content.
-  // FullScreenContentCallback<RewardedAd>? fullScreenContentCallback;
-  //
-  // /// Callback for when the user earns a reward.
-  // OnUserEarnedRewardCallback? onUserEarnedRewardCallback;
-
   /// Loads a [RewardedAd] using an [AdRequest].
   static Future<void> load({
     required String adUnitId,
     required AdRequest request,
     required RewardedAdLoadListener listener,
   }) {
-    // RewardedAd rewardedAd = RewardedAd._(
-    //     adUnitId: adUnitId,
-    //     request: request,
-    //     rewardedAdLoadCallback: rewardedAdLoadCallback,
-    //     serverSideVerificationOptions: serverSideVerificationOptions);
     RewardedAdLoadListener._channel.$$create(
       listener,
       $owner: false,
@@ -895,22 +797,6 @@ class RewardedAd implements $RewardedAd {
       listener,
     );
   }
-
-  // /// Loads a [RewardedAd] using an [AdManagerAdRequest].
-  // static Future<void> loadWithAdManagerAdRequest({
-  //   required String adUnitId,
-  //   required AdManagerAdRequest adManagerRequest,
-  //   required RewardedAdLoadCallback rewardedAdLoadCallback,
-  //   ServerSideVerificationOptions? serverSideVerificationOptions,
-  // }) async {
-  //   RewardedAd rewardedAd = RewardedAd._fromAdManagerRequest(
-  //       adUnitId: adUnitId,
-  //       adManagerRequest: adManagerRequest,
-  //       rewardedAdLoadCallback: rewardedAdLoadCallback,
-  //       serverSideVerificationOptions: serverSideVerificationOptions);
-  //
-  //   await instanceManager.loadRewardedAd(rewardedAd);
-  // }
 
   /// Display this on top of the application.
   ///
