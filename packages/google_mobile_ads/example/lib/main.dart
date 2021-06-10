@@ -53,11 +53,14 @@ class _MyAppState extends State<MyApp> {
   BannerAd? _anchoredBanner;
   bool _loadingAnchoredBanner = false;
 
+  int _numAppOpenAdLoadAttempts = 0;
+
   @override
   void initState() {
     super.initState();
     _createInterstitialAd();
     _createRewardedAd();
+    _createAppOpenAd();
   }
 
   void _createInterstitialAd() {
@@ -123,6 +126,27 @@ class _MyAppState extends State<MyApp> {
             }
           },
         ));
+  }
+
+  void _createAppOpenAd() {
+    AppOpenAd.initialise(
+        adUnitId: AppOpenAd.testAdUnitId,
+        request: request,
+        adLoadCallback: AppOpenAdLoadCallback(onAdLoaded: (appOpenAd) {
+          print('$appOpenAd loaded.');
+          appOpenAd.fullScreenContentCallback = FullScreenContentCallback(
+            onAdFailedToShowFullScreenContent: (_, __) {
+              AppOpenAd.disposeAppOpenAds();
+              _createAppOpenAd();
+          });
+          _numAppOpenAdLoadAttempts = 0;
+        }, onAdFailedToLoad: (LoadAdError error) {
+          print('AppOpenAd failed to load: $error');
+          _numAppOpenAdLoadAttempts += 1;
+          if (_numAppOpenAdLoadAttempts <= maxFailedLoadAttempts) {
+            _createAppOpenAd();
+          }
+        }));
   }
 
   void _showRewardedAd() {

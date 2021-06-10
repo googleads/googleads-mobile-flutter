@@ -248,6 +248,30 @@ class InterstitialAdLoadCallback
   }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
 }
 
+/// This class holds callbacks for loading an [AppOpenAd].
+class AppOpenAdLoadCallback
+    extends FullScreenAdLoadCallback<AppOpenAd> {
+  /// Construct a [AppOpenAdLoadCallback].
+  ///
+  /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
+  const AppOpenAdLoadCallback({
+    required GenericAdEventCallback<AppOpenAd> onAdLoaded,
+    required FullScreenAdLoadErrorCallback onAdFailedToLoad,
+  }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
+}
+
+/// This class holds callbacks for loading an [AdManagerAppOpenAd].
+class AdManagerAppOpenAdLoadCallback
+    extends FullScreenAdLoadCallback<AdManagerAppOpenAd> {
+  /// Construct a [AdManagerAppOpenAdLoadCallback].
+  ///
+  /// [Ad.dispose] should be invoked from [onAdFailedToLoad].
+  const AdManagerAppOpenAdLoadCallback({
+    required GenericAdEventCallback<AdManagerAppOpenAd> onAdLoaded,
+    required FullScreenAdLoadErrorCallback onAdFailedToLoad,
+  }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
+}
+
 /// This class holds callbacks for loading an [AdManagerInterstitialAd].
 class AdManagerInterstitialAdLoadCallback
     extends FullScreenAdLoadCallback<AdManagerInterstitialAd> {

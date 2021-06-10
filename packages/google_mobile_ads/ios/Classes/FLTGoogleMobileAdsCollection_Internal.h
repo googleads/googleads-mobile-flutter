@@ -25,4 +25,6 @@
 - (id _Nullable)objectForKey:(KeyType _Nonnull)key;
 - (NSArray<KeyType> *_Nonnull)allKeysForObject:(ObjectType _Nonnull)object;
 - (void)removeAllObjects;
+- (id _Nonnull)appOpenAdObjects;
+- (void) removeObjects:(ObjectType _Nonnull)object;
 @end

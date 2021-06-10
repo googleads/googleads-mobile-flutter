@@ -46,6 +46,9 @@ class FlutterFullScreenContentCallback extends FullScreenContentCallback {
   @Override
   public void onAdDismissedFullScreenContent() {
     manager.onAdDismissedFullScreenContent(ad);
+    if (ad instanceof FlutterAppOpenAd) {
+      ((FlutterAppOpenAd) ad).reload();
+    }
   }
 
   @Override

@@ -54,6 +54,7 @@
 - (void)didFailToPresentFullScreenContentWithError:(id<FLTAd> _Nonnull)ad
                                              error:(NSError *_Nonnull)error;
 - (void)disposeAllAds;
+- (void)disposeAppOpenAds;
 @end
 
 @interface FLTNewGoogleMobileAdsViewFactory : NSObject <FlutterPlatformViewFactory>

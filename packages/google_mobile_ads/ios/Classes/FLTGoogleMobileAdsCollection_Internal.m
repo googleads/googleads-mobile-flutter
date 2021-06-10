@@ -36,6 +36,23 @@
   }
 }
 
+- (void)removeObjects:(id _Nonnull)object {
+    id keys = [self allKeysForObject:object];
+    dispatch_sync(_lockQueue, ^{
+        [self->_dictionary removeObjectsForKeys:keys];
+    });
+}
+
+- (id)appOpenAdObjects {
+    NSMutableArray *appOpenAds = [[NSMutableArray alloc] init];
+    for (id object in [_dictionary allValues]) {
+        if ([object isKindOfClass:[FLTAppOpenAd class]]) {
+            [appOpenAds addObject:object];
+        }
+    }
+    return appOpenAds;
+}
+
 - (void)removeObjectForKey:(id _Nonnull)key {
   if (key != nil) {
     dispatch_async(_lockQueue, ^{
