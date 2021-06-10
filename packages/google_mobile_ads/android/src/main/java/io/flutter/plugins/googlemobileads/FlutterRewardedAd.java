@@ -149,8 +149,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
   void onUserEarnedReward(@NonNull RewardItem rewardItem) {
     manager.onRewardedAdUserEarnedReward(
-        adId,
-        new FlutterRewardItem(rewardItem.getAmount(), rewardItem.getType()));
+        adId, new FlutterRewardItem(rewardItem.getAmount(), rewardItem.getType()));
   }
 
   @Override
@@ -159,11 +158,11 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   }
 
   /**
-   * This class delegates various rewarded ad callbacks to FlutterRewardedAd.
-   * Maintains a weak reference to avoid memory leaks.
+   * This class delegates various rewarded ad callbacks to FlutterRewardedAd. Maintains a weak
+   * reference to avoid memory leaks.
    */
-  private static final class DelegatingRewardedCallback extends
-      RewardedAdLoadCallback implements OnAdMetadataChangedListener, OnUserEarnedRewardListener {
+  private static final class DelegatingRewardedCallback extends RewardedAdLoadCallback
+      implements OnAdMetadataChangedListener, OnUserEarnedRewardListener {
 
     private final WeakReference<FlutterRewardedAd> delegate;
 

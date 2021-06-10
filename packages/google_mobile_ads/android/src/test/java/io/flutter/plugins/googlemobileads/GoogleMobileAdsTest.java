@@ -301,8 +301,7 @@ public class GoogleMobileAdsTest {
             new BannerAdCreator(testManager.activity));
     testManager.trackAd(bannerAd, 0);
 
-    testManager.onAdFailedToLoad(
-        0, new FlutterAd.FlutterLoadAdError(1, "hi", "friend", null));
+    testManager.onAdFailedToLoad(0, new FlutterAd.FlutterLoadAdError(1, "hi", "friend", null));
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);

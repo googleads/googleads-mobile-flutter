@@ -63,9 +63,7 @@ class FlutterBannerAdListener extends FlutterAdListener {
   @NonNull final WeakReference<FlutterAdLoadedListener> adLoadedListenerWeakReference;
 
   FlutterBannerAdListener(
-      int adId,
-      @NonNull AdInstanceManager manager,
-      FlutterAdLoadedListener adLoadedListener) {
+      int adId, @NonNull AdInstanceManager manager, FlutterAdLoadedListener adLoadedListener) {
     super(adId, manager);
     adLoadedListenerWeakReference = new WeakReference<>(adLoadedListener);
   }
@@ -81,9 +79,7 @@ class FlutterBannerAdListener extends FlutterAdListener {
 /** Listener for native ads. */
 class FlutterNativeAdListener extends FlutterAdListener {
 
-  FlutterNativeAdListener(
-      int adId,
-      AdInstanceManager manager) {
+  FlutterNativeAdListener(int adId, AdInstanceManager manager) {
     super(adId, manager);
   }
 

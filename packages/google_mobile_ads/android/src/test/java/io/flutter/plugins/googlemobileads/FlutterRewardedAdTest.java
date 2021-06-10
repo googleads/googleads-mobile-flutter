@@ -219,8 +219,7 @@ public class FlutterRewardedAdTest {
     verify(mockManager).onAdShowedFullScreenContent(eq(1));
     verify(mockManager).onAdImpression(eq(1));
     verify(mockManager).onAdDismissedFullScreenContent(eq(1));
-    verify(mockManager)
-        .onRewardedAdUserEarnedReward(1, new FlutterRewardItem(5, "$$"));
+    verify(mockManager).onRewardedAdUserEarnedReward(1, new FlutterRewardItem(5, "$$"));
     verify(mockManager).onAdMetadataChanged(eq(1));
 
     assertNull(flutterRewardedAd.getPlatformView());

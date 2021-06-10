@@ -193,8 +193,7 @@ public class FlutterAdManagerInterstitialAdTest {
         .setFullScreenContentCallback(any(FullScreenContentCallback.class));
 
     flutterAdManagerInterstitialAd.show();
-    verify(mockManager)
-        .onFailedToShowFullScreenContent(eq(1), eq(adError));
+    verify(mockManager).onFailedToShowFullScreenContent(eq(1), eq(adError));
   }
 
   @Test

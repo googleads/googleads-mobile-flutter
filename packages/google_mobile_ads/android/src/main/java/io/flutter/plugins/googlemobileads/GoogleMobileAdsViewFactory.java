@@ -65,8 +65,8 @@ final class GoogleMobileAdsViewFactory extends PlatformViewFactory {
   }
 
   /**
-   * Returns an ErrorView with a debug message for debug builds only.
-   * Otherwise just returns an empty PlatformView.
+   * Returns an ErrorView with a debug message for debug builds only. Otherwise just returns an
+   * empty PlatformView.
    */
   private static PlatformView getErrorView(@NonNull final Context context, int adId) {
     final String message =

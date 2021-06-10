@@ -293,8 +293,8 @@ abstract class FlutterAd {
   };
 
   /**
-   * Invoked when dispose() is called on the corresponding Flutter ad object.
-   * This perform any necessary cleanup.
+   * Invoked when dispose() is called on the corresponding Flutter ad object. This perform any
+   * necessary cleanup.
    */
   abstract void dispose();
 }

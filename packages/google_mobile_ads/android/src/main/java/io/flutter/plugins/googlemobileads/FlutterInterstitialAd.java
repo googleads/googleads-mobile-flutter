@@ -80,7 +80,8 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   }
 
   /** An InterstitialAdLoadCallback that just forwards events to a delegate. */
-  private static final class DelegatingInterstitialAdLoadCallback extends InterstitialAdLoadCallback {
+  private static final class DelegatingInterstitialAdLoadCallback
+      extends InterstitialAdLoadCallback {
 
     private final WeakReference<FlutterInterstitialAd> delegate;
 

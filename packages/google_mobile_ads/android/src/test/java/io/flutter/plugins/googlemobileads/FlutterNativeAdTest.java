@@ -139,7 +139,8 @@ public class FlutterNativeAdTest {
     NativeAdFactory mockNativeAdFactory = mock(GoogleMobileAdsPlugin.NativeAdFactory.class);
     NativeAdView mockNativeAdView = mock(NativeAdView.class);
     doReturn(mockNativeAdView)
-        .when(mockNativeAdFactory).createNativeAd(any(NativeAd.class), any(Map.class));
+        .when(mockNativeAdFactory)
+        .createNativeAd(any(NativeAd.class), any(Map.class));
     @SuppressWarnings("unchecked")
     Map<String, Object> mockOptions = mock(Map.class);
     final FlutterNativeAd nativeAd =

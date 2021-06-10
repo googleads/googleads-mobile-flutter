@@ -94,11 +94,11 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
   }
 
   /**
-   * This class delegates various rewarded ad callbacks to FlutterAdManagerInterstitialAd.
-   * Maintains a weak reference to avoid memory leaks.
+   * This class delegates various rewarded ad callbacks to FlutterAdManagerInterstitialAd. Maintains
+   * a weak reference to avoid memory leaks.
    */
-  private static final class DelegatingAdManagerInterstitialAdCallbacks extends
-      AdManagerInterstitialAdLoadCallback implements AppEventListener {
+  private static final class DelegatingAdManagerInterstitialAdCallbacks
+      extends AdManagerInterstitialAdLoadCallback implements AppEventListener {
 
     private final WeakReference<FlutterAdManagerInterstitialAd> delegate;
 
