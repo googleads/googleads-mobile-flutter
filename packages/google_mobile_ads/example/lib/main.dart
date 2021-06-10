@@ -132,15 +132,13 @@ class _MyAppState extends State<MyApp> {
     AppOpenAd.initialise(
         adUnitId: AppOpenAd.testAdUnitId,
         request: request,
-        adLoadCallback:
-            AppOpenAdLoadCallback(onAdLoaded: (AppOpenAd appOpenAd) {
+        adLoadCallback: AppOpenAdLoadCallback(onAdLoaded: (appOpenAd) {
           print('$appOpenAd loaded.');
           appOpenAd.fullScreenContentCallback = FullScreenContentCallback(
             onAdFailedToShowFullScreenContent: (_, __) {
               AppOpenAd.disposeAppOpenAds();
               _createAppOpenAd();
-            }
-          );
+          });
           _numAppOpenAdLoadAttempts = 0;
         }, onAdFailedToLoad: (LoadAdError error) {
           print('AppOpenAd failed to load: $error');
