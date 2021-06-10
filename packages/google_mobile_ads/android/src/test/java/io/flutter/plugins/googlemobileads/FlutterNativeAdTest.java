@@ -35,6 +35,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
+import com.google.android.gms.ads.nativead.NativeAdView;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
@@ -136,6 +137,9 @@ public class FlutterNativeAdTest {
     when(mockFlutterRequest.asAdRequest()).thenReturn(mockRequest);
     FlutterAdLoader mockLoader = mock(FlutterAdLoader.class);
     NativeAdFactory mockNativeAdFactory = mock(GoogleMobileAdsPlugin.NativeAdFactory.class);
+    NativeAdView mockNativeAdView = mock(NativeAdView.class);
+    doReturn(mockNativeAdView)
+        .when(mockNativeAdFactory).createNativeAd(any(NativeAd.class), any(Map.class));
     @SuppressWarnings("unchecked")
     Map<String, Object> mockOptions = mock(Map.class);
     final FlutterNativeAd nativeAd =
@@ -201,6 +205,18 @@ public class FlutterNativeAdTest {
     verify(testManager).onAdImpression(eq(1));
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
     verify(testManager).onAdFailedToLoad(eq(1), eq(expectedError));
+
+    // Check that platform view is defined.
+    PlatformView platformView = nativeAd.getPlatformView();
+    assertEquals(platformView.getView(), mockNativeAdView);
+    // getPlatformView() should be null after dispose() is invoked, but the platform view should
+    // still return the view.
+    nativeAd.dispose();
+    assertNull(nativeAd.getPlatformView());
+    assertNotNull(platformView.getView());
+    // Platform view's reference to the view isn't cleared until dispose() is invoked on it.
+    platformView.dispose();
+    assertNull(platformView.getView());
   }
 
   @Test(expected = IllegalStateException.class)

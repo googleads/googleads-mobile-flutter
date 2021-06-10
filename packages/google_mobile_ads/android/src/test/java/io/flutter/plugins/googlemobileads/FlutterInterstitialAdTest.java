@@ -14,6 +14,7 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -155,6 +156,7 @@ public class FlutterInterstitialAdTest {
     verify(mockManager).onAdShowedFullScreenContent(eq(1));
     verify(mockManager).onAdDismissedFullScreenContent(eq(1));
     verify(mockManager).onAdImpression(eq(1));
+    assertNull(flutterInterstitialAd.getPlatformView());
   }
 
   @Test

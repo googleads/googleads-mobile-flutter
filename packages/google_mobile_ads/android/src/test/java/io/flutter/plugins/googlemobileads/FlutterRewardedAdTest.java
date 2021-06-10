@@ -14,6 +14,7 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -221,6 +222,8 @@ public class FlutterRewardedAdTest {
     verify(mockManager)
         .onRewardedAdUserEarnedReward(1, new FlutterRewardItem(5, "$$"));
     verify(mockManager).onAdMetadataChanged(eq(1));
+
+    assertNull(flutterRewardedAd.getPlatformView());
   }
 
   @Test
