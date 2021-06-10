@@ -19,9 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import io.flutter.plugin.platform.PlatformView;
 
-/** The platform view type used in this plugin. */
-public interface FlutterDestroyablePlatformView extends PlatformView, FlutterDestroyableAd {}
-
 /** A simple PlatformView that wraps a View and sets its reference to null on dispose(). */
 class FlutterPlatformView implements PlatformView {
 

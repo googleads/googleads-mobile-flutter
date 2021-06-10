@@ -59,7 +59,8 @@ public class FlutterInterstitialAdTest {
     when(mockFlutterRequest.asAdRequest()).thenReturn(mockAdRequest);
 
     flutterInterstitialAd =
-        new FlutterInterstitialAd(mockManager, "testId", mockFlutterRequest, mockFlutterAdLoader);
+        new FlutterInterstitialAd(
+            1, mockManager, "testId", mockFlutterRequest, mockFlutterAdLoader);
   }
 
   @Test
@@ -99,7 +100,7 @@ public class FlutterInterstitialAdTest {
             any(InterstitialAdLoadCallback.class));
 
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
-    verify(mockManager).onAdFailedToLoad(eq(flutterInterstitialAd), eq(expectedError));
+    verify(mockManager).onAdFailedToLoad(eq(1), eq(expectedError));
   }
 
   @Test
@@ -132,7 +133,7 @@ public class FlutterInterstitialAdTest {
             eq(mockAdRequest),
             any(InterstitialAdLoadCallback.class));
 
-    verify(mockManager).onAdLoaded(eq(flutterInterstitialAd), eq(responseInfo));
+    verify(mockManager).onAdLoaded(eq(1), eq(responseInfo));
 
     doAnswer(
             new Answer() {
@@ -151,9 +152,9 @@ public class FlutterInterstitialAdTest {
     flutterInterstitialAd.show();
     verify(mockAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
     verify(mockAd).show(eq(mockManager.activity));
-    verify(mockManager).onAdShowedFullScreenContent(eq(flutterInterstitialAd));
-    verify(mockManager).onAdDismissedFullScreenContent(eq(flutterInterstitialAd));
-    verify(mockManager).onAdImpression(eq(flutterInterstitialAd));
+    verify(mockManager).onAdShowedFullScreenContent(eq(1));
+    verify(mockManager).onAdDismissedFullScreenContent(eq(1));
+    verify(mockManager).onAdImpression(eq(1));
   }
 
   @Test
@@ -192,6 +193,6 @@ public class FlutterInterstitialAdTest {
         .setFullScreenContentCallback(any(FullScreenContentCallback.class));
 
     flutterInterstitialAd.show();
-    verify(mockManager).onFailedToShowFullScreenContent(eq(flutterInterstitialAd), eq(adError));
+    verify(mockManager).onFailedToShowFullScreenContent(eq(1), eq(adError));
   }
 }

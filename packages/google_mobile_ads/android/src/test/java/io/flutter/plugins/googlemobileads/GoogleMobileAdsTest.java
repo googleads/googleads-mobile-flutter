@@ -78,6 +78,7 @@ public class GoogleMobileAdsTest {
   public void loadAd() {
     final FlutterBannerAd bannerAd =
         new FlutterBannerAd(
+            1,
             testManager,
             "testId",
             request,
@@ -93,14 +94,12 @@ public class GoogleMobileAdsTest {
   @Test
   public void disposeAd_banner() {
     FlutterBannerAd bannerAd = mock(FlutterBannerAd.class);
-    FlutterDestroyablePlatformView mockPlatformView = mock(FlutterDestroyablePlatformView.class);
-    doReturn(mockPlatformView).when(bannerAd).getPlatformView();
 
     testManager.trackAd(bannerAd, 2);
     assertNotNull(testManager.adForId(2));
     assertNotNull(testManager.adIdFor(bannerAd));
     testManager.disposeAd(2);
-    verify(mockPlatformView).destroy();
+    verify(bannerAd).dispose();
     assertNull(testManager.adForId(2));
     assertNull(testManager.adIdFor(bannerAd));
   }
@@ -108,14 +107,12 @@ public class GoogleMobileAdsTest {
   @Test
   public void disposeAd_adManagerBanner() {
     FlutterAdManagerBannerAd adManagerBannerAd = mock(FlutterAdManagerBannerAd.class);
-    FlutterDestroyablePlatformView mockPlatformView = mock(FlutterDestroyablePlatformView.class);
-    doReturn(mockPlatformView).when(adManagerBannerAd).getPlatformView();
 
     testManager.trackAd(adManagerBannerAd, 2);
     assertNotNull(testManager.adForId(2));
     assertNotNull(testManager.adIdFor(adManagerBannerAd));
     testManager.disposeAd(2);
-    verify(mockPlatformView).destroy();
+    verify(adManagerBannerAd).dispose();
     assertNull(testManager.adForId(2));
     assertNull(testManager.adIdFor(adManagerBannerAd));
   }
@@ -123,14 +120,12 @@ public class GoogleMobileAdsTest {
   @Test
   public void disposeAd_native() {
     FlutterNativeAd flutterNativeAd = mock(FlutterNativeAd.class);
-    FlutterDestroyablePlatformView mockPlatformView = mock(FlutterDestroyablePlatformView.class);
-    doReturn(mockPlatformView).when(flutterNativeAd).getPlatformView();
 
     testManager.trackAd(flutterNativeAd, 2);
     assertNotNull(testManager.adForId(2));
     assertNotNull(testManager.adIdFor(flutterNativeAd));
     testManager.disposeAd(2);
-    verify(mockPlatformView).destroy();
+    verify(flutterNativeAd).dispose();
     assertNull(testManager.adForId(2));
     assertNull(testManager.adIdFor(flutterNativeAd));
   }
@@ -220,6 +215,7 @@ public class GoogleMobileAdsTest {
   public void flutterAdListener_onAdLoaded() {
     final FlutterBannerAd bannerAd =
         new FlutterBannerAd(
+            0,
             testManager,
             "testId",
             request,
@@ -258,7 +254,7 @@ public class GoogleMobileAdsTest {
     doReturn("class-name").when(responseInfo).getMediationAdapterClassName();
     doReturn(adapterResponses).when(responseInfo).getAdapterResponses();
 
-    testManager.onAdLoaded(bannerAd, responseInfo);
+    testManager.onAdLoaded(0, responseInfo);
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
@@ -274,6 +270,7 @@ public class GoogleMobileAdsTest {
   public void flutterAdListener_onAdLoaded_responseInfoNull() {
     final FlutterBannerAd bannerAd =
         new FlutterBannerAd(
+            0,
             testManager,
             "testId",
             request,
@@ -281,7 +278,7 @@ public class GoogleMobileAdsTest {
             new BannerAdCreator(testManager.activity));
     testManager.trackAd(bannerAd, 0);
 
-    testManager.onAdLoaded(bannerAd, null);
+    testManager.onAdLoaded(0, null);
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
@@ -296,6 +293,7 @@ public class GoogleMobileAdsTest {
   public void flutterAdListener_onAdFailedToLoad() {
     final FlutterBannerAd bannerAd =
         new FlutterBannerAd(
+            0,
             testManager,
             "testId",
             request,
@@ -304,7 +302,7 @@ public class GoogleMobileAdsTest {
     testManager.trackAd(bannerAd, 0);
 
     testManager.onAdFailedToLoad(
-        bannerAd, new FlutterAd.FlutterLoadAdError(1, "hi", "friend", null));
+        0, new FlutterAd.FlutterLoadAdError(1, "hi", "friend", null));
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
@@ -323,6 +321,7 @@ public class GoogleMobileAdsTest {
   public void flutterAdListener_onAppEvent() {
     final FlutterBannerAd bannerAd =
         new FlutterBannerAd(
+            0,
             testManager,
             "testId",
             request,
@@ -330,7 +329,7 @@ public class GoogleMobileAdsTest {
             new BannerAdCreator(testManager.activity));
     testManager.trackAd(bannerAd, 0);
 
-    testManager.onAppEvent(bannerAd, "color", "red");
+    testManager.onAppEvent(0, "color", "red");
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
@@ -348,6 +347,7 @@ public class GoogleMobileAdsTest {
   public void flutterAdListener_onAdOpened() {
     final FlutterBannerAd bannerAd =
         new FlutterBannerAd(
+            0,
             testManager,
             "testId",
             request,
@@ -355,7 +355,7 @@ public class GoogleMobileAdsTest {
             new BannerAdCreator(testManager.activity));
     testManager.trackAd(bannerAd, 0);
 
-    testManager.onAdOpened(bannerAd);
+    testManager.onAdOpened(0);
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
@@ -380,10 +380,11 @@ public class GoogleMobileAdsTest {
                     return null;
                   }
                 })
+            .setId(0)
             .build();
     testManager.trackAd(nativeAd, 0);
 
-    testManager.onNativeAdClicked(nativeAd);
+    testManager.onNativeAdClicked(0);
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
@@ -408,10 +409,11 @@ public class GoogleMobileAdsTest {
                     return null;
                   }
                 })
+            .setId(0)
             .build();
     testManager.trackAd(nativeAd, 0);
 
-    testManager.onAdImpression(nativeAd);
+    testManager.onAdImpression(0);
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
@@ -425,6 +427,7 @@ public class GoogleMobileAdsTest {
   public void flutterAdListener_onAdClosed() {
     final FlutterBannerAd bannerAd =
         new FlutterBannerAd(
+            0,
             testManager,
             "testId",
             request,
@@ -432,7 +435,7 @@ public class GoogleMobileAdsTest {
             new BannerAdCreator(testManager.activity));
     testManager.trackAd(bannerAd, 0);
 
-    testManager.onAdClosed(bannerAd);
+    testManager.onAdClosed(0);
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
@@ -446,11 +449,11 @@ public class GoogleMobileAdsTest {
   public void flutterAdListener_onRewardedAdUserEarnedReward() {
     FlutterAdLoader mockFlutterAdLoader = mock(FlutterAdLoader.class);
     final FlutterRewardedAd ad =
-        new FlutterRewardedAd(testManager, "testId", request, null, mockFlutterAdLoader);
+        new FlutterRewardedAd(0, testManager, "testId", request, null, mockFlutterAdLoader);
     testManager.trackAd(ad, 0);
 
     testManager.onRewardedAdUserEarnedReward(
-        ad, new FlutterRewardedAd.FlutterRewardItem(23, "coins"));
+        0, new FlutterRewardedAd.FlutterRewardItem(23, "coins"));
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
@@ -469,8 +472,6 @@ public class GoogleMobileAdsTest {
     // Set up testManager so that two ads have already been loaded and tracked.
     final FlutterRewardedAd rewarded = mock(FlutterRewardedAd.class);
     final FlutterBannerAd banner = mock(FlutterBannerAd.class);
-    final FlutterDestroyablePlatformView platformView = mock(FlutterDestroyablePlatformView.class);
-    doReturn(platformView).when(banner).getPlatformView();
 
     testManager.trackAd(rewarded, 0);
     testManager.trackAd(banner, 1);
@@ -489,7 +490,8 @@ public class GoogleMobileAdsTest {
 
     verify(testManagerSpy).disposeAllAds();
     verify(result).success(null);
-    verify(platformView).destroy();
+    verify(rewarded).dispose();
+    verify(banner).dispose();
     assertNull(testManager.adForId(0));
     assertNull(testManager.adForId(1));
     assertNull(testManager.adIdFor(rewarded));

@@ -14,6 +14,9 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -33,6 +36,7 @@ import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Map;
@@ -63,6 +67,7 @@ public class FlutterNativeAdTest {
     Map<String, Object> mockOptions = mock(Map.class);
     final FlutterNativeAd nativeAd =
         new FlutterNativeAd(
+            1,
             testManager,
             "testId",
             mockNativeAdFactory,
@@ -115,13 +120,13 @@ public class FlutterNativeAdTest {
             eq(mockRequest));
 
     verify(mockNativeAdFactory).createNativeAd(eq(mockNativeAd), eq(mockOptions));
-    verify(testManager).onAdOpened(eq(nativeAd));
-    verify(testManager).onAdClosed(eq(nativeAd));
-    verify(testManager).onNativeAdClicked(eq(nativeAd));
-    verify(testManager).onAdImpression(eq(nativeAd));
-    verify(testManager).onAdLoaded(eq(nativeAd), eq(responseInfo));
+    verify(testManager).onAdOpened(eq(1));
+    verify(testManager).onAdClosed(eq(1));
+    verify(testManager).onNativeAdClicked(eq(1));
+    verify(testManager).onAdImpression(eq(1));
+    verify(testManager).onAdLoaded(eq(1), eq(responseInfo));
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
-    verify(testManager).onAdFailedToLoad(eq(nativeAd), eq(expectedError));
+    verify(testManager).onAdFailedToLoad(eq(1), eq(expectedError));
   }
 
   @Test
@@ -135,6 +140,7 @@ public class FlutterNativeAdTest {
     Map<String, Object> mockOptions = mock(Map.class);
     final FlutterNativeAd nativeAd =
         new FlutterNativeAd(
+            1,
             testManager,
             "testId",
             mockNativeAdFactory,
@@ -188,13 +194,13 @@ public class FlutterNativeAdTest {
             eq(mockRequest));
 
     verify(mockNativeAdFactory).createNativeAd(eq(mockNativeAd), eq(mockOptions));
-    verify(testManager).onAdOpened(eq(nativeAd));
-    verify(testManager).onAdClosed(eq(nativeAd));
-    verify(testManager).onNativeAdClicked(eq(nativeAd));
-    verify(testManager).onAdImpression(eq(nativeAd));
-    verify(testManager).onAdLoaded(eq(nativeAd), eq(responseInfo));
+    verify(testManager).onAdLoaded(eq(1), eq(responseInfo));
+    verify(testManager).onAdOpened(eq(1));
+    verify(testManager).onAdClosed(eq(1));
+    verify(testManager).onNativeAdClicked(eq(1));
+    verify(testManager).onAdImpression(eq(1));
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
-    verify(testManager).onAdFailedToLoad(eq(nativeAd), eq(expectedError));
+    verify(testManager).onAdFailedToLoad(eq(1), eq(expectedError));
   }
 
   @Test(expected = IllegalStateException.class)
