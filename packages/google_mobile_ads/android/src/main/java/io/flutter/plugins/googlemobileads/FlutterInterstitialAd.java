@@ -31,10 +31,12 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @NonNull private final FlutterAdLoader flutterAdLoader;
 
   public FlutterInterstitialAd(
+      int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdRequest request,
       @NonNull FlutterAdLoader flutterAdLoader) {
+    super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.request = request;
@@ -52,17 +54,21 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
             @Override
             public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
               FlutterInterstitialAd.this.ad = interstitialAd;
-              FlutterInterstitialAd.this.manager.onAdLoaded(
-                  FlutterInterstitialAd.this, interstitialAd.getResponseInfo());
+              FlutterInterstitialAd.this.manager.onAdLoaded(adId, interstitialAd.getResponseInfo());
             }
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
               FlutterInterstitialAd.this.manager.onAdFailedToLoad(
-                  FlutterInterstitialAd.this, new FlutterAd.FlutterLoadAdError(loadAdError));
+                  adId, new FlutterAd.FlutterLoadAdError(loadAdError));
             }
           });
     }
+  }
+
+  @Override
+  void dispose() {
+    ad = null;
   }
 
   @Override
@@ -71,7 +77,7 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
       Log.e(TAG, "The interstitial wasn't loaded yet.");
       return;
     }
-    ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, this));
+    ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
     ad.show(manager.activity);
   }
 }

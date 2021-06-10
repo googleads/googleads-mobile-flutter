@@ -14,27 +14,27 @@
 
 package io.flutter.plugins.googlemobileads;
 
-import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
 import com.google.android.gms.common.internal.Preconditions;
+import io.flutter.plugin.platform.PlatformView;
 import java.util.List;
 
 /**
  * Wrapper around {@link com.google.android.gms.ads.admanager.AdManagerAdView} for the Google Mobile
  * Ads Plugin.
  */
-class FlutterAdManagerBannerAd extends FlutterAd {
+class FlutterAdManagerBannerAd extends FlutterAd implements FlutterAdLoadedListener {
+
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final List<FlutterAdSize> sizes;
   @NonNull private final FlutterAdManagerAdRequest request;
   @NonNull private final BannerAdCreator bannerAdCreator;
-  @Nullable private FlutterDestroyablePlatformView platformView;
+  @Nullable private AdManagerAdView adView;
 
   /**
    * Constructs a `FlutterAdManagerBannerAd`.
@@ -43,11 +43,13 @@ class FlutterAdManagerBannerAd extends FlutterAd {
    * null only until `load` is called.
    */
   public FlutterAdManagerBannerAd(
+      int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull List<FlutterAdSize> sizes,
       @NonNull FlutterAdManagerAdRequest request,
       @NonNull BannerAdCreator bannerAdCreator) {
+    super(adId);
     Preconditions.checkNotNull(manager);
     Preconditions.checkNotNull(adUnitId);
     Preconditions.checkNotNull(sizes);
@@ -61,13 +63,13 @@ class FlutterAdManagerBannerAd extends FlutterAd {
 
   @Override
   void load() {
-    final AdManagerAdView view = bannerAdCreator.createAdManagerAdView();
-    view.setAdUnitId(adUnitId);
-    view.setAppEventListener(
+    adView = bannerAdCreator.createAdManagerAdView();
+    adView.setAdUnitId(adUnitId);
+    adView.setAppEventListener(
         new AppEventListener() {
           @Override
           public void onAppEvent(String name, String data) {
-            manager.onAppEvent(FlutterAdManagerBannerAd.this, name, data);
+            manager.onAppEvent(adId, name, data);
           }
         });
 
@@ -75,42 +77,32 @@ class FlutterAdManagerBannerAd extends FlutterAd {
     for (int i = 0; i < sizes.size(); i++) {
       allSizes[i] = sizes.get(i).getAdSize();
     }
-    view.setAdSizes(allSizes);
-    view.setAdListener(
-        new FlutterBannerAdListener(
-            manager,
-            this,
-            new ResponseInfoProvider() {
-              @Override
-              public ResponseInfo getResponseInfo() {
-                return view.getResponseInfo();
-              }
-            }));
-    platformView =
-        new FlutterDestroyablePlatformView() {
-          @Override
-          public View getView() {
-            return view;
-          }
+    adView.setAdSizes(allSizes);
+    adView.setAdListener(new FlutterBannerAdListener(adId, manager, this));
+    adView.loadAd(request.asAdManagerAdRequest());
+  }
 
-          @Override
-          public void dispose() {
-            // Do nothing. Cleanup is handled in destroy() below, which is triggered from dispose() being
-            // called on the flutter ad object. This is allows for reuse of the ad view, for example
-            // in a scrolling list view.
-          }
-
-          @Override
-          public void destroy() {
-            view.destroy();
-          }
-        };
-    view.loadAd(request.asAdManagerAdRequest());
+  @Override
+  public void onAdLoaded() {
+    if (adView != null) {
+      manager.onAdLoaded(adId, adView.getResponseInfo());
+    }
   }
 
   @Nullable
   @Override
-  FlutterDestroyablePlatformView getPlatformView() {
-    return platformView;
+  PlatformView getPlatformView() {
+    if (adView == null) {
+      return null;
+    }
+    return new FlutterPlatformView(adView);
+  }
+
+  @Override
+  void dispose() {
+    if (adView != null) {
+      adView.destroy();
+      adView = null;
+    }
   }
 }

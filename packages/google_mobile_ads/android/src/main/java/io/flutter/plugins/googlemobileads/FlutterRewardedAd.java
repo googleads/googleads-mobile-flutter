@@ -71,11 +71,13 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
   /** Constructor for AdMob Ad Request. */
   public FlutterRewardedAd(
+      int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdRequest request,
       @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions,
       @NonNull FlutterAdLoader flutterAdLoader) {
+    super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.request = request;
@@ -86,11 +88,13 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
   /** Constructor for Ad Manager Ad request. */
   public FlutterRewardedAd(
+      int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdManagerAdRequest adManagerRequest,
       @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions,
       @NonNull FlutterAdLoader flutterAdLoader) {
+    super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.adManagerRequest = adManagerRequest;
@@ -110,13 +114,13 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
               rewardedAd.setServerSideVerificationOptions(
                   serverSideVerificationOptions.asServerSideVerificationOptions());
             }
-            manager.onAdLoaded(FlutterRewardedAd.this, rewardedAd.getResponseInfo());
+            manager.onAdLoaded(adId, rewardedAd.getResponseInfo());
             super.onAdLoaded(rewardedAd);
           }
 
           @Override
           public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-            manager.onAdFailedToLoad(FlutterRewardedAd.this, new FlutterLoadAdError(loadAdError));
+            manager.onAdFailedToLoad(adId, new FlutterLoadAdError(loadAdError));
           }
         };
 
@@ -138,12 +142,12 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       return;
     }
 
-    rewardedAd.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, this));
+    rewardedAd.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
     rewardedAd.setOnAdMetadataChangedListener(
         new OnAdMetadataChangedListener() {
           @Override
           public void onAdMetadataChanged() {
-            manager.onAdMetadataChanged(FlutterRewardedAd.this);
+            manager.onAdMetadataChanged(adId);
           }
         });
     rewardedAd.show(
@@ -152,9 +156,15 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
           @Override
           public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
             manager.onRewardedAdUserEarnedReward(
-                FlutterRewardedAd.this,
+                adId,
                 new FlutterRewardItem(rewardItem.getAmount(), rewardItem.getType()));
           }
         });
   }
+
+  @Override
+  void dispose() {
+    rewardedAd = null;
+  }
+
 }

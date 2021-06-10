@@ -17,44 +17,47 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.ResponseInfo;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
+import java.lang.ref.WeakReference;
 
 /** A type for retrieving {@link ResponseInfo} from an ad after it is loaded. */
 interface ResponseInfoProvider {
   ResponseInfo getResponseInfo();
 }
 
-class FlutterAdListener extends AdListener {
-  @NonNull protected final AdInstanceManager manager;
-  @NonNull protected final FlutterAd ad;
-  @NonNull protected final ResponseInfoProvider responseInfoProvider;
+/** Callback type to notify when an ad successfully loads. */
+interface FlutterAdLoadedListener {
+  void onAdLoaded();
+}
 
-  FlutterAdListener(
-      @NonNull AdInstanceManager manager,
-      @NonNull FlutterAd ad,
-      @NonNull ResponseInfoProvider responseInfoProvider) {
+class FlutterAdListener extends AdListener {
+  private final int adId;
+  @NonNull protected final AdInstanceManager manager;
+
+  FlutterAdListener(int adId, @NonNull AdInstanceManager manager) {
+    this.adId = adId;
     this.manager = manager;
-    this.ad = ad;
-    this.responseInfoProvider = responseInfoProvider;
   }
 
   @Override
   public void onAdClosed() {
-    manager.onAdClosed(ad);
+    manager.onAdClosed(adId);
   }
 
   @Override
   public void onAdFailedToLoad(LoadAdError loadAdError) {
-    manager.onAdFailedToLoad(ad, new FlutterAd.FlutterLoadAdError(loadAdError));
+    manager.onAdFailedToLoad(adId, new FlutterAd.FlutterLoadAdError(loadAdError));
   }
 
   @Override
   public void onAdOpened() {
-    manager.onAdOpened(ad);
+    manager.onAdOpened(adId);
   }
 
   @Override
-  public void onAdLoaded() {
-    manager.onAdLoaded(ad, responseInfoProvider.getResponseInfo());
+  public void onAdImpression() {
+    manager.onAdImpression(adId);
   }
 }
 
@@ -63,15 +66,114 @@ class FlutterAdListener extends AdListener {
  */
 class FlutterBannerAdListener extends FlutterAdListener {
 
+  @NonNull final WeakReference<FlutterAdLoadedListener> adLoadedListenerWeakReference;
+
   FlutterBannerAdListener(
+      int adId,
       @NonNull AdInstanceManager manager,
-      @NonNull FlutterAd ad,
-      ResponseInfoProvider responseInfoProvider) {
-    super(manager, ad, responseInfoProvider);
+      FlutterAdLoadedListener adLoadedListener) {
+    super(adId, manager);
+    adLoadedListenerWeakReference = new WeakReference<>(adLoadedListener);
+  }
+
+  @Override
+  public void onAdLoaded() {
+    if (adLoadedListenerWeakReference.get() != null) {
+      adLoadedListenerWeakReference.get().onAdLoaded();
+    }
+  }
+}
+
+/** Listener for native ads. */
+class FlutterNativeAdListener extends AdListener {
+
+  private final int adId;
+  private final AdInstanceManager manager;
+
+  FlutterNativeAdListener(
+      int adId,
+      AdInstanceManager manager) {
+    this.adId = adId;
+    this.manager = manager;
+  }
+
+  @Override
+  public void onAdLoaded() {
+    // Do nothing. Loaded event is handled from FlutterNativeAdLoadedListener.
+  }
+
+  @Override
+  public void onAdClicked() {
+    manager.onNativeAdClicked(adId);
+  }
+}
+
+/** {@link OnNativeAdLoadedListener} for native ads. */
+class FlutterNativeAdLoadedListener implements OnNativeAdLoadedListener {
+
+  private final WeakReference<FlutterNativeAd> nativeAdWeakReference;
+
+  FlutterNativeAdLoadedListener(FlutterNativeAd flutterNativeAd) {
+    nativeAdWeakReference = new WeakReference<>(flutterNativeAd);
+  }
+
+  @Override
+  public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+    nativeAdWeakReference.get().onNativeAdLoaded(nativeAd);
+  }
+}
+
+/**
+ * An {@link AdListener} that forwards everything to another AdListener.
+ */
+class DelegatingAdListener extends AdListener {
+
+  @NonNull
+  private final WeakReference<AdListener> delegate;
+
+  DelegatingAdListener(AdListener delegate) {
+    this.delegate = new WeakReference<>(delegate);
+  }
+
+  @Override
+  public void onAdClosed() {
+    if (delegate.get() != null) {
+      delegate.get().onAdClosed();
+    }
+  }
+
+  @Override
+  public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+    if (delegate.get() != null) {
+      delegate.get().onAdFailedToLoad(loadAdError);
+    }
+  }
+
+  @Override
+  public void onAdOpened() {
+    if (delegate.get() != null) {
+      delegate.get().onAdOpened();
+    }
+  }
+
+  @Override
+  public void onAdLoaded() {
+    if (delegate.get() != null) {
+      delegate.get().onAdLoaded();
+    }
+  }
+
+  @Override
+  public void onAdClicked() {
+    if (delegate.get() != null) {
+      delegate.get().onAdClicked();
+    }
   }
 
   @Override
   public void onAdImpression() {
-    manager.onAdImpression(ad);
+    if (delegate.get() != null) {
+      delegate.get().onAdImpression();
+    }
   }
 }

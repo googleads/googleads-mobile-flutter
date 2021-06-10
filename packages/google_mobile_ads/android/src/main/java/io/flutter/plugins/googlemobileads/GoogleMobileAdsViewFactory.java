@@ -61,10 +61,13 @@ final class GoogleMobileAdsViewFactory extends PlatformViewFactory {
     if (ad == null || ad.getPlatformView() == null) {
       return getErrorView(context, adId);
     }
-
     return ad.getPlatformView();
   }
 
+  /**
+   * Returns an ErrorView with a debug message for debug builds only.
+   * Otherwise just returns an empty PlatformView.
+   */
   private static PlatformView getErrorView(@NonNull final Context context, int adId) {
     final String message =
         String.format(
