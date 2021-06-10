@@ -21,6 +21,7 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 import com.google.android.gms.ads.admanager.AppEventListener;
+import java.lang.ref.WeakReference;
 
 /**
  * Wrapper around {@link com.google.android.gms.ads.admanager.AdManagerInterstitialAd} for the
@@ -60,26 +61,21 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
         manager.activity,
         adUnitId,
         request.asAdManagerAdRequest(),
-        new AdManagerInterstitialAdLoadCallback() {
-          @Override
-          public void onAdLoaded(@NonNull AdManagerInterstitialAd adManagerInterstitialAd) {
-            FlutterAdManagerInterstitialAd.this.ad = adManagerInterstitialAd;
-            ad.setAppEventListener(
-                new AppEventListener() {
-                  @Override
-                  public void onAppEvent(@NonNull String name, @NonNull String data) {
-                    manager.onAppEvent(adId, name, data);
-                  }
-                });
-            manager.onAdLoaded(adId, adManagerInterstitialAd.getResponseInfo());
-          }
+        new DelegatingAdManagerInterstitialAdCallbacks(this));
+  }
 
-          @Override
-          public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-            manager.onAdFailedToLoad(adId, new FlutterLoadAdError(loadAdError));
-            super.onAdFailedToLoad(loadAdError);
-          }
-        });
+  void onAdLoaded(AdManagerInterstitialAd ad) {
+    this.ad = ad;
+    ad.setAppEventListener(new DelegatingAdManagerInterstitialAdCallbacks(this));
+    manager.onAdLoaded(adId, ad.getResponseInfo());
+  }
+
+  void onAdFailedToLoad(LoadAdError loadAdError) {
+    manager.onAdFailedToLoad(adId, new FlutterLoadAdError(loadAdError));
+  }
+
+  void onAppEvent(@NonNull String name, @NonNull String data) {
+    manager.onAppEvent(adId, name, data);
   }
 
   @Override
@@ -95,5 +91,40 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @Override
   void dispose() {
     ad = null;
+  }
+
+  /**
+   * This class delegates various rewarded ad callbacks to FlutterAdManagerInterstitialAd.
+   * Maintains a weak reference to avoid memory leaks.
+   */
+  private static final class DelegatingAdManagerInterstitialAdCallbacks extends
+      AdManagerInterstitialAdLoadCallback implements AppEventListener {
+
+    private final WeakReference<FlutterAdManagerInterstitialAd> delegate;
+
+    DelegatingAdManagerInterstitialAdCallbacks(FlutterAdManagerInterstitialAd delegate) {
+      this.delegate = new WeakReference<>(delegate);
+    }
+
+    @Override
+    public void onAdLoaded(@NonNull AdManagerInterstitialAd interstitialAd) {
+      if (delegate.get() != null) {
+        delegate.get().onAdLoaded(interstitialAd);
+      }
+    }
+
+    @Override
+    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+      if (delegate.get() != null) {
+        delegate.get().onAdFailedToLoad(loadAdError);
+      }
+    }
+
+    @Override
+    public void onAppEvent(@NonNull String name, @NonNull String data) {
+      if (delegate.get() != null) {
+        delegate.get().onAppEvent(name, data);
+      }
+    }
   }
 }

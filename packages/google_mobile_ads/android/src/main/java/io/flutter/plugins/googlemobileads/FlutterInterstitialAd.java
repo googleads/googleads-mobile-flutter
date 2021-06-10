@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import java.lang.ref.WeakReference;
 
 class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   private static final String TAG = "FlutterInterstitialAd";
@@ -50,20 +51,17 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
           manager.activity,
           adUnitId,
           request.asAdRequest(),
-          new InterstitialAdLoadCallback() {
-            @Override
-            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-              FlutterInterstitialAd.this.ad = interstitialAd;
-              FlutterInterstitialAd.this.manager.onAdLoaded(adId, interstitialAd.getResponseInfo());
-            }
-
-            @Override
-            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-              FlutterInterstitialAd.this.manager.onAdFailedToLoad(
-                  adId, new FlutterAd.FlutterLoadAdError(loadAdError));
-            }
-          });
+          new DelegatingInterstitialAdLoadCallback(this));
     }
+  }
+
+  void onAdLoaded(InterstitialAd ad) {
+    this.ad = ad;
+    manager.onAdLoaded(adId, ad.getResponseInfo());
+  }
+
+  void onAdFailedToLoad(LoadAdError loadAdError) {
+    manager.onAdFailedToLoad(adId, new FlutterAd.FlutterLoadAdError(loadAdError));
   }
 
   @Override
@@ -79,5 +77,29 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
     }
     ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
     ad.show(manager.activity);
+  }
+
+  /** An InterstitialAdLoadCallback that just forwards events to a delegate. */
+  private static final class DelegatingInterstitialAdLoadCallback extends InterstitialAdLoadCallback {
+
+    private final WeakReference<FlutterInterstitialAd> delegate;
+
+    DelegatingInterstitialAdLoadCallback(FlutterInterstitialAd delegate) {
+      this.delegate = new WeakReference<>(delegate);
+    }
+
+    @Override
+    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+      if (delegate.get() != null) {
+        delegate.get().onAdLoaded(interstitialAd);
+      }
+    }
+
+    @Override
+    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+      if (delegate.get() != null) {
+        delegate.get().onAdFailedToLoad(loadAdError);
+      }
+    }
   }
 }
