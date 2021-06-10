@@ -34,7 +34,22 @@ typedef AdLoadErrorCallback = void Function(Ad ad, LoadAdError error);
 
 /// The callback type for when an ad receives revenue value.
 typedef OnPaidEventCallback = void Function(
-    Ad ad, double value, int precision, String currencyCode);
+    Ad ad, double valueMicros, PrecisionType precision, String currencyCode);
+
+/// Allowed constants for precision type in [OnPaidEventCallback].
+enum PrecisionType {
+  /// An ad value with unknown precision.
+  unknown,
+
+  /// An ad value estimated from aggregated data.
+  estimated,
+
+  /// A publisher-provided ad value, such as manual CPMs in a mediation group.
+  publisherProvided,
+
+  /// The precise value paid for this ad.
+  precise
+}
 
 /// Listener for app events.
 class AppEventListener {

@@ -19,6 +19,7 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:google_mobile_ads/src/ad_listeners.dart';
 import 'package:google_mobile_ads/src/mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -311,18 +312,38 @@ class AdInstanceManager {
       Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     assert(arguments['valueMicros'] != null && arguments['valueMicros'] is num);
 
+    int precisionTypeInt = arguments['precision'];
+    PrecisionType precisionType;
+    switch (precisionTypeInt) {
+      case 0:
+        precisionType = PrecisionType.unknown;
+        break;
+      case 1:
+        precisionType = PrecisionType.estimated;
+        break;
+      case 2:
+        precisionType = PrecisionType.publisherProvided;
+        break;
+      case 3:
+        precisionType = PrecisionType.precise;
+        break;
+      default:
+        debugPrint('Unexpected precisionType: $precisionTypeInt');
+        precisionType = PrecisionType.unknown;
+        break;
+    }
     if (ad is AdWithView) {
       ad.listener.onPaidEvent?.call(
         ad,
-        arguments['valueMicros'] / 1000000.0,
-        arguments['precision'],
+        arguments['valueMicros'],
+        precisionType,
         arguments['currencyCode'],
       );
     } else if (ad is AdWithoutView) {
       ad.onPaidEvent?.call(
         ad,
-        arguments['valueMicros'] / 1000000.0,
-        arguments['precision'],
+        arguments['valueMicros'],
+        precisionType,
         arguments['currencyCode'],
       );
     } else {
