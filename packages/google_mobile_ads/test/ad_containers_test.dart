@@ -1125,11 +1125,12 @@ void main() {
       expect(result[2], PrecisionType.unknown);
 
       // Check precision type: estimated.
+      // Also check that callback is invoked successfully for int valueMicros.
       resultCompleter = Completer<List<dynamic>>();
       methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
         'adId': 0,
         'eventName': 'onPaidEvent',
-        'valueMicros': 1.2345,
+        'valueMicros': 12345, // int
         'precision': 1,
         'currencyCode': 'USD',
       });
@@ -1140,6 +1141,7 @@ void main() {
         (ByteData? data) {},
       );
       result = await resultCompleter.future;
+      expect(result[1], 12345);
       expect(result[2], PrecisionType.estimated);
 
       // Check precision type: publisherProvided.

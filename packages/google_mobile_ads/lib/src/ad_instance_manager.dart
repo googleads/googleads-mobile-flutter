@@ -335,14 +335,14 @@ class AdInstanceManager {
     if (ad is AdWithView) {
       ad.listener.onPaidEvent?.call(
         ad,
-        arguments['valueMicros'],
+        arguments['valueMicros'].toDouble(),
         precisionType,
         arguments['currencyCode'],
       );
     } else if (ad is AdWithoutView) {
       ad.onPaidEvent?.call(
         ad,
-        arguments['valueMicros'],
+        arguments['valueMicros'].toDouble(),
         precisionType,
         arguments['currencyCode'],
       );
