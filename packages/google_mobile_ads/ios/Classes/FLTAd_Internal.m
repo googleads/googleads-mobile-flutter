@@ -262,7 +262,7 @@
   return self;
 }
 
-- (GADBannerView *_Nonnull)bannerView {
+- (GAMBannerView *_Nonnull)bannerView {
   return _bannerView;
 }
 
@@ -277,10 +277,10 @@
 }
 
 #pragma mark - GADAppEventDelegate
-- (void)adView:(nonnull GADBannerView *)banner
+- (void)adView:(nonnull GAMBannerView *)banner
     didReceiveAppEvent:(nonnull NSString *)name
               withInfo:(nullable NSString *)info {
-    [_bannerView recordImpression];
+    [banner recordImpression];
     [self.manager onAppEvent:self name:name data:info];
 }
 
