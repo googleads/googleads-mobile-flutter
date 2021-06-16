@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -49,11 +50,15 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /** Tests {@link AdInstanceManager}. */
 public class GoogleMobileAdsTest {
   private AdInstanceManager testManager;
   private final FlutterAdRequest request = new FlutterAdRequest.Builder().build();
+  private Activity mockActivity;
   private static BinaryMessenger mockMessenger;
 
   private static MethodCall getLastMethodCall() {
@@ -71,7 +76,19 @@ public class GoogleMobileAdsTest {
   @Before
   public void setup() {
     mockMessenger = mock(BinaryMessenger.class);
-    testManager = new AdInstanceManager(mock(Activity.class), mockMessenger);
+    mockActivity = mock(Activity.class);
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) {
+                Runnable runnable = invocation.getArgument(0);
+                runnable.run();
+                return null;
+              }
+            })
+        .when(mockActivity)
+        .runOnUiThread(ArgumentMatchers.any(Runnable.class));
+    testManager = new AdInstanceManager(mockActivity, mockMessenger);
   }
 
   @Test
