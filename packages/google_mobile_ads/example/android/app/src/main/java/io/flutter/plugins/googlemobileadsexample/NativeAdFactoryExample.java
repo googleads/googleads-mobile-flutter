@@ -101,8 +101,8 @@ class NativeAdFactoryExample implements NativeAdFactory {
     if (nativeAd.getAdvertiser() == null) {
       adView.getAdvertiserView().setVisibility(View.INVISIBLE);
     } else {
-      ((TextView) adView.getAdvertiserView()).setText(nativeAd.getAdvertiser());
       adView.getAdvertiserView().setVisibility(View.VISIBLE);
+      ((TextView) adView.getAdvertiserView()).setText(nativeAd.getAdvertiser());
     }
 
     // This method tells the Google Mobile Ads SDK that you have finished populating your
