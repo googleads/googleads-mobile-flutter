@@ -91,18 +91,17 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
             ? 'ca-app-pub-3940256099942544/6300978111'
             : 'ca-app-pub-3940256099942544/2934735716',
         listener: BannerAdListener(
-          onAdLoaded: (Ad ad) {
+          onAdLoaded: () {
             print('$BannerAd loaded.');
             setState(() {
               _bannerAdIsLoaded = true;
             });
           },
-          onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          onAdFailedToLoad: (LoadAdError error) {
             print('$BannerAd failedToLoad: $error');
-            ad.dispose();
           },
-          onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
-          onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
+          onAdOpened: () => print('$BannerAd onAdOpened.'),
+          onAdClosed: () => print('$BannerAd onAdClosed.'),
         ),
         request: AdRequest())
       ..load();
@@ -114,47 +113,37 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
       request: AdRequest(),
       factoryId: 'adFactoryExample',
       listener: NativeAdListener(
-        onAdLoaded: (Ad ad) {
+        onAdLoaded: () {
           print('$NativeAd loaded.');
           setState(() {
             _nativeAdIsLoaded = true;
           });
         },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        onAdFailedToLoad: (LoadAdError error) {
           print('$NativeAd failedToLoad: $error');
-          ad.dispose();
         },
-        onAdOpened: (Ad ad) => print('$NativeAd onAdOpened.'),
-        onAdClosed: (Ad ad) => print('$NativeAd onAdClosed.'),
+        onAdOpened: () => print('$NativeAd onAdOpened.'),
+        onAdClosed: () => print('$NativeAd onAdClosed.'),
       ),
     )..load();
 
     _adManagerBannerAd = AdManagerBannerAd(
       adUnitId: '/6499/example/banner',
-      request: AdManagerAdRequest(nonPersonalizedAds: true),
+      request: AdManagerAdRequest()..setNonPersonalizedAds(true),
       sizes: <AdSize>[AdSize.largeBanner],
       listener: AdManagerBannerAdListener(
-        onAdLoaded: (Ad ad) {
+        onAdLoaded: () {
           print('$AdManagerBannerAd loaded.');
           setState(() {
             _adManagerBannerAdIsLoaded = true;
           });
         },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        onAdFailedToLoad: (LoadAdError error) {
           print('$AdManagerBannerAd failedToLoad: $error');
-          ad.dispose();
         },
-        onAdOpened: (Ad ad) => print('$AdManagerBannerAd onAdOpened.'),
-        onAdClosed: (Ad ad) => print('$AdManagerBannerAd onAdClosed.'),
+        onAdOpened: () => print('$AdManagerBannerAd onAdOpened.'),
+        onAdClosed: () => print('$AdManagerBannerAd onAdClosed.'),
       ),
     )..load();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _bannerAd?.dispose();
-    _adManagerBannerAd?.dispose();
-    _nativeAd?.dispose();
   }
 }

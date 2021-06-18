@@ -12,17 +12,42 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'ad_instance_manager.dart';
-import 'request_configuration.dart';
 import 'package:flutter/foundation.dart';
+import 'package:reference/annotations.dart';
+
+import 'mobile_ads.g.dart';
+import 'mobile_ads_channels.dart';
 
 /// The initialization state of the mediation adapter.
-enum AdapterInitializationState {
+@Reference('google_mobile_ads.AdapterInitializationState')
+class AdapterInitializationState implements $AdapterInitializationState {
+  /// Construct an [AdapterInitializationState].
+  ///
+  /// This should only be used by the API or for testing.
+  @visibleForTesting
+  const AdapterInitializationState(String value) : _value = value;
+
+  final String _value;
+
   /// The mediation adapter is less likely to fill ad requests.
-  notReady,
+  static const AdapterInitializationState notReady = AdapterInitializationState(
+    'notReady',
+  );
 
   /// The mediation adapter is ready to service ad requests.
-  ready,
+  static const AdapterInitializationState ready = AdapterInitializationState(
+    'ready',
+  );
+
+  @ReferenceMethod(ignore: true)
+  @override
+  bool operator ==(other) {
+    return other is AdapterInitializationState && other._value == _value;
+  }
+
+  @ReferenceMethod(ignore: true)
+  @override
+  int get hashCode => _value.hashCode;
 }
 
 /// Class contains logic that applies to the Google Mobile Ads SDK as a whole.
@@ -30,13 +55,20 @@ enum AdapterInitializationState {
 /// Right now, the only methods in it are used for initialization.
 ///
 /// See [instance].
-class MobileAds {
-  MobileAds._();
+@Reference('google_mobile_ads.MobileAds')
+class MobileAds implements $MobileAds {
+  @protected
+  MobileAds._() {
+    _channel.$$create(this, $owner: true);
+  }
 
-  static final MobileAds _instance = MobileAds._().._init();
+  static final MobileAds _instance = MobileAds._();
 
   /// Shared instance to initialize the AdMob SDK.
   static MobileAds get instance => _instance;
+
+  static $MobileAdsChannel get _channel =>
+      ChannelRegistrar.instance.implementations.channelMobileAds;
 
   /// Initializes the Google Mobile Ads SDK.
   ///
@@ -45,16 +77,21 @@ class MobileAds {
   ///
   /// If this method is not called, the first ad request automatically
   /// initializes the Google Mobile Ads SDK.
-  Future<InitializationStatus> initialize() async {
-    return (await instanceManager.channel.invokeMethod<InitializationStatus>(
-      'MobileAds#initialize',
-    ))!;
+  Future<void> initialize({OnInitializationCompleteListener? listener}) {
+    if (listener != null) {
+      OnInitializationCompleteListener._channel.$$create(
+        listener,
+        $owner: false,
+      );
+    }
+    return _channel.$initialize(this, listener);
   }
 
   /// Update the [RequestConfiguration] to apply for future ad requests.
   Future<void> updateRequestConfiguration(
-      RequestConfiguration requestConfiguration) {
-    return instanceManager.updateRequestConfiguration(requestConfiguration);
+    RequestConfiguration requestConfiguration,
+  ) {
+    return _channel.$updateRequestConfiguration(this, requestConfiguration);
   }
 
   /// Set whether the Google Mobile Ads SDK Same App Key is enabled (iOS only).
@@ -65,21 +102,30 @@ class MobileAds {
   /// https://developers.google.com/admob/ios/global-settings#same_app_key.
   Future<void> setSameAppKeyEnabled(bool isEnabled) {
     if (defaultTargetPlatform == TargetPlatform.iOS) {
-      return instanceManager.setSameAppKeyEnabled(isEnabled);
+      return _channel.$setSameAppKeyEnabled(this, isEnabled);
     } else {
       return Future.value();
     }
   }
+}
 
-  /// Internal init to cleanup state for hot restart.
-  /// This is a workaround for https://github.com/flutter/flutter/issues/7160.
-  void _init() {
-    instanceManager.channel.invokeMethod('_init');
-  }
+///
+@Reference('google_mobile_ads.OnInitializationCompleteListener')
+mixin OnInitializationCompleteListener
+    implements $OnInitializationCompleteListener {
+  static $OnInitializationCompleteListenerChannel get _channel =>
+      ChannelRegistrar
+          .instance.implementations.channelOnInitializationCompleteListener;
+
+  @override
+  void onInitializationComplete(
+    covariant InitializationStatus initializationStatus,
+  );
 }
 
 /// The status of the SDK initialization.
-class InitializationStatus {
+@Reference('google_mobile_ads.InitializationStatus')
+class InitializationStatus implements $InitializationStatus {
   /// Default constructor to create an [InitializationStatus].
   ///
   /// Returned when calling [MobileAds.initialize];
@@ -93,7 +139,8 @@ class InitializationStatus {
 }
 
 /// An immutable snapshot of a mediation adapter's initialization status.
-class AdapterStatus {
+@Reference('google_mobile_ads.AdapterStatus')
+class AdapterStatus implements $AdapterStatus {
   /// Default constructor to create an [AdapterStatus].
   ///
   /// Returned when calling [MobileAds.initialize].
@@ -109,4 +156,109 @@ class AdapterStatus {
   ///
   /// 0 if initialization has not yet ended.
   final double latency;
+}
+
+/// Contains targeting information that can be applied to all ad requests.
+///
+/// See relevant documentation at
+/// https://developers.google.com/ad-manager/mobile-ads-sdk/android/targeting#requestconfiguration.
+@Reference('google_mobile_ads.RequestConfiguration')
+class RequestConfiguration implements $RequestConfiguration {
+  /// Creates a [RequestConfiguration].
+  RequestConfiguration({
+    this.maxAdContentRating,
+    this.tagForChildDirectedTreatment,
+    this.tagForUnderAgeOfConsent,
+    this.testDeviceIds,
+  }) {
+    _channel.$$create(
+      this,
+      $owner: true,
+      maxAdContentRating: maxAdContentRating,
+      tagForChildDirectedTreatment: tagForChildDirectedTreatment,
+      tagForUnderAgeOfConsent: tagForUnderAgeOfConsent,
+      testDeviceIds: testDeviceIds,
+    );
+  }
+
+  static $RequestConfigurationChannel get _channel =>
+      ChannelRegistrar.instance.implementations.channelRequestConfiguration;
+
+  /// Maximum content rating that will be shown.
+  final String? maxAdContentRating;
+
+  /// Whether to tag as child directed.
+  final int? tagForChildDirectedTreatment;
+
+  /// Whether to tag as under age of consent.
+  final int? tagForUnderAgeOfConsent;
+
+  /// List of test device ids to set.
+  final List<String>? testDeviceIds;
+}
+
+/// Values for [RequestConfiguration.maxAdContentRating].
+class MaxAdContentRating {
+  /// No specified content rating.
+  static final String unspecified = '';
+
+  /// Content suitable for general audiences, including families.
+  static final String g = 'G';
+
+  /// Content suitable for most audiences with parental guidance.
+  static final String pg = 'PG';
+
+  /// Content suitable for most audiences with parental guidance.
+  static final String t = 'T';
+
+  /// Content suitable only for mature audiences.
+  static final String ma = 'MA';
+}
+
+/// Values for [RequestConfiguration.tagForUnderAgeOfConsent].
+class TagForUnderAgeOfConsent {
+  /// Tag as under age of consent.
+  ///
+  /// Indicates the publisher specified that the ad request should receive
+  /// treatment for users in the European Economic Area (EEA) under the age
+  /// of consent.
+  static final int yes = 1;
+
+  /// Tag as NOT under age of consent.
+  ///
+  /// Indicates the publisher specified that the ad request should not receive
+  /// treatment for users in the European Economic Area (EEA) under the age of
+  /// consent.
+  static final int no = 0;
+
+  /// Do not specify tag for under age of consent.
+  ///
+  /// Indicates that the publisher has not specified whether the ad request
+  /// should receive treatment for users in the European Economic Area (EEA)
+  /// under the age of consent.
+  static final int unspecified = -1;
+}
+
+/// Values for [RequestConfiguration.tagForChildDirectedTreatment].
+class TagForChildDirectedTreatment {
+  /// Tag for child directed treatment.
+  ///
+  /// Indicates the publisher specified that the ad request should receive
+  /// treatment for users in the European Economic Area (EEA) under the age
+  /// of consent.
+  static final int yes = 1;
+
+  /// Tag for NOT child directed treatment.
+  ///
+  /// Indicates the publisher specified that the ad request should not receive
+  /// treatment for users in the European Economic Area (EEA) under the age
+  /// of consent.
+  static final int no = 0;
+
+  /// Do not specify tag for child directed treatment.
+  ///
+  /// Indicates that the publisher has not specified whether the ad request
+  /// should receive treatment for users in the European Economic Area (EEA)
+  /// under the age of consent.
+  static final int unspecified = -1;
 }

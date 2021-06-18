@@ -38,11 +38,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  static final AdRequest request = AdRequest(
-    keywords: <String>['foo', 'bar'],
-    contentUrl: 'http://foo.com/bar.html',
-    nonPersonalizedAds: true,
-  );
+  static final AdRequest request = AdRequest()
+    ..addKeyword('foo')
+    ..addKeyword('bar')
+    ..setContentUrl('http://foo.com/bar.html')
+    ..setNonPersonalizedAds(true);
 
   InterstitialAd? _interstitialAd;
   int _numInterstitialLoadAttempts = 0;
@@ -52,6 +52,7 @@ class _MyAppState extends State<MyApp> {
 
   BannerAd? _anchoredBanner;
   bool _loadingAnchoredBanner = false;
+  bool _anchoredBannerAdLoaded = false;
 
   @override
   void initState() {
@@ -64,7 +65,7 @@ class _MyAppState extends State<MyApp> {
     InterstitialAd.load(
         adUnitId: InterstitialAd.testAdUnitId,
         request: request,
-        adLoadCallback: InterstitialAdLoadCallback(
+        listener: InterstitialAdLoadListener(
           onAdLoaded: (InterstitialAd ad) {
             print('$ad loaded');
             _interstitialAd = ad;
@@ -86,21 +87,18 @@ class _MyAppState extends State<MyApp> {
       print('Warning: attempt to show interstitial before loaded.');
       return;
     }
-    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+    _interstitialAd!.show(FullScreenContentListener(
+      onAdShowedFullScreenContent: () =>
           print('ad onAdShowedFullScreenContent.'),
-      onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
-        ad.dispose();
+      onAdDismissedFullScreenContent: () {
+        print('ad onAdDismissedFullScreenContent.');
         _createInterstitialAd();
       },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
-        ad.dispose();
+      onAdFailedToShowFullScreenContent: () {
+        print('ad onAdFailedToShowFullScreenContent');
         _createInterstitialAd();
       },
-    );
-    _interstitialAd!.show();
+    ));
     _interstitialAd = null;
   }
 
@@ -108,7 +106,7 @@ class _MyAppState extends State<MyApp> {
     RewardedAd.load(
         adUnitId: RewardedAd.testAdUnitId,
         request: request,
-        rewardedAdLoadCallback: RewardedAdLoadCallback(
+        listener: RewardedAdLoadListener(
           onAdLoaded: (RewardedAd ad) {
             print('$ad loaded.');
             _rewardedAd = ad;
@@ -130,31 +128,32 @@ class _MyAppState extends State<MyApp> {
       print('Warning: attempt to show rewarded before loaded.');
       return;
     }
-    _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedAd ad) =>
-          print('ad onAdShowedFullScreenContent.'),
-      onAdDismissedFullScreenContent: (RewardedAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
-        ad.dispose();
-        _createRewardedAd();
-      },
-      onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
-        ad.dispose();
-        _createRewardedAd();
-      },
+    _rewardedAd!.show(
+      onUserEarnedReward: OnUserEarnedRewardListener(
+        (RewardItem reward) {
+          print(
+            'RewardedAd with reward $RewardItem(${reward.amount}, ${reward.type})',
+          );
+        },
+      ),
+      fullScreenContentListener: FullScreenContentListener(
+        onAdShowedFullScreenContent: () =>
+            print('ad onAdShowedFullScreenContent.'),
+        onAdDismissedFullScreenContent: () {
+          print('ad onAdDismissedFullScreenContent.');
+          _createRewardedAd();
+        },
+        onAdFailedToShowFullScreenContent: () {
+          print('ad onAdFailedToShowFullScreenContent');
+          _createRewardedAd();
+        },
+      ),
     );
-
-    _rewardedAd!.show(onUserEarnedReward: (RewardedAd ad, RewardItem reward) {
-      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
-    });
     _rewardedAd = null;
   }
 
   Future<void> _createAnchoredBanner(BuildContext context) async {
-    final AnchoredAdaptiveBannerAdSize? size =
-        await AdSize.getAnchoredAdaptiveBannerAdSize(
-      Orientation.portrait,
+    final AdSize? size = await AdSize.getPortraitAnchoredAdaptiveBannerAdSize(
       MediaQuery.of(context).size.width.truncate(),
     );
 
@@ -163,36 +162,27 @@ class _MyAppState extends State<MyApp> {
       return;
     }
 
-    final BannerAd banner = BannerAd(
+    _anchoredBanner = BannerAd(
       size: size,
       request: request,
       adUnitId: Platform.isAndroid
           ? 'ca-app-pub-3940256099942544/6300978111'
           : 'ca-app-pub-3940256099942544/2934735716',
       listener: BannerAdListener(
-        onAdLoaded: (Ad ad) {
+        onAdLoaded: () {
           print('$BannerAd loaded.');
           setState(() {
-            _anchoredBanner = ad as BannerAd?;
+            _anchoredBannerAdLoaded = true;
           });
         },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+        onAdFailedToLoad: (LoadAdError error) {
           print('$BannerAd failedToLoad: $error');
-          ad.dispose();
         },
-        onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
-        onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
+        onAdOpened: () => print('$BannerAd onAdOpened.'),
+        onAdClosed: () => print('$BannerAd onAdClosed.'),
       ),
     );
-    return banner.load();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _interstitialAd?.dispose();
-    _rewardedAd?.dispose();
-    _anchoredBanner?.dispose();
+    return _anchoredBanner!.load();
   }
 
   @override
@@ -238,7 +228,7 @@ class _MyAppState extends State<MyApp> {
               alignment: AlignmentDirectional.bottomCenter,
               children: <Widget>[
                 ReusableInlineExample(),
-                if (_anchoredBanner != null)
+                if (_anchoredBannerAdLoaded)
                   Container(
                     color: Colors.green,
                     width: _anchoredBanner!.size.width.toDouble(),
