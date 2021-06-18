@@ -14,6 +14,8 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,6 +31,7 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
@@ -44,6 +47,7 @@ import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
 import io.flutter.plugins.googlemobileads.FlutterRewardedAd.FlutterRewardItem;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatcher;
 import org.mockito.ArgumentMatchers;
 import org.mockito.invocation.InvocationOnMock;
@@ -129,7 +133,6 @@ public class FlutterRewardedAdTest {
     setupAdManagerMocks(options);
 
     final RewardedAd mockAd = mock(RewardedAd.class);
-    final LoadAdError loadAdError = new LoadAdError(1, "2", "3", null, null);
     doAnswer(
             new Answer() {
               @Override
@@ -148,6 +151,23 @@ public class FlutterRewardedAdTest {
             any(RewardedAdLoadCallback.class));
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAd).getResponseInfo();
+
+    final AdValue adValue = mock(AdValue.class);
+    doReturn(1).when(adValue).getPrecisionType();
+    doReturn("Dollars").when(adValue).getCurrencyCode();
+    doReturn(1000L).when(adValue).getValueMicros();
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) {
+                FlutterPaidEventListener listener = invocation.getArgument(0);
+                listener.onPaidEvent(adValue);
+                return null;
+              }
+            })
+        .when(mockAd)
+        .setOnPaidEventListener(any(FlutterPaidEventListener.class));
+
     flutterRewardedAd.load();
 
     verify(mockFlutterAdLoader)
@@ -157,8 +177,15 @@ public class FlutterRewardedAdTest {
             eq(mockAdManagerAdRequest),
             any(RewardedAdLoadCallback.class));
 
+    verify(mockAd).setOnPaidEventListener(any(FlutterPaidEventListener.class));
     verify(mockManager).onAdLoaded(eq(flutterRewardedAd), eq(responseInfo));
+    final ArgumentCaptor<FlutterAdValue> adValueCaptor = forClass(FlutterAdValue.class);
+    verify(mockManager).onPaidEvent(eq(flutterRewardedAd), adValueCaptor.capture());
+    assertEquals(adValueCaptor.getValue().currencyCode, "Dollars");
+    assertEquals(adValueCaptor.getValue().precisionType, 1);
+    assertEquals(adValueCaptor.getValue().valueMicros, 1000L);
 
+    // Setup mocks for show().
     doAnswer(
             new Answer() {
               @Override

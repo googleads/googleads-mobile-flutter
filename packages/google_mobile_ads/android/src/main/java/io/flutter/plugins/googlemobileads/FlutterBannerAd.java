@@ -54,6 +54,7 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
     view = bannerAdCreator.createAdView();
     view.setAdUnitId(adUnitId);
     view.setAdSize(size.getAdSize());
+    view.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
     view.setAdListener(
         new FlutterBannerAdListener(
             manager,

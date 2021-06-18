@@ -21,6 +21,7 @@
 @class FLTNativeAd;
 @class FLTRewardedAd;
 @class FLTRewardItem;
+@class FLTAdValue;
 
 @interface FLTAdInstanceManager : NSObject
 - (instancetype _Nonnull)initWithBinaryMessenger:
@@ -42,6 +43,7 @@
 - (void)onNativeAdWillDismissScreen:(FLTNativeAd *_Nonnull)ad;
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward;
+- (void)onPaidEvent:(id<FLTAd> _Nonnull)ad value:(FLTAdValue *_Nonnull)value;
 - (void)onBannerImpression:(FLTBannerAd *_Nonnull)ad;
 - (void)onBannerWillDismissScreen:(FLTBannerAd *_Nonnull)ad;
 - (void)onBannerDidDismissScreen:(FLTBannerAd *_Nonnull)ad;

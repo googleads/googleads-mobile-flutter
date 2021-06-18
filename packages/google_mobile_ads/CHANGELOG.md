@@ -1,3 +1,7 @@
+## 0.13.1
+
+* Adds support for the paid event callback.
+
 ## 0.13.0
 
 * Updates GMA Android and iOS dependencies to 20.1.0 and 8.5.0, respectively.

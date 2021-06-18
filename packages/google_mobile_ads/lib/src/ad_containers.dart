@@ -385,6 +385,10 @@ abstract class AdWithView extends Ad {
 abstract class AdWithoutView extends Ad {
   /// Default constructor used by subclasses.
   AdWithoutView({required String adUnitId}) : super(adUnitId: adUnitId);
+
+  /// Callback to be invoked when an ad is estimated to have earned money.
+  /// Available for allowlisted accounts only.
+  OnPaidEventCallback? onPaidEvent;
 }
 
 /// Displays an [Ad] as a Flutter widget.

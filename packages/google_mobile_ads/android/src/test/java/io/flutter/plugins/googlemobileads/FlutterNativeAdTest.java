@@ -14,6 +14,8 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -26,6 +28,7 @@ import static org.mockito.Mockito.when;
 import android.app.Activity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
@@ -38,6 +41,7 @@ import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -81,7 +85,7 @@ public class FlutterNativeAdTest {
     doAnswer(
             new Answer() {
               @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
+              public Object answer(InvocationOnMock invocation) {
                 OnNativeAdLoadedListener adLoadCallback = invocation.getArgument(2);
                 adLoadCallback.onNativeAdLoaded(mockNativeAd);
 
@@ -104,6 +108,22 @@ public class FlutterNativeAdTest {
             any(AdListener.class),
             eq(mockRequest));
 
+    final AdValue adValue = mock(AdValue.class);
+    doReturn(1).when(adValue).getPrecisionType();
+    doReturn("Dollars").when(adValue).getCurrencyCode();
+    doReturn(1000L).when(adValue).getValueMicros();
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) {
+                FlutterPaidEventListener listener = invocation.getArgument(0);
+                listener.onPaidEvent(adValue);
+                return null;
+              }
+            })
+        .when(mockNativeAd)
+        .setOnPaidEventListener(any(FlutterPaidEventListener.class));
+
     nativeAd.load();
     verify(mockLoader)
         .loadAdManagerNativeAd(
@@ -114,6 +134,8 @@ public class FlutterNativeAdTest {
             any(AdListener.class),
             eq(mockRequest));
 
+    verify(mockNativeAd).setOnPaidEventListener(any(FlutterPaidEventListener.class));
+
     verify(mockNativeAdFactory).createNativeAd(eq(mockNativeAd), eq(mockOptions));
     verify(testManager).onAdOpened(eq(nativeAd));
     verify(testManager).onAdClosed(eq(nativeAd));
@@ -122,6 +144,11 @@ public class FlutterNativeAdTest {
     verify(testManager).onAdLoaded(eq(nativeAd), eq(responseInfo));
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
     verify(testManager).onAdFailedToLoad(eq(nativeAd), eq(expectedError));
+    final ArgumentCaptor<FlutterAdValue> adValueCaptor = forClass(FlutterAdValue.class);
+    verify(testManager).onPaidEvent(eq(nativeAd), adValueCaptor.capture());
+    assertEquals(adValueCaptor.getValue().currencyCode, "Dollars");
+    assertEquals(adValueCaptor.getValue().precisionType, 1);
+    assertEquals(adValueCaptor.getValue().valueMicros, 1000L);
   }
 
   @Test
@@ -234,5 +261,16 @@ public class FlutterNativeAdTest {
         .setAdUnitId("testId")
         .setAdFactory(mock(GoogleMobileAdsPlugin.NativeAdFactory.class))
         .build();
+  }
+
+  public void paidEvent() {
+    FlutterNativeAd nativeAd =
+        new FlutterNativeAd.Builder()
+            .setManager(testManager)
+            .setAdUnitId("adUnitId")
+            .setRequest(request)
+            .setAdFactory(mock(GoogleMobileAdsPlugin.NativeAdFactory.class))
+            .build();
+    nativeAd.load();
   }
 }

@@ -244,6 +244,34 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   OCMVerify([_mockMessenger sendOnChannel:channel message:data]);
 }
 
+- (void)testAdInstanceManagerOnPaidEvent {
+  FLTNativeAd *ad =
+      [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                    request:[[FLTAdRequest alloc] init]
+                            nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+                              customOptions:nil
+                         rootViewController:OCMClassMock([UIViewController class])];
+  [_manager loadAd:ad adId:@(1)];
+
+  NSDecimalNumber *valueDecimal = [[NSDecimalNumber alloc] initWithInt:1];
+  FLTAdValue *value = [[FLTAdValue alloc] initWithValue:valueDecimal
+                                              precision:12
+                                           currencyCode:@"code"];
+
+  [_manager onPaidEvent:ad value:value];
+  NSData *data = [_methodCodec
+      encodeMethodCall:[FlutterMethodCall
+                           methodCallWithMethodName:@"onAdEvent"
+                                          arguments:@{
+                                            @"adId" : @1,
+                                            @"eventName" : @"onPaidEvent",
+                                            @"valueMicros" : value.valueMicros,
+                                            @"precision" : [NSNumber numberWithInteger:12],
+                                            @"currencyCode" : @"code"
+                                          }]];
+  OCMVerify([_mockMessenger sendOnChannel:channel message:data]);
+}
+
 - (void)testBannerEvents {
   FLTAdSize *size = [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)];
   FLTBannerAd *ad = [[FLTBannerAd alloc] initWithAdUnitId:@"testId"
