@@ -188,6 +188,17 @@
     _bannerView = [[GADBannerView alloc] initWithAdSize:size.size];
     _bannerView.adUnitID = adUnitId;
     self.bannerView.rootViewController = rootViewController;
+
+    __weak FLTBannerAd *weakSelf = self;
+    self.bannerView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+      if (weakSelf.manager == nil) {
+        return;
+      }
+      [weakSelf.manager onPaidEvent:weakSelf
+                              value:[[FLTAdValue alloc] initWithValue:value.value
+                                                            precision:(NSInteger)value.precision
+                                                         currencyCode:value.currencyCode]];
+    };
   }
   return self;
 }
@@ -256,6 +267,17 @@
       [validAdSizes addObject:NSValueFromGADAdSize(size.size)];
     }
     _bannerView.validAdSizes = validAdSizes;
+
+    __weak FLTGAMBannerAd *weakSelf = self;
+    self.bannerView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+      if (weakSelf.manager == nil) {
+        return;
+      }
+      [weakSelf.manager onPaidEvent:weakSelf
+                              value:[[FLTAdValue alloc] initWithValue:value.value
+                                                            precision:(NSInteger)value.precision
+                                                         currencyCode:value.currencyCode]];
+    };
   }
   return self;
 }
@@ -320,6 +342,18 @@
                       }
                       ad.fullScreenContentDelegate = self;
                       self->_interstitialView = ad;
+                      __weak FLTInterstitialAd *weakSelf = self;
+                      ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+                        if (weakSelf.manager == nil) {
+                          return;
+                        }
+                        [weakSelf.manager
+                            onPaidEvent:weakSelf
+                                  value:[[FLTAdValue alloc] initWithValue:value.value
+                                                                precision:(NSInteger)value.precision
+                                                             currencyCode:value.currencyCode]];
+                      };
+
                       [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
                     }];
 }
@@ -383,18 +417,31 @@
 }
 
 - (void)load {
-  [GAMInterstitialAd loadWithAdManagerAdUnitID:_adUnitId
-                                       request:[_adRequest asGAMRequest]
-                             completionHandler:^(GAMInterstitialAd *ad, NSError *error) {
-                               if (error) {
-                                 [self.manager onAdFailedToLoad:self error:error];
-                                 return;
-                               }
-                               [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
-                               ad.fullScreenContentDelegate = self;
-                               ad.appEventDelegate = self;
-                               self->_insterstitial = ad;
-                             }];
+  [GAMInterstitialAd
+      loadWithAdManagerAdUnitID:_adUnitId
+                        request:[_adRequest asGAMRequest]
+              completionHandler:^(GAMInterstitialAd *ad, NSError *error) {
+                if (error) {
+                  [self.manager onAdFailedToLoad:self error:error];
+                  return;
+                }
+                [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+                ad.fullScreenContentDelegate = self;
+                ad.appEventDelegate = self;
+                __weak FLTGAMInterstitialAd *weakSelf = self;
+                ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+                  if (weakSelf.manager == nil) {
+                    return;
+                  }
+                  [weakSelf.manager
+                      onPaidEvent:weakSelf
+                            value:[[FLTAdValue alloc] initWithValue:value.value
+                                                          precision:(NSInteger)value.precision
+                                                       currencyCode:value.currencyCode]];
+                };
+
+                self->_insterstitial = ad;
+              }];
 }
 
 - (void)show {
@@ -466,7 +513,17 @@
                     rewardedAd.serverSideVerificationOptions =
                         [self->_serverSideVerificationOptions asGADServerSideVerificationOptions];
                   }
-
+                  __weak FLTRewardedAd *weakSelf = self;
+                  rewardedAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+                    if (weakSelf.manager == nil) {
+                      return;
+                    }
+                    [weakSelf.manager
+                        onPaidEvent:weakSelf
+                              value:[[FLTAdValue alloc] initWithValue:value.value
+                                                            precision:(NSInteger)value.precision
+                                                         currencyCode:value.currencyCode]];
+                  };
                   rewardedAd.fullScreenContentDelegate = self;
                   self->_rewardedView = rewardedAd;
                   [self.manager onAdLoaded:self responseInfo:rewardedAd.responseInfo];
@@ -570,6 +627,17 @@
       [[NSNull null] isEqual:_customOptions] ? nil : _customOptions;
   _view = [_nativeAdFactory createNativeAd:nativeAd customOptions:customOptions];
   nativeAd.delegate = self;
+
+  __weak FLTNativeAd *weakSelf = self;
+  nativeAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+    if (weakSelf.manager == nil) {
+      return;
+    }
+    [weakSelf.manager onPaidEvent:weakSelf
+                            value:[[FLTAdValue alloc] initWithValue:value.value
+                                                          precision:(NSInteger)value.precision
+                                                       currencyCode:value.currencyCode]];
+  };
   [_manager onAdLoaded:self responseInfo:nativeAd.responseInfo];
 }
 
@@ -629,5 +697,20 @@
 
 - (NSUInteger)hash {
   return _amount.hash | _type.hash;
+}
+@end
+
+@implementation FLTAdValue
+- (instancetype _Nonnull)initWithValue:(NSDecimalNumber *_Nonnull)value
+                             precision:(NSInteger)precision
+                          currencyCode:(NSString *_Nonnull)currencyCode {
+  self = [super init];
+  if (self) {
+    _valueMicros =
+        [value decimalNumberByMultiplyingBy:[[NSDecimalNumber alloc] initWithInteger:1000000]];
+    _precision = precision;
+    _currencyCode = currencyCode;
+  }
+  return self;
 }
 @end

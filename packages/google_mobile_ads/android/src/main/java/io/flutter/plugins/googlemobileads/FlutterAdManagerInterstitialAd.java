@@ -67,6 +67,7 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
   void onAdLoaded(AdManagerInterstitialAd ad) {
     this.ad = ad;
     ad.setAppEventListener(new DelegatingAdManagerInterstitialAdCallbacks(this));
+      ad.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
     manager.onAdLoaded(adId, ad.getResponseInfo());
   }
 

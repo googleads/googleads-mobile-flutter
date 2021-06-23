@@ -62,6 +62,7 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
     adView = bannerAdCreator.createAdView();
     adView.setAdUnitId(adUnitId);
     adView.setAdSize(size.getAdSize());
+    adView.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
     adView.setAdListener(new FlutterBannerAdListener(adId, manager, this));
     adView.loadAd(request.asAdRequest());
   }

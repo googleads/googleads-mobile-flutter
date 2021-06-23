@@ -124,6 +124,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       rewardedAd.setServerSideVerificationOptions(
           serverSideVerificationOptions.asServerSideVerificationOptions());
     }
+    rewardedAd.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
     manager.onAdLoaded(adId, rewardedAd.getResponseInfo());
   }
 

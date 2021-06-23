@@ -102,7 +102,7 @@ class AdInstanceManager {
     FlutterResponseInfo flutterResponseInfo =
         (responseInfo == null) ? null : new FlutterResponseInfo(responseInfo);
     arguments.put("responseInfo", flutterResponseInfo);
-    channel.invokeMethod("onAdEvent", arguments);
+    invokeOnAdEvent(arguments);
   }
 
   void onAdFailedToLoad(int adId, @NonNull FlutterAd.FlutterLoadAdError error) {
@@ -110,7 +110,7 @@ class AdInstanceManager {
     arguments.put("adId", adId);
     arguments.put("eventName", "onAdFailedToLoad");
     arguments.put("loadAdError", error);
-    channel.invokeMethod("onAdEvent", arguments);
+    invokeOnAdEvent(arguments);
   }
 
   void onAppEvent(int adId, @NonNull String name, @NonNull String data) {
@@ -119,35 +119,35 @@ class AdInstanceManager {
     arguments.put("eventName", "onAppEvent");
     arguments.put("name", name);
     arguments.put("data", data);
-    channel.invokeMethod("onAdEvent", arguments);
+    invokeOnAdEvent(arguments);
   }
 
   void onAdImpression(int id) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", id);
     arguments.put("eventName", "onAdImpression");
-    channel.invokeMethod("onAdEvent", arguments);
+    invokeOnAdEvent(arguments);
   }
 
   void onNativeAdClicked(int id) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", id);
     arguments.put("eventName", "onNativeAdClicked");
-    channel.invokeMethod("onAdEvent", arguments);
+    invokeOnAdEvent(arguments);
   }
 
   void onAdOpened(int adId) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adId);
     arguments.put("eventName", "onAdOpened");
-    channel.invokeMethod("onAdEvent", arguments);
+    invokeOnAdEvent(arguments);
   }
 
   void onAdClosed(int adId) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adId);
     arguments.put("eventName", "onAdClosed");
-    channel.invokeMethod("onAdEvent", arguments);
+    invokeOnAdEvent(arguments);
   }
 
   void onRewardedAdUserEarnedReward(int adId, @NonNull FlutterRewardedAd.FlutterRewardItem reward) {
@@ -155,7 +155,17 @@ class AdInstanceManager {
     arguments.put("adId", adId);
     arguments.put("eventName", "onRewardedAdUserEarnedReward");
     arguments.put("rewardItem", reward);
-    channel.invokeMethod("onAdEvent", arguments);
+    invokeOnAdEvent(arguments);
+  }
+
+  void onPaidEvent(@NonNull FlutterAd ad, @NonNull FlutterAdValue adValue) {
+    final Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adIdFor(ad));
+    arguments.put("eventName", "onPaidEvent");
+    arguments.put("valueMicros", adValue.valueMicros);
+    arguments.put("precision", adValue.precisionType);
+    arguments.put("currencyCode", adValue.currencyCode);
+    invokeOnAdEvent(arguments);
   }
 
   void onFailedToShowFullScreenContent(int adId, @NonNull AdError error) {
@@ -163,28 +173,28 @@ class AdInstanceManager {
     arguments.put("adId", adId);
     arguments.put("eventName", "onFailedToShowFullScreenContent");
     arguments.put("error", new FlutterAdError(error));
-    channel.invokeMethod("onAdEvent", arguments);
+    invokeOnAdEvent(arguments);
   }
 
   void onAdShowedFullScreenContent(int adId) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adId);
     arguments.put("eventName", "onAdShowedFullScreenContent");
-    channel.invokeMethod("onAdEvent", arguments);
+    invokeOnAdEvent(arguments);
   }
 
   void onAdDismissedFullScreenContent(int adId) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adId);
     arguments.put("eventName", "onAdDismissedFullScreenContent");
-    channel.invokeMethod("onAdEvent", arguments);
+    invokeOnAdEvent(arguments);
   }
 
   void onAdMetadataChanged(int adId) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adId);
     arguments.put("eventName", "onAdMetadataChanged");
-    channel.invokeMethod("onAdEvent", arguments);
+    invokeOnAdEvent(arguments);
   }
 
   boolean showAdWithId(int id) {
@@ -196,5 +206,16 @@ class AdInstanceManager {
 
     ad.show();
     return true;
+  }
+
+  /** Invoke the method channel using the UI thread. Otherwise the message gets silently dropped. */
+  private void invokeOnAdEvent(final Map<Object, Object> arguments) {
+    activity.runOnUiThread(
+        new Runnable() {
+          @Override
+          public void run() {
+            channel.invokeMethod("onAdEvent", arguments);
+          }
+        });
   }
 }
