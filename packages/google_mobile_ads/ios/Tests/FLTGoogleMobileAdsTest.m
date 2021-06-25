@@ -353,10 +353,10 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 
   XCTAssertNil([_manager adFor:@(1)]);
   XCTAssertNil([_manager adIdFor:bannerAd]);
-  
+
   GADBannerView *mockGADBannerView = OCMClassMock([GADBannerView class]);
   [bannerAd bannerViewDidRecordImpression:mockGADBannerView];
-  
+
   NSData *impressionData = [self getDataForEvent:@"onBannerImpression" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:impressionData]));
 }
