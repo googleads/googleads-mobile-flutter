@@ -63,7 +63,8 @@
                                       request:request
                            rootViewController:UIApplication.sharedApplication.delegate.window
                                                   .rootViewController
-                serverSideVerificationOptions:serverSideVerificationOptions];
+                serverSideVerificationOptions:serverSideVerificationOptions
+                                         adId:@1];
 
   FlutterMethodCall *methodCall = [FlutterMethodCall
       methodCallWithMethodName:@"loadRewardedAd"
@@ -94,8 +95,7 @@
     XCTAssertEqualObjects(options, serverSideVerificationOptions);
     return YES;
   };
-  OCMVerify([_mockAdInstanceManager loadAd:[OCMArg checkWithBlock:verificationBlock]
-                                      adId:[OCMArg isEqual:@2]]);
+  OCMVerify([_mockAdInstanceManager loadAd:[OCMArg checkWithBlock:verificationBlock]]);
 }
 
 - (void)testInternalInit {

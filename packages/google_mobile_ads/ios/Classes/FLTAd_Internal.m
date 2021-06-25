@@ -173,6 +173,14 @@
 }
 @end
 
+@interface FLTBaseAd ()
+@property(readwrite) NSNumber *_Nonnull adId;
+@end
+
+@implementation FLTBaseAd
+@synthesize adId;
+@end
+
 @implementation FLTBannerAd {
   GADBannerView *_bannerView;
   FLTAdRequest *_adRequest;
@@ -181,14 +189,15 @@
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                             size:(FLTAdSize *_Nonnull)size
                          request:(FLTAdRequest *_Nonnull)request
-              rootViewController:(UIViewController *_Nonnull)rootViewController {
+              rootViewController:(UIViewController *_Nonnull)rootViewController
+                            adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     _adRequest = request;
     _bannerView = [[GADBannerView alloc] initWithAdSize:size.size];
     _bannerView.adUnitID = adUnitId;
+    self.adId = adId;
     self.bannerView.rootViewController = rootViewController;
-
     __weak FLTBannerAd *weakSelf = self;
     self.bannerView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
       if (weakSelf.manager == nil) {
@@ -215,33 +224,36 @@
 #pragma mark - GADBannerViewDelegate
 
 - (void)bannerViewDidReceiveAd:(GADBannerView *)bannerView {
-  [_manager onAdLoaded:self responseInfo:bannerView.responseInfo];
+  [manager onAdLoaded:self responseInfo:bannerView.responseInfo];
 }
 
 - (void)bannerView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(NSError *)error {
-  [_manager onAdFailedToLoad:self error:error];
+  [manager onAdFailedToLoad:self error:error];
 }
 
 - (void)bannerViewDidRecordImpression:(GADBannerView *)bannerView {
-  [_manager onBannerImpression:self];
+  [manager onBannerImpression:self];
 }
 
 - (void)bannerViewWillPresentScreen:(GADBannerView *)bannerView {
-  [_manager onBannerWillPresentScreen:self];
+  [manager onBannerWillPresentScreen:self];
 }
 
 - (void)bannerViewWillDismissScreen:(GADBannerView *)bannerView {
-  [_manager onBannerWillDismissScreen:self];
+  [manager onBannerWillDismissScreen:self];
 }
 
 - (void)bannerViewDidDismissScreen:(GADBannerView *)bannerView {
-  [_manager onBannerDidDismissScreen:self];
+  [manager onBannerDidDismissScreen:self];
 }
 
 #pragma mark - FlutterPlatformView
 - (nonnull UIView *)view {
   return self.bannerView;
 }
+
+@synthesize manager;
+
 @end
 
 @implementation FLTGAMBannerAd {
@@ -252,9 +264,11 @@
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                            sizes:(NSArray<FLTAdSize *> *_Nonnull)sizes
                          request:(FLTGAMAdRequest *_Nonnull)request
-              rootViewController:(UIViewController *_Nonnull)rootViewController {
+              rootViewController:(UIViewController *_Nonnull)rootViewController
+                            adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
+    self.adId = adId;
     _adRequest = request;
     _bannerView = [[GAMBannerView alloc] initWithAdSize:sizes[0].size];
     _bannerView.adUnitID = adUnitId;
@@ -314,9 +328,11 @@
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
-              rootViewController:(UIViewController *_Nonnull)rootViewController {
+              rootViewController:(UIViewController *_Nonnull)rootViewController
+                            adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
+    self.adId = adId;
     _adRequest = request;
     _adUnitId = [adUnitId copy];
     _rootViewController = rootViewController;
@@ -402,9 +418,11 @@
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTGAMAdRequest *_Nonnull)request
-              rootViewController:(UIViewController *_Nonnull)rootViewController {
+              rootViewController:(UIViewController *_Nonnull)rootViewController
+                            adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
+    self.adId = adId;
     _adRequest = request;
     _adUnitId = [adUnitId copy];
     _rootViewController = rootViewController;
@@ -474,9 +492,11 @@
                           request:(FLTAdRequest *_Nonnull)request
                rootViewController:(UIViewController *_Nonnull)rootViewController
     serverSideVerificationOptions:
-        (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions {
+        (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions
+                             adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
+    self.adId = adId;
     _adRequest = request;
     _rootViewController = rootViewController;
     _serverSideVerificationOptions = serverSideVerificationOptions;
@@ -587,9 +607,11 @@
                                   request:(FLTAdRequest *_Nonnull)request
                           nativeAdFactory:(NSObject<FLTNativeAdFactory> *_Nonnull)nativeAdFactory
                             customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions
-                       rootViewController:(UIViewController *_Nonnull)rootViewController {
+                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                                     adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
+    self.adId = adId;
     _adUnitId = adUnitId;
     _adRequest = request;
     _nativeAdFactory = nativeAdFactory;
@@ -638,39 +660,41 @@
                                                           precision:(NSInteger)value.precision
                                                        currencyCode:value.currencyCode]];
   };
-  [_manager onAdLoaded:self responseInfo:nativeAd.responseInfo];
+  [manager onAdLoaded:self responseInfo:nativeAd.responseInfo];
 }
 
 - (void)adLoader:(GADAdLoader *)adLoader didFailToReceiveAdWithError:(NSError *)error {
-  [_manager onAdFailedToLoad:self error:error];
+  [manager onAdFailedToLoad:self error:error];
 }
 
 #pragma mark - GADNativeAdDelegate
 
 - (void)nativeAdDidRecordClick:(GADNativeAd *)nativeAd {
-  [_manager onNativeAdClicked:self];
+  [manager onNativeAdClicked:self];
 }
 
 - (void)nativeAdDidRecordImpression:(GADNativeAd *)nativeAd {
-  [_manager onNativeAdImpression:self];
+  [manager onNativeAdImpression:self];
 }
 
 - (void)nativeAdWillPresentScreen:(GADNativeAd *)nativeAd {
-  [_manager onNativeAdWillPresentScreen:self];
+  [manager onNativeAdWillPresentScreen:self];
 }
 
 - (void)nativeAdWillDismissScreen:(nonnull GADNativeAd *)nativeAd {
-  [_manager onNativeAdWillDismissScreen:self];
+  [manager onNativeAdWillDismissScreen:self];
 }
 
 - (void)nativeAdDidDismissScreen:(GADNativeAd *)nativeAd {
-  [_manager onNativeAdDidDismissScreen:self];
+  [manager onNativeAdDidDismissScreen:self];
 }
 
 #pragma mark - FlutterPlatformView
 - (UIView *)view {
   return _view;
 }
+
+@synthesize manager;
 
 @end
 

@@ -28,7 +28,7 @@
     (id<FlutterBinaryMessenger> _Nonnull)binaryMessenger;
 - (id<FLTAd> _Nullable)adFor:(NSNumber *_Nonnull)adId;
 - (NSNumber *_Nullable)adIdFor:(id<FLTAd> _Nonnull)ad;
-- (void)loadAd:(id<FLTAd> _Nonnull)ad adId:(NSNumber *_Nonnull)adId;
+- (void)loadAd:(id<FLTAd> _Nonnull)ad;
 - (void)dispose:(NSNumber *_Nonnull)adId;
 - (void)showAdWithID:(NSNumber *_Nonnull)adId;
 - (void)onAdLoaded:(id<FLTAd> _Nonnull)ad responseInfo:(GADResponseInfo *_Nonnull)responseInfo;

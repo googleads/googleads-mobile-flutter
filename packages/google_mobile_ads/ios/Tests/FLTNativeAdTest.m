@@ -49,7 +49,8 @@
                                                   request:gadOrGAMRequest
                                           nativeAdFactory:mockNativeAdFactory
                                             customOptions:customOptions
-                                       rootViewController:OCMClassMock([UIViewController class])];
+                                       rootViewController:OCMClassMock([UIViewController class])
+                                                     adId:@1];
   ad.manager = mockManager;
 
   XCTAssertEqual(ad.adLoader.adUnitID, @"testAdUnitId");

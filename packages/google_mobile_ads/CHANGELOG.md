@@ -1,3 +1,7 @@
+## 0.13.1+1
+
+* Fixes a [crash on iOS](https://github.com/googleads/googleads-mobile-flutter/issues/138).
+
 ## 0.13.1
 
 * Adds support for the paid event callback.
