@@ -69,7 +69,8 @@
   FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
                                                       request:request
                                            rootViewController:mockRootViewController
-                                serverSideVerificationOptions:options];
+                                serverSideVerificationOptions:options
+                                                         adId:@1];
   ad.manager = mockManager;
 
   // Stub the load call to invoke successful load callback.
@@ -194,7 +195,8 @@
   FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
                                                       request:request
                                            rootViewController:mockRootViewController
-                                serverSideVerificationOptions:nil];
+                                serverSideVerificationOptions:nil
+                                                         adId:@1];
   ad.manager = mockManager;
 
   id rewardedClassMock = OCMClassMock([GADRewardedAd class]);
