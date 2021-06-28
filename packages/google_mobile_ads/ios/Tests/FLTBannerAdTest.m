@@ -35,7 +35,8 @@
   FLTBannerAd *bannerAd = [[FLTBannerAd alloc] initWithAdUnitId:@"testId"
                                                            size:size
                                                         request:[[FLTAdRequest alloc] init]
-                                             rootViewController:mockRootViewController];
+                                             rootViewController:mockRootViewController
+                                                           adId:@1];
   bannerAd.manager = mockManager;
 
   [bannerAd load];
@@ -96,7 +97,8 @@
                                                      size:[[FLTAdSize alloc] initWithWidth:@(1)
                                                                                     height:@(2)]
                                                   request:request
-                                       rootViewController:mockRootViewController];
+                                       rootViewController:mockRootViewController
+                                                     adId:@1];
 
   XCTAssertEqual(ad.bannerView.adUnitID, @"testId");
   XCTAssertEqual(ad.bannerView.rootViewController, mockRootViewController);

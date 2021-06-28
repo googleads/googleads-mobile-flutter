@@ -38,7 +38,8 @@
   UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
   FLTInterstitialAd *ad = [[FLTInterstitialAd alloc] initWithAdUnitId:@"testId"
                                                               request:request
-                                                   rootViewController:mockRootViewController];
+                                                   rootViewController:mockRootViewController
+                                                                 adId:@1];
   ad.manager = mockManager;
 
   id interstitialClassMock = OCMClassMock([GADInterstitialAd class]);
@@ -121,7 +122,8 @@
   UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
   FLTInterstitialAd *ad = [[FLTInterstitialAd alloc] initWithAdUnitId:@"testId"
                                                               request:request
-                                                   rootViewController:mockRootViewController];
+                                                   rootViewController:mockRootViewController
+                                                                 adId:@1];
   ad.manager = mockManager;
 
   id interstitialClassMock = OCMClassMock([GADInterstitialAd class]);
