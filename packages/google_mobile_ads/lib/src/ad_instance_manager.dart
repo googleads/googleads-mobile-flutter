@@ -424,6 +424,7 @@ class AdInstanceManager {
         'request': ad.request,
         'adManagerRequest': ad.adManagerRequest,
         'factoryId': ad.factoryId,
+        'nativeAdOptions': ad.nativeAdOptions,
         'customOptions': ad.customOptions,
       },
     );
@@ -553,8 +554,6 @@ class AdInstanceManager {
 
 @visibleForTesting
 class AdMessageCodec extends StandardMessageCodec {
-  const AdMessageCodec();
-
   // The type values below must be consistent for each platform.
   static const int _valueAdSize = 128;
   static const int _valueAdRequest = 129;
@@ -570,6 +569,8 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueAdapterResponseInfo = 141;
   static const int _valueAnchoredAdaptiveBannerAdSize = 142;
   static const int _valueSmartBannerAdSize = 143;
+  static const int _valueNativeAdOptions = 144;
+  static const int _valueVideoOptions = 145;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -629,6 +630,19 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueServerSideVerificationOptions);
       writeValue(buffer, value.userId);
       writeValue(buffer, value.customData);
+    } else if (value is NativeAdOptions) {
+      buffer.putUint8(_valueNativeAdOptions);
+      writeValue(buffer, value.adChoicesPlacement);
+      writeValue(buffer, value.mediaAspectRatio);
+      writeValue(buffer, value.videoOptions);
+      writeValue(buffer, value.requestCustomMuteThisAd);
+      writeValue(buffer, value.shouldRequestMultipleImages);
+      writeValue(buffer, value.shouldReturnUrlsForImageAssets);
+    } else if (value is VideoOptions) {
+      buffer.putUint8(_valueVideoOptions);
+      writeValue(buffer, value.clickToExpandRequested);
+      writeValue(buffer, value.customControlsRequested);
+      writeValue(buffer, value.startMuted);
     } else {
       super.writeValue(buffer, value);
     }
@@ -741,6 +755,23 @@ class AdMessageCodec extends StandardMessageCodec {
         return ServerSideVerificationOptions(
             userId: readValueOfType(buffer.getUint8(), buffer),
             customData: readValueOfType(buffer.getUint8(), buffer));
+      case _valueNativeAdOptions:
+        return NativeAdOptions(
+          adChoicesPlacement: readValueOfType(buffer.getUint8(), buffer),
+          mediaAspectRatio: readValueOfType(buffer.getUint8(), buffer),
+          videoOptions: readValueOfType(buffer.getUint8(), buffer),
+          requestCustomMuteThisAd: readValueOfType(buffer.getUint8(), buffer),
+          shouldRequestMultipleImages:
+              readValueOfType(buffer.getUint8(), buffer),
+          shouldReturnUrlsForImageAssets:
+              readValueOfType(buffer.getUint8(), buffer),
+        );
+      case _valueVideoOptions:
+        return VideoOptions(
+          clickToExpandRequested: readValueOfType(buffer.getUint8(), buffer),
+          customControlsRequested: readValueOfType(buffer.getUint8(), buffer),
+          startMuted: readValueOfType(buffer.getUint8(), buffer),
+        );
       default:
         return super.readValueOfType(type, buffer);
     }

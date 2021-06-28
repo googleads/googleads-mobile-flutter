@@ -47,6 +47,8 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_ADAPTER_RESPONSE_INFO = (byte) 141;
   static final byte VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE = (byte) 142;
   static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 143;
+  static final byte VALUE_NATIVE_AD_OPTIONS = (byte) 144;
+  static final byte VALUE_VIDEO_OPTIONS = (byte) 145;
 
   @NonNull final Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
@@ -141,6 +143,21 @@ class AdMessageCodec extends StandardMessageCodec {
       FlutterServerSideVerificationOptions options = (FlutterServerSideVerificationOptions) value;
       writeValue(stream, options.getUserId());
       writeValue(stream, options.getCustomData());
+    } else if (value instanceof FlutterNativeAdOptions) {
+      stream.write(VALUE_NATIVE_AD_OPTIONS);
+      FlutterNativeAdOptions options = (FlutterNativeAdOptions) value;
+      writeValue(stream, options.adChoicesPlacement);
+      writeValue(stream, options.mediaAspectRatio);
+      writeValue(stream, options.videoOptions);
+      writeValue(stream, options.requestCustomMuteThisAd);
+      writeValue(stream, options.shouldRequestMultipleImages);
+      writeValue(stream, options.shouldReturnUrlsForImageAssets);
+    } else if (value instanceof FlutterVideoOptions) {
+      stream.write(VALUE_VIDEO_OPTIONS);
+      FlutterVideoOptions options = (FlutterVideoOptions) value;
+      writeValue(stream, options.clickToExpandRequested);
+      writeValue(stream, options.customControlsRequested);
+      writeValue(stream, options.startMuted);
     } else {
       super.writeValue(stream, value);
     }
@@ -226,6 +243,19 @@ class AdMessageCodec extends StandardMessageCodec {
         return new FlutterServerSideVerificationOptions(
             (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer));
+      case VALUE_NATIVE_AD_OPTIONS:
+        return new FlutterNativeAdOptions(
+            (Integer) readValueOfType(buffer.get(), buffer),
+            (Integer) readValueOfType(buffer.get(), buffer),
+            (FlutterVideoOptions) readValueOfType(buffer.get(), buffer),
+            (Boolean) readValueOfType(buffer.get(), buffer),
+            (Boolean) readValueOfType(buffer.get(), buffer),
+            (Boolean) readValueOfType(buffer.get(), buffer));
+      case VALUE_VIDEO_OPTIONS:
+        return new FlutterVideoOptions(
+            (Boolean) readValueOfType(buffer.get(), buffer),
+            (Boolean) readValueOfType(buffer.get(), buffer),
+            (Boolean) readValueOfType(buffer.get(), buffer));
       default:
         return super.readValueOfType(type, buffer);
     }
