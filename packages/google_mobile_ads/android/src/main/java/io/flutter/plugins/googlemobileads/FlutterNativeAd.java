@@ -15,11 +15,9 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.util.Log;
-import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
@@ -29,7 +27,7 @@ import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Map;
 
 /** A wrapper for {@link NativeAd}. */
-class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
+class FlutterNativeAd extends FlutterAd {
   private static final String TAG = "FlutterNativeAd";
 
   @NonNull private final AdInstanceManager manager;
@@ -39,8 +37,7 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
   @Nullable private FlutterAdRequest request;
   @Nullable private FlutterAdManagerAdRequest adManagerRequest;
   @Nullable private Map<String, Object> customOptions;
-  @Nullable private NativeAdView ad;
-  @Nullable private ResponseInfo responseInfo;
+  @Nullable private NativeAdView nativeAdView;
 
   static class Builder {
     @Nullable private AdInstanceManager manager;
@@ -49,9 +46,15 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
     @Nullable private FlutterAdRequest request;
     @Nullable private FlutterAdManagerAdRequest adManagerRequest;
     @Nullable private Map<String, Object> customOptions;
+    @Nullable private Integer id;
 
     public Builder setAdFactory(@NonNull NativeAdFactory adFactory) {
       this.adFactory = adFactory;
+      return this;
+    }
+
+    public Builder setId(int id) {
+      this.id = id;
       return this;
     }
 
@@ -95,6 +98,7 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
       if (request == null) {
         nativeAd =
             new FlutterNativeAd(
+                id,
                 manager,
                 adUnitId,
                 adFactory,
@@ -104,19 +108,21 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
       } else {
         nativeAd =
             new FlutterNativeAd(
-                manager, adUnitId, adFactory, request, new FlutterAdLoader(), customOptions);
+                id, manager, adUnitId, adFactory, request, new FlutterAdLoader(), customOptions);
       }
       return nativeAd;
     }
   }
 
   protected FlutterNativeAd(
+      int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull NativeAdFactory adFactory,
       @NonNull FlutterAdRequest request,
       @NonNull FlutterAdLoader flutterAdLoader,
       @Nullable Map<String, Object> customOptions) {
+    super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.adFactory = adFactory;
@@ -126,12 +132,14 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
   }
 
   protected FlutterNativeAd(
+      int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull NativeAdFactory adFactory,
       @NonNull FlutterAdManagerAdRequest adManagerRequest,
       @NonNull FlutterAdLoader flutterAdLoader,
       @Nullable Map<String, Object> customOptions) {
+    super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.adFactory = adFactory;
@@ -142,39 +150,12 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
 
   @Override
   void load() {
+    final OnNativeAdLoadedListener loadedListener = new FlutterNativeAdLoadedListener(this);
+    final AdListener adListener = new FlutterNativeAdListener(adId, manager);
+    final NativeAdOptions options = new NativeAdOptions.Builder().build();
+
     // Note we delegate loading the ad to FlutterAdLoader mainly for testing purposes.
     // As of 20.0.0 of GMA, mockito is unable to mock AdLoader.
-    OnNativeAdLoadedListener loadedListener =
-        new OnNativeAdLoadedListener() {
-          @Override
-          public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
-            ad = adFactory.createNativeAd(nativeAd, customOptions);
-            responseInfo = nativeAd.getResponseInfo();
-            nativeAd.setOnPaidEventListener(
-                new FlutterPaidEventListener(manager, FlutterNativeAd.this));
-          }
-        };
-
-    final ResponseInfoProvider responseInfoProvider =
-        new ResponseInfoProvider() {
-          @Override
-          public ResponseInfo getResponseInfo() {
-            return responseInfo;
-          }
-        };
-    final AdListener adListener =
-        new FlutterAdListener(manager, this, responseInfoProvider) {
-          @Override
-          public void onAdClicked() {
-            manager.onNativeAdClicked(FlutterNativeAd.this);
-          }
-
-          @Override
-          public void onAdImpression() {
-            manager.onAdImpression(FlutterNativeAd.this);
-          }
-        };
-    NativeAdOptions options = new NativeAdOptions.Builder().build();
     if (request != null) {
       flutterAdLoader.loadNativeAd(
           manager.activity, adUnitId, loadedListener, options, adListener, request.asAdRequest());
@@ -193,22 +174,24 @@ class FlutterNativeAd extends FlutterAd implements PlatformView, FlutterDestroya
 
   @Override
   @Nullable
-  public View getView() {
-    return ad;
+  public PlatformView getPlatformView() {
+    if (nativeAdView == null) {
+      return null;
+    }
+    return new FlutterPlatformView(nativeAdView);
+  }
+
+  void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+    nativeAdView = adFactory.createNativeAd(nativeAd, customOptions);
+    nativeAd.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
+    manager.onAdLoaded(adId, nativeAd.getResponseInfo());
   }
 
   @Override
-  public void dispose() {
-    // Do nothing. Cleanup is handled in destroy() below, which is triggered from dispose() being
-    // called on the flutter ad object. This is allows for reuse of the ad view, for example
-    // in a scrolling list view.
-  }
-
-  @Override
-  public void destroy() {
-    if (ad != null) {
-      ad.destroy();
-      ad = null;
+  void dispose() {
+    if (nativeAdView != null) {
+      nativeAdView.destroy();
+      nativeAdView = null;
     }
   }
 }

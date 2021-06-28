@@ -14,30 +14,31 @@
 
 package io.flutter.plugins.googlemobileads;
 
-import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.ResponseInfo;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.util.Preconditions;
 
 /** A wrapper for {@link AdView}. */
-class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroyableAd {
+class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
+
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final FlutterAdSize size;
   @NonNull private final FlutterAdRequest request;
   @NonNull private final BannerAdCreator bannerAdCreator;
-  @Nullable private AdView view;
+  @Nullable private AdView adView;
 
   /** Constructs the FlutterBannerAd. */
   public FlutterBannerAd(
+      int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdRequest request,
       @NonNull FlutterAdSize size,
       @NonNull BannerAdCreator bannerAdCreator) {
+    super(adId);
     Preconditions.checkNotNull(manager);
     Preconditions.checkNotNull(adUnitId);
     Preconditions.checkNotNull(request);
@@ -50,42 +51,36 @@ class FlutterBannerAd extends FlutterAd implements PlatformView, FlutterDestroya
   }
 
   @Override
+  public void onAdLoaded() {
+    if (adView != null) {
+      manager.onAdLoaded(adId, adView.getResponseInfo());
+    }
+  }
+
+  @Override
   void load() {
-    view = bannerAdCreator.createAdView();
-    view.setAdUnitId(adUnitId);
-    view.setAdSize(size.getAdSize());
-    view.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
-    view.setAdListener(
-        new FlutterBannerAdListener(
-            manager,
-            this,
-            new ResponseInfoProvider() {
-              @Override
-              public ResponseInfo getResponseInfo() {
-                return view.getResponseInfo();
-              }
-            }));
-    view.loadAd(request.asAdRequest());
+    adView = bannerAdCreator.createAdView();
+    adView.setAdUnitId(adUnitId);
+    adView.setAdSize(size.getAdSize());
+    adView.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
+    adView.setAdListener(new FlutterBannerAdListener(adId, manager, this));
+    adView.loadAd(request.asAdRequest());
   }
 
-  @Override
   @Nullable
-  public View getView() {
-    return view;
+  @Override
+  public PlatformView getPlatformView() {
+    if (adView == null) {
+      return null;
+    }
+    return new FlutterPlatformView(adView);
   }
 
   @Override
-  public void dispose() {
-    // Do nothing. Cleanup is handled in destroy() below, which is triggered from dispose() being
-    // called on the flutter ad object. This is allows for reuse of the  ad view, for example
-    // in a scrolling list view.
-  }
-
-  @Override
-  public void destroy() {
-    if (view != null) {
-      view.destroy();
-      view = null;
+  void dispose() {
+    if (adView != null) {
+      adView.destroy();
+      adView = null;
     }
   }
 }

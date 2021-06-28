@@ -23,6 +23,7 @@ import com.google.android.gms.ads.rewarded.OnAdMetadataChangedListener;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import java.lang.ref.WeakReference;
 
 /** A wrapper for {@link RewardedAd}. */
 class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
@@ -71,11 +72,13 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
   /** Constructor for AdMob Ad Request. */
   public FlutterRewardedAd(
+      int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdRequest request,
       @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions,
       @NonNull FlutterAdLoader flutterAdLoader) {
+    super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.request = request;
@@ -86,11 +89,13 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
   /** Constructor for Ad Manager Ad request. */
   public FlutterRewardedAd(
+      int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdManagerAdRequest adManagerRequest,
       @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions,
       @NonNull FlutterAdLoader flutterAdLoader) {
+    super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.adManagerRequest = adManagerRequest;
@@ -101,28 +106,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
   @Override
   void load() {
-    final RewardedAdLoadCallback adLoadCallback =
-        new RewardedAdLoadCallback() {
-          @Override
-          public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
-            FlutterRewardedAd.this.rewardedAd = rewardedAd;
-            if (serverSideVerificationOptions != null) {
-              rewardedAd.setServerSideVerificationOptions(
-                  serverSideVerificationOptions.asServerSideVerificationOptions());
-            }
-            manager.onAdLoaded(FlutterRewardedAd.this, rewardedAd.getResponseInfo());
-            rewardedAd.setOnPaidEventListener(
-                new FlutterPaidEventListener(manager, FlutterRewardedAd.this));
-
-            super.onAdLoaded(rewardedAd);
-          }
-
-          @Override
-          public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-            manager.onAdFailedToLoad(FlutterRewardedAd.this, new FlutterLoadAdError(loadAdError));
-          }
-        };
-
+    final RewardedAdLoadCallback adLoadCallback = new DelegatingRewardedCallback(this);
     if (request != null) {
       flutterAdLoader.loadRewarded(
           manager.activity, adUnitId, request.asAdRequest(), adLoadCallback);
@@ -134,6 +118,20 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
     }
   }
 
+  void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+    FlutterRewardedAd.this.rewardedAd = rewardedAd;
+    if (serverSideVerificationOptions != null) {
+      rewardedAd.setServerSideVerificationOptions(
+          serverSideVerificationOptions.asServerSideVerificationOptions());
+    }
+    rewardedAd.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
+    manager.onAdLoaded(adId, rewardedAd.getResponseInfo());
+  }
+
+  void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+    manager.onAdFailedToLoad(adId, new FlutterLoadAdError(loadAdError));
+  }
+
   @Override
   public void show() {
     if (rewardedAd == null) {
@@ -141,23 +139,64 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       return;
     }
 
-    rewardedAd.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, this));
-    rewardedAd.setOnAdMetadataChangedListener(
-        new OnAdMetadataChangedListener() {
-          @Override
-          public void onAdMetadataChanged() {
-            manager.onAdMetadataChanged(FlutterRewardedAd.this);
-          }
-        });
-    rewardedAd.show(
-        manager.activity,
-        new OnUserEarnedRewardListener() {
-          @Override
-          public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-            manager.onRewardedAdUserEarnedReward(
-                FlutterRewardedAd.this,
-                new FlutterRewardItem(rewardItem.getAmount(), rewardItem.getType()));
-          }
-        });
+    rewardedAd.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
+    rewardedAd.setOnAdMetadataChangedListener(new DelegatingRewardedCallback(this));
+    rewardedAd.show(manager.activity, new DelegatingRewardedCallback(this));
+  }
+
+  void onAdMetadataChanged() {
+    manager.onAdMetadataChanged(adId);
+  }
+
+  void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+    manager.onRewardedAdUserEarnedReward(
+        adId, new FlutterRewardItem(rewardItem.getAmount(), rewardItem.getType()));
+  }
+
+  @Override
+  void dispose() {
+    rewardedAd = null;
+  }
+
+  /**
+   * This class delegates various rewarded ad callbacks to FlutterRewardedAd. Maintains a weak
+   * reference to avoid memory leaks.
+   */
+  private static final class DelegatingRewardedCallback extends RewardedAdLoadCallback
+      implements OnAdMetadataChangedListener, OnUserEarnedRewardListener {
+
+    private final WeakReference<FlutterRewardedAd> delegate;
+
+    DelegatingRewardedCallback(FlutterRewardedAd delegate) {
+      this.delegate = new WeakReference<>(delegate);
+    }
+
+    @Override
+    public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+      if (delegate.get() != null) {
+        delegate.get().onAdLoaded(rewardedAd);
+      }
+    }
+
+    @Override
+    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+      if (delegate.get() != null) {
+        delegate.get().onAdFailedToLoad(loadAdError);
+      }
+    }
+
+    @Override
+    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+      if (delegate.get() != null) {
+        delegate.get().onUserEarnedReward(rewardItem);
+      }
+    }
+
+    @Override
+    public void onAdMetadataChanged() {
+      if (delegate.get() != null) {
+        delegate.get().onAdMetadataChanged();
+      }
+    }
   }
 }
