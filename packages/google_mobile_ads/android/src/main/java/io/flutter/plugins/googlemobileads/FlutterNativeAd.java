@@ -150,9 +150,9 @@ class FlutterNativeAd extends FlutterAd {
 
   @Override
   void load() {
-    OnNativeAdLoadedListener loadedListener = new FlutterNativeAdLoadedListener(this);
+    final OnNativeAdLoadedListener loadedListener = new FlutterNativeAdLoadedListener(this);
     final AdListener adListener = new FlutterNativeAdListener(adId, manager);
-    NativeAdOptions options = new NativeAdOptions.Builder().build();
+    final NativeAdOptions options = new NativeAdOptions.Builder().build();
 
     // Note we delegate loading the ad to FlutterAdLoader mainly for testing purposes.
     // As of 20.0.0 of GMA, mockito is unable to mock AdLoader.

@@ -118,7 +118,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
     }
   }
 
-  void onAdLoaded(RewardedAd rewardedAd) {
+  void onAdLoaded(@NonNull RewardedAd rewardedAd) {
     FlutterRewardedAd.this.rewardedAd = rewardedAd;
     if (serverSideVerificationOptions != null) {
       rewardedAd.setServerSideVerificationOptions(
@@ -128,7 +128,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
     manager.onAdLoaded(adId, rewardedAd.getResponseInfo());
   }
 
-  void onAdFailedToLoad(LoadAdError loadAdError) {
+  void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
     manager.onAdFailedToLoad(adId, new FlutterLoadAdError(loadAdError));
   }
 

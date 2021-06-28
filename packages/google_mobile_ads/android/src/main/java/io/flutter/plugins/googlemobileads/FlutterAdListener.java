@@ -105,6 +105,8 @@ class FlutterNativeAdLoadedListener implements OnNativeAdLoadedListener {
 
   @Override
   public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
-    nativeAdWeakReference.get().onNativeAdLoaded(nativeAd);
+    if (nativeAdWeakReference.get() != null) {
+      nativeAdWeakReference.get().onNativeAdLoaded(nativeAd);
+    }
   }
 }
