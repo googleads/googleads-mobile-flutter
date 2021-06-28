@@ -1,4 +1,4 @@
-## 0.13.0+1
+## 0.13.1+1
 
 * Fixes a crash where [PlatformView.getView() returns null](https://github.com/googleads/googleads-mobile-flutter/issues/46)
 * Fixes memory leaks on Android.
