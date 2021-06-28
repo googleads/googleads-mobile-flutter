@@ -181,7 +181,7 @@ class FlutterNativeAd extends FlutterAd {
     return new FlutterPlatformView(nativeAdView);
   }
 
-  void onNativeAdLoaded(NativeAd nativeAd) {
+  void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
     nativeAdView = adFactory.createNativeAd(nativeAd, customOptions);
     nativeAd.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
     manager.onAdLoaded(adId, nativeAd.getResponseInfo());
