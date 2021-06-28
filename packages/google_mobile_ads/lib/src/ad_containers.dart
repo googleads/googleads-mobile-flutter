@@ -604,11 +604,14 @@ class NativeAd extends AdWithView {
   ///
   /// A valid [adUnitId], nonnull [listener], nonnull [request], and nonnull
   /// [factoryId] is required.
+  /// Use [nativeAdOptions] to customize the native ad request.
+  /// Use [customOptions] to pass data to your native ad factory.
   NativeAd({
     required String adUnitId,
     required this.factoryId,
     required this.listener,
     required this.request,
+    this.nativeAdOptions,
     this.customOptions,
   })  : adManagerRequest = null,
         assert(request != null),
@@ -618,11 +621,14 @@ class NativeAd extends AdWithView {
   ///
   /// A valid [adUnitId], nonnull [listener], nonnull [adManagerRequest], and
   /// nonnull [factoryId] is required.
+  /// Use [nativeAdOptions] to customize the native ad request.
+  /// Use [customOptions] to pass data to your native ad factory.
   NativeAd.fromAdManagerRequest({
     required String adUnitId,
     required this.factoryId,
     required this.listener,
     required this.adManagerRequest,
+    this.nativeAdOptions,
     this.customOptions,
   })  : request = null,
         assert(adManagerRequest != null),
@@ -645,6 +651,9 @@ class NativeAd extends AdWithView {
 
   /// Targeting information used to fetch an [Ad] with Ad Manager.
   final AdManagerAdRequest? adManagerRequest;
+
+  /// Options to configure the native ad request.
+  final NativeAdOptions? nativeAdOptions;
 
   /// {@template google_mobile_ads.testAdUnitId}
   /// A platform-specific AdMob test ad unit ID.
@@ -890,5 +899,56 @@ class ServerSideVerificationOptions {
     return other is ServerSideVerificationOptions &&
         userId == other.userId &&
         customData == other.customData;
+  }
+}
+
+/// Used to configure native ad requests.
+class NativeAdOptions {
+  final int? adChoicesPlacement;
+  final int? mediaAspectRatio;
+  final VideoOptions? videoOptions;
+  final bool? requestCustomMuteThisAd;
+  final bool? shouldRequestMultipleImages;
+  final bool? shouldReturnUrlsForImageAssets;
+
+  NativeAdOptions({
+    this.adChoicesPlacement,
+    this.mediaAspectRatio,
+    this.videoOptions,
+    this.requestCustomMuteThisAd,
+    this.shouldRequestMultipleImages,
+    this.shouldReturnUrlsForImageAssets,
+  });
+
+  @override
+  bool operator ==(other) {
+    return other is NativeAdOptions &&
+        adChoicesPlacement == other.adChoicesPlacement &&
+        mediaAspectRatio == other.mediaAspectRatio &&
+        videoOptions == other.videoOptions &&
+        requestCustomMuteThisAd == other.requestCustomMuteThisAd &&
+        shouldRequestMultipleImages == other.shouldRequestMultipleImages &&
+        shouldReturnUrlsForImageAssets == other.shouldReturnUrlsForImageAssets;
+  }
+}
+
+/// Options for controlling video playback in supported ad formats.
+class VideoOptions {
+  final bool? clickToExpandRequested;
+  final bool? customControlsRequested;
+  final bool? startMuted;
+
+  VideoOptions({
+    this.clickToExpandRequested,
+    this.customControlsRequested,
+    this.startMuted,
+  });
+
+  @override
+  bool operator ==(other) {
+    return other is VideoOptions &&
+        clickToExpandRequested == other.clickToExpandRequested &&
+        customControlsRequested == other.customControlsRequested &&
+        startMuted == other.startMuted;
   }
 }
