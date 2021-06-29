@@ -3,7 +3,7 @@
 * Fixes a crash where [PlatformView.getView() returns null](https://github.com/googleads/googleads-mobile-flutter/issues/46)
 * Fixes memory leaks on Android.
 * Fixes a [crash on iOS](https://github.com/googleads/googleads-mobile-flutter/issues/138).
-* Marks adaptive banner sizes as deprecated. Instead you should use adaptive banners.
+* Marks smart banner sizes as deprecated. Instead you should use adaptive banners.
 
 ## 0.13.1
 
