@@ -22,6 +22,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 
+// ignore_for_file: deprecated_member_use_from_same_package
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 

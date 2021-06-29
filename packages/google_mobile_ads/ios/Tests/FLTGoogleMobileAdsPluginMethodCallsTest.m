@@ -58,14 +58,6 @@
       [[FLTServerSideVerificationOptions alloc] init];
   serverSideVerificationOptions.customRewardString = @"reward";
   serverSideVerificationOptions.userIdentifier = @"user-id";
-  FLTRewardedAd *ad =
-      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                      request:request
-                           rootViewController:UIApplication.sharedApplication.delegate.window
-                                                  .rootViewController
-                serverSideVerificationOptions:serverSideVerificationOptions
-                                         adId:@1];
-
   FlutterMethodCall *methodCall = [FlutterMethodCall
       methodCallWithMethodName:@"loadRewardedAd"
                      arguments:@{

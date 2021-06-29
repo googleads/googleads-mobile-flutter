@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// ignore_for_file: deprecated_member_use_from_same_package
-
 import 'dart:async';
 import 'dart:io' show Platform;
 
@@ -244,6 +242,7 @@ class AnchoredAdaptiveBannerAdSize extends AdSize {
 }
 
 /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
+@Deprecated('Use adaptive banner instead')
 class SmartBannerAdSize extends AdSize {
   /// Default constructor for [SmartBannerAdSize].
   SmartBannerAdSize(this.orientation) : super(width: -1, height: -1);
@@ -314,6 +313,7 @@ class AdSize {
   }
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in either orientation on Android.
+  @Deprecated('Use adaptive banner instead')
   static AdSize get smartBanner {
     assert(defaultTargetPlatform == TargetPlatform.android);
     // Orientation is not used on Android.
@@ -321,16 +321,19 @@ class AdSize {
   }
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in portrait on iOS.
+  @Deprecated('Use adaptive banner instead')
   static AdSize get smartBannerPortrait {
     return getSmartBanner(Orientation.portrait);
   }
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in landscape on iOS.
+  @Deprecated('Use adaptive banner instead')
   static AdSize get smartBannerLandscape {
     return getSmartBanner(Orientation.landscape);
   }
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
+  @Deprecated('Use adaptive banner instead')
   static SmartBannerAdSize getSmartBanner(Orientation orientation) {
     return SmartBannerAdSize(orientation);
   }

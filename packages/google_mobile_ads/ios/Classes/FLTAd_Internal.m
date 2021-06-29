@@ -68,9 +68,12 @@
 - (instancetype _Nonnull)initWithOrientation:(NSString *_Nonnull)orientation {
   GADAdSize size;
   if ([orientation isEqualToString:@"portrait"]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     size = kGADAdSizeSmartBannerPortrait;
   } else if ([orientation isEqualToString:@"landscape"]) {
     size = kGADAdSizeSmartBannerLandscape;
+#pragma clang diagnostic pop
   } else {
     NSLog(@"SmartBanner orientation should be 'portrait' or 'landscape': %@", orientation);
     return nil;

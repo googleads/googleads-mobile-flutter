@@ -66,6 +66,8 @@ class FlutterAdSize {
   }
 
   static class SmartBannerAdSize extends FlutterAdSize {
+
+    @SuppressWarnings("deprecation")
     SmartBannerAdSize() {
       super(AdSize.SMART_BANNER);
     }

@@ -72,8 +72,11 @@
   FLTSmartBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
 
   XCTAssertTrue([decodedSize isKindOfClass:FLTSmartBannerSize.class]);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   XCTAssertEqual(decodedSize.size.size.width, kGADAdSizeSmartBannerPortrait.size.width);
   XCTAssertEqual(decodedSize.size.size.height, kGADAdSizeSmartBannerPortrait.size.height);
+#pragma clang diagnostic pop
 }
 
 - (void)testEncodeDecodeAdRequest {
