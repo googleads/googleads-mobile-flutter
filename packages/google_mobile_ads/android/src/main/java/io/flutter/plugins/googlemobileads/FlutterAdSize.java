@@ -67,7 +67,7 @@ class FlutterAdSize {
 
   static class SmartBannerAdSize extends FlutterAdSize {
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings("deprecation") // Smart banner is already deprecated in Dart.
     SmartBannerAdSize() {
       super(AdSize.SMART_BANNER);
     }
