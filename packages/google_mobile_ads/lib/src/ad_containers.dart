@@ -906,12 +906,16 @@ class ServerSideVerificationOptions {
 enum MediaAspectRatio {
   /// Unknown media aspect ratio.
   unknown,
+
   /// Any media aspect ratio.
   any,
+
   /// Landscape media aspect ratio.
   landscape,
+
   /// Portrait media aspect ratio.
   portrait,
+
   /// Close to square media aspect ratio. This is not a strict 1:1 aspect ratio.
   square
 }
@@ -920,10 +924,13 @@ enum MediaAspectRatio {
 enum AdChoicesPlacement {
   /// Top right corner.
   topRightCorner,
+
   /// Top left corner.
   topLeftCorner,
+
   /// Bottom right corner.
   bottomRightCorner,
+
   /// Bottom left corner.
   bottomLeftCorner
 }
@@ -934,20 +941,25 @@ class NativeAdOptions {
   ///
   /// Default is top right.
   final AdChoicesPlacement? adChoicesPlacement;
+
   /// The media aspect ratio.
   ///
   /// Default is unknown, which will apply no restrictions.
   final MediaAspectRatio? mediaAspectRatio;
+
   /// Options for video.
   final VideoOptions? videoOptions;
+
   /// Whether to request a custom implementation for the Mute This Ad feature.
   ///
   /// Default value is false.
   final bool? requestCustomMuteThisAd;
+
   /// Sets whether multiple images should be requested or not.
   ///
   /// Default value is false.
   final bool? shouldRequestMultipleImages;
+
   /// Indicates whether image asset content should be loaded by the SDK.
   ///
   /// If set to true, the SDK will not load image asset content and native ad
@@ -982,9 +994,11 @@ class VideoOptions {
   /// Indicates whether the requested video should have the click to expand
   /// behavior.
   final bool? clickToExpandRequested;
+
   /// Indicates whether the requested video should have custom controls enabled for
   /// play/pause/mute/unmute.
   final bool? customControlsRequested;
+
   /// Indicates whether videos should start muted. By default this property value is YES.
   final bool? startMuted;
 

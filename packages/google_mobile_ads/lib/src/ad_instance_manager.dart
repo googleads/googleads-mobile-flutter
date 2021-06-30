@@ -809,7 +809,6 @@ class AdMessageCodec extends StandardMessageCodec {
 
 /// An extension that maps each [MediaAspectRatio] to an int.
 extension MediaAspectRatioExtension on MediaAspectRatio {
-
   /// Gets the int mapping to pass to platform channel.
   int get intValue {
     switch (this) {
@@ -827,7 +826,7 @@ extension MediaAspectRatioExtension on MediaAspectRatio {
   }
 
   /// Maps an int back to [MediaAspectRatio].
-  static MediaAspectRatio? fromInt(int? intValue){
+  static MediaAspectRatio? fromInt(int? intValue) {
     switch (intValue) {
       case 0:
         return MediaAspectRatio.unknown;
@@ -847,7 +846,6 @@ extension MediaAspectRatioExtension on MediaAspectRatio {
 
 /// An extension that maps each [AdChoicesPlacement] to an int.
 extension AdChoicesPlacementExtension on AdChoicesPlacement {
-
   /// Gets the int mapping to pass to platform channel.
   int get intValue {
     switch (this) {
@@ -863,7 +861,7 @@ extension AdChoicesPlacementExtension on AdChoicesPlacement {
   }
 
   /// Maps an int back to [AdChoicesPlacement].
-  static AdChoicesPlacement? fromInt(int? intValue){
+  static AdChoicesPlacement? fromInt(int? intValue) {
     switch (intValue) {
       case 0:
         return AdChoicesPlacement.topRightCorner;
