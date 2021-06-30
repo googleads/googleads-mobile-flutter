@@ -918,7 +918,7 @@ To define a custom banner size, set your desired `AdSize`, as shown here:
 
 
 ```dart
-final AdSize adSize = AdSize(300, 50);
+final AdSize adSize = AdSize(width: 300, height: 50);
 ```
 
 
