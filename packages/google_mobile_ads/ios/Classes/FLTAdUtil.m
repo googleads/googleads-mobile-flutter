@@ -17,7 +17,7 @@
 @implementation FLTAdUtil
 
 + (BOOL)isNull:(id)object {
-  return object == nil || [[NSNull null] isEqual: object];
+  return object == nil || [[NSNull null] isEqual:object];
 }
 
 + (BOOL)isNotNull:(id)object {

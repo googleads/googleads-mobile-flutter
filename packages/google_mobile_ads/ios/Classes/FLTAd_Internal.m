@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #import "FLTAd_Internal.h"
-#import "FLTConstants.h"
 #import "FLTAdUtil.h"
+#import "FLTConstants.h"
 
 @implementation FLTAdSize
 - (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width height:(NSNumber *_Nonnull)height {
@@ -623,10 +623,10 @@
     _nativeAdFactory = nativeAdFactory;
     _customOptions = customOptions;
     NSArray<GADAdLoaderOptions *> *adLoaderOptions =
-      (nativeAdOptions == nil || [[NSNull null] isEqual:nativeAdOptions])
-        ? @[]
-        : nativeAdOptions.asGADAdLoaderOptions;
-    
+        (nativeAdOptions == nil || [[NSNull null] isEqual:nativeAdOptions])
+            ? @[]
+            : nativeAdOptions.asGADAdLoaderOptions;
+
     _adLoader = [[GADAdLoader alloc] initWithAdUnitID:_adUnitId
                                    rootViewController:rootViewController
                                               adTypes:@[ kGADAdLoaderAdTypeNative ]
@@ -764,7 +764,7 @@
   return self;
 }
 
-- (GADVideoOptions *_Nonnull) asGADVideoOptions {
+- (GADVideoOptions *_Nonnull)asGADVideoOptions {
   GADVideoOptions *options = [[GADVideoOptions alloc] init];
   if ([FLTAdUtil isNotNull:_clickToExpandRequested]) {
     options.clickToExpandRequested = _clickToExpandRequested.boolValue;
@@ -786,7 +786,8 @@
                                        videoOptions:(FLTVideoOptions *_Nullable)videoOptions
                             requestCustomMuteThisAd:(NSNumber *_Nullable)requestCustomMuteThisAd
                         shouldRequestMultipleImages:(NSNumber *_Nullable)shouldRequestMultipleImages
-                     shouldReturnUrlsForImageAssets:(NSNumber *_Nullable)shouldReturnUrlsForImageAssets {
+                     shouldReturnUrlsForImageAssets:
+                         (NSNumber *_Nullable)shouldReturnUrlsForImageAssets {
   self = [super init];
   if (self) {
     _adChoicesPlacement = adChoicesPlacement;
@@ -801,16 +802,16 @@
 
 - (NSArray<GADAdLoaderOptions *> *_Nonnull)asGADAdLoaderOptions {
   NSMutableArray<GADAdLoaderOptions *> *options = [NSMutableArray array];
-  
-  GADNativeAdImageAdLoaderOptions * imageOptions = [[GADNativeAdImageAdLoaderOptions alloc] init];
-  if ([FLTAdUtil isNotNull: _shouldReturnUrlsForImageAssets]) {
+
+  GADNativeAdImageAdLoaderOptions *imageOptions = [[GADNativeAdImageAdLoaderOptions alloc] init];
+  if ([FLTAdUtil isNotNull:_shouldReturnUrlsForImageAssets]) {
     imageOptions.disableImageLoading = _shouldReturnUrlsForImageAssets.boolValue;
   }
   if ([FLTAdUtil isNotNull:_shouldRequestMultipleImages]) {
     imageOptions.shouldRequestMultipleImages = _shouldRequestMultipleImages.boolValue;
   }
   [options addObject:imageOptions];
-  
+
   if ([FLTAdUtil isNotNull:_adChoicesPlacement]) {
     GADNativeAdViewAdOptions *adViewOptions = [[GADNativeAdViewAdOptions alloc] init];
     switch (_adChoicesPlacement.intValue) {
@@ -827,14 +828,15 @@
         adViewOptions.preferredAdChoicesPosition = GADAdChoicesPositionBottomLeftCorner;
         break;
       default:
-        NSLog(@"AdChoicesPlacement should be an int in the range [0, 3]: %d", _adChoicesPlacement.intValue);
+        NSLog(@"AdChoicesPlacement should be an int in the range [0, 3]: %d",
+              _adChoicesPlacement.intValue);
         break;
     }
     [options addObject:adViewOptions];
   }
-  
+
   if ([FLTAdUtil isNotNull:_mediaAspectRatio]) {
-    GADNativeAdMediaAdLoaderOptions * mediaOptions = [[GADNativeAdMediaAdLoaderOptions alloc] init];
+    GADNativeAdMediaAdLoaderOptions *mediaOptions = [[GADNativeAdMediaAdLoaderOptions alloc] init];
     switch (_mediaAspectRatio.intValue) {
       case 0:
         mediaOptions.mediaAspectRatio = GADMediaAspectRatioUnknown;
@@ -852,17 +854,17 @@
         mediaOptions.mediaAspectRatio = GADMediaAspectRatioSquare;
         break;
       default:
-        NSLog(@"MediaAspectRatio should be an int in the range [0, 4]: %d", _mediaAspectRatio.intValue);
+        NSLog(@"MediaAspectRatio should be an int in the range [0, 4]: %d",
+              _mediaAspectRatio.intValue);
         break;
     }
     [options addObject:mediaOptions];
   }
-  
-  if ([FLTAdUtil isNotNull: _videoOptions]) {
+
+  if ([FLTAdUtil isNotNull:_videoOptions]) {
     [options addObject:_videoOptions.asGADVideoOptions];
   }
   return options;
 }
 
 @end
-

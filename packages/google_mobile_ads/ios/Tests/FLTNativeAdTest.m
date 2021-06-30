@@ -48,7 +48,7 @@
   GADAdLoaderOptions *mockGADAdLoaderOptions = OCMClassMock([GADAdLoaderOptions class]);
   OCMStub([mockNativeAdOptions asGADAdLoaderOptions]).andReturn(mockGADAdLoaderOptions);
   UIViewController *mockViewController = OCMClassMock([UIViewController class]);
-  
+
   FLTNativeAd *ad = [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
                                                   request:gadOrGAMRequest
                                           nativeAdFactory:mockNativeAdFactory

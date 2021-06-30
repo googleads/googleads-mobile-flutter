@@ -188,18 +188,19 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       return
           [[FLTSmartBannerSize alloc] initWithOrientation:[self readValueOfType:[self readByte]]];
     case FLTAdmobFieldNativeAdOptions: {
-      return [[FLTNativeAdOptions alloc] initWithAdChoicesPlacement:[self readValueOfType:[self readByte]]
-                                                   mediaAspectRatio:[self readValueOfType:[self readByte]]
-                                                       videoOptions:[self readValueOfType:[self readByte]]
-                                            requestCustomMuteThisAd:[self readValueOfType:[self readByte]]
-                                        shouldRequestMultipleImages:[self readValueOfType:[self readByte]]
-                                     shouldReturnUrlsForImageAssets:[self readValueOfType:[self readByte]]];
+      return [[FLTNativeAdOptions alloc]
+              initWithAdChoicesPlacement:[self readValueOfType:[self readByte]]
+                        mediaAspectRatio:[self readValueOfType:[self readByte]]
+                            videoOptions:[self readValueOfType:[self readByte]]
+                 requestCustomMuteThisAd:[self readValueOfType:[self readByte]]
+             shouldRequestMultipleImages:[self readValueOfType:[self readByte]]
+          shouldReturnUrlsForImageAssets:[self readValueOfType:[self readByte]]];
     }
     case FLTAdmobFieldVideoOptions: {
-      return [[FLTVideoOptions alloc] initWithClickToExpandRequested:[self readValueOfType:[self readByte]]
-                                             customControlsRequested:[self readValueOfType:[self readByte]]
-                                                          startMuted:[self readValueOfType:[self readByte]]];
-      
+      return [[FLTVideoOptions alloc]
+          initWithClickToExpandRequested:[self readValueOfType:[self readByte]]
+                 customControlsRequested:[self readValueOfType:[self readByte]]
+                              startMuted:[self readValueOfType:[self readByte]]];
     }
   }
   return [super readValueOfType:type];
