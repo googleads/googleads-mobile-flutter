@@ -108,6 +108,35 @@
   OCMVerify([_mockAdInstanceManager disposeAllAds]);
 }
 
+- (void)testMobileAdsInitialize {
+  id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
+  OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
+      .andReturn((GADMobileAds *)gadMobileAdsClassMock);
+  GADInitializationStatus *mockInitStatus = OCMClassMock([GADInitializationStatus class]);
+  OCMStub([mockInitStatus adapterStatusesByClassName]).andReturn(@{});
+  OCMStub([gadMobileAdsClassMock startWithCompletionHandler:[OCMArg any]])
+      .andDo(^(NSInvocation *invocation) {
+        // Invoke the init handler twice.
+        GADInitializationCompletionHandler completionHandler;
+        [invocation getArgument:&completionHandler atIndex:2];
+        completionHandler(mockInitStatus);
+        completionHandler(mockInitStatus);
+      });
+
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#initialize" arguments:@{}];
+  __block int resultInvokedCount = 0;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvokedCount += 1;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+  XCTAssertEqual(resultInvokedCount, 1);
+  XCTAssertEqual([((FLTInitializationStatus *)returnedResult) adapterStatuses].count, 0);
+}
+
 - (void)testSetSameAppKeyEnabledYes {
   id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
   OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
