@@ -28,10 +28,13 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdapterResponseInfo;
 import com.google.android.gms.ads.ResponseInfo;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -499,7 +502,8 @@ public class GoogleMobileAdsTest {
 
     // Check that ads are removed and disposed when "_init" is called.
     AdInstanceManager testManagerSpy = spy(testManager);
-    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(null, testManagerSpy, new FlutterMobileAdsWrapper());
     Result result = mock(Result.class);
     MethodCall methodCall = new MethodCall("_init", null);
     plugin.onMethodCall(methodCall, result);
@@ -512,6 +516,35 @@ public class GoogleMobileAdsTest {
     assertNull(testManager.adForId(1));
     assertNull(testManager.adIdFor(rewarded));
     assertNull(testManager.adIdFor(banner));
+  }
+
+  @Test
+  public void initializeCallbackInvokedTwice() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+    final InitializationStatus mockInitStatus = mock(InitializationStatus.class);
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) {
+                // Invoke init listener twice.
+                OnInitializationCompleteListener listener = invocation.getArgument(1);
+                listener.onInitializationComplete(mockInitStatus);
+                listener.onInitializationComplete(mockInitStatus);
+                return null;
+              }
+            })
+        .when(mockMobileAds)
+        .initialize(
+            ArgumentMatchers.any(Context.class),
+            ArgumentMatchers.any(OnInitializationCompleteListener.class));
+
+    MethodCall methodCall = new MethodCall("MobileAds#initialize", null);
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(ArgumentMatchers.any(FlutterInitializationStatus.class));
   }
 
   @Test(expected = IllegalArgumentException.class)
