@@ -1,4 +1,4 @@
-## 0.13.2 + 1
+## 0.13.2+1
 
 * Fixes [Issue #130](https://github.com/googleads/googleads-mobile-flutter/issues/130)
 
