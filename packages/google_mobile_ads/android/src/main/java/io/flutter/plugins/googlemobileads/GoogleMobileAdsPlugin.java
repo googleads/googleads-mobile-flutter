@@ -399,22 +399,22 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
       implements OnInitializationCompleteListener {
 
     private final Result result;
-    private int numTimesInvoked;
+    private boolean isInitializationCompleted;
 
     private FlutterInitializationListener(@NonNull final Result result) {
       this.result = result;
-      numTimesInvoked = 0;
+      isInitializationCompleted = false;
     }
 
     @Override
     public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
       // Make sure not to invoke this more than once, since Dart will throw an exception if success
       // is invoked more than once.
-      if (numTimesInvoked > 0) {
+      if (isInitializationCompleted) {
         return;
       }
       result.success(new FlutterInitializationStatus(initializationStatus));
-      numTimesInvoked += 1;
+      isInitializationCompleted = true;
     }
   }
 }

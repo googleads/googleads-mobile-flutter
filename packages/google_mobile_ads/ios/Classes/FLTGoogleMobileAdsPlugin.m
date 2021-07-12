@@ -27,24 +27,24 @@
 
 @implementation FLTInitializationHandler {
   FlutterResult _result;
-  int _numCalls;
+  BOOL _isInitializationCompleted;
 }
 
 - (instancetype)initWithResult:(FlutterResult)result {
   self = [super init];
   if (self) {
-    _numCalls = 0;
+    _isInitializationCompleted = false;
     _result = result;
   }
   return self;
 }
 
 - (void)handleInitializationComplete:(GADInitializationStatus *_Nonnull)status {
-  if (_numCalls > 0) {
+  if (_isInitializationCompleted) {
     return;
   }
   _result([[FLTInitializationStatus alloc] initWithStatus:status]);
-  _numCalls += 1;
+  _isInitializationCompleted = true;
 }
 
 @end

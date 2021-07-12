@@ -1,3 +1,7 @@
+## 0.13.2 + 1
+
+* Fixes [Issue #130](https://github.com/googleads/googleads-mobile-flutter/issues/130)
+
 ## 0.13.2
 
 * Fixes a crash where [PlatformView.getView() returns null](https://github.com/googleads/googleads-mobile-flutter/issues/46)
