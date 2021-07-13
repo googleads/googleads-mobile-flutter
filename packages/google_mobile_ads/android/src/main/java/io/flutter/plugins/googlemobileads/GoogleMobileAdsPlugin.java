@@ -409,7 +409,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     @Override
     public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
       // Make sure not to invoke this more than once, since Dart will throw an exception if success
-      // is invoked more than once.
+      // is invoked more than once. See b/193418432.
       if (isInitializationCompleted) {
         return;
       }
