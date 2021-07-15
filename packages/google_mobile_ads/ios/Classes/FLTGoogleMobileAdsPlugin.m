@@ -193,7 +193,8 @@
                                             nativeAdFactory:(id)factory
                                               customOptions:call.arguments[@"customOptions"]
                                          rootViewController:rootController
-                                                       adId:call.arguments[@"adId"]];
+                                                       adId:call.arguments[@"adId"]
+                                            nativeAdOptions:call.arguments[@"nativeAdOptions"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadInterstitialAd"]) {

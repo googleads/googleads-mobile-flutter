@@ -902,15 +902,60 @@ class ServerSideVerificationOptions {
   }
 }
 
+/// Media aspect ratio for native ads.
+enum MediaAspectRatio {
+  /// Unknown media aspect ratio.
+  unknown,
+  /// Any media aspect ratio.
+  any,
+  /// Landscape media aspect ratio.
+  landscape,
+  /// Portrait media aspect ratio.
+  portrait,
+  /// Close to square media aspect ratio. This is not a strict 1:1 aspect ratio.
+  square
+}
+
+/// Indicates preferred location of AdChoices icon.
+enum AdChoicesPlacement {
+  /// Top right corner.
+  topRightCorner,
+  /// Top left corner.
+  topLeftCorner,
+  /// Bottom right corner.
+  bottomRightCorner,
+  /// Bottom left corner.
+  bottomLeftCorner
+}
+
 /// Used to configure native ad requests.
 class NativeAdOptions {
-  final int? adChoicesPlacement;
-  final int? mediaAspectRatio;
+  /// Where to place the AdChoices icon.
+  ///
+  /// Default is top right.
+  final AdChoicesPlacement? adChoicesPlacement;
+  /// The media aspect ratio.
+  ///
+  /// Default is unknown, which will apply no restrictions.
+  final MediaAspectRatio? mediaAspectRatio;
+  /// Options for video.
   final VideoOptions? videoOptions;
+  /// Whether to request a custom implementation for the Mute This Ad feature.
+  ///
+  /// Default value is false.
   final bool? requestCustomMuteThisAd;
+  /// Sets whether multiple images should be requested or not.
+  ///
+  /// Default value is false.
   final bool? shouldRequestMultipleImages;
+  /// Indicates whether image asset content should be loaded by the SDK.
+  ///
+  /// If set to true, the SDK will not load image asset content and native ad
+  /// image URLs can be used to fetch content. Defaults to false.
   final bool? shouldReturnUrlsForImageAssets;
 
+  /// Construct a NativeAdOptions, an optional class used to further customize
+  /// native ad requests.
   NativeAdOptions({
     this.adChoicesPlacement,
     this.mediaAspectRatio,
@@ -934,10 +979,19 @@ class NativeAdOptions {
 
 /// Options for controlling video playback in supported ad formats.
 class VideoOptions {
+  /// Indicates whether the requested video should have the click to expand
+  /// behavior.
   final bool? clickToExpandRequested;
+  /// Indicates whether the requested video should have custom controls enabled for
+  /// play/pause/mute/unmute.
   final bool? customControlsRequested;
+  /// Indicates whether videos should start muted. By default this property value is YES.
   final bool? startMuted;
 
+  /// Constructs a VideoOptions to further customize a native ad request.
+  ///
+  /// This is only necessary if you wish to further customize your native ad
+  /// integration.
   VideoOptions({
     this.clickToExpandRequested,
     this.customControlsRequested,

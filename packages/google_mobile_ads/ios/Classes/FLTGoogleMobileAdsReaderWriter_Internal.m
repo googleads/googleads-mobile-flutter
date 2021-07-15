@@ -30,6 +30,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldGADAdNetworkResponseInfo = 141,
   FLTAdmobFieldAnchoredAdaptiveBannerAdSize = 142,
   FLTAdmobFieldSmartBannerAdSize = 143,
+  FLTAdmobFieldNativeAdOptions = 144,
+  FLTAdmobFieldVideoOptions = 145,
 };
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
@@ -185,9 +187,24 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     case FLTAdmobFieldSmartBannerAdSize:
       return
           [[FLTSmartBannerSize alloc] initWithOrientation:[self readValueOfType:[self readByte]]];
+    case FLTAdmobFieldNativeAdOptions: {
+      return [[FLTNativeAdOptions alloc] initWithAdChoicesPlacement:[self readValueOfType:[self readByte]]
+                                                   mediaAspectRatio:[self readValueOfType:[self readByte]]
+                                                       videoOptions:[self readValueOfType:[self readByte]]
+                                            requestCustomMuteThisAd:[self readValueOfType:[self readByte]]
+                                        shouldRequestMultipleImages:[self readValueOfType:[self readByte]]
+                                     shouldReturnUrlsForImageAssets:[self readValueOfType:[self readByte]]];
+    }
+    case FLTAdmobFieldVideoOptions: {
+      return [[FLTVideoOptions alloc] initWithClickToExpandRequested:[self readValueOfType:[self readByte]]
+                                             customControlsRequested:[self readValueOfType:[self readByte]]
+                                                          startMuted:[self readValueOfType:[self readByte]]];
+      
+    }
   }
   return [super readValueOfType:type];
 }
+
 @end
 
 @implementation FLTGoogleMobileAdsWriter
@@ -282,6 +299,21 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     FLTServerSideVerificationOptions *options = value;
     [self writeValue:options.userIdentifier];
     [self writeValue:options.customRewardString];
+  } else if ([value isKindOfClass:[FLTNativeAdOptions class]]) {
+    [self writeByte:FLTAdmobFieldNativeAdOptions];
+    FLTNativeAdOptions *options = value;
+    [self writeValue:options.adChoicesPlacement];
+    [self writeValue:options.mediaAspectRatio];
+    [self writeValue:options.videoOptions];
+    [self writeValue:options.requestCustomMuteThisAd];
+    [self writeValue:options.shouldRequestMultipleImages];
+    [self writeValue:options.shouldReturnUrlsForImageAssets];
+  } else if ([value isKindOfClass:[FLTVideoOptions class]]) {
+    [self writeByte:FLTAdmobFieldVideoOptions];
+    FLTVideoOptions *options = value;
+    [self writeValue:options.clickToExpandRequested];
+    [self writeValue:options.customControlsRequested];
+    [self writeValue:options.startMuted];
   } else {
     [super writeValue:value];
   }
