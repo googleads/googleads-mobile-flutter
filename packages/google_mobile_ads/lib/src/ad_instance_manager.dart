@@ -632,8 +632,8 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.customData);
     } else if (value is NativeAdOptions) {
       buffer.putUint8(_valueNativeAdOptions);
-      writeValue(buffer, value.adChoicesPlacement);
-      writeValue(buffer, value.mediaAspectRatio);
+      writeValue(buffer, value.adChoicesPlacement?.intValue);
+      writeValue(buffer, value.mediaAspectRatio?.intValue);
       writeValue(buffer, value.videoOptions);
       writeValue(buffer, value.requestCustomMuteThisAd);
       writeValue(buffer, value.shouldRequestMultipleImages);
@@ -756,9 +756,11 @@ class AdMessageCodec extends StandardMessageCodec {
             userId: readValueOfType(buffer.getUint8(), buffer),
             customData: readValueOfType(buffer.getUint8(), buffer));
       case _valueNativeAdOptions:
+        int? adChoices = readValueOfType(buffer.getUint8(), buffer);
+        int? mediaAspectRatio = readValueOfType(buffer.getUint8(), buffer);
         return NativeAdOptions(
-          adChoicesPlacement: readValueOfType(buffer.getUint8(), buffer),
-          mediaAspectRatio: readValueOfType(buffer.getUint8(), buffer),
+          adChoicesPlacement: AdChoicesPlacementExtension.fromInt(adChoices),
+          mediaAspectRatio: MediaAspectRatioExtension.fromInt(mediaAspectRatio),
           videoOptions: readValueOfType(buffer.getUint8(), buffer),
           requestCustomMuteThisAd: readValueOfType(buffer.getUint8(), buffer),
           shouldRequestMultipleImages:
@@ -801,6 +803,78 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueAdSize);
       writeValue(buffer, value.width);
       writeValue(buffer, value.height);
+    }
+  }
+}
+
+/// An extension that maps each [MediaAspectRatio] to an int.
+extension MediaAspectRatioExtension on MediaAspectRatio {
+
+  /// Gets the int mapping to pass to platform channel.
+  int get intValue {
+    switch (this) {
+      case MediaAspectRatio.unknown:
+        return 0;
+      case MediaAspectRatio.any:
+        return 1;
+      case MediaAspectRatio.landscape:
+        return 2;
+      case MediaAspectRatio.portrait:
+        return 3;
+      case MediaAspectRatio.square:
+        return 4;
+    }
+  }
+
+  /// Maps an int back to [MediaAspectRatio].
+  static MediaAspectRatio? fromInt(int? intValue){
+    switch (intValue) {
+      case 0:
+        return MediaAspectRatio.unknown;
+      case 1:
+        return MediaAspectRatio.any;
+      case 2:
+        return MediaAspectRatio.landscape;
+      case 3:
+        return MediaAspectRatio.portrait;
+      case 4:
+        return MediaAspectRatio.square;
+      default:
+        return null;
+    }
+  }
+}
+
+/// An extension that maps each [AdChoicesPlacement] to an int.
+extension AdChoicesPlacementExtension on AdChoicesPlacement {
+
+  /// Gets the int mapping to pass to platform channel.
+  int get intValue {
+    switch (this) {
+      case AdChoicesPlacement.topRightCorner:
+        return 0;
+      case AdChoicesPlacement.topLeftCorner:
+        return 1;
+      case AdChoicesPlacement.bottomRightCorner:
+        return 2;
+      case AdChoicesPlacement.bottomLeftCorner:
+        return 3;
+    }
+  }
+
+  /// Maps an int back to [AdChoicesPlacement].
+  static AdChoicesPlacement? fromInt(int? intValue){
+    switch (intValue) {
+      case 0:
+        return AdChoicesPlacement.topRightCorner;
+      case 1:
+        return AdChoicesPlacement.topLeftCorner;
+      case 2:
+        return AdChoicesPlacement.bottomRightCorner;
+      case 3:
+        return AdChoicesPlacement.bottomLeftCorner;
+      default:
+        return null;
     }
   }
 }
