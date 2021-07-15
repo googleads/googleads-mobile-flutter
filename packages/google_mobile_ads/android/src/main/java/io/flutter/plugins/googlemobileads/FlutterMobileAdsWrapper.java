@@ -14,8 +14,19 @@
 
 package io.flutter.plugins.googlemobileads;
 
-/** Constants used in the plugin. */
-public class Constants {
-  /** Version request agent. Should be bumped alongside plugin versions. */
-  public static final String REQUEST_AGENT_PREFIX_VERSIONED = "Flutter-GMA-0.13.2+1";
+import android.content.Context;
+import androidx.annotation.NonNull;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
+/** A wrapper around static methods in {@link com.google.android.gms.ads.MobileAds}. */
+public class FlutterMobileAdsWrapper {
+
+  public FlutterMobileAdsWrapper() {}
+
+  /** Initializes the sdk. */
+  public void initialize(
+      @NonNull Context context, @NonNull OnInitializationCompleteListener listener) {
+    MobileAds.initialize(context, listener);
+  }
 }

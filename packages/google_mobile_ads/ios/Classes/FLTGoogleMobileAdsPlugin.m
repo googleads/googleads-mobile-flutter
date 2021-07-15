@@ -19,6 +19,36 @@
 @property NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *nativeAdFactories;
 @end
 
+/// Initialization handler for GMASDK. Invokes result at most once.
+@interface FLTInitializationHandler : NSObject
+- (instancetype)initWithResult:(FlutterResult)result;
+- (void)handleInitializationComplete:(GADInitializationStatus *_Nonnull)status;
+@end
+
+@implementation FLTInitializationHandler {
+  FlutterResult _result;
+  BOOL _isInitializationCompleted;
+}
+
+- (instancetype)initWithResult:(FlutterResult)result {
+  self = [super init];
+  if (self) {
+    _isInitializationCompleted = false;
+    _result = result;
+  }
+  return self;
+}
+
+- (void)handleInitializationComplete:(GADInitializationStatus *_Nonnull)status {
+  if (_isInitializationCompleted) {
+    return;
+  }
+  _result([[FLTInitializationStatus alloc] initWithStatus:status]);
+  _isInitializationCompleted = true;
+}
+
+@end
+
 @implementation FLTGoogleMobileAdsPlugin {
   NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *_nativeAdFactories;
   FLTAdInstanceManager *_manager;
@@ -97,9 +127,10 @@
       UIApplication.sharedApplication.delegate.window.rootViewController;
 
   if ([call.method isEqualToString:@"MobileAds#initialize"]) {
+    FLTInitializationHandler *handler = [[FLTInitializationHandler alloc] initWithResult:result];
     [[GADMobileAds sharedInstance]
         startWithCompletionHandler:^(GADInitializationStatus *_Nonnull status) {
-          result([[FLTInitializationStatus alloc] initWithStatus:status]);
+          [handler handleInitializationComplete:status];
         }];
   } else if ([call.method isEqualToString:@"_init"]) {
     [_manager disposeAllAds];
