@@ -52,8 +52,8 @@
   return nil;
 }
 
-- (void)loadAd:(id<FLTAd> _Nonnull)ad adId:(NSNumber *_Nonnull)adId {
-  [_ads setObject:ad forKey:adId];
+- (void)loadAd:(id<FLTAd> _Nonnull)ad {
+  [_ads setObject:ad forKey:ad.adId];
   ad.manager = self;
   [ad load];
 }
@@ -80,7 +80,7 @@
 - (void)onAdLoaded:(id<FLTAd> _Nonnull)ad responseInfo:(GADResponseInfo *_Nonnull)responseInfo {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
-                 @"adId" : [self adIdFor:ad],
+                 @"adId" : ad.adId,
                  @"eventName" : @"onAdLoaded",
                  @"responseInfo" : [[FLTGADResponseInfo alloc] initWithResponseInfo:responseInfo]
                }];
@@ -89,7 +89,7 @@
 - (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(NSError *_Nonnull)error {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
-                 @"adId" : [self adIdFor:ad],
+                 @"adId" : ad.adId,
                  @"eventName" : @"onAdFailedToLoad",
                  @"loadAdError" : [[FLTLoadAdError alloc] initWithError:error]
                }];
@@ -98,7 +98,7 @@
 - (void)onAppEvent:(id<FLTAd> _Nonnull)ad name:(NSString *)name data:(NSString *)data {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
-                 @"adId" : [self adIdFor:ad],
+                 @"adId" : ad.adId,
                  @"eventName" : @"onAppEvent",
                  @"name" : name,
                  @"data" : data
@@ -129,9 +129,20 @@
                               reward:(FLTRewardItem *_Nonnull)reward {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
-                 @"adId" : [self adIdFor:ad],
+                 @"adId" : ad.adId,
                  @"eventName" : @"onRewardedAdUserEarnedReward",
                  @"rewardItem" : reward,
+               }];
+}
+
+- (void)onPaidEvent:(id<FLTAd> _Nonnull)ad value:(FLTAdValue *_Nonnull)adValue {
+  [_channel invokeMethod:@"onAdEvent"
+               arguments:@{
+                 @"adId" : ad.adId,
+                 @"eventName" : @"onPaidEvent",
+                 @"valueMicros" : adValue.valueMicros,
+                 @"precision" : [NSNumber numberWithInteger:adValue.precision],
+                 @"currencyCode" : adValue.currencyCode
                }];
 }
 
@@ -171,7 +182,7 @@
                                              error:(NSError *_Nonnull)error {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
-                 @"adId" : [self adIdFor:ad],
+                 @"adId" : ad.adId,
                  @"eventName" : @"didFailToPresentFullScreenContentWithError",
                  @"error" : error
                }];
@@ -181,7 +192,7 @@
 - (void)sendAdEvent:(NSString *_Nonnull)eventName ad:(id<FLTAd>)ad {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
-                 @"adId" : [self adIdFor:ad],
+                 @"adId" : ad.adId,
                  @"eventName" : eventName,
                }];
 }

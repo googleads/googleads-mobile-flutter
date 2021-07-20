@@ -12,5 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/** Versioned request agent string. */
-#define FLT_REQUEST_AGENT_VERSIONED @"Flutter-GMA-0.13.2"
+package io.flutter.plugins.googlemobileads;
+
+import android.view.View;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import io.flutter.plugin.platform.PlatformView;
+
+/** A simple PlatformView that wraps a View and sets its reference to null on dispose(). */
+class FlutterPlatformView implements PlatformView {
+
+  @Nullable private View view;
+
+  FlutterPlatformView(@NonNull View view) {
+    this.view = view;
+  }
+
+  @Override
+  public View getView() {
+    return view;
+  }
+
+  @Override
+  public void dispose() {
+    this.view = null;
+  }
+}

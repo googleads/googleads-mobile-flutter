@@ -38,7 +38,8 @@
   UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
   FLTGAMInterstitialAd *ad = [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
                                                                     request:request
-                                                         rootViewController:mockRootViewController];
+                                                         rootViewController:mockRootViewController
+                                                                       adId:@1];
   ad.manager = mockManager;
 
   id interstitialClassMock = OCMClassMock([GAMInterstitialAd class]);
@@ -76,6 +77,17 @@
   GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
   OCMStub([interstitialClassMock responseInfo]).andReturn(responseInfo);
 
+  // Mock callback of paid event handler.
+  GADAdValue *adValue = OCMClassMock([GADAdValue class]);
+  OCMStub([adValue value]).andReturn(NSDecimalNumber.one);
+  OCMStub([adValue precision]).andReturn(GADAdValuePrecisionEstimated);
+  OCMStub([adValue currencyCode]).andReturn(@"currencyCode");
+  OCMStub([interstitialClassMock setPaidEventHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
+                                   GADPaidEventHandler handler = obj;
+                                   handler(adValue);
+                                   return YES;
+                                 }]]);
+  // Call load and verify interactions with mocks.
   [ad load];
 
   OCMVerify(ClassMethod([interstitialClassMock loadWithAdManagerAdUnitID:[OCMArg isEqual:@"testId"]
@@ -85,6 +97,16 @@
                        responseInfo:[OCMArg isEqual:responseInfo]]);
   OCMVerify([interstitialClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
   XCTAssertEqual(ad.interstitial, interstitialClassMock);
+  OCMVerify([mockManager onPaidEvent:[OCMArg isEqual:ad]
+                               value:[OCMArg checkWithBlock:^BOOL(id obj) {
+                                 FLTAdValue *adValue = obj;
+                                 XCTAssertEqualObjects(
+                                     adValue.valueMicros,
+                                     [[NSDecimalNumber alloc] initWithInt:1000000]);
+                                 XCTAssertEqual(adValue.precision, GADAdValuePrecisionEstimated);
+                                 XCTAssertEqualObjects(adValue.currencyCode, @"currencyCode");
+                                 return TRUE;
+                               }]]);
 
   // Show the ad
   [ad show];
@@ -115,7 +137,8 @@
   UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
   FLTGAMInterstitialAd *ad = [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
                                                                     request:request
-                                                         rootViewController:mockRootViewController];
+                                                         rootViewController:mockRootViewController
+                                                                       adId:@1];
   ad.manager = mockManager;
 
   id interstitialClassMock = OCMClassMock([GAMInterstitialAd class]);

@@ -16,45 +16,42 @@ package io.flutter.plugins.googlemobileads;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.ResponseInfo;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
+import java.lang.ref.WeakReference;
 
-/** A type for retrieving {@link ResponseInfo} from an ad after it is loaded. */
-interface ResponseInfoProvider {
-  ResponseInfo getResponseInfo();
+/** Callback type to notify when an ad successfully loads. */
+interface FlutterAdLoadedListener {
+  void onAdLoaded();
 }
 
 class FlutterAdListener extends AdListener {
+  protected final int adId;
   @NonNull protected final AdInstanceManager manager;
-  @NonNull protected final FlutterAd ad;
-  @NonNull protected final ResponseInfoProvider responseInfoProvider;
 
-  FlutterAdListener(
-      @NonNull AdInstanceManager manager,
-      @NonNull FlutterAd ad,
-      @NonNull ResponseInfoProvider responseInfoProvider) {
+  FlutterAdListener(int adId, @NonNull AdInstanceManager manager) {
+    this.adId = adId;
     this.manager = manager;
-    this.ad = ad;
-    this.responseInfoProvider = responseInfoProvider;
   }
 
   @Override
   public void onAdClosed() {
-    manager.onAdClosed(ad);
+    manager.onAdClosed(adId);
   }
 
   @Override
   public void onAdFailedToLoad(LoadAdError loadAdError) {
-    manager.onAdFailedToLoad(ad, new FlutterAd.FlutterLoadAdError(loadAdError));
+    manager.onAdFailedToLoad(adId, new FlutterAd.FlutterLoadAdError(loadAdError));
   }
 
   @Override
   public void onAdOpened() {
-    manager.onAdOpened(ad);
+    manager.onAdOpened(adId);
   }
 
   @Override
-  public void onAdLoaded() {
-    manager.onAdLoaded(ad, responseInfoProvider.getResponseInfo());
+  public void onAdImpression() {
+    manager.onAdImpression(adId);
   }
 }
 
@@ -63,15 +60,53 @@ class FlutterAdListener extends AdListener {
  */
 class FlutterBannerAdListener extends FlutterAdListener {
 
+  @NonNull final WeakReference<FlutterAdLoadedListener> adLoadedListenerWeakReference;
+
   FlutterBannerAdListener(
-      @NonNull AdInstanceManager manager,
-      @NonNull FlutterAd ad,
-      ResponseInfoProvider responseInfoProvider) {
-    super(manager, ad, responseInfoProvider);
+      int adId, @NonNull AdInstanceManager manager, FlutterAdLoadedListener adLoadedListener) {
+    super(adId, manager);
+    adLoadedListenerWeakReference = new WeakReference<>(adLoadedListener);
   }
 
   @Override
-  public void onAdImpression() {
-    manager.onAdImpression(ad);
+  public void onAdLoaded() {
+    if (adLoadedListenerWeakReference.get() != null) {
+      adLoadedListenerWeakReference.get().onAdLoaded();
+    }
+  }
+}
+
+/** Listener for native ads. */
+class FlutterNativeAdListener extends FlutterAdListener {
+
+  FlutterNativeAdListener(int adId, AdInstanceManager manager) {
+    super(adId, manager);
+  }
+
+  @Override
+  public void onAdLoaded() {
+    // Do nothing. Loaded event is handled from FlutterNativeAdLoadedListener.
+  }
+
+  @Override
+  public void onAdClicked() {
+    manager.onNativeAdClicked(adId);
+  }
+}
+
+/** {@link OnNativeAdLoadedListener} for native ads. */
+class FlutterNativeAdLoadedListener implements OnNativeAdLoadedListener {
+
+  private final WeakReference<FlutterNativeAd> nativeAdWeakReference;
+
+  FlutterNativeAdLoadedListener(FlutterNativeAd flutterNativeAd) {
+    nativeAdWeakReference = new WeakReference<>(flutterNativeAd);
+  }
+
+  @Override
+  public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+    if (nativeAdWeakReference.get() != null) {
+      nativeAdWeakReference.get().onNativeAdLoaded(nativeAd);
+    }
   }
 }

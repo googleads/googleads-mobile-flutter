@@ -69,7 +69,8 @@
   FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
                                                       request:request
                                            rootViewController:mockRootViewController
-                                serverSideVerificationOptions:options];
+                                serverSideVerificationOptions:options
+                                                         adId:@1];
   ad.manager = mockManager;
 
   // Stub the load call to invoke successful load callback.
@@ -113,6 +114,18 @@
   if (options == nil) {
     OCMReject([rewardedClassMock setServerSideVerificationOptions:[OCMArg any]]);
   }
+
+  // Mock callback of paid event handler.
+  GADAdValue *adValue = OCMClassMock([GADAdValue class]);
+  OCMStub([adValue value]).andReturn(NSDecimalNumber.one);
+  OCMStub([adValue precision]).andReturn(GADAdValuePrecisionEstimated);
+  OCMStub([adValue currencyCode]).andReturn(@"currencyCode");
+  OCMStub([rewardedClassMock setPaidEventHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
+                               GADPaidEventHandler handler = obj;
+                               handler(adValue);
+                               return YES;
+                             }]]);
+  // Call load and check expected interactions with mocks.
   [ad load];
 
   OCMVerify(ClassMethod([rewardedClassMock loadWithAdUnitID:[OCMArg isEqual:@"testId"]
@@ -126,6 +139,16 @@
     GADServerSideVerificationOptions *gadOptions = [options asGADServerSideVerificationOptions];
     OCMVerify([rewardedClassMock setServerSideVerificationOptions:[OCMArg isEqual:gadOptions]]);
   }
+  OCMVerify([mockManager onPaidEvent:[OCMArg isEqual:ad]
+                               value:[OCMArg checkWithBlock:^BOOL(id obj) {
+                                 FLTAdValue *adValue = obj;
+                                 XCTAssertEqualObjects(
+                                     adValue.valueMicros,
+                                     [[NSDecimalNumber alloc] initWithInt:1000000]);
+                                 XCTAssertEqual(adValue.precision, GADAdValuePrecisionEstimated);
+                                 XCTAssertEqualObjects(adValue.currencyCode, @"currencyCode");
+                                 return TRUE;
+                               }]]);
 
   [ad show];
 
@@ -172,7 +195,8 @@
   FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
                                                       request:request
                                            rootViewController:mockRootViewController
-                                serverSideVerificationOptions:nil];
+                                serverSideVerificationOptions:nil
+                                                         adId:@1];
   ad.manager = mockManager;
 
   id rewardedClassMock = OCMClassMock([GADRewardedAd class]);

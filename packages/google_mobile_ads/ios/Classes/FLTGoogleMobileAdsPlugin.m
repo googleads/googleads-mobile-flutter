@@ -158,15 +158,17 @@
     FLTBannerAd *ad = [[FLTBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                        size:call.arguments[@"size"]
                                                     request:call.arguments[@"request"]
-                                         rootViewController:rootController];
-    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+                                         rootViewController:rootController
+                                                       adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAdManagerBannerAd"]) {
     FLTGAMBannerAd *ad = [[FLTGAMBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                             sizes:call.arguments[@"sizes"]
                                                           request:call.arguments[@"request"]
-                                               rootViewController:rootController];
-    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+                                               rootViewController:rootController
+                                                             adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadNativeAd"]) {
     NSString *factoryId = call.arguments[@"factoryId"];
@@ -190,23 +192,24 @@
                                                     request:request
                                             nativeAdFactory:(id)factory
                                               customOptions:call.arguments[@"customOptions"]
-                                         rootViewController:rootController];
-    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+                                         rootViewController:rootController
+                                                       adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadInterstitialAd"]) {
     FLTInterstitialAd *ad = [[FLTInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                                 request:call.arguments[@"request"]
-                                                     rootViewController:rootController];
-
-    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+                                                     rootViewController:rootController
+                                                                   adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAdManagerInterstitialAd"]) {
     FLTGAMInterstitialAd *ad =
         [[FLTGAMInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                request:call.arguments[@"request"]
-                                    rootViewController:rootController];
-
-    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+                                    rootViewController:rootController
+                                                  adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedAd"]) {
     FLTAdRequest *request;
@@ -225,8 +228,9 @@
         [[FLTRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                         request:request
                              rootViewController:rootController
-                  serverSideVerificationOptions:call.arguments[@"serverSideVerificationOptions"]];
-    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+                  serverSideVerificationOptions:call.arguments[@"serverSideVerificationOptions"]
+                                           adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"disposeAd"]) {
     [_manager dispose:call.arguments[@"adId"]];

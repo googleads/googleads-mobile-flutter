@@ -104,6 +104,7 @@
 
 @protocol FLTAd <NSObject>
 @property(weak) FLTAdInstanceManager *_Nullable manager;
+@property(readonly) NSNumber *_Nonnull adId;
 - (void)load;
 @end
 
@@ -111,12 +112,16 @@
 - (void)show;
 @end
 
-@interface FLTBannerAd : NSObject <FLTAd, FlutterPlatformView, GADBannerViewDelegate>
-@property(weak) FLTAdInstanceManager *_Nullable manager;
+@interface FLTBaseAd : NSObject
+@property(readonly) NSNumber *_Nonnull adId;
+@end
+
+@interface FLTBannerAd : FLTBaseAd <FLTAd, FlutterPlatformView, GADBannerViewDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                      size:(FLTAdSize *_Nonnull)size
                                   request:(FLTAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController;
+                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                                     adId:(NSNumber *_Nonnull)adId;
 - (GADBannerView *_Nonnull)bannerView;
 @end
 
@@ -127,13 +132,15 @@
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                     sizes:(NSArray<FLTAdSize *> *_Nonnull)sizes
                                   request:(FLTGAMAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController;
+                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                                     adId:(NSNumber *_Nonnull)adId;
 @end
 
-@interface FLTInterstitialAd : NSObject <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTInterstitialAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController;
+                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                                     adId:(NSNumber *_Nonnull)adId;
 - (GADInterstitialAd *_Nullable)interstitial;
 - (NSString *_Nonnull)adUnitId;
 - (void)load;
@@ -143,26 +150,28 @@
 @interface FLTGAMInterstitialAd : FLTInterstitialAd <GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTGAMAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController;
+                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                                     adId:(NSNumber *_Nonnull)adId;
 @end
 
-@interface FLTRewardedAd : NSObject <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTRewardedAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
             serverSideVerificationOptions:
-                (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
+                (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions
+                                     adId:(NSNumber *_Nonnull)adId;
 - (GADRewardedAd *_Nullable)rewardedAd;
 @end
 
 @interface FLTNativeAd
-    : NSObject <FLTAd, FlutterPlatformView, GADNativeAdDelegate, GADNativeAdLoaderDelegate>
-@property(weak) FLTAdInstanceManager *_Nullable manager;
+    : FLTBaseAd <FLTAd, FlutterPlatformView, GADNativeAdDelegate, GADNativeAdLoaderDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                           nativeAdFactory:(NSObject<FLTNativeAdFactory> *_Nonnull)nativeAdFactory
                             customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions
-                       rootViewController:(UIViewController *_Nonnull)rootViewController;
+                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                                     adId:(NSNumber *_Nonnull)adId;
 - (GADAdLoader *_Nonnull)adLoader;
 @end
 
@@ -170,4 +179,13 @@
 @property(readonly) NSNumber *_Nonnull amount;
 @property(readonly) NSString *_Nonnull type;
 - (instancetype _Nonnull)initWithAmount:(NSNumber *_Nonnull)amount type:(NSString *_Nonnull)type;
+@end
+
+@interface FLTAdValue : NSObject
+@property(readonly) NSDecimalNumber *_Nonnull valueMicros;
+@property(readonly) NSInteger precision;
+@property(readonly) NSString *_Nonnull currencyCode;
+- (instancetype _Nonnull)initWithValue:(NSDecimalNumber *_Nonnull)value
+                             precision:(NSInteger)precision
+                          currencyCode:(NSString *_Nonnull)currencyCode;
 @end
