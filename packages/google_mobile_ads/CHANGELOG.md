@@ -1,3 +1,14 @@
+## 0.13.2
+
+* Fixes a crash where [PlatformView.getView() returns null](https://github.com/googleads/googleads-mobile-flutter/issues/46)
+* Fixes memory leaks on Android.
+* Fixes a [crash on iOS](https://github.com/googleads/googleads-mobile-flutter/issues/138).
+* Marks smart banner sizes as deprecated. Instead you should use adaptive banners.
+
+## 0.13.1
+
+* Adds support for the paid event callback.
+
 ## 0.13.0
 
 * Updates GMA Android and iOS dependencies to 20.1.0 and 8.5.0, respectively.

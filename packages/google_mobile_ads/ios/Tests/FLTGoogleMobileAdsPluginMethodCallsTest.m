@@ -58,13 +58,6 @@
       [[FLTServerSideVerificationOptions alloc] init];
   serverSideVerificationOptions.customRewardString = @"reward";
   serverSideVerificationOptions.userIdentifier = @"user-id";
-  FLTRewardedAd *ad =
-      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                      request:request
-                           rootViewController:UIApplication.sharedApplication.delegate.window
-                                                  .rootViewController
-                serverSideVerificationOptions:serverSideVerificationOptions];
-
   FlutterMethodCall *methodCall = [FlutterMethodCall
       methodCallWithMethodName:@"loadRewardedAd"
                      arguments:@{
@@ -94,8 +87,7 @@
     XCTAssertEqualObjects(options, serverSideVerificationOptions);
     return YES;
   };
-  OCMVerify([_mockAdInstanceManager loadAd:[OCMArg checkWithBlock:verificationBlock]
-                                      adId:[OCMArg isEqual:@2]]);
+  OCMVerify([_mockAdInstanceManager loadAd:[OCMArg checkWithBlock:verificationBlock]]);
 }
 
 - (void)testInternalInit {

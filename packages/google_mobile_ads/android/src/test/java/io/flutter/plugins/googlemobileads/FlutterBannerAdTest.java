@@ -15,7 +15,9 @@
 package io.flutter.plugins.googlemobileads;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -29,13 +31,16 @@ import android.app.Activity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.ResponseInfo;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -64,7 +69,7 @@ public class FlutterBannerAdTest {
     doReturn(mockAdView).when(bannerAdCreator).createAdView();
     flutterBannerAd =
         new FlutterBannerAd(
-            mockManager, "testId", mockFlutterRequest, mockFlutterAdSize, bannerAdCreator);
+            1, mockManager, "testId", mockFlutterRequest, mockFlutterAdSize, bannerAdCreator);
   }
 
   @Test
@@ -92,7 +97,7 @@ public class FlutterBannerAdTest {
     verify(mockAdView).setAdUnitId(eq("testId"));
     verify(mockAdView).setAdSize(adSize);
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadError);
-    verify(mockManager).onAdFailedToLoad(eq(flutterBannerAd), eq(expectedError));
+    verify(mockManager).onAdFailedToLoad(eq(1), eq(expectedError));
   }
 
   @Test
@@ -115,26 +120,56 @@ public class FlutterBannerAdTest {
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAdView).getResponseInfo();
 
+    final AdValue adValue = mock(AdValue.class);
+    doReturn(1).when(adValue).getPrecisionType();
+    doReturn("Dollars").when(adValue).getCurrencyCode();
+    doReturn(1000L).when(adValue).getValueMicros();
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) {
+                FlutterPaidEventListener listener = invocation.getArgument(0);
+                listener.onPaidEvent(adValue);
+                return null;
+              }
+            })
+        .when(mockAdView)
+        .setOnPaidEventListener(any(FlutterPaidEventListener.class));
+
     flutterBannerAd.load();
+
     verify(mockAdView).loadAd(eq(mockAdRequest));
     verify(mockAdView).setAdListener(any(AdListener.class));
     verify(mockAdView).setAdUnitId(eq("testId"));
     verify(mockAdView).setAdSize(adSize);
-    verify(mockManager).onAdLoaded(eq(flutterBannerAd), eq(responseInfo));
-    verify(mockManager).onAdImpression(eq(flutterBannerAd));
-    verify(mockManager).onAdClosed(eq(flutterBannerAd));
-    verify(mockManager).onAdOpened(eq(flutterBannerAd));
-    assertEquals(flutterBannerAd.getView(), mockAdView);
+    verify(mockManager).onAdLoaded(eq(1), eq(responseInfo));
+    verify(mockManager).onAdImpression(eq(1));
+    verify(mockManager).onAdClosed(eq(1));
+    verify(mockManager).onAdOpened(eq(1));
+    assertEquals(flutterBannerAd.getPlatformView().getView(), mockAdView);
+    verify(mockAdView).setOnPaidEventListener(any(FlutterPaidEventListener.class));
+    final ArgumentCaptor<FlutterAdValue> adValueCaptor = forClass(FlutterAdValue.class);
+    verify(mockManager).onPaidEvent(eq(flutterBannerAd), adValueCaptor.capture());
+    assertEquals(adValueCaptor.getValue().currencyCode, "Dollars");
+    assertEquals(adValueCaptor.getValue().precisionType, 1);
+    assertEquals(adValueCaptor.getValue().valueMicros, 1000L);
   }
 
   @Test
-  public void destroy() {
+  public void dispose() {
     flutterBannerAd.load();
 
-    assertEquals(flutterBannerAd.getView(), mockAdView);
+    assertEquals(flutterBannerAd.getPlatformView().getView(), mockAdView);
+    PlatformView platformView = flutterBannerAd.getPlatformView();
+    assertNotNull(platformView);
 
-    flutterBannerAd.destroy();
+    flutterBannerAd.dispose();
     verify(mockAdView).destroy();
-    assertNull(flutterBannerAd.getView());
+    assertNull(flutterBannerAd.getPlatformView());
+    // Check that the platform view still retains a reference to the view until
+    // dispose is called on it.
+    assertNotNull(platformView.getView());
+    platformView.dispose();
+    assertNull(platformView.getView());
   }
 }

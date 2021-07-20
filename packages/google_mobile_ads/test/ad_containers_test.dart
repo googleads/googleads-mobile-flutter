@@ -22,6 +22,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 
+// ignore_for_file: deprecated_member_use_from_same_package
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -1064,6 +1065,121 @@ void main() {
       expect(result[0], rewarded!);
       expect(result[1].amount, 1);
       expect(result[1].type, 'one');
+    });
+
+    test('onPaidEvent', () async {
+      Completer<List<dynamic>> resultCompleter = Completer<List<dynamic>>();
+
+      final BannerAd banner = BannerAd(
+        adUnitId: BannerAd.testAdUnitId,
+        size: AdSize.banner,
+        listener: BannerAdListener(
+          onPaidEvent: (Ad ad, double value, precision, String currencyCode) =>
+              resultCompleter
+                  .complete(<Object>[ad, value, precision, currencyCode]),
+        ),
+        request: AdRequest(),
+      );
+
+      await banner.load();
+
+      // Check precision type: unknown
+      MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+        'adId': 0,
+        'eventName': 'onPaidEvent',
+        'valueMicros': 1.2345,
+        'precision': 0,
+        'currencyCode': 'USD',
+      });
+
+      ByteData data =
+          instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+        'plugins.flutter.io/google_mobile_ads',
+        data,
+        (ByteData? data) {},
+      );
+
+      List<dynamic> result = await resultCompleter.future;
+      expect(result[0], banner);
+      expect(result[1], 1.2345);
+      expect(result[2], PrecisionType.unknown);
+      expect(result[3], 'USD');
+
+      // Unknown precision outside 0-3 range.
+      resultCompleter = Completer<List<dynamic>>();
+      methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+        'adId': 0,
+        'eventName': 'onPaidEvent',
+        'valueMicros': 1.2345,
+        'precision': 9999,
+        'currencyCode': 'USD',
+      });
+      data = instanceManager.channel.codec.encodeMethodCall(methodCall);
+      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+        'plugins.flutter.io/google_mobile_ads',
+        instanceManager.channel.codec.encodeMethodCall(methodCall),
+        (ByteData? data) {},
+      );
+      result = await resultCompleter.future;
+      expect(result[2], PrecisionType.unknown);
+
+      // Check precision type: estimated.
+      // Also check that callback is invoked successfully for int valueMicros.
+      resultCompleter = Completer<List<dynamic>>();
+      methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+        'adId': 0,
+        'eventName': 'onPaidEvent',
+        'valueMicros': 12345, // int
+        'precision': 1,
+        'currencyCode': 'USD',
+      });
+      data = instanceManager.channel.codec.encodeMethodCall(methodCall);
+      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+        'plugins.flutter.io/google_mobile_ads',
+        instanceManager.channel.codec.encodeMethodCall(methodCall),
+        (ByteData? data) {},
+      );
+      result = await resultCompleter.future;
+      expect(result[1], 12345);
+      expect(result[2], PrecisionType.estimated);
+
+      // Check precision type: publisherProvided.
+      resultCompleter = Completer<List<dynamic>>();
+      methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+        'adId': 0,
+        'eventName': 'onPaidEvent',
+        'valueMicros': 1.2345,
+        'precision': 2,
+        'currencyCode': 'USD',
+      });
+      data = instanceManager.channel.codec.encodeMethodCall(methodCall);
+      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+        'plugins.flutter.io/google_mobile_ads',
+        instanceManager.channel.codec.encodeMethodCall(methodCall),
+        (ByteData? data) {},
+      );
+      result = await resultCompleter.future;
+      expect(result[2], PrecisionType.publisherProvided);
+
+      // Check precision type: precise.
+      resultCompleter = Completer<List<dynamic>>();
+      methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+        'adId': 0,
+        'eventName': 'onPaidEvent',
+        'valueMicros': 1.2345,
+        'precision': 3,
+        'currencyCode': 'USD',
+      });
+      data = instanceManager.channel.codec.encodeMethodCall(methodCall);
+      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+        'plugins.flutter.io/google_mobile_ads',
+        instanceManager.channel.codec.encodeMethodCall(methodCall),
+        (ByteData? data) {},
+      );
+      result = await resultCompleter.future;
+      expect(result[2], PrecisionType.precise);
     });
 
     test('encode/decode AdSize', () async {
