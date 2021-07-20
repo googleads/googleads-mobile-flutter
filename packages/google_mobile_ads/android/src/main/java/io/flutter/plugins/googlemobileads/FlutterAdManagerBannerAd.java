@@ -78,7 +78,7 @@ class FlutterAdManagerBannerAd extends FlutterAd implements FlutterAdLoadedListe
       allSizes[i] = sizes.get(i).getAdSize();
     }
     if(allSizes[0].getWidth() == 1) {
-      view.setManualImpressionsEnabled(true);
+      adView.setManualImpressionsEnabled(true);
     }
     adView.setAdSizes(allSizes);
     adView.setAdListener(new FlutterBannerAdListener(adId, manager, this));
@@ -86,7 +86,7 @@ class FlutterAdManagerBannerAd extends FlutterAd implements FlutterAdLoadedListe
   }
 
   public void recordImpression() {
-    view.recordManualImpression();
+    adView.recordManualImpression();
   }
 
   @Override
