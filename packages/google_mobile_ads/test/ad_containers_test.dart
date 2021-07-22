@@ -158,8 +158,8 @@ void main() {
     test('load native', () async {
       final Map<String, Object> options = <String, Object>{'a': 1, 'b': 2};
       final NativeAdOptions nativeAdOptions = NativeAdOptions(
-          adChoicesPlacement: 1,
-          mediaAspectRatio: 2,
+          adChoicesPlacement: AdChoicesPlacement.bottomLeftCorner,
+          mediaAspectRatio: MediaAspectRatio.any,
           videoOptions: VideoOptions(
             clickToExpandRequested: true,
             customControlsRequested: true,
