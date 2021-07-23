@@ -663,6 +663,52 @@ final NativeAdListener listener = NativeAdListener(
 );
 ```
 
+#### NativeAdOptions
+
+`NativeAds` have an optional argument, `nativeAdOptions`, which can be used to set specific options on the native ad.
+
+`shouldRequestMultipleImages`
+<p>If set to `true`, the SDK will not load image asset content and native ad
+image URLs can be used to fetch content. Defaults to false.</p>
+
+`shouldRequestMultipleImages`
+<p>
+Some image assets will contain a series of images rather than just one. By setting this value to true, 
+your app indicates that it's prepared to display all the images for any assets that have more than one. 
+By setting it to false (the default) your app instructs the SDK to provide just the first image for any assets that contain a series.
+
+If no `NativeadOptions` are passed in when initializing a `NativeAd`, the default value for each property will be used.
+</p>
+
+`adChoicesPlacement`
+<p>
+The [AdChoices overlay](https://developers.google.com/admob/android/native/advanced#adchoices_overlay) is set to the top right corner by default. 
+Apps can change which corner this overlay is rendered in by setting this property to one of the following:
+
+* AdChoicesPlacement.topRightCorner
+* AdChoicesPlacement.topLeftCorner
+* AdChoicesPlacement.bottomRightCorner
+* AdChoicesPlacement.bottomLeftCorner
+</p>
+
+`videoOptions`
+<p>
+Can be used to set video options for video assets returned as part of a native ad.
+</p>
+
+`mediaAspectRatio`
+<p>
+This sets the aspect ratio for image or video to be returned for the native ad. 
+Setting NativeMediaAspectRatio to one of the following constants will cause only ads with media of the specified aspect ratio to be returned:
+
+* MediaAspectRatio.landscape
+* MediaAspectRatio.portrait
+* MediaAspectRatio.square
+* MediaAspectRatio.any
+
+If not set, ads with any aspect ratio will be returned.
+</p>
+
 ### Load Native Ad
 
 After a `NativeAd` is instantiated, `load()` must be called before it can be shown on the screen.
@@ -1338,6 +1384,52 @@ final NativeAdListener listener = NativeAdListener(
  onNativeAdClicked: (NativeAd ad) => print('Ad clicked.'),
 );
 ```
+
+#### NativeAdOptions
+
+`NativeAds` have an optional argument, `nativeAdOptions`, which can be used to set specific options on the native ad.
+
+`shouldRequestMultipleImages`
+<p>If set to `true`, the SDK will not load image asset content and native ad
+image URLs can be used to fetch content. Defaults to false.</p>
+
+`shouldRequestMultipleImages`
+<p>
+Some image assets will contain a series of images rather than just one. By setting this value to true, 
+your app indicates that it's prepared to display all the images for any assets that have more than one. 
+By setting it to false (the default) your app instructs the SDK to provide just the first image for any assets that contain a series.
+
+If no `NativeadOptions` are passed in when initializing a `NativeAd`, the default value for each property will be used.
+</p>
+
+`adChoicesPlacement`
+<p>
+The [AdChoices overlay](https://developers.google.com/admob/android/native/advanced#adchoices_overlay) is set to the top right corner by default. 
+Apps can change which corner this overlay is rendered in by setting this property to one of the following:
+
+* AdChoicesPlacement.topRightCorner
+* AdChoicesPlacement.topLeftCorner
+* AdChoicesPlacement.bottomRightCorner
+* AdChoicesPlacement.bottomLeftCorner
+</p>
+
+`videoOptions`
+<p>
+Can be used to set video options for video assets returned as part of a native ad.
+</p>
+
+`mediaAspectRatio`
+<p>
+This sets the aspect ratio for image or video to be returned for the native ad. 
+Setting NativeMediaAspectRatio to one of the following constants will cause only ads with media of the specified aspect ratio to be returned:
+
+* MediaAspectRatio.landscape
+* MediaAspectRatio.portrait
+* MediaAspectRatio.square
+* MediaAspectRatio.any
+
+If not set, ads with any aspect ratio will be returned.
+</p>
 
 ### Load Native Ad
 

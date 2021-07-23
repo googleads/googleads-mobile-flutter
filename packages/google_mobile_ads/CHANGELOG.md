@@ -1,5 +1,6 @@
-## 0.13.2+1
+## 0.13.3
 
+* Adds support for NativeAdOptions. More documentation also available for [Android](https://developers.google.com/admob/android/native/options) and [iOS](https://developers.google.com/admob/ios/native/options)
 * Fixes [Issue #130](https://github.com/googleads/googleads-mobile-flutter/issues/130)
 
 ## 0.13.2
