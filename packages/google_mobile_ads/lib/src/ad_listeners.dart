@@ -32,6 +32,25 @@ typedef OnUserEarnedRewardCallback = void Function(
 /// The callback type to handle an error loading an [Ad].
 typedef AdLoadErrorCallback = void Function(Ad ad, LoadAdError error);
 
+/// The callback type for when an ad receives revenue value.
+typedef OnPaidEventCallback = void Function(
+    Ad ad, double valueMicros, PrecisionType precision, String currencyCode);
+
+/// Allowed constants for precision type in [OnPaidEventCallback].
+enum PrecisionType {
+  /// An ad value with unknown precision.
+  unknown,
+
+  /// An ad value estimated from aggregated data.
+  estimated,
+
+  /// A publisher-provided ad value, such as manual CPMs in a mediation group.
+  publisherProvided,
+
+  /// The precise value paid for this ad.
+  precise
+}
+
 /// Listener for app events.
 class AppEventListener {
   /// Called when an app event is received.
@@ -49,6 +68,7 @@ abstract class AdWithViewListener {
     this.onAdWillDismissScreen,
     this.onAdImpression,
     this.onAdClosed,
+    this.onPaidEvent,
   });
 
   /// Called when an ad is successfully received.
@@ -71,6 +91,10 @@ abstract class AdWithViewListener {
 
   /// Called when an impression occurs on the ad.
   final AdEventCallback? onAdImpression;
+
+  /// Callback to be invoked when an ad is estimated to have earned money.
+  /// Available for allowlisted accounts only.
+  final OnPaidEventCallback? onPaidEvent;
 }
 
 /// A listener for receiving notifications for the lifecycle of a [BannerAd].
@@ -96,6 +120,7 @@ class BannerAdListener extends AdWithViewListener {
     AdEventCallback? onAdClosed,
     AdEventCallback? onAdWillDismissScreen,
     AdEventCallback? onAdImpression,
+    OnPaidEventCallback? onPaidEvent,
   }) : super(
           onAdLoaded: onAdLoaded,
           onAdFailedToLoad: onAdFailedToLoad,
@@ -103,6 +128,7 @@ class BannerAdListener extends AdWithViewListener {
           onAdClosed: onAdClosed,
           onAdWillDismissScreen: onAdWillDismissScreen,
           onAdImpression: onAdImpression,
+          onPaidEvent: onPaidEvent,
         );
 }
 
@@ -130,6 +156,7 @@ class AdManagerBannerAdListener extends BannerAdListener
     AdEventCallback? onAdWillDismissScreen,
     AdEventCallback? onAdClosed,
     AdEventCallback? onAdImpression,
+    OnPaidEventCallback? onPaidEvent,
     this.onAppEvent,
   }) : super(
             onAdLoaded: onAdLoaded,
@@ -137,7 +164,8 @@ class AdManagerBannerAdListener extends BannerAdListener
             onAdOpened: onAdOpened,
             onAdWillDismissScreen: onAdWillDismissScreen,
             onAdClosed: onAdClosed,
-            onAdImpression: onAdImpression);
+            onAdImpression: onAdImpression,
+            onPaidEvent: onPaidEvent);
 
   /// Called when an app event is received.
   @override
@@ -167,6 +195,7 @@ class NativeAdListener extends AdWithViewListener {
     AdEventCallback? onAdWillDismissScreen,
     AdEventCallback? onAdClosed,
     AdEventCallback? onAdImpression,
+    OnPaidEventCallback? onPaidEvent,
     this.onNativeAdClicked,
   }) : super(
             onAdLoaded: onAdLoaded,
@@ -174,7 +203,8 @@ class NativeAdListener extends AdWithViewListener {
             onAdOpened: onAdOpened,
             onAdWillDismissScreen: onAdWillDismissScreen,
             onAdClosed: onAdClosed,
-            onAdImpression: onAdImpression);
+            onAdImpression: onAdImpression,
+            onPaidEvent: onPaidEvent);
 
   /// Called when a click is recorded for a [NativeAd].
   final void Function(NativeAd ad)? onNativeAdClicked;

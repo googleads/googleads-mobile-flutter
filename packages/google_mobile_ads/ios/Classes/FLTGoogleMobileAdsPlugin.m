@@ -19,6 +19,36 @@
 @property NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *nativeAdFactories;
 @end
 
+/// Initialization handler for GMASDK. Invokes result at most once.
+@interface FLTInitializationHandler : NSObject
+- (instancetype)initWithResult:(FlutterResult)result;
+- (void)handleInitializationComplete:(GADInitializationStatus *_Nonnull)status;
+@end
+
+@implementation FLTInitializationHandler {
+  FlutterResult _result;
+  BOOL _isInitializationCompleted;
+}
+
+- (instancetype)initWithResult:(FlutterResult)result {
+  self = [super init];
+  if (self) {
+    _isInitializationCompleted = false;
+    _result = result;
+  }
+  return self;
+}
+
+- (void)handleInitializationComplete:(GADInitializationStatus *_Nonnull)status {
+  if (_isInitializationCompleted) {
+    return;
+  }
+  _result([[FLTInitializationStatus alloc] initWithStatus:status]);
+  _isInitializationCompleted = true;
+}
+
+@end
+
 @implementation FLTGoogleMobileAdsPlugin {
   NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *_nativeAdFactories;
   FLTAdInstanceManager *_manager;
@@ -97,9 +127,10 @@
       UIApplication.sharedApplication.delegate.window.rootViewController;
 
   if ([call.method isEqualToString:@"MobileAds#initialize"]) {
+    FLTInitializationHandler *handler = [[FLTInitializationHandler alloc] initWithResult:result];
     [[GADMobileAds sharedInstance]
         startWithCompletionHandler:^(GADInitializationStatus *_Nonnull status) {
-          result([[FLTInitializationStatus alloc] initWithStatus:status]);
+          [handler handleInitializationComplete:status];
         }];
   } else if ([call.method isEqualToString:@"_init"]) {
     [_manager disposeAllAds];
@@ -158,15 +189,17 @@
     FLTBannerAd *ad = [[FLTBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                        size:call.arguments[@"size"]
                                                     request:call.arguments[@"request"]
-                                         rootViewController:rootController];
-    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+                                         rootViewController:rootController
+                                                       adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAdManagerBannerAd"]) {
     FLTGAMBannerAd *ad = [[FLTGAMBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                             sizes:call.arguments[@"sizes"]
                                                           request:call.arguments[@"request"]
-                                               rootViewController:rootController];
-    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+                                               rootViewController:rootController
+                                                             adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadNativeAd"]) {
     NSString *factoryId = call.arguments[@"factoryId"];
@@ -190,15 +223,16 @@
                                                     request:request
                                             nativeAdFactory:(id)factory
                                               customOptions:call.arguments[@"customOptions"]
-                                         rootViewController:rootController];
-    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+                                         rootViewController:rootController
+                                                       adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadInterstitialAd"]) {
     FLTInterstitialAd *ad = [[FLTInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                                 request:call.arguments[@"request"]
-                                                     rootViewController:rootController];
-
-    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+                                                     rootViewController:rootController
+                                                                   adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
       NSNumber *orientationFromArguments = call.arguments[@"orientation"];
@@ -246,9 +280,9 @@
     FLTGAMInterstitialAd *ad =
         [[FLTGAMInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                request:call.arguments[@"request"]
-                                    rootViewController:rootController];
-
-    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+                                    rootViewController:rootController
+                                                  adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedAd"]) {
     FLTAdRequest *request;
@@ -267,8 +301,9 @@
         [[FLTRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                         request:request
                              rootViewController:rootController
-                  serverSideVerificationOptions:call.arguments[@"serverSideVerificationOptions"]];
-    [_manager loadAd:ad adId:call.arguments[@"adId"]];
+                  serverSideVerificationOptions:call.arguments[@"serverSideVerificationOptions"]
+                                           adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"disposeAd"]) {
     [_manager dispose:call.arguments[@"adId"]];

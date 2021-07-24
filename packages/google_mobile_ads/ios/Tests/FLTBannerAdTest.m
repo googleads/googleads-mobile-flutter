@@ -35,7 +35,8 @@
   FLTBannerAd *bannerAd = [[FLTBannerAd alloc] initWithAdUnitId:@"testId"
                                                            size:size
                                                         request:[[FLTAdRequest alloc] init]
-                                             rootViewController:mockRootViewController];
+                                             rootViewController:mockRootViewController
+                                                           adId:@1];
   bannerAd.manager = mockManager;
 
   [bannerAd load];
@@ -62,6 +63,24 @@
   [bannerAd.bannerView.delegate bannerViewDidRecordImpression:bannerMock];
   OCMVerify([mockManager onBannerImpression:[OCMArg isEqual:bannerAd]]);
 
+  // Mock callback of paid event handler.
+  GADAdValue *adValue = OCMClassMock([GADAdValue class]);
+  OCMStub([adValue value]).andReturn(NSDecimalNumber.one);
+  OCMStub([adValue precision]).andReturn(GADAdValuePrecisionEstimated);
+  OCMStub([adValue currencyCode]).andReturn(@"currencyCode");
+
+  bannerAd.bannerView.paidEventHandler(adValue);
+  OCMVerify([mockManager onPaidEvent:[OCMArg isEqual:bannerAd]
+                               value:[OCMArg checkWithBlock:^BOOL(id obj) {
+                                 FLTAdValue *adValue = obj;
+                                 XCTAssertEqualObjects(
+                                     adValue.valueMicros,
+                                     [[NSDecimalNumber alloc] initWithInt:1000000]);
+                                 XCTAssertEqual(adValue.precision, GADAdValuePrecisionEstimated);
+                                 XCTAssertEqualObjects(adValue.currencyCode, @"currencyCode");
+                                 return TRUE;
+                               }]]);
+
   NSString *domain = @"domain";
   NSDictionary *userInfo = @{NSLocalizedDescriptionKey : @"description"};
   NSError *error = [NSError errorWithDomain:domain code:1 userInfo:userInfo];
@@ -78,7 +97,8 @@
                                                      size:[[FLTAdSize alloc] initWithWidth:@(1)
                                                                                     height:@(2)]
                                                   request:request
-                                       rootViewController:mockRootViewController];
+                                       rootViewController:mockRootViewController
+                                                     adId:@1];
 
   XCTAssertEqual(ad.bannerView.adUnitID, @"testId");
   XCTAssertEqual(ad.bannerView.rootViewController, mockRootViewController);

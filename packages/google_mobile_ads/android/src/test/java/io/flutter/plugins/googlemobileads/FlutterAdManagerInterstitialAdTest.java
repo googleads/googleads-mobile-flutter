@@ -14,6 +14,9 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -27,6 +30,7 @@ import static org.mockito.Mockito.when;
 import android.app.Activity;
 import android.content.Context;
 import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.ResponseInfo;
@@ -38,6 +42,7 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -59,7 +64,7 @@ public class FlutterAdManagerInterstitialAdTest {
     when(mockFlutterRequest.asAdManagerAdRequest()).thenReturn(mockRequest);
     flutterAdManagerInterstitialAd =
         new FlutterAdManagerInterstitialAd(
-            mockManager, "testId", mockFlutterRequest, mockFlutterAdLoader);
+            1, mockManager, "testId", mockFlutterRequest, mockFlutterAdLoader);
   }
 
   @Test
@@ -96,8 +101,7 @@ public class FlutterAdManagerInterstitialAdTest {
             any(AdManagerInterstitialAdLoadCallback.class));
 
     FlutterLoadAdError flutterLoadAdError = new FlutterLoadAdError(loadAdError);
-    verify(mockManager)
-        .onAdFailedToLoad(eq(flutterAdManagerInterstitialAd), eq(flutterLoadAdError));
+    verify(mockManager).onAdFailedToLoad(eq(1), eq(flutterLoadAdError));
   }
 
   @Test
@@ -123,6 +127,22 @@ public class FlutterAdManagerInterstitialAdTest {
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAdManagerAd).getResponseInfo();
 
+    final AdValue adValue = mock(AdValue.class);
+    doReturn(1).when(adValue).getPrecisionType();
+    doReturn("Dollars").when(adValue).getCurrencyCode();
+    doReturn(1000L).when(adValue).getValueMicros();
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) {
+                FlutterPaidEventListener listener = invocation.getArgument(0);
+                listener.onPaidEvent(adValue);
+                return null;
+              }
+            })
+        .when(mockAdManagerAd)
+        .setOnPaidEventListener(any(FlutterPaidEventListener.class));
+
     flutterAdManagerInterstitialAd.load();
 
     verify(mockFlutterAdLoader)
@@ -132,8 +152,15 @@ public class FlutterAdManagerInterstitialAdTest {
             eq(mockRequest),
             any(AdManagerInterstitialAdLoadCallback.class));
 
-    verify(mockManager).onAdLoaded(flutterAdManagerInterstitialAd, responseInfo);
+    verify(mockManager).onAdLoaded(1, responseInfo);
+    verify(mockAdManagerAd).setOnPaidEventListener(any(FlutterPaidEventListener.class));
+    final ArgumentCaptor<FlutterAdValue> adValueCaptor = forClass(FlutterAdValue.class);
+    verify(mockManager).onPaidEvent(eq(flutterAdManagerInterstitialAd), adValueCaptor.capture());
+    assertEquals(adValueCaptor.getValue().currencyCode, "Dollars");
+    assertEquals(adValueCaptor.getValue().precisionType, 1);
+    assertEquals(adValueCaptor.getValue().valueMicros, 1000L);
 
+    // Setup mocks for show().
     doAnswer(
             new Answer() {
               @Override
@@ -152,9 +179,10 @@ public class FlutterAdManagerInterstitialAdTest {
     verify(mockAdManagerAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
     verify(mockAdManagerAd).show(mockManager.activity);
     verify(mockAdManagerAd).setAppEventListener(any(AppEventListener.class));
-    verify(mockManager).onAdShowedFullScreenContent(eq(flutterAdManagerInterstitialAd));
-    verify(mockManager).onAdImpression(eq(flutterAdManagerInterstitialAd));
-    verify(mockManager).onAdDismissedFullScreenContent(eq(flutterAdManagerInterstitialAd));
+    verify(mockManager).onAdShowedFullScreenContent(eq(1));
+    verify(mockManager).onAdImpression(eq(1));
+    verify(mockManager).onAdDismissedFullScreenContent(eq(1));
+    assertNull(flutterAdManagerInterstitialAd.getPlatformView());
   }
 
   @Test
@@ -192,8 +220,7 @@ public class FlutterAdManagerInterstitialAdTest {
         .setFullScreenContentCallback(any(FullScreenContentCallback.class));
 
     flutterAdManagerInterstitialAd.show();
-    verify(mockManager)
-        .onFailedToShowFullScreenContent(eq(flutterAdManagerInterstitialAd), eq(adError));
+    verify(mockManager).onFailedToShowFullScreenContent(eq(1), eq(adError));
   }
 
   @Test
@@ -233,6 +260,6 @@ public class FlutterAdManagerInterstitialAdTest {
     flutterAdManagerInterstitialAd.load();
 
     verify(mockAdManagerAd).setAppEventListener(any(AppEventListener.class));
-    verify(mockManager).onAppEvent(eq(flutterAdManagerInterstitialAd), eq("test"), eq("data"));
+    verify(mockManager).onAppEvent(eq(1), eq("test"), eq("data"));
   }
 }

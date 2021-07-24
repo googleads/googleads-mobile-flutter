@@ -14,8 +14,17 @@
 
 package io.flutter.plugins.googlemobileads;
 
-/** Constants used in the plugin. */
-public class Constants {
-  /** Version request agent. Should be bumped alongside plugin versions. */
-  public static final String REQUEST_AGENT_PREFIX_VERSIONED = "Flutter-GMA-0.13.2+1";
+import androidx.annotation.NonNull;
+
+/** A wrapper for {@link com.google.android.gms.ads.AdValue}. */
+public class FlutterAdValue {
+  final int precisionType;
+  @NonNull final String currencyCode;
+  final long valueMicros;
+
+  public FlutterAdValue(int precisionType, @NonNull String currencyCode, long valueMicros) {
+    this.precisionType = precisionType;
+    this.currencyCode = currencyCode;
+    this.valueMicros = valueMicros;
+  }
 }

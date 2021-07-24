@@ -49,7 +49,8 @@
                                                   request:gadOrGAMRequest
                                           nativeAdFactory:mockNativeAdFactory
                                             customOptions:customOptions
-                                       rootViewController:OCMClassMock([UIViewController class])];
+                                       rootViewController:OCMClassMock([UIViewController class])
+                                                     adId:@1];
   ad.manager = mockManager;
 
   XCTAssertEqual(ad.adLoader.adUnitID, @"testAdUnitId");
@@ -87,6 +88,17 @@
                              return YES;
                            }]]);
 
+  // Mock callback of paid event handler.
+  GADAdValue *adValue = OCMClassMock([GADAdValue class]);
+  OCMStub([adValue value]).andReturn(NSDecimalNumber.one);
+  OCMStub([adValue precision]).andReturn(GADAdValuePrecisionEstimated);
+  OCMStub([adValue currencyCode]).andReturn(@"currencyCode");
+  OCMStub([mockGADNativeAd setPaidEventHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
+                             GADPaidEventHandler handler = obj;
+                             handler(adValue);
+                             return YES;
+                           }]]);
+
   // Check ad loader delegate methods forward to ad instance manager.
   [(id<GADNativeAdLoaderDelegate>)ad.adLoader.delegate adLoader:mockLoader
                                              didReceiveNativeAd:mockGADNativeAd];
@@ -99,6 +111,8 @@
                                     didFailToReceiveAdWithError:error];
   OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad] error:[OCMArg isEqual:error]]);
 
+  OCMVerify([mockGADNativeAd setPaidEventHandler:[OCMArg any]]);
+
   // Check GADNativeAdDelegate methods forward to ad instance manager.
   OCMVerify([mockGADNativeAd setDelegate:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager onNativeAdClicked:[OCMArg isEqual:ad]]);
@@ -106,6 +120,16 @@
   OCMVerify([mockManager onNativeAdWillPresentScreen:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager onNativeAdDidDismissScreen:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager onNativeAdWillDismissScreen:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager onPaidEvent:[OCMArg isEqual:ad]
+                               value:[OCMArg checkWithBlock:^BOOL(id obj) {
+                                 FLTAdValue *adValue = obj;
+                                 XCTAssertEqualObjects(
+                                     adValue.valueMicros,
+                                     [[NSDecimalNumber alloc] initWithInt:1000000]);
+                                 XCTAssertEqual(adValue.precision, GADAdValuePrecisionEstimated);
+                                 XCTAssertEqualObjects(adValue.currencyCode, @"currencyCode");
+                                 return TRUE;
+                               }]]);
 }
 
 @end

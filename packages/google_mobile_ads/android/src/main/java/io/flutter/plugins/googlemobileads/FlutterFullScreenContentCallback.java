@@ -25,22 +25,22 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 class FlutterFullScreenContentCallback extends FullScreenContentCallback {
 
   @NonNull protected final AdInstanceManager manager;
-  @NonNull protected final FlutterAd ad;
 
-  public FlutterFullScreenContentCallback(
-      @NonNull AdInstanceManager manager, @NonNull FlutterAd ad) {
+  @NonNull protected final int adId;
+
+  public FlutterFullScreenContentCallback(@NonNull AdInstanceManager manager, int adId) {
     this.manager = manager;
-    this.ad = ad;
+    this.adId = adId;
   }
 
   @Override
   public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-    manager.onFailedToShowFullScreenContent(ad, adError);
+    manager.onFailedToShowFullScreenContent(adId, adError);
   }
 
   @Override
   public void onAdShowedFullScreenContent() {
-    manager.onAdShowedFullScreenContent(ad);
+    manager.onAdShowedFullScreenContent(adId);
   }
 
   @Override
@@ -53,6 +53,6 @@ class FlutterFullScreenContentCallback extends FullScreenContentCallback {
 
   @Override
   public void onAdImpression() {
-    manager.onAdImpression(ad);
+    manager.onAdImpression(adId);
   }
 }

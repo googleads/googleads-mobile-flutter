@@ -58,13 +58,6 @@
       [[FLTServerSideVerificationOptions alloc] init];
   serverSideVerificationOptions.customRewardString = @"reward";
   serverSideVerificationOptions.userIdentifier = @"user-id";
-  FLTRewardedAd *ad =
-      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                      request:request
-                           rootViewController:UIApplication.sharedApplication.delegate.window
-                                                  .rootViewController
-                serverSideVerificationOptions:serverSideVerificationOptions];
-
   FlutterMethodCall *methodCall = [FlutterMethodCall
       methodCallWithMethodName:@"loadRewardedAd"
                      arguments:@{
@@ -94,8 +87,7 @@
     XCTAssertEqualObjects(options, serverSideVerificationOptions);
     return YES;
   };
-  OCMVerify([_mockAdInstanceManager loadAd:[OCMArg checkWithBlock:verificationBlock]
-                                      adId:[OCMArg isEqual:@2]]);
+  OCMVerify([_mockAdInstanceManager loadAd:[OCMArg checkWithBlock:verificationBlock]]);
 }
 
 - (void)testInternalInit {
@@ -114,6 +106,35 @@
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
   OCMVerify([_mockAdInstanceManager disposeAllAds]);
+}
+
+- (void)testMobileAdsInitialize {
+  id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
+  OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
+      .andReturn((GADMobileAds *)gadMobileAdsClassMock);
+  GADInitializationStatus *mockInitStatus = OCMClassMock([GADInitializationStatus class]);
+  OCMStub([mockInitStatus adapterStatusesByClassName]).andReturn(@{});
+  OCMStub([gadMobileAdsClassMock startWithCompletionHandler:[OCMArg any]])
+      .andDo(^(NSInvocation *invocation) {
+        // Invoke the init handler twice.
+        GADInitializationCompletionHandler completionHandler;
+        [invocation getArgument:&completionHandler atIndex:2];
+        completionHandler(mockInitStatus);
+        completionHandler(mockInitStatus);
+      });
+
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#initialize" arguments:@{}];
+  __block int resultInvokedCount = 0;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvokedCount += 1;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+  XCTAssertEqual(resultInvokedCount, 1);
+  XCTAssertEqual([((FLTInitializationStatus *)returnedResult) adapterStatuses].count, 0);
 }
 
 - (void)testSetSameAppKeyEnabledYes {
