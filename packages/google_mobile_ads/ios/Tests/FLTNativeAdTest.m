@@ -44,17 +44,23 @@
 - (void)testLoadNativeAd:(FLTAdRequest *)gadOrGAMRequest
            customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions {
   id mockNativeAdFactory = OCMProtocolMock(@protocol(FLTNativeAdFactory));
+  FLTNativeAdOptions *mockNativeAdOptions = OCMClassMock([FLTNativeAdOptions class]);
+  GADAdLoaderOptions *mockGADAdLoaderOptions = OCMClassMock([GADAdLoaderOptions class]);
+  OCMStub([mockNativeAdOptions asGADAdLoaderOptions]).andReturn(mockGADAdLoaderOptions);
+  UIViewController *mockViewController = OCMClassMock([UIViewController class]);
 
   FLTNativeAd *ad = [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
                                                   request:gadOrGAMRequest
                                           nativeAdFactory:mockNativeAdFactory
                                             customOptions:customOptions
-                                       rootViewController:OCMClassMock([UIViewController class])
-                                                     adId:@1];
+                                       rootViewController:mockViewController
+                                                     adId:@1
+                                          nativeAdOptions:mockNativeAdOptions];
   ad.manager = mockManager;
 
   XCTAssertEqual(ad.adLoader.adUnitID, @"testAdUnitId");
   XCTAssertEqual(ad.adLoader.delegate, ad);
+  OCMVerify([mockNativeAdOptions asGADAdLoaderOptions]);
 
   FLTNativeAd *mockNativeAd = OCMPartialMock(ad);
   GADAdLoader *mockLoader = OCMPartialMock([ad adLoader]);
