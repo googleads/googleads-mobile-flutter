@@ -157,13 +157,24 @@ void main() {
 
     test('load native', () async {
       final Map<String, Object> options = <String, Object>{'a': 1, 'b': 2};
-
+      final NativeAdOptions nativeAdOptions = NativeAdOptions(
+          adChoicesPlacement: AdChoicesPlacement.bottomLeftCorner,
+          mediaAspectRatio: MediaAspectRatio.any,
+          videoOptions: VideoOptions(
+            clickToExpandRequested: true,
+            customControlsRequested: true,
+            startMuted: true,
+          ),
+          requestCustomMuteThisAd: false,
+          shouldRequestMultipleImages: true,
+          shouldReturnUrlsForImageAssets: false);
       final NativeAd native = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
         factoryId: '0',
         customOptions: options,
         listener: NativeAdListener(),
         request: AdRequest(),
+        nativeAdOptions: nativeAdOptions,
       );
 
       await native.load();
@@ -174,6 +185,7 @@ void main() {
           'request': native.request,
           'adManagerRequest': null,
           'factoryId': '0',
+          'nativeAdOptions': nativeAdOptions,
           'customOptions': options,
         })
       ]);
@@ -200,6 +212,7 @@ void main() {
           'request': null,
           'adManagerRequest': native.adManagerRequest,
           'factoryId': '0',
+          'nativeAdOptions': null,
           'customOptions': options,
         })
       ]);
