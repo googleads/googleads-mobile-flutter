@@ -140,6 +140,12 @@
     NSNumber *isEnabled = call.arguments[@"isEnabled"];
     [requestConfig setSameAppKeyEnabled:isEnabled.boolValue];
     result(nil);
+  } else if ([call.method isEqualToString:@"MobileAds#setAppMuted"]) {
+    GADMobileAds.sharedInstance.applicationMuted = [call.arguments[@"muted"] boolValue];
+    result(nil);
+  } else if ([call.method isEqualToString:@"MobileAds#setAppVolume"]) {
+    GADMobileAds.sharedInstance.applicationVolume = [call.arguments[@"volume"] floatValue];
+    result(nil);
   } else if ([call.method isEqualToString:@"MobileAds#updateRequestConfiguration"]) {
     NSString *maxAdContentRating = call.arguments[@"maxAdContentRating"];
     NSNumber *tagForChildDirectedTreatment = call.arguments[@"tagForChildDirectedTreatment"];

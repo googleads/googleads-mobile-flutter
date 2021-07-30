@@ -71,6 +71,18 @@ class MobileAds {
     }
   }
 
+  // For more details about the volume control, visit
+  // https://developers.google.com/admob/android/global-settings#video_ad_volume_control
+  Future<void> setAppMuted (bool muted) {
+    return instanceManager.setAppMuted(muted);
+  }
+  
+  // Sets the current app volume.
+  // https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-void-setappvolume-float-volume
+  Future<void> setAppVolume (double volume) {
+    return instanceManager.setAppVolume(volume);
+  }
+  
   /// Internal init to cleanup state for hot restart.
   /// This is a workaround for https://github.com/flutter/flutter/issues/7160.
   void _init() {

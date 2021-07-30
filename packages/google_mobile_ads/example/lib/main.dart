@@ -105,6 +105,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _createRewardedAd() {
+    // MobileAds.instance.setAppMuted(true); // Uncomment to test muting
+    // MobileAds.instance.setAppVolume(0.10); // Uncomment to test volume level
     RewardedAd.load(
         adUnitId: RewardedAd.testAdUnitId,
         request: request,
