@@ -23,7 +23,7 @@ inline banner and native ads.
     *   Android Gradle Plugin 4.1 or higher (this is the version supported by Flutter out of the box)
 *   Ios
     *   Latest version of Xcode with [enabled command-line tools](https://flutter.dev/docs/get-started/install/macos#install-xcode).
-*   Recommended: [Create an AdMob account](https://support.google.com/admob/answer/2784575) and [register an Android and/or iOS app](https://support.google.com/admob/answer/2773509)
+*   Recommended: [Create an AdMob account](https://support.google.com/admob/answer/2784575) and [register an Android and/or iOS app](https://support.google.com/admob/answer/2773509) (To show live ads on a published app, it is required to register that app)
 
 
 ## Import the Mobile Ads SDK
