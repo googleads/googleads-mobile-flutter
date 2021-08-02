@@ -667,7 +667,7 @@ final NativeAdListener listener = NativeAdListener(
 
 `NativeAds` have an optional argument, `nativeAdOptions`, which can be used to set specific options on the native ad.
 
-`shouldRequestMultipleImages`
+`shouldReturnUrlsForImageAssets`
 <p>If set to `true`, the SDK will not load image asset content and native ad
 image URLs can be used to fetch content. Defaults to false.</p>
 
@@ -1389,7 +1389,7 @@ final NativeAdListener listener = NativeAdListener(
 
 `NativeAds` have an optional argument, `nativeAdOptions`, which can be used to set specific options on the native ad.
 
-`shouldRequestMultipleImages`
+`shouldReturnUrlsForImageAssets`
 <p>If set to `true`, the SDK will not load image asset content and native ad
 image URLs can be used to fetch content. Defaults to false.</p>
 

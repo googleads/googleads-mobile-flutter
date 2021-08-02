@@ -991,15 +991,16 @@ class NativeAdOptions {
 
 /// Options for controlling video playback in supported ad formats.
 class VideoOptions {
-  /// Indicates whether the requested video should have the click to expand
-  /// behavior.
+  /// Whether the requested video should have the click to expand behavior.
   final bool? clickToExpandRequested;
 
-  /// Indicates whether the requested video should have custom controls enabled for
-  /// play/pause/mute/unmute.
+  /// Whether the requested video should have custom controls enabled
+  /// for play/pause/mute/unmute.
   final bool? customControlsRequested;
 
-  /// Indicates whether videos should start muted. By default this property value is YES.
+  /// Indicates whether videos should start muted.
+  ///
+  /// By default this property value is YES.
   final bool? startMuted;
 
   /// Constructs a VideoOptions to further customize a native ad request.
