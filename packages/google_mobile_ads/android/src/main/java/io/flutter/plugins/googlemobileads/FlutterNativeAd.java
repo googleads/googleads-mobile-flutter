@@ -38,7 +38,7 @@ class FlutterNativeAd extends FlutterAd {
   @Nullable private FlutterAdManagerAdRequest adManagerRequest;
   @Nullable private Map<String, Object> customOptions;
   @Nullable private NativeAdView nativeAdView;
-  @Nullable private FlutterNativeAdOptions nativeAdOptions;
+  @Nullable private final FlutterNativeAdOptions nativeAdOptions;
 
   static class Builder {
     @Nullable private AdInstanceManager manager;
