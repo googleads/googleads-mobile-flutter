@@ -994,8 +994,9 @@ class VideoOptions {
   /// Whether the requested video should have the click to expand behavior.
   final bool? clickToExpandRequested;
 
-  /// Whether the requested video should have custom controls enabled
-  /// for play/pause/mute/unmute.
+  /// Whether the requested video should have custom controls enabled.
+  ///
+  /// Custom controls are for play/pause/mute/unmute.
   final bool? customControlsRequested;
 
   /// Indicates whether videos should start muted.
