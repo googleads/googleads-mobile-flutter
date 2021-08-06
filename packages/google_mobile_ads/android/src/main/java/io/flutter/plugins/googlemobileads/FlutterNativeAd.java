@@ -38,6 +38,7 @@ class FlutterNativeAd extends FlutterAd {
   @Nullable private FlutterAdManagerAdRequest adManagerRequest;
   @Nullable private Map<String, Object> customOptions;
   @Nullable private NativeAdView nativeAdView;
+  @Nullable private FlutterNativeAdOptions nativeAdOptions;
 
   static class Builder {
     @Nullable private AdInstanceManager manager;
@@ -47,6 +48,7 @@ class FlutterNativeAd extends FlutterAd {
     @Nullable private FlutterAdManagerAdRequest adManagerRequest;
     @Nullable private Map<String, Object> customOptions;
     @Nullable private Integer id;
+    @Nullable private FlutterNativeAdOptions nativeAdOptions;
 
     public Builder setAdFactory(@NonNull NativeAdFactory adFactory) {
       this.adFactory = adFactory;
@@ -83,6 +85,11 @@ class FlutterNativeAd extends FlutterAd {
       return this;
     }
 
+    public Builder setNativeAdOptions(@Nullable FlutterNativeAdOptions nativeAdOptions) {
+      this.nativeAdOptions = nativeAdOptions;
+      return this;
+    }
+
     FlutterNativeAd build() {
       if (manager == null) {
         throw new IllegalStateException("AdInstanceManager cannot not be null.");
@@ -104,11 +111,19 @@ class FlutterNativeAd extends FlutterAd {
                 adFactory,
                 adManagerRequest,
                 new FlutterAdLoader(),
-                customOptions);
+                customOptions,
+                nativeAdOptions);
       } else {
         nativeAd =
             new FlutterNativeAd(
-                id, manager, adUnitId, adFactory, request, new FlutterAdLoader(), customOptions);
+                id,
+                manager,
+                adUnitId,
+                adFactory,
+                request,
+                new FlutterAdLoader(),
+                customOptions,
+                nativeAdOptions);
       }
       return nativeAd;
     }
@@ -121,7 +136,8 @@ class FlutterNativeAd extends FlutterAd {
       @NonNull NativeAdFactory adFactory,
       @NonNull FlutterAdRequest request,
       @NonNull FlutterAdLoader flutterAdLoader,
-      @Nullable Map<String, Object> customOptions) {
+      @Nullable Map<String, Object> customOptions,
+      @Nullable FlutterNativeAdOptions nativeAdOptions) {
     super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
@@ -129,6 +145,7 @@ class FlutterNativeAd extends FlutterAd {
     this.request = request;
     this.flutterAdLoader = flutterAdLoader;
     this.customOptions = customOptions;
+    this.nativeAdOptions = nativeAdOptions;
   }
 
   protected FlutterNativeAd(
@@ -138,7 +155,8 @@ class FlutterNativeAd extends FlutterAd {
       @NonNull NativeAdFactory adFactory,
       @NonNull FlutterAdManagerAdRequest adManagerRequest,
       @NonNull FlutterAdLoader flutterAdLoader,
-      @Nullable Map<String, Object> customOptions) {
+      @Nullable Map<String, Object> customOptions,
+      @Nullable FlutterNativeAdOptions nativeAdOptions) {
     super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
@@ -146,16 +164,19 @@ class FlutterNativeAd extends FlutterAd {
     this.adManagerRequest = adManagerRequest;
     this.flutterAdLoader = flutterAdLoader;
     this.customOptions = customOptions;
+    this.nativeAdOptions = nativeAdOptions;
   }
 
   @Override
   void load() {
     final OnNativeAdLoadedListener loadedListener = new FlutterNativeAdLoadedListener(this);
     final AdListener adListener = new FlutterNativeAdListener(adId, manager);
-    final NativeAdOptions options = new NativeAdOptions.Builder().build();
-
     // Note we delegate loading the ad to FlutterAdLoader mainly for testing purposes.
     // As of 20.0.0 of GMA, mockito is unable to mock AdLoader.
+    final NativeAdOptions options =
+        this.nativeAdOptions == null
+            ? new NativeAdOptions.Builder().build()
+            : nativeAdOptions.asNativeAdOptions();
     if (request != null) {
       flutterAdLoader.loadNativeAd(
           manager.activity, adUnitId, loadedListener, options, adListener, request.asAdRequest());

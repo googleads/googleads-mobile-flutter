@@ -149,5 +149,81 @@ void main() {
             arguments: {'isEnabled': false})
       ]);
     });
+
+    test('encode/decode empty native ad options', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      ByteData byteData = codec.encodeMessage(NativeAdOptions())!;
+
+      NativeAdOptions result = codec.decodeMessage(byteData);
+      expect(result.mediaAspectRatio, null);
+      expect(result.adChoicesPlacement, null);
+      expect(result.requestCustomMuteThisAd, null);
+      expect(result.shouldRequestMultipleImages, null);
+      expect(result.shouldReturnUrlsForImageAssets, null);
+      expect(result.videoOptions, null);
+
+      byteData =
+          codec.encodeMessage(NativeAdOptions(videoOptions: VideoOptions()))!;
+      result = codec.decodeMessage(byteData);
+      expect(result.mediaAspectRatio, null);
+      expect(result.adChoicesPlacement, null);
+      expect(result.requestCustomMuteThisAd, null);
+      expect(result.shouldRequestMultipleImages, null);
+      expect(result.shouldReturnUrlsForImageAssets, null);
+      expect(result.videoOptions!.clickToExpandRequested, null);
+      expect(result.videoOptions!.customControlsRequested, null);
+      expect(result.videoOptions!.startMuted, null);
+    });
+
+    test('encode/decode native ad options', () {
+      NativeAdOptions nativeAdOptions = NativeAdOptions(
+          adChoicesPlacement: AdChoicesPlacement.topRightCorner,
+          mediaAspectRatio: MediaAspectRatio.unknown,
+          videoOptions: VideoOptions(
+            clickToExpandRequested: false,
+            customControlsRequested: false,
+            startMuted: false,
+          ),
+          requestCustomMuteThisAd: false,
+          shouldRequestMultipleImages: false,
+          shouldReturnUrlsForImageAssets: false);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      ByteData byteData = codec.encodeMessage(nativeAdOptions)!;
+
+      NativeAdOptions result = codec.decodeMessage(byteData);
+      expect(result.mediaAspectRatio, MediaAspectRatio.unknown);
+      expect(result.adChoicesPlacement, AdChoicesPlacement.topRightCorner);
+      expect(result.requestCustomMuteThisAd, false);
+      expect(result.shouldRequestMultipleImages, false);
+      expect(result.shouldReturnUrlsForImageAssets, false);
+      expect(result.videoOptions!.startMuted, false);
+      expect(result.videoOptions!.customControlsRequested, false);
+      expect(result.videoOptions!.clickToExpandRequested, false);
+
+      nativeAdOptions = NativeAdOptions(
+          adChoicesPlacement: AdChoicesPlacement.bottomLeftCorner,
+          mediaAspectRatio: MediaAspectRatio.landscape,
+          videoOptions: VideoOptions(
+            clickToExpandRequested: true,
+            customControlsRequested: true,
+            startMuted: true,
+          ),
+          requestCustomMuteThisAd: true,
+          shouldRequestMultipleImages: true,
+          shouldReturnUrlsForImageAssets: true);
+
+      byteData = codec.encodeMessage(nativeAdOptions)!;
+      result = codec.decodeMessage(byteData);
+
+      expect(result.mediaAspectRatio, MediaAspectRatio.landscape);
+      expect(result.adChoicesPlacement, AdChoicesPlacement.bottomLeftCorner);
+      expect(result.requestCustomMuteThisAd, true);
+      expect(result.shouldRequestMultipleImages, true);
+      expect(result.shouldReturnUrlsForImageAssets, true);
+      expect(result.videoOptions!.startMuted, true);
+      expect(result.videoOptions!.customControlsRequested, true);
+      expect(result.videoOptions!.clickToExpandRequested, true);
+    });
   });
 }

@@ -12,10 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package io.flutter.plugins.googlemobileads;
+#import "FLTAdUtil.h"
 
-/** Constants used in the plugin. */
-public class Constants {
-  /** Version request agent. Should be bumped alongside plugin versions. */
-  public static final String REQUEST_AGENT_PREFIX_VERSIONED = "Flutter-GMA-0.13.3";
+@implementation FLTAdUtil
+
++ (BOOL)isNull:(id)object {
+  return object == nil || [[NSNull null] isEqual:object];
 }
+
++ (BOOL)isNotNull:(id)object {
+  return ![FLTAdUtil isNull:object];
+}
+
+@end
