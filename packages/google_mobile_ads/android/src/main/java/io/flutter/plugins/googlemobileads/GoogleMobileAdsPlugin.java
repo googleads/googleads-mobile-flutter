@@ -390,11 +390,11 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         }
         break;
       case "MobileAds#setAppMuted":
-        MobileAds.setAppMuted(call.<Boolean>argument("muted"));
+        flutterMobileAds.setAppMuted(call.<Boolean>argument("muted"));
         result.success(null);
         break;
       case "MobileAds#setAppVolume":
-        MobileAds.setAppVolume(call.<Float>argument("volume"));
+        flutterMobileAds.setAppVolume(call.<Float>argument("volume"));
         result.success(null);
         break;
       default:

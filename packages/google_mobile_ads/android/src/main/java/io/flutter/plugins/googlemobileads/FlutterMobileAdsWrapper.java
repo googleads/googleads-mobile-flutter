@@ -18,6 +18,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import java.util.Map;
 
 /** A wrapper around static methods in {@link com.google.android.gms.ads.MobileAds}. */
 public class FlutterMobileAdsWrapper {
@@ -28,5 +29,17 @@ public class FlutterMobileAdsWrapper {
   public void initialize(
       @NonNull Context context, @NonNull OnInitializationCompleteListener listener) {
     MobileAds.initialize(context, listener);
+  }
+
+  // Wrapper for setAppMuted
+  public boolean setAppMuted(boolean muted) {
+    MobileAds.setAppMuted(muted);
+    return true;
+  }
+
+  // Wrapper for setAppVolume
+  public float setAppVolume(float volume) {
+    MobileAds.setAppVolume(volume);
+    return volume;
   }
 }

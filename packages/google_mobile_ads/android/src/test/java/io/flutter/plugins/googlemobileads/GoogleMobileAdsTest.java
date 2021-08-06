@@ -30,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdapterResponseInfo;
 import com.google.android.gms.ads.ResponseInfo;
@@ -47,6 +48,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.hamcrest.Matcher;
@@ -569,5 +571,99 @@ public class GoogleMobileAdsTest {
     assertEquals(args.get("valueMicros"), 1L);
     assertEquals(args.get("precision"), 1);
     assertEquals(args.get("currencyCode"), "code");
+  }
+
+  @Test
+  public void testSetAppMuted() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+
+    // Return TRUE when the setAppMuted method is called on the mocked FlutterMobileAds object with TRUE argument
+    doAnswer(
+        new Answer() {
+          @Override
+          public Object answer(InvocationOnMock invocation) {
+            // Invoke setAppMuted.
+            return  invocation.getArgument(0);
+          }
+        })
+        .when(mockMobileAds)
+        .setAppMuted(true);
+
+    //Return FALSE when the setAppMuted method is called on the mocked FlutterMobileAds object with FALSE argument
+    doAnswer(
+        new Answer() {
+          @Override
+          public Object answer(InvocationOnMock invocation) {
+            // Invoke setAppMuted.
+            return invocation.getArgument(0);
+          }
+        })
+        .when(mockMobileAds)
+        .setAppMuted(false);
+
+    HashMap<String, Boolean> trueArguments = new HashMap<>();
+    trueArguments.put("muted", true);
+
+    MethodCall methodCall = new MethodCall("MobileAds#setAppMuted", trueArguments);
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(ArgumentMatchers.isNull());
+
+    HashMap<String, Boolean> falseArguments = new HashMap<>();
+    falseArguments.put("muted", false);
+
+    methodCall = new MethodCall("MobileAds#setAppMuted", falseArguments);
+    result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(ArgumentMatchers.isNull());
+  }
+
+  @Test
+  public void testSetAppVolume() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+
+    doAnswer(
+        new Answer() {
+          @Override
+          public Object answer(InvocationOnMock invocation) {
+            // Invoke setAppVolume.
+            return invocation.getArgument(0);
+          }
+        })
+        .when(mockMobileAds)
+        .setAppVolume(1.0f);
+
+    doAnswer(
+        new Answer() {
+          @Override
+          public Object answer(InvocationOnMock invocation) {
+            // Invoke setAppVolume.
+            return invocation.getArgument(0);
+          }
+        })
+        .when(mockMobileAds)
+        .setAppVolume(0.0f);
+
+    HashMap<String, Float> fullVolumeArguments = new HashMap<>();
+    fullVolumeArguments.put("volume", 1.0f);
+    MethodCall methodCall = new MethodCall("MobileAds#setAppVolume", fullVolumeArguments);
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(ArgumentMatchers.isNull());
+
+    HashMap<String, Float> noVolumeArguments = new HashMap<>();
+    noVolumeArguments.put("volume", 0.0f);
+    methodCall = new MethodCall("MobileAds#setAppVolume", noVolumeArguments);
+    result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(ArgumentMatchers.isNull());
   }
 }
