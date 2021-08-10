@@ -902,6 +902,81 @@ class ServerSideVerificationOptions {
   }
 }
 
+/// A full-screen app open ad for the Google Mobile Ads Plugin.
+class AppOpenAd extends AdWithoutView {
+
+  AppOpenAd._({
+    required String adUnitId,
+    required this.adLoadCallback,
+    required this.request,
+    required this.orientation,
+  })  : adManagerRequest = null,
+        super(adUnitId: adUnitId);
+
+  AppOpenAd._fromAdManagerRequest({
+    required String adUnitId,
+    required this.adLoadCallback,
+    required this.adManagerRequest,
+    required this.orientation,
+  })  : request = null,
+        super(adUnitId: adUnitId);
+
+  final AdRequest? request;
+  final AdManagerAdRequest? adManagerRequest;
+  final AppOpenAdLoadCallback adLoadCallback;
+  final int orientation;
+
+
+  /// Callbacks to be invoked when ads show and dismiss full screen content.
+  FullScreenContentCallback<AppOpenAd>? fullScreenContentCallback;
+
+  /// Constant for Portrait Orientation on AppOpenAd
+  static const int APP_OPEN_AD_ORIENTATION_PORTRAIT = 1;
+
+  /// Constant for Landscape Orientation on AppOpenAd
+  static const int APP_OPEN_AD_ORIENTATION_LANDSCAPE = 2;
+
+  static Future<void> load({
+    required String adUnitId,
+    required AdRequest request,
+    required AppOpenAdLoadCallback adLoadCallback,
+    required int orientation,
+  }) async {
+    AppOpenAd ad = AppOpenAd._(
+        adUnitId: adUnitId,
+        adLoadCallback: adLoadCallback,
+        request: request,
+        orientation: orientation,);
+    await instanceManager.loadAppOpenAd(ad);
+  }
+
+  static Future<void> loadWithAdManagerAdRequest({
+    required String adUnitId,
+    required AdManagerAdRequest adManagerAdRequest,
+    required AppOpenAdLoadCallback adLoadCallback,
+    required int orientation,
+  }) async {
+    AppOpenAd ad = AppOpenAd._fromAdManagerRequest(
+      adUnitId: adUnitId,
+      adLoadCallback: adLoadCallback,
+      adManagerRequest: adManagerAdRequest,
+      orientation: orientation,);
+    await instanceManager.loadAppOpenAd(ad);
+  }
+
+  /// Displays this on top of the application.
+  ///
+  /// Set [fullScreenContentCallback] before calling this method to be
+  /// notified of events that occur when showing the ad.
+  Future<void> show() {
+    return instanceManager.showAdWithoutView(this);
+  }
+
+  // Future<void> dispose() {
+  //   // TODO - do we need this?
+  // }
+}
+
 /// Media aspect ratio for native ads.
 enum MediaAspectRatio {
   /// Unknown media aspect ratio.
