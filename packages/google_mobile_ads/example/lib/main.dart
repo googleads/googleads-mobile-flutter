@@ -37,7 +37,7 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   static final AdRequest request = AdRequest(
     keywords: <String>['foo', 'bar'],
     contentUrl: 'http://foo.com/bar.html',
@@ -53,11 +53,60 @@ class _MyAppState extends State<MyApp> {
   BannerAd? _anchoredBanner;
   bool _loadingAnchoredBanner = false;
 
+  AppOpenAd? _appOpenAd;
+  bool _isShowingAppOpenAd = false;
+
   @override
   void initState() {
     super.initState();
-    _createInterstitialAd();
+    WidgetsBinding.instance!.addObserver(this);
+    _loadAppOpenAd();
+    // _createInterstitialAd();
     _createRewardedAd();
+  }
+  
+  void _loadAppOpenAd() {
+    AppOpenAd.load(
+        adUnitId: 'ca-app-pub-3940256099942544/3419835294',
+        orientation: 1,
+        request: request,
+        adLoadCallback: AppOpenAdLoadCallback(
+            onAdLoaded: (ad) {
+              print('$ad loaded: ${ad.responseInfo}');
+              _appOpenAd = ad;
+            },
+            onAdFailedToLoad: (error) {
+              print('AppOpenAd failed to load: $error');
+            }),);
+  }
+
+  void _showAppOpenAd() {
+    if (_appOpenAd != null) {
+      _appOpenAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdShowedFullScreenContent: (ad) {
+          _isShowingAppOpenAd = true;
+          print('$ad onAdShowedFullScreenContent');
+        },
+        onAdImpression: (ad) {
+          print('$ad onAdImpression');
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          _isShowingAppOpenAd = false;
+          print('$ad onAdFailedToShowFullScreenContent: $error');
+        },
+        onAdWillDismissFullScreenContent: (ad) {
+          print('$ad onAdWillDismissFullScreenContent');
+        },
+        onAdDismissedFullScreenContent: (ad) {
+          _isShowingAppOpenAd = false;
+          print('$ad onAdDismissedFullScreenContent');
+          ad.dispose();
+          _appOpenAd = null;
+          _loadAppOpenAd();
+        },
+      );
+      _appOpenAd!.show();
+    }
   }
 
   void _createInterstitialAd() {
@@ -190,10 +239,25 @@ class _MyAppState extends State<MyApp> {
   @override
   void dispose() {
     super.dispose();
+    WidgetsBinding.instance!.removeObserver(this);
     _interstitialAd?.dispose();
     _rewardedAd?.dispose();
     _anchoredBanner?.dispose();
   }
+
+  late AppLifecycleState _appLifecycleState;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    setState(() { _appLifecycleState = state; });
+    if (state == AppLifecycleState.resumed
+        && _appOpenAd != null
+        && !_isShowingAppOpenAd) {
+      _showAppOpenAd();
+    }
+    print('AppLifecycleState changed: $state');
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -216,6 +280,9 @@ class _MyAppState extends State<MyApp> {
                     case 'RewardedAd':
                       _showRewardedAd();
                       break;
+                    case 'AppOpenAd':
+                      _showAppOpenAd();
+                      break;
                     default:
                       throw AssertionError('unexpected button: $result');
                   }
@@ -228,6 +295,10 @@ class _MyAppState extends State<MyApp> {
                   PopupMenuItem<String>(
                     value: '$RewardedAd',
                     child: Text('$RewardedAd'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'AppOpenAd',
+                    child: Text('AppOpenAd'),
                   ),
                 ],
               ),
