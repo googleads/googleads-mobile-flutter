@@ -207,19 +207,6 @@
 }
 
 - (void)testSetAppMuted {
-
-  id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
-  OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
-      .andReturn((GADMobileAds *)gadMobileAdsClassMock);
-  GADInitializationStatus *mockInitStatus = OCMClassMock([GADInitializationStatus class]);
-  OCMStub([mockInitStatus adapterStatusesByClassName]).andReturn(@{});
-  OCMStub([gadMobileAdsClassMock startWithCompletionHandler:[OCMArg any]])
-      .andDo(^(NSInvocation *invocation) {
-        // Invoke the init handler twice.
-        GADInitializationCompletionHandler completionHandler;
-        [invocation getArgument:&completionHandler atIndex:1];
-      });
-
   FlutterMethodCall *methodCall =
       [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setAppMuted"
                                         arguments:@{@"muted" : @(YES)}];
@@ -235,22 +222,26 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
+  XCTAssertTrue(GADMobileAds.sharedInstance.applicationMuted);
+
+  methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setAppMuted"
+                                        arguments:@{@"muted" : @(NO)}];
+
+  resultInvoked = false;
+  result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertNil(returnedResult);
+  XCTAssertFalse(GADMobileAds.sharedInstance.applicationMuted);
 }
 
 - (void)testSetAppVolume {
-
-  id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
-  OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
-      .andReturn((GADMobileAds *)gadMobileAdsClassMock);
-  GADInitializationStatus *mockInitStatus = OCMClassMock([GADInitializationStatus class]);
-  OCMStub([mockInitStatus adapterStatusesByClassName]).andReturn(@{});
-  OCMStub([gadMobileAdsClassMock startWithCompletionHandler:[OCMArg any]])
-      .andDo(^(NSInvocation *invocation) {
-        // Invoke the init handler twice.
-        GADInitializationCompletionHandler completionHandler;
-        [invocation getArgument:&completionHandler atIndex:1];
-      });
-
   FlutterMethodCall *methodCall =
       [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setAppVolume"
                                         arguments:@{@"volume" : @1.0f}];
@@ -266,6 +257,7 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
+  XCTAssertEqual(GADMobileAds.sharedInstance.applicationVolume, 1.0f);
 }
 
 @end

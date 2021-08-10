@@ -71,6 +71,8 @@ class MobileAds {
     }
   }
 
+  /// Sets whether the app is muted.
+  ///
   /// For more details about the volume control, visit
   /// https://developers.google.com/admob/android/global-settings#video_ad_volume_control
   Future<void> setAppMuted (bool muted) {
@@ -78,6 +80,10 @@ class MobileAds {
   }
   
   /// Sets the current app volume.
+  ///
+  /// [volume] should be from 0 (muted) to 1 (full media volume).
+  /// The default value is 1.
+  /// For more details about the volume control, visit
   /// https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-void-setappvolume-float-volume
   Future<void> setAppVolume (double volume) {
     return instanceManager.setAppVolume(volume);

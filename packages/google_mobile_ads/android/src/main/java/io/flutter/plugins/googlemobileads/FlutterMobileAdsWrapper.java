@@ -31,15 +31,13 @@ public class FlutterMobileAdsWrapper {
     MobileAds.initialize(context, listener);
   }
 
-  // Wrapper for setAppMuted
-  public boolean setAppMuted(boolean muted) {
+  /** Wrapper for setAppMuted */
+  public void setAppMuted(boolean muted) {
     MobileAds.setAppMuted(muted);
-    return true;
   }
 
-  // Wrapper for setAppVolume
-  public float setAppVolume(float volume) {
+  /** Wrapper for setAppVolume */
+  public void setAppVolume(float volume) {
     MobileAds.setAppVolume(volume);
-    return volume;
   }
 }
