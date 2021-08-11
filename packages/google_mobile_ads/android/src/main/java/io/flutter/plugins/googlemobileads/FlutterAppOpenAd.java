@@ -63,16 +63,26 @@ public class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
           manager.activity,
           adUnitId,
           request.asAdRequest(),
-          orientation,
+          getOrientation(),
           new DelegatingAppOpenAdLoadCallback(this));
     } else if (adManagerAdRequest != null) {
       flutterAdLoader.loadAdManagerAppOpen(
           manager.activity,
           adUnitId,
           adManagerAdRequest.asAdManagerAdRequest(),
-          orientation,
+          getOrientation(),
           new DelegatingAppOpenAdLoadCallback(this));
     }
+  }
+
+  private int getOrientation() {
+    if (orientation == 1) {
+      return AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT;
+    } else if (orientation == 2 || orientation == 3) {
+      return AppOpenAd.APP_OPEN_AD_ORIENTATION_LANDSCAPE;
+    }
+    Log.e(TAG, "Passed unknown app open orientation: " + orientation);
+    return AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT;
   }
 
   private void onAdLoaded(@NonNull AppOpenAd ad) {

@@ -694,14 +694,14 @@
   [manager onAdDidPresentFullScreenContent:self];
 }
 
-///// Tells the delegate that the ad dismissed full screen content.
-//- (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-//  [manager adDidDismissFullScreenContent:self];
-//}
-
-- (void)adDidDismissFullScreenContent:(nonnull id)ad {
+/// Tells the delegate that the ad dismissed full screen content.
+- (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
   [manager adDidDismissFullScreenContent:self];
 }
+
+//- (void)adDidDismissFullScreenContent:(nonnull id)ad {
+//  [manager adDidDismissFullScreenContent:self];
+//}
 
 - (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
   [manager adWillDismissFullScreenContent:self];
