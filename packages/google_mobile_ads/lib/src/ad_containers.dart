@@ -904,6 +904,22 @@ class ServerSideVerificationOptions {
 
 /// A full-screen app open ad for the Google Mobile Ads Plugin.
 class AppOpenAd extends AdWithoutView {
+
+  /// Portrait orientation.
+  static const int orientationPortrait = 1;
+
+  /// Landscape orientation left.
+  ///
+  /// Android does not distinguish between left/right, and will treat this
+  /// the same way as [orientationLandscapeRight].
+  static const int orientationLandscapeLeft = 2
+  ;
+  /// Landscape orientation right.
+  ///
+  /// Android does not distinguish between left/right, and will treat this
+  /// the same way as [orientationLandscapeLeft].
+  static const int orientationLandscapeRight = 3;
+
   AppOpenAd._({
     required String adUnitId,
     required this.adLoadCallback,
@@ -920,20 +936,25 @@ class AppOpenAd extends AdWithoutView {
   })  : request = null,
         super(adUnitId: adUnitId);
 
+  /// The [AdRequest] used to load the ad.
   final AdRequest? request;
+
+  /// The [AdManagerAdRequest] used to load the ad.
   final AdManagerAdRequest? adManagerRequest;
+
+  /// Listener for ad load events.
   final AppOpenAdLoadCallback adLoadCallback;
+
+  /// The requested orientation.
+  ///
+  /// Must be [orientationPortrait], [orientationLandscapeLeft], or
+  /// [orientationLandscapeRight].
   final int orientation;
 
   /// Callbacks to be invoked when ads show and dismiss full screen content.
   FullScreenContentCallback<AppOpenAd>? fullScreenContentCallback;
 
-  /// Constant for Portrait Orientation on AppOpenAd
-  static const int APP_OPEN_AD_ORIENTATION_PORTRAIT = 1;
-
-  /// Constant for Landscape Orientation on AppOpenAd
-  static const int APP_OPEN_AD_ORIENTATION_LANDSCAPE = 2;
-
+  /// Loads a [AppOpenAd] using an [AdRequest].
   static Future<void> load({
     required String adUnitId,
     required AdRequest request,
@@ -949,6 +970,7 @@ class AppOpenAd extends AdWithoutView {
     await instanceManager.loadAppOpenAd(ad);
   }
 
+  /// Loads a [AppOpenAd] using an [AdManagerRequest].
   static Future<void> loadWithAdManagerAdRequest({
     required String adUnitId,
     required AdManagerAdRequest adManagerAdRequest,
@@ -971,10 +993,6 @@ class AppOpenAd extends AdWithoutView {
   Future<void> show() {
     return instanceManager.showAdWithoutView(this);
   }
-
-  // Future<void> dispose() {
-  //   // TODO - do we need this?
-  // }
 }
 
 /// Media aspect ratio for native ads.
