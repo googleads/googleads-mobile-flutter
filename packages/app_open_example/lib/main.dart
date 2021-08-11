@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'App Open Demo Home Page'),
     );
   }
 }
@@ -45,14 +45,19 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+/// Example home page for an app open ad.
+///
+/// Overrides [WidgetsBindingObserver.didChangeAppLifecycleState]
+/// to handle showing an app open ad when the app is resumed.
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
+  /// Maximum duration allowed between loading and showing the ad.
   final Duration maxCacheDuration = Duration(hours: 4);
-
-  int _counter = 0;
 
   DateTime? _appOpenLoadTime;
   AppOpenAd? _appOpenAd;
   bool _isShowingAppOpenAd = false;
+
+  int _counter = 0;
 
   @override
   void initState() {
@@ -93,25 +98,25 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       return;
     }
     if (DateTime.now().subtract(maxCacheDuration).isAfter(_appOpenLoadTime!)) {
+      // Exceeded maximum cache duration. Load another ad.
+      print('Maximum cache duration exceeded. Loading another ad.');
       _loadAppOpenAd();
       return;
     }
+    // Set the fullScreenContentCallback and show the ad.
     _appOpenAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (ad) {
         _isShowingAppOpenAd = true;
         print('$ad onAdShowedFullScreenContent');
       },
-      onAdImpression: (ad) {
-        print('$ad onAdImpression');
-      },
       onAdFailedToShowFullScreenContent: (ad, error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
         _isShowingAppOpenAd = false;
         ad.dispose();
-        print('$ad onAdFailedToShowFullScreenContent: $error');
       },
       onAdDismissedFullScreenContent: (ad) {
-        _isShowingAppOpenAd = false;
         print('$ad onAdDismissedFullScreenContent');
+        _isShowingAppOpenAd = false;
         ad.dispose();
         _appOpenAd = null;
         _loadAppOpenAd();
