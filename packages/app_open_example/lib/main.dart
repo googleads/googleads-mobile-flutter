@@ -46,7 +46,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
-
   final Duration maxCacheDuration = Duration(hours: 4);
 
   int _counter = 0;
@@ -66,9 +65,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     // Try to show an app open ad if the app is being resumed, and
     // we're not already showing an app open ad.
-    if (state == AppLifecycleState.resumed
-        && _appOpenAd != null
-        && !_isShowingAppOpenAd) {
+    if (state == AppLifecycleState.resumed &&
+        _appOpenAd != null &&
+        !_isShowingAppOpenAd) {
       _showAppOpenAd();
     }
   }
@@ -78,15 +77,14 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       adUnitId: 'ca-app-pub-3940256099942544/3419835294',
       orientation: 1,
       request: AdRequest(),
-      adLoadCallback: AppOpenAdLoadCallback(
-          onAdLoaded: (ad) {
-            print('$ad loaded');
-            _appOpenLoadTime = DateTime.now();
-            _appOpenAd = ad;
-          },
-          onAdFailedToLoad: (error) {
-            print('AppOpenAd failed to load: $error');
-          }),);
+      adLoadCallback: AppOpenAdLoadCallback(onAdLoaded: (ad) {
+        print('$ad loaded');
+        _appOpenLoadTime = DateTime.now();
+        _appOpenAd = ad;
+      }, onAdFailedToLoad: (error) {
+        print('AppOpenAd failed to load: $error');
+      }),
+    );
   }
 
   void _showAppOpenAd() {

@@ -64,20 +64,19 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // _createInterstitialAd();
     _createRewardedAd();
   }
-  
+
   void _loadAppOpenAd() {
     AppOpenAd.load(
-        adUnitId: 'ca-app-pub-3940256099942544/3419835294',
-        orientation: 1,
-        request: request,
-        adLoadCallback: AppOpenAdLoadCallback(
-            onAdLoaded: (ad) {
-              print('$ad loaded: ${ad.responseInfo}');
-              _appOpenAd = ad;
-            },
-            onAdFailedToLoad: (error) {
-              print('AppOpenAd failed to load: $error');
-            }),);
+      adUnitId: 'ca-app-pub-3940256099942544/3419835294',
+      orientation: 1,
+      request: request,
+      adLoadCallback: AppOpenAdLoadCallback(onAdLoaded: (ad) {
+        print('$ad loaded: ${ad.responseInfo}');
+        _appOpenAd = ad;
+      }, onAdFailedToLoad: (error) {
+        print('AppOpenAd failed to load: $error');
+      }),
+    );
   }
 
   void _showAppOpenAd() {
@@ -249,15 +248,16 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    setState(() { _appLifecycleState = state; });
-    if (state == AppLifecycleState.resumed
-        && _appOpenAd != null
-        && !_isShowingAppOpenAd) {
+    setState(() {
+      _appLifecycleState = state;
+    });
+    if (state == AppLifecycleState.resumed &&
+        _appOpenAd != null &&
+        !_isShowingAppOpenAd) {
       _showAppOpenAd();
     }
     print('AppLifecycleState changed: $state');
   }
-
 
   @override
   Widget build(BuildContext context) {

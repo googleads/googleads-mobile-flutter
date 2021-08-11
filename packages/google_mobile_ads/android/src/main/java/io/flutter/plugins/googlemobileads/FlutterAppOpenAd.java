@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 package io.flutter.plugins.googlemobileads;
 
 import android.util.Log;
@@ -48,8 +47,7 @@ public class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
     super(adId);
     Preconditions.checkState(
         request != null || adManagerAdRequest != null,
-        "One of request and adManagerAdRequest must be non-null."
-    );
+        "One of request and adManagerAdRequest must be non-null.");
     this.manager = manager;
     this.orientation = orientation;
     this.adUnitId = adUnitId;
@@ -98,15 +96,13 @@ public class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
     ad.show(manager.activity);
   }
 
-
   @Override
   void dispose() {
     ad = null;
   }
 
   /** An InterstitialAdLoadCallback that just forwards events to a delegate. */
-  private static final class DelegatingAppOpenAdLoadCallback
-      extends AppOpenAdLoadCallback {
+  private static final class DelegatingAppOpenAdLoadCallback extends AppOpenAdLoadCallback {
 
     private final WeakReference<FlutterAppOpenAd> delegate;
 
