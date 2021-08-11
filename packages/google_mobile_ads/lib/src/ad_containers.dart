@@ -904,7 +904,6 @@ class ServerSideVerificationOptions {
 
 /// A full-screen app open ad for the Google Mobile Ads Plugin.
 class AppOpenAd extends AdWithoutView {
-
   AppOpenAd._({
     required String adUnitId,
     required this.adLoadCallback,
@@ -926,7 +925,6 @@ class AppOpenAd extends AdWithoutView {
   final AppOpenAdLoadCallback adLoadCallback;
   final int orientation;
 
-
   /// Callbacks to be invoked when ads show and dismiss full screen content.
   FullScreenContentCallback<AppOpenAd>? fullScreenContentCallback;
 
@@ -943,10 +941,11 @@ class AppOpenAd extends AdWithoutView {
     required int orientation,
   }) async {
     AppOpenAd ad = AppOpenAd._(
-        adUnitId: adUnitId,
-        adLoadCallback: adLoadCallback,
-        request: request,
-        orientation: orientation,);
+      adUnitId: adUnitId,
+      adLoadCallback: adLoadCallback,
+      request: request,
+      orientation: orientation,
+    );
     await instanceManager.loadAppOpenAd(ad);
   }
 
@@ -960,7 +959,8 @@ class AppOpenAd extends AdWithoutView {
       adUnitId: adUnitId,
       adLoadCallback: adLoadCallback,
       adManagerRequest: adManagerAdRequest,
-      orientation: orientation,);
+      orientation: orientation,
+    );
     await instanceManager.loadAppOpenAd(ad);
   }
 
