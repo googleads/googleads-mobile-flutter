@@ -551,7 +551,7 @@ class AdInstanceManager {
     );
   }
 
-  /// Mute / Unmute app
+  /// Mute / Unmute app.
   Future<void> setAppMuted(bool muted) {
     return channel.invokeMethod<void>(
       'MobileAds#setAppMuted',
@@ -561,7 +561,7 @@ class AdInstanceManager {
     );
   }
 
-  /// Set app volume
+  /// Set app volume.
   Future<void> setAppVolume(double volume) {
     return channel.invokeMethod<void>(
       'MobileAds#setAppVolume',

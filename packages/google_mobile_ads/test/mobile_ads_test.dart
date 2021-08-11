@@ -49,6 +49,10 @@ void main() {
             return null;
           case 'MobileAds#setSameAppKeyEnabled':
             return null;
+          case 'MobileAds#setAppMuted':
+            return null;
+          case 'MobileAds#setAppVolume':
+            return null;
           default:
             assert(false);
             return null;
@@ -224,6 +228,33 @@ void main() {
       expect(result.videoOptions!.startMuted, true);
       expect(result.videoOptions!.customControlsRequested, true);
       expect(result.videoOptions!.clickToExpandRequested, true);
+    });
+
+    test('$MobileAds.setAppMuted', () async {
+      await MobileAds.instance.setAppMuted(true);
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#setAppMuted',
+            arguments: {'muted': true})
+      ]);
+
+      await MobileAds.instance.setAppMuted(false);
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#setAppMuted',
+            arguments: {'muted': true}),
+        isMethodCall('MobileAds#setAppMuted',
+            arguments: {'muted': false})
+      ]);
+    });
+
+    test('$MobileAds.setAppVolume', () async {
+      await MobileAds.instance.setAppVolume(1.0);
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#setAppVolume',
+            arguments: {'volume': 1.0})
+      ]);
     });
   });
 }
