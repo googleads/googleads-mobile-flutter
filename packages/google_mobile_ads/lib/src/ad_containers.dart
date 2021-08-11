@@ -904,7 +904,6 @@ class ServerSideVerificationOptions {
 
 /// A full-screen app open ad for the Google Mobile Ads Plugin.
 class AppOpenAd extends AdWithoutView {
-
   /// Portrait orientation.
   static const int orientationPortrait = 1;
 
@@ -912,8 +911,8 @@ class AppOpenAd extends AdWithoutView {
   ///
   /// Android does not distinguish between left/right, and will treat this
   /// the same way as [orientationLandscapeRight].
-  static const int orientationLandscapeLeft = 2
-  ;
+  static const int orientationLandscapeLeft = 2;
+
   /// Landscape orientation right.
   ///
   /// Android does not distinguish between left/right, and will treat this
@@ -970,7 +969,7 @@ class AppOpenAd extends AdWithoutView {
     await instanceManager.loadAppOpenAd(ad);
   }
 
-  /// Loads a [AppOpenAd] using an [AdManagerRequest].
+  /// Loads an [AppOpenAd] using an [AdManagerRequest].
   static Future<void> loadWithAdManagerAdRequest({
     required String adUnitId,
     required AdManagerAdRequest adManagerAdRequest,

@@ -24,7 +24,7 @@ import io.flutter.util.Preconditions;
 import java.lang.ref.WeakReference;
 
 /** A wrapper for {@link com.google.android.gms.ads.appopen.AppOpenAd}. */
-public class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
+class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
 
   private static final String TAG = "FlutterAppOpenAd";
 
@@ -36,7 +36,7 @@ public class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
   @Nullable private AppOpenAd ad;
   @NonNull private final FlutterAdLoader flutterAdLoader;
 
-  public FlutterAppOpenAd(
+  FlutterAppOpenAd(
       int adId,
       int orientation,
       @NonNull AdInstanceManager manager,

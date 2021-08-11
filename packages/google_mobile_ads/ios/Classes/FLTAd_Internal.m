@@ -699,10 +699,6 @@
   [manager adDidDismissFullScreenContent:self];
 }
 
-//- (void)adDidDismissFullScreenContent:(nonnull id)ad {
-//  [manager adDidDismissFullScreenContent:self];
-//}
-
 - (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
   [manager adWillDismissFullScreenContent:self];
 }
