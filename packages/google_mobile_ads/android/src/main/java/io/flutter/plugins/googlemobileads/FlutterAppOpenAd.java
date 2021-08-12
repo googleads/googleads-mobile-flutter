@@ -111,7 +111,7 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
     ad = null;
   }
 
-  /** An InterstitialAdLoadCallback that just forwards events to a delegate. */
+  /** An AppOpenAdLoadCallback that just forwards events to a delegate. */
   private static final class DelegatingAppOpenAdLoadCallback extends AppOpenAdLoadCallback {
 
     private final WeakReference<FlutterAppOpenAd> delegate;
