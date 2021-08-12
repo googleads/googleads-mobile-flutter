@@ -234,17 +234,14 @@ void main() {
       await MobileAds.instance.setAppMuted(true);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setAppMuted',
-            arguments: {'muted': true})
+        isMethodCall('MobileAds#setAppMuted', arguments: {'muted': true})
       ]);
 
       await MobileAds.instance.setAppMuted(false);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setAppMuted',
-            arguments: {'muted': true}),
-        isMethodCall('MobileAds#setAppMuted',
-            arguments: {'muted': false})
+        isMethodCall('MobileAds#setAppMuted', arguments: {'muted': true}),
+        isMethodCall('MobileAds#setAppMuted', arguments: {'muted': false})
       ]);
     });
 
@@ -252,8 +249,7 @@ void main() {
       await MobileAds.instance.setAppVolume(1.0);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setAppVolume',
-            arguments: {'volume': 1.0})
+        isMethodCall('MobileAds#setAppVolume', arguments: {'volume': 1.0})
       ]);
     });
   });
