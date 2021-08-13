@@ -18,7 +18,6 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-import java.util.Map;
 
 /** A wrapper around static methods in {@link com.google.android.gms.ads.MobileAds}. */
 public class FlutterMobileAdsWrapper {

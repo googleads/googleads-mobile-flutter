@@ -37,6 +37,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugin.platform.PlatformViewRegistry;
+import io.flutter.plugins.googlemobileads.FlutterAd.FlutterOverlayAd;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -396,6 +397,11 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         break;
       case "MobileAds#setAppVolume":
         flutterMobileAds.setAppVolume(call.<Float>argument("volume"));
+        result.success(null);
+        break;
+      case "MobileAds#setImmersiveMode":
+        ((FlutterOverlayAd) instanceManager.adForId(call.<Integer>argument("adId")))
+            .setImmersiveMode(call.<Boolean>argument("immersiveModeEnabled"));
         result.success(null);
         break;
       default:

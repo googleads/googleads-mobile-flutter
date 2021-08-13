@@ -224,9 +224,8 @@
   XCTAssertNil(returnedResult);
   XCTAssertTrue(GADMobileAds.sharedInstance.applicationMuted);
 
-  methodCall =
-      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setAppMuted"
-                                        arguments:@{@"muted" : @(NO)}];
+  methodCall = [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setAppMuted"
+                                                 arguments:@{@"muted" : @(NO)}];
 
   resultInvoked = false;
   result = ^(id _Nullable result) {

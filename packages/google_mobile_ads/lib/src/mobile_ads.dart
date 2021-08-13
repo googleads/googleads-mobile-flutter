@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import 'ad_instance_manager.dart';
 import 'request_configuration.dart';
 import 'package:flutter/foundation.dart';
@@ -87,6 +89,14 @@ class MobileAds {
   /// https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-void-setappvolume-float-volume
   Future<void> setAppVolume(double volume) {
     return instanceManager.setAppVolume(volume);
+  }
+
+  /// Enable / Disable immersive mode for the Ad.
+  ///
+  /// For more details, visit
+  /// https://developers.google.com/android/reference/com/google/android/gms/ads/rewarded/RewardedAd#public-abstract-void-setimmersivemode-boolean-immersivemodeenabled
+  Future<void> setImmersiveMode(AdWithoutView ad, bool immersiveModeEnabled) {
+    return instanceManager.setImmersiveMode(ad, immersiveModeEnabled);
   }
 
   /// Internal init to cleanup state for hot restart.
