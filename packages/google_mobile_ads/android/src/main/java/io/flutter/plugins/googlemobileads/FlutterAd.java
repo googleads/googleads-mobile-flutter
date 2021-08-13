@@ -37,8 +37,6 @@ abstract class FlutterAd {
   abstract static class FlutterOverlayAd extends FlutterAd {
     abstract void show();
 
-    abstract void setImmersiveMode(boolean immersiveModeEnabled);
-
     FlutterOverlayAd(int adId) {
       super(adId);
     }

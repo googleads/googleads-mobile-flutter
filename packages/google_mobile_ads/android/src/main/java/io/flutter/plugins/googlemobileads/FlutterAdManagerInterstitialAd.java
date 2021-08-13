@@ -90,15 +90,6 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
   }
 
   @Override
-  public void setImmersiveMode(boolean immersiveModeEnabled) {
-    if (ad == null) {
-      Log.e(TAG, "The interstitial wasn't loaded yet.");
-      return;
-    }
-    ad.setImmersiveMode(immersiveModeEnabled);
-  }
-
-  @Override
   void dispose() {
     ad = null;
   }

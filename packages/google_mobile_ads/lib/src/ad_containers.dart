@@ -717,11 +717,6 @@ class InterstitialAd extends AdWithoutView {
   Future<void> show() {
     return instanceManager.showAdWithoutView(this);
   }
-
-  /// Enable / Disable immersive mode for the Ad.
-  Future<void> setImmersiveMode(bool immersiveModeEnabled) async {
-    return instanceManager.setImmersiveMode(this, immersiveModeEnabled);
-  }
 }
 
 /// A full-screen interstitial ad for use with Ad Manager.
@@ -866,11 +861,6 @@ class RewardedAd extends AdWithoutView {
   Future<void> show({required OnUserEarnedRewardCallback onUserEarnedReward}) {
     onUserEarnedRewardCallback = onUserEarnedReward;
     return instanceManager.showAdWithoutView(this);
-  }
-
-  /// Enable / Disable immersive mode for the Ad.
-  Future<void> setImmersiveMode(bool immersiveModeEnabled) async {
-    return instanceManager.setImmersiveMode(this, immersiveModeEnabled);
   }
 }
 
