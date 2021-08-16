@@ -231,15 +231,15 @@ public class FlutterInterstitialAdTest {
   public void loadInterstitialAd_setImmersiveMode() {
     final InterstitialAd mockAd = mock(InterstitialAd.class);
     doAnswer(
-            new Answer() {
-              @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
-                InterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
-                adLoadCallback.onAdLoaded(mockAd);
-                // Pass back null for ad
-                return null;
-              }
-            })
+        new Answer() {
+          @Override
+          public Object answer(InvocationOnMock invocation) throws Throwable {
+            InterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+            // Pass back null for ad
+            adLoadCallback.onAdLoaded(mockAd);
+            return null;
+          }
+        })
         .when(mockFlutterAdLoader)
         .loadInterstitial(
             any(Context.class),
@@ -247,7 +247,7 @@ public class FlutterInterstitialAdTest {
             any(AdRequest.class),
             any(InterstitialAdLoadCallback.class));
     flutterInterstitialAd.load();
-    flutterInterstitialAd.setImmersiveMode(false);
-    verify(mockAd).setImmersiveMode(eq(false));
+    flutterInterstitialAd.setImmersiveMode(true);
+    verify(mockAd).setImmersiveMode(anyBoolean());
   }
 }

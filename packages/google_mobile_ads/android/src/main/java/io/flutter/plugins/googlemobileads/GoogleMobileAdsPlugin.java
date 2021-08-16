@@ -399,17 +399,10 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         flutterMobileAds.setAppVolume(call.<Float>argument("volume"));
         result.success(null);
         break;
-      case "setImmersiveMode":
+      case "MobileAds#setImmersiveMode":
         ((FlutterOverlayAd) instanceManager.adForId(call.<Integer>argument("adId")))
             .setImmersiveMode(call.<Boolean>argument("immersiveModeEnabled"));
         result.success(null);
-        break;
-      case "MobileAds#disableMediationInitialization":
-        flutterMobileAds.disableMediationInitialization(instanceManager.activity);
-        result.success(null);
-        break;
-      case "MobileAds#getVersionString":
-        result.success(flutterMobileAds.getVersionString());
         break;
       default:
         result.notImplemented();

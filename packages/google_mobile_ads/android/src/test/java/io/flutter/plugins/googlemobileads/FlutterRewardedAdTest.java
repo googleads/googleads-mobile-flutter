@@ -377,15 +377,15 @@ public class FlutterRewardedAdTest {
 
     final RewardedAd mockRewardedAd = mock(RewardedAd.class);
     doAnswer(
-            new Answer() {
-              @Override
-              public Object answer(InvocationOnMock invocation) throws Throwable {
-                RewardedAdLoadCallback adLoadCallback = invocation.getArgument(3);
-                adLoadCallback.onAdLoaded(mockRewardedAd);
-                // Pass back null for ad
-                return null;
-              }
-            })
+        new Answer() {
+          @Override
+          public Object answer(InvocationOnMock invocation) throws Throwable {
+            RewardedAdLoadCallback adLoadCallback = invocation.getArgument(3);
+            // Pass back null for ad
+            adLoadCallback.onAdLoaded(mockRewardedAd);
+            return null;
+          }
+        })
         .when(mockFlutterAdLoader)
         .loadRewarded(
             any(Activity.class),
@@ -395,6 +395,6 @@ public class FlutterRewardedAdTest {
 
     flutterRewardedAd.load();
     flutterRewardedAd.setImmersiveMode(true);
-    verify(mockRewardedAd).setImmersiveMode(eq(true));
+    verify(mockRewardedAd).setImmersiveMode(anyBoolean());
   }
 }

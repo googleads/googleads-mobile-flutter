@@ -89,29 +89,12 @@ class MobileAds {
     return instanceManager.setAppVolume(volume);
   }
 
-  /// Disables automated SDK crash reporting (iOS only).
+  /// Enable / Disable immersive mode for the Ad.
   ///
-  /// For more details, visit admob (iOS) documentation:
-  /// https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablesdkcrashreporting
-  Future<void> disableSDKCrashReporting() {
-    if (defaultTargetPlatform == TargetPlatform.iOS) {
-      return instanceManager.disableSDKCrashReporting();
-    } else {
-      return Future.value();
-    }
-  }
-
-  /// Disables mediation adapter initialization during initialization of the GMA SDK.
-  ///
-  /// For more details, visit admob documentation:
-  /// https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablemediationinitialization
-  Future<void> disableMediationInitialization() {
-    return instanceManager.disableMediationInitialization();
-  }
-
-  /// Gets the version string of Google Mobile Ads SDK.
-  Future<String> getVersionString() {
-    return instanceManager.getVersionString();
+  /// For more details, visit
+  /// https://developers.google.com/android/reference/com/google/android/gms/ads/rewarded/RewardedAd#public-abstract-void-setimmersivemode-boolean-immersivemodeenabled
+  Future<void> setImmersiveMode(AdWithoutView ad, bool immersiveModeEnabled) {
+    return instanceManager.setImmersiveMode(ad, immersiveModeEnabled);
   }
 
   /// Internal init to cleanup state for hot restart.
