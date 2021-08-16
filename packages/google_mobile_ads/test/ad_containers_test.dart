@@ -101,44 +101,43 @@ void main() {
     });
 
     test('load rewarded ad and set immersive mode', () async {
-      RewardedAd? rewarded;
-      AdRequest request = AdRequest();
-      await RewardedAd.load(
-          adUnitId: RewardedAd.testAdUnitId,
-          request: request,
-          rewardedAdLoadCallback: RewardedAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewarded = ad;
-              },
-              onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+        RewardedAd? rewarded;
+        AdRequest request = AdRequest();
+        await RewardedAd.load(
+            adUnitId: RewardedAd.testAdUnitId,
+            request: request,
+            rewardedAdLoadCallback: RewardedAdLoadCallback(
+                onAdLoaded: (ad) {
+                  rewarded = ad;
+                },
+                onAdFailedToLoad: (error) => null),
+            serverSideVerificationOptions: ServerSideVerificationOptions(
+              userId: 'test-user-id',
+              customData: 'test-custom-data',
+            ));
 
-      RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
-      (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
+        RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
+        (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
 
-      expect(log, <Matcher>[
-        isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': RewardedAd.testAdUnitId,
-          'request': request,
-          'adManagerRequest': null,
-          'serverSideVerificationOptions':
-              rewarded!.serverSideVerificationOptions,
-        }),
-      ]);
+        expect(log, <Matcher>[
+          isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': RewardedAd.testAdUnitId,
+            'request': request,
+            'adManagerRequest': null,
+            'serverSideVerificationOptions':
+            rewarded!.serverSideVerificationOptions,
+          }),
+        ]);
 
-      expect(instanceManager.adFor(0), isNotNull);
-      expect(rewarded, createdAd);
+        expect(instanceManager.adFor(0), isNotNull);
+        expect(rewarded, createdAd);
 
-      log.clear();
-      await createdAd.setImmersiveMode(true);
-      expect(log, <Matcher>[
-        isMethodCall('MobileAds#setImmersiveMode',
-            arguments: {'adId': 0, 'immersiveModeEnabled': true})
-      ]);
+        log.clear();
+        await createdAd.setImmersiveMode(true);
+        expect(log, <Matcher>[
+          isMethodCall('MobileAds#setImmersiveMode', arguments: {'adId': 0, 'immersiveModeEnabled': true})
+        ]);
     });
 
     test('load interstitial ad and set immersive mode', () async {
@@ -167,10 +166,9 @@ void main() {
       expect(instanceManager.adFor(0), isNotNull);
 
       log.clear();
-      await createdAd.setImmersiveMode(false);
+      await createdAd.setImmersiveMode(true);
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setImmersiveMode',
-            arguments: {'adId': 0, 'immersiveModeEnabled': false})
+        isMethodCall('MobileAds#setImmersiveMode', arguments: {'adId': 0, 'immersiveModeEnabled': true})
       ]);
     });
 
@@ -187,7 +185,7 @@ void main() {
       );
 
       AdManagerInterstitialAd createdAd =
-          (instanceManager.adFor(0) as AdManagerInterstitialAd);
+      (instanceManager.adFor(0) as AdManagerInterstitialAd);
       (createdAd).adLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
@@ -204,8 +202,7 @@ void main() {
       log.clear();
       await createdAd.setImmersiveMode(true);
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setImmersiveMode',
-            arguments: {'adId': 0, 'immersiveModeEnabled': true})
+        isMethodCall('MobileAds#setImmersiveMode', arguments: {'adId': 0, 'immersiveModeEnabled': true})
       ]);
     });
 

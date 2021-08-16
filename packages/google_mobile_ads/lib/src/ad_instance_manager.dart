@@ -578,7 +578,7 @@ class AdInstanceManager {
   }
 
   /// Enable / Disable immersive mode for the Ad.
-  Future<void> setImmersiveMode(AdWithoutView ad, bool immersiveModeEnabled) {
+  Future<void> setImmersiveMode(Ad ad, bool immersiveModeEnabled) {
     assert(
       adIdFor(ad) != null,
       '$Ad has not been loaded or has already been disposed.',
