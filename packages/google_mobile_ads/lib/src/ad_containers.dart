@@ -540,6 +540,11 @@ class BannerAd extends AdWithView {
   Future<void> load() async {
     await instanceManager.loadBannerAd(this);
   }
+
+  /// Enable / Disable immersive mode for the Ad.
+  Future<void> setImmersiveMode(bool immersiveModeEnabled) async {
+    return instanceManager.setImmersiveMode(this, immersiveModeEnabled);
+  }
 }
 
 /// A banner ad displayed with Google Ad Manager.
@@ -717,6 +722,11 @@ class InterstitialAd extends AdWithoutView {
   Future<void> show() {
     return instanceManager.showAdWithoutView(this);
   }
+
+  /// Enable / Disable immersive mode for the Ad.
+  Future<void> setImmersiveMode(bool immersiveModeEnabled) async {
+    return instanceManager.setImmersiveMode(this, immersiveModeEnabled);
+  }
 }
 
 /// A full-screen interstitial ad for use with Ad Manager.
@@ -762,6 +772,11 @@ class AdManagerInterstitialAd extends AdWithoutView {
   /// notified of events that occur when showing the ad.
   Future<void> show() {
     return instanceManager.showAdWithoutView(this);
+  }
+
+  /// Enable / Disable immersive mode for the Ad.
+  Future<void> setImmersiveMode(bool immersiveModeEnabled) async {
+    return instanceManager.setImmersiveMode(this, immersiveModeEnabled);
   }
 }
 
@@ -861,6 +876,11 @@ class RewardedAd extends AdWithoutView {
   Future<void> show({required OnUserEarnedRewardCallback onUserEarnedReward}) {
     onUserEarnedRewardCallback = onUserEarnedReward;
     return instanceManager.showAdWithoutView(this);
+  }
+
+  /// Enable / Disable immersive mode for the Ad.
+  Future<void> setImmersiveMode(bool immersiveModeEnabled) async {
+    return instanceManager.setImmersiveMode(this, immersiveModeEnabled);
   }
 }
 
