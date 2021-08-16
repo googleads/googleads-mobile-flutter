@@ -5,14 +5,6 @@
   * https://developers.google.com/admob/android/global-settings#video_ad_volume_control
   * https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-void-setappvolume-float-volume
 * Adds support for setting immersive mode for Rewarded and Interstitial Ads in Android.
-* Visit the following links for more information:
-  * https://developers.google.com/android/reference/com/google/android/gms/ads/interstitial/InterstitialAd?hl=en#setImmersiveMode(boolean)
-  * https://developers.google.com/android/reference/com/google/android/gms/ads/rewarded/RewardedAd#setImmersiveMode(boolean)
-* Adds support for disableSDKCrashReporting in iOS; disableMediationInitialization and getVersionString in both the platforms.
-  * https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablesdkcrashreporting
-  * iOS (disableMediationInitialization): https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablemediationinitialization
-  * Android (disableMediationAdapterInitialization): https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-void-disablemediationadapterinitialization-context-context
-  * https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#getVersionString()
 
 ## 0.13.3
 
