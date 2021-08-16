@@ -4,6 +4,7 @@
 * Visit the following links for more information:
   * https://developers.google.com/admob/android/global-settings#video_ad_volume_control
   * https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-void-setappvolume-float-volume
+* Adds support for setting immersive mode for Rewarded and Interstitial Ads in Android.
 
 ## 0.13.3
 
