@@ -377,15 +377,15 @@ public class FlutterRewardedAdTest {
 
     final RewardedAd mockRewardedAd = mock(RewardedAd.class);
     doAnswer(
-        new Answer() {
-          @Override
-          public Object answer(InvocationOnMock invocation) throws Throwable {
-            RewardedAdLoadCallback adLoadCallback = invocation.getArgument(3);
-            // Pass back null for ad
-            adLoadCallback.onAdLoaded(mockRewardedAd);
-            return null;
-          }
-        })
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                RewardedAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                // Pass back null for ad
+                adLoadCallback.onAdLoaded(mockRewardedAd);
+                return null;
+              }
+            })
         .when(mockFlutterAdLoader)
         .loadRewarded(
             any(Activity.class),
