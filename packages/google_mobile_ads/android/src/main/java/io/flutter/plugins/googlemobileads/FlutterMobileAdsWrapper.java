@@ -29,4 +29,14 @@ public class FlutterMobileAdsWrapper {
       @NonNull Context context, @NonNull OnInitializationCompleteListener listener) {
     MobileAds.initialize(context, listener);
   }
+
+  /** Wrapper for setAppMuted */
+  public void setAppMuted(boolean muted) {
+    MobileAds.setAppMuted(muted);
+  }
+
+  /** Wrapper for setAppVolume */
+  public void setAppVolume(float volume) {
+    MobileAds.setAppVolume(volume);
+  }
 }
