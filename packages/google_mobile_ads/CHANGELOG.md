@@ -5,9 +5,7 @@
   * https://developers.google.com/admob/android/global-settings#video_ad_volume_control
   * https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-void-setappvolume-float-volume
 * Adds support for setting immersive mode for Rewarded and Interstitial Ads in Android.
-* Visit the following links for more information:
-  * https://developers.google.com/android/reference/com/google/android/gms/ads/interstitial/InterstitialAd?hl=en#setImmersiveMode(boolean)
-  * https://developers.google.com/android/reference/com/google/android/gms/ads/rewarded/RewardedAd#setImmersiveMode(boolean)
+
 ## 0.13.3
 
 * Adds support for NativeAdOptions. More documentation also available for [Android](https://developers.google.com/admob/android/native/options) and [iOS](https://developers.google.com/admob/ios/native/options)
