@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -224,5 +225,29 @@ public class FlutterInterstitialAdTest {
 
     flutterInterstitialAd.show();
     verify(mockManager).onFailedToShowFullScreenContent(eq(1), eq(adError));
+  }
+
+  @Test
+  public void loadInterstitialAd_setImmersiveMode() {
+    final InterstitialAd mockAd = mock(InterstitialAd.class);
+    doAnswer(
+        new Answer() {
+          @Override
+          public Object answer(InvocationOnMock invocation) throws Throwable {
+            InterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+            // Pass back null for ad
+            adLoadCallback.onAdLoaded(mockAd);
+            return null;
+          }
+        })
+        .when(mockFlutterAdLoader)
+        .loadInterstitial(
+            any(Context.class),
+            anyString(),
+            any(AdRequest.class),
+            any(InterstitialAdLoadCallback.class));
+    flutterInterstitialAd.load();
+    flutterInterstitialAd.setImmersiveMode(true);
+    verify(mockAd).setImmersiveMode(anyBoolean());
   }
 }

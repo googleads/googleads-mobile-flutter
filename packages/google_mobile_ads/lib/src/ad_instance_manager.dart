@@ -570,6 +570,22 @@ class AdInstanceManager {
       },
     );
   }
+
+  /// Enable / Disable immersive mode for the Ad.
+  Future<void> setImmersiveMode(Ad ad, bool immersiveModeEnabled) {
+    assert(
+      adIdFor(ad) != null,
+      '$Ad has not been loaded or has already been disposed.',
+    );
+
+    return channel.invokeMethod<void>(
+      'MobileAds#setImmersiveMode',
+      <dynamic, dynamic>{
+        'adId': adIdFor(ad),
+        'immersiveModeEnabled': immersiveModeEnabled,
+      },
+    );
+  }
 }
 
 @visibleForTesting
