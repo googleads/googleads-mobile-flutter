@@ -559,11 +559,6 @@ class BannerAd extends AdWithView {
   Future<void> load() async {
     await instanceManager.loadBannerAd(this);
   }
-
-  /// Enable / Disable immersive mode for the Ad.
-  Future<void> setImmersiveMode(bool immersiveModeEnabled) async {
-    return instanceManager.setImmersiveMode(this, immersiveModeEnabled);
-  }
 }
 
 /// A banner ad displayed with Google Ad Manager.
