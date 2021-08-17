@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -183,6 +184,31 @@ public class FlutterAdManagerInterstitialAdTest {
     verify(mockManager).onAdImpression(eq(1));
     verify(mockManager).onAdDismissedFullScreenContent(eq(1));
     assertNull(flutterAdManagerInterstitialAd.getPlatformView());
+  }
+
+  @Test
+  public void loadAdManagerInterstitialAd_setImmersiveMode() {
+    final AdManagerInterstitialAd mockAdManagerAd = mock(AdManagerInterstitialAd.class);
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                // Pass back null for ad
+                adLoadCallback.onAdLoaded(mockAdManagerAd);
+                return null;
+              }
+            })
+        .when(mockFlutterAdLoader)
+        .loadAdManagerInterstitial(
+            any(Context.class),
+            anyString(),
+            any(AdManagerAdRequest.class),
+            any(AdManagerInterstitialAdLoadCallback.class));
+
+    flutterAdManagerInterstitialAd.load();
+    flutterAdManagerInterstitialAd.setImmersiveMode(true);
+    verify(mockAdManagerAd).setImmersiveMode(anyBoolean());
   }
 
   @Test
