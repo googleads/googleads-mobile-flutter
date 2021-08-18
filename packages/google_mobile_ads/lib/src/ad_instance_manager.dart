@@ -482,7 +482,7 @@ class AdInstanceManager {
         'adId': adId,
         'adUnitId': ad.adUnitId,
         'request': ad.request,
-        'adManagerRequest': ad.adManagerRequest,
+        'adManagerRequest': ad.adManagerAdRequest,
         'orientation': ad.orientation,
       },
     );
