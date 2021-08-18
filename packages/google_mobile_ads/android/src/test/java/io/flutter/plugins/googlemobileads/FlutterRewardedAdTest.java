@@ -369,4 +369,31 @@ public class FlutterRewardedAdTest {
     verify(mockRewardedAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
     verify(mockManager).onFailedToShowFullScreenContent(eq(1), eq(adError));
   }
+
+  @Test
+  public void loadRewardedAd_setImmersiveMode() {
+    setupAdmobMocks(null);
+
+    final RewardedAd mockRewardedAd = mock(RewardedAd.class);
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                RewardedAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                // Pass back null for ad
+                adLoadCallback.onAdLoaded(mockRewardedAd);
+                return null;
+              }
+            })
+        .when(mockFlutterAdLoader)
+        .loadRewarded(
+            any(Activity.class),
+            anyString(),
+            any(AdRequest.class),
+            any(RewardedAdLoadCallback.class));
+
+    flutterRewardedAd.load();
+    flutterRewardedAd.setImmersiveMode(true);
+    verify(mockRewardedAd).setImmersiveMode(eq(true));
+  }
 }
