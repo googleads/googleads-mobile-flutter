@@ -902,6 +902,98 @@ class ServerSideVerificationOptions {
   }
 }
 
+/// A full-screen app open ad for the Google Mobile Ads Plugin.
+class AppOpenAd extends AdWithoutView {
+  /// Portrait orientation.
+  static const int orientationPortrait = 1;
+
+  /// Landscape orientation left.
+  ///
+  /// Android does not distinguish between left/right, and will treat this
+  /// the same way as [orientationLandscapeRight].
+  static const int orientationLandscapeLeft = 2;
+
+  /// Landscape orientation right.
+  ///
+  /// Android does not distinguish between left/right, and will treat this
+  /// the same way as [orientationLandscapeLeft].
+  static const int orientationLandscapeRight = 3;
+
+  AppOpenAd._({
+    required String adUnitId,
+    required this.adLoadCallback,
+    required this.request,
+    required this.orientation,
+  })  : adManagerAdRequest = null,
+        super(adUnitId: adUnitId);
+
+  AppOpenAd._fromAdManagerRequest({
+    required String adUnitId,
+    required this.adLoadCallback,
+    required this.adManagerAdRequest,
+    required this.orientation,
+  })  : request = null,
+        super(adUnitId: adUnitId);
+
+  /// The [AdRequest] used to load the ad.
+  final AdRequest? request;
+
+  /// The [AdManagerAdRequest] used to load the ad.
+  final AdManagerAdRequest? adManagerAdRequest;
+
+  /// Listener for ad load events.
+  final AppOpenAdLoadCallback adLoadCallback;
+
+  /// The requested orientation.
+  ///
+  /// Must be [orientationPortrait], [orientationLandscapeLeft], or
+  /// [orientationLandscapeRight].
+  final int orientation;
+
+  /// Callbacks to be invoked when ads show and dismiss full screen content.
+  FullScreenContentCallback<AppOpenAd>? fullScreenContentCallback;
+
+  /// Loads a [AppOpenAd] using an [AdRequest].
+  static Future<void> load({
+    required String adUnitId,
+    required AdRequest request,
+    required AppOpenAdLoadCallback adLoadCallback,
+    required int orientation,
+  }) async {
+    AppOpenAd ad = AppOpenAd._(
+      adUnitId: adUnitId,
+      adLoadCallback: adLoadCallback,
+      request: request,
+      orientation: orientation,
+    );
+    await instanceManager.loadAppOpenAd(ad);
+  }
+
+  /// Loads an [AppOpenAd] using an [AdManagerRequest].
+  static Future<void> loadWithAdManagerAdRequest({
+    required String adUnitId,
+    required AdManagerAdRequest adManagerAdRequest,
+    required AppOpenAdLoadCallback adLoadCallback,
+    required int orientation,
+  }) async {
+    AppOpenAd ad = AppOpenAd._fromAdManagerRequest(
+      adUnitId: adUnitId,
+      adLoadCallback: adLoadCallback,
+      adManagerAdRequest: adManagerAdRequest,
+      orientation: orientation,
+    );
+    await instanceManager.loadAppOpenAd(ad);
+  }
+
+  /// Displays this on top of the application.
+  ///
+  /// Set [fullScreenContentCallback] before calling this method to be
+  /// notified of events that occur when showing the ad.
+  Future<void> show() {
+    return instanceManager.showAdWithoutView(this);
+  }
+}
+
 /// Media aspect ratio for native ads.
 enum MediaAspectRatio {
   /// Unknown media aspect ratio.
