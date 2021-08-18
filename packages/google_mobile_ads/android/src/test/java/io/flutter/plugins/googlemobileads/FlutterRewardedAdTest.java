@@ -18,7 +18,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -395,6 +394,6 @@ public class FlutterRewardedAdTest {
 
     flutterRewardedAd.load();
     flutterRewardedAd.setImmersiveMode(true);
-    verify(mockRewardedAd).setImmersiveMode(anyBoolean());
+    verify(mockRewardedAd).setImmersiveMode(eq(true));
   }
 }

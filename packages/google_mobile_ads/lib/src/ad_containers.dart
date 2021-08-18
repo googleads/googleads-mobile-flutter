@@ -392,6 +392,19 @@ abstract class AdWithoutView extends Ad {
   /// Callback to be invoked when an ad is estimated to have earned money.
   /// Available for allowlisted accounts only.
   OnPaidEventCallback? onPaidEvent;
+
+  /// Sets whether this ad will be displayed in immersive mode (Android only).
+  ///
+  /// This is a no-op on iOS.
+  /// See https://developer.android.com/training/system-ui/immersive#immersive
+  /// for more information on immersive mode.
+  Future<void> setImmersiveMode(bool immersiveModeEnabled) async {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return Future.value();
+    } else {
+      return instanceManager.setImmersiveMode(this, immersiveModeEnabled);
+    }
+  }
 }
 
 /// Displays an [Ad] as a Flutter widget.
@@ -717,11 +730,6 @@ class InterstitialAd extends AdWithoutView {
   Future<void> show() {
     return instanceManager.showAdWithoutView(this);
   }
-
-  /// Enable / Disable immersive mode for the Ad.
-  Future<void> setImmersiveMode(bool immersiveModeEnabled) async {
-    return instanceManager.setImmersiveMode(this, immersiveModeEnabled);
-  }
 }
 
 /// A full-screen interstitial ad for use with Ad Manager.
@@ -767,11 +775,6 @@ class AdManagerInterstitialAd extends AdWithoutView {
   /// notified of events that occur when showing the ad.
   Future<void> show() {
     return instanceManager.showAdWithoutView(this);
-  }
-
-  /// Enable / Disable immersive mode for the Ad.
-  Future<void> setImmersiveMode(bool immersiveModeEnabled) async {
-    return instanceManager.setImmersiveMode(this, immersiveModeEnabled);
   }
 }
 
@@ -871,11 +874,6 @@ class RewardedAd extends AdWithoutView {
   Future<void> show({required OnUserEarnedRewardCallback onUserEarnedReward}) {
     onUserEarnedRewardCallback = onUserEarnedReward;
     return instanceManager.showAdWithoutView(this);
-  }
-
-  /// Enable / Disable immersive mode for the Ad.
-  Future<void> setImmersiveMode(bool immersiveModeEnabled) async {
-    return instanceManager.setImmersiveMode(this, immersiveModeEnabled);
   }
 }
 
