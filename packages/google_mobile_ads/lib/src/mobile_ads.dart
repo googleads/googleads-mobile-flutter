@@ -47,10 +47,8 @@ class MobileAds {
   ///
   /// If this method is not called, the first ad request automatically
   /// initializes the Google Mobile Ads SDK.
-  Future<InitializationStatus> initialize() async {
-    return (await instanceManager.channel.invokeMethod<InitializationStatus>(
-      'MobileAds#initialize',
-    ))!;
+  Future<InitializationStatus> initialize() {
+    return instanceManager.initialize();
   }
 
   /// Update the [RequestConfiguration] to apply for future ad requests.
@@ -89,6 +87,33 @@ class MobileAds {
   /// https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-void-setappvolume-float-volume
   Future<void> setAppVolume(double volume) {
     return instanceManager.setAppVolume(volume);
+  }
+
+  /// Disables automated SDK crash reporting (iOS only).
+  ///
+  /// For more details, visit admob (iOS) documentation:
+  /// https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablesdkcrashreporting
+  Future<void> disableSDKCrashReporting() {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return instanceManager.disableSDKCrashReporting();
+    } else {
+      return Future.value();
+    }
+  }
+
+  /// Disables mediation adapter initialization during initialization of the GMA SDK.
+  ///
+  /// For more details, visit admob documentation:
+  /// https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablemediationinitialization
+  Future<void> disableMediationInitialization() {
+    return instanceManager.disableMediationInitialization();
+  }
+
+  /// Gets the version string of Google Mobile Ads SDK.
+  ///
+  /// Check out the documentation: https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#getVersionString()
+  Future<String> getVersionString() {
+    return instanceManager.getVersionString();
   }
 
   /// Internal init to cleanup state for hot restart.

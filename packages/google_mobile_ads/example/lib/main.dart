@@ -21,10 +21,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'reusable_inline_example.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
+  await MobileAds.instance.initialize();
   runApp(MyApp());
+  await MobileAds.instance.disableMediationInitialization();
+  print('SRI getVersionString: ' + await MobileAds.instance.getVersionString());
 }
 
 // You can also test with your own ad unit IDs by registering your device as a

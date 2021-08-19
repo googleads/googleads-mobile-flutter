@@ -252,5 +252,30 @@ void main() {
         isMethodCall('MobileAds#setAppVolume', arguments: {'volume': 1.0})
       ]);
     });
+
+    test('$MobileAds.disableSDKCrashReporting', () async {
+      await MobileAds.instance.disableSDKCrashReporting();
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#disableSDKCrashReporting', arguments: null)
+      ]);
+    });
+
+    test('$MobileAds.disableMediationInitialization', () async {
+      await MobileAds.instance.disableMediationInitialization();
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#disableMediationInitialization',
+            arguments: null)
+      ]);
+    });
+
+    test('$MobileAds.getVersionString', () async {
+      await MobileAds.instance.getVersionString();
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#getVersionString', arguments: null)
+      ]);
+    });
   });
 }
