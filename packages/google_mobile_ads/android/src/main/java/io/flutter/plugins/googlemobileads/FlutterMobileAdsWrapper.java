@@ -39,4 +39,14 @@ public class FlutterMobileAdsWrapper {
   public void setAppVolume(float volume) {
     MobileAds.setAppVolume(volume);
   }
+
+  /** Wrapper for disableMediationInitialization */
+  public void disableMediationInitialization(@NonNull Context context) {
+    MobileAds.disableMediationAdapterInitialization(context);
+  }
+
+  /** Wrapper for disableMediationInitialization */
+  public String getVersionString() {
+    return MobileAds.getVersionString();
+  }
 }

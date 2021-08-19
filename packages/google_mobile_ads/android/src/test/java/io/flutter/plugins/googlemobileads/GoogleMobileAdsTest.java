@@ -621,4 +621,34 @@ public class GoogleMobileAdsTest {
     // Verify that mockMobileAds.setAppVolume() was called with the correct value
     verify(mockMobileAds).setAppVolume(eq(1.0f));
   }
+
+  @Test
+  public void testDisableMediationInitialization() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+
+    // Invoke the disableMediationInitialization method
+    MethodCall methodCall = new MethodCall("MobileAds#disableMediationInitialization");
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    // Verify that mockMobileAds.disableMediationInitialization() was called
+    verify(mockMobileAds).disableMediationInitialization(ArgumentMatchers.any(Context.class));
+  }
+
+  @Test
+  public void testGetVersionString() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+
+    // Invoke the disableMediationInitialization method
+    MethodCall methodCall = new MethodCall("MobileAds#getVersionString");
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    // Verify that mockMobileAds.disableMediationInitialization() was called
+    verify(mockMobileAds).getVersionString();
+  }
 }
