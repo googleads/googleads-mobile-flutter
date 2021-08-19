@@ -53,6 +53,8 @@ class _MyAppState extends State<MyApp> {
   BannerAd? _anchoredBanner;
   bool _loadingAnchoredBanner = false;
 
+  Orientation? _orientation;
+
   @override
   void initState() {
     super.initState();
@@ -177,10 +179,12 @@ class _MyAppState extends State<MyApp> {
           setState(() {
             _anchoredBanner = ad as BannerAd?;
           });
+          _loadingAnchoredBanner = false;
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('$BannerAd failedToLoad: $error');
           ad.dispose();
+          _loadingAnchoredBanner = false;
         },
         onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
         onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
@@ -201,7 +205,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Builder(builder: (BuildContext context) {
-        if (!_loadingAnchoredBanner) {
+        final MediaQueryData mediaQuery = MediaQuery.of(context);
+        if (!_loadingAnchoredBanner && mediaQuery.orientation != _orientation) {
+          _orientation = mediaQuery.orientation;
+          _anchoredBanner?.dispose();
+          _anchoredBanner = null;
           _loadingAnchoredBanner = true;
           _createAnchoredBanner(context);
         }
