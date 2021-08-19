@@ -156,10 +156,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _createAnchoredBanner(BuildContext context) async {
+    final MediaQueryData mediaQuery = MediaQuery.of(context);
     final AnchoredAdaptiveBannerAdSize? size =
         await AdSize.getAnchoredAdaptiveBannerAdSize(
-      Orientation.portrait,
-      MediaQuery.of(context).size.width.truncate(),
+        mediaQuery.orientation,
+        mediaQuery.size.width.truncate(),
     );
 
     if (size == null) {
