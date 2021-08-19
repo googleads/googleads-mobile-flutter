@@ -46,13 +46,14 @@ void main() {
               ),
             });
           case '_init':
-            return null;
           case 'MobileAds#setSameAppKeyEnabled':
-            return null;
           case 'MobileAds#setAppMuted':
-            return null;
           case 'MobileAds#setAppVolume':
+          case 'MobileAds#disableSDKCrashReporting':
+          case 'MobileAds#disableMediationInitialization':
             return null;
+          case 'MobileAds#getVersionString':
+            return Future<String>.value("Test-SDK-Version");
           default:
             assert(false);
             return null;
@@ -254,6 +255,7 @@ void main() {
     });
 
     test('$MobileAds.disableSDKCrashReporting', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await MobileAds.instance.disableSDKCrashReporting();
 
       expect(log, <Matcher>[
