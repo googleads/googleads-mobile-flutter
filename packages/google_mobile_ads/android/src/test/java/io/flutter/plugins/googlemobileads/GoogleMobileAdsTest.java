@@ -628,12 +628,12 @@ public class GoogleMobileAdsTest {
     FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
     GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
 
-    // Invoke the disableMediationInitialization method.
-    MethodCall methodCall = new MethodCall("MobileAds#disableMediationInitialization", null);
+    // Invoke the disableMediationInitialization method
+    MethodCall methodCall = new MethodCall("MobileAds#disableMediationInitialization");
     Result result = mock(Result.class);
     plugin.onMethodCall(methodCall, result);
 
-    // Verify that mockMobileAds.disableMediationInitialization() was called.
+    // Verify that mockMobileAds.disableMediationInitialization() was called
     verify(mockMobileAds).disableMediationInitialization(ArgumentMatchers.any(Context.class));
   }
 
@@ -643,16 +643,12 @@ public class GoogleMobileAdsTest {
     FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
     GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
 
-    // Stub getVersionString() to return a value.
-    doReturn("Test-SDK-Version").when(mockMobileAds).getVersionString();
-
-    // Invoke the getVersionString method.
-    MethodCall methodCall = new MethodCall("MobileAds#getVersionString", null);
+    // Invoke the disableMediationInitialization method
+    MethodCall methodCall = new MethodCall("MobileAds#getVersionString");
     Result result = mock(Result.class);
     plugin.onMethodCall(methodCall, result);
 
-    // Verify that mockMobileAds.getVersionString() was called and a value is returned.
+    // Verify that mockMobileAds.disableMediationInitialization() was called
     verify(mockMobileAds).getVersionString();
-    verify(result).success("Test-SDK-Version");
   }
 }

@@ -595,19 +595,26 @@ class AdInstanceManager {
 
   /// Disables automated SDK crash reporting.
   Future<void> disableSDKCrashReporting() {
-    return channel.invokeMethod<void>('MobileAds#disableSDKCrashReporting');
+    return channel.invokeMethod<void>(
+      'MobileAds#disableSDKCrashReporting',
+      <dynamic, dynamic>{},
+    );
   }
 
   /// Disables mediation adapter initialization during initialization of the GMA SDK.
   Future<void> disableMediationInitialization() {
-    return channel
-        .invokeMethod<void>('MobileAds#disableMediationInitialization');
+    return channel.invokeMethod<void>(
+      'MobileAds#disableMediationInitialization',
+      <dynamic, dynamic>{},
+    );
   }
 
   /// Gets the version string of Google Mobile Ads SDK.
   Future<String> getVersionString() async {
-    return (await instanceManager.channel
-        .invokeMethod<String>('MobileAds#getVersionString'))!;
+    return (await instanceManager.channel.invokeMethod<String>(
+      'MobileAds#getVersionString',
+      <dynamic, dynamic>{},
+    ))!;
   }
 }
 

@@ -255,7 +255,6 @@ void main() {
     });
 
     test('$MobileAds.disableSDKCrashReporting', () async {
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await MobileAds.instance.disableSDKCrashReporting();
 
       expect(log, <Matcher>[

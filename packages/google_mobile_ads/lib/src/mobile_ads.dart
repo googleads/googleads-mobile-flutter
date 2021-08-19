@@ -89,6 +89,33 @@ class MobileAds {
     return instanceManager.setAppVolume(volume);
   }
 
+  /// Disables automated SDK crash reporting (iOS only).
+  ///
+  /// For more details, visit admob (iOS) documentation:
+  /// https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablesdkcrashreporting
+  Future<void> disableSDKCrashReporting() {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return instanceManager.disableSDKCrashReporting();
+    } else {
+      return Future.value();
+    }
+  }
+
+  /// Disables mediation adapter initialization during initialization of the GMA SDK.
+  ///
+  /// For more details, visit admob documentation:
+  /// https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablemediationinitialization
+  Future<void> disableMediationInitialization() {
+    return instanceManager.disableMediationInitialization();
+  }
+
+  /// Gets the version string of Google Mobile Ads SDK.
+  ///
+  /// Check out the documentation: https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#getVersionString()
+  Future<String> getVersionString() {
+    return instanceManager.getVersionString();
+  }
+
   /// Internal init to cleanup state for hot restart.
   /// This is a workaround for https://github.com/flutter/flutter/issues/7160.
   void _init() {
