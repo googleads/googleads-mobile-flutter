@@ -381,8 +381,8 @@ public class FlutterRewardedAdTest {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 RewardedAdLoadCallback adLoadCallback = invocation.getArgument(3);
-                // Pass back null for ad
                 adLoadCallback.onAdLoaded(mockRewardedAd);
+                // Pass back null for ad
                 return null;
               }
             })
