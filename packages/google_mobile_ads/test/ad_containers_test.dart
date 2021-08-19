@@ -40,7 +40,7 @@ void main() {
         switch (methodCall.method) {
           case 'MobileAds#updateRequestConfiguration':
           case 'MobileAds#setSameAppKeyEnabled':
-          case 'MobileAds#setImmersiveMode':
+          case 'setImmersiveMode':
           case 'loadBannerAd':
           case 'loadNativeAd':
           case 'showAdWithoutView':
@@ -136,7 +136,7 @@ void main() {
       log.clear();
       await createdAd.setImmersiveMode(true);
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setImmersiveMode',
+        isMethodCall('setImmersiveMode',
             arguments: {'adId': 0, 'immersiveModeEnabled': true})
       ]);
     });
@@ -169,8 +169,8 @@ void main() {
       log.clear();
       await createdAd.setImmersiveMode(true);
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setImmersiveMode',
-            arguments: {'adId': 0, 'immersiveModeEnabled': true})
+        isMethodCall('setImmersiveMode',
+            arguments: {'adId': 0, 'immersiveModeEnabled': false})
       ]);
     });
 
@@ -204,7 +204,7 @@ void main() {
       log.clear();
       await createdAd.setImmersiveMode(true);
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setImmersiveMode',
+        isMethodCall('setImmersiveMode',
             arguments: {'adId': 0, 'immersiveModeEnabled': true})
       ]);
     });

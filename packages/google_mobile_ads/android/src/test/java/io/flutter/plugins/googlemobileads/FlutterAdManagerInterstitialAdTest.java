@@ -194,8 +194,8 @@ public class FlutterAdManagerInterstitialAdTest {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
-                // Pass back null for ad
                 adLoadCallback.onAdLoaded(mockAdManagerAd);
+                // Pass back null for ad
                 return null;
               }
             })

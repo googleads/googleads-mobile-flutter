@@ -73,7 +73,7 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @Override
   public void show() {
     if (ad == null) {
-      Log.e(TAG, "Error showing interstitial - the interstitial ad wasn't loaded yet.");
+      Log.e(TAG, "The interstitial ad wasn't loaded yet.");
       return;
     }
     ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
@@ -83,7 +83,7 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @Override
   public void setImmersiveMode(boolean immersiveModeEnabled) {
     if (ad == null) {
-      Log.e(TAG, "The interstitial wasn't loaded yet.");
+      Log.e(TAG, "The interstitial ad wasn't loaded yet.");
       return;
     }
     ad.setImmersiveMode(immersiveModeEnabled);

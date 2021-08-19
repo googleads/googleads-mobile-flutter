@@ -581,11 +581,11 @@ class AdInstanceManager {
   Future<void> setImmersiveMode(AdWithoutView ad, bool immersiveModeEnabled) {
     assert(
       adIdFor(ad) != null,
-      '$Ad has not been loaded or has already been disposed.',
+      '$ad has not been loaded or has already been disposed.',
     );
 
     return channel.invokeMethod<void>(
-      'MobileAds#setImmersiveMode',
+      'setImmersiveMode',
       <dynamic, dynamic>{
         'adId': adIdFor(ad),
         'immersiveModeEnabled': immersiveModeEnabled,
