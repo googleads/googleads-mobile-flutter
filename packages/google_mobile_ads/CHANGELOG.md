@@ -8,6 +8,11 @@
 * Visit the following links for more information:
   * https://developers.google.com/android/reference/com/google/android/gms/ads/interstitial/InterstitialAd?hl=en#setImmersiveMode(boolean)
   * https://developers.google.com/android/reference/com/google/android/gms/ads/rewarded/RewardedAd#setImmersiveMode(boolean)
+* Adds support for disableSDKCrashReporting in iOS; disableMediationInitialization and getVersionString in both the platforms.
+  * https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablesdkcrashreporting
+  * https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablemediationinitialization
+  * https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#getVersionString()
+
 ## 0.13.3
 
 * Adds support for NativeAdOptions. More documentation also available for [Android](https://developers.google.com/admob/android/native/options) and [iOS](https://developers.google.com/admob/ios/native/options)
