@@ -147,7 +147,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   @Override
   public void setImmersiveMode(boolean immersiveModeEnabled) {
     if (rewardedAd == null) {
-      Log.e(TAG, "The interstitial wasn't loaded yet.");
+      Log.e(TAG, "The rewarded ad wasn't loaded yet.");
       return;
     }
     rewardedAd.setImmersiveMode(immersiveModeEnabled);
