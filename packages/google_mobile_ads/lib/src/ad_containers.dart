@@ -924,13 +924,13 @@ class AppOpenAd extends AdWithoutView {
     required this.adLoadCallback,
     required this.request,
     required this.orientation,
-  })  : adManagerRequest = null,
+  })  : adManagerAdRequest = null,
         super(adUnitId: adUnitId);
 
   AppOpenAd._fromAdManagerRequest({
     required String adUnitId,
     required this.adLoadCallback,
-    required this.adManagerRequest,
+    required this.adManagerAdRequest,
     required this.orientation,
   })  : request = null,
         super(adUnitId: adUnitId);
@@ -939,7 +939,7 @@ class AppOpenAd extends AdWithoutView {
   final AdRequest? request;
 
   /// The [AdManagerAdRequest] used to load the ad.
-  final AdManagerAdRequest? adManagerRequest;
+  final AdManagerAdRequest? adManagerAdRequest;
 
   /// Listener for ad load events.
   final AppOpenAdLoadCallback adLoadCallback;
@@ -979,7 +979,7 @@ class AppOpenAd extends AdWithoutView {
     AppOpenAd ad = AppOpenAd._fromAdManagerRequest(
       adUnitId: adUnitId,
       adLoadCallback: adLoadCallback,
-      adManagerRequest: adManagerAdRequest,
+      adManagerAdRequest: adManagerAdRequest,
       orientation: orientation,
     );
     await instanceManager.loadAppOpenAd(ad);

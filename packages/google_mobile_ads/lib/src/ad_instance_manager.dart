@@ -482,7 +482,7 @@ class AdInstanceManager {
         'adId': adId,
         'adUnitId': ad.adUnitId,
         'request': ad.request,
-        'adManagerRequest': ad.adManagerRequest,
+        'adManagerRequest': ad.adManagerAdRequest,
         'orientation': ad.orientation,
       },
     );
@@ -583,6 +583,26 @@ class AdInstanceManager {
       'MobileAds#setSameAppKeyEnabled',
       <dynamic, dynamic>{
         'isEnabled': isEnabled,
+      },
+    );
+  }
+
+  /// Mute / Unmute app.
+  Future<void> setAppMuted(bool muted) {
+    return channel.invokeMethod<void>(
+      'MobileAds#setAppMuted',
+      <dynamic, dynamic>{
+        'muted': muted,
+      },
+    );
+  }
+
+  /// Set app volume.
+  Future<void> setAppVolume(double volume) {
+    return channel.invokeMethod<void>(
+      'MobileAds#setAppVolume',
+      <dynamic, dynamic>{
+        'volume': volume,
       },
     );
   }

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import 'ad_instance_manager.dart';
 import 'request_configuration.dart';
 import 'package:flutter/foundation.dart';
@@ -69,6 +71,24 @@ class MobileAds {
     } else {
       return Future.value();
     }
+  }
+
+  /// Sets whether the app is muted.
+  ///
+  /// For more details about the volume control, visit
+  /// https://developers.google.com/admob/android/global-settings#video_ad_volume_control
+  Future<void> setAppMuted(bool muted) {
+    return instanceManager.setAppMuted(muted);
+  }
+
+  /// Sets the current app volume.
+  ///
+  /// [volume] should be from 0 (muted) to 1 (full media volume).
+  /// The default value is 1.
+  /// For more details about the volume control, visit
+  /// https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-void-setappvolume-float-volume
+  Future<void> setAppVolume(double volume) {
+    return instanceManager.setAppVolume(volume);
   }
 
   /// Internal init to cleanup state for hot restart.

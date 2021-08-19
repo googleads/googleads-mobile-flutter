@@ -663,10 +663,10 @@
                      return;
                    }
                    [weakSelf.manager
-                     onPaidEvent:weakSelf
-                           value:[[FLTAdValue alloc] initWithValue:value.value
-                                                         precision:(NSInteger)value.precision
-                                                      currencyCode:value.currencyCode]];
+                       onPaidEvent:weakSelf
+                             value:[[FLTAdValue alloc] initWithValue:value.value
+                                                           precision:(NSInteger)value.precision
+                                                        currencyCode:value.currencyCode]];
                  };
                  appOpenAd.fullScreenContentDelegate = self;
                  self->_appOpenAd = appOpenAd;

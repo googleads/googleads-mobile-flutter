@@ -206,4 +206,57 @@
   OCMVerify([gadRequestConfigurationMock setSameAppKeyEnabled:NO]);
 }
 
+- (void)testSetAppMuted {
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setAppMuted"
+                                        arguments:@{@"muted" : @(YES)}];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertNil(returnedResult);
+  XCTAssertTrue(GADMobileAds.sharedInstance.applicationMuted);
+
+  methodCall = [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setAppMuted"
+                                                 arguments:@{@"muted" : @(NO)}];
+
+  resultInvoked = false;
+  result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertNil(returnedResult);
+  XCTAssertFalse(GADMobileAds.sharedInstance.applicationMuted);
+}
+
+- (void)testSetAppVolume {
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setAppVolume"
+                                        arguments:@{@"volume" : @1.0f}];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertNil(returnedResult);
+  XCTAssertEqual(GADMobileAds.sharedInstance.applicationVolume, 1.0f);
+}
+
 @end

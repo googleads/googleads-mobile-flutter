@@ -48,7 +48,7 @@ public class FlutterAdLoader {
     AppOpenAd.load(context, adUnitId, adRequest, orientation, loadCallback);
   }
 
-  /** Load an app open ad. */
+  /** Load an ad manager app open ad. */
   public void loadAdManagerAppOpen(
       @NonNull Context context,
       @NonNull String adUnitId,
