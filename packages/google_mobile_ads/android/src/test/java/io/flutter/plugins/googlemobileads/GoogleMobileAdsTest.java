@@ -629,7 +629,7 @@ public class GoogleMobileAdsTest {
     GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
 
     // Invoke the disableMediationInitialization method
-    MethodCall methodCall = new MethodCall("MobileAds#disableMediationInitialization");
+    MethodCall methodCall = new MethodCall("MobileAds#disableMediationInitialization", null);
     Result result = mock(Result.class);
     plugin.onMethodCall(methodCall, result);
 
@@ -644,7 +644,7 @@ public class GoogleMobileAdsTest {
     GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
 
     // Invoke the disableMediationInitialization method
-    MethodCall methodCall = new MethodCall("MobileAds#getVersionString");
+    MethodCall methodCall = new MethodCall("MobileAds#getVersionString", null);
     Result result = mock(Result.class);
     plugin.onMethodCall(methodCall, result);
 
