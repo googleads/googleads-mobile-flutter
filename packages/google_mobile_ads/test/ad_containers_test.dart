@@ -136,11 +136,7 @@ void main() {
       log.clear();
       await createdAd.setImmersiveMode(true);
       expect(log, <Matcher>[
-<<<<<<< HEAD
         isMethodCall('setImmersiveMode',
-=======
-        isMethodCall('MobileAds#setImmersiveMode',
->>>>>>> master
             arguments: {'adId': 0, 'immersiveModeEnabled': true})
       ]);
     });
@@ -173,11 +169,7 @@ void main() {
       log.clear();
       await createdAd.setImmersiveMode(false);
       expect(log, <Matcher>[
-<<<<<<< HEAD
         isMethodCall('setImmersiveMode',
-=======
-        isMethodCall('MobileAds#setImmersiveMode',
->>>>>>> master
             arguments: {'adId': 0, 'immersiveModeEnabled': false})
       ]);
     });
@@ -212,11 +204,7 @@ void main() {
       log.clear();
       await createdAd.setImmersiveMode(true);
       expect(log, <Matcher>[
-<<<<<<< HEAD
         isMethodCall('setImmersiveMode',
-=======
-        isMethodCall('MobileAds#setImmersiveMode',
->>>>>>> master
             arguments: {'adId': 0, 'immersiveModeEnabled': true})
       ]);
     });
