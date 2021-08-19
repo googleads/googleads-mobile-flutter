@@ -186,6 +186,31 @@ public class FlutterAdManagerInterstitialAdTest {
   }
 
   @Test
+  public void loadAdManagerInterstitialAd_setImmersiveMode() {
+    final AdManagerInterstitialAd mockAdManagerAd = mock(AdManagerInterstitialAd.class);
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                // Pass back null for ad
+                adLoadCallback.onAdLoaded(mockAdManagerAd);
+                return null;
+              }
+            })
+        .when(mockFlutterAdLoader)
+        .loadAdManagerInterstitial(
+            any(Context.class),
+            anyString(),
+            any(AdManagerAdRequest.class),
+            any(AdManagerInterstitialAdLoadCallback.class));
+
+    flutterAdManagerInterstitialAd.load();
+    flutterAdManagerInterstitialAd.setImmersiveMode(true);
+    verify(mockAdManagerAd).setImmersiveMode(eq(true));
+  }
+
+  @Test
   public void loadAdManagerInterstitialAd_showFailure() {
     final AdManagerInterstitialAd mockAdManagerAd = mock(AdManagerInterstitialAd.class);
     doAnswer(

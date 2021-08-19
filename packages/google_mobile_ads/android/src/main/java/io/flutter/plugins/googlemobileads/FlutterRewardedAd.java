@@ -144,6 +144,15 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
     rewardedAd.show(manager.activity, new DelegatingRewardedCallback(this));
   }
 
+  @Override
+  public void setImmersiveMode(boolean immersiveModeEnabled) {
+    if (rewardedAd == null) {
+      Log.e(TAG, "The interstitial wasn't loaded yet.");
+      return;
+    }
+    rewardedAd.setImmersiveMode(immersiveModeEnabled);
+  }
+
   void onAdMetadataChanged() {
     manager.onAdMetadataChanged(adId);
   }
