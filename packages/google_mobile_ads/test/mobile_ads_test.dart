@@ -53,7 +53,7 @@ void main() {
           case 'MobileAds#disableMediationInitialization':
             return null;
           case 'MobileAds#getVersionString':
-            return Future<String>.value("Test-SDK-Version");
+            return Future<String>.value('Test-SDK-Version');
           default:
             assert(false);
             return null;
