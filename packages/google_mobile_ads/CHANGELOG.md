@@ -10,8 +10,7 @@
   * https://developers.google.com/android/reference/com/google/android/gms/ads/rewarded/RewardedAd#setImmersiveMode(boolean)
 * Adds support for disableSDKCrashReporting in iOS; disableMediationInitialization and getVersionString in both the platforms.
   * https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablesdkcrashreporting
-  * iOS (disableMediationInitialization): https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablemediationinitialization
-  * Android (disableMediationAdapterInitialization): https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-void-disablemediationadapterinitialization-context-context
+  * https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablemediationinitialization
   * https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#getVersionString()
 
 ## 0.13.3
