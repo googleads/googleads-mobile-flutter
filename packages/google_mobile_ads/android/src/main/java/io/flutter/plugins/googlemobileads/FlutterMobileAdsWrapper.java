@@ -40,12 +40,12 @@ public class FlutterMobileAdsWrapper {
     MobileAds.setAppVolume(volume);
   }
 
-  /** Wrapper for disableMediationInitialization */
+  /** Wrapper for disableMediationInitialization. */
   public void disableMediationInitialization(@NonNull Context context) {
     MobileAds.disableMediationAdapterInitialization(context);
   }
 
-  /** Wrapper for disableMediationInitialization */
+  /** Wrapper for disableMediationInitialization. */
   public String getVersionString() {
     return MobileAds.getVersionString();
   }

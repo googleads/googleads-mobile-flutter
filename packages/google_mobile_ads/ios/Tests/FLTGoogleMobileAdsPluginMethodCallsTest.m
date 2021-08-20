@@ -260,6 +260,9 @@
 }
 
 - (void)testDisableSDKCrashReporting {
+  id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
+  OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
+      .andReturn((GADMobileAds *)gadMobileAdsClassMock);
   FlutterMethodCall *methodCall =
       [FlutterMethodCall methodCallWithMethodName:@"MobileAds#disableSDKCrashReporting"
                                         arguments:@{}];
@@ -275,9 +278,14 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
+  OCMVerify([gadMobileAdsClassMock disableSDKCrashReporting]);
 }
 
 - (void)testDisableMediationInitialization {
+  id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
+  OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
+      .andReturn((GADMobileAds *)gadMobileAdsClassMock);
+
   FlutterMethodCall *methodCall =
       [FlutterMethodCall methodCallWithMethodName:@"MobileAds#disableMediationInitialization"
                                         arguments:@{}];
@@ -293,6 +301,7 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
+  OCMVerify([gadMobileAdsClassMock disableMediationInitialization]);
 }
 
 - (void)testGetVersionString {
