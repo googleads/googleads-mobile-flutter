@@ -30,22 +30,22 @@ public class FlutterMobileAdsWrapper {
     MobileAds.initialize(context, listener);
   }
 
-  /** Wrapper for setAppMuted */
+  /** Wrapper for setAppMuted. */
   public void setAppMuted(boolean muted) {
     MobileAds.setAppMuted(muted);
   }
 
-  /** Wrapper for setAppVolume */
+  /** Wrapper for setAppVolume. */
   public void setAppVolume(float volume) {
     MobileAds.setAppVolume(volume);
   }
 
-  /** Wrapper for disableMediationInitialization */
+  /** Wrapper for disableMediationInitialization. */
   public void disableMediationInitialization(@NonNull Context context) {
     MobileAds.disableMediationAdapterInitialization(context);
   }
 
-  /** Wrapper for disableMediationInitialization */
+  /** Wrapper for disableMediationInitialization. */
   public String getVersionString() {
     return MobileAds.getVersionString();
   }

@@ -135,7 +135,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   @Override
   public void show() {
     if (rewardedAd == null) {
-      Log.e(TAG, "The rewarded ad wasn't loaded yet.");
+      Log.e(TAG, "Error showing rewarded - the rewarded ad wasn't loaded yet.");
       return;
     }
 
@@ -147,7 +147,8 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   @Override
   public void setImmersiveMode(boolean immersiveModeEnabled) {
     if (rewardedAd == null) {
-      Log.e(TAG, "The rewarded ad wasn't loaded yet.");
+      Log.e(
+          TAG, "Error setting immersive mode in rewarded ad - the rewarded ad wasn't loaded yet.");
       return;
     }
     rewardedAd.setImmersiveMode(immersiveModeEnabled);

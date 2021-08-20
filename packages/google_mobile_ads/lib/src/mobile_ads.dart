@@ -110,8 +110,6 @@ class MobileAds {
   }
 
   /// Gets the version string of Google Mobile Ads SDK.
-  ///
-  /// Check out the documentation: https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#getVersionString()
   Future<String> getVersionString() {
     return instanceManager.getVersionString();
   }
