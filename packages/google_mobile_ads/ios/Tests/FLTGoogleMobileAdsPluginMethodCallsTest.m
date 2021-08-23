@@ -259,4 +259,65 @@
   XCTAssertEqual(GADMobileAds.sharedInstance.applicationVolume, 1.0f);
 }
 
+- (void)testDisableSDKCrashReporting {
+  id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
+  OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
+      .andReturn((GADMobileAds *)gadMobileAdsClassMock);
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#disableSDKCrashReporting"
+                                        arguments:@{}];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertNil(returnedResult);
+  OCMVerify([gadMobileAdsClassMock disableSDKCrashReporting]);
+}
+
+- (void)testDisableMediationInitialization {
+  id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
+  OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
+      .andReturn((GADMobileAds *)gadMobileAdsClassMock);
+
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#disableMediationInitialization"
+                                        arguments:@{}];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertNil(returnedResult);
+  OCMVerify([gadMobileAdsClassMock disableMediationInitialization]);
+}
+
+- (void)testGetVersionString {
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#getVersionString" arguments:@{}];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertEqual(returnedResult, [GADMobileAds.sharedInstance sdkVersion]);
+}
 @end
