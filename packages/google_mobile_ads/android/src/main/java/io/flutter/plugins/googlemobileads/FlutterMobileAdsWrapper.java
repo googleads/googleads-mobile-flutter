@@ -45,7 +45,7 @@ public class FlutterMobileAdsWrapper {
     MobileAds.disableMediationAdapterInitialization(context);
   }
 
-  /** Wrapper for disableMediationInitialization. */
+  /** Wrapper for getVersionString. */
   public String getVersionString() {
     return MobileAds.getVersionString();
   }
