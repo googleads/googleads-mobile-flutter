@@ -46,13 +46,14 @@ void main() {
               ),
             });
           case '_init':
-            return null;
           case 'MobileAds#setSameAppKeyEnabled':
-            return null;
           case 'MobileAds#setAppMuted':
-            return null;
           case 'MobileAds#setAppVolume':
+          case 'MobileAds#disableSDKCrashReporting':
+          case 'MobileAds#disableMediationInitialization':
             return null;
+          case 'MobileAds#getVersionString':
+            return Future<String>.value('Test-SDK-Version');
           default:
             assert(false);
             return null;
@@ -250,6 +251,32 @@ void main() {
 
       expect(log, <Matcher>[
         isMethodCall('MobileAds#setAppVolume', arguments: {'volume': 1.0})
+      ]);
+    });
+
+    test('$MobileAds.disableSDKCrashReporting', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await MobileAds.instance.disableSDKCrashReporting();
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#disableSDKCrashReporting', arguments: null)
+      ]);
+    });
+
+    test('$MobileAds.disableMediationInitialization', () async {
+      await MobileAds.instance.disableMediationInitialization();
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#disableMediationInitialization',
+            arguments: null)
+      ]);
+    });
+
+    test('$MobileAds.getVersionString', () async {
+      await MobileAds.instance.getVersionString();
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#getVersionString', arguments: null)
       ]);
     });
   });
