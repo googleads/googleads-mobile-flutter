@@ -159,8 +159,8 @@ class _MyAppState extends State<MyApp> {
     final MediaQueryData mediaQuery = MediaQuery.of(context);
     final AnchoredAdaptiveBannerAdSize? size =
         await AdSize.getAnchoredAdaptiveBannerAdSize(
-        mediaQuery.orientation,
-        mediaQuery.size.width.truncate(),
+      mediaQuery.orientation,
+      mediaQuery.size.width.truncate(),
     );
 
     if (size == null) {
