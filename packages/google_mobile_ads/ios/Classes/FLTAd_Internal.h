@@ -164,6 +164,36 @@
 - (GADRewardedAd *_Nullable)rewardedAd;
 @end
 
+@interface FLTVideoOptions : NSObject
+@property(readonly) NSNumber *_Nullable clickToExpandRequested;
+@property(readonly) NSNumber *_Nullable customControlsRequested;
+@property(readonly) NSNumber *_Nullable startMuted;
+- (instancetype _Nonnull)initWithClickToExpandRequested:(NSNumber *_Nullable)clickToExpandRequested
+                                customControlsRequested:(NSNumber *_Nullable)customControlsRequested
+                                             startMuted:(NSNumber *_Nullable)startMuted;
+- (GADVideoOptions *_Nonnull)asGADVideoOptions;
+
+@end
+
+@interface FLTNativeAdOptions : NSObject
+@property(readonly) NSNumber *_Nullable adChoicesPlacement;
+@property(readonly) NSNumber *_Nullable mediaAspectRatio;
+@property(readonly) FLTVideoOptions *_Nullable videoOptions;
+@property(readonly) NSNumber *_Nullable requestCustomMuteThisAd;
+@property(readonly) NSNumber *_Nullable shouldRequestMultipleImages;
+@property(readonly) NSNumber *_Nullable shouldReturnUrlsForImageAssets;
+
+- (instancetype _Nonnull)initWithAdChoicesPlacement:(NSNumber *_Nullable)adChoicesPlacement
+                                   mediaAspectRatio:(NSNumber *_Nullable)mediaAspectRatio
+                                       videoOptions:(FLTVideoOptions *_Nullable)videoOptions
+                            requestCustomMuteThisAd:(NSNumber *_Nullable)requestCustomMuteThisAd
+                        shouldRequestMultipleImages:(NSNumber *_Nullable)shouldRequestMultipleImages
+                     shouldReturnUrlsForImageAssets:
+                         (NSNumber *_Nullable)shouldReturnUrlsForImageAssets;
+
+- (NSArray<GADAdLoaderOptions *> *_Nonnull)asGADAdLoaderOptions;
+@end
+
 @interface FLTNativeAd
     : FLTBaseAd <FLTAd, FlutterPlatformView, GADNativeAdDelegate, GADNativeAdLoaderDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -171,7 +201,8 @@
                           nativeAdFactory:(NSObject<FLTNativeAdFactory> *_Nonnull)nativeAdFactory
                             customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions
                        rootViewController:(UIViewController *_Nonnull)rootViewController
-                                     adId:(NSNumber *_Nonnull)adId;
+                                     adId:(NSNumber *_Nonnull)adId
+                          nativeAdOptions:(FLTNativeAdOptions *_Nullable)nativeAdOptions;
 - (GADAdLoader *_Nonnull)adLoader;
 @end
 

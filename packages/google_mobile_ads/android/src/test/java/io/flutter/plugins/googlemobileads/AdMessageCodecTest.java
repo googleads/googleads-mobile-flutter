@@ -15,6 +15,9 @@
 package io.flutter.plugins.googlemobileads;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import android.content.Context;
@@ -177,5 +180,50 @@ public class AdMessageCodecTest {
     final FlutterAdSize.SmartBannerAdSize result =
         (FlutterAdSize.SmartBannerAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
     assertEquals(result.size, AdSize.SMART_BANNER);
+  }
+
+  @Test
+  public void adMessageCodec_nativeAdOptionsNull() {
+    final ByteBuffer data =
+        testCodec.encodeMessage(new FlutterNativeAdOptions(null, null, null, null, null, null));
+
+    final FlutterNativeAdOptions result =
+        (FlutterNativeAdOptions) testCodec.decodeMessage((ByteBuffer) data.position(0));
+    assertNull(result.adChoicesPlacement);
+    assertNull(result.mediaAspectRatio);
+    assertNull(result.videoOptions);
+    assertNull(result.requestCustomMuteThisAd);
+    assertNull(result.shouldRequestMultipleImages);
+    assertNull(result.shouldReturnUrlsForImageAssets);
+  }
+
+  @Test
+  public void adMessageCodec_nativeAdOptions() {
+    FlutterVideoOptions videoOptions = new FlutterVideoOptions(true, false, true);
+
+    final ByteBuffer data =
+        testCodec.encodeMessage(new FlutterNativeAdOptions(1, 2, videoOptions, false, true, false));
+
+    final FlutterNativeAdOptions result =
+        (FlutterNativeAdOptions) testCodec.decodeMessage((ByteBuffer) data.position(0));
+    assertEquals(result.adChoicesPlacement, (Integer) 1);
+    assertEquals(result.mediaAspectRatio, (Integer) 2);
+    assertEquals(result.videoOptions.clickToExpandRequested, true);
+    assertEquals(result.videoOptions.customControlsRequested, false);
+    assertEquals(result.videoOptions.startMuted, true);
+    assertFalse(result.requestCustomMuteThisAd);
+    assertTrue(result.shouldRequestMultipleImages);
+    assertFalse(result.shouldReturnUrlsForImageAssets);
+  }
+
+  @Test
+  public void adMessageCodec_videoOptionsNull() {
+    final ByteBuffer data = testCodec.encodeMessage(new FlutterVideoOptions(null, null, null));
+
+    final FlutterVideoOptions result =
+        (FlutterVideoOptions) testCodec.decodeMessage((ByteBuffer) data.position(0));
+    assertNull(result.clickToExpandRequested);
+    assertNull(result.customControlsRequested);
+    assertNull(result.startMuted);
   }
 }

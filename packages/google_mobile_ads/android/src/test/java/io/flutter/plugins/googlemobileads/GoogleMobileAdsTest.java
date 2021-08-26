@@ -47,6 +47,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.hamcrest.Matcher;
@@ -569,5 +570,89 @@ public class GoogleMobileAdsTest {
     assertEquals(args.get("valueMicros"), 1L);
     assertEquals(args.get("precision"), 1);
     assertEquals(args.get("currencyCode"), "code");
+  }
+
+  @Test
+  public void testSetAppMuted() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+
+    // Create a map for passing arguments to the MethodCall
+    HashMap<String, Boolean> trueArguments = new HashMap<>();
+    trueArguments.put("muted", true);
+
+    // Invoke the setAppMuted method with the arguments.
+    MethodCall methodCall = new MethodCall("MobileAds#setAppMuted", trueArguments);
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    // Verify that mockMobileAds.setAppMuted() was called with the correct value.
+    verify(mockMobileAds).setAppMuted(eq(true));
+
+    // Create a map for passing arguments to the MethodCall
+    HashMap<String, Boolean> falseArguments = new HashMap<>();
+    falseArguments.put("muted", false);
+
+    // Invoke the setAppMuted method with the arguments.
+    MethodCall falseMethodCall = new MethodCall("MobileAds#setAppMuted", falseArguments);
+    Result falseResult = mock(Result.class);
+    plugin.onMethodCall(falseMethodCall, falseResult);
+
+    // Verify that mockMobileAds.setAppMuted() was called with the correct value.
+    verify(mockMobileAds).setAppMuted(eq(false));
+  }
+
+  @Test
+  public void testSetAppVolume() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+
+    // Create a map for passing arguments to the MethodCall.
+    HashMap<String, Float> fullVolumeArguments = new HashMap<>();
+    fullVolumeArguments.put("volume", 1.0f);
+
+    // Invoke the setAppVolume method with the arguments.
+    MethodCall methodCall = new MethodCall("MobileAds#setAppVolume", fullVolumeArguments);
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    // Verify that mockMobileAds.setAppVolume() was called with the correct value.
+    verify(mockMobileAds).setAppVolume(eq(1.0f));
+  }
+
+  @Test
+  public void testDisableMediationInitialization() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+
+    // Invoke the disableMediationInitialization method.
+    MethodCall methodCall = new MethodCall("MobileAds#disableMediationInitialization", null);
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    // Verify that mockMobileAds.disableMediationInitialization() was called.
+    verify(mockMobileAds).disableMediationInitialization(ArgumentMatchers.any(Context.class));
+  }
+
+  @Test
+  public void testGetVersionString() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+
+    // Stub getVersionString() to return a value.
+    doReturn("Test-SDK-Version").when(mockMobileAds).getVersionString();
+
+    // Invoke the getVersionString method.
+    MethodCall methodCall = new MethodCall("MobileAds#getVersionString", null);
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    // Verify that mockMobileAds.getVersionString() was called and a value is returned.
+    verify(mockMobileAds).getVersionString();
+    verify(result).success("Test-SDK-Version");
   }
 }

@@ -392,6 +392,19 @@ abstract class AdWithoutView extends Ad {
   /// Callback to be invoked when an ad is estimated to have earned money.
   /// Available for allowlisted accounts only.
   OnPaidEventCallback? onPaidEvent;
+
+  /// Sets whether this ad will be displayed in immersive mode (Android only).
+  ///
+  /// This is a no-op on iOS.
+  /// See https://developer.android.com/training/system-ui/immersive#immersive
+  /// for more information on immersive mode.
+  Future<void> setImmersiveMode(bool immersiveModeEnabled) async {
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return Future.value();
+    } else {
+      return instanceManager.setImmersiveMode(this, immersiveModeEnabled);
+    }
+  }
 }
 
 /// Displays an [Ad] as a Flutter widget.
@@ -604,11 +617,14 @@ class NativeAd extends AdWithView {
   ///
   /// A valid [adUnitId], nonnull [listener], nonnull [request], and nonnull
   /// [factoryId] is required.
+  /// Use [nativeAdOptions] to customize the native ad request.
+  /// Use [customOptions] to pass data to your native ad factory.
   NativeAd({
     required String adUnitId,
     required this.factoryId,
     required this.listener,
     required this.request,
+    this.nativeAdOptions,
     this.customOptions,
   })  : adManagerRequest = null,
         assert(request != null),
@@ -618,11 +634,14 @@ class NativeAd extends AdWithView {
   ///
   /// A valid [adUnitId], nonnull [listener], nonnull [adManagerRequest], and
   /// nonnull [factoryId] is required.
+  /// Use [nativeAdOptions] to customize the native ad request.
+  /// Use [customOptions] to pass data to your native ad factory.
   NativeAd.fromAdManagerRequest({
     required String adUnitId,
     required this.factoryId,
     required this.listener,
     required this.adManagerRequest,
+    this.nativeAdOptions,
     this.customOptions,
   })  : request = null,
         assert(adManagerRequest != null),
@@ -645,6 +664,9 @@ class NativeAd extends AdWithView {
 
   /// Targeting information used to fetch an [Ad] with Ad Manager.
   final AdManagerAdRequest? adManagerRequest;
+
+  /// Options to configure the native ad request.
+  final NativeAdOptions? nativeAdOptions;
 
   /// {@template google_mobile_ads.testAdUnitId}
   /// A platform-specific AdMob test ad unit ID.
@@ -890,5 +912,126 @@ class ServerSideVerificationOptions {
     return other is ServerSideVerificationOptions &&
         userId == other.userId &&
         customData == other.customData;
+  }
+}
+
+/// Media aspect ratio for native ads.
+enum MediaAspectRatio {
+  /// Unknown media aspect ratio.
+  unknown,
+
+  /// Any media aspect ratio.
+  any,
+
+  /// Landscape media aspect ratio.
+  landscape,
+
+  /// Portrait media aspect ratio.
+  portrait,
+
+  /// Close to square media aspect ratio. This is not a strict 1:1 aspect ratio.
+  square
+}
+
+/// Indicates preferred location of AdChoices icon.
+enum AdChoicesPlacement {
+  /// Top right corner.
+  topRightCorner,
+
+  /// Top left corner.
+  topLeftCorner,
+
+  /// Bottom right corner.
+  bottomRightCorner,
+
+  /// Bottom left corner.
+  bottomLeftCorner
+}
+
+/// Used to configure native ad requests.
+class NativeAdOptions {
+  /// Where to place the AdChoices icon.
+  ///
+  /// Default is top right.
+  final AdChoicesPlacement? adChoicesPlacement;
+
+  /// The media aspect ratio.
+  ///
+  /// Default is unknown, which will apply no restrictions.
+  final MediaAspectRatio? mediaAspectRatio;
+
+  /// Options for video.
+  final VideoOptions? videoOptions;
+
+  /// Whether to request a custom implementation for the Mute This Ad feature.
+  ///
+  /// Default value is false.
+  final bool? requestCustomMuteThisAd;
+
+  /// Sets whether multiple images should be requested or not.
+  ///
+  /// Default value is false.
+  final bool? shouldRequestMultipleImages;
+
+  /// Indicates whether image asset content should be loaded by the SDK.
+  ///
+  /// If set to true, the SDK will not load image asset content and native ad
+  /// image URLs can be used to fetch content. Defaults to false.
+  final bool? shouldReturnUrlsForImageAssets;
+
+  /// Construct a NativeAdOptions, an optional class used to further customize
+  /// native ad requests.
+  NativeAdOptions({
+    this.adChoicesPlacement,
+    this.mediaAspectRatio,
+    this.videoOptions,
+    this.requestCustomMuteThisAd,
+    this.shouldRequestMultipleImages,
+    this.shouldReturnUrlsForImageAssets,
+  });
+
+  @override
+  bool operator ==(other) {
+    return other is NativeAdOptions &&
+        adChoicesPlacement == other.adChoicesPlacement &&
+        mediaAspectRatio == other.mediaAspectRatio &&
+        videoOptions == other.videoOptions &&
+        requestCustomMuteThisAd == other.requestCustomMuteThisAd &&
+        shouldRequestMultipleImages == other.shouldRequestMultipleImages &&
+        shouldReturnUrlsForImageAssets == other.shouldReturnUrlsForImageAssets;
+  }
+}
+
+/// Options for controlling video playback in supported ad formats.
+class VideoOptions {
+  /// Whether the requested video should have the click to expand behavior.
+  final bool? clickToExpandRequested;
+
+  /// Whether the requested video should have custom controls enabled.
+  ///
+  /// Custom controls are for play/pause/mute/unmute.
+  final bool? customControlsRequested;
+
+  /// Indicates whether videos should start muted.
+  ///
+  /// By default this property value is YES.
+  final bool? startMuted;
+
+  /// Constructs a VideoOptions to further customize a native ad request.
+  ///
+  /// This is only necessary if you wish to further customize your native ad
+  /// integration.
+  VideoOptions({
+    this.clickToExpandRequested,
+    this.customControlsRequested,
+    this.startMuted,
+  });
+
+  @override
+  bool operator ==(other) {
+    return other is VideoOptions &&
+        clickToExpandRequested == other.clickToExpandRequested &&
+        customControlsRequested == other.customControlsRequested &&
+        startMuted == other.startMuted;
   }
 }

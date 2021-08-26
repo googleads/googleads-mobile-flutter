@@ -351,6 +351,12 @@ class AdInstanceManager {
     }
   }
 
+  Future<InitializationStatus> initialize() async {
+    return (await instanceManager.channel.invokeMethod<InitializationStatus>(
+      'MobileAds#initialize',
+    ))!;
+  }
+
   /// Returns null if an invalid [adId] was passed in.
   Ad? adFor(int adId) => _loadedAds[adId];
 
@@ -424,6 +430,7 @@ class AdInstanceManager {
         'request': ad.request,
         'adManagerRequest': ad.adManagerRequest,
         'factoryId': ad.factoryId,
+        'nativeAdOptions': ad.nativeAdOptions,
         'customOptions': ad.customOptions,
       },
     );
@@ -549,12 +556,63 @@ class AdInstanceManager {
       },
     );
   }
+
+  /// Mute / Unmute app.
+  Future<void> setAppMuted(bool muted) {
+    return channel.invokeMethod<void>(
+      'MobileAds#setAppMuted',
+      <dynamic, dynamic>{
+        'muted': muted,
+      },
+    );
+  }
+
+  /// Set app volume.
+  Future<void> setAppVolume(double volume) {
+    return channel.invokeMethod<void>(
+      'MobileAds#setAppVolume',
+      <dynamic, dynamic>{
+        'volume': volume,
+      },
+    );
+  }
+
+  /// Enable / Disable immersive mode for the Ad.
+  Future<void> setImmersiveMode(AdWithoutView ad, bool immersiveModeEnabled) {
+    assert(
+      adIdFor(ad) != null,
+      '$ad has not been loaded or has already been disposed.',
+    );
+
+    return channel.invokeMethod<void>(
+      'setImmersiveMode',
+      <dynamic, dynamic>{
+        'adId': adIdFor(ad),
+        'immersiveModeEnabled': immersiveModeEnabled,
+      },
+    );
+  }
+
+  /// Disables automated SDK crash reporting.
+  Future<void> disableSDKCrashReporting() {
+    return channel.invokeMethod<void>('MobileAds#disableSDKCrashReporting');
+  }
+
+  /// Disables mediation adapter initialization during initialization of the GMA SDK.
+  Future<void> disableMediationInitialization() {
+    return channel
+        .invokeMethod<void>('MobileAds#disableMediationInitialization');
+  }
+
+  /// Gets the version string of Google Mobile Ads SDK.
+  Future<String> getVersionString() async {
+    return (await instanceManager.channel
+        .invokeMethod<String>('MobileAds#getVersionString'))!;
+  }
 }
 
 @visibleForTesting
 class AdMessageCodec extends StandardMessageCodec {
-  const AdMessageCodec();
-
   // The type values below must be consistent for each platform.
   static const int _valueAdSize = 128;
   static const int _valueAdRequest = 129;
@@ -570,6 +628,8 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueAdapterResponseInfo = 141;
   static const int _valueAnchoredAdaptiveBannerAdSize = 142;
   static const int _valueSmartBannerAdSize = 143;
+  static const int _valueNativeAdOptions = 144;
+  static const int _valueVideoOptions = 145;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -629,6 +689,19 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueServerSideVerificationOptions);
       writeValue(buffer, value.userId);
       writeValue(buffer, value.customData);
+    } else if (value is NativeAdOptions) {
+      buffer.putUint8(_valueNativeAdOptions);
+      writeValue(buffer, value.adChoicesPlacement?.intValue);
+      writeValue(buffer, value.mediaAspectRatio?.intValue);
+      writeValue(buffer, value.videoOptions);
+      writeValue(buffer, value.requestCustomMuteThisAd);
+      writeValue(buffer, value.shouldRequestMultipleImages);
+      writeValue(buffer, value.shouldReturnUrlsForImageAssets);
+    } else if (value is VideoOptions) {
+      buffer.putUint8(_valueVideoOptions);
+      writeValue(buffer, value.clickToExpandRequested);
+      writeValue(buffer, value.customControlsRequested);
+      writeValue(buffer, value.startMuted);
     } else {
       super.writeValue(buffer, value);
     }
@@ -741,6 +814,25 @@ class AdMessageCodec extends StandardMessageCodec {
         return ServerSideVerificationOptions(
             userId: readValueOfType(buffer.getUint8(), buffer),
             customData: readValueOfType(buffer.getUint8(), buffer));
+      case _valueNativeAdOptions:
+        int? adChoices = readValueOfType(buffer.getUint8(), buffer);
+        int? mediaAspectRatio = readValueOfType(buffer.getUint8(), buffer);
+        return NativeAdOptions(
+          adChoicesPlacement: AdChoicesPlacementExtension.fromInt(adChoices),
+          mediaAspectRatio: MediaAspectRatioExtension.fromInt(mediaAspectRatio),
+          videoOptions: readValueOfType(buffer.getUint8(), buffer),
+          requestCustomMuteThisAd: readValueOfType(buffer.getUint8(), buffer),
+          shouldRequestMultipleImages:
+              readValueOfType(buffer.getUint8(), buffer),
+          shouldReturnUrlsForImageAssets:
+              readValueOfType(buffer.getUint8(), buffer),
+        );
+      case _valueVideoOptions:
+        return VideoOptions(
+          clickToExpandRequested: readValueOfType(buffer.getUint8(), buffer),
+          customControlsRequested: readValueOfType(buffer.getUint8(), buffer),
+          startMuted: readValueOfType(buffer.getUint8(), buffer),
+        );
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -770,6 +862,76 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueAdSize);
       writeValue(buffer, value.width);
       writeValue(buffer, value.height);
+    }
+  }
+}
+
+/// An extension that maps each [MediaAspectRatio] to an int.
+extension MediaAspectRatioExtension on MediaAspectRatio {
+  /// Gets the int mapping to pass to platform channel.
+  int get intValue {
+    switch (this) {
+      case MediaAspectRatio.unknown:
+        return 0;
+      case MediaAspectRatio.any:
+        return 1;
+      case MediaAspectRatio.landscape:
+        return 2;
+      case MediaAspectRatio.portrait:
+        return 3;
+      case MediaAspectRatio.square:
+        return 4;
+    }
+  }
+
+  /// Maps an int back to [MediaAspectRatio].
+  static MediaAspectRatio? fromInt(int? intValue) {
+    switch (intValue) {
+      case 0:
+        return MediaAspectRatio.unknown;
+      case 1:
+        return MediaAspectRatio.any;
+      case 2:
+        return MediaAspectRatio.landscape;
+      case 3:
+        return MediaAspectRatio.portrait;
+      case 4:
+        return MediaAspectRatio.square;
+      default:
+        return null;
+    }
+  }
+}
+
+/// An extension that maps each [AdChoicesPlacement] to an int.
+extension AdChoicesPlacementExtension on AdChoicesPlacement {
+  /// Gets the int mapping to pass to platform channel.
+  int get intValue {
+    switch (this) {
+      case AdChoicesPlacement.topRightCorner:
+        return 0;
+      case AdChoicesPlacement.topLeftCorner:
+        return 1;
+      case AdChoicesPlacement.bottomRightCorner:
+        return 2;
+      case AdChoicesPlacement.bottomLeftCorner:
+        return 3;
+    }
+  }
+
+  /// Maps an int back to [AdChoicesPlacement].
+  static AdChoicesPlacement? fromInt(int? intValue) {
+    switch (intValue) {
+      case 0:
+        return AdChoicesPlacement.topRightCorner;
+      case 1:
+        return AdChoicesPlacement.topLeftCorner;
+      case 2:
+        return AdChoicesPlacement.bottomRightCorner;
+      case 3:
+        return AdChoicesPlacement.bottomLeftCorner;
+      default:
+        return null;
     }
   }
 }
