@@ -23,6 +23,7 @@ Pods/
 **/Flutter/flutter_assets/
 ServiceDefinitions.json
 xcuserdata/
+xcshareddata/
 
 local.properties
 keystore.properties

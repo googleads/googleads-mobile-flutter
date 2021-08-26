@@ -69,6 +69,9 @@ public class FlutterNativeAdTest {
     NativeAdFactory mockNativeAdFactory = mock(NativeAdFactory.class);
     @SuppressWarnings("unchecked")
     Map<String, Object> mockOptions = mock(Map.class);
+    FlutterNativeAdOptions mockFlutterNativeAdOptions = mock(FlutterNativeAdOptions.class);
+    NativeAdOptions mockNativeAdOptions = mock(NativeAdOptions.class);
+    doReturn(mockNativeAdOptions).when(mockFlutterNativeAdOptions).asNativeAdOptions();
     final FlutterNativeAd nativeAd =
         new FlutterNativeAd(
             1,
@@ -77,7 +80,8 @@ public class FlutterNativeAdTest {
             mockNativeAdFactory,
             mockFlutterRequest,
             mockLoader,
-            mockOptions);
+            mockOptions,
+            mockFlutterNativeAdOptions);
 
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     final NativeAd mockNativeAd = mock(NativeAd.class);
@@ -135,7 +139,7 @@ public class FlutterNativeAdTest {
             eq(testManager.activity),
             eq("testId"),
             any(OnNativeAdLoadedListener.class),
-            any(NativeAdOptions.class),
+            eq(mockNativeAdOptions),
             any(AdListener.class),
             eq(mockRequest));
 
@@ -169,6 +173,9 @@ public class FlutterNativeAdTest {
         .createNativeAd(any(NativeAd.class), any(Map.class));
     @SuppressWarnings("unchecked")
     Map<String, Object> mockOptions = mock(Map.class);
+    FlutterNativeAdOptions mockFlutterNativeAdOptions = mock(FlutterNativeAdOptions.class);
+    NativeAdOptions mockNativeAdOptions = mock(NativeAdOptions.class);
+    doReturn(mockNativeAdOptions).when(mockFlutterNativeAdOptions).asNativeAdOptions();
     final FlutterNativeAd nativeAd =
         new FlutterNativeAd(
             1,
@@ -177,7 +184,8 @@ public class FlutterNativeAdTest {
             mockNativeAdFactory,
             mockFlutterRequest,
             mockLoader,
-            mockOptions);
+            mockOptions,
+            mockFlutterNativeAdOptions);
 
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     final NativeAd mockNativeAd = mock(NativeAd.class);
@@ -220,7 +228,7 @@ public class FlutterNativeAdTest {
             eq(testManager.activity),
             eq("testId"),
             any(OnNativeAdLoadedListener.class),
-            any(NativeAdOptions.class),
+            eq(mockNativeAdOptions),
             any(AdListener.class),
             eq(mockRequest));
 
