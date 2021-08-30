@@ -50,10 +50,13 @@ class MyHomePage extends StatefulWidget {
 /// Overrides [WidgetsBindingObserver.didChangeAppLifecycleState]
 /// to handle showing an app open ad when the app is resumed.
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
+
   /// Maximum duration allowed between loading and showing the ad.
   final Duration maxCacheDuration = Duration(hours: 4);
 
+  /// Keep track of load time so we don't show an expired ad.
   DateTime? _appOpenLoadTime;
+
   AppOpenAd? _appOpenAd;
   bool _isShowingAppOpenAd = false;
 
@@ -68,19 +71,17 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Try to show an app open ad if the app is being resumed, and
+    // Try to show an app open ad if the app is being resumed and
     // we're not already showing an app open ad.
-    if (state == AppLifecycleState.resumed &&
-        _appOpenAd != null &&
-        !_isShowingAppOpenAd) {
-      _showAppOpenAd();
+    if (state == AppLifecycleState.resumed) {
+      _showAdIfAvailable();
     }
   }
 
   void _loadAppOpenAd() {
     AppOpenAd.load(
       adUnitId: 'ca-app-pub-3940256099942544/3419835294',
-      orientation: 1,
+      orientation: AppOpenAd.orientationPortrait,
       request: AdRequest(),
       adLoadCallback: AppOpenAdLoadCallback(onAdLoaded: (ad) {
         print('$ad loaded');
@@ -92,14 +93,20 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     );
   }
 
-  void _showAppOpenAd() {
+  /// Show the ad, if one exists and is not already showing.
+  void _showAdIfAvailable() {
     if (_appOpenAd == null || _appOpenLoadTime == null) {
       print('Tried to show app open ad before it was loaded!');
       return;
     }
+    if (_isShowingAppOpenAd) {
+      print('Ad is already being shown.');
+      return;
+    }
     if (DateTime.now().subtract(maxCacheDuration).isAfter(_appOpenLoadTime!)) {
-      // Exceeded maximum cache duration. Load another ad.
       print('Maximum cache duration exceeded. Loading another ad.');
+      _appOpenAd!.dispose();
+      _appOpenAd = null;
       _loadAppOpenAd();
       return;
     }
@@ -113,6 +120,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         print('$ad onAdFailedToShowFullScreenContent: $error');
         _isShowingAppOpenAd = false;
         ad.dispose();
+        _appOpenAd = null;
       },
       onAdDismissedFullScreenContent: (ad) {
         print('$ad onAdDismissedFullScreenContent');
