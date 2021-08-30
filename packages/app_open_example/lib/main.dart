@@ -50,7 +50,6 @@ class MyHomePage extends StatefulWidget {
 /// Overrides [WidgetsBindingObserver.didChangeAppLifecycleState]
 /// to handle showing an app open ad when the app is resumed.
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
-
   /// Maximum duration allowed between loading and showing the ad.
   final Duration maxCacheDuration = Duration(hours: 4);
 
