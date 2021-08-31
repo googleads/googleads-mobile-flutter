@@ -18,6 +18,8 @@ import 'package:app_open_example/app_open_ad_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'app_lifecycle_reactor.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
@@ -47,29 +49,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 /// Example home page for an app open ad.
-///
-/// Overrides [WidgetsBindingObserver.didChangeAppLifecycleState]
-/// to handle showing an app open ad when the app is resumed.
-class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
-
+class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
-  AppOpenAdManager _appOpenAdManager = AppOpenAdManager();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
-    _appOpenAdManager.loadAppOpenAd();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    // Try to show an app open ad if the app is being resumed and
-    // we're not already showing an app open ad.
-    if (state == AppLifecycleState.resumed) {
-      _appOpenAdManager.showAdIfAvailable();
-    }
+    AppOpenAdManager appOpenAdManager = AppOpenAdManager()..loadAd();
+    WidgetsBinding.instance!
+        .addObserver(AppLifecycleReactor(appOpenAdManager: appOpenAdManager));
   }
 
   void _incrementCounter() {
