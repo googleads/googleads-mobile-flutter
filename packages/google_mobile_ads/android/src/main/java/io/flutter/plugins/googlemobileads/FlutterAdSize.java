@@ -73,6 +73,13 @@ class FlutterAdSize {
     }
   }
 
+  static class FluidAdSize extends FlutterAdSize {
+
+    FluidAdSize() {
+      super(AdSize.FLUID);
+    }
+  }
+
   FlutterAdSize(int width, int height) {
     this(new AdSize(width, height));
   }

@@ -23,6 +23,7 @@ import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
+import io.flutter.plugins.googlemobileads.FlutterAdSize.FluidAdSize;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -35,6 +36,7 @@ class AdMessageCodec extends StandardMessageCodec {
   // The type values below must be consistent for each platform.
   private static final byte VALUE_AD_SIZE = (byte) 128;
   private static final byte VALUE_AD_REQUEST = (byte) 129;
+  private static final byte VALUE_FLUID_AD_SIZE = (byte) 130;
   private static final byte VALUE_REWARD_ITEM = (byte) 132;
   private static final byte VALUE_LOAD_AD_ERROR = (byte) 133;
   private static final byte VALUE_ADMANAGER_AD_REQUEST = (byte) 134;
@@ -178,6 +180,8 @@ class AdMessageCodec extends StandardMessageCodec {
         return new FlutterAdSize(
             (Integer) readValueOfType(buffer.get(), buffer),
             (Integer) readValueOfType(buffer.get(), buffer));
+      case VALUE_FLUID_AD_SIZE:
+        return new FluidAdSize();
       case VALUE_AD_REQUEST:
         return new FlutterAdRequest.Builder()
             .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))
@@ -270,6 +274,8 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, size.width);
     } else if (value instanceof FlutterAdSize.SmartBannerAdSize) {
       stream.write(VALUE_SMART_BANNER_AD_SIZE);
+    } else if (value instanceof FlutterAdSize.FluidAdSize) {
+      stream.write(VALUE_FLUID_AD_SIZE);
     } else {
       stream.write(VALUE_AD_SIZE);
       writeValue(stream, value.width);
