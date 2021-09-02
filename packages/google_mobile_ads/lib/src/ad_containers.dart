@@ -251,6 +251,12 @@ class SmartBannerAdSize extends AdSize {
   final Orientation orientation;
 }
 
+/// A dynamically sized banner that matches its parent's width and content height.
+class FluidAdSize extends AdSize {
+  /// Default constructor for [FluidAdSize].
+  FluidAdSize() : super(width: -3, height: -3);
+}
+
 /// [AdSize] represents the size of a banner ad.
 ///
 /// There are six sizes available, which are the same for both iOS and Android.

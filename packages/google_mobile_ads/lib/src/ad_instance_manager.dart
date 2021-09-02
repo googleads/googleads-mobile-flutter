@@ -616,6 +616,7 @@ class AdMessageCodec extends StandardMessageCodec {
   // The type values below must be consistent for each platform.
   static const int _valueAdSize = 128;
   static const int _valueAdRequest = 129;
+  static const int _valueFluidAdSize = 130;
   static const int _valueRewardItem = 132;
   static const int _valueLoadAdError = 133;
   static const int _valueAdManagerAdRequest = 134;
@@ -736,6 +737,8 @@ class AdMessageCodec extends StandardMessageCodec {
           width: readValueOfType(buffer.getUint8(), buffer),
           height: readValueOfType(buffer.getUint8(), buffer),
         );
+      case _valueFluidAdSize:
+        return FluidAdSize();
       case _valueAdRequest:
         return AdRequest(
           keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
@@ -855,9 +858,8 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.width);
     } else if (value is SmartBannerAdSize) {
       buffer.putUint8(_valueSmartBannerAdSize);
-      if (defaultTargetPlatform == TargetPlatform.iOS) {
-        writeValue(buffer, describeEnum(value.orientation));
-      }
+    } else if (value is FluidAdSize) {
+      buffer.putUint8(_valueFluidAdSize);
     } else {
       buffer.putUint8(_valueAdSize);
       writeValue(buffer, value.width);
