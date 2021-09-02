@@ -858,6 +858,9 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.width);
     } else if (value is SmartBannerAdSize) {
       buffer.putUint8(_valueSmartBannerAdSize);
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        writeValue(buffer, describeEnum(value.orientation));
+      }
     } else if (value is FluidAdSize) {
       buffer.putUint8(_valueFluidAdSize);
     } else {
