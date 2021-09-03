@@ -367,6 +367,12 @@ class AdInstanceManager {
     }
   }
 
+  Future<InitializationStatus> initialize() async {
+    return (await instanceManager.channel.invokeMethod<InitializationStatus>(
+      'MobileAds#initialize',
+    ))!;
+  }
+
   /// Returns null if an invalid [adId] was passed in.
   Ad? adFor(int adId) => _loadedAds[adId];
 
@@ -605,6 +611,39 @@ class AdInstanceManager {
         'volume': volume,
       },
     );
+  }
+
+  /// Enable / Disable immersive mode for the Ad.
+  Future<void> setImmersiveMode(AdWithoutView ad, bool immersiveModeEnabled) {
+    assert(
+      adIdFor(ad) != null,
+      '$ad has not been loaded or has already been disposed.',
+    );
+
+    return channel.invokeMethod<void>(
+      'setImmersiveMode',
+      <dynamic, dynamic>{
+        'adId': adIdFor(ad),
+        'immersiveModeEnabled': immersiveModeEnabled,
+      },
+    );
+  }
+
+  /// Disables automated SDK crash reporting.
+  Future<void> disableSDKCrashReporting() {
+    return channel.invokeMethod<void>('MobileAds#disableSDKCrashReporting');
+  }
+
+  /// Disables mediation adapter initialization during initialization of the GMA SDK.
+  Future<void> disableMediationInitialization() {
+    return channel
+        .invokeMethod<void>('MobileAds#disableMediationInitialization');
+  }
+
+  /// Gets the version string of Google Mobile Ads SDK.
+  Future<String> getVersionString() async {
+    return (await instanceManager.channel
+        .invokeMethod<String>('MobileAds#getVersionString'))!;
   }
 }
 

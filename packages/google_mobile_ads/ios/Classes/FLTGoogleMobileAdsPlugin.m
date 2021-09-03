@@ -146,6 +146,14 @@
   } else if ([call.method isEqualToString:@"MobileAds#setAppVolume"]) {
     GADMobileAds.sharedInstance.applicationVolume = [call.arguments[@"volume"] floatValue];
     result(nil);
+  } else if ([call.method isEqualToString:@"MobileAds#disableSDKCrashReporting"]) {
+    [GADMobileAds.sharedInstance disableSDKCrashReporting];
+    result(nil);
+  } else if ([call.method isEqualToString:@"MobileAds#disableMediationInitialization"]) {
+    [GADMobileAds.sharedInstance disableMediationInitialization];
+    result(nil);
+  } else if ([call.method isEqualToString:@"MobileAds#getVersionString"]) {
+    result([GADMobileAds.sharedInstance sdkVersion]);
   } else if ([call.method isEqualToString:@"MobileAds#updateRequestConfiguration"]) {
     NSString *maxAdContentRating = call.arguments[@"maxAdContentRating"];
     NSNumber *tagForChildDirectedTreatment = call.arguments[@"tagForChildDirectedTreatment"];
