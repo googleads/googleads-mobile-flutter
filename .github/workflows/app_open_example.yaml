@@ -17,11 +17,12 @@ name: app_open_example
 on:
   pull_request:
     paths:
+      - "packages/google_mobile_ads/**"
       - "packages/app_open_example/**"
       - ".github/workflows/app_open_example.yaml"
   push:
     branches:
-      - **
+      - "**"
 
 env:
   GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "*app_open_example*"
