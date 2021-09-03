@@ -21,7 +21,7 @@ on:
       - ".github/workflows/app_open_example.yaml"
   push:
     branches:
-      - master
+      - **
 
 env:
   GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "*app_open_example*"
