@@ -72,7 +72,7 @@ iOS:
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Flutter Analyze"
         run: |
-          cd packages/app_open_examples/
+          cd packages/app_open_example/
           flutter analyze
       - name: "Flutter Format"
         run: |
