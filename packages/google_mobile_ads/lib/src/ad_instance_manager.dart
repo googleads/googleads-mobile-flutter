@@ -635,11 +635,23 @@ class AdMessageCodec extends StandardMessageCodec {
   void writeValue(WriteBuffer buffer, dynamic value) {
     if (value is AdSize) {
       writeAdSize(buffer, value);
+    } else if (value is AdManagerAdRequest) {
+      buffer.putUint8(_valueAdManagerAdRequest);
+      writeValue(buffer, value.keywords);
+      writeValue(buffer, value.contentUrl);
+      writeValue(buffer, value.customTargeting);
+      writeValue(buffer, value.customTargetingLists);
+      writeValue(buffer, value.nonPersonalizedAds);
+      writeValue(buffer, value.neighboringContentUrls);
+      writeValue(buffer, value.httpTimeoutMillis);
+      writeValue(buffer, value.publisherProvidedId);
     } else if (value is AdRequest) {
       buffer.putUint8(_valueAdRequest);
       writeValue(buffer, value.keywords);
       writeValue(buffer, value.contentUrl);
       writeValue(buffer, value.nonPersonalizedAds);
+      writeValue(buffer, value.neighboringContentUrls);
+      writeValue(buffer, value.httpTimeoutMillis);
     } else if (value is RewardItem) {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
@@ -667,13 +679,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.code);
       writeValue(buffer, value.domain);
       writeValue(buffer, value.message);
-    } else if (value is AdManagerAdRequest) {
-      buffer.putUint8(_valueAdManagerAdRequest);
-      writeValue(buffer, value.keywords);
-      writeValue(buffer, value.contentUrl);
-      writeValue(buffer, value.customTargeting);
-      writeValue(buffer, value.customTargetingLists);
-      writeValue(buffer, value.nonPersonalizedAds);
     } else if (value is AdapterInitializationState) {
       buffer.putUint8(_valueInitializationState);
       writeValue(buffer, describeEnum(value));
@@ -741,6 +746,9 @@ class AdMessageCodec extends StandardMessageCodec {
           keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
           contentUrl: readValueOfType(buffer.getUint8(), buffer),
           nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
+          neighboringContentUrls:
+            readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
+          httpTimeoutMillis: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueRewardItem:
         return RewardItem(
@@ -783,6 +791,10 @@ class AdMessageCodec extends StandardMessageCodec {
             readValueOfType(buffer.getUint8(), buffer),
           ),
           nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
+          neighboringContentUrls:
+            readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
+          httpTimeoutMillis: readValueOfType(buffer.getUint8(), buffer),
+          publisherProvidedId: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueInitializationState:
         switch (readValueOfType(buffer.getUint8(), buffer)) {

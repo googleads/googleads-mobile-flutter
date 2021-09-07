@@ -151,7 +151,9 @@ class AdRequest {
   const AdRequest({
     this.keywords,
     this.contentUrl,
+    this.neighboringContentUrls,
     this.nonPersonalizedAds,
+    this.httpTimeoutMillis,
   });
 
   /// Words or phrases describing the current user activity.
@@ -161,6 +163,9 @@ class AdRequest {
   ///
   /// This webpage content is used for targeting and brand safety purposes.
   final String? contentUrl;
+
+  /// URLs representing web content near an ad.
+  final List<String>? neighboringContentUrls;
 
   /// Non-personalized ads are ads that are not based on a user’s past behavior.
   ///
@@ -168,33 +173,42 @@ class AdRequest {
   /// https://support.google.com/admob/answer/7676680?hl=en
   final bool? nonPersonalizedAds;
 
+  /// A custom timeout for HTTPS calls during an ad request.
+  final int? httpTimeoutMillis;
+
+  // TODO - location
+
   @override
   bool operator ==(Object other) {
     return other is AdRequest &&
         listEquals<String>(keywords, other.keywords) &&
         contentUrl == other.contentUrl &&
-        nonPersonalizedAds == other.nonPersonalizedAds;
+        nonPersonalizedAds == other.nonPersonalizedAds &&
+        listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
+        httpTimeoutMillis == other.httpTimeoutMillis;
   }
 }
 
 /// Targeting info per the Ad Manager API.
-class AdManagerAdRequest {
+class AdManagerAdRequest extends AdRequest {
   /// Constructs an [AdManagerAdRequest] from optional targeting information.
   const AdManagerAdRequest({
-    this.keywords,
-    this.contentUrl,
+    List<String>? keywords,
+    String? contentUrl,
+    List<String>? neighboringContentUrls,
     this.customTargeting,
     this.customTargetingLists,
-    this.nonPersonalizedAds,
-  });
+    bool? nonPersonalizedAds,
+    int? httpTimeoutMillis,
+    this.publisherProvidedId,
+  }) : super(
+    keywords: keywords,
+    contentUrl: contentUrl,
+    neighboringContentUrls: neighboringContentUrls,
+    nonPersonalizedAds: nonPersonalizedAds,
+    httpTimeoutMillis: httpTimeoutMillis,
+  );
 
-  /// Words or phrases describing the current user activity.
-  final List<String>? keywords;
-
-  /// URL string for a webpage whose content matches the app’s primary content.
-  ///
-  /// This webpage content is used for targeting and brand safety purposes.
-  final String? contentUrl;
 
   /// Key-value pairs used for custom targeting.
   final Map<String, String>? customTargeting;
@@ -202,21 +216,19 @@ class AdManagerAdRequest {
   /// Key-value pairs used for custom targeting.
   final Map<String, List<String>>? customTargetingLists;
 
-  /// Non-personalized ads are ads that are not based on a user’s past behavior.
-  ///
-  /// For more information:
-  /// https://support.google.com/admanager/answer/9005435?hl=en
-  final bool? nonPersonalizedAds;
+  /// The identifier used for frequency capping, audience segmentation
+  /// and targeting, sequential ad rotation, and other audience-based ad
+  /// delivery controls across devices.
+  final String? publisherProvidedId;
 
   @override
   bool operator ==(Object other) {
-    return other is AdManagerAdRequest &&
-        listEquals<String>(keywords, other.keywords) &&
-        contentUrl == other.contentUrl &&
+    return super == other &&
+        other is AdManagerAdRequest &&
         mapEquals<String, String>(customTargeting, other.customTargeting) &&
         customTargetingLists.toString() ==
             other.customTargetingLists.toString() &&
-        nonPersonalizedAds == other.nonPersonalizedAds;
+        publisherProvidedId == other.publisherProvidedId;
   }
 }
 

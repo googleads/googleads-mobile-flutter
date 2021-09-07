@@ -1314,7 +1314,9 @@ void main() {
       final AdRequest adRequest = AdRequest(
           keywords: <String>['1', '2', '3'],
           contentUrl: 'contentUrl',
-          nonPersonalizedAds: false);
+          nonPersonalizedAds: false,
+          neighboringContentUrls: <String>['url1.com', 'url2.com'],
+          httpTimeoutMillis: 12345);
 
       final ByteData byteData = codec.encodeMessage(adRequest)!;
       expect(codec.decodeMessage(byteData), adRequest);
@@ -1378,7 +1380,7 @@ void main() {
     });
 
     test('encode/decode $AdManagerAdRequest', () async {
-      final ByteData byteData = codec.encodeMessage(AdManagerAdRequest(
+      final AdManagerAdRequest request = AdManagerAdRequest(
         keywords: <String>['who'],
         contentUrl: 'dat',
         customTargeting: <String, String>{'boy': 'who'},
@@ -1386,19 +1388,15 @@ void main() {
           'him': <String>['is']
         },
         nonPersonalizedAds: true,
-      ))!;
+        neighboringContentUrls: <String>['url1.com', 'url2.com'],
+        httpTimeoutMillis: 5000,
+        publisherProvidedId: 'test-pub-id',
+      );
+      final ByteData byteData = codec.encodeMessage(request)!;
 
       expect(
         codec.decodeMessage(byteData),
-        AdManagerAdRequest(
-          keywords: <String>['who'],
-          contentUrl: 'dat',
-          customTargeting: <String, String>{'boy': 'who'},
-          customTargetingLists: <String, List<String>>{
-            'him': <String>['is'],
-          },
-          nonPersonalizedAds: true,
-        ),
+        request,
       );
     });
   });
