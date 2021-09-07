@@ -747,7 +747,7 @@ class AdMessageCodec extends StandardMessageCodec {
           contentUrl: readValueOfType(buffer.getUint8(), buffer),
           nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
           neighboringContentUrls:
-            readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
+              readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
           httpTimeoutMillis: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueRewardItem:
@@ -792,7 +792,7 @@ class AdMessageCodec extends StandardMessageCodec {
           ),
           nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
           neighboringContentUrls:
-            readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
+              readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
           httpTimeoutMillis: readValueOfType(buffer.getUint8(), buffer),
           publisherProvidedId: readValueOfType(buffer.getUint8(), buffer),
         );

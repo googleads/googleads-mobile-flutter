@@ -68,12 +68,24 @@ class AdMessageCodec extends StandardMessageCodec {
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
     if (value instanceof FlutterAdSize) {
       writeAdSize(stream, (FlutterAdSize) value);
+    } else if (value instanceof FlutterAdManagerAdRequest) {
+      stream.write(VALUE_ADMANAGER_AD_REQUEST);
+      final FlutterAdManagerAdRequest request = (FlutterAdManagerAdRequest) value;
+      writeValue(stream, request.getKeywords());
+      writeValue(stream, request.getContentUrl());
+      writeValue(stream, request.getCustomTargeting());
+      writeValue(stream, request.getCustomTargetingLists());
+      writeValue(stream, request.getNonPersonalizedAds());
+      writeValue(stream, request.getNeighboringContentUrls());
+      writeValue(stream, request.getHttpTimeoutMillis());
     } else if (value instanceof FlutterAdRequest) {
       stream.write(VALUE_AD_REQUEST);
       final FlutterAdRequest request = (FlutterAdRequest) value;
       writeValue(stream, request.getKeywords());
       writeValue(stream, request.getContentUrl());
       writeValue(stream, request.getNonPersonalizedAds());
+      writeValue(stream, request.getNeighboringContentUrls());
+      writeValue(stream, request.getHttpTimeoutMillis());
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
       stream.write(VALUE_REWARD_ITEM);
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;
@@ -106,14 +118,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, error.code);
       writeValue(stream, error.domain);
       writeValue(stream, error.message);
-    } else if (value instanceof FlutterAdManagerAdRequest) {
-      stream.write(VALUE_ADMANAGER_AD_REQUEST);
-      final FlutterAdManagerAdRequest request = (FlutterAdManagerAdRequest) value;
-      writeValue(stream, request.getKeywords());
-      writeValue(stream, request.getContentUrl());
-      writeValue(stream, request.getCustomTargeting());
-      writeValue(stream, request.getCustomTargetingLists());
-      writeValue(stream, request.getNonPersonalizedAds());
     } else if (value instanceof FlutterAdapterStatus.AdapterInitializationState) {
       stream.write(VALUE_INITIALIZATION_STATE);
       final FlutterAdapterStatus.AdapterInitializationState state =
@@ -183,6 +187,8 @@ class AdMessageCodec extends StandardMessageCodec {
             .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))
             .setContentUrl((String) readValueOfType(buffer.get(), buffer))
             .setNonPersonalizedAds(booleanValueOf(readValueOfType(buffer.get(), buffer)))
+            .setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer))
+            .setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer))
             .build();
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
@@ -212,14 +218,16 @@ class AdMessageCodec extends StandardMessageCodec {
             (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer));
       case VALUE_ADMANAGER_AD_REQUEST:
-        return new FlutterAdManagerAdRequest.Builder()
-            .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))
-            .setContentUrl((String) readValueOfType(buffer.get(), buffer))
-            .setCustomTargeting((Map<String, String>) readValueOfType(buffer.get(), buffer))
-            .setCustomTargetingLists(
-                (Map<String, List<String>>) readValueOfType(buffer.get(), buffer))
-            .setNonPersonalizedAds((Boolean) readValueOfType(buffer.get(), buffer))
-            .build();
+        FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
+        builder.setKeywords((List<String>) readValueOfType(buffer.get(), buffer));
+        builder.setContentUrl((String) readValueOfType(buffer.get(), buffer));
+        builder.setCustomTargeting((Map<String, String>) readValueOfType(buffer.get(), buffer));
+        builder.setCustomTargetingLists(
+            (Map<String, List<String>>) readValueOfType(buffer.get(), buffer));
+        builder.setNonPersonalizedAds((Boolean) readValueOfType(buffer.get(), buffer));
+        builder.setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer));
+        builder.setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer));
+        return builder.build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);
         switch (state) {

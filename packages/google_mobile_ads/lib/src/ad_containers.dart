@@ -202,13 +202,12 @@ class AdManagerAdRequest extends AdRequest {
     int? httpTimeoutMillis,
     this.publisherProvidedId,
   }) : super(
-    keywords: keywords,
-    contentUrl: contentUrl,
-    neighboringContentUrls: neighboringContentUrls,
-    nonPersonalizedAds: nonPersonalizedAds,
-    httpTimeoutMillis: httpTimeoutMillis,
-  );
-
+          keywords: keywords,
+          contentUrl: contentUrl,
+          neighboringContentUrls: neighboringContentUrls,
+          nonPersonalizedAds: nonPersonalizedAds,
+          httpTimeoutMillis: httpTimeoutMillis,
+        );
 
   /// Key-value pairs used for custom targeting.
   final Map<String, String>? customTargeting;

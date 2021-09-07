@@ -41,12 +41,9 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.StandardMethodCodec;
-import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -149,87 +146,6 @@ public class GoogleMobileAdsTest {
     verify(flutterNativeAd).dispose();
     assertNull(testManager.adForId(2));
     assertNull(testManager.adIdFor(flutterNativeAd));
-  }
-
-  @Test
-  public void adMessageCodec_encodeFlutterAdSize() {
-    final AdMessageCodec codec = new AdMessageCodec(null);
-    final ByteBuffer message = codec.encodeMessage(new FlutterAdSize(1, 2));
-
-    assertEquals(codec.decodeMessage((ByteBuffer) message.position(0)), new FlutterAdSize(1, 2));
-  }
-
-  @Test
-  public void adMessageCodec_encodeFlutterAdRequest() {
-    final AdMessageCodec codec = new AdMessageCodec(null);
-    final ByteBuffer message =
-        codec.encodeMessage(
-            new FlutterAdRequest.Builder()
-                .setKeywords(Arrays.asList("1", "2", "3"))
-                .setContentUrl("contentUrl")
-                .setNonPersonalizedAds(false)
-                .build());
-
-    final FlutterAdRequest request =
-        (FlutterAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
-    assertEquals(Arrays.asList("1", "2", "3"), request.getKeywords());
-    assertEquals("contentUrl", request.getContentUrl());
-    assertEquals(false, request.getNonPersonalizedAds());
-  }
-
-  @Test
-  public void adMessageCodec_encodeFlutterAdManagerAdRequest() {
-    final AdMessageCodec codec = new AdMessageCodec(null);
-    final ByteBuffer message =
-        codec.encodeMessage(
-            new FlutterAdManagerAdRequest.Builder()
-                .setKeywords(Arrays.asList("1", "2", "3"))
-                .setContentUrl("contentUrl")
-                .setCustomTargeting(Collections.singletonMap("apple", "banana"))
-                .setCustomTargetingLists(
-                    Collections.singletonMap("cherry", Collections.singletonList("pie")))
-                .build());
-
-    assertEquals(
-        codec.decodeMessage((ByteBuffer) message.position(0)),
-        new FlutterAdManagerAdRequest.Builder()
-            .setKeywords(Arrays.asList("1", "2", "3"))
-            .setContentUrl("contentUrl")
-            .setCustomTargeting(Collections.singletonMap("apple", "banana"))
-            .setCustomTargetingLists(
-                Collections.singletonMap("cherry", Collections.singletonList("pie")))
-            .build());
-  }
-
-  @Test
-  public void adMessageCodec_encodeFlutterRewardItem() {
-    final AdMessageCodec codec = new AdMessageCodec(null);
-    final ByteBuffer message =
-        codec.encodeMessage(new FlutterRewardedAd.FlutterRewardItem(23, "coins"));
-
-    assertEquals(
-        codec.decodeMessage((ByteBuffer) message.position(0)),
-        new FlutterRewardedAd.FlutterRewardItem(23, "coins"));
-  }
-
-  @Test
-  public void adMessageCodec_encodeFlutterLoadAdError() {
-    final AdMessageCodec codec = new AdMessageCodec(null);
-    List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
-    adapterResponseInfos.add(
-        new FlutterAdapterResponseInfo("adapter-class", 9999, "description", "credentials", null));
-    FlutterResponseInfo info =
-        new FlutterResponseInfo("responseId", "className", adapterResponseInfos);
-    final ByteBuffer message =
-        codec.encodeMessage(new FlutterBannerAd.FlutterLoadAdError(1, "domain", "message", info));
-
-    final FlutterAd.FlutterLoadAdError error =
-        (FlutterAd.FlutterLoadAdError) codec.decodeMessage((ByteBuffer) message.position(0));
-    assertNotNull(error);
-    assertEquals(error.code, 1);
-    assertEquals(error.domain, "domain");
-    assertEquals(error.message, "message");
-    assertEquals(error.responseInfo, info);
   }
 
   @Test
