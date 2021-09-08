@@ -14,6 +14,7 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.location.Location;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.ads.mediation.admob.AdMobAdapter;
@@ -27,6 +28,7 @@ class FlutterAdRequest {
   @Nullable private final Boolean nonPersonalizedAds;
   @Nullable private final List<String> neighboringContentUrls;
   @Nullable private final Integer httpTimeoutMillis;
+  @Nullable private final Location location;
 
   protected static class Builder {
     @Nullable private List<String> keywords;
@@ -34,6 +36,7 @@ class FlutterAdRequest {
     @Nullable private Boolean nonPersonalizedAds;
     @Nullable private List<String> neighboringContentUrls;
     @Nullable private Integer httpTimeoutMillis;
+    @Nullable private Location location;
 
     Builder setKeywords(@Nullable List<String> keywords) {
       this.keywords = keywords;
@@ -57,6 +60,11 @@ class FlutterAdRequest {
 
     Builder setHttpTimeoutMillis(@Nullable Integer httpTimeoutMillis) {
       this.httpTimeoutMillis = httpTimeoutMillis;
+      return this;
+    }
+
+    Builder setLocation(@Nullable Location location) {
+      this.location = location;
       return this;
     }
 
@@ -85,9 +93,19 @@ class FlutterAdRequest {
       return httpTimeoutMillis;
     }
 
+    @Nullable
+    protected Location getLocation() {
+      return location;
+    }
+
     FlutterAdRequest build() {
       return new FlutterAdRequest(
-          keywords, contentUrl, nonPersonalizedAds, neighboringContentUrls, httpTimeoutMillis);
+          keywords,
+          contentUrl,
+          nonPersonalizedAds,
+          neighboringContentUrls,
+          httpTimeoutMillis,
+          location);
     }
   }
 
@@ -96,12 +114,14 @@ class FlutterAdRequest {
       @Nullable String contentUrl,
       @Nullable Boolean nonPersonalizedAds,
       @Nullable List<String> neighboringContentUrls,
-      @Nullable Integer httpTimeoutMillis) {
+      @Nullable Integer httpTimeoutMillis,
+      @Nullable Location location) {
     this.keywords = keywords;
     this.contentUrl = contentUrl;
     this.nonPersonalizedAds = nonPersonalizedAds;
     this.neighboringContentUrls = neighboringContentUrls;
     this.httpTimeoutMillis = httpTimeoutMillis;
+    this.location = location;
   }
 
   AdRequest asAdRequest() {
@@ -125,6 +145,9 @@ class FlutterAdRequest {
     }
     if (httpTimeoutMillis != null) {
       builder.setHttpTimeoutMillis(httpTimeoutMillis);
+    }
+    if (location != null) {
+      builder.setLocation(location);
     }
     builder.setRequestAgent(Constants.REQUEST_AGENT_PREFIX_VERSIONED);
     return builder.build();
@@ -155,6 +178,11 @@ class FlutterAdRequest {
     return httpTimeoutMillis;
   }
 
+  @Nullable
+  protected Location getLocation() {
+    return location;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -168,12 +196,18 @@ class FlutterAdRequest {
         && Objects.equals(contentUrl, request.contentUrl)
         && Objects.equals(nonPersonalizedAds, request.nonPersonalizedAds)
         && Objects.equals(neighboringContentUrls, request.neighboringContentUrls)
-        && Objects.equals(httpTimeoutMillis, request.httpTimeoutMillis);
+        && Objects.equals(httpTimeoutMillis, request.httpTimeoutMillis)
+        && Objects.equals(location, request.location);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(
-        keywords, contentUrl, nonPersonalizedAds, neighboringContentUrls, httpTimeoutMillis);
+        keywords,
+        contentUrl,
+        nonPersonalizedAds,
+        neighboringContentUrls,
+        httpTimeoutMillis,
+        location);
   }
 }

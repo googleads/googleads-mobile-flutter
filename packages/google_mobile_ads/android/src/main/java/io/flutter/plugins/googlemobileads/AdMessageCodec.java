@@ -16,6 +16,7 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
+import android.location.Location;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -49,6 +50,7 @@ class AdMessageCodec extends StandardMessageCodec {
   static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 143;
   static final byte VALUE_NATIVE_AD_OPTIONS = (byte) 144;
   static final byte VALUE_VIDEO_OPTIONS = (byte) 145;
+  static final byte VALUE_LOCATION_PARAMS = (byte) 146;
 
   @NonNull final Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
@@ -78,6 +80,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getNonPersonalizedAds());
       writeValue(stream, request.getNeighboringContentUrls());
       writeValue(stream, request.getHttpTimeoutMillis());
+      writeValue(stream, request.getLocation());
     } else if (value instanceof FlutterAdRequest) {
       stream.write(VALUE_AD_REQUEST);
       final FlutterAdRequest request = (FlutterAdRequest) value;
@@ -86,6 +89,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getNonPersonalizedAds());
       writeValue(stream, request.getNeighboringContentUrls());
       writeValue(stream, request.getHttpTimeoutMillis());
+      writeValue(stream, request.getLocation());
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
       stream.write(VALUE_REWARD_ITEM);
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;
@@ -162,6 +166,13 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, options.clickToExpandRequested);
       writeValue(stream, options.customControlsRequested);
       writeValue(stream, options.startMuted);
+    } else if (value instanceof Location) {
+      stream.write(VALUE_LOCATION_PARAMS);
+      Location location = (Location) value;
+      writeValue(stream, location.getAccuracy());
+      writeValue(stream, location.getLongitude());
+      writeValue(stream, location.getLatitude());
+      writeValue(stream, location.getTime());
     } else {
       super.writeValue(stream, value);
     }
@@ -189,6 +200,7 @@ class AdMessageCodec extends StandardMessageCodec {
             .setNonPersonalizedAds(booleanValueOf(readValueOfType(buffer.get(), buffer)))
             .setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer))
             .setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer))
+            .setLocation((Location) readValueOfType(buffer.get(), buffer))
             .build();
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
@@ -227,6 +239,7 @@ class AdMessageCodec extends StandardMessageCodec {
         builder.setNonPersonalizedAds((Boolean) readValueOfType(buffer.get(), buffer));
         builder.setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer));
         builder.setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer));
+        builder.setLocation((Location) readValueOfType(buffer.get(), buffer));
         return builder.build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);
@@ -264,6 +277,13 @@ class AdMessageCodec extends StandardMessageCodec {
             (Boolean) readValueOfType(buffer.get(), buffer),
             (Boolean) readValueOfType(buffer.get(), buffer),
             (Boolean) readValueOfType(buffer.get(), buffer));
+      case VALUE_LOCATION_PARAMS:
+        Location location = new Location("");
+        location.setAccuracy((float) readValueOfType(buffer.get(), buffer));
+        location.setLongitude((float) readValueOfType(buffer.get(), buffer));
+        location.setLatitude((float) readValueOfType(buffer.get(), buffer));
+        location.setTime((long) readValueOfType(buffer.get(), buffer));
+        return location;
       default:
         return super.readValueOfType(type, buffer);
     }

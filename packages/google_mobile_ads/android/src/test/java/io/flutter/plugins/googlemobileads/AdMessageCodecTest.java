@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import android.content.Context;
+import android.location.Location;
 import com.google.android.gms.ads.AdSize;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
@@ -204,23 +205,24 @@ public class AdMessageCodecTest {
 
   @Test
   public void encodeFlutterAdRequest() {
-    final ByteBuffer message =
-        codec.encodeMessage(
-            new FlutterAdRequest.Builder()
-                .setKeywords(Arrays.asList("1", "2", "3"))
-                .setContentUrl("contentUrl")
-                .setNonPersonalizedAds(false)
-                .setNeighboringContentUrls(Arrays.asList("example.com", "test.com"))
-                .setHttpTimeoutMillis(1000)
-                .build());
+    Location location = new Location("");
+    location.setAccuracy(12345);
+    location.setLongitude(1.0);
+    location.setLatitude(5.0);
+    location.setTime(54321);
+    FlutterAdRequest adRequest = new FlutterAdRequest.Builder()
+        .setKeywords(Arrays.asList("1", "2", "3"))
+        .setContentUrl("contentUrl")
+        .setNonPersonalizedAds(false)
+        .setNeighboringContentUrls(Arrays.asList("example.com", "test.com"))
+        .setHttpTimeoutMillis(1000)
+        .setLocation(location)
+        .build();
+    final ByteBuffer message = codec.encodeMessage(adRequest);
 
-    final FlutterAdRequest request =
+    final FlutterAdRequest decodedRequest =
         (FlutterAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
-    assertEquals(Arrays.asList("1", "2", "3"), request.getKeywords());
-    assertEquals("contentUrl", request.getContentUrl());
-    assertEquals(false, request.getNonPersonalizedAds());
-    assertEquals(Arrays.asList("example.com", "test.com"), request.getNeighboringContentUrls());
-    assertEquals((Integer) 1000, request.getHttpTimeoutMillis());
+    assertEquals(adRequest, decodedRequest);
   }
 
   @Test

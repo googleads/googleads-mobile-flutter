@@ -14,6 +14,7 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.location.Location;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.ads.mediation.admob.AdMobAdapter;
@@ -55,7 +56,8 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
           customTargetingLists,
           getNonPersonalizedAds(),
           getNeighboringContentUrls(),
-          getHttpTimeoutMillis());
+          getHttpTimeoutMillis(),
+          getLocation());
     }
   }
 
@@ -66,8 +68,9 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
       @Nullable Map<String, List<String>> customTargetingLists,
       @Nullable Boolean nonPersonalizedAds,
       @Nullable List<String> neighboringContentUrls,
-      @Nullable Integer httpTimeoutMillis) {
-    super(keywords, contentUrl, nonPersonalizedAds, neighboringContentUrls, httpTimeoutMillis);
+      @Nullable Integer httpTimeoutMillis,
+      @Nullable Location location) {
+    super(keywords, contentUrl, nonPersonalizedAds, neighboringContentUrls, httpTimeoutMillis, location);
     this.customTargeting = customTargeting;
     this.customTargetingLists = customTargetingLists;
   }
@@ -97,6 +100,9 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
       final Bundle extras = new Bundle();
       extras.putString("npa", "1");
       builder.addNetworkExtrasBundle(AdMobAdapter.class, extras);
+    }
+    if (getLocation() != null) {
+      builder.setLocation(getLocation());
     }
     builder.setRequestAgent(Constants.REQUEST_AGENT_PREFIX_VERSIONED);
     return builder.build();
