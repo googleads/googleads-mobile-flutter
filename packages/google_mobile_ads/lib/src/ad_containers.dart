@@ -142,6 +142,40 @@ class LoadAdError extends AdError {
   }
 }
 
+/// Location parameters that can be configured in an ad request.
+class LocationParams {
+  /// Location parameters that can be configured in an ad request.
+  const LocationParams({
+    required this.accuracy,
+    required this.longitude,
+    required this.latitude,
+    this.time,
+  });
+
+  /// The accuracy in meters.
+  final double accuracy;
+
+  /// The longitude in degrees.
+  final double longitude;
+
+  /// The latitude in degrees.
+  final double latitude;
+
+  /// The UTC time, in milliseconds since epoch (January 1, 1970).
+  ///
+  /// This is required on Android, and ignored on iOS.
+  final int? time;
+
+  @override
+  bool operator ==(Object other) {
+    return other is LocationParams &&
+        accuracy == other.accuracy &&
+        longitude == other.longitude &&
+        latitude == other.latitude &&
+        time == other.time;
+  }
+}
+
 /// Targeting info per the AdMob API.
 ///
 /// This class's properties mirror the native AdRequest API. See for example:
@@ -154,6 +188,7 @@ class AdRequest {
     this.neighboringContentUrls,
     this.nonPersonalizedAds,
     this.httpTimeoutMillis,
+    this.location,
   });
 
   /// Words or phrases describing the current user activity.
@@ -178,7 +213,10 @@ class AdRequest {
   /// This is only supported in Android. This value is ignored on iOS.
   final int? httpTimeoutMillis;
 
-  // TODO - location
+  /// Location data.
+  ///
+  /// Used for mediation targeting purposes.
+  final LocationParams? location;
 
   @override
   bool operator ==(Object other) {
@@ -187,7 +225,8 @@ class AdRequest {
         contentUrl == other.contentUrl &&
         nonPersonalizedAds == other.nonPersonalizedAds &&
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
-        httpTimeoutMillis == other.httpTimeoutMillis;
+        httpTimeoutMillis == other.httpTimeoutMillis &&
+        location == other.location;
   }
 }
 
@@ -203,12 +242,14 @@ class AdManagerAdRequest extends AdRequest {
     bool? nonPersonalizedAds,
     int? httpTimeoutMillis,
     this.publisherProvidedId,
+    LocationParams? location,
   }) : super(
           keywords: keywords,
           contentUrl: contentUrl,
           neighboringContentUrls: neighboringContentUrls,
           nonPersonalizedAds: nonPersonalizedAds,
           httpTimeoutMillis: httpTimeoutMillis,
+          location: location,
         );
 
   /// Key-value pairs used for custom targeting.

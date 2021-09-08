@@ -630,6 +630,7 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueSmartBannerAdSize = 143;
   static const int _valueNativeAdOptions = 144;
   static const int _valueVideoOptions = 145;
+  static const int _valueLocationParams = 146;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -647,6 +648,7 @@ class AdMessageCodec extends StandardMessageCodec {
         writeValue(buffer, value.httpTimeoutMillis);
       }
       writeValue(buffer, value.publisherProvidedId);
+      writeValue(buffer, value.location);
     } else if (value is AdRequest) {
       buffer.putUint8(_valueAdRequest);
       writeValue(buffer, value.keywords);
@@ -656,6 +658,7 @@ class AdMessageCodec extends StandardMessageCodec {
       if (defaultTargetPlatform == TargetPlatform.android) {
         writeValue(buffer, value.httpTimeoutMillis);
       }
+      writeValue(buffer, value.location);
     } else if (value is RewardItem) {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
@@ -711,6 +714,14 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.clickToExpandRequested);
       writeValue(buffer, value.customControlsRequested);
       writeValue(buffer, value.startMuted);
+    } else if (value is LocationParams) {
+      buffer.putUint8(_valueLocationParams);
+      writeValue(buffer, value.accuracy);
+      writeValue(buffer, value.longitude);
+      writeValue(buffer, value.latitude);
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        writeValue(buffer, value.time);
+      }
     } else {
       super.writeValue(buffer, value);
     }
@@ -755,6 +766,7 @@ class AdMessageCodec extends StandardMessageCodec {
           httpTimeoutMillis: (defaultTargetPlatform == TargetPlatform.android)
               ? readValueOfType(buffer.getUint8(), buffer)
               : null,
+          location: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueRewardItem:
         return RewardItem(
@@ -803,6 +815,7 @@ class AdMessageCodec extends StandardMessageCodec {
               ? readValueOfType(buffer.getUint8(), buffer)
               : null,
           publisherProvidedId: readValueOfType(buffer.getUint8(), buffer),
+          location: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueInitializationState:
         switch (readValueOfType(buffer.getUint8(), buffer)) {
@@ -852,6 +865,15 @@ class AdMessageCodec extends StandardMessageCodec {
           clickToExpandRequested: readValueOfType(buffer.getUint8(), buffer),
           customControlsRequested: readValueOfType(buffer.getUint8(), buffer),
           startMuted: readValueOfType(buffer.getUint8(), buffer),
+        );
+      case _valueLocationParams:
+        return LocationParams(
+          accuracy: readValueOfType(buffer.getUint8(), buffer),
+          longitude: readValueOfType(buffer.getUint8(), buffer),
+          latitude: readValueOfType(buffer.getUint8(), buffer),
+          time: (defaultTargetPlatform == TargetPlatform.android)
+              ? readValueOfType(buffer.getUint8(), buffer)
+              : null,
         );
       default:
         return super.readValueOfType(type, buffer);

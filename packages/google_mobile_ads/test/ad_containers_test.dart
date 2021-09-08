@@ -1318,7 +1318,9 @@ void main() {
           contentUrl: 'contentUrl',
           nonPersonalizedAds: false,
           neighboringContentUrls: <String>['url1.com', 'url2.com'],
-          httpTimeoutMillis: 12345);
+          httpTimeoutMillis: 12345,
+          location: LocationParams(
+              accuracy: 1.1, longitude: 25, latitude: 38, time: 1));
 
       final ByteData byteData = codec.encodeMessage(adRequest)!;
       expect(codec.decodeMessage(byteData), adRequest);
@@ -1332,7 +1334,9 @@ void main() {
           contentUrl: 'contentUrl',
           nonPersonalizedAds: false,
           neighboringContentUrls: <String>['url1.com', 'url2.com'],
-          httpTimeoutMillis: 12345);
+          httpTimeoutMillis: 12345,
+          location: LocationParams(
+              accuracy: 1.1, longitude: 25, latitude: 38, time: 1));
 
       final ByteData byteData = codec.encodeMessage(adRequest)!;
       AdRequest decoded = codec.decodeMessage(byteData);
@@ -1341,6 +1345,9 @@ void main() {
       expect(decoded.contentUrl, adRequest.contentUrl);
       expect(decoded.nonPersonalizedAds, adRequest.nonPersonalizedAds);
       expect(decoded.keywords, adRequest.keywords);
+      expect(decoded.location!.accuracy, 1.1);
+      expect(decoded.location!.longitude, 25);
+      expect(decoded.location!.latitude, 38);
     });
 
     test('encode/decode $LoadAdError', () async {
@@ -1413,6 +1420,8 @@ void main() {
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
         httpTimeoutMillis: 5000,
         publisherProvidedId: 'test-pub-id',
+        location:
+            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
       );
       final ByteData byteData = codec.encodeMessage(request)!;
 
@@ -1436,6 +1445,8 @@ void main() {
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
         httpTimeoutMillis: 5000,
         publisherProvidedId: 'test-pub-id',
+        location:
+            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
       );
 
       final ByteData byteData = codec.encodeMessage(request)!;
@@ -1448,6 +1459,9 @@ void main() {
       expect(decoded.publisherProvidedId, request.publisherProvidedId);
       expect(decoded.customTargeting, request.customTargeting);
       expect(decoded.customTargetingLists, request.customTargetingLists);
+      expect(decoded.location!.accuracy, 1.1);
+      expect(decoded.location!.longitude, 25);
+      expect(decoded.location!.latitude, 38);
     });
   });
 }
