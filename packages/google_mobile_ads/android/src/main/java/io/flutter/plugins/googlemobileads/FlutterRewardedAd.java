@@ -135,13 +135,23 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   @Override
   public void show() {
     if (rewardedAd == null) {
-      Log.e(TAG, "The rewarded ad wasn't loaded yet.");
+      Log.e(TAG, "Error showing rewarded - the rewarded ad wasn't loaded yet.");
       return;
     }
 
     rewardedAd.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
     rewardedAd.setOnAdMetadataChangedListener(new DelegatingRewardedCallback(this));
     rewardedAd.show(manager.activity, new DelegatingRewardedCallback(this));
+  }
+
+  @Override
+  public void setImmersiveMode(boolean immersiveModeEnabled) {
+    if (rewardedAd == null) {
+      Log.e(
+          TAG, "Error setting immersive mode in rewarded ad - the rewarded ad wasn't loaded yet.");
+      return;
+    }
+    rewardedAd.setImmersiveMode(immersiveModeEnabled);
   }
 
   void onAdMetadataChanged() {

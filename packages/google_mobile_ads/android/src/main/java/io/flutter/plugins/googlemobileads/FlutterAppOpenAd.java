@@ -107,6 +107,15 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
   }
 
   @Override
+  void setImmersiveMode(boolean immersiveModeEnabled) {
+    if (ad == null) {
+      Log.w(TAG, "Tried to set immersive mode on app open ad before it was loaded");
+      return;
+    }
+    ad.setImmersiveMode(immersiveModeEnabled);
+  }
+
+  @Override
   void dispose() {
     ad = null;
   }

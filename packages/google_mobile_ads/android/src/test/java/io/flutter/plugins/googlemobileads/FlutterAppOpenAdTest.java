@@ -475,4 +475,30 @@ public class FlutterAppOpenAdTest {
     verify(mockAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
     verify(mockManager).onFailedToShowFullScreenContent(eq(1), eq(adError));
   }
+
+  @Test
+  public void setImmersiveMode() {
+    setupAdmobMocks();
+    final AppOpenAd mockAd = mock(AppOpenAd.class);
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(4);
+                adLoadCallback.onAdLoaded(mockAd);
+                // Pass back null for ad
+                return null;
+              }
+            })
+        .when(mockFlutterAdLoader)
+        .loadAppOpen(
+            any(Context.class),
+            anyString(),
+            any(AdRequest.class),
+            anyInt(),
+            any(AppOpenAdLoadCallback.class));
+    flutterAppOpenAd.load();
+    flutterAppOpenAd.setImmersiveMode(false);
+    verify(mockAd).setImmersiveMode(eq(false));
+  }
 }
