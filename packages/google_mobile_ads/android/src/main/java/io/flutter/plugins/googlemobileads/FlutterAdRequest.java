@@ -197,7 +197,13 @@ class FlutterAdRequest {
         && Objects.equals(nonPersonalizedAds, request.nonPersonalizedAds)
         && Objects.equals(neighboringContentUrls, request.neighboringContentUrls)
         && Objects.equals(httpTimeoutMillis, request.httpTimeoutMillis)
-        && Objects.equals(location, request.location);
+        && (location == null) == (request.location == null)
+        && (location == null
+            // We only care about these properties which are guaranteed by the Location API.
+            || (location.getAccuracy() == request.location.getAccuracy()
+                && location.getLongitude() == request.location.getLongitude()
+                && location.getLatitude() == request.location.getLatitude()
+                && location.getTime() == request.location.getTime()));
   }
 
   @Override

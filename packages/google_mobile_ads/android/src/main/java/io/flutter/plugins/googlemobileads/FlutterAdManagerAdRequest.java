@@ -70,7 +70,13 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
       @Nullable List<String> neighboringContentUrls,
       @Nullable Integer httpTimeoutMillis,
       @Nullable Location location) {
-    super(keywords, contentUrl, nonPersonalizedAds, neighboringContentUrls, httpTimeoutMillis, location);
+    super(
+        keywords,
+        contentUrl,
+        nonPersonalizedAds,
+        neighboringContentUrls,
+        httpTimeoutMillis,
+        location);
     this.customTargeting = customTargeting;
     this.customTargetingLists = customTargetingLists;
   }

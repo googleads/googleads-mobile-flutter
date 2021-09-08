@@ -279,9 +279,10 @@ class AdMessageCodec extends StandardMessageCodec {
             (Boolean) readValueOfType(buffer.get(), buffer));
       case VALUE_LOCATION_PARAMS:
         Location location = new Location("");
-        location.setAccuracy((float) readValueOfType(buffer.get(), buffer));
-        location.setLongitude((float) readValueOfType(buffer.get(), buffer));
-        location.setLatitude((float) readValueOfType(buffer.get(), buffer));
+        // This is necessary because StandardMessageCodec converts floats to double.
+        location.setAccuracy(((Double) readValueOfType(buffer.get(), buffer)).floatValue());
+        location.setLongitude((double) readValueOfType(buffer.get(), buffer));
+        location.setLatitude((double) readValueOfType(buffer.get(), buffer));
         location.setTime((long) readValueOfType(buffer.get(), buffer));
         return location;
       default:

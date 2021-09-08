@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-      classpath 'com.android.tools.build:gradle:4.1.0'
+        classpath 'com.android.tools.build:gradle:4.1.0'
     }
 }
 
@@ -32,10 +32,16 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-      api 'com.google.android.gms:play-services-ads:20.1.0'
-      testImplementation 'junit:junit:4.12'
-      testImplementation 'org.hamcrest:hamcrest:2.2'
-      testImplementation 'org.mockito:mockito-inline:3.9.0'
+        api 'com.google.android.gms:play-services-ads:20.1.0'
+        testImplementation 'junit:junit:4.12'
+        testImplementation 'org.hamcrest:hamcrest:2.2'
+        testImplementation 'org.mockito:mockito-inline:3.9.0'
+        testImplementation 'org.robolectric:robolectric:4.4'
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
     }
 }
 

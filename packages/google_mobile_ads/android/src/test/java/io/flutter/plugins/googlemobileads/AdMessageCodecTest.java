@@ -33,8 +33,11 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 /** Tests for {@link AdMessageCodec}. */
+@RunWith(RobolectricTestRunner.class)
 public class AdMessageCodecTest {
   AdMessageCodec codec;
   AdSize mockAdSize;
@@ -206,18 +209,19 @@ public class AdMessageCodecTest {
   @Test
   public void encodeFlutterAdRequest() {
     Location location = new Location("");
-    location.setAccuracy(12345);
+    location.setAccuracy(12345f);
     location.setLongitude(1.0);
     location.setLatitude(5.0);
     location.setTime(54321);
-    FlutterAdRequest adRequest = new FlutterAdRequest.Builder()
-        .setKeywords(Arrays.asList("1", "2", "3"))
-        .setContentUrl("contentUrl")
-        .setNonPersonalizedAds(false)
-        .setNeighboringContentUrls(Arrays.asList("example.com", "test.com"))
-        .setHttpTimeoutMillis(1000)
-        .setLocation(location)
-        .build();
+    FlutterAdRequest adRequest =
+        new FlutterAdRequest.Builder()
+            .setKeywords(Arrays.asList("1", "2", "3"))
+            .setContentUrl("contentUrl")
+            .setNonPersonalizedAds(false)
+            .setNeighboringContentUrls(Arrays.asList("example.com", "test.com"))
+            .setHttpTimeoutMillis(1000)
+            .setLocation(location)
+            .build();
     final ByteBuffer message = codec.encodeMessage(adRequest);
 
     final FlutterAdRequest decodedRequest =
@@ -227,6 +231,11 @@ public class AdMessageCodecTest {
 
   @Test
   public void encodeFlutterAdManagerAdRequest() {
+    Location location = new Location("");
+    location.setAccuracy(12345f);
+    location.setLongitude(1.0);
+    location.setLatitude(5.0);
+    location.setTime(54321);
     FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
     builder.setKeywords(Arrays.asList("1", "2", "3"));
     builder.setContentUrl("contentUrl");
@@ -234,6 +243,7 @@ public class AdMessageCodecTest {
     builder.setCustomTargetingLists(
         Collections.singletonMap("cherry", Collections.singletonList("pie")));
     builder.setNonPersonalizedAds(true);
+    builder.setLocation(location);
     FlutterAdManagerAdRequest flutterAdManagerAdRequest = builder.build();
 
     final ByteBuffer message = codec.encodeMessage(flutterAdManagerAdRequest);
