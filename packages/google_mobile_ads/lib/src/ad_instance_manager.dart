@@ -643,7 +643,9 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.customTargetingLists);
       writeValue(buffer, value.nonPersonalizedAds);
       writeValue(buffer, value.neighboringContentUrls);
-      writeValue(buffer, value.httpTimeoutMillis);
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        writeValue(buffer, value.httpTimeoutMillis);
+      }
       writeValue(buffer, value.publisherProvidedId);
     } else if (value is AdRequest) {
       buffer.putUint8(_valueAdRequest);
@@ -651,7 +653,9 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.contentUrl);
       writeValue(buffer, value.nonPersonalizedAds);
       writeValue(buffer, value.neighboringContentUrls);
-      writeValue(buffer, value.httpTimeoutMillis);
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        writeValue(buffer, value.httpTimeoutMillis);
+      }
     } else if (value is RewardItem) {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
@@ -748,7 +752,9 @@ class AdMessageCodec extends StandardMessageCodec {
           nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
           neighboringContentUrls:
               readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
-          httpTimeoutMillis: readValueOfType(buffer.getUint8(), buffer),
+          httpTimeoutMillis: (defaultTargetPlatform == TargetPlatform.android)
+              ? readValueOfType(buffer.getUint8(), buffer)
+              : null,
         );
       case _valueRewardItem:
         return RewardItem(
@@ -793,7 +799,9 @@ class AdMessageCodec extends StandardMessageCodec {
           nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
           neighboringContentUrls:
               readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
-          httpTimeoutMillis: readValueOfType(buffer.getUint8(), buffer),
+          httpTimeoutMillis: (defaultTargetPlatform == TargetPlatform.android)
+              ? readValueOfType(buffer.getUint8(), buffer)
+              : null,
           publisherProvidedId: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueInitializationState:

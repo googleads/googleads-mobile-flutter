@@ -52,6 +52,7 @@
 @property NSArray<NSString *> *_Nullable keywords;
 @property NSString *_Nullable contentURL;
 @property BOOL nonPersonalizedAds;
+@property NSArray<NSString *> *_Nullable neighboringContentURLs;
 - (GADRequest *_Nonnull)asGADRequest;
 @end
 
@@ -99,6 +100,8 @@
 @interface FLTGAMAdRequest : FLTAdRequest
 @property NSDictionary<NSString *, NSString *> *_Nullable customTargeting;
 @property NSDictionary<NSString *, NSArray<NSString *> *> *_Nullable customTargetingLists;
+@property NSString *_Nullable pubProvidedID;
+
 - (GAMRequest *_Nonnull)asGAMRequest;
 @end
 

@@ -174,6 +174,8 @@ class AdRequest {
   final bool? nonPersonalizedAds;
 
   /// A custom timeout for HTTPS calls during an ad request.
+  ///
+  /// This is only supported in Android. This value is ignored on iOS.
   final int? httpTimeoutMillis;
 
   // TODO - location
@@ -213,6 +215,8 @@ class AdManagerAdRequest extends AdRequest {
   final Map<String, String>? customTargeting;
 
   /// Key-value pairs used for custom targeting.
+  ///
+  /// Any duplicate keys from [customTargeting] will be overwritten.
   final Map<String, List<String>>? customTargetingLists;
 
   /// The identifier used for frequency capping, audience segmentation

@@ -84,6 +84,8 @@
   request.keywords = @[ @"apple" ];
   request.contentURL = @"banana";
   request.nonPersonalizedAds = YES;
+  NSArray<NSString *> *contentURLs = @[ @"url-1.com", @"url-2.com" ];
+  request.neighboringContentURLs = contentURLs;
 
   NSData *encodedMessage = [_messageCodec encode:request];
 
@@ -91,6 +93,7 @@
   XCTAssertTrue([decodedRequest.keywords isEqualToArray:@[ @"apple" ]]);
   XCTAssertEqualObjects(decodedRequest.contentURL, @"banana");
   XCTAssertTrue(decodedRequest.nonPersonalizedAds);
+  XCTAssertEqualObjects(decodedRequest.neighboringContentURLs, contentURLs);
 }
 
 - (void)testEncodeDecodeGAMAdRequest {
@@ -100,6 +103,9 @@
   request.customTargeting = @{@"table" : @"linen"};
   request.customTargetingLists = @{@"go" : @[ @"lakers" ]};
   request.nonPersonalizedAds = YES;
+  NSArray<NSString *> *contentURLs = @[ @"url-1.com", @"url-2.com" ];
+  request.neighboringContentURLs = contentURLs;
+  request.pubProvidedID = @"pub-id";
   NSData *encodedMessage = [_messageCodec encode:request];
 
   FLTGAMAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
@@ -109,6 +115,8 @@
   XCTAssertTrue(
       [decodedRequest.customTargetingLists isEqualToDictionary:@{@"go" : @[ @"lakers" ]}]);
   XCTAssertTrue(decodedRequest.nonPersonalizedAds);
+  XCTAssertEqualObjects(decodedRequest.neighboringContentURLs, contentURLs);
+  XCTAssertEqualObjects(decodedRequest.pubProvidedID, @"pub-id");
 }
 
 - (void)testEncodeDecodeRewardItem {
