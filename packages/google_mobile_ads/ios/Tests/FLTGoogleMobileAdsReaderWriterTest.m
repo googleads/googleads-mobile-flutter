@@ -86,10 +86,7 @@
   request.nonPersonalizedAds = YES;
   NSArray<NSString *> *contentURLs = @[ @"url-1.com", @"url-2.com" ];
   request.neighboringContentURLs = contentURLs;
-  request.location =
-    [[FLTLocationParams alloc] initWithAccuracy:@1.5
-                                    longitude:@52
-                                     latitude:@123];
+  request.location = [[FLTLocationParams alloc] initWithAccuracy:@1.5 longitude:@52 latitude:@123];
   NSData *encodedMessage = [_messageCodec encode:request];
 
   FLTAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
@@ -112,10 +109,7 @@
   NSArray<NSString *> *contentURLs = @[ @"url-1.com", @"url-2.com" ];
   request.neighboringContentURLs = contentURLs;
   request.pubProvidedID = @"pub-id";
-  request.location =
-    [[FLTLocationParams alloc] initWithAccuracy:@1.5
-                                    longitude:@52
-                                     latitude:@123];
+  request.location = [[FLTLocationParams alloc] initWithAccuracy:@1.5 longitude:@52 latitude:@123];
   NSData *encodedMessage = [_messageCodec encode:request];
 
   FLTGAMAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];

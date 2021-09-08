@@ -48,7 +48,6 @@
 - (instancetype _Nonnull)initWithOrientation:(NSString *_Nonnull)orientation;
 @end
 
-
 @interface FLTLocationParams : NSObject
 
 @property NSNumber *_Nullable accuracy;
@@ -56,8 +55,8 @@
 @property NSNumber *_Nullable latitude;
 
 - (instancetype _Nonnull)initWithAccuracy:(NSNumber *_Nonnull)accuracy
-                                longitude: (NSNumber *_Nonnull)longitude
-                                 latitude: (NSNumber *_Nonnull)latitude;
+                                longitude:(NSNumber *_Nonnull)longitude
+                                 latitude:(NSNumber *_Nonnull)latitude;
 
 @end
 

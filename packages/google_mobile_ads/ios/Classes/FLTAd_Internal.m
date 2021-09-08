@@ -91,8 +91,8 @@
 @implementation FLTLocationParams
 
 - (instancetype _Nonnull)initWithAccuracy:(NSNumber *_Nonnull)accuracy
-                                longitude: (NSNumber *_Nonnull)longitude
-                                 latitude: (NSNumber *_Nonnull)latitude {
+                                longitude:(NSNumber *_Nonnull)longitude
+                                 latitude:(NSNumber *_Nonnull)latitude {
   self = [super init];
   if (self) {
     _accuracy = accuracy;

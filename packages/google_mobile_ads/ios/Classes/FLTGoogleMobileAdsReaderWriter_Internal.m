@@ -211,7 +211,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       return [[FLTLocationParams alloc] initWithAccuracy:[self readValueOfType:[self readByte]]
                                                longitude:[self readValueOfType:[self readByte]]
                                                 latitude:[self readValueOfType:[self readByte]]];
-    
     }
   }
   return [super readValueOfType:type];
