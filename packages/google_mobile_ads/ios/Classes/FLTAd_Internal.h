@@ -48,11 +48,25 @@
 - (instancetype _Nonnull)initWithOrientation:(NSString *_Nonnull)orientation;
 @end
 
+
+@interface FLTLocationParams : NSObject
+
+@property NSNumber *_Nullable accuracy;
+@property NSNumber *_Nullable longitude;
+@property NSNumber *_Nullable latitude;
+
+- (instancetype _Nonnull)initWithAccuracy:(NSNumber *_Nonnull)accuracy
+                                longitude: (NSNumber *_Nonnull)longitude
+                                 latitude: (NSNumber *_Nonnull)latitude;
+
+@end
+
 @interface FLTAdRequest : NSObject
 @property NSArray<NSString *> *_Nullable keywords;
 @property NSString *_Nullable contentURL;
 @property BOOL nonPersonalizedAds;
 @property NSArray<NSString *> *_Nullable neighboringContentURLs;
+@property FLTLocationParams *_Nullable location;
 - (GADRequest *_Nonnull)asGADRequest;
 @end
 
