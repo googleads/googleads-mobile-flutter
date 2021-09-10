@@ -32,6 +32,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
 
   AdManagerBannerAd? _adManagerBannerAd;
   bool _adManagerBannerAdIsLoaded = false;
+  double _adManagerBannerAdWidth = 200;
 
   NativeAd? _nativeAd;
   bool _nativeAdIsLoaded = false;
@@ -60,10 +61,29 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
               if (index == 10 &&
                   _adManagerBannerAdIsLoaded &&
                   adManagerBannerAd != null) {
-                return Container(
-                    height: adManagerBannerAd.sizes[0].height.toDouble(),
-                    width: adManagerBannerAd.sizes[0].width.toDouble(),
-                    child: AdWidget(ad: _adManagerBannerAd!));
+                return Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                        height: 500,
+                        width: _adManagerBannerAdWidth,
+                        child: AdWidget(ad: _adManagerBannerAd!)));
+              }
+              if (index == 11) {
+                return ElevatedButton(
+                    onPressed: () {
+                      double newWidth;
+                      if (_adManagerBannerAdWidth == 200) {
+                        newWidth = 100;
+                      } else if (_adManagerBannerAdWidth == 100) {
+                        newWidth = 150;
+                      } else {
+                        newWidth = 200;
+                      }
+                      setState(() {
+                        _adManagerBannerAdWidth = newWidth;
+                      });
+                    },
+                    child: Text('Change size'));
               }
 
               final NativeAd? nativeAd = _nativeAd;
@@ -130,9 +150,9 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
     )..load();
 
     _adManagerBannerAd = AdManagerBannerAd(
-      adUnitId: '/6499/example/banner',
+      adUnitId: '/6499/example/APIDemo/Fluid',
       request: AdManagerAdRequest(nonPersonalizedAds: true),
-      sizes: <AdSize>[AdSize.largeBanner],
+      sizes: <AdSize>[FluidAdSize()],
       listener: AdManagerBannerAdListener(
         onAdLoaded: (Ad ad) {
           print('$AdManagerBannerAd loaded.');

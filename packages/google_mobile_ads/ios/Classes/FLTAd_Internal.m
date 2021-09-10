@@ -88,6 +88,13 @@
 }
 @end
 
+@implementation FLTFluidSize
+- (instancetype _Nonnull)init {
+  self = [self initWithAdSize:kGADAdSizeFluid];
+  return self;
+}
+@end
+
 @implementation FLTAdRequest
 - (GADRequest *_Nonnull)asGADRequest {
   GADRequest *request = [GADRequest request];
