@@ -18,6 +18,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'reusable_inline_example.dart';
 
@@ -214,6 +215,11 @@ class _MyAppState extends State<MyApp> {
                   switch (result) {
                     case 'InterstitialAd':
                       _showInterstitialAd();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MockScreen()));
+
                       break;
                     case 'RewardedAd':
                       _showRewardedAd();
@@ -252,6 +258,50 @@ class _MyAppState extends State<MyApp> {
           ),
         );
       }),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class MockScreen extends StatelessWidget {
+  String url = 'https://support.google.com/admob/answer/6201362?hl=en';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Mock Screen'),
+      ),
+      body: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Always show Interstitial Ads while navigating to routes',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              SizedBox(
+                height: 60,
+              ),
+              MaterialButton(
+                  color: Colors.blue,
+                  child: Text('Tap for more info',
+                      style: TextStyle(color: Colors.white)),
+                  onPressed: () async {
+                    if (await canLaunch(url)) {
+                      await launch(
+                        url,
+                        forceSafariVC: false,
+                        forceWebView: false,
+                      );
+                    } else {
+                      throw 'Could not launch $url';
+                    }
+                  })
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -18,6 +18,7 @@ description: Demonstrates how to use the google mobile ads plugin.
 dependencies:
   flutter:
     sdk: flutter
+  url_launcher: ^6.0.10
   google_mobile_ads:
     path: ../
 
