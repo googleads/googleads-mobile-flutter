@@ -284,20 +284,21 @@ class MockScreen extends StatelessWidget {
                 height: 60,
               ),
               MaterialButton(
-                  color: Colors.blue,
-                  child: Text('Tap for more info',
-                      style: TextStyle(color: Colors.white)),
-                  onPressed: () async {
-                    if (await canLaunch(url)) {
-                      await launch(
-                        url,
-                        forceSafariVC: false,
-                        forceWebView: false,
-                      );
-                    } else {
-                      throw 'Could not launch $url';
-                    }
-                  })
+                color: Colors.blue,
+                onPressed: () async {
+                  if (await canLaunch(url)) {
+                    await launch(
+                      url,
+                      forceSafariVC: false,
+                      forceWebView: false,
+                    );
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                },
+                child: Text('Tap for more info',
+                    style: TextStyle(color: Colors.white)),
+              )
             ],
           ),
         ),
