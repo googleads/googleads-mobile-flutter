@@ -1379,8 +1379,7 @@ void main() {
 
     test('encode/decode $FluidAdSize', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      final ByteData byteData =
-      codec.encodeMessage(FluidAdSize())!;
+      final ByteData byteData = codec.encodeMessage(FluidAdSize())!;
 
       final FluidAdSize result = codec.decodeMessage(byteData);
       expect(result.width, -3);
