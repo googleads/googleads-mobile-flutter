@@ -167,7 +167,7 @@ void main() {
       expect(instanceManager.adFor(0), isNotNull);
 
       log.clear();
-      await createdAd.setImmersiveMode(true);
+      await createdAd.setImmersiveMode(false);
       expect(log, <Matcher>[
         isMethodCall('setImmersiveMode',
             arguments: {'adId': 0, 'immersiveModeEnabled': false})

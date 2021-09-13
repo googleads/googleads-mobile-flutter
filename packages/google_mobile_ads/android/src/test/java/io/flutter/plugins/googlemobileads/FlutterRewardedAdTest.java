@@ -394,6 +394,6 @@ public class FlutterRewardedAdTest {
 
     flutterRewardedAd.load();
     flutterRewardedAd.setImmersiveMode(true);
-    verify(mockRewardedAd).setImmersiveMode(anyBoolean());
+    verify(mockRewardedAd).setImmersiveMode(true);
   }
 }

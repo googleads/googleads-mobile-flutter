@@ -207,7 +207,7 @@ public class FlutterAdManagerInterstitialAdTest {
 
     flutterAdManagerInterstitialAd.load();
     flutterAdManagerInterstitialAd.setImmersiveMode(true);
-    verify(mockAdManagerAd).setImmersiveMode(anyBoolean());
+    verify(mockAdManagerAd).setImmersiveMode(true);
   }
 
   @Test
