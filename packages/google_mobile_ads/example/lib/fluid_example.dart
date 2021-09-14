@@ -16,8 +16,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'constants.dart';
-import 'dart:io' show Platform;
 
 /// This example demonstrates fluid ads, where the ad objects
 /// live for the lifetime of this widget.
@@ -28,7 +26,6 @@ class FluidExample extends StatefulWidget {
 
 class _FluidExampleExampleState extends State<FluidExample> {
   AdManagerBannerAd? _adManagerBannerAd;
-  bool _adManagerBannerAdIsLoaded = false;
   double _adManagerBannerAdWidth = 200;
 
   @override
@@ -75,7 +72,6 @@ class _FluidExampleExampleState extends State<FluidExample> {
         onAdLoaded: (Ad ad) {
           print('$AdManagerBannerAd loaded.');
           setState(() {
-            _adManagerBannerAdIsLoaded = true;
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
