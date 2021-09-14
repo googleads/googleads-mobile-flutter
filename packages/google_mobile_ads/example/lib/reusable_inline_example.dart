@@ -19,6 +19,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'constants.dart';
 import 'dart:io' show Platform;
 
+import 'fluid_example.dart';
+
 /// This example demonstrates inline ads in a list view, where the ad objects
 /// live for the lifetime of this widget.
 class ReusableInlineExample extends StatefulWidget {
@@ -32,7 +34,6 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
 
   AdManagerBannerAd? _adManagerBannerAd;
   bool _adManagerBannerAdIsLoaded = false;
-  double _adManagerBannerAdWidth = 200;
 
   NativeAd? _nativeAd;
   bool _nativeAdIsLoaded = false;
@@ -61,35 +62,20 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
               if (index == 10 &&
                   _adManagerBannerAdIsLoaded &&
                   adManagerBannerAd != null) {
-                return Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                        height: 500,
-                        width: _adManagerBannerAdWidth,
-                        child: AdWidget(ad: _adManagerBannerAd!)));
-              }
-              if (index == 11) {
-                return ElevatedButton(
-                    onPressed: () {
-                      double newWidth;
-                      if (_adManagerBannerAdWidth == 200) {
-                        newWidth = 100;
-                      } else if (_adManagerBannerAdWidth == 100) {
-                        newWidth = 150;
-                      } else {
-                        newWidth = 200;
-                      }
-                      setState(() {
-                        _adManagerBannerAdWidth = newWidth;
-                      });
-                    },
-                    child: Text('Change size'));
+                return Container(
+                    height: adManagerBannerAd.sizes[0].height.toDouble(),
+                    width: adManagerBannerAd.sizes[0].width.toDouble(),
+                    child: AdWidget(ad: _adManagerBannerAd!));
               }
 
               final NativeAd? nativeAd = _nativeAd;
               if (index == 15 && _nativeAdIsLoaded && nativeAd != null) {
                 return Container(
                     width: 250, height: 350, child: AdWidget(ad: nativeAd));
+              }
+
+              if (index == 18) {
+                return FluidExample();
               }
 
               return Text(
@@ -150,9 +136,9 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
     )..load();
 
     _adManagerBannerAd = AdManagerBannerAd(
-      adUnitId: '/6499/example/APIDemo/Fluid',
+      adUnitId: '/6499/example/banner',
       request: AdManagerAdRequest(nonPersonalizedAds: true),
-      sizes: <AdSize>[FluidAdSize()],
+      sizes: <AdSize>[AdSize.largeBanner],
       listener: AdManagerBannerAdListener(
         onAdLoaded: (Ad ad) {
           print('$AdManagerBannerAd loaded.');
