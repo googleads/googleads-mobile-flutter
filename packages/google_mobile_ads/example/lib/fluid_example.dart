@@ -71,8 +71,7 @@ class _FluidExampleExampleState extends State<FluidExample> {
       listener: AdManagerBannerAdListener(
         onAdLoaded: (Ad ad) {
           print('$AdManagerBannerAd loaded.');
-          setState(() {
-          });
+          setState(() {});
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('$AdManagerBannerAd failedToLoad: $error');
