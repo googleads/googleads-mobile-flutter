@@ -23,7 +23,6 @@ import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
-import io.flutter.plugins.googlemobileads.FlutterAdSize.FluidAdSize;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -181,7 +180,7 @@ class AdMessageCodec extends StandardMessageCodec {
             (Integer) readValueOfType(buffer.get(), buffer),
             (Integer) readValueOfType(buffer.get(), buffer));
       case VALUE_FLUID_AD_SIZE:
-        return new FluidAdSize();
+        return new FlutterAdSize.FluidAdSize();
       case VALUE_AD_REQUEST:
         return new FlutterAdRequest.Builder()
             .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))

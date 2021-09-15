@@ -26,7 +26,7 @@ class FluidExample extends StatefulWidget {
 
 class _FluidExampleExampleState extends State<FluidExample> {
   AdManagerBannerAd? _adManagerBannerAd;
-  double _adManagerBannerAdWidth = 200;
+  double _adManagerBannerAdWidth = 200.0;
 
   @override
   Widget build(BuildContext context) => Center(
@@ -38,18 +38,18 @@ class _FluidExampleExampleState extends State<FluidExample> {
                 Align(
                     alignment: Alignment.center,
                     child: Container(
-                        height: 500,
+                        height: 500.0,
                         width: _adManagerBannerAdWidth,
                         child: AdWidget(ad: _adManagerBannerAd!))),
                 ElevatedButton(
                     onPressed: () {
                       double newWidth;
-                      if (_adManagerBannerAdWidth == 200) {
-                        newWidth = 100;
-                      } else if (_adManagerBannerAdWidth == 100) {
-                        newWidth = 150;
+                      if (_adManagerBannerAdWidth == 200.0) {
+                        newWidth = 100.0;
+                      } else if (_adManagerBannerAdWidth == 100.0) {
+                        newWidth = 150.0;
                       } else {
-                        newWidth = 200;
+                        newWidth = 200.0;
                       }
                       setState(() {
                         _adManagerBannerAdWidth = newWidth;
