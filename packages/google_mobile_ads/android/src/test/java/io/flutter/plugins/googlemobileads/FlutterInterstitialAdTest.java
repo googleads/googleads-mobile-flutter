@@ -246,7 +246,7 @@ public class FlutterInterstitialAdTest {
             any(AdRequest.class),
             any(InterstitialAdLoadCallback.class));
     flutterInterstitialAd.load();
-    flutterInterstitialAd.setImmersiveMode(false);
-    verify(mockAd).setImmersiveMode(eq(false));
+    flutterInterstitialAd.setImmersiveMode(true);
+    verify(mockAd).setImmersiveMode(true);
   }
 }

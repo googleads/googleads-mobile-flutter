@@ -1,3 +1,8 @@
+## 0.13.5
+* Adds support for Fluid Ad Size (Ad Manager only)
+Android - https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size
+iOS - https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size
+
 ## 0.13.4
 
 * Adds support for muting and setting the volume level of the app.

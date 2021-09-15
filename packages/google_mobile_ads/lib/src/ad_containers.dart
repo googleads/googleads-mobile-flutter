@@ -251,6 +251,12 @@ class SmartBannerAdSize extends AdSize {
   final Orientation orientation;
 }
 
+/// A dynamically sized banner that matches its parent's width and content height.
+class FluidAdSize extends AdSize {
+  /// Default constructor for [FluidAdSize].
+  const FluidAdSize() : super(width: -3, height: -3);
+}
+
 /// [AdSize] represents the size of a banner ad.
 ///
 /// There are six sizes available, which are the same for both iOS and Android.
@@ -284,6 +290,9 @@ class AdSize {
 
   /// The leaderboard (728x90) size.
   static const AdSize leaderboard = AdSize(width: 728, height: 90);
+
+  /// A dynamically sized banner that matches its parent's width and expands/contracts its height to match the ad's content after loading completes.
+  static const AdSize fluid = FluidAdSize();
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
   ///

@@ -183,6 +183,15 @@ public class AdMessageCodecTest {
   }
 
   @Test
+  public void adMessageCodec_encodeFluidAdSize() {
+    final ByteBuffer data = testCodec.encodeMessage(new FlutterAdSize.FluidAdSize());
+
+    final FlutterAdSize.FluidAdSize result =
+        (FlutterAdSize.FluidAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
+    assertEquals(result.size, AdSize.FLUID);
+  }
+
+  @Test
   public void adMessageCodec_nativeAdOptionsNull() {
     final ByteBuffer data =
         testCodec.encodeMessage(new FlutterNativeAdOptions(null, null, null, null, null, null));
