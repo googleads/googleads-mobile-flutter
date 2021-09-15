@@ -22,6 +22,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
+import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
@@ -35,6 +37,26 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 public class FlutterAdLoader {
 
   public FlutterAdLoader() {}
+
+  /** Load an app open ad. */
+  public void loadAppOpen(
+      @NonNull Context context,
+      @NonNull String adUnitId,
+      @NonNull AdRequest adRequest,
+      int orientation,
+      @NonNull AppOpenAdLoadCallback loadCallback) {
+    AppOpenAd.load(context, adUnitId, adRequest, orientation, loadCallback);
+  }
+
+  /** Load an ad manager app open ad. */
+  public void loadAdManagerAppOpen(
+      @NonNull Context context,
+      @NonNull String adUnitId,
+      @NonNull AdManagerAdRequest adRequest,
+      int orientation,
+      @NonNull AppOpenAdLoadCallback loadCallback) {
+    AppOpenAd.load(context, adUnitId, adRequest, orientation, loadCallback);
+  }
 
   /** Load an interstitial ad. */
   public void loadInterstitial(

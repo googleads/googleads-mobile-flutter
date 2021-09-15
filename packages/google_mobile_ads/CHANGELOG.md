@@ -2,6 +2,10 @@
 * Adds support for Fluid Ad Size (Ad Manager only)
 Android - https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size
 iOS - https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size
+* Adds support for app open. 
+  * Implementation guidance can be found [here](https://developers.devsite.corp.google.com/admob/flutter/app-open).
+  * As a reference please also see the [example app](https://github.com/googleads/googleads-mobile-flutter/tree/master/packages/app_open_example).
+  * Best practices can be found [here](https://support.google.com/admob/answer/9341964?hl=en).
 
 ## 0.13.4
 
