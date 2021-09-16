@@ -14,6 +14,11 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdSize;
@@ -29,12 +34,12 @@ import java.util.List;
  */
 class FlutterAdManagerBannerAd extends FlutterAd implements FlutterAdLoadedListener {
 
-  @NonNull private final AdInstanceManager manager;
+  @NonNull protected final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final List<FlutterAdSize> sizes;
   @NonNull private final FlutterAdManagerAdRequest request;
   @NonNull private final BannerAdCreator bannerAdCreator;
-  @Nullable private AdManagerAdView adView;
+  @Nullable protected AdManagerAdView adView;
 
   /**
    * Constructs a `FlutterAdManagerBannerAd`.
@@ -64,6 +69,9 @@ class FlutterAdManagerBannerAd extends FlutterAd implements FlutterAdLoadedListe
   @Override
   void load() {
     adView = bannerAdCreator.createAdManagerAdView();
+    if (this instanceof FluidAdManagerBannerAd) {
+      adView.setLayoutParams(new LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+    }
     adView.setAdUnitId(adUnitId);
     adView.setAppEventListener(
         new AppEventListener() {

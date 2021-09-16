@@ -25,11 +25,15 @@ class FluidExample extends StatefulWidget {
 }
 
 class _FluidExampleExampleState extends State<FluidExample> {
-  AdManagerBannerAd? _adManagerBannerAd;
-  double _adManagerBannerAdWidth = 200.0;
+  FluidAdManagerBannerAd? _fluidAd;
+  double _width = 200.0;
 
   @override
-  Widget build(BuildContext context) => Center(
+  Widget build(BuildContext context) =>  Scaffold(
+    appBar: AppBar(
+      title: Text('Fluid example'),
+    ),
+    body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
@@ -37,48 +41,46 @@ class _FluidExampleExampleState extends State<FluidExample> {
               children: [
                 Align(
                     alignment: Alignment.center,
-                    child: Container(
-                        height: 500.0,
-                        width: _adManagerBannerAdWidth,
-                        child: AdWidget(ad: _adManagerBannerAd!))),
+                    child: FluidAdWidget(
+                        width: _width,
+                        ad: _fluidAd!,)),
                 ElevatedButton(
                     onPressed: () {
                       double newWidth;
-                      if (_adManagerBannerAdWidth == 200.0) {
+                      if (_width == 200.0) {
                         newWidth = 100.0;
-                      } else if (_adManagerBannerAdWidth == 100.0) {
+                      } else if (_width == 100.0) {
                         newWidth = 150.0;
                       } else {
                         newWidth = 200.0;
                       }
                       setState(() {
-                        _adManagerBannerAdWidth = newWidth;
+                        _width = newWidth;
                       });
                     },
                     child: Text('Change size'))
               ]),
         ),
-      );
+      )
+  );
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Create the ad objects and load ads.
-    _adManagerBannerAd = AdManagerBannerAd(
+    _fluidAd = FluidAdManagerBannerAd(
       adUnitId: '/6499/example/APIDemo/Fluid',
       request: AdManagerAdRequest(nonPersonalizedAds: true),
-      sizes: <AdSize>[AdSize.fluid],
       listener: AdManagerBannerAdListener(
         onAdLoaded: (Ad ad) {
-          print('$AdManagerBannerAd loaded.');
-          setState(() {});
+          print('$_fluidAd loaded.');
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$AdManagerBannerAd failedToLoad: $error');
+          print('$_fluidAd failedToLoad: $error');
           ad.dispose();
         },
-        onAdOpened: (Ad ad) => print('$AdManagerBannerAd onAdOpened.'),
-        onAdClosed: (Ad ad) => print('$AdManagerBannerAd onAdClosed.'),
+        onAdOpened: (Ad ad) => print('$_fluidAd onAdOpened.'),
+        onAdClosed: (Ad ad) => print('$_fluidAd onAdClosed.'),
       ),
     )..load();
   }
@@ -86,6 +88,6 @@ class _FluidExampleExampleState extends State<FluidExample> {
   @override
   void dispose() {
     super.dispose();
-    _adManagerBannerAd?.dispose();
+    _fluidAd?.dispose();
   }
 }

@@ -517,6 +517,121 @@ class _AdWidgetState extends State<AdWidget> {
   }
 }
 
+/// A widget for displaying [FluidAdManagerBannerAd].
+///
+/// This widget resizes its height based on the rendered width.
+class FluidAdWidget extends StatefulWidget {
+
+  /// Constructs a [FluidAdWidget].
+  const FluidAdWidget({
+    Key? key,
+    required this.ad,
+    double? width}) : this.width = width, super(key: key);
+
+  /// Ad to be displayed as a widget.
+  final FluidAdManagerBannerAd ad;
+
+  /// The width to set for the ad widget.
+  final double? width;
+
+  @override
+  _FluidAdWidgetState createState() => _FluidAdWidgetState();
+}
+
+class _FluidAdWidgetState extends State<FluidAdWidget> {
+  bool _adIdAlreadyMounted = false;
+  bool _adLoadNotCalled = false;
+  double _height = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    final int? adId = instanceManager.adIdFor(widget.ad);
+    if (adId != null) {
+      if (instanceManager.isWidgetAdIdMounted(adId)) {
+        _adIdAlreadyMounted = true;
+      }
+      instanceManager.mountWidgetAdId(adId);
+    } else {
+      _adLoadNotCalled = true;
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    final int? adId = instanceManager.adIdFor(widget.ad);
+    if (adId != null) {
+      instanceManager.unmountWidgetAdId(adId);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_adIdAlreadyMounted) {
+      throw FlutterError.fromParts(<DiagnosticsNode>[
+        ErrorSummary('This AdWidget is already in the Widget tree'),
+        ErrorHint(
+            'If you placed this AdWidget in a list, make sure you create a new instance '
+                'in the builder function with a unique ad object.'),
+        ErrorHint(
+            'Make sure you are not using the same ad object in more than one AdWidget.'),
+      ]);
+    }
+    if (_adLoadNotCalled) {
+      throw FlutterError.fromParts(<DiagnosticsNode>[
+        ErrorSummary(
+            'AdWidget requires Ad.load to be called before AdWidget is inserted into the tree'),
+        ErrorHint(
+            'Parameter ad is not loaded. Call Ad.load before AdWidget is inserted into the tree.'),
+      ]);
+    }
+
+    widget.ad.onFluidAdHeightChangedListener = (ad, height) {
+      setState(() {
+        _height = height;
+      });
+    };
+
+    Widget platformView;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      platformView = PlatformViewLink(
+        viewType: '${instanceManager.channel.name}/ad_widget',
+        surfaceFactory:
+            (BuildContext context, PlatformViewController controller) {
+          return AndroidViewSurface(
+            controller: controller as AndroidViewController,
+            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+          );
+        },
+        onCreatePlatformView: (PlatformViewCreationParams params) {
+          return PlatformViewsService.initSurfaceAndroidView(
+            id: params.id,
+            viewType: '${instanceManager.channel.name}/ad_widget',
+            layoutDirection: TextDirection.ltr,
+            creationParams: instanceManager.adIdFor(widget.ad),
+            creationParamsCodec: StandardMessageCodec(),
+          )
+            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+            ..create();
+        },
+      );
+    } else {
+      platformView = UiKitView(
+        viewType: '${instanceManager.channel.name}/ad_widget',
+        creationParams: instanceManager.adIdFor(widget.ad),
+        creationParamsCodec: StandardMessageCodec(),
+      );
+    }
+
+    return Container(
+      height: (_height / MediaQuery.of(context).devicePixelRatio),
+      width: widget.width,
+      child: platformView,);
+  }
+}
+
 /// A banner ad.
 ///
 /// This ad can either be overlaid on top of all flutter widgets as a static
@@ -561,6 +676,28 @@ class BannerAd extends AdWithView {
   @override
   Future<void> load() async {
     await instanceManager.loadBannerAd(this);
+  }
+}
+
+class FluidAdManagerBannerAd extends AdManagerBannerAd {
+
+  FluidAdManagerBannerAd({
+    required String adUnitId,
+    required AdManagerBannerAdListener listener,
+    required AdManagerAdRequest request,
+    OnFluidAdHeightChangedListener? onFluidAdHeightChangedListener,
+  }): this.onFluidAdHeightChangedListener= onFluidAdHeightChangedListener,
+      super(
+        sizes: [FluidAdSize()],
+        adUnitId: adUnitId,
+        listener: listener,
+        request: request,);
+
+  OnFluidAdHeightChangedListener? onFluidAdHeightChangedListener;
+
+  @override
+  Future<void> load() async {
+    return instanceManager.loadFluidAd(this);
   }
 }
 

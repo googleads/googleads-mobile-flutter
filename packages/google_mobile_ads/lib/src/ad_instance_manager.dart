@@ -181,9 +181,18 @@ class AdInstanceManager {
       case 'onPaidEvent':
         _invokePaidEvent(ad, eventName, arguments);
         break;
+      case 'onFluidAdHeightChanged':
+        _invokeFluidAdHeightChanged(ad, arguments);
+        break;
       default:
         debugPrint('invalid ad event name: $eventName');
     }
+  }
+
+  void _invokeFluidAdHeightChanged(Ad ad, Map<dynamic, dynamic> arguments) {
+    assert (ad is FluidAdManagerBannerAd);
+    (ad as FluidAdManagerBannerAd)
+        .onFluidAdHeightChangedListener?.call(ad, arguments['height'].toDouble());
   }
 
   void _invokeOnAdLoaded(
@@ -506,6 +515,27 @@ class AdInstanceManager {
     _loadedAds[adId] = ad;
     return channel.invokeMethod<void>(
       'loadAdManagerBannerAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'sizes': ad.sizes,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+      },
+    );
+  }
+
+  /// Starts loading the ad if not previously loaded.
+  ///
+  /// Loading also terminates if ad is already in the process of loading.
+  Future<void> loadFluidAd(FluidAdManagerBannerAd ad) {
+    if (adIdFor(ad) != null) {
+      return Future<void>.value();
+    }
+
+    final int adId = _nextAdId++;
+    _loadedAds[adId] = ad;
+    return channel.invokeMethod<void>(
+      'loadFluidAd',
       <dynamic, dynamic>{
         'adId': adId,
         'sizes': ad.sizes,

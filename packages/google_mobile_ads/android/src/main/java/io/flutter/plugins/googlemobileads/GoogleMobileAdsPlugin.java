@@ -353,6 +353,19 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         adManagerBannerAd.load();
         result.success(null);
         break;
+      case "loadFluidAd":
+        final FluidAdManagerBannerAd fluidAd =
+            new FluidAdManagerBannerAd(
+                call.<Integer>argument("adId"),
+                instanceManager,
+                call.<String>argument("adUnitId"),
+                call.<List<FlutterAdSize>>argument("sizes"),
+                call.<FlutterAdManagerAdRequest>argument("request"),
+                new BannerAdCreator(instanceManager.activity));
+        instanceManager.trackAd(fluidAd, call.<Integer>argument("adId"));
+        fluidAd.load();
+        result.success(null);
+        break;
       case "loadAdManagerInterstitialAd":
         final FlutterAdManagerInterstitialAd adManagerInterstitialAd =
             new FlutterAdManagerInterstitialAd(

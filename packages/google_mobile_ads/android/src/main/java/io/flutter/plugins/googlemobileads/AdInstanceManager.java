@@ -197,6 +197,14 @@ class AdInstanceManager {
     invokeOnAdEvent(arguments);
   }
 
+  void onFluidAdHeightChanged(int adId, int height) {
+    final Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adId);
+    arguments.put("eventName", "onFluidAdHeightChanged");
+    arguments.put("height", height);
+    invokeOnAdEvent(arguments);
+  }
+
   boolean showAdWithId(int id) {
     final FlutterAd.FlutterOverlayAd ad = (FlutterAd.FlutterOverlayAd) adForId(id);
 
