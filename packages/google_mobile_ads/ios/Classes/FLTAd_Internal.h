@@ -164,6 +164,16 @@
 - (GADRewardedAd *_Nullable)rewardedAd;
 @end
 
+
+@interface FLTAppOpenAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                                  request:(FLTAdRequest *_Nonnull)request
+                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                              orientation:(NSNumber *_Nonnull)orientation
+                                     adId:(NSNumber *_Nonnull)adId;
+- (GADAppOpenAd *_Nullable)appOpenAd;
+@end
+
 @interface FLTVideoOptions : NSObject
 @property(readonly) NSNumber *_Nullable clickToExpandRequested;
 @property(readonly) NSNumber *_Nullable customControlsRequested;
