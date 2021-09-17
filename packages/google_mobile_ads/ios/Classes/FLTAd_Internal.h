@@ -164,6 +164,7 @@
 - (GADRewardedAd *_Nullable)rewardedAd;
 @end
 
+
 @interface FLTAppOpenAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
