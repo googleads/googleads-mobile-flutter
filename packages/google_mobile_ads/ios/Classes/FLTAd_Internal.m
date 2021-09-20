@@ -392,6 +392,8 @@
   }
 
   UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
+  [scrollView setShowsHorizontalScrollIndicator:NO];
+  [scrollView setShowsVerticalScrollIndicator:NO];
   [scrollView addSubview:_bannerView];
 
   _bannerView.translatesAutoresizingMaskIntoConstraints = false;
@@ -414,20 +416,6 @@
 - (void)adView:(GADBannerView *)bannerView willChangeAdSizeTo:(GADAdSize)adSize {
   CGFloat height = adSize.size.height;
   [self.manager onFluidAdHeightChanged:self height:height];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary *)change
-                       context:(void *)context {
-  if (object == self.bannerView && [keyPath isEqualToString:@"frame"]) {
-    // Bounds of the ad view have changes. Notify flutter.
-    CGFloat newHeight = self.bannerView.bounds.size.height;
-    if (newHeight != _height) {
-      [self.manager onFluidAdHeightChanged:self height:newHeight];
-    }
-    _height = newHeight;
-  }
 }
 
 #pragma mark - GADAppEventDelegate
