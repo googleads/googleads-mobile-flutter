@@ -18,8 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'constants.dart';
 
-/// This example demonstrates fluid ads, where the ad objects
-/// live for the lifetime of this widget.
+/// This example demonstrates fluid ads,.
 class FluidExample extends StatefulWidget {
   @override
   _FluidExampleExampleState createState() => _FluidExampleExampleState();
@@ -30,11 +29,11 @@ class _FluidExampleExampleState extends State<FluidExample> {
   double _width = 200.0;
 
   @override
-  Widget build(BuildContext context) =>  Scaffold(
-    appBar: AppBar(
-      title: Text('Fluid example'),
-    ),
-    body: Center(
+  Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(
+        title: Text('Fluid example'),
+      ),
+      body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: ListView.separated(
@@ -50,24 +49,25 @@ class _FluidExampleExampleState extends State<FluidExample> {
                   alignment: Alignment.center,
                   child: FluidAdWidget(
                     width: _width,
-                    ad: _fluidAd!,),
+                    ad: _fluidAd!,
+                  ),
                 );
               } else if (index == 2) {
-              return ElevatedButton(
-                onPressed: () {
-                double newWidth;
-                if (_width == 200.0) {
-                newWidth = 100.0;
-                } else if (_width == 100.0) {
-                newWidth = 150.0;
-                } else {
-                newWidth = 200.0;
-                }
-                setState(() {
-                _width = newWidth;
-                });
-                },
-                child: Text('Change size'));
+                return ElevatedButton(
+                    onPressed: () {
+                      double newWidth;
+                      if (_width == 200.0) {
+                        newWidth = 100.0;
+                      } else if (_width == 100.0) {
+                        newWidth = 150.0;
+                      } else {
+                        newWidth = 200.0;
+                      }
+                      setState(() {
+                        _width = newWidth;
+                      });
+                    },
+                    child: Text('Change size'));
               }
               return Text(
                 Constants.placeholderText,
@@ -76,8 +76,7 @@ class _FluidExampleExampleState extends State<FluidExample> {
             },
           ),
         ),
-      )
-  );
+      ));
 
   @override
   void didChangeDependencies() {

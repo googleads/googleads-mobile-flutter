@@ -37,8 +37,8 @@ typedef OnPaidEventCallback = void Function(
     Ad ad, double valueMicros, PrecisionType precision, String currencyCode);
 
 /// The callback type for when a fluid ad's height changes.
-typedef OnFluidAdHeightChangedListener =
-  void Function(FluidAdManagerBannerAd ad, double height);
+typedef OnFluidAdHeightChangedListener = void Function(
+    FluidAdManagerBannerAd ad, double height);
 
 /// Allowed constants for precision type in [OnPaidEventCallback].
 enum PrecisionType {

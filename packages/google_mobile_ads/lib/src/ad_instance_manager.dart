@@ -193,9 +193,10 @@ class AdInstanceManager {
   }
 
   void _invokeFluidAdHeightChanged(Ad ad, Map<dynamic, dynamic> arguments) {
-    assert (ad is FluidAdManagerBannerAd);
+    assert(ad is FluidAdManagerBannerAd);
     (ad as FluidAdManagerBannerAd)
-        .onFluidAdHeightChangedListener?.call(ad, arguments['height'].toDouble());
+        .onFluidAdHeightChangedListener
+        ?.call(ad, arguments['height'].toDouble());
   }
 
   void _invokeOnAdLoaded(

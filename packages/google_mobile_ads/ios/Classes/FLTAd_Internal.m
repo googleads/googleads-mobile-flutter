@@ -395,21 +395,19 @@
   [scrollView addSubview:_bannerView];
 
   _bannerView.translatesAutoresizingMaskIntoConstraints = false;
-  NSLayoutConstraint *width =[NSLayoutConstraint
-                                      constraintWithItem:_bannerView
-                                      attribute:NSLayoutAttributeWidth
-                                      relatedBy:0
-                                      toItem:scrollView
-                                      attribute:NSLayoutAttributeWidth
-                                      multiplier:1.0
-                                      constant:0];
+  NSLayoutConstraint *width = [NSLayoutConstraint constraintWithItem:_bannerView
+                                                           attribute:NSLayoutAttributeWidth
+                                                           relatedBy:0
+                                                              toItem:scrollView
+                                                           attribute:NSLayoutAttributeWidth
+                                                          multiplier:1.0
+                                                            constant:0];
   [scrollView addConstraint:width];
   _containerView = scrollView;
-  [_bannerView.widthAnchor constraintEqualToAnchor:scrollView.widthAnchor];
-  [_bannerView.topAnchor constraintEqualToAnchor:scrollView.topAnchor];
+  [_bannerView.widthAnchor constraintEqualToAnchor:scrollView.widthAnchor].active = YES;
+  [_bannerView.topAnchor constraintEqualToAnchor:scrollView.topAnchor].active = YES;
   return scrollView;
 }
-
 
 #pragma mark - GADAdSizeDelegate
 
@@ -418,8 +416,10 @@
   [self.manager onFluidAdHeightChanged:self height:height];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
   if (object == self.bannerView && [keyPath isEqualToString:@"frame"]) {
     // Bounds of the ad view have changes. Notify flutter.
     CGFloat newHeight = self.bannerView.bounds.size.height;

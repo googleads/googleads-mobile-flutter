@@ -522,12 +522,9 @@ class _AdWidgetState extends State<AdWidget> {
 ///
 /// This widget resizes its height based on the rendered width.
 class FluidAdWidget extends StatefulWidget {
-
   /// Constructs a [FluidAdWidget].
-  const FluidAdWidget({
-    Key? key,
-    required this.ad,
-    double? width}) : this.width = width, super(key: key);
+  const FluidAdWidget({Key? key, required this.ad, this.width})
+      : super(key: key);
 
   /// Ad to be displayed as a widget.
   final FluidAdManagerBannerAd ad;
@@ -574,7 +571,7 @@ class _FluidAdWidgetState extends State<FluidAdWidget> {
         ErrorSummary('This AdWidget is already in the Widget tree'),
         ErrorHint(
             'If you placed this AdWidget in a list, make sure you create a new instance '
-                'in the builder function with a unique ad object.'),
+            'in the builder function with a unique ad object.'),
         ErrorHint(
             'Make sure you are not using the same ad object in more than one AdWidget.'),
       ]);
@@ -632,7 +629,8 @@ class _FluidAdWidgetState extends State<FluidAdWidget> {
     return Container(
       height: max(0, height),
       width: widget.width,
-      child: platformView,);
+      child: platformView,
+    );
   }
 }
 
@@ -684,18 +682,17 @@ class BannerAd extends AdWithView {
 }
 
 class FluidAdManagerBannerAd extends AdManagerBannerAd {
-
   FluidAdManagerBannerAd({
     required String adUnitId,
     required AdManagerBannerAdListener listener,
     required AdManagerAdRequest request,
-    OnFluidAdHeightChangedListener? onFluidAdHeightChangedListener,
-  }): this.onFluidAdHeightChangedListener= onFluidAdHeightChangedListener,
-      super(
-        sizes: [FluidAdSize()],
-        adUnitId: adUnitId,
-        listener: listener,
-        request: request,);
+    this.onFluidAdHeightChangedListener,
+  }) : super(
+          sizes: [FluidAdSize()],
+          adUnitId: adUnitId,
+          listener: listener,
+          request: request,
+        );
 
   OnFluidAdHeightChangedListener? onFluidAdHeightChangedListener;
 

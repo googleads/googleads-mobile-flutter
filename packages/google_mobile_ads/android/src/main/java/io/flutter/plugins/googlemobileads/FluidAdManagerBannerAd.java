@@ -17,7 +17,6 @@ package io.flutter.plugins.googlemobileads;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ScrollView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,8 +38,7 @@ final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
       @NonNull String adUnitId,
       @NonNull List<FlutterAdSize> sizes,
       @NonNull FlutterAdManagerAdRequest request,
-      @NonNull BannerAdCreator bannerAdCreator
-  ) {
+      @NonNull BannerAdCreator bannerAdCreator) {
     super(
         adId,
         manager,
@@ -53,17 +51,26 @@ final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
   @Override
   public void onAdLoaded() {
     if (adView != null) {
-      adView.addOnLayoutChangeListener(new OnLayoutChangeListener() {
-        @Override
-        public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft,
-            int oldTop, int oldRight, int oldBottom) {
-          // Forward the new height to its container.
-          if (v.getMeasuredHeight() != height) {
-            manager.onFluidAdHeightChanged(adId, v.getMeasuredHeight());
-          }
-          height = v.getMeasuredHeight();
-        }
-      });
+      adView.addOnLayoutChangeListener(
+          new OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(
+                View v,
+                int left,
+                int top,
+                int right,
+                int bottom,
+                int oldLeft,
+                int oldTop,
+                int oldRight,
+                int oldBottom) {
+              // Forward the new height to its container.
+              if (v.getMeasuredHeight() != height) {
+                manager.onFluidAdHeightChanged(adId, v.getMeasuredHeight());
+              }
+              height = v.getMeasuredHeight();
+            }
+          });
       manager.onAdLoaded(adId, adView.getResponseInfo());
     }
   }

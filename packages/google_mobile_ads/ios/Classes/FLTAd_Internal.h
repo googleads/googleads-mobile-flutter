@@ -142,14 +142,12 @@
 /**
  * An extension of`GAMBannerAd` for fluid ad size.
  */
-@interface FLTFluidGAMBannerAd : FLTGAMBannerAd
+@interface FLTFluidGAMBannerAd : FLTGAMBannerAd <GADAdSizeDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTGAMAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
 @end
-
-
 
 @interface FLTInterstitialAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
