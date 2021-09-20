@@ -137,6 +137,9 @@ class AdInstanceManager {
       case 'onPaidEvent':
         _invokePaidEvent(ad, eventName, arguments);
         break;
+      case 'onFluidAdHeightChanged':
+        _invokeFluidAdHeightChanged(ad, arguments);
+        break;
       default:
         debugPrint('invalid ad event name: $eventName');
     }

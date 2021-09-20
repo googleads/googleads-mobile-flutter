@@ -16,6 +16,8 @@ package io.flutter.plugins.googlemobileads;
 
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ScrollView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,7 +29,7 @@ import java.util.List;
 /** A subclass of {@link FlutterAdManagerBannerAd} specifically for fluid ad size. */
 final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
 
-  @Nullable private ScrollView containerView;
+  @Nullable private ViewGroup containerView;
 
   private int height = -1;
 
@@ -57,7 +59,7 @@ final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
             int oldTop, int oldRight, int oldBottom) {
           // Forward the new height to its container.
           if (v.getMeasuredHeight() != height) {
-            manager.onFluidAdHeightChanged(adId, height);
+            manager.onFluidAdHeightChanged(adId, v.getMeasuredHeight());
           }
           height = v.getMeasuredHeight();
         }
@@ -77,7 +79,10 @@ final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
     }
     // Place the ad view inside a scroll view. This allows the height of the ad view to overflow
     // it container so we can calculate the height and send it back to flutter.
-    containerView = new ScrollView(manager.activity);
+    ScrollView scrollView = new ScrollView(manager.activity);
+    scrollView.setClipChildren(false);
+    scrollView.setVerticalScrollBarEnabled(false);
+    containerView = scrollView;
     containerView.addView(adView);
     return new FlutterPlatformView(adView);
   }

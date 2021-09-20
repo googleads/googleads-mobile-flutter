@@ -14,6 +14,7 @@
 
 import 'dart:async';
 import 'dart:io' show Platform;
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -594,6 +595,7 @@ class _FluidAdWidgetState extends State<FluidAdWidget> {
     };
 
     Widget platformView;
+    double height;
     if (defaultTargetPlatform == TargetPlatform.android) {
       platformView = PlatformViewLink(
         viewType: '${instanceManager.channel.name}/ad_widget',
@@ -617,16 +619,18 @@ class _FluidAdWidgetState extends State<FluidAdWidget> {
             ..create();
         },
       );
+      height = _height / MediaQuery.of(context).devicePixelRatio;
     } else {
       platformView = UiKitView(
         viewType: '${instanceManager.channel.name}/ad_widget',
         creationParams: instanceManager.adIdFor(widget.ad),
         creationParamsCodec: StandardMessageCodec(),
       );
+      height = _height;
     }
 
     return Container(
-      height: (_height / MediaQuery.of(context).devicePixelRatio),
+      height: max(0, height),
       width: widget.width,
       child: platformView,);
   }
