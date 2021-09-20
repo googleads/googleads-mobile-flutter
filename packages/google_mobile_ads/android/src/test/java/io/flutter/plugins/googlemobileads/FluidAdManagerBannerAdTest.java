@@ -27,6 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.app.Activity;
+import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ScrollView;
 import com.google.android.gms.ads.AdListener;
@@ -41,6 +42,7 @@ import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -132,6 +134,7 @@ public class FluidAdManagerBannerAdTest {
     verify(mockManager).onAdClosed(eq(1));
     verify(mockManager).onAdOpened(eq(1));
 
+    // Verify that ad is correctly put into container view.
     FluidAdManagerBannerAd spy = spy(fluidAd);
     ScrollView mockContainer = mock(ScrollView.class);
     doReturn(mockContainer).when(spy).createContainerView();
@@ -139,6 +142,15 @@ public class FluidAdManagerBannerAdTest {
     verify(mockContainer).setClipChildren(false);
     verify(mockContainer).setVerticalScrollBarEnabled(false);
     verify(mockContainer).setHorizontalScrollBarEnabled(false);
+
+    // Height changed callback.
+    ArgumentCaptor<OnLayoutChangeListener> layoutChangeCaptor =
+        ArgumentCaptor.forClass(OnLayoutChangeListener.class);
+    verify(mockAdView).addOnLayoutChangeListener(layoutChangeCaptor.capture());
+    doReturn(10).when(mockAdView).getMeasuredHeight();
+
+    layoutChangeCaptor.getValue().onLayoutChange(mockAdView, 0, 0, 10, 10, 0, 0, 0, 0);
+    verify(mockManager).onFluidAdHeightChanged(eq(1), eq(10));
   }
 
   @Test

@@ -64,10 +64,11 @@ final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
                 int oldRight,
                 int oldBottom) {
               // Forward the new height to its container.
-              if (v.getMeasuredHeight() != height) {
-                manager.onFluidAdHeightChanged(adId, v.getMeasuredHeight());
+              int newHeight = v.getMeasuredHeight();
+              if (newHeight != height) {
+                manager.onFluidAdHeightChanged(adId, newHeight);
               }
-              height = v.getMeasuredHeight();
+              height = newHeight;
             }
           });
       manager.onAdLoaded(adId, adView.getResponseInfo());

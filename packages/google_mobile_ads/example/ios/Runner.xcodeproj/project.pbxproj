@@ -27,6 +27,7 @@
 		9EA7474F2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA7474D2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m */; };
 		9EA747532637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA747512637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m */; };
 		9EA747542637EC7000E0B0E4 /* FLTInterstitialAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA747522637EC7000E0B0E4 /* FLTInterstitialAdTest.m */; };
+		9EDE65D626F9300000783049 /* FLTFluidGAMBannerAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EDE65D526F9300000783049 /* FLTFluidGAMBannerAdTest.m */; };
 		9EF1F00025F8351A0017A440 /* FLTGoogleMobileAdsPluginMethodCallsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF1EFFF25F8351A0017A440 /* FLTGoogleMobileAdsPluginMethodCallsTest.m */; };
 		9EF4E70026392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.h in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6F326392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.h */; };
 		9EF4E70126392B230007E4FE /* FLTAd_Internal.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6F426392B230007E4FE /* FLTAd_Internal.m */; };
@@ -99,6 +100,7 @@
 		9EA7474D2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGAMBannerAdTest.m; path = ../../../ios/Tests/FLTGAMBannerAdTest.m; sourceTree = "<group>"; };
 		9EA747512637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGamInterstitialAdTest.m; path = ../../../ios/Tests/FLTGamInterstitialAdTest.m; sourceTree = "<group>"; };
 		9EA747522637EC7000E0B0E4 /* FLTInterstitialAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTInterstitialAdTest.m; path = ../../../ios/Tests/FLTInterstitialAdTest.m; sourceTree = "<group>"; };
+		9EDE65D526F9300000783049 /* FLTFluidGAMBannerAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTFluidGAMBannerAdTest.m; path = ../../../ios/Tests/FLTFluidGAMBannerAdTest.m; sourceTree = "<group>"; };
 		9EF1EFFF25F8351A0017A440 /* FLTGoogleMobileAdsPluginMethodCallsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsPluginMethodCallsTest.m; path = ../../../ios/Tests/FLTGoogleMobileAdsPluginMethodCallsTest.m; sourceTree = "<group>"; };
 		9EF4E6F326392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FLTGoogleMobileAdsCollection_Internal.h; path = ../../ios/Classes/FLTGoogleMobileAdsCollection_Internal.h; sourceTree = "<group>"; };
 		9EF4E6F426392B230007E4FE /* FLTAd_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTAd_Internal.m; path = ../../ios/Classes/FLTAd_Internal.m; sourceTree = "<group>"; };
@@ -168,6 +170,7 @@
 		8FB13CD3248F07B80011A72F /* google_mobile_ads_exampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				9EDE65D526F9300000783049 /* FLTFluidGAMBannerAdTest.m */,
 				9E4163BA26CCE99300220C78 /* FLTAppOpenAdTest.m */,
 				9EF4E7132639D4B30007E4FE /* FLTNativeAdTest.m */,
 				9EF4E70F2639410D0007E4FE /* FLTRewardedAdTest.m */,
@@ -452,6 +455,7 @@
 				9E4163BB26CCE99400220C78 /* FLTAppOpenAdTest.m in Sources */,
 				9EF4E70926392B230007E4FE /* FLTGoogleMobileAdsPlugin.m in Sources */,
 				9EF4E70A26392B230007E4FE /* FLTAdInstanceManager_Internal.h in Sources */,
+				9EDE65D626F9300000783049 /* FLTFluidGAMBannerAdTest.m in Sources */,
 				9EF4E70B26392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.m in Sources */,
 				9EF4E70C26392B230007E4FE /* FLTMobileAds_Internal.h in Sources */,
 				9EA7474F2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m in Sources */,
