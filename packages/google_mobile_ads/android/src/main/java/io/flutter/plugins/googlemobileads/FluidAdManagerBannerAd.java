@@ -93,4 +93,16 @@ final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
     containerView.addView(adView);
     return new FlutterPlatformView(adView);
   }
+
+  @Override
+  void dispose() {
+    if (adView != null) {
+      adView.destroy();
+      adView = null;
+    }
+    if (containerView != null) {
+      containerView.removeAllViews();
+      containerView = null;
+    }
+  }
 }

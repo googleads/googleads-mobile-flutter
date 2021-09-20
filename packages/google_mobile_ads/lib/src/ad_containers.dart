@@ -520,7 +520,7 @@ class _AdWidgetState extends State<AdWidget> {
 
 /// A widget for displaying [FluidAdManagerBannerAd].
 ///
-/// This widget resizes its height based on the rendered width.
+/// This widget adjusts its height based on the platform rendered ad.
 class FluidAdWidget extends StatefulWidget {
   /// Constructs a [FluidAdWidget].
   const FluidAdWidget({Key? key, required this.ad, this.width})
@@ -681,7 +681,17 @@ class BannerAd extends AdWithView {
   }
 }
 
+/// An 'AdManagerBannerAd' that has fluid ad size.
+///
+/// These ads will dynamically adjust their height to match the width of the ad.
+/// This should be used with [FluidAdWidget], which displays the ad in a widget
+/// that adjusts its height to the height of the platform rendered ad.
 class FluidAdManagerBannerAd extends AdManagerBannerAd {
+
+  /// Create a [FluidAdManagerBannerAd].
+  ///
+  /// These ads dynamically change their height based on the width.
+  /// Set [onFluidAdHeightChangedListener] to get notified of height updates.
   FluidAdManagerBannerAd({
     required String adUnitId,
     required AdManagerBannerAdListener listener,
@@ -694,6 +704,7 @@ class FluidAdManagerBannerAd extends AdManagerBannerAd {
           request: request,
         );
 
+  /// Listener for when the height of the ad changes.
   OnFluidAdHeightChangedListener? onFluidAdHeightChangedListener;
 
   @override
