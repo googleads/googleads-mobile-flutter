@@ -18,8 +18,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:google_mobile_ads_example/fluid_example.dart';
 
+import 'fluid_example.dart';
 import 'reusable_inline_example.dart';
 
 void main() {
