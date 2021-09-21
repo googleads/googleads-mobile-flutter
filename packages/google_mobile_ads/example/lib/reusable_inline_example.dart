@@ -19,8 +19,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'constants.dart';
 import 'dart:io' show Platform;
 
-import 'fluid_example.dart';
-
 /// This example demonstrates inline ads in a list view, where the ad objects
 /// live for the lifetime of this widget.
 class ReusableInlineExample extends StatefulWidget {
@@ -72,10 +70,6 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
               if (index == 15 && _nativeAdIsLoaded && nativeAd != null) {
                 return Container(
                     width: 250, height: 350, child: AdWidget(ad: nativeAd));
-              }
-
-              if (index == 18) {
-                return FluidExample();
               }
 
               return Text(
