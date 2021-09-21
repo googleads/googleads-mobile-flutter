@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'constants.dart';
 
-/// This example demonstrates fluid ads,.
+/// This example demonstrates fluid ads.
 class FluidExample extends StatefulWidget {
   @override
   _FluidExampleExampleState createState() => _FluidExampleExampleState();
