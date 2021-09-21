@@ -124,6 +124,9 @@
       [(UIScrollView *)scrollViewClassMock addSubview:[OCMArg isKindOfClass:GAMBannerView.class]]);
   OCMVerify([(UIScrollView *)scrollViewClassMock setShowsHorizontalScrollIndicator:NO]);
   OCMVerify([(UIScrollView *)scrollViewClassMock setShowsVerticalScrollIndicator:NO]);
+
+  [scrollViewClassMock stopMocking];
+  [gamBannerClassMock stopMocking];
 }
 
 - (void)testSizeChangedEvent {
@@ -153,12 +156,10 @@
   FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
   UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
-  FLTFluidGAMBannerAd *ad = [[FLTFluidGAMBannerAd alloc]
-        initWithAdUnitId:@"testId"
-                   sizes:@[ [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)] ]
-                 request:request
-      rootViewController:mockRootViewController
-                    adId:@1];
+  FLTFluidGAMBannerAd *ad = [[FLTFluidGAMBannerAd alloc] initWithAdUnitId:@"testId"
+                                                                  request:request
+                                                       rootViewController:mockRootViewController
+                                                                     adId:@1];
 
   XCTAssertEqual(ad.bannerView.adUnitID, @"testId");
   XCTAssertEqual(ad.bannerView.rootViewController, mockRootViewController);
