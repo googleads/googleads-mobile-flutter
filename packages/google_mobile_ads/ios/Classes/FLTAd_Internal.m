@@ -41,6 +41,10 @@
 - (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
   return GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
 }
+
+- (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+  return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
+}
 @end
 
 @implementation FLTAnchoredAdaptiveBannerSize
@@ -53,8 +57,7 @@
   } else if ([orientation isEqualToString:@"landscape"]) {
     size = [factory landscapeAnchoredAdaptiveBannerAdSizeWithWidth:width];
   } else {
-    NSLog(@"AdaptiveBanner orientation should be 'portrait' or 'landscape': %@", orientation);
-    return nil;
+    size = [factory currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:width];
   }
 
   self = [self initWithAdSize:size];

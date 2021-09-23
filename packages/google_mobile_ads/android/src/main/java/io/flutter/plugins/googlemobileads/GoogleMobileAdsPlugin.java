@@ -235,6 +235,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         flutterMobileAds.initialize(
             instanceManager.activity, new FlutterInitializationListener(result));
         break;
+      case "MobileAds#getRequestConfiguration":
+        result.success(flutterMobileAds.getRequestConfiguration());
+        break;
       case "MobileAds#updateRequestConfiguration":
         RequestConfiguration.Builder builder = MobileAds.getRequestConfiguration().toBuilder();
         String maxAdContentRating = call.argument("maxAdContentRating");
@@ -410,7 +413,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         result.success(null);
         break;
       case "MobileAds#setAppVolume":
-        flutterMobileAds.setAppVolume(call.<Float>argument("volume"));
+        flutterMobileAds.setAppVolume(call.<Double>argument("volume"));
         result.success(null);
         break;
       case "setImmersiveMode":

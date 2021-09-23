@@ -199,6 +199,8 @@
       GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers = testDeviceIds;
     }
     result(nil);
+  } else if ([call.method isEqualToString:@"MobileAds#getRequestConfiguration"]) {
+    result(GADMobileAds.sharedInstance.requestConfiguration);
   } else if ([call.method isEqualToString:@"loadBannerAd"]) {
     FLTBannerAd *ad = [[FLTBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                                        size:call.arguments[@"size"]

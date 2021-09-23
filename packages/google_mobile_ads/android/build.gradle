@@ -36,6 +36,12 @@ android {
       testImplementation 'junit:junit:4.12'
       testImplementation 'org.hamcrest:hamcrest:2.2'
       testImplementation 'org.mockito:mockito-inline:3.9.0'
+      testImplementation 'org.robolectric:robolectric:4.4'
+    }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
     }
 }
 

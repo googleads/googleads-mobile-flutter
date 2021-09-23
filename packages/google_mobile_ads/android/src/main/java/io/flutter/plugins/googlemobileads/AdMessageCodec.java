@@ -19,6 +19,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import com.google.android.gms.ads.RequestConfiguration;
 import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
@@ -50,6 +51,7 @@ class AdMessageCodec extends StandardMessageCodec {
   static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 143;
   static final byte VALUE_NATIVE_AD_OPTIONS = (byte) 144;
   static final byte VALUE_VIDEO_OPTIONS = (byte) 145;
+  static final byte VALUE_REQUEST_CONFIGURATION_PARAMS = (byte) 146;
 
   @NonNull final Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
@@ -159,6 +161,13 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, options.clickToExpandRequested);
       writeValue(stream, options.customControlsRequested);
       writeValue(stream, options.startMuted);
+    } else if (value instanceof RequestConfiguration) {
+      stream.write(VALUE_REQUEST_CONFIGURATION_PARAMS);
+      RequestConfiguration params = (RequestConfiguration) value;
+      writeValue(stream, params.getMaxAdContentRating());
+      writeValue(stream, params.getTagForChildDirectedTreatment());
+      writeValue(stream, params.getTagForUnderAgeOfConsent());
+      writeValue(stream, params.getTestDeviceIds());
     } else {
       super.writeValue(stream, value);
     }
@@ -259,6 +268,13 @@ class AdMessageCodec extends StandardMessageCodec {
             (Boolean) readValueOfType(buffer.get(), buffer),
             (Boolean) readValueOfType(buffer.get(), buffer),
             (Boolean) readValueOfType(buffer.get(), buffer));
+      case VALUE_REQUEST_CONFIGURATION_PARAMS:
+        RequestConfiguration.Builder rcb = new RequestConfiguration.Builder();
+        rcb.setMaxAdContentRating((String) readValueOfType(buffer.get(), buffer));
+        rcb.setTagForChildDirectedTreatment((Integer) readValueOfType(buffer.get(), buffer));
+        rcb.setTagForUnderAgeOfConsent((Integer) readValueOfType(buffer.get(), buffer));
+        rcb.setTestDeviceIds((List<String>) readValueOfType(buffer.get(), buffer));
+        return rcb.build();
       default:
         return super.readValueOfType(type, buffer);
     }

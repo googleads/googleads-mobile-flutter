@@ -17,6 +17,7 @@ package io.flutter.plugins.googlemobileads;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 /** A wrapper around static methods in {@link com.google.android.gms.ads.MobileAds}. */
@@ -36,8 +37,8 @@ public class FlutterMobileAdsWrapper {
   }
 
   /** Wrapper for setAppVolume. */
-  public void setAppVolume(float volume) {
-    MobileAds.setAppVolume(volume);
+  public void setAppVolume(double volume) {
+    MobileAds.setAppVolume((float) volume);
   }
 
   /** Wrapper for disableMediationInitialization. */
@@ -48,5 +49,10 @@ public class FlutterMobileAdsWrapper {
   /** Wrapper for getVersionString. */
   public String getVersionString() {
     return MobileAds.getVersionString();
+  }
+
+  /** Wrapper for getRequestConfiguration. */
+  public RequestConfiguration getRequestConfiguration() {
+    return MobileAds.getRequestConfiguration();
   }
 }

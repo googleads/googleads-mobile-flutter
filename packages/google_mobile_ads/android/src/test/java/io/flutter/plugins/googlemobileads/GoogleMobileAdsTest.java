@@ -32,6 +32,7 @@ import android.content.Context;
 import android.os.Bundle;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdapterResponseInfo;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
@@ -53,12 +54,15 @@ import java.util.Map;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.robolectric.RobolectricTestRunner;
 
 /** Tests {@link AdInstanceManager}. */
+@RunWith(RobolectricTestRunner.class)
 public class GoogleMobileAdsTest {
   private AdInstanceManager testManager;
   private final FlutterAdRequest request = new FlutterAdRequest.Builder().build();
@@ -546,6 +550,26 @@ public class GoogleMobileAdsTest {
     plugin.onMethodCall(methodCall, result);
 
     verify(result).success(ArgumentMatchers.any(FlutterInitializationStatus.class));
+  }
+
+  @Test
+  public void testGetRequestConfiguration() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+    RequestConfiguration.Builder rcb = new RequestConfiguration.Builder();
+    rcb.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_MA);
+    rcb.setTagForChildDirectedTreatment(RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE);
+    rcb.setTagForUnderAgeOfConsent(RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_TRUE);
+    rcb.setTestDeviceIds(new ArrayList<String>(Arrays.asList("id1", "id2")));
+    RequestConfiguration rc = rcb.build();
+    doReturn(rc).when(mockMobileAds).getRequestConfiguration();
+
+    MethodCall methodCall = new MethodCall("MobileAds#getRequestConfiguration", null);
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(rc);
   }
 
   @Test(expected = IllegalArgumentException.class)

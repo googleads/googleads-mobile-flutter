@@ -320,6 +320,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:options.clickToExpandRequested];
     [self writeValue:options.customControlsRequested];
     [self writeValue:options.startMuted];
+  } else if ([value isKindOfClass:[FLTAnchoredAdaptiveBannerSize class]]) {
+    [self writeByte:FLTAdmobFieldAnchoredAdaptiveBannerAdSize];
+    FLTAnchoredAdaptiveBannerSize *params = value;
+    [self writeValue:params.ma];
+    [self writeValue:params.customControlsRequested];
+    [self writeValue:params.startMuted];
   } else {
     [super writeValue:value];
   }

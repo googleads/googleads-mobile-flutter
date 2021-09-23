@@ -1,10 +1,10 @@
 // Copyright 2021 Google LLC
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
+// Licensed under the Apache License, Version 2 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-// https://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,30 +26,30 @@ class FluidExample extends StatefulWidget {
 
 class _FluidExampleExampleState extends State<FluidExample> {
   AdManagerBannerAd? _adManagerBannerAd;
-  double _adManagerBannerAdWidth = 200.0;
+  double _adManagerBannerAdWidth = 200;
 
   @override
   Widget build(BuildContext context) => Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Align(
                     alignment: Alignment.center,
                     child: Container(
-                        height: 500.0,
+                        height: 500,
                         width: _adManagerBannerAdWidth,
                         child: AdWidget(ad: _adManagerBannerAd!))),
                 ElevatedButton(
                     onPressed: () {
                       double newWidth;
-                      if (_adManagerBannerAdWidth == 200.0) {
-                        newWidth = 100.0;
-                      } else if (_adManagerBannerAdWidth == 100.0) {
-                        newWidth = 150.0;
+                      if (_adManagerBannerAdWidth == 200) {
+                        newWidth = 100;
+                      } else if (_adManagerBannerAdWidth == 100) {
+                        newWidth = 150;
                       } else {
-                        newWidth = 200.0;
+                        newWidth = 200;
                       }
                       setState(() {
                         _adManagerBannerAdWidth = newWidth;

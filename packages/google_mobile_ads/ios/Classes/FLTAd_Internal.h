@@ -34,6 +34,7 @@
 @interface FLTAdSizeFactory : NSObject
 - (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
 - (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
+- (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
 @end
 
 @interface FLTAnchoredAdaptiveBannerSize : FLTAdSize

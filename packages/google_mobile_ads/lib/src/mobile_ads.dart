@@ -57,6 +57,11 @@ class MobileAds {
     return instanceManager.updateRequestConfiguration(requestConfiguration);
   }
 
+  /// Update the [RequestConfiguration] to apply for future ad requests.
+  Future<RequestConfiguration> getRequestConfiguration() {
+    return instanceManager.getRequestConfiguration();
+  }
+
   /// Set whether the Google Mobile Ads SDK Same App Key is enabled (iOS only).
   ///
   /// The value set persists across app sessions. The key is enabled by default.
