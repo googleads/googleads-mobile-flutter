@@ -55,7 +55,12 @@ void main() {
           case 'MobileAds#getVersionString':
             return Future<String>.value('Test-SDK-Version');
           case 'MobileAds#getRequestConfiguration':
-            return null;
+            return RequestConfiguration(
+              maxAdContentRating: MaxAdContentRating.ma,
+              tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+              tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.no,
+              testDeviceIds: <String>['id1', 'id2'],
+            );
           default:
             assert(false);
             return null;

@@ -320,4 +320,22 @@
   XCTAssertTrue(resultInvoked);
   XCTAssertEqual(returnedResult, [GADMobileAds.sharedInstance sdkVersion]);
 }
+
+- (void)testGetRequestConfiguration {
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#getRequestConfiguration"
+                                        arguments:@{}];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertEqual(returnedResult, [GADMobileAds.sharedInstance requestConfiguration]);
+}
 @end
