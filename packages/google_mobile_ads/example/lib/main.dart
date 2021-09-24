@@ -21,24 +21,10 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'reusable_inline_example.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  await MobileAds.instance.initialize();
+  MobileAds.instance.initialize();
   runApp(MyApp());
-  // updateRequestConfig
-  RequestConfiguration rc = RequestConfiguration(
-    maxAdContentRating: MaxAdContentRating.ma,
-    tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
-    tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.no,
-    testDeviceIds: <String>['id1', 'id2'],
-  );
-  await MobileAds.instance.updateRequestConfiguration(rc);
-  RequestConfiguration grc = await MobileAds.instance.getRequestConfiguration();
-  print('SRI');
-  print(grc.testDeviceIds);
-  print(grc.tagForUnderAgeOfConsent);
-  print(grc.tagForChildDirectedTreatment);
-  print(grc.maxAdContentRating);
 }
 
 // You can also test with your own ad unit IDs by registering your device as a
@@ -170,8 +156,8 @@ class _MyAppState extends State<MyApp> {
   Future<void> _createAnchoredBanner(BuildContext context) async {
     final AnchoredAdaptiveBannerAdSize? size =
         await AdSize.getAnchoredAdaptiveBannerAdSize(
-      Orientation.portrait,
       MediaQuery.of(context).size.width.truncate(),
+      null,
     );
 
     if (size == null) {

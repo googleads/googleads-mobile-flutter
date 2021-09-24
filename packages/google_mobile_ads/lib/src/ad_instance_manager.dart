@@ -912,7 +912,13 @@ class AdMessageCodec extends StandardMessageCodec {
   void writeAdSize(WriteBuffer buffer, AdSize value) {
     if (value is AnchoredAdaptiveBannerAdSize) {
       buffer.putUint8(_valueAnchoredAdaptiveBannerAdSize);
-      writeValue(buffer, describeEnum(value.orientation));
+      var orientationValue;
+      if (value.orientation != null) {
+        orientationValue = describeEnum(value.orientation as Orientation);
+      } else {
+        orientationValue = null;
+      }
+      writeValue(buffer, orientationValue);
       writeValue(buffer, value.width);
     } else if (value is SmartBannerAdSize) {
       buffer.putUint8(_valueSmartBannerAdSize);

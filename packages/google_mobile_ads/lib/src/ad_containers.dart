@@ -238,7 +238,7 @@ class AnchoredAdaptiveBannerAdSize extends AdSize {
   }) : super(width: width, height: height);
 
   /// Orientation of the device used by the SDK to automatically find the correct height.
-  final Orientation orientation;
+  final Orientation? orientation;
 }
 
 /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
@@ -302,13 +302,12 @@ class AdSize {
   /// Returns `null` if a proper height could not be found for the device or
   /// window.
   static Future<AnchoredAdaptiveBannerAdSize?> getAnchoredAdaptiveBannerAdSize(
-    Orientation orientation,
-    int width,
-  ) async {
+      int width,
+      [Orientation? orientation]) async {
     final num? height = await instanceManager.channel.invokeMethod<num?>(
       'AdSize#getAnchoredAdaptiveBannerAdSize',
-      <String, Object>{
-        'orientation': describeEnum(orientation),
+      <String, Object?>{
+        'orientation': orientation != null ? describeEnum(orientation) : null,
         'width': width,
       },
     );
