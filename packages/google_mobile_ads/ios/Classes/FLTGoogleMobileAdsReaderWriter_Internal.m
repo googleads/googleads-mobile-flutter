@@ -333,8 +333,10 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeByte:FLTAdmobRequestConfigurationParams];
     GADRequestConfiguration *params = value;
     [self writeValue:params.maxAdContentRating];
-    [self writeValue:@1];
-    [self writeValue:@1];
+    // using nil temporarily for tagForUnderAgeOfConsent and tagForChildDirectedTreatment
+    // as there are no getters for them in GADRequestConfiguration.
+    [self writeValue:nil];
+    [self writeValue:nil];
     [self writeValue:params.testDeviceIdentifiers];
   } else {
     [super writeValue:value];
