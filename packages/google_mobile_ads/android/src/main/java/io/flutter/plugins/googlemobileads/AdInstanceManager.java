@@ -42,7 +42,7 @@ class AdInstanceManager {
 
   /**
    * Initializes the ad instance manager. We only need a method channel to start loading ads, but an
-   * activity must be present in order to attach any to the view hierarchy.
+   * activity must be present in order to attach any ads to the view hierarchy.
    */
   AdInstanceManager(@NonNull MethodChannel channel) {
     this.channel = channel;
