@@ -1,3 +1,7 @@
+## 0.13.6
+
+* Partial fix for [#265](https://github.com/googleads/googleads-mobile-flutter/issues/265).
+
 ## 0.13.5
 
 * Adds support for app open. 
