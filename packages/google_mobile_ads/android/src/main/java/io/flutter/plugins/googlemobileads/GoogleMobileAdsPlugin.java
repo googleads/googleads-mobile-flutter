@@ -47,6 +47,8 @@ import java.util.Map;
  */
 public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
 
+  private static final String TAG = "GoogleMobileAdsPlugin";
+
   private static <T> T requireNonNull(T obj) {
     if (obj == null) {
       throw new IllegalArgumentException();
@@ -238,8 +240,10 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
-    assert instanceManager != null;
-    assert pluginBinding != null;
+    if (instanceManager == null || pluginBinding == null) {
+      Log.e(TAG, "method call received before instanceManager initialized: " + call.method);
+      return;
+    }
     Context appContext = pluginBinding.getApplicationContext();
     switch (call.method) {
       case "_init":
@@ -453,6 +457,14 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         break;
       case "MobileAds#getVersionString":
         result.success(flutterMobileAds.getVersionString());
+        break;
+      case "getAdSize":
+        FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
+        if (ad instanceof FlutterBannerAd) {
+          result.success(((FlutterBannerAd) ad).getAdSize());
+        } else if (ad instanceof FlutterAdManagerBannerAd) {
+          result.success(((FlutterAdManagerBannerAd) ad).getAdSize());
+        }
         break;
       default:
         result.notImplemented();

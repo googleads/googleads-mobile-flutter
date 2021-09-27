@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import "FLTAdUtil.h"
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
 
 // The type values below must be consistent for each platform.
@@ -33,6 +34,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldSmartBannerAdSize = 143,
   FLTAdmobFieldNativeAdOptions = 144,
   FLTAdmobFieldVideoOptions = 145,
+  FLTAdmobFieldAdaptiveInlineAdSize = 146,
 };
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
@@ -204,6 +206,22 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
           initWithClickToExpandRequested:[self readValueOfType:[self readByte]]
                  customControlsRequested:[self readValueOfType:[self readByte]]
                               startMuted:[self readValueOfType:[self readByte]]];
+    }
+    case FLTAdmobFieldAdaptiveInlineAdSize: {
+      GADAdSize gadAdSize;
+      NSNumber *width = [self readValueOfType:[self readByte]];
+      NSNumber *maxHeight = [self readValueOfType:[self readByte]];
+      NSNumber *orientation = [self readValueOfType:[self readByte]];
+      if ([FLTAdUtil isNotNull:orientation]) {
+        gadAdSize = orientation.intValue == 0
+          ? [_adSizeFactory portraitOrientationInlineAdaptiveBannerSizeWithWidth:width]
+          : [_adSizeFactory landscapeInlineAdaptiveBannerAdSizeWithWidth:width];
+      } else if ([FLTAdUtil isNotNull:maxHeight]) {
+        gadAdSize = [_adSizeFactory inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:width maxHeight:maxHeight];
+      } else {
+        gadAdSize = [_adSizeFactory currentOrientationInlineAdaptiveBannerSizeWithWidth:width];
+      }
+      return [[FLTAdSize alloc] initWithAdSize:gadAdSize];
     }
   }
   return [super readValueOfType:type];

@@ -16,8 +16,10 @@ package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import io.flutter.plugin.platform.PlatformView;
+import io.flutter.plugins.googlemobileads.FlutterAdSize.AdaptiveInlineBannerAdSize;
 import io.flutter.util.Preconditions;
 
 /** A wrapper for {@link AdView}. */
@@ -82,5 +84,13 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
       adView.destroy();
       adView = null;
     }
+  }
+
+  @Nullable
+  FlutterAdSize getAdSize() {
+    if (adView == null || adView.getAdSize() == null) {
+      return null;
+    }
+    return new FlutterAdSize(adView.getAdSize());
   }
 }
