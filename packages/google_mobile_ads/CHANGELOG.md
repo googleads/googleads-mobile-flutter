@@ -1,3 +1,11 @@
+## 0.13.6
+
+* Partial fix for [#265](https://github.com/googleads/googleads-mobile-flutter/issues/265).
+  * The partial fix allows you to load ads from a cached flutter engine in the add to app scenario,
+    but it only works the first time the engine is attached to an activity.
+  * Support for reusing the engine in another activity after the first one is destroyed is blocked 
+    by this Flutter issue which affects all platform views: https://github.com/flutter/flutter/issues/88880.
+
 ## 0.13.5
 * Adds support for Fluid Ad Size (Ad Manager only)
 Android - https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size

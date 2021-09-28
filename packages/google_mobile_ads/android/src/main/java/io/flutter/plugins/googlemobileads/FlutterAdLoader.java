@@ -36,11 +36,14 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
  */
 public class FlutterAdLoader {
 
-  public FlutterAdLoader() {}
+  @NonNull private final Context context;
+
+  public FlutterAdLoader(@NonNull Context context) {
+    this.context = context;
+  }
 
   /** Load an app open ad. */
   public void loadAppOpen(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull AdRequest adRequest,
       int orientation,
@@ -50,7 +53,6 @@ public class FlutterAdLoader {
 
   /** Load an ad manager app open ad. */
   public void loadAdManagerAppOpen(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull AdManagerAdRequest adRequest,
       int orientation,
@@ -60,7 +62,6 @@ public class FlutterAdLoader {
 
   /** Load an interstitial ad. */
   public void loadInterstitial(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull AdRequest adRequest,
       @NonNull InterstitialAdLoadCallback loadCallback) {
@@ -69,7 +70,6 @@ public class FlutterAdLoader {
 
   /** Load an ad manager interstitial ad. */
   public void loadAdManagerInterstitial(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull AdManagerAdRequest adRequest,
       @NonNull AdManagerInterstitialAdLoadCallback loadCallback) {
@@ -78,7 +78,6 @@ public class FlutterAdLoader {
 
   /** Load a rewarded ad. */
   public void loadRewarded(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull AdRequest adRequest,
       @NonNull RewardedAdLoadCallback loadCallback) {
@@ -87,7 +86,6 @@ public class FlutterAdLoader {
 
   /** Load an ad manager rewarded ad. */
   public void loadAdManagerRewarded(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull AdManagerAdRequest adRequest,
       @NonNull RewardedAdLoadCallback loadCallback) {
@@ -96,7 +94,6 @@ public class FlutterAdLoader {
 
   /** Load a native ad. */
   public void loadNativeAd(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull OnNativeAdLoadedListener onNativeAdLoadedListener,
       @NonNull NativeAdOptions nativeAdOptions,
@@ -112,7 +109,6 @@ public class FlutterAdLoader {
 
   /** Load an ad manager native ad. */
   public void loadAdManagerNativeAd(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull OnNativeAdLoadedListener onNativeAdLoadedListener,
       @NonNull NativeAdOptions nativeAdOptions,

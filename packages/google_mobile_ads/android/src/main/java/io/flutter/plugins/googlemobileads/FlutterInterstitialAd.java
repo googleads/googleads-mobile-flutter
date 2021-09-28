@@ -48,10 +48,7 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   void load() {
     if (manager != null && adUnitId != null && request != null) {
       flutterAdLoader.loadInterstitial(
-          manager.activity,
-          adUnitId,
-          request.asAdRequest(),
-          new DelegatingInterstitialAdLoadCallback(this));
+          adUnitId, request.asAdRequest(), new DelegatingInterstitialAdLoadCallback(this));
     }
   }
 
@@ -76,8 +73,12 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
       Log.e(TAG, "Error showing interstitial - the interstitial ad wasn't loaded yet.");
       return;
     }
+    if (manager.getActivity() == null) {
+      Log.e(TAG, "Tried to show interstitial before activity was bound to the plugin.");
+      return;
+    }
     ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
-    ad.show(manager.activity);
+    ad.show(manager.getActivity());
   }
 
   @Override

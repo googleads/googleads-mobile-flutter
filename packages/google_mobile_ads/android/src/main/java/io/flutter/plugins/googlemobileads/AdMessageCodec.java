@@ -51,7 +51,7 @@ class AdMessageCodec extends StandardMessageCodec {
   static final byte VALUE_NATIVE_AD_OPTIONS = (byte) 144;
   static final byte VALUE_VIDEO_OPTIONS = (byte) 145;
 
-  @NonNull final Context context;
+  @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
 
   AdMessageCodec(@NonNull Context context) {
@@ -63,6 +63,10 @@ class AdMessageCodec extends StandardMessageCodec {
   AdMessageCodec(@NonNull Context context, @NonNull FlutterAdSize.AdSizeFactory adSizeFactory) {
     this.context = context;
     this.adSizeFactory = adSizeFactory;
+  }
+
+  void setContext(@NonNull Context context) {
+    this.context = context;
   }
 
   @Override
