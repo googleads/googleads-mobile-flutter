@@ -46,7 +46,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-/** Tests for {@link FluidAdManagerBannerAdTest}. */
+/** Tests for {@link FluidAdManagerBannerAd}. */
 public class FluidAdManagerBannerAdTest {
 
   private AdInstanceManager mockManager;

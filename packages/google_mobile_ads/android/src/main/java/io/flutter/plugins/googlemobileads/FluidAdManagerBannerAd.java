@@ -85,7 +85,7 @@ final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
       return new FlutterPlatformView(containerView);
     }
     // Place the ad view inside a scroll view. This allows the height of the ad view to overflow
-    // it container so we can calculate the height and send it back to flutter.
+    // its container so we can calculate the height and send it back to flutter.
     ScrollView scrollView = createContainerView();
     scrollView.setClipChildren(false);
     scrollView.setVerticalScrollBarEnabled(false);

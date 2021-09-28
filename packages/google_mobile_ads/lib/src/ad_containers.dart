@@ -687,7 +687,7 @@ class BannerAd extends AdWithView {
 /// This should be used with [FluidAdWidget], which displays the ad in a widget
 /// that adjusts its height to the height of the platform rendered ad.
 class FluidAdManagerBannerAd extends AdManagerBannerAd {
-  /// Create a [FluidAdManagerBannerAd].
+  /// Creates a [FluidAdManagerBannerAd].
   ///
   /// These ads dynamically change their height based on the width.
   /// Set [onFluidAdHeightChangedListener] to get notified of height updates.
