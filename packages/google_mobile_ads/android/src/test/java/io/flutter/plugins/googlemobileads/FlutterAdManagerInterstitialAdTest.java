@@ -28,7 +28,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.app.Activity;
-import android.content.Context;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.FullScreenContentCallback;
@@ -38,15 +37,18 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 import com.google.android.gms.ads.admanager.AppEventListener;
-import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.robolectric.RobolectricTestRunner;
 
 /** Tests for {@link FlutterAdManagerInterstitialAd}. */
+@RunWith(RobolectricTestRunner.class)
 public class FlutterAdManagerInterstitialAdTest {
 
   private AdInstanceManager mockManager;
@@ -57,7 +59,8 @@ public class FlutterAdManagerInterstitialAdTest {
 
   @Before
   public void setup() {
-    mockManager = spy(new AdInstanceManager(mock(Activity.class), mock(BinaryMessenger.class)));
+    mockManager = spy(new AdInstanceManager(mock(MethodChannel.class)));
+    doReturn(mock(Activity.class)).when(mockManager).getActivity();
     final FlutterAdManagerAdRequest mockFlutterRequest = mock(FlutterAdManagerAdRequest.class);
     mockRequest = mock(AdManagerAdRequest.class);
     mockFlutterAdLoader = mock(FlutterAdLoader.class);
@@ -78,7 +81,7 @@ public class FlutterAdManagerInterstitialAdTest {
             new Answer() {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
-                AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(2);
                 // Pass back null for ad
                 adLoadCallback.onAdFailedToLoad(loadAdError);
                 return null;
@@ -86,7 +89,6 @@ public class FlutterAdManagerInterstitialAdTest {
             })
         .when(mockFlutterAdLoader)
         .loadAdManagerInterstitial(
-            any(Activity.class),
             anyString(),
             any(AdManagerAdRequest.class),
             any(AdManagerInterstitialAdLoadCallback.class));
@@ -95,10 +97,7 @@ public class FlutterAdManagerInterstitialAdTest {
 
     verify(mockFlutterAdLoader)
         .loadAdManagerInterstitial(
-            eq(mockManager.activity),
-            eq("testId"),
-            eq(mockRequest),
-            any(AdManagerInterstitialAdLoadCallback.class));
+            eq("testId"), eq(mockRequest), any(AdManagerInterstitialAdLoadCallback.class));
 
     FlutterLoadAdError flutterLoadAdError = new FlutterLoadAdError(loadAdError);
     verify(mockManager).onAdFailedToLoad(eq(1), eq(flutterLoadAdError));
@@ -111,7 +110,7 @@ public class FlutterAdManagerInterstitialAdTest {
             new Answer() {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
-                AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(2);
                 // Pass back null for ad
                 adLoadCallback.onAdLoaded(mockAdManagerAd);
                 return null;
@@ -119,7 +118,6 @@ public class FlutterAdManagerInterstitialAdTest {
             })
         .when(mockFlutterAdLoader)
         .loadAdManagerInterstitial(
-            any(Context.class),
             anyString(),
             any(AdManagerAdRequest.class),
             any(AdManagerInterstitialAdLoadCallback.class));
@@ -147,10 +145,7 @@ public class FlutterAdManagerInterstitialAdTest {
 
     verify(mockFlutterAdLoader)
         .loadAdManagerInterstitial(
-            eq(mockManager.activity),
-            eq("testId"),
-            eq(mockRequest),
-            any(AdManagerInterstitialAdLoadCallback.class));
+            eq("testId"), eq(mockRequest), any(AdManagerInterstitialAdLoadCallback.class));
 
     verify(mockManager).onAdLoaded(1, responseInfo);
     verify(mockAdManagerAd).setOnPaidEventListener(any(FlutterPaidEventListener.class));
@@ -177,7 +172,7 @@ public class FlutterAdManagerInterstitialAdTest {
 
     flutterAdManagerInterstitialAd.show();
     verify(mockAdManagerAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
-    verify(mockAdManagerAd).show(mockManager.activity);
+    verify(mockAdManagerAd).show(mockManager.getActivity());
     verify(mockAdManagerAd).setAppEventListener(any(AppEventListener.class));
     verify(mockManager).onAdShowedFullScreenContent(eq(1));
     verify(mockManager).onAdImpression(eq(1));
@@ -192,7 +187,7 @@ public class FlutterAdManagerInterstitialAdTest {
             new Answer() {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
-                AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(2);
                 adLoadCallback.onAdLoaded(mockAdManagerAd);
                 // Pass back null for ad
                 return null;
@@ -200,7 +195,6 @@ public class FlutterAdManagerInterstitialAdTest {
             })
         .when(mockFlutterAdLoader)
         .loadAdManagerInterstitial(
-            any(Context.class),
             anyString(),
             any(AdManagerAdRequest.class),
             any(AdManagerInterstitialAdLoadCallback.class));
@@ -217,7 +211,7 @@ public class FlutterAdManagerInterstitialAdTest {
             new Answer() {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
-                AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(2);
                 // Pass back null for ad
                 adLoadCallback.onAdLoaded(mockAdManagerAd);
                 return null;
@@ -225,7 +219,6 @@ public class FlutterAdManagerInterstitialAdTest {
             })
         .when(mockFlutterAdLoader)
         .loadAdManagerInterstitial(
-            any(Context.class),
             anyString(),
             any(AdManagerAdRequest.class),
             any(AdManagerInterstitialAdLoadCallback.class));
@@ -255,7 +248,7 @@ public class FlutterAdManagerInterstitialAdTest {
             new Answer() {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
-                AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                AdManagerInterstitialAdLoadCallback adLoadCallback = invocation.getArgument(2);
                 // Pass back null for ad
                 adLoadCallback.onAdLoaded(mockAdManagerAd);
                 return null;
@@ -263,7 +256,6 @@ public class FlutterAdManagerInterstitialAdTest {
             })
         .when(mockFlutterAdLoader)
         .loadAdManagerInterstitial(
-            any(Context.class),
             anyString(),
             any(AdManagerAdRequest.class),
             any(AdManagerInterstitialAdLoadCallback.class));

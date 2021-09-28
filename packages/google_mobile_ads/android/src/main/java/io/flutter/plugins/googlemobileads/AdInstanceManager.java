@@ -15,13 +15,13 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.ResponseInfo;
-import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import java.util.HashMap;
@@ -35,21 +35,27 @@ import java.util.Map;
  * provide access until the ad is disposed.
  */
 class AdInstanceManager {
-  @NonNull Activity activity;
+  @Nullable private Activity activity;
 
   @NonNull private final Map<Integer, FlutterAd> ads;
   @NonNull private final MethodChannel channel;
 
-  AdInstanceManager(@NonNull Activity activity, @NonNull BinaryMessenger binaryMessenger) {
-    this.activity = activity;
+  /**
+   * Initializes the ad instance manager. We only need a method channel to start loading ads, but an
+   * activity must be present in order to attach any ads to the view hierarchy.
+   */
+  AdInstanceManager(@NonNull MethodChannel channel) {
+    this.channel = channel;
     this.ads = new HashMap<>();
-    final StandardMethodCodec methodCodec = new StandardMethodCodec(new AdMessageCodec(activity));
-    this.channel =
-        new MethodChannel(binaryMessenger, "plugins.flutter.io/google_mobile_ads", methodCodec);
   }
 
-  void setActivity(@NonNull Activity activity) {
+  void setActivity(@Nullable Activity activity) {
     this.activity = activity;
+  }
+
+  @Nullable
+  Activity getActivity() {
+    return activity;
   }
 
   @Nullable
@@ -210,12 +216,13 @@ class AdInstanceManager {
 
   /** Invoke the method channel using the UI thread. Otherwise the message gets silently dropped. */
   private void invokeOnAdEvent(final Map<Object, Object> arguments) {
-    activity.runOnUiThread(
-        new Runnable() {
-          @Override
-          public void run() {
-            channel.invokeMethod("onAdEvent", arguments);
-          }
-        });
+    new Handler(Looper.getMainLooper())
+        .post(
+            new Runnable() {
+              @Override
+              public void run() {
+                channel.invokeMethod("onAdEvent", arguments);
+              }
+            });
   }
 }
