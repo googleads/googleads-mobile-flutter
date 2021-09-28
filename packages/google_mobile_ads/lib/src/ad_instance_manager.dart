@@ -791,6 +791,23 @@ class AdMessageCodec extends StandardMessageCodec {
   @override
   dynamic readValueOfType(dynamic type, ReadBuffer buffer) {
     switch (type) {
+      case _valueInlineAdaptiveBannerAdSize:
+        final num width = readValueOfType(buffer.getUint8(), buffer);
+        final num? maxHeight = readValueOfType(buffer.getUint8(), buffer);
+        final num? orientation = readValueOfType(buffer.getUint8(), buffer);
+        if (orientation != null) {
+          return orientation.toInt() == 0
+              ? AdSize.getPortraitInlineAdaptiveBannerAdSize(width.toInt())
+              : AdSize.getLandscapeInlineAdaptiveBannerAdSize(width.toInt());
+        } else if (maxHeight != null) {
+          return AdSize.getInlineAdaptiveBannerAdSizeWithMaxHeight(
+              width.toInt(),
+              maxHeight.toInt());
+        } else {
+          return AdSize
+              .getCurrentOrientationInlineAdaptiveBannerAdSize(width.toInt());
+        }
+
       case _valueAnchoredAdaptiveBannerAdSize:
         final String orientationStr =
             readValueOfType(buffer.getUint8(), buffer);
