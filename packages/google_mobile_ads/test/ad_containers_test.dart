@@ -1377,6 +1377,26 @@ void main() {
       );
     });
 
+    test('encode/decode $FluidAdSize', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final ByteData byteData = codec.encodeMessage(FluidAdSize())!;
+
+      final FluidAdSize result = codec.decodeMessage(byteData);
+      expect(result.width, -3);
+      expect(result.height, -3);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final WriteBuffer expectedBuffer = WriteBuffer();
+      expectedBuffer.putUint8(130);
+
+      final WriteBuffer actualBuffer = WriteBuffer();
+      codec.writeAdSize(actualBuffer, FluidAdSize());
+      expect(
+        expectedBuffer.done().buffer.asInt8List(),
+        actualBuffer.done().buffer.asInt8List(),
+      );
+    });
+
     test('encode/decode $AdManagerAdRequest', () async {
       final ByteData byteData = codec.encodeMessage(AdManagerAdRequest(
         keywords: <String>['who'],

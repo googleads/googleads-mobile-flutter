@@ -137,6 +137,9 @@ class AdInstanceManager {
       case 'onPaidEvent':
         _invokePaidEvent(ad, eventName, arguments);
         break;
+      case 'onFluidAdHeightChanged':
+        _invokeFluidAdHeightChanged(ad, arguments);
+        break;
       default:
         debugPrint('invalid ad event name: $eventName');
     }
@@ -181,9 +184,19 @@ class AdInstanceManager {
       case 'onPaidEvent':
         _invokePaidEvent(ad, eventName, arguments);
         break;
+      case 'onFluidAdHeightChanged':
+        _invokeFluidAdHeightChanged(ad, arguments);
+        break;
       default:
         debugPrint('invalid ad event name: $eventName');
     }
+  }
+
+  void _invokeFluidAdHeightChanged(Ad ad, Map<dynamic, dynamic> arguments) {
+    assert(ad is FluidAdManagerBannerAd);
+    (ad as FluidAdManagerBannerAd)
+        .onFluidAdHeightChangedListener
+        ?.call(ad, arguments['height'].toDouble());
   }
 
   void _invokeOnAdLoaded(
@@ -515,6 +528,27 @@ class AdInstanceManager {
     );
   }
 
+  /// Starts loading the ad if not previously loaded.
+  ///
+  /// Loading also terminates if ad is already in the process of loading.
+  Future<void> loadFluidAd(FluidAdManagerBannerAd ad) {
+    if (adIdFor(ad) != null) {
+      return Future<void>.value();
+    }
+
+    final int adId = _nextAdId++;
+    _loadedAds[adId] = ad;
+    return channel.invokeMethod<void>(
+      'loadFluidAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'sizes': ad.sizes,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+      },
+    );
+  }
+
   /// Loads an ad if not currently loading or loaded.
   ///
   /// Loading also terminates if ad is already in the process of loading.
@@ -652,6 +686,7 @@ class AdMessageCodec extends StandardMessageCodec {
   // The type values below must be consistent for each platform.
   static const int _valueAdSize = 128;
   static const int _valueAdRequest = 129;
+  static const int _valueFluidAdSize = 130;
   static const int _valueRewardItem = 132;
   static const int _valueLoadAdError = 133;
   static const int _valueAdManagerAdRequest = 134;
@@ -772,6 +807,8 @@ class AdMessageCodec extends StandardMessageCodec {
           width: readValueOfType(buffer.getUint8(), buffer),
           height: readValueOfType(buffer.getUint8(), buffer),
         );
+      case _valueFluidAdSize:
+        return FluidAdSize();
       case _valueAdRequest:
         return AdRequest(
           keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
@@ -894,6 +931,8 @@ class AdMessageCodec extends StandardMessageCodec {
       if (defaultTargetPlatform == TargetPlatform.iOS) {
         writeValue(buffer, describeEnum(value.orientation));
       }
+    } else if (value is FluidAdSize) {
+      buffer.putUint8(_valueFluidAdSize);
     } else {
       buffer.putUint8(_valueAdSize);
       writeValue(buffer, value.width);

@@ -48,6 +48,9 @@
 - (instancetype _Nonnull)initWithOrientation:(NSString *_Nonnull)orientation;
 @end
 
+@interface FLTFluidSize : FLTAdSize
+@end
+
 @interface FLTAdRequest : NSObject
 @property NSArray<NSString *> *_Nullable keywords;
 @property NSString *_Nullable contentURL;
@@ -131,6 +134,16 @@
 @interface FLTGAMBannerAd : FLTBannerAd <GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                     sizes:(NSArray<FLTAdSize *> *_Nonnull)sizes
+                                  request:(FLTGAMAdRequest *_Nonnull)request
+                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                                     adId:(NSNumber *_Nonnull)adId;
+@end
+
+/**
+ * An extension of`GAMBannerAd` for fluid ad size.
+ */
+@interface FLTFluidGAMBannerAd : FLTGAMBannerAd <GADAdSizeDelegate>
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTGAMAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;

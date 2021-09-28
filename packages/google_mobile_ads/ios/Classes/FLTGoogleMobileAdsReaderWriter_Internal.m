@@ -18,6 +18,7 @@
 typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdMobFieldAdSize = 128,
   FLTAdMobFieldAdRequest = 129,
+  FLTAdMobFieldFluidAdSize = 130,
   FLTAdMobFieldRewardItem = 132,
   FLTAdMobFieldLoadError = 133,
   FLTAdMobFieldAdManagerAdRequest = 134,
@@ -75,6 +76,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     case FLTAdMobFieldAdSize:
       return [[FLTAdSize alloc] initWithWidth:[self readValueOfType:[self readByte]]
                                        height:[self readValueOfType:[self readByte]]];
+    case FLTAdMobFieldFluidAdSize:
+      return [[FLTFluidSize alloc] init];
     case FLTAdMobFieldAdRequest: {
       FLTAdRequest *request = [[FLTAdRequest alloc] init];
 
@@ -219,6 +222,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeByte:FLTAdmobFieldSmartBannerAdSize];
     FLTSmartBannerSize *size = (FLTSmartBannerSize *)value;
     [self writeValue:size.orientation];
+  } else if ([value isKindOfClass:[FLTFluidSize class]]) {
+    [self writeByte:FLTAdMobFieldFluidAdSize];
   } else if ([value isKindOfClass:[FLTAdSize class]]) {
     [self writeByte:FLTAdMobFieldAdSize];
     [self writeValue:value.width];
