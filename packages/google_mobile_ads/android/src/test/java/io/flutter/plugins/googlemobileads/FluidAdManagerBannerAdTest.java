@@ -26,7 +26,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import android.app.Activity;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.ScrollView;
@@ -38,15 +37,19 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.robolectric.RobolectricTestRunner;
 
 /** Tests for {@link FluidAdManagerBannerAd}. */
+@RunWith(RobolectricTestRunner.class)
 public class FluidAdManagerBannerAdTest {
 
   private AdInstanceManager mockManager;
@@ -59,7 +62,7 @@ public class FluidAdManagerBannerAdTest {
   public void setup() {
     // Setup mock dependencies for flutterBannerAd.
     BinaryMessenger mockMessenger = mock(BinaryMessenger.class);
-    mockManager = spy(new AdInstanceManager(mock(Activity.class), mockMessenger));
+    mockManager = spy(new AdInstanceManager(mock(MethodChannel.class)));
     FlutterAdManagerAdRequest mockFlutterAdRequest = mock(FlutterAdManagerAdRequest.class);
     mockAdRequest = mock(AdManagerAdRequest.class);
     when(mockFlutterAdRequest.asAdManagerAdRequest()).thenReturn(mockAdRequest);

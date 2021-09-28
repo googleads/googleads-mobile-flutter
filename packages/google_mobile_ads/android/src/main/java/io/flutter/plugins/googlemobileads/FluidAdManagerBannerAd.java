@@ -14,6 +14,7 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import java.util.Collections;
 
 /** A subclass of {@link FlutterAdManagerBannerAd} specifically for fluid ad size. */
 final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
+
+  private static final String TAG = "FluidAdManagerBannerAd";
 
   @Nullable private ViewGroup containerView;
 
@@ -87,6 +90,9 @@ final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
     // Place the ad view inside a scroll view. This allows the height of the ad view to overflow
     // its container so we can calculate the height and send it back to flutter.
     ScrollView scrollView = createContainerView();
+    if (scrollView == null) {
+      return null;
+    }
     scrollView.setClipChildren(false);
     scrollView.setVerticalScrollBarEnabled(false);
     scrollView.setHorizontalScrollBarEnabled(false);
@@ -95,9 +101,14 @@ final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
     return new FlutterPlatformView(adView);
   }
 
+  @Nullable
   @VisibleForTesting
   ScrollView createContainerView() {
-    return new ScrollView(manager.activity);
+    if (manager.getActivity() == null) {
+      Log.e(TAG, "Tried to create container view before plugin is attached to an activity.");
+      return null;
+    }
+    return new ScrollView(manager.getActivity());
   }
 
   @Override

@@ -377,7 +377,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 instanceManager,
                 call.<String>argument("adUnitId"),
                 call.<FlutterAdManagerAdRequest>argument("request"),
-                new BannerAdCreator(instanceManager.activity));
+                new BannerAdCreator(appContext));
         instanceManager.trackAd(fluidAd, call.<Integer>argument("adId"));
         fluidAd.load();
         result.success(null);
