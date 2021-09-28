@@ -40,7 +40,6 @@
 - (GADAdSize)inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:(NSNumber *_Nonnull)width
                                                    maxHeight:(NSNumber *_Nonnull)maxHeight;
 
-  
 @end
 
 @interface FLTAnchoredAdaptiveBannerSize : FLTAdSize
@@ -132,7 +131,7 @@
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
-- (FLTAdSize *_Nullable) getAdSize;
+- (FLTAdSize *_Nullable)getAdSize;
 - (GADBannerView *_Nonnull)bannerView;
 @end
 

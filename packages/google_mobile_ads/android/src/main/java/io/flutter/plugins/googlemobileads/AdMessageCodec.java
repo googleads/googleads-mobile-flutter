@@ -23,7 +23,6 @@ import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
-import io.flutter.plugins.googlemobileads.FlutterAdSize.AdaptiveInlineBannerAdSize;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -51,7 +50,7 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 143;
   private static final byte VALUE_NATIVE_AD_OPTIONS = (byte) 144;
   private static final byte VALUE_VIDEO_OPTIONS = (byte) 145;
-  private static final byte  VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE = (byte) 146;
+  private static final byte VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE = (byte) 146;
 
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
@@ -174,17 +173,14 @@ class AdMessageCodec extends StandardMessageCodec {
   @Override
   protected Object readValueOfType(byte type, ByteBuffer buffer) {
     switch (type) {
-      case VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE: {
-        final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
-        final Integer height = (Integer) readValueOfType(buffer.get(), buffer);
-        final Integer orientation = (Integer) readValueOfType(buffer.get(), buffer);
-        return new FlutterAdSize.AdaptiveInlineBannerAdSize(
-            adSizeFactory,
-            context,
-            width,
-            orientation,
-            height);
-      }
+      case VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE:
+        {
+          final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
+          final Integer height = (Integer) readValueOfType(buffer.get(), buffer);
+          final Integer orientation = (Integer) readValueOfType(buffer.get(), buffer);
+          return new FlutterAdSize.AdaptiveInlineBannerAdSize(
+              adSizeFactory, context, width, orientation, height);
+        }
       case VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE:
         final String orientation = (String) readValueOfType(buffer.get(), buffer);
         final Integer width = (Integer) readValueOfType(buffer.get(), buffer);

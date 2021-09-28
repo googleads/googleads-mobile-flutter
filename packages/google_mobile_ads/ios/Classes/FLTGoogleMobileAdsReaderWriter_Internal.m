@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "FLTAdUtil.h"
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
+#import "FLTAdUtil.h"
 
 // The type values below must be consistent for each platform.
 typedef NS_ENUM(NSInteger, FLTAdMobField) {
@@ -213,11 +213,13 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       NSNumber *maxHeight = [self readValueOfType:[self readByte]];
       NSNumber *orientation = [self readValueOfType:[self readByte]];
       if ([FLTAdUtil isNotNull:orientation]) {
-        gadAdSize = orientation.intValue == 0
-          ? [_adSizeFactory portraitOrientationInlineAdaptiveBannerSizeWithWidth:width]
-          : [_adSizeFactory landscapeInlineAdaptiveBannerAdSizeWithWidth:width];
+        gadAdSize =
+            orientation.intValue == 0
+                ? [_adSizeFactory portraitOrientationInlineAdaptiveBannerSizeWithWidth:width]
+                : [_adSizeFactory landscapeInlineAdaptiveBannerAdSizeWithWidth:width];
       } else if ([FLTAdUtil isNotNull:maxHeight]) {
-        gadAdSize = [_adSizeFactory inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:width maxHeight:maxHeight];
+        gadAdSize = [_adSizeFactory inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:width
+                                                                          maxHeight:maxHeight];
       } else {
         gadAdSize = [_adSizeFactory currentOrientationInlineAdaptiveBannerSizeWithWidth:width];
       }

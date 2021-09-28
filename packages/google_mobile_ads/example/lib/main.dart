@@ -228,8 +228,8 @@ class _MyAppState extends State<MyApp> {
                     case 'Adaptive inline':
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context)
-                          => AdaptiveInlineExample()),
+                        MaterialPageRoute(
+                            builder: (context) => AdaptiveInlineExample()),
                       );
                       break;
                     default:
@@ -248,12 +248,10 @@ class _MyAppState extends State<MyApp> {
                   PopupMenuItem<String>(
                     value: 'Fluid',
                     child: Text('Fluid'),
-
                   ),
                   PopupMenuItem<String>(
                     value: 'Adaptive inline',
                     child: Text('Adaptive inline'),
-
                   ),
                 ],
               ),

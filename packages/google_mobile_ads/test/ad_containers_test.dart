@@ -1364,8 +1364,8 @@ void main() {
       expect(result.maxHeight, null);
       expect(result.height, 0);
 
-      byteData = codec.encodeMessage(
-          AdSize.getPortraitInlineAdaptiveBannerAdSize(200))!;
+      byteData = codec
+          .encodeMessage(AdSize.getPortraitInlineAdaptiveBannerAdSize(200))!;
 
       result = codec.decodeMessage(byteData);
       expect(result.orientation, Orientation.portrait);
@@ -1373,8 +1373,8 @@ void main() {
       expect(result.maxHeight, null);
       expect(result.height, 0);
 
-      byteData = codec.encodeMessage(
-          AdSize.getLandscapeInlineAdaptiveBannerAdSize(20))!;
+      byteData = codec
+          .encodeMessage(AdSize.getLandscapeInlineAdaptiveBannerAdSize(20))!;
 
       result = codec.decodeMessage(byteData);
       expect(result.orientation, Orientation.landscape);

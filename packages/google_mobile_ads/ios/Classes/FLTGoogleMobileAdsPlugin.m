@@ -322,8 +322,9 @@
       result(nil);
     }
   } else if ([call.method isEqualToString:@"getAdSize"]) {
-    FLTBannerAd *ad = (FLTBannerAd *) [_manager adFor:call.arguments[@"adId"]];
-    result([ad getAdSize]);;
+    FLTBannerAd *ad = (FLTBannerAd *)[_manager adFor:call.arguments[@"adId"]];
+    result([ad getAdSize]);
+    ;
   } else {
     result(FlutterMethodNotImplemented);
   }

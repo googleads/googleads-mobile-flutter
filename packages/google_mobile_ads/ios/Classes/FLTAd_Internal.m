@@ -254,7 +254,7 @@
   [self.bannerView loadRequest:_adRequest.asGADRequest];
 }
 
-- (FLTAdSize *) getAdSize {
+- (FLTAdSize *)getAdSize {
   if (self.bannerView) {
     return [[FLTAdSize alloc] initWithAdSize:self.bannerView.adSize];
   }

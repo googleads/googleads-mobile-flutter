@@ -25,7 +25,6 @@ class AdaptiveInlineExample extends StatefulWidget {
 }
 
 class _AdaptiveInlineExampleState extends State<AdaptiveInlineExample> {
-
   static const _insets = 16.0;
   AdManagerBannerAd? _adaptiveInlineAd;
   bool _isLoaded = false;
@@ -41,8 +40,8 @@ class _AdaptiveInlineExampleState extends State<AdaptiveInlineExample> {
 
   void _loadAd() async {
     // Create the ad object and load an ad.
-    AdSize size = AdSize
-        .getCurrentOrientationInlineAdaptiveBannerAdSize( _adWidth.truncate());
+    AdSize size = AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(
+        _adWidth.truncate());
 
     _adaptiveInlineAd = AdManagerBannerAd(
       adUnitId: 'ca-app-pub-3940256099942544/9214589741',
@@ -55,11 +54,9 @@ class _AdaptiveInlineExampleState extends State<AdaptiveInlineExample> {
             // the height of the ad container.
             _adaptiveInlineAd = ad as AdManagerBannerAd;
             _isLoaded = true;
-            _adaptiveInlineAd?.getPlatformAdSize().then((size) =>
-              setState(() {
-                _adSize = size;
-              })
-            );
+            _adaptiveInlineAd?.getPlatformAdSize().then((size) => setState(() {
+                  _adSize = size;
+                }));
           });
           print('Adaptive inline banner loaded: ${ad.responseInfo}');
         },
@@ -71,7 +68,6 @@ class _AdaptiveInlineExampleState extends State<AdaptiveInlineExample> {
     );
     await _adaptiveInlineAd!.load();
   }
-
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -89,14 +85,17 @@ class _AdaptiveInlineExampleState extends State<AdaptiveInlineExample> {
               );
             },
             itemBuilder: (BuildContext context, int index) {
-              if (index == 1
-                  && _adaptiveInlineAd != null
-                  && _isLoaded
-                  && _adSize != null) {
-                return Align(child: Container(
+              if (index == 1 &&
+                  _adaptiveInlineAd != null &&
+                  _isLoaded &&
+                  _adSize != null) {
+                return Align(
+                    child: Container(
                   width: _adWidth,
                   height: _adSize!.height.toDouble(),
-                  child: AdWidget(ad: _adaptiveInlineAd!,),
+                  child: AdWidget(
+                    ad: _adaptiveInlineAd!,
+                  ),
                 ));
               }
               return Text(

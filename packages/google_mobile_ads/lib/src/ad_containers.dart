@@ -271,7 +271,6 @@ class FluidAdSize extends AdSize {
 /// [BannerAd.getPlatformAdSize] or [AdManagerBannerAd.getPlatformAdSize] to get
 /// the height to use for the ad container.
 class InlineAdaptiveSize extends AdSize {
-
   /// Private constructor for [InlineAdaptiveSize].
   ///
   /// You should use one of the static constructors in [AdSize].
@@ -290,7 +289,9 @@ class InlineAdaptiveSize extends AdSize {
   /// Representation of [orientation] to pass to platform code.
   int? get orientationValue => orientation == null
       ? null
-      : orientation == Orientation.portrait ? 0 : 1;
+      : orientation == Orientation.portrait
+          ? 0
+          : 1;
 }
 
 /// [AdSize] represents the size of a banner ad.
@@ -383,7 +384,8 @@ class AdSize {
   /// This ad size is most suitable for ads intended to be displayed inside
   /// scrollable content.
   static InlineAdaptiveSize getLandscapeInlineAdaptiveBannerAdSize(int width) {
-    return InlineAdaptiveSize._(width: width, orientation: Orientation.landscape);
+    return InlineAdaptiveSize._(
+        width: width, orientation: Orientation.landscape);
   }
 
   /// Gets an AdSize with the given width and height that is always 0.
@@ -397,7 +399,8 @@ class AdSize {
   /// This ad size is most suitable for ads intended to be displayed inside
   /// scrollable content.
   static InlineAdaptiveSize getPortraitInlineAdaptiveBannerAdSize(int width) {
-    return InlineAdaptiveSize._(width: width, orientation: Orientation.portrait);
+    return InlineAdaptiveSize._(
+        width: width, orientation: Orientation.portrait);
   }
 
   /// Gets an AdSize with the given width and height that is always 0.
@@ -848,7 +851,6 @@ class AdManagerBannerAd extends AdWithView {
   Future<void> load() async {
     await instanceManager.loadAdManagerBannerAd(this);
   }
-
 
   /// Returns the AdSize of the associated platform ad object.
   ///
