@@ -208,22 +208,11 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                               startMuted:[self readValueOfType:[self readByte]]];
     }
     case FLTAdmobFieldAdaptiveInlineAdSize: {
-      GADAdSize gadAdSize;
-      NSNumber *width = [self readValueOfType:[self readByte]];
-      NSNumber *maxHeight = [self readValueOfType:[self readByte]];
-      NSNumber *orientation = [self readValueOfType:[self readByte]];
-      if ([FLTAdUtil isNotNull:orientation]) {
-        gadAdSize =
-            orientation.intValue == 0
-                ? [_adSizeFactory portraitOrientationInlineAdaptiveBannerSizeWithWidth:width]
-                : [_adSizeFactory landscapeInlineAdaptiveBannerAdSizeWithWidth:width];
-      } else if ([FLTAdUtil isNotNull:maxHeight]) {
-        gadAdSize = [_adSizeFactory inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:width
-                                                                          maxHeight:maxHeight];
-      } else {
-        gadAdSize = [_adSizeFactory currentOrientationInlineAdaptiveBannerSizeWithWidth:width];
-      }
-      return [[FLTAdSize alloc] initWithAdSize:gadAdSize];
+      return [[FLTInlineAdaptiveBannerSize alloc]
+          initWithFactory:_adSizeFactory
+                    width:[self readValueOfType:[self readByte]]
+                maxHeight:[self readValueOfType:[self readByte]]
+              orientation:[self readValueOfType:[self readByte]]];
     }
   }
   return [super readValueOfType:type];
@@ -233,7 +222,13 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 
 @implementation FLTGoogleMobileAdsWriter
 - (void)writeAdSize:(FLTAdSize *_Nonnull)value {
-  if ([value isKindOfClass:[FLTAnchoredAdaptiveBannerSize class]]) {
+  if ([value isKindOfClass:[FLTInlineAdaptiveBannerSize class]]) {
+    [self writeByte:FLTAdmobFieldAdaptiveInlineAdSize];
+    FLTInlineAdaptiveBannerSize *size = (FLTInlineAdaptiveBannerSize *)value;
+    [self writeValue:size.width];
+    [self writeValue:size.maxHeight];
+    [self writeValue:size.orientation];
+  } else if ([value isKindOfClass:[FLTAnchoredAdaptiveBannerSize class]]) {
     [self writeByte:FLTAdmobFieldAnchoredAdaptiveBannerAdSize];
     FLTAnchoredAdaptiveBannerSize *size = (FLTAnchoredAdaptiveBannerSize *)value;
     [self writeValue:size.orientation];

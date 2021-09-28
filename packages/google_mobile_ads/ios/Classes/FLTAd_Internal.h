@@ -49,6 +49,15 @@
                                    width:(NSNumber *_Nonnull)width;
 @end
 
+@interface FLTInlineAdaptiveBannerSize : FLTAdSize
+@property(readonly) NSNumber *_Nullable orientation;
+@property(readonly) NSNumber *_Nullable maxHeight;
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
+                                   width:(NSNumber *_Nonnull)width
+                               maxHeight:(NSNumber *_Nullable)maxHeight
+                             orientation:(NSNumber *_Nullable)orientation;
+@end
+
 @interface FLTSmartBannerSize : FLTAdSize
 @property(readonly) NSString *_Nonnull orientation;
 - (instancetype _Nonnull)initWithOrientation:(NSString *_Nonnull)orientation;
