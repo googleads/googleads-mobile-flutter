@@ -57,6 +57,7 @@
 - (instancetype _Nonnull)initWithAccuracy:(NSNumber *_Nonnull)accuracy
                                 longitude:(NSNumber *_Nonnull)longitude
                                  latitude:(NSNumber *_Nonnull)latitude;
+@end
 
 @interface FLTFluidSize : FLTAdSize
 @end

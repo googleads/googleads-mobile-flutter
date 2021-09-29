@@ -101,6 +101,7 @@
   }
   return self;
 }
+@end
 
 @implementation FLTFluidSize
 - (instancetype _Nonnull)init {
