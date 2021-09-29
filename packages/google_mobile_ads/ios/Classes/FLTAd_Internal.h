@@ -58,6 +58,7 @@
                                 longitude:(NSNumber *_Nonnull)longitude
                                  latitude:(NSNumber *_Nonnull)latitude;
 
+@interface FLTFluidSize : FLTAdSize
 @end
 
 @interface FLTAdRequest : NSObject
@@ -152,6 +153,16 @@
                                      adId:(NSNumber *_Nonnull)adId;
 @end
 
+/**
+ * An extension of`GAMBannerAd` for fluid ad size.
+ */
+@interface FLTFluidGAMBannerAd : FLTGAMBannerAd <GADAdSizeDelegate>
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                                  request:(FLTGAMAdRequest *_Nonnull)request
+                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                                     adId:(NSNumber *_Nonnull)adId;
+@end
+
 @interface FLTInterstitialAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
@@ -178,6 +189,15 @@
                 (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions
                                      adId:(NSNumber *_Nonnull)adId;
 - (GADRewardedAd *_Nullable)rewardedAd;
+@end
+
+@interface FLTAppOpenAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                                  request:(FLTAdRequest *_Nonnull)request
+                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                              orientation:(NSNumber *_Nonnull)orientation
+                                     adId:(NSNumber *_Nonnull)adId;
+- (GADAppOpenAd *_Nullable)appOpenAd;
 @end
 
 @interface FLTVideoOptions : NSObject

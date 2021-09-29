@@ -37,8 +37,10 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
+import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
@@ -50,19 +52,26 @@ import java.util.Map;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricTestRunner;
 
 /** Tests {@link AdInstanceManager}. */
+@RunWith(RobolectricTestRunner.class)
 public class GoogleMobileAdsTest {
   private AdInstanceManager testManager;
   private final FlutterAdRequest request = new FlutterAdRequest.Builder().build();
   private Activity mockActivity;
+  private Context mockContext;
+  private FlutterPluginBinding mockFlutterPluginBinding;
   private static BinaryMessenger mockMessenger;
 
   private static MethodCall getLastMethodCall() {
+    Robolectric.flushForegroundThreadScheduler();
     final ArgumentCaptor<ByteBuffer> byteBufferCaptor = ArgumentCaptor.forClass(ByteBuffer.class);
     verify(mockMessenger)
         .send(
@@ -89,7 +98,16 @@ public class GoogleMobileAdsTest {
             })
         .when(mockActivity)
         .runOnUiThread(ArgumentMatchers.any(Runnable.class));
-    testManager = new AdInstanceManager(mockActivity, mockMessenger);
+    MethodChannel methodChannel =
+        new MethodChannel(
+            mockMessenger,
+            "plugins.flutter.io/google_mobile_ads",
+            new StandardMethodCodec(new AdMessageCodec(mockActivity)));
+    testManager = new AdInstanceManager(methodChannel);
+    testManager.setActivity(mockActivity);
+    mockContext = mock(Context.class);
+    mockFlutterPluginBinding = mock(FlutterPluginBinding.class);
+    doReturn(mockContext).when(mockFlutterPluginBinding).getApplicationContext();
   }
 
   @Test
@@ -101,7 +119,7 @@ public class GoogleMobileAdsTest {
             "testId",
             request,
             new FlutterAdSize(1, 2),
-            new BannerAdCreator(testManager.activity));
+            mock(BannerAdCreator.class));
     testManager.trackAd(bannerAd, 0);
 
     assertNotNull(testManager.adForId(0));
@@ -157,7 +175,7 @@ public class GoogleMobileAdsTest {
             "testId",
             request,
             new FlutterAdSize(1, 2),
-            new BannerAdCreator(testManager.activity));
+            mock(BannerAdCreator.class));
     testManager.trackAd(bannerAd, 0);
 
     AdError adError = mock(AdError.class);
@@ -212,7 +230,7 @@ public class GoogleMobileAdsTest {
             "testId",
             request,
             new FlutterAdSize(1, 2),
-            new BannerAdCreator(testManager.activity));
+            mock(BannerAdCreator.class));
     testManager.trackAd(bannerAd, 0);
 
     testManager.onAdLoaded(0, null);
@@ -235,7 +253,7 @@ public class GoogleMobileAdsTest {
             "testId",
             request,
             new FlutterAdSize(1, 2),
-            new BannerAdCreator(testManager.activity));
+            mock(BannerAdCreator.class));
     testManager.trackAd(bannerAd, 0);
 
     testManager.onAdFailedToLoad(0, new FlutterAd.FlutterLoadAdError(1, "hi", "friend", null));
@@ -262,7 +280,7 @@ public class GoogleMobileAdsTest {
             "testId",
             request,
             new FlutterAdSize(1, 2),
-            new BannerAdCreator(testManager.activity));
+            mock(BannerAdCreator.class));
     testManager.trackAd(bannerAd, 0);
 
     testManager.onAppEvent(0, "color", "red");
@@ -288,7 +306,7 @@ public class GoogleMobileAdsTest {
             "testId",
             request,
             new FlutterAdSize(1, 2),
-            new BannerAdCreator(testManager.activity));
+            mock(BannerAdCreator.class));
     testManager.trackAd(bannerAd, 0);
 
     testManager.onAdOpened(0);
@@ -368,7 +386,7 @@ public class GoogleMobileAdsTest {
             "testId",
             request,
             new FlutterAdSize(1, 2),
-            new BannerAdCreator(testManager.activity));
+            mock(BannerAdCreator.class));
     testManager.trackAd(bannerAd, 0);
 
     testManager.onAdClosed(0);
@@ -420,7 +438,8 @@ public class GoogleMobileAdsTest {
     // Check that ads are removed and disposed when "_init" is called.
     AdInstanceManager testManagerSpy = spy(testManager);
     GoogleMobileAdsPlugin plugin =
-        new GoogleMobileAdsPlugin(null, testManagerSpy, new FlutterMobileAdsWrapper());
+        new GoogleMobileAdsPlugin(
+            mockFlutterPluginBinding, testManagerSpy, new FlutterMobileAdsWrapper());
     Result result = mock(Result.class);
     MethodCall methodCall = new MethodCall("_init", null);
     plugin.onMethodCall(methodCall, result);
@@ -439,7 +458,8 @@ public class GoogleMobileAdsTest {
   public void initializeCallbackInvokedTwice() {
     AdInstanceManager testManagerSpy = spy(testManager);
     FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
-    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
     final InitializationStatus mockInitStatus = mock(InitializationStatus.class);
     doAnswer(
             new Answer() {
@@ -492,7 +512,8 @@ public class GoogleMobileAdsTest {
   public void testSetAppMuted() {
     AdInstanceManager testManagerSpy = spy(testManager);
     FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
-    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
 
     // Create a map for passing arguments to the MethodCall
     HashMap<String, Boolean> trueArguments = new HashMap<>();
@@ -523,7 +544,8 @@ public class GoogleMobileAdsTest {
   public void testSetAppVolume() {
     AdInstanceManager testManagerSpy = spy(testManager);
     FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
-    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
 
     // Create a map for passing arguments to the MethodCall.
     HashMap<String, Float> fullVolumeArguments = new HashMap<>();
@@ -542,13 +564,14 @@ public class GoogleMobileAdsTest {
   public void testDisableMediationInitialization() {
     AdInstanceManager testManagerSpy = spy(testManager);
     FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
-    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
-
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
     // Invoke the disableMediationInitialization method.
     MethodCall methodCall = new MethodCall("MobileAds#disableMediationInitialization", null);
     Result result = mock(Result.class);
     plugin.onMethodCall(methodCall, result);
 
+    Robolectric.flushForegroundThreadScheduler();
     // Verify that mockMobileAds.disableMediationInitialization() was called.
     verify(mockMobileAds).disableMediationInitialization(ArgumentMatchers.any(Context.class));
   }
@@ -557,8 +580,8 @@ public class GoogleMobileAdsTest {
   public void testGetVersionString() {
     AdInstanceManager testManagerSpy = spy(testManager);
     FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
-    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
-
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
     // Stub getVersionString() to return a value.
     doReturn("Test-SDK-Version").when(mockMobileAds).getVersionString();
 

@@ -188,6 +188,15 @@
                }];
 }
 
+- (void)onFluidAdHeightChanged:(id<FLTAd> _Nonnull)ad height:(CGFloat)height {
+  [_channel invokeMethod:@"onAdEvent"
+               arguments:@{
+                 @"adId" : ad.adId,
+                 @"eventName" : @"onFluidAdHeightChanged",
+                 @"height" : [[NSNumber alloc] initWithFloat:height]
+               }];
+}
+
 /// Sends an ad event with the provided name.
 - (void)sendAdEvent:(NSString *_Nonnull)eventName ad:(id<FLTAd>)ad {
   [_channel invokeMethod:@"onAdEvent"

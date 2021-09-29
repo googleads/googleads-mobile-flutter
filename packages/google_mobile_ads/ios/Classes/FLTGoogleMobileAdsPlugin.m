@@ -215,6 +215,14 @@
                                                              adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
+  } else if ([call.method isEqualToString:@"loadFluidAd"]) {
+    FLTFluidGAMBannerAd *ad =
+        [[FLTFluidGAMBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                              request:call.arguments[@"request"]
+                                   rootViewController:rootController
+                                                 adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
+    result(nil);
   } else if ([call.method isEqualToString:@"loadNativeAd"]) {
     NSString *factoryId = call.arguments[@"factoryId"];
     id<FLTNativeAdFactory> factory = _nativeAdFactories[factoryId];
@@ -276,6 +284,25 @@
                              rootViewController:rootController
                   serverSideVerificationOptions:call.arguments[@"serverSideVerificationOptions"]
                                            adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
+    result(nil);
+  } else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
+    FLTAdRequest *request;
+    if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
+      request = call.arguments[@"request"];
+    } else if (![call.arguments[@"adManagerRequest"] isEqual:[NSNull null]]) {
+      request = call.arguments[@"adManagerRequest"];
+    } else {
+      result([FlutterError errorWithCode:@"InvalidRequest"
+                                 message:@"A null or invalid ad request was provided."
+                                 details:nil]);
+      return;
+    }
+    FLTAppOpenAd *ad = [[FLTAppOpenAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                                      request:request
+                                           rootViewController:rootController
+                                                  orientation:call.arguments[@"orientation"]
+                                                         adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"disposeAd"]) {

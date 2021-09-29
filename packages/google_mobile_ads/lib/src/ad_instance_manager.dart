@@ -124,6 +124,9 @@ class AdInstanceManager {
         } else if (ad is AdManagerInterstitialAd) {
           ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
               ?.call(ad);
+        } else if (ad is AppOpenAd) {
+          ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
+              ?.call(ad);
         } else {
           debugPrint('invalid ad: $ad, for event name: $eventName');
         }
@@ -133,6 +136,9 @@ class AdInstanceManager {
         break;
       case 'onPaidEvent':
         _invokePaidEvent(ad, eventName, arguments);
+        break;
+      case 'onFluidAdHeightChanged':
+        _invokeFluidAdHeightChanged(ad, arguments);
         break;
       default:
         debugPrint('invalid ad event name: $eventName');
@@ -178,9 +184,19 @@ class AdInstanceManager {
       case 'onPaidEvent':
         _invokePaidEvent(ad, eventName, arguments);
         break;
+      case 'onFluidAdHeightChanged':
+        _invokeFluidAdHeightChanged(ad, arguments);
+        break;
       default:
         debugPrint('invalid ad event name: $eventName');
     }
+  }
+
+  void _invokeFluidAdHeightChanged(Ad ad, Map<dynamic, dynamic> arguments) {
+    assert(ad is FluidAdManagerBannerAd);
+    (ad as FluidAdManagerBannerAd)
+        .onFluidAdHeightChangedListener
+        ?.call(ad, arguments['height'].toDouble());
   }
 
   void _invokeOnAdLoaded(
@@ -193,6 +209,8 @@ class AdInstanceManager {
     } else if (ad is InterstitialAd) {
       ad.adLoadCallback.onAdLoaded.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
+      ad.adLoadCallback.onAdLoaded.call(ad);
+    } else if (ad is AppOpenAd) {
       ad.adLoadCallback.onAdLoaded.call(ad);
     } else {
       debugPrint('invalid ad: $ad, for event name: $eventName');
@@ -211,6 +229,8 @@ class AdInstanceManager {
       ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
     } else if (ad is AdManagerInterstitialAd) {
       ad.dispose();
+      ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
+    } else if (ad is AppOpenAd) {
       ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
     } else {
       debugPrint('invalid ad: $ad, for event name: $eventName');
@@ -261,6 +281,8 @@ class AdInstanceManager {
       ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
       ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
+    } else if (ad is AppOpenAd) {
+      ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
     } else {
       debugPrint('invalid ad: $ad, for event name: $eventName');
     }
@@ -272,6 +294,8 @@ class AdInstanceManager {
     } else if (ad is InterstitialAd) {
       ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
+      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+    } else if (ad is AppOpenAd) {
       ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
     } else {
       debugPrint('invalid ad: $ad, for event name: $eventName');
@@ -289,6 +313,9 @@ class AdInstanceManager {
     } else if (ad is AdManagerInterstitialAd) {
       ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
           ?.call(ad, arguments['error']);
+    } else if (ad is AppOpenAd) {
+      ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
+          ?.call(ad, arguments['error']);
     } else {
       debugPrint('invalid ad: $ad, for event name: $eventName');
     }
@@ -302,6 +329,8 @@ class AdInstanceManager {
     } else if (ad is InterstitialAd) {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
+      ad.fullScreenContentCallback?.onAdImpression?.call(ad);
+    } else if (ad is AppOpenAd) {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
     } else {
       debugPrint('invalid ad: $ad, for event name: $eventName');
@@ -458,6 +487,26 @@ class AdInstanceManager {
     );
   }
 
+  /// Load an app open ad.
+  Future<void> loadAppOpenAd(AppOpenAd ad) {
+    if (adIdFor(ad) != null) {
+      return Future<void>.value();
+    }
+
+    final int adId = _nextAdId++;
+    _loadedAds[adId] = ad;
+    return channel.invokeMethod<void>(
+      'loadAppOpenAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+        'adManagerRequest': ad.adManagerAdRequest,
+        'orientation': ad.orientation,
+      },
+    );
+  }
+
   /// Starts loading the ad if not previously loaded.
   ///
   /// Loading also terminates if ad is already in the process of loading.
@@ -470,6 +519,27 @@ class AdInstanceManager {
     _loadedAds[adId] = ad;
     return channel.invokeMethod<void>(
       'loadAdManagerBannerAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'sizes': ad.sizes,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+      },
+    );
+  }
+
+  /// Starts loading the ad if not previously loaded.
+  ///
+  /// Loading also terminates if ad is already in the process of loading.
+  Future<void> loadFluidAd(FluidAdManagerBannerAd ad) {
+    if (adIdFor(ad) != null) {
+      return Future<void>.value();
+    }
+
+    final int adId = _nextAdId++;
+    _loadedAds[adId] = ad;
+    return channel.invokeMethod<void>(
+      'loadFluidAd',
       <dynamic, dynamic>{
         'adId': adId,
         'sizes': ad.sizes,
@@ -616,6 +686,7 @@ class AdMessageCodec extends StandardMessageCodec {
   // The type values below must be consistent for each platform.
   static const int _valueAdSize = 128;
   static const int _valueAdRequest = 129;
+  static const int _valueFluidAdSize = 130;
   static const int _valueRewardItem = 132;
   static const int _valueLoadAdError = 133;
   static const int _valueAdManagerAdRequest = 134;
@@ -756,6 +827,8 @@ class AdMessageCodec extends StandardMessageCodec {
           width: readValueOfType(buffer.getUint8(), buffer),
           height: readValueOfType(buffer.getUint8(), buffer),
         );
+      case _valueFluidAdSize:
+        return FluidAdSize();
       case _valueAdRequest:
         return AdRequest(
           keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
@@ -900,6 +973,8 @@ class AdMessageCodec extends StandardMessageCodec {
       if (defaultTargetPlatform == TargetPlatform.iOS) {
         writeValue(buffer, describeEnum(value.orientation));
       }
+    } else if (value is FluidAdSize) {
+      buffer.putUint8(_valueFluidAdSize);
     } else {
       buffer.putUint8(_valueAdSize);
       writeValue(buffer, value.width);

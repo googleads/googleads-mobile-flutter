@@ -19,6 +19,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'fluid_example.dart';
 import 'reusable_inline_example.dart';
 
 void main() {
@@ -218,18 +219,28 @@ class _MyAppState extends State<MyApp> {
                     case 'RewardedAd':
                       _showRewardedAd();
                       break;
+                    case 'Fluid':
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => FluidExample()),
+                      );
+                      break;
                     default:
                       throw AssertionError('unexpected button: $result');
                   }
                 },
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
-                    value: '$InterstitialAd',
-                    child: Text('$InterstitialAd'),
+                    value: 'InterstitialAd',
+                    child: Text('InterstitialAd'),
                   ),
                   PopupMenuItem<String>(
-                    value: '$RewardedAd',
-                    child: Text('$RewardedAd'),
+                    value: 'RewardedAd',
+                    child: Text('RewardedAd'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'Fluid',
+                    child: Text('Fluid'),
                   ),
                 ],
               ),

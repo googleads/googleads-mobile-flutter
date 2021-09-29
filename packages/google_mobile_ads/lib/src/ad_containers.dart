@@ -14,6 +14,7 @@
 
 import 'dart:async';
 import 'dart:io' show Platform;
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -307,6 +308,12 @@ class SmartBannerAdSize extends AdSize {
   final Orientation orientation;
 }
 
+/// A dynamically sized banner that matches its parent's width and content height.
+class FluidAdSize extends AdSize {
+  /// Default constructor for [FluidAdSize].
+  const FluidAdSize() : super(width: -3, height: -3);
+}
+
 /// [AdSize] represents the size of a banner ad.
 ///
 /// There are six sizes available, which are the same for both iOS and Android.
@@ -340,6 +347,9 @@ class AdSize {
 
   /// The leaderboard (728x90) size.
   static const AdSize leaderboard = AdSize(width: 728, height: 90);
+
+  /// A dynamically sized banner that matches its parent's width and expands/contracts its height to match the ad's content after loading completes.
+  static const AdSize fluid = FluidAdSize();
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
   ///
@@ -564,6 +574,122 @@ class _AdWidgetState extends State<AdWidget> {
   }
 }
 
+/// A widget for displaying [FluidAdManagerBannerAd].
+///
+/// This widget adjusts its height based on the platform rendered ad.
+class FluidAdWidget extends StatefulWidget {
+  /// Constructs a [FluidAdWidget].
+  const FluidAdWidget({Key? key, required this.ad, this.width})
+      : super(key: key);
+
+  /// Ad to be displayed as a widget.
+  final FluidAdManagerBannerAd ad;
+
+  /// The width to set for the ad widget.
+  final double? width;
+
+  @override
+  _FluidAdWidgetState createState() => _FluidAdWidgetState();
+}
+
+class _FluidAdWidgetState extends State<FluidAdWidget> {
+  bool _adIdAlreadyMounted = false;
+  bool _adLoadNotCalled = false;
+  double _height = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    final int? adId = instanceManager.adIdFor(widget.ad);
+    if (adId != null) {
+      if (instanceManager.isWidgetAdIdMounted(adId)) {
+        _adIdAlreadyMounted = true;
+      }
+      instanceManager.mountWidgetAdId(adId);
+    } else {
+      _adLoadNotCalled = true;
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    final int? adId = instanceManager.adIdFor(widget.ad);
+    if (adId != null) {
+      instanceManager.unmountWidgetAdId(adId);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_adIdAlreadyMounted) {
+      throw FlutterError.fromParts(<DiagnosticsNode>[
+        ErrorSummary('This AdWidget is already in the Widget tree'),
+        ErrorHint(
+            'If you placed this AdWidget in a list, make sure you create a new instance '
+            'in the builder function with a unique ad object.'),
+        ErrorHint(
+            'Make sure you are not using the same ad object in more than one AdWidget.'),
+      ]);
+    }
+    if (_adLoadNotCalled) {
+      throw FlutterError.fromParts(<DiagnosticsNode>[
+        ErrorSummary(
+            'AdWidget requires Ad.load to be called before AdWidget is inserted into the tree'),
+        ErrorHint(
+            'Parameter ad is not loaded. Call Ad.load before AdWidget is inserted into the tree.'),
+      ]);
+    }
+
+    widget.ad.onFluidAdHeightChangedListener = (ad, height) {
+      setState(() {
+        _height = height;
+      });
+    };
+
+    Widget platformView;
+    double height;
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      platformView = PlatformViewLink(
+        viewType: '${instanceManager.channel.name}/ad_widget',
+        surfaceFactory:
+            (BuildContext context, PlatformViewController controller) {
+          return AndroidViewSurface(
+            controller: controller as AndroidViewController,
+            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+          );
+        },
+        onCreatePlatformView: (PlatformViewCreationParams params) {
+          return PlatformViewsService.initSurfaceAndroidView(
+            id: params.id,
+            viewType: '${instanceManager.channel.name}/ad_widget',
+            layoutDirection: TextDirection.ltr,
+            creationParams: instanceManager.adIdFor(widget.ad),
+            creationParamsCodec: StandardMessageCodec(),
+          )
+            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+            ..create();
+        },
+      );
+      height = _height / MediaQuery.of(context).devicePixelRatio;
+    } else {
+      platformView = UiKitView(
+        viewType: '${instanceManager.channel.name}/ad_widget',
+        creationParams: instanceManager.adIdFor(widget.ad),
+        creationParamsCodec: StandardMessageCodec(),
+      );
+      height = _height;
+    }
+
+    return Container(
+      height: max(0, height),
+      width: widget.width,
+      child: platformView,
+    );
+  }
+}
+
 /// A banner ad.
 ///
 /// This ad can either be overlaid on top of all flutter widgets as a static
@@ -608,6 +734,37 @@ class BannerAd extends AdWithView {
   @override
   Future<void> load() async {
     await instanceManager.loadBannerAd(this);
+  }
+}
+
+/// An 'AdManagerBannerAd' that has fluid ad size.
+///
+/// These ads will dynamically adjust their height to match the width of the ad.
+/// This should be used with [FluidAdWidget], which displays the ad in a widget
+/// that adjusts its height to the height of the platform rendered ad.
+class FluidAdManagerBannerAd extends AdManagerBannerAd {
+  /// Creates a [FluidAdManagerBannerAd].
+  ///
+  /// These ads dynamically change their height based on the width.
+  /// Set [onFluidAdHeightChangedListener] to get notified of height updates.
+  FluidAdManagerBannerAd({
+    required String adUnitId,
+    required AdManagerBannerAdListener listener,
+    required AdManagerAdRequest request,
+    this.onFluidAdHeightChangedListener,
+  }) : super(
+          sizes: [FluidAdSize()],
+          adUnitId: adUnitId,
+          listener: listener,
+          request: request,
+        );
+
+  /// Listener for when the height of the ad changes.
+  OnFluidAdHeightChangedListener? onFluidAdHeightChangedListener;
+
+  @override
+  Future<void> load() async {
+    return instanceManager.loadFluidAd(this);
   }
 }
 
@@ -968,6 +1125,98 @@ class ServerSideVerificationOptions {
     return other is ServerSideVerificationOptions &&
         userId == other.userId &&
         customData == other.customData;
+  }
+}
+
+/// A full-screen app open ad for the Google Mobile Ads Plugin.
+class AppOpenAd extends AdWithoutView {
+  /// Portrait orientation.
+  static const int orientationPortrait = 1;
+
+  /// Landscape orientation left.
+  ///
+  /// Android does not distinguish between left/right, and will treat this
+  /// the same way as [orientationLandscapeRight].
+  static const int orientationLandscapeLeft = 2;
+
+  /// Landscape orientation right.
+  ///
+  /// Android does not distinguish between left/right, and will treat this
+  /// the same way as [orientationLandscapeLeft].
+  static const int orientationLandscapeRight = 3;
+
+  AppOpenAd._({
+    required String adUnitId,
+    required this.adLoadCallback,
+    required this.request,
+    required this.orientation,
+  })  : adManagerAdRequest = null,
+        super(adUnitId: adUnitId);
+
+  AppOpenAd._fromAdManagerRequest({
+    required String adUnitId,
+    required this.adLoadCallback,
+    required this.adManagerAdRequest,
+    required this.orientation,
+  })  : request = null,
+        super(adUnitId: adUnitId);
+
+  /// The [AdRequest] used to load the ad.
+  final AdRequest? request;
+
+  /// The [AdManagerAdRequest] used to load the ad.
+  final AdManagerAdRequest? adManagerAdRequest;
+
+  /// Listener for ad load events.
+  final AppOpenAdLoadCallback adLoadCallback;
+
+  /// The requested orientation.
+  ///
+  /// Must be [orientationPortrait], [orientationLandscapeLeft], or
+  /// [orientationLandscapeRight].
+  final int orientation;
+
+  /// Callbacks to be invoked when ads show and dismiss full screen content.
+  FullScreenContentCallback<AppOpenAd>? fullScreenContentCallback;
+
+  /// Loads a [AppOpenAd] using an [AdRequest].
+  static Future<void> load({
+    required String adUnitId,
+    required AdRequest request,
+    required AppOpenAdLoadCallback adLoadCallback,
+    required int orientation,
+  }) async {
+    AppOpenAd ad = AppOpenAd._(
+      adUnitId: adUnitId,
+      adLoadCallback: adLoadCallback,
+      request: request,
+      orientation: orientation,
+    );
+    await instanceManager.loadAppOpenAd(ad);
+  }
+
+  /// Loads an [AppOpenAd] using an [AdManagerRequest].
+  static Future<void> loadWithAdManagerAdRequest({
+    required String adUnitId,
+    required AdManagerAdRequest adManagerAdRequest,
+    required AppOpenAdLoadCallback adLoadCallback,
+    required int orientation,
+  }) async {
+    AppOpenAd ad = AppOpenAd._fromAdManagerRequest(
+      adUnitId: adUnitId,
+      adLoadCallback: adLoadCallback,
+      adManagerAdRequest: adManagerAdRequest,
+      orientation: orientation,
+    );
+    await instanceManager.loadAppOpenAd(ad);
+  }
+
+  /// Displays this on top of the application.
+  ///
+  /// Set [fullScreenContentCallback] before calling this method to be
+  /// notified of events that occur when showing the ad.
+  Future<void> show() {
+    return instanceManager.showAdWithoutView(this);
   }
 }
 

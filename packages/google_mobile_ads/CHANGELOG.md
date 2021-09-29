@@ -1,3 +1,24 @@
+## 0.13.6
+
+* Partial fix for [#265](https://github.com/googleads/googleads-mobile-flutter/issues/265).
+  * The partial fix allows you to load ads from a cached flutter engine in the add to app scenario,
+    but it only works the first time the engine is attached to an activity.
+  * Support for reusing the engine in another activity after the first one is destroyed is blocked 
+    by this Flutter issue which affects all platform views: https://github.com/flutter/flutter/issues/88880.
+* Adds support for Fluid Ad Size (Ad Manager only)
+  * Fluid ads dynamically adjust their height based on their width. To help display them we've added a new
+    ad container, `FluidAdManagerBannerAd`, and a new widget `FluidAdWidget`.
+    You can reference the [example app](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/fluid_example.dart) for an example of how to load and display a fluid ad.
+  * Android - https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size
+  * iOS - https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size
+
+## 0.13.5
+
+* Adds support for app open. 
+  * Implementation guidance can be found [here](https://developers.devsite.corp.google.com/admob/flutter/app-open).
+  * As a reference please also see the [example app](https://github.com/googleads/googleads-mobile-flutter/tree/master/packages/app_open_example).
+  * Best practices can be found [here](https://support.google.com/admob/answer/9341964?hl=en).
+
 ## 0.13.4
 
 * Adds support for muting and setting the volume level of the app.
