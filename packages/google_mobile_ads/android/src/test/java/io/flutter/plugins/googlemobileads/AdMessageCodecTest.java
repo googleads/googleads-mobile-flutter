@@ -27,7 +27,7 @@ import static org.mockito.Mockito.mock;
 import android.content.Context;
 import com.google.android.gms.ads.AdSize;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.AdSizeFactory;
-import io.flutter.plugins.googlemobileads.FlutterAdSize.AdaptiveInlineBannerAdSize;
+import io.flutter.plugins.googlemobileads.FlutterAdSize.InlineAdaptiveBannerAdSize;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.AnchoredAdaptiveBannerAdSize;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -249,11 +249,11 @@ public class AdMessageCodecTest {
         .when(mockAdSizeFactory)
         .getCurrentOrientationInlineAdaptiveBannerAdSize(any(Context.class), eq(100));
 
-    AdaptiveInlineBannerAdSize size =
-        new AdaptiveInlineBannerAdSize(mockAdSizeFactory, mock(Context.class), 100, null, null);
+    InlineAdaptiveBannerAdSize size =
+        new InlineAdaptiveBannerAdSize(mockAdSizeFactory, mock(Context.class), 100, null, null);
     final ByteBuffer data = testCodec.encodeMessage(size);
-    final AdaptiveInlineBannerAdSize result =
-        (AdaptiveInlineBannerAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
+    final InlineAdaptiveBannerAdSize result =
+        (InlineAdaptiveBannerAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
 
     assertEquals(result.width, 100);
     assertNull(result.maxHeight);

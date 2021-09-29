@@ -98,7 +98,7 @@ class FlutterAdSize {
     }
   }
 
-  static class AdaptiveInlineBannerAdSize extends FlutterAdSize {
+  static class InlineAdaptiveBannerAdSize extends FlutterAdSize {
 
     @Nullable final Integer orientation;
     @Nullable final Integer maxHeight;
@@ -120,7 +120,7 @@ class FlutterAdSize {
       }
     }
 
-    AdaptiveInlineBannerAdSize(
+    InlineAdaptiveBannerAdSize(
         @NonNull AdSizeFactory adSizeFactory,
         @NonNull Context context,
         @NonNull Integer width,

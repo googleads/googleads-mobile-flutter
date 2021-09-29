@@ -23,7 +23,7 @@ import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
-import io.flutter.plugins.googlemobileads.FlutterAdSize.AdaptiveInlineBannerAdSize;
+import io.flutter.plugins.googlemobileads.FlutterAdSize.InlineAdaptiveBannerAdSize;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -179,7 +179,7 @@ class AdMessageCodec extends StandardMessageCodec {
           final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
           final Integer height = (Integer) readValueOfType(buffer.get(), buffer);
           final Integer orientation = (Integer) readValueOfType(buffer.get(), buffer);
-          return new FlutterAdSize.AdaptiveInlineBannerAdSize(
+          return new FlutterAdSize.InlineAdaptiveBannerAdSize(
               adSizeFactory, context, width, orientation, height);
         }
       case VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE:
@@ -279,8 +279,8 @@ class AdMessageCodec extends StandardMessageCodec {
   }
 
   protected void writeAdSize(ByteArrayOutputStream stream, FlutterAdSize value) {
-    if (value instanceof FlutterAdSize.AdaptiveInlineBannerAdSize) {
-      final AdaptiveInlineBannerAdSize size = (AdaptiveInlineBannerAdSize) value;
+    if (value instanceof FlutterAdSize.InlineAdaptiveBannerAdSize) {
+      final InlineAdaptiveBannerAdSize size = (InlineAdaptiveBannerAdSize) value;
       stream.write(VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE);
       writeValue(stream, size.width);
       writeValue(stream, size.maxHeight);
