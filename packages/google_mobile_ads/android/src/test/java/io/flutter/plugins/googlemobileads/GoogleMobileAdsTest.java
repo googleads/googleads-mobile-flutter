@@ -573,7 +573,8 @@ public class GoogleMobileAdsTest {
   public void testGetRequestConfiguration() {
     AdInstanceManager testManagerSpy = spy(testManager);
     FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
-    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(null, testManagerSpy, mockMobileAds);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
     RequestConfiguration.Builder rcb = new RequestConfiguration.Builder();
     rcb.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_MA);
     rcb.setTagForChildDirectedTreatment(RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE);
