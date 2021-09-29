@@ -54,6 +54,13 @@ void main() {
             return null;
           case 'MobileAds#getVersionString':
             return Future<String>.value('Test-SDK-Version');
+          case 'MobileAds#getRequestConfiguration':
+            return RequestConfiguration(
+              maxAdContentRating: MaxAdContentRating.ma,
+              tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+              tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.no,
+              testDeviceIds: <String>['id1', 'id2'],
+            );
           default:
             assert(false);
             return null;
@@ -277,6 +284,14 @@ void main() {
 
       expect(log, <Matcher>[
         isMethodCall('MobileAds#getVersionString', arguments: null)
+      ]);
+    });
+
+    test('$MobileAds.getRequestConfiguration', () async {
+      await MobileAds.instance.getRequestConfiguration();
+
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#getRequestConfiguration', arguments: null)
       ]);
     });
   });
