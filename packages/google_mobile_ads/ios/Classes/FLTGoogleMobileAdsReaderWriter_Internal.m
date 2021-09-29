@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldSmartBannerAdSize = 143,
   FLTAdmobFieldNativeAdOptions = 144,
   FLTAdmobFieldVideoOptions = 145,
+  FLTAdmobRequestConfigurationParams = 146,
 };
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
@@ -205,6 +206,14 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                  customControlsRequested:[self readValueOfType:[self readByte]]
                               startMuted:[self readValueOfType:[self readByte]]];
     }
+    case FLTAdmobRequestConfigurationParams: {
+      GADRequestConfiguration *requestConfig = [GADRequestConfiguration alloc];
+      requestConfig.maxAdContentRating = [self readValueOfType:[self readByte]];
+      [requestConfig tagForChildDirectedTreatment:[self readValueOfType:[self readByte]]];
+      [requestConfig tagForUnderAgeOfConsent:[self readValueOfType:[self readByte]]];
+      requestConfig.testDeviceIdentifiers = [self readValueOfType:[self readByte]];
+      return requestConfig;
+    }
   }
   return [super readValueOfType:type];
 }
@@ -320,6 +329,17 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:options.clickToExpandRequested];
     [self writeValue:options.customControlsRequested];
     [self writeValue:options.startMuted];
+  } else if ([value isKindOfClass:[GADRequestConfiguration class]]) {
+    [self writeByte:FLTAdmobRequestConfigurationParams];
+    GADRequestConfiguration *params = value;
+    [self writeValue:params.maxAdContentRating];
+    // using nil temporarily for tagForUnderAgeOfConsent and tagForChildDirectedTreatment
+    // as there are no getters for them in GADRequestConfiguration.
+    // using nil as placeholder for tagForUnderAgeOfConsent and tagForChildDirectedTreatment
+    // as there are no getters for them in GADRequestConfiguration yet.
+    [self writeValue:nil];
+    [self writeValue:nil];
+    [self writeValue:params.testDeviceIdentifiers];
   } else {
     [super writeValue:value];
   }

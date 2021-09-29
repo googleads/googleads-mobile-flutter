@@ -51,6 +51,11 @@ class MobileAds {
     return instanceManager.initialize();
   }
 
+  /// Get the current [RequestConfiguration].
+  Future<RequestConfiguration> getRequestConfiguration() {
+    return instanceManager.getRequestConfiguration();
+  }
+
   /// Update the [RequestConfiguration] to apply for future ad requests.
   Future<void> updateRequestConfiguration(
       RequestConfiguration requestConfiguration) {

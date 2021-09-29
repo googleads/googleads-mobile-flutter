@@ -154,6 +154,8 @@
     result(nil);
   } else if ([call.method isEqualToString:@"MobileAds#getVersionString"]) {
     result([GADMobileAds.sharedInstance sdkVersion]);
+  } else if ([call.method isEqualToString:@"MobileAds#getRequestConfiguration"]) {
+    result(GADMobileAds.sharedInstance.requestConfiguration);
   } else if ([call.method isEqualToString:@"MobileAds#updateRequestConfiguration"]) {
     NSString *maxAdContentRating = call.arguments[@"maxAdContentRating"];
     NSNumber *tagForChildDirectedTreatment = call.arguments[@"tagForChildDirectedTreatment"];
