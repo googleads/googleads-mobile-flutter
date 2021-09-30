@@ -1383,7 +1383,7 @@ void main() {
       expect(result.height, 0);
 
       byteData = codec.encodeMessage(
-          AdSize.getInlineAdaptiveBannerAdSizeWithMaxHeight(20, 50))!;
+          AdSize.getInlineAdaptiveBannerAdSize(20, 50))!;
 
       result = codec.decodeMessage(byteData);
       expect(result.orientation, null);

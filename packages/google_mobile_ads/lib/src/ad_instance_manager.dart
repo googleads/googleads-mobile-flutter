@@ -800,7 +800,7 @@ class AdMessageCodec extends StandardMessageCodec {
               ? AdSize.getPortraitInlineAdaptiveBannerAdSize(width.toInt())
               : AdSize.getLandscapeInlineAdaptiveBannerAdSize(width.toInt());
         } else if (maxHeight != null) {
-          return AdSize.getInlineAdaptiveBannerAdSizeWithMaxHeight(
+          return AdSize.getInlineAdaptiveBannerAdSize(
               width.toInt(), maxHeight.toInt());
         } else {
           return AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(

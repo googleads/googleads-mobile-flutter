@@ -373,7 +373,7 @@ class AdSize {
     return InlineAdaptiveSize._(width: width);
   }
 
-  /// Gets an AdSize with the given width and height that is always 0.
+  /// Gets an AdSize in landscape orientation with the given width and 0 height.
   ///
   /// This ad size allows Google servers to choose an optimal ad size with a
   /// height less than or equal to the height of the screen in landscape
@@ -388,7 +388,7 @@ class AdSize {
         width: width, orientation: Orientation.landscape);
   }
 
-  /// Gets an AdSize with the given width and height that is always 0.
+  /// Gets an AdSize in portrait orientation with the given width and 0 height.
   ///
   /// This ad size allows Google servers to choose an optimal ad size with a
   /// height less than or equal to the height of the screen in portrait
@@ -412,7 +412,7 @@ class AdSize {
   /// [AdManagerBannerAd.getPlatformAdSize] from the ad load callback.
   /// This ad size is most suitable for ads intended to be displayed inside
   /// scrollable content.
-  static InlineAdaptiveSize getInlineAdaptiveBannerAdSizeWithMaxHeight(
+  static InlineAdaptiveSize getInlineAdaptiveBannerAdSize(
       int width, int maxHeight) {
     return InlineAdaptiveSize._(width: width, maxHeight: maxHeight);
   }
