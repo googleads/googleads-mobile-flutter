@@ -26,7 +26,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import android.app.Activity;
+import android.view.View.OnLayoutChangeListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ScrollView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.LoadAdError;
@@ -34,49 +36,41 @@ import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
 
-/** Tests for {@link FlutterAdManagerBannerAd}. */
+/** Tests for {@link FluidAdManagerBannerAd}. */
 @RunWith(RobolectricTestRunner.class)
-public class FlutterAdManagerBannerAdTest {
+public class FluidAdManagerBannerAdTest {
 
   private AdInstanceManager mockManager;
   private AdManagerAdRequest mockAdRequest;
-  private AdSize adSize;
   private AdManagerAdView mockAdView;
-
   // The system under test.
-  private FlutterAdManagerBannerAd flutterBannerAd;
+  private FluidAdManagerBannerAd fluidAd;
 
   @Before
   public void setup() {
     // Setup mock dependencies for flutterBannerAd.
+    BinaryMessenger mockMessenger = mock(BinaryMessenger.class);
     mockManager = spy(new AdInstanceManager(mock(MethodChannel.class)));
-    doReturn(mock(Activity.class)).when(mockManager).getActivity();
     FlutterAdManagerAdRequest mockFlutterAdRequest = mock(FlutterAdManagerAdRequest.class);
     mockAdRequest = mock(AdManagerAdRequest.class);
-    FlutterAdSize mockFlutterAdSize = mock(FlutterAdSize.class);
-    adSize = new AdSize(1, 2);
     when(mockFlutterAdRequest.asAdManagerAdRequest()).thenReturn(mockAdRequest);
-    when(mockFlutterAdSize.getAdSize()).thenReturn(adSize);
-    List<FlutterAdSize> sizes = new ArrayList<>();
-    sizes.add(mockFlutterAdSize);
     BannerAdCreator bannerAdCreator = mock(BannerAdCreator.class);
     mockAdView = mock(AdManagerAdView.class);
     doReturn(mockAdView).when(bannerAdCreator).createAdManagerAdView();
-    flutterBannerAd =
-        new FlutterAdManagerBannerAd(
-            1, mockManager, "testId", sizes, mockFlutterAdRequest, bannerAdCreator);
+    fluidAd =
+        new FluidAdManagerBannerAd(1, mockManager, "testId", mockFlutterAdRequest, bannerAdCreator);
   }
 
   @Test
@@ -101,12 +95,14 @@ public class FlutterAdManagerBannerAdTest {
         .when(mockAdView)
         .setAdListener(any(AdListener.class));
 
-    flutterBannerAd.load();
+    fluidAd.load();
+
+    verify(mockAdView).setLayoutParams(any(LayoutParams.class));
     verify(mockAdView).loadAd(eq(mockAdRequest));
     verify(mockAdView).setAdListener(any(AdListener.class));
     verify(mockAdView).setAppEventListener(any(AppEventListener.class));
     verify(mockAdView).setAdUnitId(eq("testId"));
-    verify(mockAdView).setAdSizes(adSize);
+    verify(mockAdView).setAdSizes(AdSize.FLUID);
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadError);
     verify(mockManager).onAdFailedToLoad(eq(1), eq(expectedError));
   }
@@ -129,17 +125,35 @@ public class FlutterAdManagerBannerAdTest {
         .setAdListener(any(AdListener.class));
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAdView).getResponseInfo();
-    flutterBannerAd.load();
+    fluidAd.load();
 
+    verify(mockAdView).setLayoutParams(any(LayoutParams.class));
     verify(mockAdView).loadAd(eq(mockAdRequest));
     verify(mockAdView).setAdListener(any(AdListener.class));
     verify(mockAdView).setAdUnitId(eq("testId"));
-    verify(mockAdView).setAdSizes(adSize);
+    verify(mockAdView).setAdSizes(AdSize.FLUID);
     verify(mockManager).onAdLoaded(eq(1), eq(responseInfo));
     verify(mockManager).onAdImpression(eq(1));
     verify(mockManager).onAdClosed(eq(1));
     verify(mockManager).onAdOpened(eq(1));
-    assertEquals(flutterBannerAd.getPlatformView().getView(), mockAdView);
+
+    // Verify that ad is correctly put into container view.
+    FluidAdManagerBannerAd spy = spy(fluidAd);
+    ScrollView mockContainer = mock(ScrollView.class);
+    doReturn(mockContainer).when(spy).createContainerView();
+    assertEquals(spy.getPlatformView().getView(), mockAdView);
+    verify(mockContainer).setClipChildren(false);
+    verify(mockContainer).setVerticalScrollBarEnabled(false);
+    verify(mockContainer).setHorizontalScrollBarEnabled(false);
+
+    // Height changed callback.
+    ArgumentCaptor<OnLayoutChangeListener> layoutChangeCaptor =
+        ArgumentCaptor.forClass(OnLayoutChangeListener.class);
+    verify(mockAdView).addOnLayoutChangeListener(layoutChangeCaptor.capture());
+    doReturn(10).when(mockAdView).getMeasuredHeight();
+
+    layoutChangeCaptor.getValue().onLayoutChange(mockAdView, 0, 0, 10, 10, 0, 0, 0, 0);
+    verify(mockManager).onFluidAdHeightChanged(eq(1), eq(10));
   }
 
   @Test
@@ -156,22 +170,26 @@ public class FlutterAdManagerBannerAdTest {
         .when(mockAdView)
         .setAppEventListener(any(AppEventListener.class));
 
-    flutterBannerAd.load();
+    fluidAd.load();
 
     verify(mockManager).onAppEvent(eq(1), eq("appEvent"), eq("data"));
   }
 
   @Test
   public void dispose() {
-    flutterBannerAd.load();
+    fluidAd.load();
 
-    assertEquals(flutterBannerAd.getPlatformView().getView(), mockAdView);
-    PlatformView platformView = flutterBannerAd.getPlatformView();
+    FluidAdManagerBannerAd spy = spy(fluidAd);
+    ScrollView mockContainer = mock(ScrollView.class);
+    doReturn(mockContainer).when(spy).createContainerView();
+
+    assertEquals(spy.getPlatformView().getView(), mockAdView);
+    PlatformView platformView = spy.getPlatformView();
     assertNotNull(platformView);
 
-    flutterBannerAd.dispose();
+    spy.dispose();
     verify(mockAdView).destroy();
-    assertNull(flutterBannerAd.getPlatformView());
+    assertNull(spy.getPlatformView());
     // Check that the platform view still retains a reference to the view until
     // dispose is called on it.
     assertNotNull(platformView.getView());

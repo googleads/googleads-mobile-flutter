@@ -60,14 +60,12 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
   void load() {
     if (request != null) {
       flutterAdLoader.loadAppOpen(
-          manager.activity,
           adUnitId,
           request.asAdRequest(),
           getOrientation(),
           new DelegatingAppOpenAdLoadCallback(this));
     } else if (adManagerAdRequest != null) {
       flutterAdLoader.loadAdManagerAppOpen(
-          manager.activity,
           adUnitId,
           adManagerAdRequest.asAdManagerAdRequest(),
           getOrientation(),
@@ -101,9 +99,12 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
       Log.w(TAG, "Tried to show app open ad before it was loaded");
       return;
     }
-
+    if (manager.getActivity() == null) {
+      Log.e(TAG, "Tried to show app open ad before activity was bound to the plugin.");
+      return;
+    }
     ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
-    ad.show(manager.activity);
+    ad.show(manager.getActivity());
   }
 
   @Override

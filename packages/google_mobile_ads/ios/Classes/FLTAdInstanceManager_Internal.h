@@ -55,6 +55,7 @@
 - (void)adDidRecordImpression:(id<FLTAd> _Nonnull)ad;
 - (void)didFailToPresentFullScreenContentWithError:(id<FLTAd> _Nonnull)ad
                                              error:(NSError *_Nonnull)error;
+- (void)onFluidAdHeightChanged:(id<FLTAd> _Nonnull)ad height:(CGFloat)height;
 - (void)disposeAllAds;
 @end
 

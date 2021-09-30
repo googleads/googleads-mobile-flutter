@@ -79,6 +79,20 @@
 #pragma clang diagnostic pop
 }
 
+- (void)testEncodeDecodeFluidAdSize {
+  FLTFluidSize *size = [[FLTFluidSize alloc] init];
+
+  NSData *encodedMessage = [_messageCodec encode:size];
+  FLTFluidSize *decodedSize = [_messageCodec decode:encodedMessage];
+
+  XCTAssertTrue([decodedSize isKindOfClass:FLTFluidSize.class]);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  XCTAssertEqual(decodedSize.size.size.width, kGADAdSizeFluid.size.width);
+  XCTAssertEqual(decodedSize.size.size.height, kGADAdSizeFluid.size.height);
+#pragma clang diagnostic pop
+}
+
 - (void)testEncodeDecodeAdRequest {
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];

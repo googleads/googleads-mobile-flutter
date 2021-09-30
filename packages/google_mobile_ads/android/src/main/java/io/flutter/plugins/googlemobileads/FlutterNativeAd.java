@@ -49,6 +49,7 @@ class FlutterNativeAd extends FlutterAd {
     @Nullable private Map<String, Object> customOptions;
     @Nullable private Integer id;
     @Nullable private FlutterNativeAdOptions nativeAdOptions;
+    @Nullable private FlutterAdLoader flutterAdLoader;
 
     public Builder setAdFactory(@NonNull NativeAdFactory adFactory) {
       this.adFactory = adFactory;
@@ -90,6 +91,11 @@ class FlutterNativeAd extends FlutterAd {
       return this;
     }
 
+    public Builder setFlutterAdLoader(@NonNull FlutterAdLoader flutterAdLoader) {
+      this.flutterAdLoader = flutterAdLoader;
+      return this;
+    }
+
     FlutterNativeAd build() {
       if (manager == null) {
         throw new IllegalStateException("AdInstanceManager cannot not be null.");
@@ -110,7 +116,7 @@ class FlutterNativeAd extends FlutterAd {
                 adUnitId,
                 adFactory,
                 adManagerRequest,
-                new FlutterAdLoader(),
+                flutterAdLoader,
                 customOptions,
                 nativeAdOptions);
       } else {
@@ -121,7 +127,7 @@ class FlutterNativeAd extends FlutterAd {
                 adUnitId,
                 adFactory,
                 request,
-                new FlutterAdLoader(),
+                flutterAdLoader,
                 customOptions,
                 nativeAdOptions);
       }
@@ -179,15 +185,10 @@ class FlutterNativeAd extends FlutterAd {
             : nativeAdOptions.asNativeAdOptions();
     if (request != null) {
       flutterAdLoader.loadNativeAd(
-          manager.activity, adUnitId, loadedListener, options, adListener, request.asAdRequest());
+          adUnitId, loadedListener, options, adListener, request.asAdRequest());
     } else if (adManagerRequest != null) {
       flutterAdLoader.loadAdManagerNativeAd(
-          manager.activity,
-          adUnitId,
-          loadedListener,
-          options,
-          adListener,
-          adManagerRequest.asAdManagerAdRequest());
+          adUnitId, loadedListener, options, adListener, adManagerRequest.asAdManagerAdRequest());
     } else {
       Log.e(TAG, "A null or invalid ad request was provided.");
     }
