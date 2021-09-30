@@ -34,7 +34,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldSmartBannerAdSize = 143,
   FLTAdmobFieldNativeAdOptions = 144,
   FLTAdmobFieldVideoOptions = 145,
-  FLTAdmobFieldAdaptiveInlineAdSize = 146,
+  FLTAdmobFieldInlineAdaptiveAdSize = 146,
 };
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
@@ -207,7 +207,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                  customControlsRequested:[self readValueOfType:[self readByte]]
                               startMuted:[self readValueOfType:[self readByte]]];
     }
-    case FLTAdmobFieldAdaptiveInlineAdSize: {
+    case FLTAdmobFieldInlineAdaptiveAdSize: {
       return [[FLTInlineAdaptiveBannerSize alloc]
           initWithFactory:_adSizeFactory
                     width:[self readValueOfType:[self readByte]]
@@ -223,7 +223,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 @implementation FLTGoogleMobileAdsWriter
 - (void)writeAdSize:(FLTAdSize *_Nonnull)value {
   if ([value isKindOfClass:[FLTInlineAdaptiveBannerSize class]]) {
-    [self writeByte:FLTAdmobFieldAdaptiveInlineAdSize];
+    [self writeByte:FLTAdmobFieldInlineAdaptiveAdSize];
     FLTInlineAdaptiveBannerSize *size = (FLTInlineAdaptiveBannerSize *)value;
     [self writeValue:size.width];
     [self writeValue:size.maxHeight];

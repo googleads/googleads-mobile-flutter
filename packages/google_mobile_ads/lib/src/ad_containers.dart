@@ -267,7 +267,7 @@ class FluidAdSize extends AdSize {
 /// You can obtain an instance of this using factory methods such as
 /// [AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(width)].
 ///
-/// After an adaptive inline banner ad is loaded, you should use
+/// After an inline adaptive banner ad is loaded, you should use
 /// [BannerAd.getPlatformAdSize] or [AdManagerBannerAd.getPlatformAdSize] to get
 /// the height to use for the ad container.
 class InlineAdaptiveSize extends AdSize {

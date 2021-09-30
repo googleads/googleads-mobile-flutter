@@ -243,7 +243,7 @@ public class AdMessageCodecTest {
   }
 
   @Test
-  public void adMessageCodec_adaptiveInlineBanner() {
+  public void adMessageCodec_inlineAdaptiveBanner() {
     AdSize adSize = new AdSize(100, 101);
     doReturn(adSize)
         .when(mockAdSizeFactory)

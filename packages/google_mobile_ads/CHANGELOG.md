@@ -14,9 +14,9 @@
 * Adds support for inline adaptive banner ads.
   * Inline adaptive banner ads are meant to be used in scrollable content. They are of variable height and can be as tall as the device screen.
     They differ from Fluid ads in that they only resize once when the ad is loaded.
-    You can see the [adaptive_inline_example.dart](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/adaptive_inline_example.dart) for a reference of how to load and display 
-    adaptive inline banners.
-  * More information on adaptive inline banners can be found here:
+    You can see the [inline_adaptive_example.dart](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/inline_adaptive_example.dart) for a reference of how to load and display 
+    inline adaptive banners.
+  * More information on inline adaptive banners can be found here:
     * [Admob android](https://developers.google.com/admob/android/banner/inline-adaptive)
     * [Admob iOS](https://developers.google.com/admob/ios/banner/inline-adaptive)
     * [Ad manager android](https://developers.google.com/ad-manager/mobile-ads-sdk/android/banner/inline-adaptive)

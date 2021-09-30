@@ -18,15 +18,15 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'constants.dart';
 
-/// This example demonstrates adaptive inline ads.
-class AdaptiveInlineExample extends StatefulWidget {
+/// This example demonstrates inline adaptive banner ads.
+class InlineAdaptiveExample extends StatefulWidget {
   @override
-  _AdaptiveInlineExampleState createState() => _AdaptiveInlineExampleState();
+  _InlineAdaptiveExampleState createState() => _InlineAdaptiveExampleState();
 }
 
-class _AdaptiveInlineExampleState extends State<AdaptiveInlineExample> {
+class _InlineAdaptiveExampleState extends State<InlineAdaptiveExample> {
   static const _insets = 16.0;
-  AdManagerBannerAd? _adaptiveInlineAd;
+  AdManagerBannerAd? _inlineAdaptiveAd;
   bool _isLoaded = false;
   AdSize? _adSize;
 
@@ -43,7 +43,7 @@ class _AdaptiveInlineExampleState extends State<AdaptiveInlineExample> {
     AdSize size = AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(
         _adWidth.truncate());
 
-    _adaptiveInlineAd = AdManagerBannerAd(
+    _inlineAdaptiveAd = AdManagerBannerAd(
       adUnitId: 'ca-app-pub-3940256099942544/9214589741',
       sizes: [size],
       request: AdManagerAdRequest(),
@@ -52,27 +52,27 @@ class _AdaptiveInlineExampleState extends State<AdaptiveInlineExample> {
           setState(() {
             // When the ad is loaded, get the ad size and use it to set
             // the height of the ad container.
-            _adaptiveInlineAd = ad as AdManagerBannerAd;
+            _inlineAdaptiveAd = ad as AdManagerBannerAd;
             _isLoaded = true;
-            _adaptiveInlineAd?.getPlatformAdSize().then((size) => setState(() {
+            _inlineAdaptiveAd?.getPlatformAdSize().then((size) => setState(() {
                   _adSize = size;
                 }));
           });
-          print('Adaptive inline banner loaded: ${ad.responseInfo}');
+          print('Inline adaptive banner loaded: ${ad.responseInfo}');
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('Adaptive inline banner failedToLoad: $error');
+          print('Inline adaptive banner failedToLoad: $error');
           ad.dispose();
         },
       ),
     );
-    await _adaptiveInlineAd!.load();
+    await _inlineAdaptiveAd!.load();
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
-        title: Text('Adaptive inline example'),
+        title: Text('Inline adaptive banner example'),
       ),
       body: Center(
         child: Padding(
@@ -86,7 +86,7 @@ class _AdaptiveInlineExampleState extends State<AdaptiveInlineExample> {
             },
             itemBuilder: (BuildContext context, int index) {
               if (index == 1 &&
-                  _adaptiveInlineAd != null &&
+                  _inlineAdaptiveAd != null &&
                   _isLoaded &&
                   _adSize != null) {
                 return Align(
@@ -94,7 +94,7 @@ class _AdaptiveInlineExampleState extends State<AdaptiveInlineExample> {
                   width: _adWidth,
                   height: _adSize!.height.toDouble(),
                   child: AdWidget(
-                    ad: _adaptiveInlineAd!,
+                    ad: _inlineAdaptiveAd!,
                   ),
                 ));
               }
@@ -110,6 +110,6 @@ class _AdaptiveInlineExampleState extends State<AdaptiveInlineExample> {
   @override
   void dispose() {
     super.dispose();
-    _adaptiveInlineAd?.dispose();
+    _inlineAdaptiveAd?.dispose();
   }
 }
