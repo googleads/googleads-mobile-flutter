@@ -439,7 +439,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         result.success(null);
         break;
       case "MobileAds#setAppVolume":
-        flutterMobileAds.setAppVolume(call.<Float>argument("volume"));
+        flutterMobileAds.setAppVolume(call.<Double>argument("volume"));
         result.success(null);
         break;
       case "setImmersiveMode":
