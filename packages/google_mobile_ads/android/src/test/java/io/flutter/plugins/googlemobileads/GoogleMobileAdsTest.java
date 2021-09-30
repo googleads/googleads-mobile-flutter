@@ -635,8 +635,8 @@ public class GoogleMobileAdsTest {
         new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
 
     // Create a map for passing arguments to the MethodCall.
-    HashMap<String, Float> fullVolumeArguments = new HashMap<>();
-    fullVolumeArguments.put("volume", 1.0f);
+    HashMap<String, Double> fullVolumeArguments = new HashMap<>();
+    fullVolumeArguments.put("volume", 1.0);
 
     // Invoke the setAppVolume method with the arguments.
     MethodCall methodCall = new MethodCall("MobileAds#setAppVolume", fullVolumeArguments);
@@ -644,7 +644,7 @@ public class GoogleMobileAdsTest {
     plugin.onMethodCall(methodCall, result);
 
     // Verify that mockMobileAds.setAppVolume() was called with the correct value.
-    verify(mockMobileAds).setAppVolume(eq(1.0f));
+    verify(mockMobileAds).setAppVolume(eq(1.0));
   }
 
   @Test

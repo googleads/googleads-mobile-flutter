@@ -21,6 +21,8 @@
     * [Admob iOS](https://developers.google.com/admob/ios/banner/inline-adaptive)
     * [Ad manager android](https://developers.google.com/ad-manager/mobile-ads-sdk/android/banner/inline-adaptive)
     * [Ad manager iOS](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/banner/inline-adaptive)
+* Fix for [#369](https://github.com/googleads/googleads-mobile-flutter/issues/369)
+  * Fixes setting the app volume in android (doesn't affect iOS).
 
 ## 0.13.5
 
