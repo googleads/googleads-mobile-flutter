@@ -40,6 +40,7 @@ void main() {
         switch (methodCall.method) {
           case 'MobileAds#updateRequestConfiguration':
           case 'MobileAds#setSameAppKeyEnabled':
+          case 'setImmersiveMode':
           case 'loadBannerAd':
           case 'loadNativeAd':
           case 'showAdWithoutView':
@@ -96,6 +97,115 @@ void main() {
             arguments: <String, dynamic>{
               'isEnabled': false,
             })
+      ]);
+    });
+
+    test('load rewarded ad and set immersive mode', () async {
+      RewardedAd? rewarded;
+      AdRequest request = AdRequest();
+      await RewardedAd.load(
+          adUnitId: RewardedAd.testAdUnitId,
+          request: request,
+          rewardedAdLoadCallback: RewardedAdLoadCallback(
+              onAdLoaded: (ad) {
+                rewarded = ad;
+              },
+              onAdFailedToLoad: (error) => null),
+          serverSideVerificationOptions: ServerSideVerificationOptions(
+            userId: 'test-user-id',
+            customData: 'test-custom-data',
+          ));
+
+      RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
+      (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
+
+      expect(log, <Matcher>[
+        isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'adUnitId': RewardedAd.testAdUnitId,
+          'request': request,
+          'adManagerRequest': null,
+          'serverSideVerificationOptions':
+              rewarded!.serverSideVerificationOptions,
+        }),
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+      expect(rewarded, createdAd);
+
+      log.clear();
+      await createdAd.setImmersiveMode(true);
+      expect(log, <Matcher>[
+        isMethodCall('setImmersiveMode',
+            arguments: {'adId': 0, 'immersiveModeEnabled': true})
+      ]);
+    });
+
+    test('load interstitial ad and set immersive mode', () async {
+      InterstitialAd? interstitial;
+      await InterstitialAd.load(
+        adUnitId: InterstitialAd.testAdUnitId,
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              interstitial = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
+
+      InterstitialAd createdAd = (instanceManager.adFor(0) as InterstitialAd);
+      (createdAd).adLoadCallback.onAdLoaded(createdAd);
+
+      expect(log, <Matcher>[
+        isMethodCall('loadInterstitialAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'adUnitId': InterstitialAd.testAdUnitId,
+          'request': interstitial!.request,
+        })
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+
+      log.clear();
+      await createdAd.setImmersiveMode(false);
+      expect(log, <Matcher>[
+        isMethodCall('setImmersiveMode',
+            arguments: {'adId': 0, 'immersiveModeEnabled': false})
+      ]);
+    });
+
+    test('load ad manager interstitial and set immersive mode', () async {
+      AdManagerInterstitialAd? interstitial;
+      await AdManagerInterstitialAd.load(
+        adUnitId: 'test-id',
+        request: AdManagerAdRequest(),
+        adLoadCallback: AdManagerInterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              interstitial = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
+
+      AdManagerInterstitialAd createdAd =
+          (instanceManager.adFor(0) as AdManagerInterstitialAd);
+      (createdAd).adLoadCallback.onAdLoaded(createdAd);
+
+      expect(log, <Matcher>[
+        isMethodCall('loadAdManagerInterstitialAd',
+            arguments: <String, dynamic>{
+              'adId': 0,
+              'adUnitId': 'test-id',
+              'request': interstitial!.request,
+            })
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+
+      log.clear();
+      await createdAd.setImmersiveMode(true);
+      expect(log, <Matcher>[
+        isMethodCall('setImmersiveMode',
+            arguments: {'adId': 0, 'immersiveModeEnabled': true})
       ]);
     });
 
@@ -1261,6 +1371,26 @@ void main() {
 
       final WriteBuffer actualBuffer = WriteBuffer();
       codec.writeAdSize(actualBuffer, SmartBannerAdSize(Orientation.portrait));
+      expect(
+        expectedBuffer.done().buffer.asInt8List(),
+        actualBuffer.done().buffer.asInt8List(),
+      );
+    });
+
+    test('encode/decode $FluidAdSize', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final ByteData byteData = codec.encodeMessage(FluidAdSize())!;
+
+      final FluidAdSize result = codec.decodeMessage(byteData);
+      expect(result.width, -3);
+      expect(result.height, -3);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final WriteBuffer expectedBuffer = WriteBuffer();
+      expectedBuffer.putUint8(130);
+
+      final WriteBuffer actualBuffer = WriteBuffer();
+      codec.writeAdSize(actualBuffer, FluidAdSize());
       expect(
         expectedBuffer.done().buffer.asInt8List(),
         actualBuffer.done().buffer.asInt8List(),

@@ -58,7 +58,6 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @Override
   void load() {
     flutterAdLoader.loadAdManagerInterstitial(
-        manager.activity,
         adUnitId,
         request.asAdManagerAdRequest(),
         new DelegatingAdManagerInterstitialAdCallbacks(this));
@@ -85,8 +84,21 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
       Log.e(TAG, "The interstitial wasn't loaded yet.");
       return;
     }
+    if (manager.getActivity() == null) {
+      Log.e(TAG, "Tried to show interstitial before activity was bound to the plugin.");
+      return;
+    }
     ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
-    ad.show(manager.activity);
+    ad.show(manager.getActivity());
+  }
+
+  @Override
+  public void setImmersiveMode(boolean immersiveModeEnabled) {
+    if (ad == null) {
+      Log.e(TAG, "The interstitial wasn't loaded yet.");
+      return;
+    }
+    ad.setImmersiveMode(immersiveModeEnabled);
   }
 
   @Override

@@ -1,3 +1,42 @@
+## 0.13.6
+
+* Partial fix for [#265](https://github.com/googleads/googleads-mobile-flutter/issues/265).
+  * The partial fix allows you to load ads from a cached flutter engine in the add to app scenario,
+    but it only works the first time the engine is attached to an activity.
+  * Support for reusing the engine in another activity after the first one is destroyed is blocked 
+    by this Flutter issue which affects all platform views: https://github.com/flutter/flutter/issues/88880.
+* Adds support for Fluid Ad Size (Ad Manager only)
+  * Fluid ads dynamically adjust their height based on their width. To help display them we've added a new
+    ad container, `FluidAdManagerBannerAd`, and a new widget `FluidAdWidget`.
+    You can reference the [example app](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/fluid_example.dart) for an example of how to load and display a fluid ad.
+  * Android - https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size
+  * iOS - https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size
+* Fix for [#369](https://github.com/googleads/googleads-mobile-flutter/issues/369)
+  * Fixes setting the app volume in android (doesn't affect iOS).
+
+## 0.13.5
+
+* Adds support for app open. 
+  * Implementation guidance can be found [here](https://developers.devsite.corp.google.com/admob/flutter/app-open).
+  * As a reference please also see the [example app](https://github.com/googleads/googleads-mobile-flutter/tree/master/packages/app_open_example).
+  * Best practices can be found [here](https://support.google.com/admob/answer/9341964?hl=en).
+
+## 0.13.4
+
+* Adds support for muting and setting the volume level of the app.
+* Visit the following links for more information:
+  * https://developers.google.com/admob/android/global-settings#video_ad_volume_control
+  * https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-void-setappvolume-float-volume
+* Adds support for setting immersive mode for Rewarded and Interstitial Ads in Android.
+* Visit the following links for more information:
+  * https://developers.google.com/android/reference/com/google/android/gms/ads/interstitial/InterstitialAd?hl=en#setImmersiveMode(boolean)
+  * https://developers.google.com/android/reference/com/google/android/gms/ads/rewarded/RewardedAd#setImmersiveMode(boolean)
+* Adds support for disableSDKCrashReporting in iOS; disableMediationInitialization and getVersionString in both the platforms.
+  * https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablesdkcrashreporting
+  * iOS (disableMediationInitialization): https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#-disablemediationinitialization
+  * Android (disableMediationAdapterInitialization): https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-void-disablemediationadapterinitialization-context-context
+  * https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#getVersionString()
+
 ## 0.13.3
 
 * Adds support for NativeAdOptions. More documentation also available for [Android](https://developers.google.com/admob/android/native/options) and [iOS](https://developers.google.com/admob/ios/native/options)

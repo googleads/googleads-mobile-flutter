@@ -22,6 +22,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
+import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
@@ -34,11 +36,32 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
  */
 public class FlutterAdLoader {
 
-  public FlutterAdLoader() {}
+  @NonNull private final Context context;
+
+  public FlutterAdLoader(@NonNull Context context) {
+    this.context = context;
+  }
+
+  /** Load an app open ad. */
+  public void loadAppOpen(
+      @NonNull String adUnitId,
+      @NonNull AdRequest adRequest,
+      int orientation,
+      @NonNull AppOpenAdLoadCallback loadCallback) {
+    AppOpenAd.load(context, adUnitId, adRequest, orientation, loadCallback);
+  }
+
+  /** Load an ad manager app open ad. */
+  public void loadAdManagerAppOpen(
+      @NonNull String adUnitId,
+      @NonNull AdManagerAdRequest adRequest,
+      int orientation,
+      @NonNull AppOpenAdLoadCallback loadCallback) {
+    AppOpenAd.load(context, adUnitId, adRequest, orientation, loadCallback);
+  }
 
   /** Load an interstitial ad. */
   public void loadInterstitial(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull AdRequest adRequest,
       @NonNull InterstitialAdLoadCallback loadCallback) {
@@ -47,7 +70,6 @@ public class FlutterAdLoader {
 
   /** Load an ad manager interstitial ad. */
   public void loadAdManagerInterstitial(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull AdManagerAdRequest adRequest,
       @NonNull AdManagerInterstitialAdLoadCallback loadCallback) {
@@ -56,7 +78,6 @@ public class FlutterAdLoader {
 
   /** Load a rewarded ad. */
   public void loadRewarded(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull AdRequest adRequest,
       @NonNull RewardedAdLoadCallback loadCallback) {
@@ -65,7 +86,6 @@ public class FlutterAdLoader {
 
   /** Load an ad manager rewarded ad. */
   public void loadAdManagerRewarded(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull AdManagerAdRequest adRequest,
       @NonNull RewardedAdLoadCallback loadCallback) {
@@ -74,7 +94,6 @@ public class FlutterAdLoader {
 
   /** Load a native ad. */
   public void loadNativeAd(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull OnNativeAdLoadedListener onNativeAdLoadedListener,
       @NonNull NativeAdOptions nativeAdOptions,
@@ -90,7 +109,6 @@ public class FlutterAdLoader {
 
   /** Load an ad manager native ad. */
   public void loadAdManagerNativeAd(
-      @NonNull Context context,
       @NonNull String adUnitId,
       @NonNull OnNativeAdLoadedListener onNativeAdLoadedListener,
       @NonNull NativeAdOptions nativeAdOptions,

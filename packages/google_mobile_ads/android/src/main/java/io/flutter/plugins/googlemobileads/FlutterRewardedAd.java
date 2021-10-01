@@ -108,11 +108,10 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   void load() {
     final RewardedAdLoadCallback adLoadCallback = new DelegatingRewardedCallback(this);
     if (request != null) {
-      flutterAdLoader.loadRewarded(
-          manager.activity, adUnitId, request.asAdRequest(), adLoadCallback);
+      flutterAdLoader.loadRewarded(adUnitId, request.asAdRequest(), adLoadCallback);
     } else if (adManagerRequest != null) {
       flutterAdLoader.loadAdManagerRewarded(
-          manager.activity, adUnitId, adManagerRequest.asAdManagerAdRequest(), adLoadCallback);
+          adUnitId, adManagerRequest.asAdManagerAdRequest(), adLoadCallback);
     } else {
       Log.e(TAG, "A null or invalid ad request was provided.");
     }
@@ -135,13 +134,26 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   @Override
   public void show() {
     if (rewardedAd == null) {
-      Log.e(TAG, "The rewarded ad wasn't loaded yet.");
+      Log.e(TAG, "Error showing rewarded - the rewarded ad wasn't loaded yet.");
       return;
     }
-
+    if (manager.getActivity() == null) {
+      Log.e(TAG, "Tried to show rewarded ad before activity was bound to the plugin.");
+      return;
+    }
     rewardedAd.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
     rewardedAd.setOnAdMetadataChangedListener(new DelegatingRewardedCallback(this));
-    rewardedAd.show(manager.activity, new DelegatingRewardedCallback(this));
+    rewardedAd.show(manager.getActivity(), new DelegatingRewardedCallback(this));
+  }
+
+  @Override
+  public void setImmersiveMode(boolean immersiveModeEnabled) {
+    if (rewardedAd == null) {
+      Log.e(
+          TAG, "Error setting immersive mode in rewarded ad - the rewarded ad wasn't loaded yet.");
+      return;
+    }
+    rewardedAd.setImmersiveMode(immersiveModeEnabled);
   }
 
   void onAdMetadataChanged() {
