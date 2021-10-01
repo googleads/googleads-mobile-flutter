@@ -33,7 +33,7 @@ android {
     dependencies {
       api 'com.google.android.gms:play-services-ads:20.2.0'
       constraints {
-        implementation('androidx.work:work-runtime:2.7.0-alpha05') {
+        implementation('androidx.work:work-runtime:2.7.0-rc01') {
           because 'previous versions have a bug impacting this android 12 behavior'
         }
       }
