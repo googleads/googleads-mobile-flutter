@@ -11,6 +11,8 @@
     You can reference the [example app](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/fluid_example.dart) for an example of how to load and display a fluid ad.
   * Android - https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size
   * iOS - https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size
+* Fix for [#369](https://github.com/googleads/googleads-mobile-flutter/issues/369)
+  * Fixes setting the app volume in android (doesn't affect iOS).
 
 ## 0.13.5
 
