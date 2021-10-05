@@ -16,6 +16,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -54,6 +55,8 @@ void main() {
             return null;
           case 'MobileAds#getVersionString':
             return Future<String>.value('Test-SDK-Version');
+          case 'AdSize#getAnchoredAdaptiveBannerAdSize':
+            return null;
           default:
             assert(false);
             return null;
@@ -277,6 +280,35 @@ void main() {
 
       expect(log, <Matcher>[
         isMethodCall('MobileAds#getVersionString', arguments: null)
+      ]);
+    });
+
+    test('$AdSize.getAnchoredAdaptiveBannerAdSize', () async {
+      await AdSize.getAnchoredAdaptiveBannerAdSize(Orientation.portrait, 23);
+
+      expect(log, <Matcher>[
+        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
+            arguments: {'orientation': 'portrait', 'width': 23})
+      ]);
+
+      await AdSize.getAnchoredAdaptiveBannerAdSize(Orientation.landscape, 34);
+
+      expect(log, <Matcher>[
+        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
+            arguments: {'orientation': 'portrait', 'width': 23}),
+        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
+            arguments: {'orientation': 'landscape', 'width': 34})
+      ]);
+
+      await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(45);
+
+      expect(log, <Matcher>[
+        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
+            arguments: {'orientation': 'portrait', 'width': 23}),
+        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
+            arguments: {'orientation': 'landscape', 'width': 34}),
+        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
+            arguments: {'width': 45})
       ]);
     });
   });

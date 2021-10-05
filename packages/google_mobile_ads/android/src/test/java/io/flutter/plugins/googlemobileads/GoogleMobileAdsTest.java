@@ -30,7 +30,9 @@ import static org.mockito.Mockito.verify;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import androidx.test.core.app.ApplicationProvider;
 import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdapterResponseInfo;
 import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -43,6 +45,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.StandardMethodCodec;
+import io.flutter.plugin.platform.PlatformViewRegistry;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import java.nio.ByteBuffer;
@@ -677,5 +680,58 @@ public class GoogleMobileAdsTest {
     // Verify that mockMobileAds.getVersionString() was called and a value is returned.
     verify(mockMobileAds).getVersionString();
     verify(result).success("Test-SDK-Version");
+  }
+
+  @Test
+  public void testGetAnchoredAdaptiveBannerAdSize() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
+
+    BinaryMessenger mockBinaryMessenger = mock(BinaryMessenger.class);
+    FlutterPluginBinding mockActivityPluginBinding = mock(FlutterPluginBinding.class);
+    PlatformViewRegistry mockPlatformViewRegistry = mock(PlatformViewRegistry.class);
+
+    Context context = ApplicationProvider.getApplicationContext();
+
+    doReturn(context).when(mockActivityPluginBinding).getApplicationContext();
+    doReturn(mockBinaryMessenger).when(mockActivityPluginBinding).getBinaryMessenger();
+    doReturn(mockPlatformViewRegistry).when(mockActivityPluginBinding).getPlatformViewRegistry();
+
+    plugin.onAttachedToEngine(mockActivityPluginBinding);
+
+    // Test for portrait Banner AdSize.
+    HashMap<String, Object> arguments = new HashMap<>();
+    arguments.put("orientation", "portrait");
+    arguments.put("width", 23);
+
+    AdSize adSize = AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, 23);
+    MethodCall methodCall = new MethodCall("AdSize#getAnchoredAdaptiveBannerAdSize", arguments);
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(adSize.getHeight());
+
+    // Test for landscape Banner AdSize.
+    arguments = new HashMap<>();
+    arguments.put("orientation", "landscape");
+    arguments.put("width", 23);
+
+    adSize = AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, 23);
+    methodCall = new MethodCall("AdSize#getAnchoredAdaptiveBannerAdSize", arguments);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(adSize.getHeight());
+
+    // Test for current orientation (inferred) Banner AdSize.
+    arguments = new HashMap<>();
+    arguments.put("width", 23);
+
+    adSize = AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, 23);
+    methodCall = new MethodCall("AdSize#getAnchoredAdaptiveBannerAdSize", arguments);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(adSize.getHeight());
   }
 }

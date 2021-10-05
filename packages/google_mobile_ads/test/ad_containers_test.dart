@@ -1347,13 +1347,32 @@ void main() {
     });
 
     test('encode/decode $AnchoredAdaptiveBannerAdSize', () async {
-      final ByteData byteData = codec.encodeMessage(
-          AnchoredAdaptiveBannerAdSize(Orientation.landscape,
+      final ByteData byteDataPortrait = codec.encodeMessage(
+          AnchoredAdaptiveBannerAdSize(Orientation.portrait,
               width: 23, height: 34))!;
 
+      final AnchoredAdaptiveBannerAdSize resultPortrait =
+          codec.decodeMessage(byteDataPortrait);
+      expect(resultPortrait.orientation, Orientation.portrait);
+      expect(resultPortrait.width, 23);
+      expect(resultPortrait.height, -1);
+
+      final ByteData byteDataLandscape = codec.encodeMessage(
+          AnchoredAdaptiveBannerAdSize(Orientation.landscape,
+              width: 34, height: 23))!;
+
+      final AnchoredAdaptiveBannerAdSize resultLandscape =
+          codec.decodeMessage(byteDataLandscape);
+      expect(resultLandscape.orientation, Orientation.landscape);
+      expect(resultLandscape.width, 34);
+      expect(resultLandscape.height, -1);
+
+      final ByteData byteData = codec.encodeMessage(
+          AnchoredAdaptiveBannerAdSize(null, width: 45, height: 34))!;
+
       final AnchoredAdaptiveBannerAdSize result = codec.decodeMessage(byteData);
-      expect(result.orientation, Orientation.landscape);
-      expect(result.width, 23);
+      expect(result.orientation, null);
+      expect(result.width, 45);
       expect(result.height, -1);
     });
 

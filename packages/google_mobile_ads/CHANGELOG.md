@@ -11,7 +11,7 @@
     You can reference the [example app](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/fluid_example.dart) for an example of how to load and display a fluid ad.
   * Android - https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size
   * iOS - https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size
-
+* Adds support for current orientation in AnchoredAdaptiveBannerAdSize - https://developers.google.com/android/reference/com/google/android/gms/ads/AdSize#public-static-adsize-getcurrentorientationanchoredadaptivebanneradsize-context-context,-int-width
 ## 0.13.5
 
 * Adds support for app open. 
