@@ -314,6 +314,42 @@ class FluidAdSize extends AdSize {
   const FluidAdSize() : super(width: -3, height: -3);
 }
 
+/// A size for inline adaptive banner ads.
+///
+/// This ad size takes a width and optionally a maximum height and orientation.
+/// They will be rendered at the provided width and have variable height decided
+/// by Google servers.
+///
+/// You can obtain an instance of this using factory methods such as
+/// [AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(width)].
+///
+/// After an inline adaptive banner ad is loaded, you should use
+/// [BannerAd.getPlatformAdSize] or [AdManagerBannerAd.getPlatformAdSize] to get
+/// the height to use for the ad container.
+class InlineAdaptiveSize extends AdSize {
+  /// Private constructor for [InlineAdaptiveSize].
+  ///
+  /// You should use one of the static constructors in [AdSize].
+  const InlineAdaptiveSize._({
+    required int width,
+    this.maxHeight,
+    this.orientation,
+  }) : super(width: width, height: 0);
+
+  /// The maximum height allowed.
+  final int? maxHeight;
+
+  /// The orientation. If none if specified the current orientation is used.
+  final Orientation? orientation;
+
+  /// Representation of [orientation] to pass to platform code.
+  int? get orientationValue => orientation == null
+      ? null
+      : orientation == Orientation.portrait
+          ? 0
+          : 1;
+}
+
 /// [AdSize] represents the size of a banner ad.
 ///
 /// There are six sizes available, which are the same for both iOS and Android.
@@ -376,6 +412,65 @@ class AdSize {
       width: width,
       height: height.truncate(),
     );
+  }
+
+  /// Gets an AdSize with the given width and height that is always 0.
+  ///
+  /// This ad size allows Google servers to choose an optimal ad size with a
+  /// height less than or equal to the height of the screen in the current
+  /// orientation.
+  /// After the ad is loaded, you should update the height of the ad container
+  /// by calling [BannerAd.getPlatformAdSize] or
+  /// [AdManagerBannerAd.getPlatformAdSize] from the ad load callback.
+  /// This ad size is most suitable for ads intended to be displayed inside
+  /// scrollable content.
+  static InlineAdaptiveSize getCurrentOrientationInlineAdaptiveBannerAdSize(
+      int width) {
+    return InlineAdaptiveSize._(width: width);
+  }
+
+  /// Gets an AdSize in landscape orientation with the given width and 0 height.
+  ///
+  /// This ad size allows Google servers to choose an optimal ad size with a
+  /// height less than or equal to the height of the screen in landscape
+  /// orientation.
+  /// After the ad is loaded, you should update the height of the ad container
+  /// by calling [BannerAd.getPlatformAdSize] or
+  /// [AdManagerBannerAd.getPlatformAdSize] from the ad load callback.
+  /// This ad size is most suitable for ads intended to be displayed inside
+  /// scrollable content.
+  static InlineAdaptiveSize getLandscapeInlineAdaptiveBannerAdSize(int width) {
+    return InlineAdaptiveSize._(
+        width: width, orientation: Orientation.landscape);
+  }
+
+  /// Gets an AdSize in portrait orientation with the given width and 0 height.
+  ///
+  /// This ad size allows Google servers to choose an optimal ad size with a
+  /// height less than or equal to the height of the screen in portrait
+  /// orientation.
+  /// After the ad is loaded, you should update the height of the ad container
+  /// by calling [BannerAd.getPlatformAdSize] or
+  /// [AdManagerBannerAd.getPlatformAdSize] from the ad load callback.
+  /// This ad size is most suitable for ads intended to be displayed inside
+  /// scrollable content.
+  static InlineAdaptiveSize getPortraitInlineAdaptiveBannerAdSize(int width) {
+    return InlineAdaptiveSize._(
+        width: width, orientation: Orientation.portrait);
+  }
+
+  /// Gets an AdSize with the given width and height that is always 0.
+  ///
+  /// This ad size allows Google servers to choose an optimal ad size with a
+  /// height less than or equal to [maxHeight].
+  /// After the ad is loaded, you should update the height of the ad container
+  /// by calling [BannerAd.getPlatformAdSize] or
+  /// [AdManagerBannerAd.getPlatformAdSize] from the ad load callback.
+  /// This ad size is most suitable for ads intended to be displayed inside
+  /// scrollable content.
+  static InlineAdaptiveSize getInlineAdaptiveBannerAdSize(
+      int width, int maxHeight) {
+    return InlineAdaptiveSize._(width: width, maxHeight: maxHeight);
   }
 
   /// Ad units that render screen-width banner ads on any screen size across different devices in either orientation on Android.
@@ -735,6 +830,15 @@ class BannerAd extends AdWithView {
   Future<void> load() async {
     await instanceManager.loadBannerAd(this);
   }
+
+  /// Returns the AdSize of the associated platform ad object.
+  ///
+  /// The dimensions of the [AdSize] returned here may differ from [size],
+  /// depending on what type of [AdSize] was used.
+  /// The future will resolve to null if [load] has not been called yet.
+  Future<AdSize?> getPlatformAdSize() async {
+    return await instanceManager.getAdSize(this);
+  }
 }
 
 /// An 'AdManagerBannerAd' that has fluid ad size.
@@ -802,6 +906,15 @@ class AdManagerBannerAd extends AdWithView {
   @override
   Future<void> load() async {
     await instanceManager.loadAdManagerBannerAd(this);
+  }
+
+  /// Returns the AdSize of the associated platform ad object.
+  ///
+  /// The dimensions of the [AdSize] returned here may differ from [size],
+  /// depending on what type of [AdSize] was used.
+  /// The future will resolve to null if [load] has not been called yet.
+  Future<AdSize?> getPlatformAdSize() async {
+    return await instanceManager.getAdSize(this);
   }
 }
 

@@ -49,6 +49,89 @@
   XCTAssertEqualObjects(decodedSize.height, @(2));
 }
 
+- (void)testEncodeDecodeInlineAdaptiveBannerAdSize_currentOrientation {
+  GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(25, 10));
+
+  FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
+  OCMStub([factory currentOrientationInlineAdaptiveBannerSizeWithWidth:@(23)])
+      .andReturn(testAdSize);
+
+  FLTInlineAdaptiveBannerSize *inlineAdaptiveBannerSize =
+      [[FLTInlineAdaptiveBannerSize alloc] initWithFactory:factory
+                                                     width:@(23)
+                                                 maxHeight:NULL
+                                               orientation:NULL];
+
+  NSData *encodedMessage = [_messageCodec encode:inlineAdaptiveBannerSize];
+
+  FLTInlineAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
+  XCTAssertEqualObjects(decodedSize.maxHeight, inlineAdaptiveBannerSize.maxHeight);
+  XCTAssertEqualObjects(decodedSize.orientation, inlineAdaptiveBannerSize.orientation);
+}
+
+- (void)testEncodeDecodeInlineAdaptiveBannerAdSize_portraitOrientation {
+  GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(25, 10));
+
+  FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
+  OCMStub([factory portraitOrientationInlineAdaptiveBannerSizeWithWidth:@(23)])
+      .andReturn(testAdSize);
+
+  FLTInlineAdaptiveBannerSize *inlineAdaptiveBannerSize =
+      [[FLTInlineAdaptiveBannerSize alloc] initWithFactory:factory
+                                                     width:@(23)
+                                                 maxHeight:NULL
+                                               orientation:@0];
+
+  NSData *encodedMessage = [_messageCodec encode:inlineAdaptiveBannerSize];
+
+  FLTInlineAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
+  XCTAssertEqualObjects(decodedSize.maxHeight, inlineAdaptiveBannerSize.maxHeight);
+  XCTAssertEqualObjects(decodedSize.orientation, inlineAdaptiveBannerSize.orientation);
+}
+
+- (void)testEncodeDecodeInlineAdaptiveBannerAdSize_landscapeOrientation {
+  GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(25, 10));
+
+  FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
+  OCMStub([factory landscapeInlineAdaptiveBannerAdSizeWithWidth:@(23)]).andReturn(testAdSize);
+
+  FLTInlineAdaptiveBannerSize *inlineAdaptiveBannerSize =
+      [[FLTInlineAdaptiveBannerSize alloc] initWithFactory:factory
+                                                     width:@(23)
+                                                 maxHeight:NULL
+                                               orientation:@1];
+
+  NSData *encodedMessage = [_messageCodec encode:inlineAdaptiveBannerSize];
+
+  FLTInlineAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
+  XCTAssertEqualObjects(decodedSize.maxHeight, inlineAdaptiveBannerSize.maxHeight);
+  XCTAssertEqualObjects(decodedSize.orientation, inlineAdaptiveBannerSize.orientation);
+}
+
+- (void)testEncodeDecodeInlineAdaptiveBannerAdSize_withMaxHeight {
+  GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(25, 10));
+
+  FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
+  OCMStub([factory inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:@(23) maxHeight:@50])
+      .andReturn(testAdSize);
+
+  FLTInlineAdaptiveBannerSize *inlineAdaptiveBannerSize =
+      [[FLTInlineAdaptiveBannerSize alloc] initWithFactory:factory
+                                                     width:@(23)
+                                                 maxHeight:@50
+                                               orientation:nil];
+
+  NSData *encodedMessage = [_messageCodec encode:inlineAdaptiveBannerSize];
+
+  FLTInlineAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
+  XCTAssertEqualObjects(decodedSize.maxHeight, inlineAdaptiveBannerSize.maxHeight);
+  XCTAssertEqualObjects(decodedSize.orientation, inlineAdaptiveBannerSize.orientation);
+}
+
 - (void)testEncodeDecodeAnchoredAdaptiveBannerAdSize {
   GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(0, 0));
 

@@ -50,6 +50,8 @@ void main() {
           case 'loadAdManagerInterstitialAd':
           case 'loadAdManagerBannerAd':
             return Future<void>.value();
+          case 'getAdSize':
+            return Future<dynamic>.value(AdSize.banner);
           default:
             assert(false);
             return null;
@@ -228,6 +230,9 @@ void main() {
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
+
+      AdSize? adSize = await banner.getPlatformAdSize();
+      expect(adSize!, AdSize.banner);
     });
 
     test('dispose banner', () async {
@@ -711,6 +716,9 @@ void main() {
 
       expect(instanceManager.adFor(0), banner);
       expect(instanceManager.adIdFor(banner), 0);
+
+      AdSize? adSize = await banner.getPlatformAdSize();
+      expect(adSize!, AdSize.banner);
     });
 
     test('onAdLoaded', () async {
@@ -1374,6 +1382,44 @@ void main() {
       final RewardItem result = codec.decodeMessage(byteData);
       expect(result.amount, 1);
       expect(result.type, 'type');
+    });
+
+    test('encode/decode $InlineAdaptiveSize', () async {
+      ByteData byteData = codec.encodeMessage(
+          AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(100))!;
+
+      InlineAdaptiveSize result = codec.decodeMessage(byteData);
+      expect(result.orientation, null);
+      expect(result.width, 100);
+      expect(result.maxHeight, null);
+      expect(result.height, 0);
+
+      byteData = codec
+          .encodeMessage(AdSize.getPortraitInlineAdaptiveBannerAdSize(200))!;
+
+      result = codec.decodeMessage(byteData);
+      expect(result.orientation, Orientation.portrait);
+      expect(result.width, 200);
+      expect(result.maxHeight, null);
+      expect(result.height, 0);
+
+      byteData = codec
+          .encodeMessage(AdSize.getLandscapeInlineAdaptiveBannerAdSize(20))!;
+
+      result = codec.decodeMessage(byteData);
+      expect(result.orientation, Orientation.landscape);
+      expect(result.width, 20);
+      expect(result.maxHeight, null);
+      expect(result.height, 0);
+
+      byteData =
+          codec.encodeMessage(AdSize.getInlineAdaptiveBannerAdSize(20, 50))!;
+
+      result = codec.decodeMessage(byteData);
+      expect(result.orientation, null);
+      expect(result.width, 20);
+      expect(result.maxHeight, 50);
+      expect(result.height, 0);
     });
 
     test('encode/decode $AnchoredAdaptiveBannerAdSize', () async {
