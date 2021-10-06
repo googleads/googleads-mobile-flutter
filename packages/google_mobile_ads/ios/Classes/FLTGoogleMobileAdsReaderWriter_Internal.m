@@ -215,145 +215,145 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       [requestConfig tagForUnderAgeOfConsent:[self readValueOfType:[self readByte]]];
       requestConfig.testDeviceIdentifiers = [self readValueOfType:[self readByte]];
       return requestConfig;
-    case FLTAdmobFieldInlineAdaptiveAdSize: {
-      return [[FLTInlineAdaptiveBannerSize alloc]
-          initWithFactory:_adSizeFactory
-                    width:[self readValueOfType:[self readByte]]
-                maxHeight:[self readValueOfType:[self readByte]]
-              orientation:[self readValueOfType:[self readByte]]];
+      case FLTAdmobFieldInlineAdaptiveAdSize: {
+        return [[FLTInlineAdaptiveBannerSize alloc]
+            initWithFactory:_adSizeFactory
+                      width:[self readValueOfType:[self readByte]]
+                  maxHeight:[self readValueOfType:[self readByte]]
+                orientation:[self readValueOfType:[self readByte]]];
+      }
+    }
+      return [super readValueOfType:type];
+  }
+
+  @end
+
+      @implementation FLTGoogleMobileAdsWriter
+  -(void)writeAdSize : (FLTAdSize *_Nonnull)value {
+    if ([value isKindOfClass:[FLTInlineAdaptiveBannerSize class]]) {
+      [self writeByte:FLTAdmobFieldInlineAdaptiveAdSize];
+      FLTInlineAdaptiveBannerSize *size = (FLTInlineAdaptiveBannerSize *)value;
+      [self writeValue:size.width];
+      [self writeValue:size.maxHeight];
+      [self writeValue:size.orientation];
+    } else if ([value isKindOfClass:[FLTAnchoredAdaptiveBannerSize class]]) {
+      [self writeByte:FLTAdmobFieldAnchoredAdaptiveBannerAdSize];
+      FLTAnchoredAdaptiveBannerSize *size = (FLTAnchoredAdaptiveBannerSize *)value;
+      [self writeValue:size.orientation];
+      [self writeValue:size.width];
+    } else if ([value isKindOfClass:[FLTSmartBannerSize class]]) {
+      [self writeByte:FLTAdmobFieldSmartBannerAdSize];
+      FLTSmartBannerSize *size = (FLTSmartBannerSize *)value;
+      [self writeValue:size.orientation];
+    } else if ([value isKindOfClass:[FLTFluidSize class]]) {
+      [self writeByte:FLTAdMobFieldFluidAdSize];
+    } else if ([value isKindOfClass:[FLTAdSize class]]) {
+      [self writeByte:FLTAdMobFieldAdSize];
+      [self writeValue:value.width];
+      [self writeValue:value.height];
     }
   }
-  return [super readValueOfType:type];
-}
 
-@end
-
-@implementation FLTGoogleMobileAdsWriter
-- (void)writeAdSize:(FLTAdSize *_Nonnull)value {
-  if ([value isKindOfClass:[FLTInlineAdaptiveBannerSize class]]) {
-    [self writeByte:FLTAdmobFieldInlineAdaptiveAdSize];
-    FLTInlineAdaptiveBannerSize *size = (FLTInlineAdaptiveBannerSize *)value;
-    [self writeValue:size.width];
-    [self writeValue:size.maxHeight];
-    [self writeValue:size.orientation];
-  } else if ([value isKindOfClass:[FLTAnchoredAdaptiveBannerSize class]]) {
-    [self writeByte:FLTAdmobFieldAnchoredAdaptiveBannerAdSize];
-    FLTAnchoredAdaptiveBannerSize *size = (FLTAnchoredAdaptiveBannerSize *)value;
-    [self writeValue:size.orientation];
-    [self writeValue:size.width];
-  } else if ([value isKindOfClass:[FLTSmartBannerSize class]]) {
-    [self writeByte:FLTAdmobFieldSmartBannerAdSize];
-    FLTSmartBannerSize *size = (FLTSmartBannerSize *)value;
-    [self writeValue:size.orientation];
-  } else if ([value isKindOfClass:[FLTFluidSize class]]) {
-    [self writeByte:FLTAdMobFieldFluidAdSize];
-  } else if ([value isKindOfClass:[FLTAdSize class]]) {
-    [self writeByte:FLTAdMobFieldAdSize];
-    [self writeValue:value.width];
-    [self writeValue:value.height];
-  }
-}
-
-- (void)writeValue:(id _Nonnull)value {
-  if ([value isKindOfClass:[FLTAdSize class]]) {
-    [self writeAdSize:value];
-  } else if ([value isKindOfClass:[FLTGAMAdRequest class]]) {
-    [self writeByte:FLTAdMobFieldAdManagerAdRequest];
-    FLTGAMAdRequest *request = value;
-    [self writeValue:request.keywords];
-    [self writeValue:request.contentURL];
-    [self writeValue:request.customTargeting];
-    [self writeValue:request.customTargetingLists];
-    [self writeValue:@(request.nonPersonalizedAds)];
-  } else if ([value isKindOfClass:[FLTAdRequest class]]) {
-    [self writeByte:FLTAdMobFieldAdRequest];
-    FLTAdRequest *request = value;
-    [self writeValue:request.keywords];
-    [self writeValue:request.contentURL];
-    [self writeValue:@(request.nonPersonalizedAds)];
-  } else if ([value isKindOfClass:[FLTRewardItem class]]) {
-    [self writeByte:FLTAdMobFieldRewardItem];
-    FLTRewardItem *item = value;
-    [self writeValue:item.amount];
-    [self writeValue:item.type];
-  } else if ([value isKindOfClass:[FLTGADResponseInfo class]]) {
-    [self writeByte:FLTAdmobFieldGadResponseInfo];
-    GADResponseInfo *responseInfo = value;
-    [self writeValue:responseInfo.responseIdentifier];
-    [self writeValue:responseInfo.adNetworkClassName];
-    [self writeValue:responseInfo.adNetworkInfoArray];
-  } else if ([value isKindOfClass:[FLTGADAdNetworkResponseInfo class]]) {
-    [self writeByte:FLTAdmobFieldGADAdNetworkResponseInfo];
-    FLTGADAdNetworkResponseInfo *networkResponseInfo = value;
-    [self writeValue:networkResponseInfo.adNetworkClassName];
-    [self writeValue:networkResponseInfo.latency];
-    [self writeValue:networkResponseInfo.dictionaryDescription];
-    [self writeValue:networkResponseInfo.credentialsDescription];
-    [self writeValue:networkResponseInfo.error];
-  } else if ([value isKindOfClass:[FLTLoadAdError class]]) {
-    [self writeByte:FLTAdMobFieldLoadError];
-    FLTLoadAdError *error = value;
-    [self writeValue:@(error.code)];
-    [self writeValue:error.domain];
-    [self writeValue:error.message];
-    [self writeValue:error.responseInfo];
-  } else if ([value isKindOfClass:[NSError class]]) {
-    [self writeByte:FLTAdmobFieldAdError];
-    NSError *error = value;
-    [self writeValue:@(error.code)];
-    [self writeValue:error.domain];
-    [self writeValue:error.localizedDescription];
-  } else if ([value isKindOfClass:[FLTAdapterStatus class]]) {
-    [self writeByte:FLTAdMobFieldAdapterStatus];
-    FLTAdapterStatus *status = value;
-    [self writeByte:FLTAdMobFieldAdapterInitializationState];
-    if (!status.state) {
-      [self writeValue:[NSNull null]];
-    } else if (status.state.unsignedLongValue == FLTAdapterInitializationStateNotReady) {
-      [self writeValue:@"notReady"];
-    } else if (status.state.unsignedLongValue == FLTAdapterInitializationStateReady) {
-      [self writeValue:@"ready"];
+  -(void)writeValue : (id _Nonnull)value {
+    if ([value isKindOfClass:[FLTAdSize class]]) {
+      [self writeAdSize:value];
+    } else if ([value isKindOfClass:[FLTGAMAdRequest class]]) {
+      [self writeByte:FLTAdMobFieldAdManagerAdRequest];
+      FLTGAMAdRequest *request = value;
+      [self writeValue:request.keywords];
+      [self writeValue:request.contentURL];
+      [self writeValue:request.customTargeting];
+      [self writeValue:request.customTargetingLists];
+      [self writeValue:@(request.nonPersonalizedAds)];
+    } else if ([value isKindOfClass:[FLTAdRequest class]]) {
+      [self writeByte:FLTAdMobFieldAdRequest];
+      FLTAdRequest *request = value;
+      [self writeValue:request.keywords];
+      [self writeValue:request.contentURL];
+      [self writeValue:@(request.nonPersonalizedAds)];
+    } else if ([value isKindOfClass:[FLTRewardItem class]]) {
+      [self writeByte:FLTAdMobFieldRewardItem];
+      FLTRewardItem *item = value;
+      [self writeValue:item.amount];
+      [self writeValue:item.type];
+    } else if ([value isKindOfClass:[FLTGADResponseInfo class]]) {
+      [self writeByte:FLTAdmobFieldGadResponseInfo];
+      GADResponseInfo *responseInfo = value;
+      [self writeValue:responseInfo.responseIdentifier];
+      [self writeValue:responseInfo.adNetworkClassName];
+      [self writeValue:responseInfo.adNetworkInfoArray];
+    } else if ([value isKindOfClass:[FLTGADAdNetworkResponseInfo class]]) {
+      [self writeByte:FLTAdmobFieldGADAdNetworkResponseInfo];
+      FLTGADAdNetworkResponseInfo *networkResponseInfo = value;
+      [self writeValue:networkResponseInfo.adNetworkClassName];
+      [self writeValue:networkResponseInfo.latency];
+      [self writeValue:networkResponseInfo.dictionaryDescription];
+      [self writeValue:networkResponseInfo.credentialsDescription];
+      [self writeValue:networkResponseInfo.error];
+    } else if ([value isKindOfClass:[FLTLoadAdError class]]) {
+      [self writeByte:FLTAdMobFieldLoadError];
+      FLTLoadAdError *error = value;
+      [self writeValue:@(error.code)];
+      [self writeValue:error.domain];
+      [self writeValue:error.message];
+      [self writeValue:error.responseInfo];
+    } else if ([value isKindOfClass:[NSError class]]) {
+      [self writeByte:FLTAdmobFieldAdError];
+      NSError *error = value;
+      [self writeValue:@(error.code)];
+      [self writeValue:error.domain];
+      [self writeValue:error.localizedDescription];
+    } else if ([value isKindOfClass:[FLTAdapterStatus class]]) {
+      [self writeByte:FLTAdMobFieldAdapterStatus];
+      FLTAdapterStatus *status = value;
+      [self writeByte:FLTAdMobFieldAdapterInitializationState];
+      if (!status.state) {
+        [self writeValue:[NSNull null]];
+      } else if (status.state.unsignedLongValue == FLTAdapterInitializationStateNotReady) {
+        [self writeValue:@"notReady"];
+      } else if (status.state.unsignedLongValue == FLTAdapterInitializationStateReady) {
+        [self writeValue:@"ready"];
+      } else {
+        NSLog(@"Failed to interpret AdapterInitializationState of: %@", status.state);
+        [self writeValue:[NSNull null]];
+      }
+      [self writeValue:status.statusDescription];
+      [self writeValue:status.latency];
+    } else if ([value isKindOfClass:[FLTInitializationStatus class]]) {
+      [self writeByte:FLTAdMobFieldInitializationStatus];
+      FLTInitializationStatus *status = value;
+      [self writeValue:status.adapterStatuses];
+    } else if ([value isKindOfClass:[FLTServerSideVerificationOptions class]]) {
+      [self writeByte:FLTAdmobFieldServerSideVerificationOptions];
+      FLTServerSideVerificationOptions *options = value;
+      [self writeValue:options.userIdentifier];
+      [self writeValue:options.customRewardString];
+    } else if ([value isKindOfClass:[FLTNativeAdOptions class]]) {
+      [self writeByte:FLTAdmobFieldNativeAdOptions];
+      FLTNativeAdOptions *options = value;
+      [self writeValue:options.adChoicesPlacement];
+      [self writeValue:options.mediaAspectRatio];
+      [self writeValue:options.videoOptions];
+      [self writeValue:options.requestCustomMuteThisAd];
+      [self writeValue:options.shouldRequestMultipleImages];
+      [self writeValue:options.shouldReturnUrlsForImageAssets];
+    } else if ([value isKindOfClass:[FLTVideoOptions class]]) {
+      [self writeByte:FLTAdmobFieldVideoOptions];
+      FLTVideoOptions *options = value;
+      [self writeValue:options.clickToExpandRequested];
+      [self writeValue:options.customControlsRequested];
+      [self writeValue:options.startMuted];
+    } else if ([value isKindOfClass:[GADRequestConfiguration class]]) {
+      [self writeByte:FLTAdmobRequestConfigurationParams];
+      GADRequestConfiguration *params = value;
+      [self writeValue:params.maxAdContentRating];
+      // using nil temporarily for tagForUnderAgeOfConsent and tagForChildDirectedTreatment
+      // as there are no getters for them in GADRequestConfiguration.
+      [self writeValue:nil];
+      [self writeValue:nil];
+      [self writeValue:params.testDeviceIdentifiers];
     } else {
-      NSLog(@"Failed to interpret AdapterInitializationState of: %@", status.state);
-      [self writeValue:[NSNull null]];
+      [super writeValue:value];
     }
-    [self writeValue:status.statusDescription];
-    [self writeValue:status.latency];
-  } else if ([value isKindOfClass:[FLTInitializationStatus class]]) {
-    [self writeByte:FLTAdMobFieldInitializationStatus];
-    FLTInitializationStatus *status = value;
-    [self writeValue:status.adapterStatuses];
-  } else if ([value isKindOfClass:[FLTServerSideVerificationOptions class]]) {
-    [self writeByte:FLTAdmobFieldServerSideVerificationOptions];
-    FLTServerSideVerificationOptions *options = value;
-    [self writeValue:options.userIdentifier];
-    [self writeValue:options.customRewardString];
-  } else if ([value isKindOfClass:[FLTNativeAdOptions class]]) {
-    [self writeByte:FLTAdmobFieldNativeAdOptions];
-    FLTNativeAdOptions *options = value;
-    [self writeValue:options.adChoicesPlacement];
-    [self writeValue:options.mediaAspectRatio];
-    [self writeValue:options.videoOptions];
-    [self writeValue:options.requestCustomMuteThisAd];
-    [self writeValue:options.shouldRequestMultipleImages];
-    [self writeValue:options.shouldReturnUrlsForImageAssets];
-  } else if ([value isKindOfClass:[FLTVideoOptions class]]) {
-    [self writeByte:FLTAdmobFieldVideoOptions];
-    FLTVideoOptions *options = value;
-    [self writeValue:options.clickToExpandRequested];
-    [self writeValue:options.customControlsRequested];
-    [self writeValue:options.startMuted];
-  } else if ([value isKindOfClass:[GADRequestConfiguration class]]) {
-    [self writeByte:FLTAdmobRequestConfigurationParams];
-    GADRequestConfiguration *params = value;
-    [self writeValue:params.maxAdContentRating];
-    // using nil temporarily for tagForUnderAgeOfConsent and tagForChildDirectedTreatment
-    // as there are no getters for them in GADRequestConfiguration.
-    [self writeValue:nil];
-    [self writeValue:nil];
-    [self writeValue:params.testDeviceIdentifiers];
-  } else {
-    [super writeValue:value];
   }
-}
-@end
+  @end

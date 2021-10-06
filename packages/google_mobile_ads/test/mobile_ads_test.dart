@@ -288,10 +288,12 @@ void main() {
     });
 
     test('$MobileAds.getRequestConfiguration', () async {
-      RequestConfiguration requestConfig = await MobileAds.instance.getRequestConfiguration();
+      RequestConfiguration requestConfig =
+          await MobileAds.instance.getRequestConfiguration();
 
       expect(requestConfig.maxAdContentRating, MaxAdContentRating.ma);
-      expect(requestConfig.tagForChildDirectedTreatment, TagForChildDirectedTreatment.yes);
+      expect(requestConfig.tagForChildDirectedTreatment,
+          TagForChildDirectedTreatment.yes);
       expect(requestConfig.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
       expect(requestConfig.testDeviceIds, ['id1', 'id2']);
       expect(log, <Matcher>[
