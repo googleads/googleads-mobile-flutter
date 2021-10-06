@@ -112,4 +112,12 @@ class FlutterAdManagerBannerAd extends FlutterAd implements FlutterAdLoadedListe
       adView = null;
     }
   }
+
+  @Nullable
+  FlutterAdSize getAdSize() {
+    if (adView == null || adView.getAdSize() == null) {
+      return null;
+    }
+    return new FlutterAdSize(adView.getAdSize());
+  }
 }

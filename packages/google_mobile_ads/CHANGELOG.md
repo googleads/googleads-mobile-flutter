@@ -5,15 +5,27 @@
     but it only works the first time the engine is attached to an activity.
   * Support for reusing the engine in another activity after the first one is destroyed is blocked 
     by this Flutter issue which affects all platform views: https://github.com/flutter/flutter/issues/88880.
-* Adds support for Fluid Ad Size (Ad Manager only)
-  * Fluid ads dynamically adjust their height based on their width. To help display them we've added a new
-    ad container, `FluidAdManagerBannerAd`, and a new widget `FluidAdWidget`.
-    You can reference the [example app](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/fluid_example.dart) for an example of how to load and display a fluid ad.
-  * Android - [fluid_size](https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size)
-  * iOS - [fluid_size](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size)
 * Adds support for getRequestConfiguraiton API
   * Android - [getrequestconfiguration](https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-requestconfiguration-getrequestconfiguration)
   * iOS - [requestconfiguration](https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#requestconfiguration)
+* Adds support for Fluid Ad Size (Ad Manager only)
+  * Fluid ads dynamically adjust their height based on their width. To help display them we've added a new
+    ad container, `FluidAdManagerBannerAd`, and a new widget `FluidAdWidget`.
+  * You can see the [fluid_example.dart](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/fluid_example.dart) for a reference of how to load and display a fluid ad.
+  * Android - [fluid_size](https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size)
+  * iOS - [fluid_size](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size)
+* Adds support for inline adaptive banner ads.
+  * Inline adaptive banner ads are meant to be used in scrollable content. They are of variable height and can be as tall as the device screen.
+    They differ from Fluid ads in that they only resize once when the ad is loaded.
+    You can see the [inline_adaptive_example.dart](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/inline_adaptive_example.dart) for a reference of how to load and display 
+    inline adaptive banners.
+  * More information on inline adaptive banners can be found here:
+    * [Admob android](https://developers.google.com/admob/android/banner/inline-adaptive)
+    * [Admob iOS](https://developers.google.com/admob/ios/banner/inline-adaptive)
+    * [Ad manager android](https://developers.google.com/ad-manager/mobile-ads-sdk/android/banner/inline-adaptive)
+    * [Ad manager iOS](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/banner/inline-adaptive)
+* Fix for [#369](https://github.com/googleads/googleads-mobile-flutter/issues/369)
+  * Fixes setting the app volume in android (doesn't affect iOS).
 
 ## 0.13.5
 

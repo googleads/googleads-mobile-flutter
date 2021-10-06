@@ -29,7 +29,9 @@
 }
 
 - (void)setUp {
-  _mockAdInstanceManager = OCMClassMock([FLTAdInstanceManager class]);
+  id<FlutterBinaryMessenger> messenger = OCMProtocolMock(@protocol(FlutterBinaryMessenger));
+  FLTAdInstanceManager *manager = [[FLTAdInstanceManager alloc] initWithBinaryMessenger:messenger];
+  _mockAdInstanceManager = OCMPartialMock(manager);
   _fltGoogleMobileAdsPlugin = [[FLTGoogleMobileAdsPlugin alloc] init];
   [_fltGoogleMobileAdsPlugin setValue:_mockAdInstanceManager forKey:@"_manager"];
 }
@@ -337,5 +339,45 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertEqual(returnedResult, [GADMobileAds.sharedInstance requestConfiguration]);
+}
+
+- (void)testGetAdSize_bannerAd {
+  // Method calls to load a banner ad.
+  FlutterMethodCall *loadAdMethodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"loadBannerAd"
+                                        arguments:@{
+                                          @"adId" : @(1),
+                                          @"adUnitId" : @"ad-unit-id",
+                                          @"size" : [[FLTAdSize alloc] initWithWidth:@1 height:@2],
+                                          @"request" : [[FLTAdRequest alloc] init],
+                                        }];
+
+  __block bool loadAdResultInvoked = false;
+  __block id _Nullable returnedLoadAdResult;
+  FlutterResult loadAdResult = ^(id _Nullable result) {
+    loadAdResultInvoked = true;
+    returnedLoadAdResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:loadAdMethodCall result:loadAdResult];
+
+  XCTAssertTrue(loadAdResultInvoked);
+  XCTAssertNil(returnedLoadAdResult);
+
+  // Method call to get the ad size.
+  __block bool getAdSizeResultInvoked = false;
+  __block FLTAdSize *_Nullable returnedGetAdSizeResult;
+  FlutterResult getAdSizeResult = ^(id _Nullable result) {
+    getAdSizeResultInvoked = true;
+    returnedGetAdSizeResult = result;
+  };
+
+  FlutterMethodCall *getAdSizeMethodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"getAdSize" arguments:@{@"adId" : @(1)}];
+  [_fltGoogleMobileAdsPlugin handleMethodCall:getAdSizeMethodCall result:getAdSizeResult];
+
+  XCTAssertTrue(getAdSizeResultInvoked);
+  XCTAssertEqualObjects(returnedGetAdSizeResult.width, @1);
+  XCTAssertEqualObjects(returnedGetAdSizeResult.height, @2);
 }
 @end

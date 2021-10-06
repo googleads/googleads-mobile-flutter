@@ -37,8 +37,8 @@ public class FlutterMobileAdsWrapper {
   }
 
   /** Wrapper for setAppVolume. */
-  public void setAppVolume(float volume) {
-    MobileAds.setAppVolume(volume);
+  public void setAppVolume(double volume) {
+    MobileAds.setAppVolume((float) volume);
   }
 
   /** Wrapper for disableMediationInitialization. */

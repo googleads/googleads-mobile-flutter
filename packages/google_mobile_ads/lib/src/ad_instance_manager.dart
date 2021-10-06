@@ -386,6 +386,15 @@ class AdInstanceManager {
     ))!;
   }
 
+  Future<AdSize> getAdSize(Ad ad) async {
+    return (await instanceManager.channel.invokeMethod<AdSize>(
+      'getAdSize',
+      <dynamic, dynamic>{
+        'adId': adIdFor(ad),
+      },
+    ))!;
+  }
+
   /// Returns null if an invalid [adId] was passed in.
   Ad? adFor(int adId) => _loadedAds[adId];
 
@@ -707,7 +716,8 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueSmartBannerAdSize = 143;
   static const int _valueNativeAdOptions = 144;
   static const int _valueVideoOptions = 145;
-  static const int _requestConfigurationParams = 146;
+  static const int _valueRequestConfigurationParams = 146;
+  static const int _valueInlineAdaptiveBannerAdSize = 147;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -781,7 +791,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.customControlsRequested);
       writeValue(buffer, value.startMuted);
     } else if (value is RequestConfiguration) {
-      buffer.putUint8(_requestConfigurationParams);
+      buffer.putUint8(_valueRequestConfigurationParams);
       writeValue(buffer, value.maxAdContentRating);
       writeValue(buffer, value.tagForChildDirectedTreatment);
       writeValue(buffer, value.tagForUnderAgeOfConsent);
@@ -794,6 +804,22 @@ class AdMessageCodec extends StandardMessageCodec {
   @override
   dynamic readValueOfType(dynamic type, ReadBuffer buffer) {
     switch (type) {
+      case _valueInlineAdaptiveBannerAdSize:
+        final num width = readValueOfType(buffer.getUint8(), buffer);
+        final num? maxHeight = readValueOfType(buffer.getUint8(), buffer);
+        final num? orientation = readValueOfType(buffer.getUint8(), buffer);
+        if (orientation != null) {
+          return orientation.toInt() == 0
+              ? AdSize.getPortraitInlineAdaptiveBannerAdSize(width.toInt())
+              : AdSize.getLandscapeInlineAdaptiveBannerAdSize(width.toInt());
+        } else if (maxHeight != null) {
+          return AdSize.getInlineAdaptiveBannerAdSize(
+              width.toInt(), maxHeight.toInt());
+        } else {
+          return AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(
+              width.toInt());
+        }
+
       case _valueAnchoredAdaptiveBannerAdSize:
         final String orientationStr =
             readValueOfType(buffer.getUint8(), buffer);
@@ -816,9 +842,11 @@ class AdMessageCodec extends StandardMessageCodec {
           ),
         );
       case _valueAdSize:
+        num width = readValueOfType(buffer.getUint8(), buffer);
+        num height = readValueOfType(buffer.getUint8(), buffer);
         return AdSize(
-          width: readValueOfType(buffer.getUint8(), buffer),
-          height: readValueOfType(buffer.getUint8(), buffer),
+          width: width.toInt(),
+          height: height.toInt(),
         );
       case _valueFluidAdSize:
         return FluidAdSize();
@@ -919,7 +947,7 @@ class AdMessageCodec extends StandardMessageCodec {
           customControlsRequested: readValueOfType(buffer.getUint8(), buffer),
           startMuted: readValueOfType(buffer.getUint8(), buffer),
         );
-      case _requestConfigurationParams:
+      case _valueRequestConfigurationParams:
         return RequestConfiguration(
           maxAdContentRating: readValueOfType(buffer.getUint8(), buffer),
           tagForChildDirectedTreatment:
@@ -944,7 +972,12 @@ class AdMessageCodec extends StandardMessageCodec {
   }
 
   void writeAdSize(WriteBuffer buffer, AdSize value) {
-    if (value is AnchoredAdaptiveBannerAdSize) {
+    if (value is InlineAdaptiveSize) {
+      buffer.putUint8(_valueInlineAdaptiveBannerAdSize);
+      writeValue(buffer, value.width);
+      writeValue(buffer, value.maxHeight);
+      writeValue(buffer, value.orientationValue);
+    } else if (value is AnchoredAdaptiveBannerAdSize) {
       buffer.putUint8(_valueAnchoredAdaptiveBannerAdSize);
       writeValue(buffer, describeEnum(value.orientation));
       writeValue(buffer, value.width);
