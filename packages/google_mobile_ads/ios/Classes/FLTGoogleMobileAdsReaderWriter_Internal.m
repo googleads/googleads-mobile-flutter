@@ -217,15 +217,14 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       return requestConfig;
     }
     case FLTAdmobFieldInlineAdaptiveAdSize: {
-        return [[FLTInlineAdaptiveBannerSize alloc]
-            initWithFactory:_adSizeFactory
-                      width:[self readValueOfType:[self readByte]]
-                  maxHeight:[self readValueOfType:[self readByte]]
-                orientation:[self readValueOfType:[self readByte]]];
-      }
+      return [[FLTInlineAdaptiveBannerSize alloc]
+          initWithFactory:_adSizeFactory
+                    width:[self readValueOfType:[self readByte]]
+                maxHeight:[self readValueOfType:[self readByte]]
+              orientation:[self readValueOfType:[self readByte]]];
     }
-      return [super readValueOfType:type];
   }
+  return [super readValueOfType:type];
 }
 @end
 
