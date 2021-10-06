@@ -45,6 +45,22 @@
 - (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
   return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
 }
+
+- (GADAdSize)currentOrientationInlineAdaptiveBannerSizeWithWidth:(NSNumber *_Nonnull)width {
+  return GADCurrentOrientationInlineAdaptiveBannerAdSizeWithWidth(width.floatValue);
+}
+
+- (GADAdSize)portraitOrientationInlineAdaptiveBannerSizeWithWidth:(NSNumber *_Nonnull)width {
+  return GADPortraitInlineAdaptiveBannerAdSizeWithWidth(width.floatValue);
+}
+- (GADAdSize)landscapeInlineAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+  return GADLandscapeInlineAdaptiveBannerAdSizeWithWidth(width.floatValue);
+}
+- (GADAdSize)inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:(NSNumber *_Nonnull)width
+                                                   maxHeight:(NSNumber *_Nonnull)maxHeight {
+  return GADInlineAdaptiveBannerAdSizeWithWidthAndMaxHeight(width.floatValue, maxHeight.floatValue);
+}
+
 @end
 
 @implementation FLTAnchoredAdaptiveBannerSize
@@ -67,6 +83,30 @@
   self = [self initWithAdSize:size];
   if (self) {
     _orientation = orientation;
+  }
+  return self;
+}
+@end
+
+@implementation FLTInlineAdaptiveBannerSize
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
+                                   width:(NSNumber *_Nonnull)width
+                               maxHeight:(NSNumber *_Nullable)maxHeight
+                             orientation:(NSNumber *_Nullable)orientation {
+  GADAdSize gadAdSize;
+  if ([FLTAdUtil isNotNull:orientation]) {
+    gadAdSize = orientation.intValue == 0
+                    ? [factory portraitOrientationInlineAdaptiveBannerSizeWithWidth:width]
+                    : [factory landscapeInlineAdaptiveBannerAdSizeWithWidth:width];
+  } else if ([FLTAdUtil isNotNull:maxHeight]) {
+    gadAdSize = [factory inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:width maxHeight:maxHeight];
+  } else {
+    gadAdSize = [factory currentOrientationInlineAdaptiveBannerSizeWithWidth:width];
+  }
+  self = [self initWithAdSize:gadAdSize];
+  if (self) {
+    _orientation = orientation;
+    _maxHeight = maxHeight;
   }
   return self;
 }
@@ -243,6 +283,13 @@
 - (void)load {
   self.bannerView.delegate = self;
   [self.bannerView loadRequest:_adRequest.asGADRequest];
+}
+
+- (FLTAdSize *)getAdSize {
+  if (self.bannerView) {
+    return [[FLTAdSize alloc] initWithAdSize:self.bannerView.adSize];
+  }
+  return nil;
 }
 
 #pragma mark - GADBannerViewDelegate

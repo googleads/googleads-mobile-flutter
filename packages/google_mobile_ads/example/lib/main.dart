@@ -18,7 +18,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-
+import 'inline_adaptive_example.dart';
 import 'fluid_example.dart';
 import 'reusable_inline_example.dart';
 
@@ -223,6 +223,13 @@ class _MyAppState extends State<MyApp> {
                         MaterialPageRoute(builder: (context) => FluidExample()),
                       );
                       break;
+                    case 'Inline adaptive':
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => InlineAdaptiveExample()),
+                      );
+                      break;
                     default:
                       throw AssertionError('unexpected button: $result');
                   }
@@ -239,6 +246,10 @@ class _MyAppState extends State<MyApp> {
                   PopupMenuItem<String>(
                     value: 'Fluid',
                     child: Text('Fluid'),
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'Inline adaptive',
+                    child: Text('Inline adaptive'),
                   ),
                 ],
               ),

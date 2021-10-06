@@ -33,8 +33,10 @@ import android.os.Bundle;
 import androidx.test.core.app.ApplicationProvider;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.AdapterResponseInfo;
 import com.google.android.gms.ads.ResponseInfo;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -635,8 +637,8 @@ public class GoogleMobileAdsTest {
         new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
 
     // Create a map for passing arguments to the MethodCall.
-    HashMap<String, Float> fullVolumeArguments = new HashMap<>();
-    fullVolumeArguments.put("volume", 1.0f);
+    HashMap<String, Double> fullVolumeArguments = new HashMap<>();
+    fullVolumeArguments.put("volume", 1.0);
 
     // Invoke the setAppVolume method with the arguments.
     MethodCall methodCall = new MethodCall("MobileAds#setAppVolume", fullVolumeArguments);
@@ -644,7 +646,7 @@ public class GoogleMobileAdsTest {
     plugin.onMethodCall(methodCall, result);
 
     // Verify that mockMobileAds.setAppVolume() was called with the correct value.
-    verify(mockMobileAds).setAppVolume(eq(1.0f));
+    verify(mockMobileAds).setAppVolume(eq(1.0));
   }
 
   @Test
@@ -684,6 +686,7 @@ public class GoogleMobileAdsTest {
 
   @Test
   public void testGetAnchoredAdaptiveBannerAdSize() {
+    // Setup mocks
     AdInstanceManager testManagerSpy = spy(testManager);
     FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
     GoogleMobileAdsPlugin plugin =
@@ -720,6 +723,7 @@ public class GoogleMobileAdsTest {
 
     adSize = AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, 23);
     methodCall = new MethodCall("AdSize#getAnchoredAdaptiveBannerAdSize", arguments);
+    result = mock(Result.class);
     plugin.onMethodCall(methodCall, result);
 
     verify(result).success(adSize.getHeight());
@@ -730,8 +734,92 @@ public class GoogleMobileAdsTest {
 
     adSize = AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, 23);
     methodCall = new MethodCall("AdSize#getAnchoredAdaptiveBannerAdSize", arguments);
+    result = mock(Result.class);
     plugin.onMethodCall(methodCall, result);
 
     verify(result).success(adSize.getHeight());
+  }
+
+  public void testGetAdSize_bannerAd() {
+    // Setup mocks
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
+    GoogleMobileAdsPlugin pluginSpy = spy(plugin);
+    BannerAdCreator bannerAdCreator = mock(BannerAdCreator.class);
+    AdView adView = mock(AdView.class);
+    doReturn(adView).when(bannerAdCreator).createAdView();
+    doReturn(bannerAdCreator)
+        .when(pluginSpy)
+        .getBannerAdCreator(ArgumentMatchers.any(Context.class));
+
+    // Load a banner ad
+    Map<String, Object> loadArgs = new HashMap<>();
+    loadArgs.put("adId", 1);
+    loadArgs.put("adUnitId", "test-ad-unit");
+    loadArgs.put("request", new FlutterAdRequest.Builder().build());
+    loadArgs.put("size", new FlutterAdSize(1, 2));
+
+    MethodCall loadBannerMethodCall = new MethodCall("loadBannerAd", loadArgs);
+    Result result = mock(Result.class);
+    pluginSpy.onMethodCall(loadBannerMethodCall, result);
+    verify(result).success(null);
+
+    // Mock response for adView.getAdSize();
+    AdSize adSize = mock(AdSize.class);
+    doReturn(adSize).when(adView).getAdSize();
+
+    // Method call for getAdSize.
+    Result getAdSizeResult = mock(Result.class);
+    Map<String, Object> getAdSizeArgs = Collections.singletonMap("adId", 1);
+    MethodCall getAdSizeMethodCall = new MethodCall("getAdSize", getAdSizeArgs);
+    pluginSpy.onMethodCall(getAdSizeMethodCall, getAdSizeResult);
+
+    ArgumentCaptor<FlutterAdSize> argumentCaptor = ArgumentCaptor.forClass(FlutterAdSize.class);
+    verify(getAdSizeResult).success(argumentCaptor.capture());
+    assertEquals(argumentCaptor.getValue().getAdSize(), adSize);
+  }
+
+  @Test
+  public void testGetAdSize_adManagerBannerAd() {
+    // Setup mocks
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
+    GoogleMobileAdsPlugin pluginSpy = spy(plugin);
+    BannerAdCreator bannerAdCreator = mock(BannerAdCreator.class);
+    AdManagerAdView adView = mock(AdManagerAdView.class);
+    doReturn(adView).when(bannerAdCreator).createAdManagerAdView();
+    doReturn(bannerAdCreator)
+        .when(pluginSpy)
+        .getBannerAdCreator(ArgumentMatchers.any(Context.class));
+
+    // Load a banner ad
+    Map<String, Object> loadArgs = new HashMap<>();
+    loadArgs.put("adId", 1);
+    loadArgs.put("adUnitId", "test-ad-unit");
+    loadArgs.put("request", new FlutterAdManagerAdRequest.Builder().build());
+    loadArgs.put("sizes", Collections.singletonList(new FlutterAdSize(1, 2)));
+
+    MethodCall loadBannerMethodCall = new MethodCall("loadAdManagerBannerAd", loadArgs);
+    Result result = mock(Result.class);
+    pluginSpy.onMethodCall(loadBannerMethodCall, result);
+    verify(result).success(null);
+
+    // Mock response for adView.getAdSize();
+    AdSize adSize = mock(AdSize.class);
+    doReturn(adSize).when(adView).getAdSize();
+
+    // Method call for getAdSize.
+    Result getAdSizeResult = mock(Result.class);
+    Map<String, Object> getAdSizeArgs = Collections.singletonMap("adId", 1);
+    MethodCall getAdSizeMethodCall = new MethodCall("getAdSize", getAdSizeArgs);
+    pluginSpy.onMethodCall(getAdSizeMethodCall, getAdSizeResult);
+
+    ArgumentCaptor<FlutterAdSize> argumentCaptor = ArgumentCaptor.forClass(FlutterAdSize.class);
+    verify(getAdSizeResult).success(argumentCaptor.capture());
+    assertEquals(argumentCaptor.getValue().getAdSize(), adSize);
   }
 }

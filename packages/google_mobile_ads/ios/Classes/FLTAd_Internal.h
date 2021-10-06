@@ -35,6 +35,12 @@
 - (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
 - (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
 - (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
+- (GADAdSize)currentOrientationInlineAdaptiveBannerSizeWithWidth:(NSNumber *_Nonnull)width;
+- (GADAdSize)portraitOrientationInlineAdaptiveBannerSizeWithWidth:(NSNumber *_Nonnull)width;
+- (GADAdSize)landscapeInlineAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
+- (GADAdSize)inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:(NSNumber *_Nonnull)width
+                                                   maxHeight:(NSNumber *_Nonnull)maxHeight;
+
 @end
 
 @interface FLTAnchoredAdaptiveBannerSize : FLTAdSize
@@ -42,6 +48,15 @@
 - (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
                              orientation:(NSString *_Nonnull)orientation
                                    width:(NSNumber *_Nonnull)width;
+@end
+
+@interface FLTInlineAdaptiveBannerSize : FLTAdSize
+@property(readonly) NSNumber *_Nullable orientation;
+@property(readonly) NSNumber *_Nullable maxHeight;
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
+                                   width:(NSNumber *_Nonnull)width
+                               maxHeight:(NSNumber *_Nullable)maxHeight
+                             orientation:(NSNumber *_Nullable)orientation;
 @end
 
 @interface FLTSmartBannerSize : FLTAdSize
@@ -126,6 +141,7 @@
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
+- (FLTAdSize *_Nullable)getAdSize;
 - (GADBannerView *_Nonnull)bannerView;
 @end
 
@@ -138,6 +154,7 @@
                                   request:(FLTGAMAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
+
 @end
 
 /**
