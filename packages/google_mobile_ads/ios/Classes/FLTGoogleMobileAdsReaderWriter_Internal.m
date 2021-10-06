@@ -215,7 +215,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       [requestConfig tagForUnderAgeOfConsent:[self readValueOfType:[self readByte]]];
       requestConfig.testDeviceIdentifiers = [self readValueOfType:[self readByte]];
       return requestConfig;
-      case FLTAdmobFieldInlineAdaptiveAdSize: {
+    }
+    case FLTAdmobFieldInlineAdaptiveAdSize: {
         return [[FLTInlineAdaptiveBannerSize alloc]
             initWithFactory:_adSizeFactory
                       width:[self readValueOfType:[self readByte]]
