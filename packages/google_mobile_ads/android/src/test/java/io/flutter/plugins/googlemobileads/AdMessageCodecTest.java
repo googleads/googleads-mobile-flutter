@@ -156,25 +156,25 @@ public class AdMessageCodecTest {
 
     final AnchoredAdaptiveBannerAdSize portraitAnchoredAdaptiveAdSize =
         new AnchoredAdaptiveBannerAdSize(mock(Context.class), mockAdSizeFactory, "portrait", 23);
-    final ByteBuffer portraitData = testCodec.encodeMessage(portraitAnchoredAdaptiveAdSize);
+    final ByteBuffer portraitData = codec.encodeMessage(portraitAnchoredAdaptiveAdSize);
 
     final AnchoredAdaptiveBannerAdSize portraitResult =
         (AnchoredAdaptiveBannerAdSize)
-            testCodec.decodeMessage((ByteBuffer) portraitData.position(0));
+            codec.decodeMessage((ByteBuffer) portraitData.position(0));
     assertEquals(portraitResult.size, mockAdSize);
 
     final AnchoredAdaptiveBannerAdSize landscapeAnchoredAdaptiveAdSize =
         new AnchoredAdaptiveBannerAdSize(mock(Context.class), mockAdSizeFactory, "landscape", 34);
-    final ByteBuffer landscapeData = testCodec.encodeMessage(landscapeAnchoredAdaptiveAdSize);
+    final ByteBuffer landscapeData = codec.encodeMessage(landscapeAnchoredAdaptiveAdSize);
 
     final AnchoredAdaptiveBannerAdSize landscapeResult =
         (AnchoredAdaptiveBannerAdSize)
-            testCodec.decodeMessage((ByteBuffer) landscapeData.position(0));
+            codec.decodeMessage((ByteBuffer) landscapeData.position(0));
     assertEquals(landscapeResult.size, mockAdSize);
 
     final AnchoredAdaptiveBannerAdSize anchoredAdaptiveAdSize =
         new AnchoredAdaptiveBannerAdSize(mock(Context.class), mockAdSizeFactory, null, 45);
-    final ByteBuffer data = testCodec.encodeMessage(anchoredAdaptiveAdSize);
+    final ByteBuffer data = codec.encodeMessage(anchoredAdaptiveAdSize);
 
     final AnchoredAdaptiveBannerAdSize result =
         (AnchoredAdaptiveBannerAdSize) codec.decodeMessage((ByteBuffer) data.position(0));
