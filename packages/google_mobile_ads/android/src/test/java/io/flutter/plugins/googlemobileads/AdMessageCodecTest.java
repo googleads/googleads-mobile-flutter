@@ -16,6 +16,7 @@ package io.flutter.plugins.googlemobileads;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,16 +26,18 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import android.content.Context;
+import android.location.Location;
 import com.google.android.gms.ads.AdSize;
+import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
+import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.AdSizeFactory;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.AnchoredAdaptiveBannerAdSize;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.InlineAdaptiveBannerAdSize;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,34 +46,34 @@ import org.robolectric.RobolectricTestRunner;
 /** Tests for {@link AdMessageCodec}. */
 @RunWith(RobolectricTestRunner.class)
 public class AdMessageCodecTest {
-  AdMessageCodec testCodec;
+  AdMessageCodec codec;
   AdSizeFactory mockAdSizeFactory;
 
   @Before
   public void setup() {
     mockAdSizeFactory = mock(AdSizeFactory.class);
-    testCodec = new AdMessageCodec(mock(Context.class), mockAdSizeFactory);
+    codec = new AdMessageCodec(mock(Context.class), mockAdSizeFactory);
   }
 
   @Test
-  public void adMessageCodec_encodeAdapterInitializationState() {
+  public void encodeAdapterInitializationState() {
     final ByteBuffer message =
-        testCodec.encodeMessage(FlutterAdapterStatus.AdapterInitializationState.NOT_READY);
+        codec.encodeMessage(FlutterAdapterStatus.AdapterInitializationState.NOT_READY);
 
     assertEquals(
-        testCodec.decodeMessage((ByteBuffer) message.position(0)),
+        codec.decodeMessage((ByteBuffer) message.position(0)),
         FlutterAdapterStatus.AdapterInitializationState.NOT_READY);
   }
 
   @Test
-  public void adMessageCodec_encodeAdapterStatus() {
+  public void encodeAdapterStatus() {
     final ByteBuffer message =
-        testCodec.encodeMessage(
+        codec.encodeMessage(
             new FlutterAdapterStatus(
                 FlutterAdapterStatus.AdapterInitializationState.READY, "desc", 24));
 
     final FlutterAdapterStatus result =
-        (FlutterAdapterStatus) testCodec.decodeMessage((ByteBuffer) message.position(0));
+        (FlutterAdapterStatus) codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(
         result,
         new FlutterAdapterStatus(
@@ -78,9 +81,9 @@ public class AdMessageCodecTest {
   }
 
   @Test
-  public void adMessageCodec_encodeInitializationStatus() {
+  public void encodeInitializationStatus() {
     final ByteBuffer message =
-        testCodec.encodeMessage(
+        codec.encodeMessage(
             new FlutterInitializationStatus(
                 Collections.singletonMap(
                     "table",
@@ -90,7 +93,7 @@ public class AdMessageCodecTest {
                         56.66))));
 
     final FlutterInitializationStatus initStatus =
-        (FlutterInitializationStatus) testCodec.decodeMessage((ByteBuffer) message.position(0));
+        (FlutterInitializationStatus) codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(initStatus.adapterStatuses.size(), 1);
     final FlutterAdapterStatus adapterStatus = initStatus.adapterStatuses.get("table");
     assertEquals(
@@ -100,71 +103,44 @@ public class AdMessageCodecTest {
   }
 
   @Test
-  public void adMessageCodec_decodeInitializationStatus() {
-    Map<String, String> targeting = new HashMap<>();
-    targeting.put("testKey", "testValue");
-
-    Map<String, List<String>> targetingList = new HashMap<>();
-    List<String> list = new ArrayList<>();
-    list.add("testValue1");
-    list.add("testValue2");
-    targetingList.put("testKey", list);
-
-    FlutterAdManagerAdRequest flutterAdManagerAdRequest =
-        new FlutterAdManagerAdRequest.Builder()
-            .setContentUrl("test-content-url")
-            .setCustomTargeting(targeting)
-            .setCustomTargetingLists(targetingList)
-            .setKeywords(list)
-            .setNonPersonalizedAds(true)
-            .build();
-
-    ByteBuffer message = testCodec.encodeMessage(flutterAdManagerAdRequest);
-
-    FlutterAdManagerAdRequest decodedAdManagerAdRequest =
-        (FlutterAdManagerAdRequest) testCodec.decodeMessage((ByteBuffer) message.position(0));
-    assertEquals(decodedAdManagerAdRequest, flutterAdManagerAdRequest);
-  }
-
-  @Test
-  public void adMessageCodec_decodeServerSideVerificationOptions() {
+  public void decodeServerSideVerificationOptions() {
     FlutterServerSideVerificationOptions options =
         new FlutterServerSideVerificationOptions("user-id", "custom-data");
 
-    ByteBuffer message = testCodec.encodeMessage(options);
+    ByteBuffer message = codec.encodeMessage(options);
 
     FlutterServerSideVerificationOptions decodedOptions =
         (FlutterServerSideVerificationOptions)
-            testCodec.decodeMessage((ByteBuffer) message.position(0));
+            codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
 
     // With userId = null.
     options = new FlutterServerSideVerificationOptions(null, "custom-data");
-    message = testCodec.encodeMessage(options);
+    message = codec.encodeMessage(options);
     decodedOptions =
         (FlutterServerSideVerificationOptions)
-            testCodec.decodeMessage((ByteBuffer) message.position(0));
+            codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
 
     // With customData = null.
     options = new FlutterServerSideVerificationOptions("user-Id", null);
-    message = testCodec.encodeMessage(options);
+    message = codec.encodeMessage(options);
     decodedOptions =
         (FlutterServerSideVerificationOptions)
-            testCodec.decodeMessage((ByteBuffer) message.position(0));
+            codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
 
     // With userId and customData = null.
     options = new FlutterServerSideVerificationOptions(null, null);
-    message = testCodec.encodeMessage(options);
+    message = codec.encodeMessage(options);
     decodedOptions =
         (FlutterServerSideVerificationOptions)
-            testCodec.decodeMessage((ByteBuffer) message.position(0));
+            codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedOptions, options);
   }
 
   @Test
-  public void adMessageCodec_encodeAnchoredAdaptiveBannerAdSize() {
+  public void encodeAnchoredAdaptiveBannerAdSize() {
     AdSize mockAdSize = mock(AdSize.class);
     doReturn(mockAdSize)
         .when(mockAdSizeFactory)
@@ -172,38 +148,38 @@ public class AdMessageCodecTest {
 
     final AnchoredAdaptiveBannerAdSize adaptiveAdSize =
         new AnchoredAdaptiveBannerAdSize(mock(Context.class), mockAdSizeFactory, "portrait", 23);
-    final ByteBuffer data = testCodec.encodeMessage(adaptiveAdSize);
+    final ByteBuffer data = codec.encodeMessage(adaptiveAdSize);
 
     final AnchoredAdaptiveBannerAdSize result =
-        (AnchoredAdaptiveBannerAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
+        (AnchoredAdaptiveBannerAdSize) codec.decodeMessage((ByteBuffer) data.position(0));
     assertEquals(result.size, mockAdSize);
   }
 
   @Test
-  public void adMessageCodec_encodeSmartBannerAdSize() {
-    final ByteBuffer data = testCodec.encodeMessage(new FlutterAdSize.SmartBannerAdSize());
+  public void encodeSmartBannerAdSize() {
+    final ByteBuffer data = codec.encodeMessage(new FlutterAdSize.SmartBannerAdSize());
 
     final FlutterAdSize.SmartBannerAdSize result =
-        (FlutterAdSize.SmartBannerAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
+        (FlutterAdSize.SmartBannerAdSize) codec.decodeMessage((ByteBuffer) data.position(0));
     assertEquals(result.size, AdSize.SMART_BANNER);
   }
 
   @Test
-  public void adMessageCodec_encodeFluidAdSize() {
-    final ByteBuffer data = testCodec.encodeMessage(new FlutterAdSize.FluidAdSize());
+  public void encodeFluidAdSize() {
+    final ByteBuffer data = codec.encodeMessage(new FlutterAdSize.FluidAdSize());
 
     final FlutterAdSize.FluidAdSize result =
-        (FlutterAdSize.FluidAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
+        (FlutterAdSize.FluidAdSize) codec.decodeMessage((ByteBuffer) data.position(0));
     assertEquals(result.size, AdSize.FLUID);
   }
 
   @Test
-  public void adMessageCodec_nativeAdOptionsNull() {
+  public void nativeAdOptionsNull() {
     final ByteBuffer data =
-        testCodec.encodeMessage(new FlutterNativeAdOptions(null, null, null, null, null, null));
+        codec.encodeMessage(new FlutterNativeAdOptions(null, null, null, null, null, null));
 
     final FlutterNativeAdOptions result =
-        (FlutterNativeAdOptions) testCodec.decodeMessage((ByteBuffer) data.position(0));
+        (FlutterNativeAdOptions) codec.decodeMessage((ByteBuffer) data.position(0));
     assertNull(result.adChoicesPlacement);
     assertNull(result.mediaAspectRatio);
     assertNull(result.videoOptions);
@@ -213,14 +189,14 @@ public class AdMessageCodecTest {
   }
 
   @Test
-  public void adMessageCodec_nativeAdOptions() {
+  public void nativeAdOptions() {
     FlutterVideoOptions videoOptions = new FlutterVideoOptions(true, false, true);
 
     final ByteBuffer data =
-        testCodec.encodeMessage(new FlutterNativeAdOptions(1, 2, videoOptions, false, true, false));
+        codec.encodeMessage(new FlutterNativeAdOptions(1, 2, videoOptions, false, true, false));
 
     final FlutterNativeAdOptions result =
-        (FlutterNativeAdOptions) testCodec.decodeMessage((ByteBuffer) data.position(0));
+        (FlutterNativeAdOptions) codec.decodeMessage((ByteBuffer) data.position(0));
     assertEquals(result.adChoicesPlacement, (Integer) 1);
     assertEquals(result.mediaAspectRatio, (Integer) 2);
     assertEquals(result.videoOptions.clickToExpandRequested, true);
@@ -232,18 +208,99 @@ public class AdMessageCodecTest {
   }
 
   @Test
-  public void adMessageCodec_videoOptionsNull() {
-    final ByteBuffer data = testCodec.encodeMessage(new FlutterVideoOptions(null, null, null));
+  public void videoOptionsNull() {
+    final ByteBuffer data = codec.encodeMessage(new FlutterVideoOptions(null, null, null));
 
     final FlutterVideoOptions result =
-        (FlutterVideoOptions) testCodec.decodeMessage((ByteBuffer) data.position(0));
+        (FlutterVideoOptions) codec.decodeMessage((ByteBuffer) data.position(0));
     assertNull(result.clickToExpandRequested);
     assertNull(result.customControlsRequested);
     assertNull(result.startMuted);
   }
 
   @Test
-  public void adMessageCodec_inlineAdaptiveBanner() {
+  public void encodeFlutterAdRequest() {
+    Location location = new Location("");
+    location.setAccuracy(12345f);
+    location.setLongitude(1.0);
+    location.setLatitude(5.0);
+    location.setTime(54321);
+    FlutterAdRequest adRequest =
+        new FlutterAdRequest.Builder()
+            .setKeywords(Arrays.asList("1", "2", "3"))
+            .setContentUrl("contentUrl")
+            .setNonPersonalizedAds(false)
+            .setNeighboringContentUrls(Arrays.asList("example.com", "test.com"))
+            .setHttpTimeoutMillis(1000)
+            .setLocation(location)
+            .build();
+    final ByteBuffer message = codec.encodeMessage(adRequest);
+
+    final FlutterAdRequest decodedRequest =
+        (FlutterAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(adRequest, decodedRequest);
+  }
+
+  @Test
+  public void encodeFlutterAdManagerAdRequest() {
+    Location location = new Location("");
+    location.setAccuracy(12345f);
+    location.setLongitude(1.0);
+    location.setLatitude(5.0);
+    location.setTime(54321);
+    FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
+    builder.setKeywords(Arrays.asList("1", "2", "3"));
+    builder.setContentUrl("contentUrl");
+    builder.setCustomTargeting(Collections.singletonMap("apple", "banana"));
+    builder.setCustomTargetingLists(
+        Collections.singletonMap("cherry", Collections.singletonList("pie")));
+    builder.setNonPersonalizedAds(true);
+    builder.setPublisherProvidedId("pub-provided-id");
+    builder.setLocation(location);
+    FlutterAdManagerAdRequest flutterAdManagerAdRequest = builder.build();
+
+    final ByteBuffer message = codec.encodeMessage(flutterAdManagerAdRequest);
+
+    assertEquals(codec.decodeMessage((ByteBuffer) message.position(0)), flutterAdManagerAdRequest);
+  }
+
+  @Test
+  public void encodeFlutterAdSize() {
+    final ByteBuffer message = codec.encodeMessage(new FlutterAdSize(1, 2));
+
+    assertEquals(codec.decodeMessage((ByteBuffer) message.position(0)), new FlutterAdSize(1, 2));
+  }
+
+  @Test
+  public void encodeFlutterRewardItem() {
+    final ByteBuffer message =
+        codec.encodeMessage(new FlutterRewardedAd.FlutterRewardItem(23, "coins"));
+
+    assertEquals(
+        codec.decodeMessage((ByteBuffer) message.position(0)),
+        new FlutterRewardedAd.FlutterRewardItem(23, "coins"));
+  }
+
+  @Test
+  public void encodeFlutterLoadAdError() {
+    List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
+    adapterResponseInfos.add(
+        new FlutterAdapterResponseInfo("adapter-class", 9999, "description", "credentials", null));
+    FlutterResponseInfo info =
+        new FlutterResponseInfo("responseId", "className", adapterResponseInfos);
+    final ByteBuffer message =
+        codec.encodeMessage(new FlutterBannerAd.FlutterLoadAdError(1, "domain", "message", info));
+
+    final FlutterAd.FlutterLoadAdError error =
+        (FlutterAd.FlutterLoadAdError) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertNotNull(error);
+    assertEquals(error.code, 1);
+    assertEquals(error.domain, "domain");
+    assertEquals(error.message, "message");
+    assertEquals(error.responseInfo, info);
+  }
+
+  public void encodeInlineAdaptiveBanner() {
     AdSize adSize = new AdSize(100, 101);
     doReturn(adSize)
         .when(mockAdSizeFactory)
@@ -251,9 +308,9 @@ public class AdMessageCodecTest {
 
     InlineAdaptiveBannerAdSize size =
         new InlineAdaptiveBannerAdSize(mockAdSizeFactory, mock(Context.class), 100, null, null);
-    final ByteBuffer data = testCodec.encodeMessage(size);
+    final ByteBuffer data = codec.encodeMessage(size);
     final InlineAdaptiveBannerAdSize result =
-        (InlineAdaptiveBannerAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
+        (InlineAdaptiveBannerAdSize) codec.decodeMessage((ByteBuffer) data.position(0));
 
     assertEquals(result.width, 100);
     assertNull(result.maxHeight);

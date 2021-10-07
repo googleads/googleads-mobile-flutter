@@ -16,6 +16,7 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
+import android.location.Location;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -54,6 +55,7 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_VIDEO_OPTIONS = (byte) 145;
   private static final byte VALUE_REQUEST_CONFIGURATION_PARAMS = (byte) 146;
   private static final byte VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE = (byte) 147;
+  static final byte VALUE_LOCATION_PARAMS = (byte) 148;
 
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
@@ -77,12 +79,27 @@ class AdMessageCodec extends StandardMessageCodec {
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
     if (value instanceof FlutterAdSize) {
       writeAdSize(stream, (FlutterAdSize) value);
+    } else if (value instanceof FlutterAdManagerAdRequest) {
+      stream.write(VALUE_ADMANAGER_AD_REQUEST);
+      final FlutterAdManagerAdRequest request = (FlutterAdManagerAdRequest) value;
+      writeValue(stream, request.getKeywords());
+      writeValue(stream, request.getContentUrl());
+      writeValue(stream, request.getCustomTargeting());
+      writeValue(stream, request.getCustomTargetingLists());
+      writeValue(stream, request.getNonPersonalizedAds());
+      writeValue(stream, request.getNeighboringContentUrls());
+      writeValue(stream, request.getHttpTimeoutMillis());
+      writeValue(stream, request.getPublisherProvidedId());
+      writeValue(stream, request.getLocation());
     } else if (value instanceof FlutterAdRequest) {
       stream.write(VALUE_AD_REQUEST);
       final FlutterAdRequest request = (FlutterAdRequest) value;
       writeValue(stream, request.getKeywords());
       writeValue(stream, request.getContentUrl());
       writeValue(stream, request.getNonPersonalizedAds());
+      writeValue(stream, request.getNeighboringContentUrls());
+      writeValue(stream, request.getHttpTimeoutMillis());
+      writeValue(stream, request.getLocation());
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
       stream.write(VALUE_REWARD_ITEM);
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;
@@ -115,14 +132,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, error.code);
       writeValue(stream, error.domain);
       writeValue(stream, error.message);
-    } else if (value instanceof FlutterAdManagerAdRequest) {
-      stream.write(VALUE_ADMANAGER_AD_REQUEST);
-      final FlutterAdManagerAdRequest request = (FlutterAdManagerAdRequest) value;
-      writeValue(stream, request.getKeywords());
-      writeValue(stream, request.getContentUrl());
-      writeValue(stream, request.getCustomTargeting());
-      writeValue(stream, request.getCustomTargetingLists());
-      writeValue(stream, request.getNonPersonalizedAds());
     } else if (value instanceof FlutterAdapterStatus.AdapterInitializationState) {
       stream.write(VALUE_INITIALIZATION_STATE);
       final FlutterAdapterStatus.AdapterInitializationState state =
@@ -174,6 +183,13 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, options.clickToExpandRequested);
       writeValue(stream, options.customControlsRequested);
       writeValue(stream, options.startMuted);
+    } else if (value instanceof Location) {
+      stream.write(VALUE_LOCATION_PARAMS);
+      Location location = (Location) value;
+      writeValue(stream, location.getAccuracy());
+      writeValue(stream, location.getLongitude());
+      writeValue(stream, location.getLatitude());
+      writeValue(stream, location.getTime());
     } else {
       super.writeValue(stream, value);
     }
@@ -209,6 +225,9 @@ class AdMessageCodec extends StandardMessageCodec {
             .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))
             .setContentUrl((String) readValueOfType(buffer.get(), buffer))
             .setNonPersonalizedAds(booleanValueOf(readValueOfType(buffer.get(), buffer)))
+            .setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer))
+            .setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer))
+            .setLocation((Location) readValueOfType(buffer.get(), buffer))
             .build();
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
@@ -238,14 +257,18 @@ class AdMessageCodec extends StandardMessageCodec {
             (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer));
       case VALUE_ADMANAGER_AD_REQUEST:
-        return new FlutterAdManagerAdRequest.Builder()
-            .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))
-            .setContentUrl((String) readValueOfType(buffer.get(), buffer))
-            .setCustomTargeting((Map<String, String>) readValueOfType(buffer.get(), buffer))
-            .setCustomTargetingLists(
-                (Map<String, List<String>>) readValueOfType(buffer.get(), buffer))
-            .setNonPersonalizedAds((Boolean) readValueOfType(buffer.get(), buffer))
-            .build();
+        FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
+        builder.setKeywords((List<String>) readValueOfType(buffer.get(), buffer));
+        builder.setContentUrl((String) readValueOfType(buffer.get(), buffer));
+        builder.setCustomTargeting((Map<String, String>) readValueOfType(buffer.get(), buffer));
+        builder.setCustomTargetingLists(
+            (Map<String, List<String>>) readValueOfType(buffer.get(), buffer));
+        builder.setNonPersonalizedAds((Boolean) readValueOfType(buffer.get(), buffer));
+        builder.setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer));
+        builder.setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer));
+        builder.setPublisherProvidedId((String) readValueOfType(buffer.get(), buffer));
+        builder.setLocation((Location) readValueOfType(buffer.get(), buffer));
+        return builder.build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);
         switch (state) {
@@ -289,6 +312,14 @@ class AdMessageCodec extends StandardMessageCodec {
         rcb.setTagForUnderAgeOfConsent((Integer) readValueOfType(buffer.get(), buffer));
         rcb.setTestDeviceIds((List<String>) readValueOfType(buffer.get(), buffer));
         return rcb.build();
+      case VALUE_LOCATION_PARAMS:
+        Location location = new Location("");
+        // This is necessary because StandardMessageCodec converts floats to double.
+        location.setAccuracy(((Double) readValueOfType(buffer.get(), buffer)).floatValue());
+        location.setLongitude((double) readValueOfType(buffer.get(), buffer));
+        location.setLatitude((double) readValueOfType(buffer.get(), buffer));
+        location.setTime((long) readValueOfType(buffer.get(), buffer));
+        return location;
       default:
         return super.readValueOfType(type, buffer);
     }

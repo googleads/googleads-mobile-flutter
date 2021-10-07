@@ -128,6 +128,21 @@
 }
 @end
 
+@implementation FLTLocationParams
+
+- (instancetype _Nonnull)initWithAccuracy:(NSNumber *_Nonnull)accuracy
+                                longitude:(NSNumber *_Nonnull)longitude
+                                 latitude:(NSNumber *_Nonnull)latitude {
+  self = [super init];
+  if (self) {
+    _accuracy = accuracy;
+    _longitude = longitude;
+    _latitude = latitude;
+  }
+  return self;
+}
+@end
+
 @implementation FLTFluidSize
 - (instancetype _Nonnull)init {
   self = [self initWithAdSize:kGADAdSizeFluid];
@@ -145,8 +160,13 @@
     extras.additionalParameters = @{@"npa" : @"1"};
     [request registerAdNetworkExtras:extras];
   }
-
+  request.neighboringContentURLStrings = _neighboringContentURLs;
   request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
+  if ([FLTAdUtil isNotNull:_location]) {
+    [request setLocationWithLatitude:_location.latitude.floatValue
+                           longitude:_location.longitude.floatValue
+                            accuracy:_location.accuracy.floatValue];
+  }
   return request;
 }
 @end
@@ -209,6 +229,8 @@
   GAMRequest *request = [GAMRequest request];
   request.keywords = self.keywords;
   request.contentURL = self.contentURL;
+  request.neighboringContentURLStrings = self.neighboringContentURLs;
+  request.publisherProvidedID = self.pubProvidedID;
 
   NSMutableDictionary<NSString *, id> *targetingDictionary =
       [NSMutableDictionary dictionaryWithDictionary:self.customTargeting];
@@ -220,7 +242,11 @@
     extras.additionalParameters = @{@"npa" : @"1"};
     [request registerAdNetworkExtras:extras];
   }
-
+  if ([FLTAdUtil isNotNull:self.location]) {
+    [request setLocationWithLatitude:self.location.latitude.floatValue
+                           longitude:self.location.longitude.floatValue
+                            accuracy:self.location.accuracy.floatValue];
+  }
   request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
   return request;
 }

@@ -36,6 +36,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldVideoOptions = 145,
   FLTAdmobRequestConfigurationParams = 146,
   FLTAdmobFieldInlineAdaptiveAdSize = 147,
+  FLTAdmobFieldLocation = 148,
 };
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
@@ -89,7 +90,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 
       NSNumber *nonPersonalizedAds = [self readValueOfType:[self readByte]];
       request.nonPersonalizedAds = nonPersonalizedAds.boolValue;
-
+      request.neighboringContentURLs = [self readValueOfType:[self readByte]];
+      request.location = [self readValueOfType:[self readByte]];
       return request;
     }
     case FLTAdMobFieldRewardItem: {
@@ -151,6 +153,9 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.customTargetingLists = [self readValueOfType:[self readByte]];
       NSNumber *nonPersonalizedAds = [self readValueOfType:[self readByte]];
       request.nonPersonalizedAds = nonPersonalizedAds.boolValue;
+      request.neighboringContentURLs = [self readValueOfType:[self readByte]];
+      request.pubProvidedID = [self readValueOfType:[self readByte]];
+      request.location = [self readValueOfType:[self readByte]];
       return request;
     }
     case FLTAdMobFieldAdapterInitializationState: {
@@ -216,6 +221,11 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       requestConfig.testDeviceIdentifiers = [self readValueOfType:[self readByte]];
       return requestConfig;
     }
+    case FLTAdmobFieldLocation: {
+      return [[FLTLocationParams alloc] initWithAccuracy:[self readValueOfType:[self readByte]]
+                                               longitude:[self readValueOfType:[self readByte]]
+                                                latitude:[self readValueOfType:[self readByte]]];
+    }
     case FLTAdmobFieldInlineAdaptiveAdSize: {
       return [[FLTInlineAdaptiveBannerSize alloc]
           initWithFactory:_adSizeFactory
@@ -265,12 +275,17 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.customTargeting];
     [self writeValue:request.customTargetingLists];
     [self writeValue:@(request.nonPersonalizedAds)];
+    [self writeValue:request.neighboringContentURLs];
+    [self writeValue:request.pubProvidedID];
+    [self writeValue:request.location];
   } else if ([value isKindOfClass:[FLTAdRequest class]]) {
     [self writeByte:FLTAdMobFieldAdRequest];
     FLTAdRequest *request = value;
     [self writeValue:request.keywords];
     [self writeValue:request.contentURL];
     [self writeValue:@(request.nonPersonalizedAds)];
+    [self writeValue:request.neighboringContentURLs];
+    [self writeValue:request.location];
   } else if ([value isKindOfClass:[FLTRewardItem class]]) {
     [self writeByte:FLTAdMobFieldRewardItem];
     FLTRewardItem *item = value;
@@ -352,6 +367,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:nil];
     [self writeValue:nil];
     [self writeValue:params.testDeviceIdentifiers];
+  } else if ([value isKindOfClass:[FLTLocationParams class]]) {
+    [self writeByte:FLTAdmobFieldLocation];
+    FLTLocationParams *location = value;
+    [self writeValue:location.accuracy];
+    [self writeValue:location.longitude];
+    [self writeValue:location.latitude];
   } else {
     [super writeValue:value];
   }

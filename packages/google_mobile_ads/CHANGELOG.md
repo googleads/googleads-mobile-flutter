@@ -26,11 +26,16 @@
     * [Ad manager iOS](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/banner/inline-adaptive)
 * Fix for [#369](https://github.com/googleads/googleads-mobile-flutter/issues/369)
   * Fixes setting the app volume in android (doesn't affect iOS).
+* Adds support for setting location in `AdRequest` and `AdManagerAdRequest`.
+  * Both `AdRequest` and `AdManagerAdRequest` have a new param, `location`.
+  * Location data is not used to target Google Ads, but may be used by 3rd party ad networks.
+  * See other packages for getting the location. For example, https://pub.dev/packages/location.
+* Adds `publisherProvidedId` to `AdManagerAdRequest` to support [publisher provided ids](https://support.google.com/admanager/answer/2880055).
 
 ## 0.13.5
 
 * Adds support for app open. 
-  * Implementation guidance can be found [here](https://developers.devsite.corp.google.com/admob/flutter/app-open).
+  * Implementation guidance can be found [here](https://developers.google.com/admob/flutter/app-open).
   * As a reference please also see the [example app](https://github.com/googleads/googleads-mobile-flutter/tree/master/packages/app_open_example).
   * Best practices can be found [here](https://support.google.com/admob/answer/9341964?hl=en).
 
