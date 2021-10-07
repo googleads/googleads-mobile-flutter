@@ -1318,14 +1318,44 @@ void main() {
       expect(codec.decodeMessage(byteData), AdSize.banner);
     });
 
-    test('encode/decode AdRequest', () async {
+    test('encode/decode AdRequest Android', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+
       final AdRequest adRequest = AdRequest(
           keywords: <String>['1', '2', '3'],
           contentUrl: 'contentUrl',
-          nonPersonalizedAds: false);
+          nonPersonalizedAds: false,
+          neighboringContentUrls: <String>['url1.com', 'url2.com'],
+          httpTimeoutMillis: 12345,
+          location: LocationParams(
+              accuracy: 1.1, longitude: 25, latitude: 38, time: 1));
 
       final ByteData byteData = codec.encodeMessage(adRequest)!;
       expect(codec.decodeMessage(byteData), adRequest);
+    });
+
+    test('encode/decode AdRequest iOS', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      final AdRequest adRequest = AdRequest(
+          keywords: <String>['1', '2', '3'],
+          contentUrl: 'contentUrl',
+          nonPersonalizedAds: false,
+          neighboringContentUrls: <String>['url1.com', 'url2.com'],
+          httpTimeoutMillis: 12345,
+          location: LocationParams(
+              accuracy: 1.1, longitude: 25, latitude: 38, time: 1));
+
+      final ByteData byteData = codec.encodeMessage(adRequest)!;
+      AdRequest decoded = codec.decodeMessage(byteData);
+      expect(decoded.httpTimeoutMillis, null);
+      expect(decoded.neighboringContentUrls, adRequest.neighboringContentUrls);
+      expect(decoded.contentUrl, adRequest.contentUrl);
+      expect(decoded.nonPersonalizedAds, adRequest.nonPersonalizedAds);
+      expect(decoded.keywords, adRequest.keywords);
+      expect(decoded.location!.accuracy, 1.1);
+      expect(decoded.location!.longitude, 25);
+      expect(decoded.location!.latitude, 38);
     });
 
     test('encode/decode $LoadAdError', () async {
@@ -1443,8 +1473,9 @@ void main() {
       );
     });
 
-    test('encode/decode $AdManagerAdRequest', () async {
-      final ByteData byteData = codec.encodeMessage(AdManagerAdRequest(
+    test('encode/decode AdManagerAdRequest Android', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final AdManagerAdRequest request = AdManagerAdRequest(
         keywords: <String>['who'],
         contentUrl: 'dat',
         customTargeting: <String, String>{'boy': 'who'},
@@ -1452,20 +1483,51 @@ void main() {
           'him': <String>['is']
         },
         nonPersonalizedAds: true,
-      ))!;
+        neighboringContentUrls: <String>['url1.com', 'url2.com'],
+        httpTimeoutMillis: 5000,
+        publisherProvidedId: 'test-pub-id',
+        location:
+            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+      );
+      final ByteData byteData = codec.encodeMessage(request)!;
 
       expect(
         codec.decodeMessage(byteData),
-        AdManagerAdRequest(
-          keywords: <String>['who'],
-          contentUrl: 'dat',
-          customTargeting: <String, String>{'boy': 'who'},
-          customTargetingLists: <String, List<String>>{
-            'him': <String>['is'],
-          },
-          nonPersonalizedAds: true,
-        ),
+        request,
       );
+    });
+
+    test('encode/decode AdManagerAdRequest iOS', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      final AdManagerAdRequest request = AdManagerAdRequest(
+        keywords: <String>['who'],
+        contentUrl: 'dat',
+        customTargeting: <String, String>{'boy': 'who'},
+        customTargetingLists: <String, List<String>>{
+          'him': <String>['is']
+        },
+        nonPersonalizedAds: true,
+        neighboringContentUrls: <String>['url1.com', 'url2.com'],
+        httpTimeoutMillis: 5000,
+        publisherProvidedId: 'test-pub-id',
+        location:
+            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+      );
+
+      final ByteData byteData = codec.encodeMessage(request)!;
+      AdManagerAdRequest decoded = codec.decodeMessage(byteData);
+      expect(decoded.httpTimeoutMillis, null);
+      expect(decoded.neighboringContentUrls, request.neighboringContentUrls);
+      expect(decoded.contentUrl, request.contentUrl);
+      expect(decoded.nonPersonalizedAds, request.nonPersonalizedAds);
+      expect(decoded.keywords, request.keywords);
+      expect(decoded.publisherProvidedId, request.publisherProvidedId);
+      expect(decoded.customTargeting, request.customTargeting);
+      expect(decoded.customTargetingLists, request.customTargetingLists);
+      expect(decoded.location!.accuracy, 1.1);
+      expect(decoded.location!.longitude, 25);
+      expect(decoded.location!.latitude, 38);
     });
   });
 }

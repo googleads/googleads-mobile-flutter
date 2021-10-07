@@ -63,6 +63,17 @@
 - (instancetype _Nonnull)initWithOrientation:(NSString *_Nonnull)orientation;
 @end
 
+@interface FLTLocationParams : NSObject
+
+@property NSNumber *_Nullable accuracy;
+@property NSNumber *_Nullable longitude;
+@property NSNumber *_Nullable latitude;
+
+- (instancetype _Nonnull)initWithAccuracy:(NSNumber *_Nonnull)accuracy
+                                longitude:(NSNumber *_Nonnull)longitude
+                                 latitude:(NSNumber *_Nonnull)latitude;
+@end
+
 @interface FLTFluidSize : FLTAdSize
 @end
 
@@ -70,6 +81,8 @@
 @property NSArray<NSString *> *_Nullable keywords;
 @property NSString *_Nullable contentURL;
 @property BOOL nonPersonalizedAds;
+@property NSArray<NSString *> *_Nullable neighboringContentURLs;
+@property FLTLocationParams *_Nullable location;
 - (GADRequest *_Nonnull)asGADRequest;
 @end
 
@@ -117,6 +130,8 @@
 @interface FLTGAMAdRequest : FLTAdRequest
 @property NSDictionary<NSString *, NSString *> *_Nullable customTargeting;
 @property NSDictionary<NSString *, NSArray<NSString *> *> *_Nullable customTargetingLists;
+@property NSString *_Nullable pubProvidedID;
+
 - (GAMRequest *_Nonnull)asGAMRequest;
 @end
 
