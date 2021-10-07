@@ -48,7 +48,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugin.platform.PlatformViewRegistry;
-import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
