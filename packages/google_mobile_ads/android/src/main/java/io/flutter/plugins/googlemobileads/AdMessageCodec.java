@@ -87,6 +87,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getNonPersonalizedAds());
       writeValue(stream, request.getNeighboringContentUrls());
       writeValue(stream, request.getHttpTimeoutMillis());
+      writeValue(stream, request.getPublisherProvidedId());
       writeValue(stream, request.getLocation());
     } else if (value instanceof FlutterAdRequest) {
       stream.write(VALUE_AD_REQUEST);
@@ -256,6 +257,7 @@ class AdMessageCodec extends StandardMessageCodec {
         builder.setNonPersonalizedAds((Boolean) readValueOfType(buffer.get(), buffer));
         builder.setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer));
         builder.setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer));
+        builder.setPublisherProvidedId((String) readValueOfType(buffer.get(), buffer));
         builder.setLocation((Location) readValueOfType(buffer.get(), buffer));
         return builder.build();
       case VALUE_INITIALIZATION_STATE:

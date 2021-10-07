@@ -31,11 +31,13 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
 
   @Nullable private Map<String, String> customTargeting;
   @Nullable private Map<String, List<String>> customTargetingLists;
+  @Nullable private String publisherProvidedId;
 
   static class Builder extends FlutterAdRequest.Builder {
 
     @Nullable private Map<String, String> customTargeting;
     @Nullable private Map<String, List<String>> customTargetingLists;
+    @Nullable private String publisherProvidedId;
 
     public Builder setCustomTargeting(@Nullable Map<String, String> customTargeting) {
       this.customTargeting = customTargeting;
@@ -48,6 +50,11 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
       return this;
     }
 
+    public Builder setPublisherProvidedId(@Nullable String publisherProvidedId) {
+      this.publisherProvidedId = publisherProvidedId;
+      return this;
+    }
+
     FlutterAdManagerAdRequest build() {
       return new FlutterAdManagerAdRequest(
           getKeywords(),
@@ -57,7 +64,8 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
           getNonPersonalizedAds(),
           getNeighboringContentUrls(),
           getHttpTimeoutMillis(),
-          getLocation());
+          getLocation(),
+          publisherProvidedId);
     }
   }
 
@@ -69,7 +77,8 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
       @Nullable Boolean nonPersonalizedAds,
       @Nullable List<String> neighboringContentUrls,
       @Nullable Integer httpTimeoutMillis,
-      @Nullable Location location) {
+      @Nullable Location location,
+      @Nullable String publisherProvidedId) {
     super(
         keywords,
         contentUrl,
@@ -79,6 +88,7 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
         location);
     this.customTargeting = customTargeting;
     this.customTargetingLists = customTargetingLists;
+    this.publisherProvidedId = publisherProvidedId;
   }
 
   AdManagerAdRequest asAdManagerAdRequest() {
@@ -107,6 +117,9 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
       extras.putString("npa", "1");
       builder.addNetworkExtrasBundle(AdMobAdapter.class, extras);
     }
+    if (publisherProvidedId != null) {
+      builder.setPublisherProvidedId(publisherProvidedId);
+    }
     if (getLocation() != null) {
       builder.setLocation(getLocation());
     }
@@ -122,6 +135,11 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
   @Nullable
   protected Map<String, List<String>> getCustomTargetingLists() {
     return customTargetingLists;
+  }
+
+  @Nullable
+  protected String getPublisherProvidedId() {
+    return publisherProvidedId;
   }
 
   @Override

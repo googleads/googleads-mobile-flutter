@@ -255,6 +255,7 @@ public class AdMessageCodecTest {
     builder.setCustomTargetingLists(
         Collections.singletonMap("cherry", Collections.singletonList("pie")));
     builder.setNonPersonalizedAds(true);
+    builder.setPublisherProvidedId("pub-provided-id");
     builder.setLocation(location);
     FlutterAdManagerAdRequest flutterAdManagerAdRequest = builder.build();
 
