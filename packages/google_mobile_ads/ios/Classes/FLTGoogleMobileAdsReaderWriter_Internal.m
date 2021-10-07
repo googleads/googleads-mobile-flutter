@@ -216,7 +216,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       return [[FLTLocationParams alloc] initWithAccuracy:[self readValueOfType:[self readByte]]
                                                longitude:[self readValueOfType:[self readByte]]
                                                 latitude:[self readValueOfType:[self readByte]]];
-      }
+    }
     case FLTAdmobFieldInlineAdaptiveAdSize: {
       return [[FLTInlineAdaptiveBannerSize alloc]
           initWithFactory:_adSizeFactory

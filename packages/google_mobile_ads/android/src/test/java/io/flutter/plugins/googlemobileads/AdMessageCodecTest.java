@@ -52,7 +52,7 @@ public class AdMessageCodecTest {
   @Before
   public void setup() {
     mockAdSizeFactory = mock(AdSizeFactory.class);
-    testCodec = new AdMessageCodec(mock(Context.class), mockAdSizeFactory);
+    codec = new AdMessageCodec(mock(Context.class), mockAdSizeFactory);
   }
 
   @Test
@@ -148,10 +148,10 @@ public class AdMessageCodecTest {
 
     final AnchoredAdaptiveBannerAdSize adaptiveAdSize =
         new AnchoredAdaptiveBannerAdSize(mock(Context.class), mockAdSizeFactory, "portrait", 23);
-    final ByteBuffer data = testCodec.encodeMessage(adaptiveAdSize);
+    final ByteBuffer data = codec.encodeMessage(adaptiveAdSize);
 
     final AnchoredAdaptiveBannerAdSize result =
-        (AnchoredAdaptiveBannerAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
+        (AnchoredAdaptiveBannerAdSize) codec.decodeMessage((ByteBuffer) data.position(0));
     assertEquals(result.size, mockAdSize);
   }
 
@@ -297,7 +297,8 @@ public class AdMessageCodecTest {
     assertEquals(error.domain, "domain");
     assertEquals(error.message, "message");
     assertEquals(error.responseInfo, info);
-  
+  }
+
   public void encodeInlineAdaptiveBanner() {
     AdSize adSize = new AdSize(100, 101);
     doReturn(adSize)
@@ -306,9 +307,9 @@ public class AdMessageCodecTest {
 
     InlineAdaptiveBannerAdSize size =
         new InlineAdaptiveBannerAdSize(mockAdSizeFactory, mock(Context.class), 100, null, null);
-    final ByteBuffer data = testCodec.encodeMessage(size);
+    final ByteBuffer data = codec.encodeMessage(size);
     final InlineAdaptiveBannerAdSize result =
-        (InlineAdaptiveBannerAdSize) testCodec.decodeMessage((ByteBuffer) data.position(0));
+        (InlineAdaptiveBannerAdSize) codec.decodeMessage((ByteBuffer) data.position(0));
 
     assertEquals(result.width, 100);
     assertNull(result.maxHeight);
