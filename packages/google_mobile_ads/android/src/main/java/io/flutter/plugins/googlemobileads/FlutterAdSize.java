@@ -106,7 +106,7 @@ class FlutterAdSize {
     private static AdSize getAdSize(
         @NonNull AdSizeFactory adSizeFactory,
         @NonNull Context context,
-        @NonNull Integer width,
+        int width,
         @Nullable Integer orientation,
         @Nullable Integer maxHeight) {
       if (orientation != null) {
@@ -123,7 +123,7 @@ class FlutterAdSize {
     InlineAdaptiveBannerAdSize(
         @NonNull AdSizeFactory adSizeFactory,
         @NonNull Context context,
-        @NonNull Integer width,
+        int width,
         @Nullable Integer orientation,
         @Nullable Integer maxHeight) {
       super(getAdSize(adSizeFactory, context, width, orientation, maxHeight));

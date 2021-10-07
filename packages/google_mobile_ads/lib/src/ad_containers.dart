@@ -143,6 +143,40 @@ class LoadAdError extends AdError {
   }
 }
 
+/// Location parameters that can be configured in an ad request.
+class LocationParams {
+  /// Location parameters that can be configured in an ad request.
+  const LocationParams({
+    required this.accuracy,
+    required this.longitude,
+    required this.latitude,
+    this.time,
+  });
+
+  /// The accuracy in meters.
+  final double accuracy;
+
+  /// The longitude in degrees.
+  final double longitude;
+
+  /// The latitude in degrees.
+  final double latitude;
+
+  /// The UTC time, in milliseconds since epoch (January 1, 1970).
+  ///
+  /// This is required on Android, and ignored on iOS.
+  final int? time;
+
+  @override
+  bool operator ==(Object other) {
+    return other is LocationParams &&
+        accuracy == other.accuracy &&
+        longitude == other.longitude &&
+        latitude == other.latitude &&
+        time == other.time;
+  }
+}
+
 /// Targeting info per the AdMob API.
 ///
 /// This class's properties mirror the native AdRequest API. See for example:
@@ -152,7 +186,10 @@ class AdRequest {
   const AdRequest({
     this.keywords,
     this.contentUrl,
+    this.neighboringContentUrls,
     this.nonPersonalizedAds,
+    this.httpTimeoutMillis,
+    this.location,
   });
 
   /// Words or phrases describing the current user activity.
@@ -162,6 +199,9 @@ class AdRequest {
   ///
   /// This webpage content is used for targeting and brand safety purposes.
   final String? contentUrl;
+
+  /// URLs representing web content near an ad.
+  final List<String>? neighboringContentUrls;
 
   /// Non-personalized ads are ads that are not based on a user’s past behavior.
   ///
@@ -169,55 +209,71 @@ class AdRequest {
   /// https://support.google.com/admob/answer/7676680?hl=en
   final bool? nonPersonalizedAds;
 
+  /// A custom timeout for HTTPS calls during an ad request.
+  ///
+  /// This is only supported in Android. This value is ignored on iOS.
+  final int? httpTimeoutMillis;
+
+  /// Location data.
+  ///
+  /// Used for mediation targeting purposes.
+  final LocationParams? location;
+
   @override
   bool operator ==(Object other) {
     return other is AdRequest &&
         listEquals<String>(keywords, other.keywords) &&
         contentUrl == other.contentUrl &&
-        nonPersonalizedAds == other.nonPersonalizedAds;
+        nonPersonalizedAds == other.nonPersonalizedAds &&
+        listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
+        httpTimeoutMillis == other.httpTimeoutMillis &&
+        location == other.location;
   }
 }
 
 /// Targeting info per the Ad Manager API.
-class AdManagerAdRequest {
+class AdManagerAdRequest extends AdRequest {
   /// Constructs an [AdManagerAdRequest] from optional targeting information.
   const AdManagerAdRequest({
-    this.keywords,
-    this.contentUrl,
+    List<String>? keywords,
+    String? contentUrl,
+    List<String>? neighboringContentUrls,
     this.customTargeting,
     this.customTargetingLists,
-    this.nonPersonalizedAds,
-  });
-
-  /// Words or phrases describing the current user activity.
-  final List<String>? keywords;
-
-  /// URL string for a webpage whose content matches the app’s primary content.
-  ///
-  /// This webpage content is used for targeting and brand safety purposes.
-  final String? contentUrl;
+    bool? nonPersonalizedAds,
+    int? httpTimeoutMillis,
+    this.publisherProvidedId,
+    LocationParams? location,
+  }) : super(
+          keywords: keywords,
+          contentUrl: contentUrl,
+          neighboringContentUrls: neighboringContentUrls,
+          nonPersonalizedAds: nonPersonalizedAds,
+          httpTimeoutMillis: httpTimeoutMillis,
+          location: location,
+        );
 
   /// Key-value pairs used for custom targeting.
   final Map<String, String>? customTargeting;
 
   /// Key-value pairs used for custom targeting.
+  ///
+  /// Any duplicate keys from [customTargeting] will be overwritten.
   final Map<String, List<String>>? customTargetingLists;
 
-  /// Non-personalized ads are ads that are not based on a user’s past behavior.
-  ///
-  /// For more information:
-  /// https://support.google.com/admanager/answer/9005435?hl=en
-  final bool? nonPersonalizedAds;
+  /// The identifier used for frequency capping, audience segmentation
+  /// and targeting, sequential ad rotation, and other audience-based ad
+  /// delivery controls across devices.
+  final String? publisherProvidedId;
 
   @override
   bool operator ==(Object other) {
-    return other is AdManagerAdRequest &&
-        listEquals<String>(keywords, other.keywords) &&
-        contentUrl == other.contentUrl &&
+    return super == other &&
+        other is AdManagerAdRequest &&
         mapEquals<String, String>(customTargeting, other.customTargeting) &&
         customTargetingLists.toString() ==
             other.customTargetingLists.toString() &&
-        nonPersonalizedAds == other.nonPersonalizedAds;
+        publisherProvidedId == other.publisherProvidedId;
   }
 }
 

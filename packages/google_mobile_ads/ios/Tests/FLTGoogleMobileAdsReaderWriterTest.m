@@ -212,13 +212,19 @@
   request.keywords = @[ @"apple" ];
   request.contentURL = @"banana";
   request.nonPersonalizedAds = YES;
-
+  NSArray<NSString *> *contentURLs = @[ @"url-1.com", @"url-2.com" ];
+  request.neighboringContentURLs = contentURLs;
+  request.location = [[FLTLocationParams alloc] initWithAccuracy:@1.5 longitude:@52 latitude:@123];
   NSData *encodedMessage = [_messageCodec encode:request];
 
   FLTAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
   XCTAssertTrue([decodedRequest.keywords isEqualToArray:@[ @"apple" ]]);
   XCTAssertEqualObjects(decodedRequest.contentURL, @"banana");
   XCTAssertTrue(decodedRequest.nonPersonalizedAds);
+  XCTAssertEqualObjects(decodedRequest.neighboringContentURLs, contentURLs);
+  XCTAssertEqualObjects(decodedRequest.location.accuracy, @1.5);
+  XCTAssertEqualObjects(decodedRequest.location.longitude, @52);
+  XCTAssertEqualObjects(decodedRequest.location.latitude, @123);
 }
 
 - (void)testEncodeDecodeGAMAdRequest {
@@ -228,6 +234,10 @@
   request.customTargeting = @{@"table" : @"linen"};
   request.customTargetingLists = @{@"go" : @[ @"lakers" ]};
   request.nonPersonalizedAds = YES;
+  NSArray<NSString *> *contentURLs = @[ @"url-1.com", @"url-2.com" ];
+  request.neighboringContentURLs = contentURLs;
+  request.pubProvidedID = @"pub-id";
+  request.location = [[FLTLocationParams alloc] initWithAccuracy:@1.5 longitude:@52 latitude:@123];
   NSData *encodedMessage = [_messageCodec encode:request];
 
   FLTGAMAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
@@ -237,6 +247,11 @@
   XCTAssertTrue(
       [decodedRequest.customTargetingLists isEqualToDictionary:@{@"go" : @[ @"lakers" ]}]);
   XCTAssertTrue(decodedRequest.nonPersonalizedAds);
+  XCTAssertEqualObjects(decodedRequest.neighboringContentURLs, contentURLs);
+  XCTAssertEqualObjects(decodedRequest.pubProvidedID, @"pub-id");
+  XCTAssertEqualObjects(decodedRequest.location.accuracy, @1.5);
+  XCTAssertEqualObjects(decodedRequest.location.longitude, @52);
+  XCTAssertEqualObjects(decodedRequest.location.latitude, @123);
 }
 
 - (void)testEncodeDecodeRewardItem {
