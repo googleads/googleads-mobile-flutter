@@ -159,8 +159,7 @@ public class AdMessageCodecTest {
     final ByteBuffer portraitData = codec.encodeMessage(portraitAnchoredAdaptiveAdSize);
 
     final AnchoredAdaptiveBannerAdSize portraitResult =
-        (AnchoredAdaptiveBannerAdSize)
-            codec.decodeMessage((ByteBuffer) portraitData.position(0));
+        (AnchoredAdaptiveBannerAdSize) codec.decodeMessage((ByteBuffer) portraitData.position(0));
     assertEquals(portraitResult.size, mockAdSize);
 
     final AnchoredAdaptiveBannerAdSize landscapeAnchoredAdaptiveAdSize =
@@ -168,8 +167,7 @@ public class AdMessageCodecTest {
     final ByteBuffer landscapeData = codec.encodeMessage(landscapeAnchoredAdaptiveAdSize);
 
     final AnchoredAdaptiveBannerAdSize landscapeResult =
-        (AnchoredAdaptiveBannerAdSize)
-            codec.decodeMessage((ByteBuffer) landscapeData.position(0));
+        (AnchoredAdaptiveBannerAdSize) codec.decodeMessage((ByteBuffer) landscapeData.position(0));
     assertEquals(landscapeResult.size, mockAdSize);
 
     final AnchoredAdaptiveBannerAdSize anchoredAdaptiveAdSize =
