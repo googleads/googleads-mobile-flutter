@@ -359,6 +359,7 @@ class AdSize {
   }
 
   /// Returns an AdSize with the given width and a Google-optimized height to create a banner ad.
+  ///
   /// The size returned will have an aspect ratio similar to AdSize, suitable for anchoring near the top or bottom of your app.
   /// The height will never be larger than 15% of the device's current orientation height and never smaller than 50px.
   /// This function always returns the same height for any width / device combination.

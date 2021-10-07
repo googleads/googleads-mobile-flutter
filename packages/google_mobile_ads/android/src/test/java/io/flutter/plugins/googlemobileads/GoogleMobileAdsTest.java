@@ -721,7 +721,7 @@ public class GoogleMobileAdsTest {
     arguments.put("orientation", "landscape");
     arguments.put("width", 23);
 
-    adSize = AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, 23);
+    adSize = AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(context, 23);
     methodCall = new MethodCall("AdSize#getAnchoredAdaptiveBannerAdSize", arguments);
     result = mock(Result.class);
     plugin.onMethodCall(methodCall, result);
@@ -732,7 +732,7 @@ public class GoogleMobileAdsTest {
     arguments = new HashMap<>();
     arguments.put("width", 23);
 
-    adSize = AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, 23);
+    adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, 23);
     methodCall = new MethodCall("AdSize#getAnchoredAdaptiveBannerAdSize", arguments);
     result = mock(Result.class);
     plugin.onMethodCall(methodCall, result);

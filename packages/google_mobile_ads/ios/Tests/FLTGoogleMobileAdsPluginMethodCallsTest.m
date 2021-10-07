@@ -360,7 +360,7 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertEqual([returnedResult doubleValue],
-                 GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(34).size.height);
+                 GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(34).size.height);
 
   methodCall = [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
                                                  arguments:@{
@@ -377,7 +377,7 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertEqual([returnedResult doubleValue],
-                 GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(45).size.height);
+                 GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(45).size.height);
 }
 
 - (void)testGetAdSize_bannerAd {

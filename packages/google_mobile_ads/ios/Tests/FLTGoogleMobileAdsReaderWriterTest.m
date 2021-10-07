@@ -132,8 +132,8 @@
   XCTAssertEqualObjects(decodedSize.orientation, inlineAdaptiveBannerSize.orientation);
 }
 
-- (void)testEncodeDecodeAnchoredAdaptiveBannerAdSize {
-  GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(0, 0));
+- (void)testEncodeDecodeAnchoredAdaptiveBannerAdSize_portraitOrientation {
+  GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(23, 34));
 
   FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
   OCMStub([factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:@(23)]).andReturn(testAdSize);
@@ -142,6 +142,37 @@
       [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory
                                                  orientation:@"portrait"
                                                        width:@(23)];
+  NSData *encodedMessage = [_messageCodec encode:size];
+
+  FLTAnchoredAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
+}
+
+- (void)testEncodeDecodeAnchoredAdaptiveBannerAdSize_landscapeOrientation {
+  GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(34, 45));
+
+  FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
+  OCMStub([factory landscapeAnchoredAdaptiveBannerAdSizeWithWidth:@(34)]).andReturn(testAdSize);
+
+  FLTAnchoredAdaptiveBannerSize *size =
+      [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory
+                                                 orientation:@"landscape"
+                                                       width:@(34)];
+  NSData *encodedMessage = [_messageCodec encode:size];
+
+  FLTAnchoredAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
+}
+
+- (void)testEncodeDecodeAnchoredAdaptiveBannerAdSize_currentOrientation {
+  GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(45, 56));
+
+  FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
+  OCMStub([factory currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:@(45)])
+      .andReturn(testAdSize);
+
+  FLTAnchoredAdaptiveBannerSize *size =
+      [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory orientation:NULL width:@(45)];
   NSData *encodedMessage = [_messageCodec encode:size];
 
   FLTAnchoredAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
@@ -423,6 +454,10 @@
 }
 
 - (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *)width {
+  return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
+}
+
+- (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *)width {
   return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
 }
 @end

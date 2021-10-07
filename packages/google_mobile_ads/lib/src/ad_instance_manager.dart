@@ -964,8 +964,6 @@ class AdMessageCodec extends StandardMessageCodec {
       var orientationValue;
       if (value.orientation != null) {
         orientationValue = describeEnum(value.orientation as Orientation);
-      } else {
-        orientationValue = null;
       }
       writeValue(buffer, orientationValue);
       writeValue(buffer, value.width);
