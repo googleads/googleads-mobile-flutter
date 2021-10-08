@@ -34,6 +34,12 @@
 @interface FLTAdSizeFactory : NSObject
 - (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
 - (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
+- (GADAdSize)currentOrientationInlineAdaptiveBannerSizeWithWidth:(NSNumber *_Nonnull)width;
+- (GADAdSize)portraitOrientationInlineAdaptiveBannerSizeWithWidth:(NSNumber *_Nonnull)width;
+- (GADAdSize)landscapeInlineAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
+- (GADAdSize)inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:(NSNumber *_Nonnull)width
+                                                   maxHeight:(NSNumber *_Nonnull)maxHeight;
+
 @end
 
 @interface FLTAnchoredAdaptiveBannerSize : FLTAdSize
@@ -43,9 +49,29 @@
                                    width:(NSNumber *_Nonnull)width;
 @end
 
+@interface FLTInlineAdaptiveBannerSize : FLTAdSize
+@property(readonly) NSNumber *_Nullable orientation;
+@property(readonly) NSNumber *_Nullable maxHeight;
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
+                                   width:(NSNumber *_Nonnull)width
+                               maxHeight:(NSNumber *_Nullable)maxHeight
+                             orientation:(NSNumber *_Nullable)orientation;
+@end
+
 @interface FLTSmartBannerSize : FLTAdSize
 @property(readonly) NSString *_Nonnull orientation;
 - (instancetype _Nonnull)initWithOrientation:(NSString *_Nonnull)orientation;
+@end
+
+@interface FLTLocationParams : NSObject
+
+@property NSNumber *_Nullable accuracy;
+@property NSNumber *_Nullable longitude;
+@property NSNumber *_Nullable latitude;
+
+- (instancetype _Nonnull)initWithAccuracy:(NSNumber *_Nonnull)accuracy
+                                longitude:(NSNumber *_Nonnull)longitude
+                                 latitude:(NSNumber *_Nonnull)latitude;
 @end
 
 @interface FLTFluidSize : FLTAdSize
@@ -55,6 +81,8 @@
 @property NSArray<NSString *> *_Nullable keywords;
 @property NSString *_Nullable contentURL;
 @property BOOL nonPersonalizedAds;
+@property NSArray<NSString *> *_Nullable neighboringContentURLs;
+@property FLTLocationParams *_Nullable location;
 - (GADRequest *_Nonnull)asGADRequest;
 @end
 
@@ -102,6 +130,8 @@
 @interface FLTGAMAdRequest : FLTAdRequest
 @property NSDictionary<NSString *, NSString *> *_Nullable customTargeting;
 @property NSDictionary<NSString *, NSArray<NSString *> *> *_Nullable customTargetingLists;
+@property NSString *_Nullable pubProvidedID;
+
 - (GAMRequest *_Nonnull)asGAMRequest;
 @end
 
@@ -125,6 +155,7 @@
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
+- (FLTAdSize *_Nullable)getAdSize;
 - (GADBannerView *_Nonnull)bannerView;
 @end
 
@@ -137,6 +168,7 @@
                                   request:(FLTGAMAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
+
 @end
 
 /**

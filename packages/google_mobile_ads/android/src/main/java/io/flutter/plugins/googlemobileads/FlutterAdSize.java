@@ -16,6 +16,7 @@ package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdSize;
 
 class FlutterAdSize {
@@ -25,12 +26,29 @@ class FlutterAdSize {
 
   /** Wrapper around static methods for {@link com.google.android.gms.ads.AdSize}. */
   static class AdSizeFactory {
+
     AdSize getPortraitAnchoredAdaptiveBannerAdSize(Context context, int width) {
       return AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
     }
 
     AdSize getLandscapeAnchoredAdaptiveBannerAdSize(Context context, int width) {
       return AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
+    }
+
+    AdSize getCurrentOrientationInlineAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(context, width);
+    }
+
+    AdSize getLandscapeInlineAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getLandscapeInlineAdaptiveBannerAdSize(context, width);
+    }
+
+    AdSize getPortraitInlineAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getPortraitInlineAdaptiveBannerAdSize(context, width);
+    }
+
+    AdSize getInlineAdaptiveBannerAdSize(int width, int maxHeight) {
+      return AdSize.getInlineAdaptiveBannerAdSize(width, maxHeight);
     }
   }
 
@@ -77,6 +95,40 @@ class FlutterAdSize {
 
     FluidAdSize() {
       super(AdSize.FLUID);
+    }
+  }
+
+  static class InlineAdaptiveBannerAdSize extends FlutterAdSize {
+
+    @Nullable final Integer orientation;
+    @Nullable final Integer maxHeight;
+
+    private static AdSize getAdSize(
+        @NonNull AdSizeFactory adSizeFactory,
+        @NonNull Context context,
+        int width,
+        @Nullable Integer orientation,
+        @Nullable Integer maxHeight) {
+      if (orientation != null) {
+        return orientation == 0
+            ? adSizeFactory.getPortraitInlineAdaptiveBannerAdSize(context, width)
+            : adSizeFactory.getLandscapeInlineAdaptiveBannerAdSize(context, width);
+      } else if (maxHeight != null) {
+        return adSizeFactory.getInlineAdaptiveBannerAdSize(width, maxHeight);
+      } else {
+        return adSizeFactory.getCurrentOrientationInlineAdaptiveBannerAdSize(context, width);
+      }
+    }
+
+    InlineAdaptiveBannerAdSize(
+        @NonNull AdSizeFactory adSizeFactory,
+        @NonNull Context context,
+        int width,
+        @Nullable Integer orientation,
+        @Nullable Integer maxHeight) {
+      super(getAdSize(adSizeFactory, context, width, orientation, maxHeight));
+      this.orientation = orientation;
+      this.maxHeight = maxHeight;
     }
   }
 
