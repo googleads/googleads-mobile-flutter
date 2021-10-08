@@ -68,15 +68,14 @@
                              orientation:(NSString *)orientation
                                    width:(NSNumber *_Nonnull)width {
   GADAdSize size;
-  if (!orientation || [orientation isKindOfClass:[NSNull class]]) {
+  if ([FLTAdUtil isNull:orientation]) {
     size = [factory currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:width];
   } else if ([orientation isEqualToString:@"portrait"]) {
     size = [factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:width];
   } else if ([orientation isEqualToString:@"landscape"]) {
     size = [factory landscapeAnchoredAdaptiveBannerAdSizeWithWidth:width];
   } else {
-    NSLog(@"AdaptiveBanner orientation (optional) should be 'portrait' or 'landscape': %@",
-          orientation);
+    NSLog(@"Unexpected value for orientation: %@", orientation);
     return nil;
   }
 

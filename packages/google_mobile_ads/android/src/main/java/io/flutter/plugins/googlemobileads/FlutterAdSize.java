@@ -61,7 +61,10 @@ class FlutterAdSize {
 
     @NonNull
     private static AdSize getAdSize(
-        @NonNull Context context, @NonNull AdSizeFactory factory, String orientation, int width) {
+        @NonNull Context context,
+        @NonNull AdSizeFactory factory,
+        @Nullable String orientation,
+        int width) {
       final AdSize adSize;
       if (orientation == null) {
         adSize = factory.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width);
@@ -70,14 +73,16 @@ class FlutterAdSize {
       } else if (orientation.equals("landscape")) {
         adSize = factory.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
       } else {
-        throw new IllegalArgumentException(
-            "Orientation (optional) should be 'portrait' or 'landscape': " + orientation);
+        throw new IllegalArgumentException("Unexpected value for orientation: " + orientation);
       }
       return adSize;
     }
 
     AnchoredAdaptiveBannerAdSize(
-        @NonNull Context context, @NonNull AdSizeFactory factory, String orientation, int width) {
+        @NonNull Context context,
+        @NonNull AdSizeFactory factory,
+        @Nullable String orientation,
+        int width) {
       super(getAdSize(context, factory, orientation, width));
       this.orientation = orientation;
     }
