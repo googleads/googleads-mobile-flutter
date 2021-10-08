@@ -323,6 +323,63 @@
   XCTAssertEqual(returnedResult, [GADMobileAds.sharedInstance sdkVersion]);
 }
 
+- (void)testGetAnchoredAdaptiveBannerAdSize {
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
+                                        arguments:@{
+                                          @"orientation" : @"portrait",
+                                          @"width" : @23,
+                                        }];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertEqual([returnedResult doubleValue],
+                 GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(23).size.height);
+
+  methodCall = [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
+                                                 arguments:@{
+                                                   @"orientation" : @"landscape",
+                                                   @"width" : @34,
+                                                 }];
+
+  resultInvoked = false;
+  result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertEqual([returnedResult doubleValue],
+                 GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(34).size.height);
+
+  methodCall = [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
+                                                 arguments:@{
+                                                   @"width" : @45,
+                                                 }];
+
+  resultInvoked = false;
+  result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertEqual([returnedResult doubleValue],
+                 GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(45).size.height);
+}
+
 - (void)testGetAdSize_bannerAd {
   // Method calls to load a banner ad.
   FlutterMethodCall *loadAdMethodCall =
