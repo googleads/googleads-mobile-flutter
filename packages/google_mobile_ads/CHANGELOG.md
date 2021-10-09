@@ -11,6 +11,13 @@
     You can see the [fluid_example.dart](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/fluid_example.dart) for a reference of how to load and display a fluid ad.
   * Android - https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size
   * iOS - https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size
+* Adds `AdSize. getCurrentOrientationAnchoredAdaptiveBannerAdSize()` to support getting an `AnchoredAdaptiveBannerAdSize` in the current orientation.
+  * Previously the user had to specify an orientation (portrait / landscape) to create an AnchoredAdaptiveBannerAdSize. It has been made optional with this version. SDK will determine the current orientation of the device and return an appropriate AdSize.
+  * More information on anchored adaptive banners can be found here:
+    * [Admob android](https://developers.google.com/admob/android/banner/anchored-adaptive)
+    * [Admob iOS](https://developers.google.com/admob/ios/banner/anchored-adaptive)
+    * [Ad manager android](https://developers.google.com/ad-manager/mobile-ads-sdk/android/banner/anchored-adaptive)
+    * [Ad manager iOS](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/banner/anchored-adaptive)
 * Adds support for inline adaptive banner ads.
   * Inline adaptive banner ads are meant to be used in scrollable content. They are of variable height and can be as tall as the device screen.
     They differ from Fluid ads in that they only resize once when the ad is loaded.
