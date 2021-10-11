@@ -56,12 +56,21 @@ void main() {
           case 'MobileAds#getVersionString':
             return Future<String>.value('Test-SDK-Version');
           case 'MobileAds#getRequestConfiguration':
-            return RequestConfiguration(
-              maxAdContentRating: MaxAdContentRating.ma,
-              tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
-              tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.no,
-              testDeviceIds: <String>['id1', 'id2'],
-            );
+            if (debugDefaultTargetPlatformOverride == TargetPlatform.iOS) {
+              return RequestConfiguration(
+                maxAdContentRating: MaxAdContentRating.ma,
+                tagForChildDirectedTreatment: null,
+                tagForUnderAgeOfConsent: null,
+                testDeviceIds: <String>['id1', 'id2'],
+              );
+            } else {
+              return RequestConfiguration(
+                maxAdContentRating: MaxAdContentRating.ma,
+                tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+                tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.no,
+                testDeviceIds: <String>['id1', 'id2'],
+              );
+            }
           case 'AdSize#getAnchoredAdaptiveBannerAdSize':
             return null;
           default:
@@ -291,8 +300,20 @@ void main() {
     });
 
     test('$MobileAds.getRequestConfiguration', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       RequestConfiguration requestConfig =
           await MobileAds.instance.getRequestConfiguration();
+
+      expect(requestConfig.maxAdContentRating, MaxAdContentRating.ma);
+      expect(requestConfig.tagForChildDirectedTreatment, null);
+      expect(requestConfig.tagForUnderAgeOfConsent, null);
+      expect(requestConfig.testDeviceIds, ['id1', 'id2']);
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#getRequestConfiguration', arguments: null)
+      ]);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      requestConfig = await MobileAds.instance.getRequestConfiguration();
 
       expect(requestConfig.maxAdContentRating, MaxAdContentRating.ma);
       expect(requestConfig.tagForChildDirectedTreatment,
@@ -300,6 +321,7 @@ void main() {
       expect(requestConfig.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
       expect(requestConfig.testDeviceIds, ['id1', 'id2']);
       expect(log, <Matcher>[
+        isMethodCall('MobileAds#getRequestConfiguration', arguments: null),
         isMethodCall('MobileAds#getRequestConfiguration', arguments: null)
       ]);
     });

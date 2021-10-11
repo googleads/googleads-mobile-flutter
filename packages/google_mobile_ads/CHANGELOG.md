@@ -14,7 +14,7 @@
   * You can see the [fluid_example.dart](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/fluid_example.dart) for a reference of how to load and display a fluid ad.
   * [Android API reference](https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size)
   * [iOS API reference](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size)
-* Adds `AdSize. getCurrentOrientationAnchoredAdaptiveBannerAdSize()` to support getting an `AnchoredAdaptiveBannerAdSize` in the current orientation.
+* Adds `AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize()` to support getting an `AnchoredAdaptiveBannerAdSize` in the current orientation.
   * Previously the user had to specify an orientation (portrait / landscape) to create an AnchoredAdaptiveBannerAdSize. It has been made optional with this version. SDK will determine the current orientation of the device and return an appropriate AdSize.
   * More information on anchored adaptive banners can be found here:
     * [Admob android](https://developers.google.com/admob/android/banner/anchored-adaptive)

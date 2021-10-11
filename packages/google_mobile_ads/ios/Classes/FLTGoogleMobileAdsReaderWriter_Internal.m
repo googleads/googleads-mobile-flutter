@@ -34,9 +34,9 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldSmartBannerAdSize = 143,
   FLTAdmobFieldNativeAdOptions = 144,
   FLTAdmobFieldVideoOptions = 145,
-  FLTAdmobRequestConfigurationParams = 146,
-  FLTAdmobFieldInlineAdaptiveAdSize = 147,
-  FLTAdmobFieldLocation = 148,
+  FLTAdmobFieldInlineAdaptiveAdSize = 146,
+  FLTAdmobFieldLocation = 147,
+  FLTAdmobRequestConfigurationParams = 148,
 };
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter

@@ -716,9 +716,9 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueSmartBannerAdSize = 143;
   static const int _valueNativeAdOptions = 144;
   static const int _valueVideoOptions = 145;
-  static const int _valueRequestConfigurationParams = 146;
-  static const int _valueInlineAdaptiveBannerAdSize = 147;
-  static const int _valueLocationParams = 148;
+  static const int _valueInlineAdaptiveBannerAdSize = 146;
+  static const int _valueLocationParams = 147;
+  static const int _valueRequestConfigurationParams = 148;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
