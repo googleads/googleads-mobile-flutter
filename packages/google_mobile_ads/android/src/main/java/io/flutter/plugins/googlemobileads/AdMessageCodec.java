@@ -55,7 +55,7 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_VIDEO_OPTIONS = (byte) 145;
   private static final byte VALUE_REQUEST_CONFIGURATION_PARAMS = (byte) 146;
   private static final byte VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE = (byte) 147;
-  static final byte VALUE_LOCATION_PARAMS = (byte) 148;
+  private static final byte VALUE_LOCATION_PARAMS = (byte) 148;
 
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
