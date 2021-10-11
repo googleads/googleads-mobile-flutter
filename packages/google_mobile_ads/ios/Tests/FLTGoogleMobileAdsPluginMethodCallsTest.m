@@ -328,104 +328,113 @@
       [FlutterMethodCall methodCallWithMethodName:@"MobileAds#getRequestConfiguration"
                                         arguments:@{}];
 
-  -(void)testGetAnchoredAdaptiveBannerAdSize {
-    FlutterMethodCall *methodCall =
-        [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
-                                          arguments:@{
-                                            @"orientation" : @"portrait",
-                                            @"width" : @23,
-                                          }];
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
 
-    __block bool resultInvoked = false;
-    __block id _Nullable returnedResult;
-    FlutterResult result = ^(id _Nullable result) {
-      resultInvoked = true;
-      returnedResult = result;
-    };
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
-    [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+  XCTAssertTrue(resultInvoked);
+  XCTAssertEqual(returnedResult, [GADMobileAds.sharedInstance requestConfiguration]);
+}
 
-    XCTAssertTrue(resultInvoked);
-    XCTAssertEqual([returnedResult doubleValue],
-                   GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(23).size.height);
+- (void)testGetAnchoredAdaptiveBannerAdSize {
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
+                                        arguments:@{
+                                          @"orientation" : @"portrait",
+                                          @"width" : @23,
+                                        }];
 
-    methodCall =
-        [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
-                                          arguments:@{
-                                            @"orientation" : @"landscape",
-                                            @"width" : @34,
-                                          }];
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
 
-    resultInvoked = false;
-    result = ^(id _Nullable result) {
-      resultInvoked = true;
-      returnedResult = result;
-    };
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
-    [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+  XCTAssertTrue(resultInvoked);
+  XCTAssertEqual([returnedResult doubleValue],
+                 GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(23).size.height);
 
-    XCTAssertTrue(resultInvoked);
-    XCTAssertEqual([returnedResult doubleValue],
-                   GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(34).size.height);
+  methodCall = [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
+                                                 arguments:@{
+                                                   @"orientation" : @"landscape",
+                                                   @"width" : @34,
+                                                 }];
 
-    methodCall =
-        [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
-                                          arguments:@{
-                                            @"width" : @45,
-                                          }];
+  resultInvoked = false;
+  result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
 
-    resultInvoked = false;
-    result = ^(id _Nullable result) {
-      resultInvoked = true;
-      returnedResult = result;
-    };
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
-    [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+  XCTAssertTrue(resultInvoked);
+  XCTAssertEqual([returnedResult doubleValue],
+                 GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(34).size.height);
 
-    XCTAssertTrue(resultInvoked);
-    XCTAssertEqual([returnedResult doubleValue],
-                   GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(45).size.height);
-  }
+  methodCall = [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
+                                                 arguments:@{
+                                                   @"width" : @45,
+                                                 }];
 
-  -(void)testGetAdSize_bannerAd {
-    // Method calls to load a banner ad.
-    FlutterMethodCall *loadAdMethodCall = [FlutterMethodCall
-        methodCallWithMethodName:@"loadBannerAd"
-                       arguments:@{
-                         @"adId" : @(1),
-                         @"adUnitId" : @"ad-unit-id",
-                         @"size" : [[FLTAdSize alloc] initWithWidth:@1 height:@2],
-                         @"request" : [[FLTAdRequest alloc] init],
-                       }];
+  resultInvoked = false;
+  result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
 
-    __block bool loadAdResultInvoked = false;
-    __block id _Nullable returnedLoadAdResult;
-    FlutterResult loadAdResult = ^(id _Nullable result) {
-      loadAdResultInvoked = true;
-      returnedLoadAdResult = result;
-    };
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
-    [_fltGoogleMobileAdsPlugin handleMethodCall:loadAdMethodCall result:loadAdResult];
+  XCTAssertTrue(resultInvoked);
+  XCTAssertEqual([returnedResult doubleValue],
+                 GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(45).size.height);
+}
 
-    XCTAssertTrue(loadAdResultInvoked);
-    XCTAssertNil(returnedLoadAdResult);
+- (void)testGetAdSize_bannerAd {
+  // Method calls to load a banner ad.
+  FlutterMethodCall *loadAdMethodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"loadBannerAd"
+                                        arguments:@{
+                                          @"adId" : @(1),
+                                          @"adUnitId" : @"ad-unit-id",
+                                          @"size" : [[FLTAdSize alloc] initWithWidth:@1 height:@2],
+                                          @"request" : [[FLTAdRequest alloc] init],
+                                        }];
 
-    // Method call to get the ad size.
-    __block bool getAdSizeResultInvoked = false;
-    __block FLTAdSize *_Nullable returnedGetAdSizeResult;
-    FlutterResult getAdSizeResult = ^(id _Nullable result) {
-      getAdSizeResultInvoked = true;
-      returnedGetAdSizeResult = result;
-    };
+  __block bool loadAdResultInvoked = false;
+  __block id _Nullable returnedLoadAdResult;
+  FlutterResult loadAdResult = ^(id _Nullable result) {
+    loadAdResultInvoked = true;
+    returnedLoadAdResult = result;
+  };
 
-    FlutterMethodCall *getAdSizeMethodCall =
-        [FlutterMethodCall methodCallWithMethodName:@"getAdSize" arguments:@{
-          @"adId" : @(1)
-        }];
-    [_fltGoogleMobileAdsPlugin handleMethodCall:getAdSizeMethodCall result:getAdSizeResult];
+  [_fltGoogleMobileAdsPlugin handleMethodCall:loadAdMethodCall result:loadAdResult];
 
-    XCTAssertTrue(getAdSizeResultInvoked);
-    XCTAssertEqualObjects(returnedGetAdSizeResult.width, @1);
-    XCTAssertEqualObjects(returnedGetAdSizeResult.height, @2);
-  }
-  @end
+  XCTAssertTrue(loadAdResultInvoked);
+  XCTAssertNil(returnedLoadAdResult);
+
+  // Method call to get the ad size.
+  __block bool getAdSizeResultInvoked = false;
+  __block FLTAdSize *_Nullable returnedGetAdSizeResult;
+  FlutterResult getAdSizeResult = ^(id _Nullable result) {
+    getAdSizeResultInvoked = true;
+    returnedGetAdSizeResult = result;
+  };
+
+  FlutterMethodCall *getAdSizeMethodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"getAdSize" arguments:@{@"adId" : @(1)}];
+  [_fltGoogleMobileAdsPlugin handleMethodCall:getAdSizeMethodCall result:getAdSizeResult];
+
+  XCTAssertTrue(getAdSizeResultInvoked);
+  XCTAssertEqualObjects(returnedGetAdSizeResult.width, @1);
+  XCTAssertEqualObjects(returnedGetAdSizeResult.height, @2);
+}
+@end
