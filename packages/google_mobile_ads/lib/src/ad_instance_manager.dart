@@ -841,14 +841,18 @@ class AdMessageCodec extends StandardMessageCodec {
         }
 
       case _valueAnchoredAdaptiveBannerAdSize:
-        final String orientationStr =
+        final String? orientationStr =
             readValueOfType(buffer.getUint8(), buffer);
         final num width = readValueOfType(buffer.getUint8(), buffer);
-        return AnchoredAdaptiveBannerAdSize(
-          Orientation.values.firstWhere(
+        Orientation? orientation;
+        if (orientationStr != null) {
+          orientation = Orientation.values.firstWhere(
             (Orientation orientation) =>
                 describeEnum(orientation) == orientationStr,
-          ),
+          );
+        }
+        return AnchoredAdaptiveBannerAdSize(
+          orientation,
           width: width.truncate(),
           height: -1, // Unused value
         );
@@ -1021,7 +1025,11 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.orientationValue);
     } else if (value is AnchoredAdaptiveBannerAdSize) {
       buffer.putUint8(_valueAnchoredAdaptiveBannerAdSize);
-      writeValue(buffer, describeEnum(value.orientation));
+      var orientationValue;
+      if (value.orientation != null) {
+        orientationValue = describeEnum(value.orientation as Orientation);
+      }
+      writeValue(buffer, orientationValue);
       writeValue(buffer, value.width);
     } else if (value is SmartBannerAdSize) {
       buffer.putUint8(_valueSmartBannerAdSize);
