@@ -292,31 +292,6 @@ void main() {
       ]);
     });
 
-    test('$MobileAds.getRequestConfiguration', () async {
-      RequestConfiguration requestConfig =
-          await MobileAds.instance.getRequestConfiguration();
-
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      ByteData byteData = codec.encodeMessage(requestConfig)!;
-      RequestConfiguration result = codec.decodeMessage(byteData);
-
-      expect(result.maxAdContentRating, MaxAdContentRating.ma);
-      expect(result.tagForChildDirectedTreatment,
-          TagForChildDirectedTreatment.yes);
-      expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
-      expect(result.testDeviceIds, ['test-device-id']);
-
-      debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      byteData = codec.encodeMessage(requestConfig)!;
-      result = codec.decodeMessage(byteData);
-
-      expect(result.maxAdContentRating, MaxAdContentRating.ma);
-      expect(result.tagForChildDirectedTreatment,
-          TagForChildDirectedTreatment.yes);
-      expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
-      expect(result.testDeviceIds, ['test-device-id']);
-    });
-
     test('$AdSize.getAnchoredAdaptiveBannerAdSize', () async {
       await AdSize.getAnchoredAdaptiveBannerAdSize(Orientation.portrait, 23);
 
@@ -346,7 +321,32 @@ void main() {
       ]);
     });
 
-    test('encode/decode $RequestConfiguration', () async {
+    test('encode/decode $MobileAds.getRequestConfiguration', () async {
+      RequestConfiguration requestConfig =
+          await MobileAds.instance.getRequestConfiguration();
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      ByteData byteData = codec.encodeMessage(requestConfig)!;
+      RequestConfiguration result = codec.decodeMessage(byteData);
+
+      expect(result.maxAdContentRating, MaxAdContentRating.ma);
+      expect(result.tagForChildDirectedTreatment,
+          TagForChildDirectedTreatment.yes);
+      expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
+      expect(result.testDeviceIds, ['test-device-id']);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      byteData = codec.encodeMessage(requestConfig)!;
+      result = codec.decodeMessage(byteData);
+
+      expect(result.maxAdContentRating, MaxAdContentRating.ma);
+      expect(result.tagForChildDirectedTreatment,
+          TagForChildDirectedTreatment.yes);
+      expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
+      expect(result.testDeviceIds, ['test-device-id']);
+    });
+
+    test('$MobileAds.RequestConfiguration', () async {
       RequestConfiguration requestConfiguration = RequestConfiguration(
         maxAdContentRating: MaxAdContentRating.ma,
         tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
@@ -364,6 +364,15 @@ void main() {
           TagForChildDirectedTreatment.yes);
       expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
       expect(result.testDeviceIds, <String>['test-device-id']);
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#updateRequestConfiguration', arguments: {
+          'maxAdContentRating': MaxAdContentRating.ma,
+          'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
+          'testDeviceIds': <String>['test-device-id'],
+          'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.no,
+        }),
+        isMethodCall('MobileAds#getRequestConfiguration', arguments: null)
+      ]);
 
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       result = await MobileAds.instance.getRequestConfiguration();
@@ -372,6 +381,16 @@ void main() {
           TagForChildDirectedTreatment.yes);
       expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
       expect(result.testDeviceIds, <String>['test-device-id']);
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#updateRequestConfiguration', arguments: {
+          'maxAdContentRating': MaxAdContentRating.ma,
+          'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
+          'testDeviceIds': <String>['test-device-id'],
+          'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.no,
+        }),
+        isMethodCall('MobileAds#getRequestConfiguration', arguments: null),
+        isMethodCall('MobileAds#getRequestConfiguration', arguments: null)
+      ]);
     });
   });
 }
