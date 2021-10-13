@@ -293,7 +293,8 @@ void main() {
     });
 
     test('$MobileAds.getRequestConfiguration', () async {
-      RequestConfiguration requestConfig = await MobileAds.instance.getRequestConfiguration();
+      RequestConfiguration requestConfig =
+          await MobileAds.instance.getRequestConfiguration();
 
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       ByteData byteData = codec.encodeMessage(requestConfig)!;
