@@ -60,6 +60,7 @@ website/build
 # Generated files
 .docusaurus
 .cache-loader
+packages/google_mobile_ads/coverage/
 
 # Misc
 .env.local

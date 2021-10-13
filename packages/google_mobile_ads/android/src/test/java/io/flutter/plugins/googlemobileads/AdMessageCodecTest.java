@@ -28,6 +28,7 @@ import static org.mockito.Mockito.mock;
 import android.content.Context;
 import android.location.Location;
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.RequestConfiguration;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.AdSizeFactory;
@@ -339,5 +340,30 @@ public class AdMessageCodecTest {
     assertEquals(result.width, 100);
     assertNull(result.maxHeight);
     assertNull(result.orientation);
+  }
+
+  public void encodeRequestConfiguration() {
+    RequestConfiguration.Builder requestConfigurationBuilder = new RequestConfiguration.Builder();
+    requestConfigurationBuilder.setMaxAdContentRating(
+        RequestConfiguration.MAX_AD_CONTENT_RATING_MA);
+    requestConfigurationBuilder.setTagForChildDirectedTreatment(
+        RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE);
+    requestConfigurationBuilder.setTagForUnderAgeOfConsent(
+        RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE);
+    requestConfigurationBuilder.setTestDeviceIds(Arrays.asList("test-device-id"));
+    RequestConfiguration requestConfiguration = requestConfigurationBuilder.build();
+
+    final ByteBuffer data = codec.encodeMessage(requestConfiguration);
+    final RequestConfiguration result =
+        (RequestConfiguration) codec.decodeMessage((ByteBuffer) data.position(0));
+
+    assertEquals(result.getMaxAdContentRating(), RequestConfiguration.MAX_AD_CONTENT_RATING_MA);
+    assertEquals(
+        result.getTagForChildDirectedTreatment(),
+        RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE);
+    assertEquals(
+        result.getTagForUnderAgeOfConsent(),
+        RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE);
+    assertEquals(result.getTestDeviceIds(), Arrays.asList("test-device-id"));
   }
 }

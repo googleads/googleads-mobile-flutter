@@ -49,6 +49,20 @@
   XCTAssertEqualObjects(decodedSize.height, @(2));
 }
 
+- (void)testEncodeDecodeRequestConfiguration {
+  GADRequestConfiguration *requestConfiguration = [GADRequestConfiguration alloc];
+  requestConfiguration.maxAdContentRating = GADMaxAdContentRatingMatureAudience;
+  [GADMobileAds.sharedInstance.requestConfiguration tagForChildDirectedTreatment:YES];
+  [GADMobileAds.sharedInstance.requestConfiguration tagForUnderAgeOfConsent:NO];
+  NSArray<NSString *> *testDeviceIds = [[NSArray alloc] initWithObjects:@"test-device-id", nil];
+  requestConfiguration.testDeviceIdentifiers = testDeviceIds;
+  NSData *encodedMessage = [_messageCodec encode:requestConfiguration];
+
+  GADRequestConfiguration *decodedSize = [_messageCodec decode:encodedMessage];
+  XCTAssertEqualObjects(decodedSize.maxAdContentRating, GADMaxAdContentRatingMatureAudience);
+  XCTAssertEqualObjects(decodedSize.testDeviceIdentifiers, testDeviceIds);
+}
+
 - (void)testEncodeDecodeInlineAdaptiveBannerAdSize_currentOrientation {
   GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(25, 10));
 

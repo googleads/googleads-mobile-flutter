@@ -51,6 +51,14 @@ class MobileAds {
     return instanceManager.initialize();
   }
 
+  /// Get the current [RequestConfiguration].
+  ///
+  /// On iOS, tagForUnderAgeOfConsent and tagForChildDirectedTreatment are null on
+  /// the returned [RequestConfiguration].
+  Future<RequestConfiguration> getRequestConfiguration() {
+    return instanceManager.getRequestConfiguration();
+  }
+
   /// Update the [RequestConfiguration] to apply for future ad requests.
   Future<void> updateRequestConfiguration(
       RequestConfiguration requestConfiguration) {
