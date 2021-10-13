@@ -58,21 +58,12 @@ void main() {
           case 'MobileAds#updateRequestConfiguration':
             return null;
           case 'MobileAds#getRequestConfiguration':
-            if (debugDefaultTargetPlatformOverride == TargetPlatform.iOS) {
-              return RequestConfiguration(
-                maxAdContentRating: MaxAdContentRating.ma,
-                tagForChildDirectedTreatment: null,
-                tagForUnderAgeOfConsent: null,
-                testDeviceIds: <String>['test-device-id'],
-              );
-            } else {
-              return RequestConfiguration(
-                maxAdContentRating: MaxAdContentRating.ma,
-                tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
-                tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.no,
-                testDeviceIds: <String>['test-device-id'],
-              );
-            }
+            return RequestConfiguration(
+              maxAdContentRating: MaxAdContentRating.ma,
+              tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+              tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.no,
+              testDeviceIds: <String>['test-device-id'],
+            );
           case 'AdSize#getAnchoredAdaptiveBannerAdSize':
             return null;
           default:
@@ -302,30 +293,27 @@ void main() {
     });
 
     test('$MobileAds.getRequestConfiguration', () async {
-      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      RequestConfiguration requestConfig =
-          await MobileAds.instance.getRequestConfiguration();
+      RequestConfiguration requestConfig = await MobileAds.instance.getRequestConfiguration();
 
-      expect(requestConfig.maxAdContentRating, MaxAdContentRating.ma);
-      expect(requestConfig.tagForChildDirectedTreatment, null);
-      expect(requestConfig.tagForUnderAgeOfConsent, null);
-      expect(requestConfig.testDeviceIds, ['test-device-id']);
-      expect(log, <Matcher>[
-        isMethodCall('MobileAds#getRequestConfiguration', arguments: null)
-      ]);
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      ByteData byteData = codec.encodeMessage(requestConfig)!;
+      RequestConfiguration result = codec.decodeMessage(byteData);
+
+      expect(result.maxAdContentRating, MaxAdContentRating.ma);
+      expect(result.tagForChildDirectedTreatment,
+          TagForChildDirectedTreatment.yes);
+      expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
+      expect(result.testDeviceIds, ['test-device-id']);
 
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      requestConfig = await MobileAds.instance.getRequestConfiguration();
+      byteData = codec.encodeMessage(requestConfig)!;
+      result = codec.decodeMessage(byteData);
 
-      expect(requestConfig.maxAdContentRating, MaxAdContentRating.ma);
-      expect(requestConfig.tagForChildDirectedTreatment,
+      expect(result.maxAdContentRating, MaxAdContentRating.ma);
+      expect(result.tagForChildDirectedTreatment,
           TagForChildDirectedTreatment.yes);
-      expect(requestConfig.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
-      expect(requestConfig.testDeviceIds, ['test-device-id']);
-      expect(log, <Matcher>[
-        isMethodCall('MobileAds#getRequestConfiguration', arguments: null),
-        isMethodCall('MobileAds#getRequestConfiguration', arguments: null)
-      ]);
+      expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
+      expect(result.testDeviceIds, ['test-device-id']);
     });
 
     test('$AdSize.getAnchoredAdaptiveBannerAdSize', () async {
@@ -371,8 +359,9 @@ void main() {
       RequestConfiguration result =
           await MobileAds.instance.getRequestConfiguration();
       expect(result.maxAdContentRating, MaxAdContentRating.ma);
-      expect(result.tagForChildDirectedTreatment, null);
-      expect(result.tagForUnderAgeOfConsent, null);
+      expect(result.tagForChildDirectedTreatment,
+          TagForChildDirectedTreatment.yes);
+      expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
       expect(result.testDeviceIds, <String>['test-device-id']);
 
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
