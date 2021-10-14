@@ -59,6 +59,7 @@ class AdMessageCodec extends StandardMessageCodec {
 
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
+  @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
 
   AdMessageCodec(@NonNull Context context) {
     this.context = context;
@@ -73,6 +74,11 @@ class AdMessageCodec extends StandardMessageCodec {
 
   void setContext(@NonNull Context context) {
     this.context = context;
+  }
+
+  void setMediationNetworkExtrasProvider(
+      @NonNull MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
+    this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
   }
 
   @Override
@@ -91,6 +97,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getHttpTimeoutMillis());
       writeValue(stream, request.getPublisherProvidedId());
       writeValue(stream, request.getLocation());
+      writeValue(stream, request.getMediationExtrasIdentifier());
     } else if (value instanceof FlutterAdRequest) {
       stream.write(VALUE_AD_REQUEST);
       final FlutterAdRequest request = (FlutterAdRequest) value;
@@ -100,6 +107,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getNeighboringContentUrls());
       writeValue(stream, request.getHttpTimeoutMillis());
       writeValue(stream, request.getLocation());
+      writeValue(stream, request.getMediationExtrasIdentifier());
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
       stream.write(VALUE_REWARD_ITEM);
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;
@@ -228,6 +236,8 @@ class AdMessageCodec extends StandardMessageCodec {
             .setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer))
             .setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer))
             .setLocation((Location) readValueOfType(buffer.get(), buffer))
+            .setMediationNetworkExtrasIdentifier((String) readValueOfType(buffer.get(), buffer))
+            .setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider)
             .build();
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
@@ -268,6 +278,8 @@ class AdMessageCodec extends StandardMessageCodec {
         builder.setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer));
         builder.setPublisherProvidedId((String) readValueOfType(buffer.get(), buffer));
         builder.setLocation((Location) readValueOfType(buffer.get(), buffer));
+        builder.setMediationNetworkExtrasIdentifier((String) readValueOfType(buffer.get(), buffer));
+        builder.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
         return builder.build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);

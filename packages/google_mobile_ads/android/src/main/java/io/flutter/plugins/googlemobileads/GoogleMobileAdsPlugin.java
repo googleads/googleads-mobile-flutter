@@ -62,6 +62,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   @Nullable private ActivityPluginBinding activityBinding;
   @Nullable private AdMessageCodec adMessageCodec;
   private final Map<String, NativeAdFactory> nativeAdFactories = new HashMap<>();
+  @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
   private final FlutterMobileAdsWrapper flutterMobileAds;
   /**
    * Public constructor for the plugin. Dependency initialization is handled in lifecycle methods
@@ -122,6 +123,22 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     return registerNativeAdFactory(gmaPlugin, factoryId, nativeAdFactory);
   }
 
+  /** TODO. */
+  public static boolean registerMediationNetworkExtrasProvider(
+      FlutterEngine engine,
+      MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
+    final GoogleMobileAdsPlugin gmaPlugin =
+        (GoogleMobileAdsPlugin) engine.getPlugins().get(GoogleMobileAdsPlugin.class);
+    if (gmaPlugin == null) {
+      return false;
+    }
+    gmaPlugin.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
+    if (gmaPlugin.adMessageCodec != null) {
+      gmaPlugin.adMessageCodec.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
+    }
+    return true;
+  }
+
   private static boolean registerNativeAdFactory(
       GoogleMobileAdsPlugin plugin, String factoryId, NativeAdFactory nativeAdFactory) {
     if (plugin == null) {
@@ -177,6 +194,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   public void onAttachedToEngine(FlutterPluginBinding binding) {
     pluginBinding = binding;
     adMessageCodec = new AdMessageCodec(binding.getApplicationContext());
+    if (mediationNetworkExtrasProvider != null) {
+      adMessageCodec.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
+    }
     final MethodChannel channel =
         new MethodChannel(
             binding.getBinaryMessenger(),

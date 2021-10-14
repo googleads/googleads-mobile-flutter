@@ -108,10 +108,10 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   void load() {
     final RewardedAdLoadCallback adLoadCallback = new DelegatingRewardedCallback(this);
     if (request != null) {
-      flutterAdLoader.loadRewarded(adUnitId, request.asAdRequest(), adLoadCallback);
+      flutterAdLoader.loadRewarded(adUnitId, request.asAdRequest(adUnitId), adLoadCallback);
     } else if (adManagerRequest != null) {
       flutterAdLoader.loadAdManagerRewarded(
-          adUnitId, adManagerRequest.asAdManagerAdRequest(), adLoadCallback);
+          adUnitId, adManagerRequest.asAdManagerAdRequest(adUnitId), adLoadCallback);
     } else {
       Log.e(TAG, "A null or invalid ad request was provided.");
     }
