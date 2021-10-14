@@ -386,6 +386,15 @@ class AdInstanceManager {
     ))!;
   }
 
+  Future<AdSize> getAdSize(Ad ad) async {
+    return (await instanceManager.channel.invokeMethod<AdSize>(
+      'getAdSize',
+      <dynamic, dynamic>{
+        'adId': adIdFor(ad),
+      },
+    ))!;
+  }
+
   /// Returns null if an invalid [adId] was passed in.
   Ad? adFor(int adId) => _loadedAds[adId];
 
@@ -602,6 +611,12 @@ class AdInstanceManager {
     );
   }
 
+  /// Gets the global [RequestConfiguration].
+  Future<RequestConfiguration> getRequestConfiguration() async {
+    return (await instanceManager.channel.invokeMethod<RequestConfiguration>(
+        'MobileAds#getRequestConfiguration'))!;
+  }
+
   /// Set the [RequestConfiguration] to apply for future ad requests.
   Future<void> updateRequestConfiguration(
       RequestConfiguration requestConfiguration) {
@@ -701,16 +716,37 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueSmartBannerAdSize = 143;
   static const int _valueNativeAdOptions = 144;
   static const int _valueVideoOptions = 145;
+  static const int _valueInlineAdaptiveBannerAdSize = 146;
+  static const int _valueLocationParams = 147;
+  static const int _valueRequestConfigurationParams = 148;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
     if (value is AdSize) {
       writeAdSize(buffer, value);
+    } else if (value is AdManagerAdRequest) {
+      buffer.putUint8(_valueAdManagerAdRequest);
+      writeValue(buffer, value.keywords);
+      writeValue(buffer, value.contentUrl);
+      writeValue(buffer, value.customTargeting);
+      writeValue(buffer, value.customTargetingLists);
+      writeValue(buffer, value.nonPersonalizedAds);
+      writeValue(buffer, value.neighboringContentUrls);
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        writeValue(buffer, value.httpTimeoutMillis);
+      }
+      writeValue(buffer, value.publisherProvidedId);
+      writeValue(buffer, value.location);
     } else if (value is AdRequest) {
       buffer.putUint8(_valueAdRequest);
       writeValue(buffer, value.keywords);
       writeValue(buffer, value.contentUrl);
       writeValue(buffer, value.nonPersonalizedAds);
+      writeValue(buffer, value.neighboringContentUrls);
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        writeValue(buffer, value.httpTimeoutMillis);
+      }
+      writeValue(buffer, value.location);
     } else if (value is RewardItem) {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
@@ -738,13 +774,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.code);
       writeValue(buffer, value.domain);
       writeValue(buffer, value.message);
-    } else if (value is AdManagerAdRequest) {
-      buffer.putUint8(_valueAdManagerAdRequest);
-      writeValue(buffer, value.keywords);
-      writeValue(buffer, value.contentUrl);
-      writeValue(buffer, value.customTargeting);
-      writeValue(buffer, value.customTargetingLists);
-      writeValue(buffer, value.nonPersonalizedAds);
     } else if (value is AdapterInitializationState) {
       buffer.putUint8(_valueInitializationState);
       writeValue(buffer, describeEnum(value));
@@ -773,6 +802,20 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.clickToExpandRequested);
       writeValue(buffer, value.customControlsRequested);
       writeValue(buffer, value.startMuted);
+    } else if (value is RequestConfiguration) {
+      buffer.putUint8(_valueRequestConfigurationParams);
+      writeValue(buffer, value.maxAdContentRating);
+      writeValue(buffer, value.tagForChildDirectedTreatment);
+      writeValue(buffer, value.tagForUnderAgeOfConsent);
+      writeValue(buffer, value.testDeviceIds);
+    } else if (value is LocationParams) {
+      buffer.putUint8(_valueLocationParams);
+      writeValue(buffer, value.accuracy);
+      writeValue(buffer, value.longitude);
+      writeValue(buffer, value.latitude);
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        writeValue(buffer, value.time);
+      }
     } else {
       super.writeValue(buffer, value);
     }
@@ -781,15 +824,35 @@ class AdMessageCodec extends StandardMessageCodec {
   @override
   dynamic readValueOfType(dynamic type, ReadBuffer buffer) {
     switch (type) {
+      case _valueInlineAdaptiveBannerAdSize:
+        final num width = readValueOfType(buffer.getUint8(), buffer);
+        final num? maxHeight = readValueOfType(buffer.getUint8(), buffer);
+        final num? orientation = readValueOfType(buffer.getUint8(), buffer);
+        if (orientation != null) {
+          return orientation.toInt() == 0
+              ? AdSize.getPortraitInlineAdaptiveBannerAdSize(width.toInt())
+              : AdSize.getLandscapeInlineAdaptiveBannerAdSize(width.toInt());
+        } else if (maxHeight != null) {
+          return AdSize.getInlineAdaptiveBannerAdSize(
+              width.toInt(), maxHeight.toInt());
+        } else {
+          return AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(
+              width.toInt());
+        }
+
       case _valueAnchoredAdaptiveBannerAdSize:
-        final String orientationStr =
+        final String? orientationStr =
             readValueOfType(buffer.getUint8(), buffer);
         final num width = readValueOfType(buffer.getUint8(), buffer);
-        return AnchoredAdaptiveBannerAdSize(
-          Orientation.values.firstWhere(
+        Orientation? orientation;
+        if (orientationStr != null) {
+          orientation = Orientation.values.firstWhere(
             (Orientation orientation) =>
                 describeEnum(orientation) == orientationStr,
-          ),
+          );
+        }
+        return AnchoredAdaptiveBannerAdSize(
+          orientation,
           width: width.truncate(),
           height: -1, // Unused value
         );
@@ -803,9 +866,11 @@ class AdMessageCodec extends StandardMessageCodec {
           ),
         );
       case _valueAdSize:
+        num width = readValueOfType(buffer.getUint8(), buffer);
+        num height = readValueOfType(buffer.getUint8(), buffer);
         return AdSize(
-          width: readValueOfType(buffer.getUint8(), buffer),
-          height: readValueOfType(buffer.getUint8(), buffer),
+          width: width.toInt(),
+          height: height.toInt(),
         );
       case _valueFluidAdSize:
         return FluidAdSize();
@@ -814,6 +879,12 @@ class AdMessageCodec extends StandardMessageCodec {
           keywords: readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
           contentUrl: readValueOfType(buffer.getUint8(), buffer),
           nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
+          neighboringContentUrls:
+              readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
+          httpTimeoutMillis: (defaultTargetPlatform == TargetPlatform.android)
+              ? readValueOfType(buffer.getUint8(), buffer)
+              : null,
+          location: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueRewardItem:
         return RewardItem(
@@ -856,6 +927,13 @@ class AdMessageCodec extends StandardMessageCodec {
             readValueOfType(buffer.getUint8(), buffer),
           ),
           nonPersonalizedAds: readValueOfType(buffer.getUint8(), buffer),
+          neighboringContentUrls:
+              readValueOfType(buffer.getUint8(), buffer)?.cast<String>(),
+          httpTimeoutMillis: (defaultTargetPlatform == TargetPlatform.android)
+              ? readValueOfType(buffer.getUint8(), buffer)
+              : null,
+          publisherProvidedId: readValueOfType(buffer.getUint8(), buffer),
+          location: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueInitializationState:
         switch (readValueOfType(buffer.getUint8(), buffer)) {
@@ -906,6 +984,24 @@ class AdMessageCodec extends StandardMessageCodec {
           customControlsRequested: readValueOfType(buffer.getUint8(), buffer),
           startMuted: readValueOfType(buffer.getUint8(), buffer),
         );
+      case _valueRequestConfigurationParams:
+        return RequestConfiguration(
+          maxAdContentRating: readValueOfType(buffer.getUint8(), buffer),
+          tagForChildDirectedTreatment:
+              readValueOfType(buffer.getUint8(), buffer),
+          tagForUnderAgeOfConsent: readValueOfType(buffer.getUint8(), buffer),
+          testDeviceIds:
+              readValueOfType(buffer.getUint8(), buffer).cast<String>(),
+        );
+      case _valueLocationParams:
+        return LocationParams(
+          accuracy: readValueOfType(buffer.getUint8(), buffer),
+          longitude: readValueOfType(buffer.getUint8(), buffer),
+          latitude: readValueOfType(buffer.getUint8(), buffer),
+          time: (defaultTargetPlatform == TargetPlatform.android)
+              ? readValueOfType(buffer.getUint8(), buffer)
+              : null,
+        );
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -922,9 +1018,18 @@ class AdMessageCodec extends StandardMessageCodec {
   }
 
   void writeAdSize(WriteBuffer buffer, AdSize value) {
-    if (value is AnchoredAdaptiveBannerAdSize) {
+    if (value is InlineAdaptiveSize) {
+      buffer.putUint8(_valueInlineAdaptiveBannerAdSize);
+      writeValue(buffer, value.width);
+      writeValue(buffer, value.maxHeight);
+      writeValue(buffer, value.orientationValue);
+    } else if (value is AnchoredAdaptiveBannerAdSize) {
       buffer.putUint8(_valueAnchoredAdaptiveBannerAdSize);
-      writeValue(buffer, describeEnum(value.orientation));
+      var orientationValue;
+      if (value.orientation != null) {
+        orientationValue = describeEnum(value.orientation as Orientation);
+      }
+      writeValue(buffer, orientationValue);
       writeValue(buffer, value.width);
     } else if (value is SmartBannerAdSize) {
       buffer.putUint8(_valueSmartBannerAdSize);

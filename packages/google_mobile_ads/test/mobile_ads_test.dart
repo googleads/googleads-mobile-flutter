@@ -16,6 +16,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -54,6 +55,17 @@ void main() {
             return null;
           case 'MobileAds#getVersionString':
             return Future<String>.value('Test-SDK-Version');
+          case 'MobileAds#updateRequestConfiguration':
+            return null;
+          case 'MobileAds#getRequestConfiguration':
+            return RequestConfiguration(
+              maxAdContentRating: MaxAdContentRating.ma,
+              tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+              tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.no,
+              testDeviceIds: <String>['test-device-id'],
+            );
+          case 'AdSize#getAnchoredAdaptiveBannerAdSize':
+            return null;
           default:
             assert(false);
             return null;
@@ -277,6 +289,107 @@ void main() {
 
       expect(log, <Matcher>[
         isMethodCall('MobileAds#getVersionString', arguments: null)
+      ]);
+    });
+
+    test('$AdSize.getAnchoredAdaptiveBannerAdSize', () async {
+      await AdSize.getAnchoredAdaptiveBannerAdSize(Orientation.portrait, 23);
+
+      expect(log, <Matcher>[
+        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
+            arguments: {'orientation': 'portrait', 'width': 23})
+      ]);
+
+      await AdSize.getAnchoredAdaptiveBannerAdSize(Orientation.landscape, 34);
+
+      expect(log, <Matcher>[
+        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
+            arguments: {'orientation': 'portrait', 'width': 23}),
+        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
+            arguments: {'orientation': 'landscape', 'width': 34})
+      ]);
+
+      await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(45);
+
+      expect(log, <Matcher>[
+        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
+            arguments: {'orientation': 'portrait', 'width': 23}),
+        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
+            arguments: {'orientation': 'landscape', 'width': 34}),
+        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
+            arguments: {'width': 45})
+      ]);
+    });
+
+    test('encode/decode $MobileAds.getRequestConfiguration', () async {
+      RequestConfiguration requestConfig =
+          await MobileAds.instance.getRequestConfiguration();
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      ByteData byteData = codec.encodeMessage(requestConfig)!;
+      RequestConfiguration result = codec.decodeMessage(byteData);
+
+      expect(result.maxAdContentRating, MaxAdContentRating.ma);
+      expect(result.tagForChildDirectedTreatment,
+          TagForChildDirectedTreatment.yes);
+      expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
+      expect(result.testDeviceIds, ['test-device-id']);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      byteData = codec.encodeMessage(requestConfig)!;
+      result = codec.decodeMessage(byteData);
+
+      expect(result.maxAdContentRating, MaxAdContentRating.ma);
+      expect(result.tagForChildDirectedTreatment,
+          TagForChildDirectedTreatment.yes);
+      expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
+      expect(result.testDeviceIds, ['test-device-id']);
+    });
+
+    test('$MobileAds.RequestConfiguration', () async {
+      RequestConfiguration requestConfiguration = RequestConfiguration(
+        maxAdContentRating: MaxAdContentRating.ma,
+        tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+        tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.no,
+        testDeviceIds: <String>['test-device-id'],
+      );
+
+      await MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      RequestConfiguration result =
+          await MobileAds.instance.getRequestConfiguration();
+      expect(result.maxAdContentRating, MaxAdContentRating.ma);
+      expect(result.tagForChildDirectedTreatment,
+          TagForChildDirectedTreatment.yes);
+      expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
+      expect(result.testDeviceIds, <String>['test-device-id']);
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#updateRequestConfiguration', arguments: {
+          'maxAdContentRating': MaxAdContentRating.ma,
+          'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
+          'testDeviceIds': <String>['test-device-id'],
+          'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.no,
+        }),
+        isMethodCall('MobileAds#getRequestConfiguration', arguments: null)
+      ]);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      result = await MobileAds.instance.getRequestConfiguration();
+      expect(result.maxAdContentRating, MaxAdContentRating.ma);
+      expect(result.tagForChildDirectedTreatment,
+          TagForChildDirectedTreatment.yes);
+      expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
+      expect(result.testDeviceIds, <String>['test-device-id']);
+      expect(log, <Matcher>[
+        isMethodCall('MobileAds#updateRequestConfiguration', arguments: {
+          'maxAdContentRating': MaxAdContentRating.ma,
+          'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
+          'testDeviceIds': <String>['test-device-id'],
+          'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.no,
+        }),
+        isMethodCall('MobileAds#getRequestConfiguration', arguments: null),
+        isMethodCall('MobileAds#getRequestConfiguration', arguments: null)
       ]);
     });
   });

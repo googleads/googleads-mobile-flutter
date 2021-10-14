@@ -47,6 +47,8 @@ import java.util.Map;
  */
 public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, MethodCallHandler {
 
+  private static final String TAG = "GoogleMobileAdsPlugin";
+
   private static <T> T requireNonNull(T obj) {
     if (obj == null) {
       throw new IllegalArgumentException();
@@ -238,8 +240,10 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
-    assert instanceManager != null;
-    assert pluginBinding != null;
+    if (instanceManager == null || pluginBinding == null) {
+      Log.e(TAG, "method call received before instanceManager initialized: " + call.method);
+      return;
+    }
     Context appContext = pluginBinding.getApplicationContext();
     switch (call.method) {
       case "_init":
@@ -250,6 +254,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
 
       case "MobileAds#initialize":
         flutterMobileAds.initialize(appContext, new FlutterInitializationListener(result));
+        break;
+      case "MobileAds#getRequestConfiguration":
+        result.success(flutterMobileAds.getRequestConfiguration());
         break;
       case "MobileAds#updateRequestConfiguration":
         RequestConfiguration.Builder builder = MobileAds.getRequestConfiguration().toBuilder();
@@ -280,7 +287,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 call.<String>argument("adUnitId"),
                 call.<FlutterAdRequest>argument("request"),
                 call.<FlutterAdSize>argument("size"),
-                new BannerAdCreator(appContext));
+                getBannerAdCreator(appContext));
         instanceManager.trackAd(bannerAd, call.<Integer>argument("adId"));
         bannerAd.load();
         result.success(null);
@@ -365,7 +372,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 call.<String>argument("adUnitId"),
                 call.<List<FlutterAdSize>>argument("sizes"),
                 call.<FlutterAdManagerAdRequest>argument("request"),
-                new BannerAdCreator(appContext));
+                getBannerAdCreator(appContext));
         instanceManager.trackAd(adManagerBannerAd, call.<Integer>argument("adId"));
         adManagerBannerAd.load();
         result.success(null);
@@ -377,7 +384,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 instanceManager,
                 call.<String>argument("adUnitId"),
                 call.<FlutterAdManagerAdRequest>argument("request"),
-                new BannerAdCreator(appContext));
+                getBannerAdCreator(appContext));
         instanceManager.trackAd(fluidAd, call.<Integer>argument("adId"));
         fluidAd.load();
         result.success(null);
@@ -424,7 +431,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
       case "AdSize#getAnchoredAdaptiveBannerAdSize":
         final FlutterAdSize.AnchoredAdaptiveBannerAdSize size =
             new FlutterAdSize.AnchoredAdaptiveBannerAdSize(
-                activityBinding.getActivity(),
+                appContext,
                 new FlutterAdSize.AdSizeFactory(),
                 call.<String>argument("orientation"),
                 call.<Integer>argument("width"));
@@ -454,9 +461,22 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
       case "MobileAds#getVersionString":
         result.success(flutterMobileAds.getVersionString());
         break;
+      case "getAdSize":
+        FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
+        if (ad instanceof FlutterBannerAd) {
+          result.success(((FlutterBannerAd) ad).getAdSize());
+        } else if (ad instanceof FlutterAdManagerBannerAd) {
+          result.success(((FlutterAdManagerBannerAd) ad).getAdSize());
+        }
+        break;
       default:
         result.notImplemented();
     }
+  }
+
+  @VisibleForTesting
+  BannerAdCreator getBannerAdCreator(@NonNull Context context) {
+    return new BannerAdCreator(context);
   }
 
   /** An {@link OnInitializationCompleteListener} that invokes result.success() at most once. */

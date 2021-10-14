@@ -41,25 +41,71 @@
 - (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
   return GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
 }
+
+- (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+  return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
+}
+
+- (GADAdSize)currentOrientationInlineAdaptiveBannerSizeWithWidth:(NSNumber *_Nonnull)width {
+  return GADCurrentOrientationInlineAdaptiveBannerAdSizeWithWidth(width.floatValue);
+}
+
+- (GADAdSize)portraitOrientationInlineAdaptiveBannerSizeWithWidth:(NSNumber *_Nonnull)width {
+  return GADPortraitInlineAdaptiveBannerAdSizeWithWidth(width.floatValue);
+}
+- (GADAdSize)landscapeInlineAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+  return GADLandscapeInlineAdaptiveBannerAdSizeWithWidth(width.floatValue);
+}
+- (GADAdSize)inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:(NSNumber *_Nonnull)width
+                                                   maxHeight:(NSNumber *_Nonnull)maxHeight {
+  return GADInlineAdaptiveBannerAdSizeWithWidthAndMaxHeight(width.floatValue, maxHeight.floatValue);
+}
+
 @end
 
 @implementation FLTAnchoredAdaptiveBannerSize
 - (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
-                             orientation:(NSString *_Nonnull)orientation
+                             orientation:(NSString *)orientation
                                    width:(NSNumber *_Nonnull)width {
   GADAdSize size;
-  if ([orientation isEqualToString:@"portrait"]) {
+  if ([FLTAdUtil isNull:orientation]) {
+    size = [factory currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:width];
+  } else if ([orientation isEqualToString:@"portrait"]) {
     size = [factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:width];
   } else if ([orientation isEqualToString:@"landscape"]) {
     size = [factory landscapeAnchoredAdaptiveBannerAdSizeWithWidth:width];
   } else {
-    NSLog(@"AdaptiveBanner orientation should be 'portrait' or 'landscape': %@", orientation);
+    NSLog(@"Unexpected value for orientation: %@", orientation);
     return nil;
   }
 
   self = [self initWithAdSize:size];
   if (self) {
     _orientation = orientation;
+  }
+  return self;
+}
+@end
+
+@implementation FLTInlineAdaptiveBannerSize
+- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
+                                   width:(NSNumber *_Nonnull)width
+                               maxHeight:(NSNumber *_Nullable)maxHeight
+                             orientation:(NSNumber *_Nullable)orientation {
+  GADAdSize gadAdSize;
+  if ([FLTAdUtil isNotNull:orientation]) {
+    gadAdSize = orientation.intValue == 0
+                    ? [factory portraitOrientationInlineAdaptiveBannerSizeWithWidth:width]
+                    : [factory landscapeInlineAdaptiveBannerAdSizeWithWidth:width];
+  } else if ([FLTAdUtil isNotNull:maxHeight]) {
+    gadAdSize = [factory inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:width maxHeight:maxHeight];
+  } else {
+    gadAdSize = [factory currentOrientationInlineAdaptiveBannerSizeWithWidth:width];
+  }
+  self = [self initWithAdSize:gadAdSize];
+  if (self) {
+    _orientation = orientation;
+    _maxHeight = maxHeight;
   }
   return self;
 }
@@ -88,6 +134,21 @@
 }
 @end
 
+@implementation FLTLocationParams
+
+- (instancetype _Nonnull)initWithAccuracy:(NSNumber *_Nonnull)accuracy
+                                longitude:(NSNumber *_Nonnull)longitude
+                                 latitude:(NSNumber *_Nonnull)latitude {
+  self = [super init];
+  if (self) {
+    _accuracy = accuracy;
+    _longitude = longitude;
+    _latitude = latitude;
+  }
+  return self;
+}
+@end
+
 @implementation FLTFluidSize
 - (instancetype _Nonnull)init {
   self = [self initWithAdSize:kGADAdSizeFluid];
@@ -105,8 +166,13 @@
     extras.additionalParameters = @{@"npa" : @"1"};
     [request registerAdNetworkExtras:extras];
   }
-
+  request.neighboringContentURLStrings = _neighboringContentURLs;
   request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
+  if ([FLTAdUtil isNotNull:_location]) {
+    [request setLocationWithLatitude:_location.latitude.floatValue
+                           longitude:_location.longitude.floatValue
+                            accuracy:_location.accuracy.floatValue];
+  }
   return request;
 }
 @end
@@ -169,6 +235,8 @@
   GAMRequest *request = [GAMRequest request];
   request.keywords = self.keywords;
   request.contentURL = self.contentURL;
+  request.neighboringContentURLStrings = self.neighboringContentURLs;
+  request.publisherProvidedID = self.pubProvidedID;
 
   NSMutableDictionary<NSString *, id> *targetingDictionary =
       [NSMutableDictionary dictionaryWithDictionary:self.customTargeting];
@@ -180,7 +248,11 @@
     extras.additionalParameters = @{@"npa" : @"1"};
     [request registerAdNetworkExtras:extras];
   }
-
+  if ([FLTAdUtil isNotNull:self.location]) {
+    [request setLocationWithLatitude:self.location.latitude.floatValue
+                           longitude:self.location.longitude.floatValue
+                            accuracy:self.location.accuracy.floatValue];
+  }
   request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
   return request;
 }
@@ -236,6 +308,13 @@
 - (void)load {
   self.bannerView.delegate = self;
   [self.bannerView loadRequest:_adRequest.asGADRequest];
+}
+
+- (FLTAdSize *)getAdSize {
+  if (self.bannerView) {
+    return [[FLTAdSize alloc] initWithAdSize:self.bannerView.adSize];
+  }
+  return nil;
 }
 
 #pragma mark - GADBannerViewDelegate

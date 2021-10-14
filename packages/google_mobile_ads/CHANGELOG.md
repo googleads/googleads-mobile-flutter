@@ -5,19 +5,44 @@
     but it only works the first time the engine is attached to an activity.
   * Support for reusing the engine in another activity after the first one is destroyed is blocked 
     by this Flutter issue which affects all platform views: https://github.com/flutter/flutter/issues/88880.
+* Adds support for getRequestConfiguration API
+  * [Android API reference](https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-requestconfiguration-getrequestconfiguration)
+  * [iOS API reference](https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#requestconfiguration)
 * Adds support for Fluid Ad Size (Ad Manager only)
   * Fluid ads dynamically adjust their height based on their width. To help display them we've added a new
     ad container, `FluidAdManagerBannerAd`, and a new widget `FluidAdWidget`.
-    You can reference the [example app](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/fluid_example.dart) for an example of how to load and display a fluid ad.
-  * Android - https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size
-  * iOS - https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size
+  * You can see the [fluid_example.dart](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/fluid_example.dart) for a reference of how to load and display a fluid ad.
+  * [Android API reference](https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size)
+  * [iOS API reference](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size)
+* Adds `AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize()` to support getting an `AnchoredAdaptiveBannerAdSize` in the current orientation.
+  * Previously the user had to specify an orientation (portrait / landscape) to create an AnchoredAdaptiveBannerAdSize. It has been made optional with this version. SDK will determine the current orientation of the device and return an appropriate AdSize.
+  * More information on anchored adaptive banners can be found here:
+    * [Admob android](https://developers.google.com/admob/android/banner/anchored-adaptive)
+    * [Admob iOS](https://developers.google.com/admob/ios/banner/anchored-adaptive)
+    * [Ad manager android](https://developers.google.com/ad-manager/mobile-ads-sdk/android/banner/anchored-adaptive)
+    * [Ad manager iOS](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/banner/anchored-adaptive)
+* Adds support for inline adaptive banner ads.
+  * Inline adaptive banner ads are meant to be used in scrollable content. They are of variable height and can be as tall as the device screen.
+    They differ from Fluid ads in that they only resize once when the ad is loaded.
+    You can see the [inline_adaptive_example.dart](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/inline_adaptive_example.dart) for a reference of how to load and display 
+    inline adaptive banners.
+  * More information on inline adaptive banners can be found here:
+    * [Admob android](https://developers.google.com/admob/android/banner/inline-adaptive)
+    * [Admob iOS](https://developers.google.com/admob/ios/banner/inline-adaptive)
+    * [Ad manager android](https://developers.google.com/ad-manager/mobile-ads-sdk/android/banner/inline-adaptive)
+    * [Ad manager iOS](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/banner/inline-adaptive)
 * Fix for [#369](https://github.com/googleads/googleads-mobile-flutter/issues/369)
   * Fixes setting the app volume in android (doesn't affect iOS).
+* Adds support for setting location in `AdRequest` and `AdManagerAdRequest`.
+  * Both `AdRequest` and `AdManagerAdRequest` have a new param, `location`.
+  * Location data is not used to target Google Ads, but may be used by 3rd party ad networks.
+  * See other packages for getting the location. For example, https://pub.dev/packages/location.
+* Adds `publisherProvidedId` to `AdManagerAdRequest` to support [publisher provided ids](https://support.google.com/admanager/answer/2880055).
 
 ## 0.13.5
 
 * Adds support for app open. 
-  * Implementation guidance can be found [here](https://developers.devsite.corp.google.com/admob/flutter/app-open).
+  * Implementation guidance can be found [here](https://developers.google.com/admob/flutter/app-open).
   * As a reference please also see the [example app](https://github.com/googleads/googleads-mobile-flutter/tree/master/packages/app_open_example).
   * Best practices can be found [here](https://support.google.com/admob/answer/9341964?hl=en).
 

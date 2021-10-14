@@ -16,13 +16,16 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
+import android.location.Location;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import com.google.android.gms.ads.RequestConfiguration;
 import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
+import io.flutter.plugins.googlemobileads.FlutterAdSize.InlineAdaptiveBannerAdSize;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -46,10 +49,13 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_AD_ERROR = (byte) 139;
   private static final byte VALUE_RESPONSE_INFO = (byte) 140;
   private static final byte VALUE_ADAPTER_RESPONSE_INFO = (byte) 141;
-  static final byte VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE = (byte) 142;
-  static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 143;
-  static final byte VALUE_NATIVE_AD_OPTIONS = (byte) 144;
-  static final byte VALUE_VIDEO_OPTIONS = (byte) 145;
+  private static final byte VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE = (byte) 142;
+  private static final byte VALUE_SMART_BANNER_AD_SIZE = (byte) 143;
+  private static final byte VALUE_NATIVE_AD_OPTIONS = (byte) 144;
+  private static final byte VALUE_VIDEO_OPTIONS = (byte) 145;
+  private static final byte VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE = (byte) 146;
+  private static final byte VALUE_LOCATION_PARAMS = (byte) 147;
+  private static final byte VALUE_REQUEST_CONFIGURATION_PARAMS = (byte) 148;
 
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
@@ -73,12 +79,27 @@ class AdMessageCodec extends StandardMessageCodec {
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
     if (value instanceof FlutterAdSize) {
       writeAdSize(stream, (FlutterAdSize) value);
+    } else if (value instanceof FlutterAdManagerAdRequest) {
+      stream.write(VALUE_ADMANAGER_AD_REQUEST);
+      final FlutterAdManagerAdRequest request = (FlutterAdManagerAdRequest) value;
+      writeValue(stream, request.getKeywords());
+      writeValue(stream, request.getContentUrl());
+      writeValue(stream, request.getCustomTargeting());
+      writeValue(stream, request.getCustomTargetingLists());
+      writeValue(stream, request.getNonPersonalizedAds());
+      writeValue(stream, request.getNeighboringContentUrls());
+      writeValue(stream, request.getHttpTimeoutMillis());
+      writeValue(stream, request.getPublisherProvidedId());
+      writeValue(stream, request.getLocation());
     } else if (value instanceof FlutterAdRequest) {
       stream.write(VALUE_AD_REQUEST);
       final FlutterAdRequest request = (FlutterAdRequest) value;
       writeValue(stream, request.getKeywords());
       writeValue(stream, request.getContentUrl());
       writeValue(stream, request.getNonPersonalizedAds());
+      writeValue(stream, request.getNeighboringContentUrls());
+      writeValue(stream, request.getHttpTimeoutMillis());
+      writeValue(stream, request.getLocation());
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
       stream.write(VALUE_REWARD_ITEM);
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;
@@ -111,14 +132,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, error.code);
       writeValue(stream, error.domain);
       writeValue(stream, error.message);
-    } else if (value instanceof FlutterAdManagerAdRequest) {
-      stream.write(VALUE_ADMANAGER_AD_REQUEST);
-      final FlutterAdManagerAdRequest request = (FlutterAdManagerAdRequest) value;
-      writeValue(stream, request.getKeywords());
-      writeValue(stream, request.getContentUrl());
-      writeValue(stream, request.getCustomTargeting());
-      writeValue(stream, request.getCustomTargetingLists());
-      writeValue(stream, request.getNonPersonalizedAds());
     } else if (value instanceof FlutterAdapterStatus.AdapterInitializationState) {
       stream.write(VALUE_INITIALIZATION_STATE);
       final FlutterAdapterStatus.AdapterInitializationState state =
@@ -157,12 +170,26 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, options.requestCustomMuteThisAd);
       writeValue(stream, options.shouldRequestMultipleImages);
       writeValue(stream, options.shouldReturnUrlsForImageAssets);
+    } else if (value instanceof RequestConfiguration) {
+      stream.write(VALUE_REQUEST_CONFIGURATION_PARAMS);
+      RequestConfiguration params = (RequestConfiguration) value;
+      writeValue(stream, params.getMaxAdContentRating());
+      writeValue(stream, params.getTagForChildDirectedTreatment());
+      writeValue(stream, params.getTagForUnderAgeOfConsent());
+      writeValue(stream, params.getTestDeviceIds());
     } else if (value instanceof FlutterVideoOptions) {
       stream.write(VALUE_VIDEO_OPTIONS);
       FlutterVideoOptions options = (FlutterVideoOptions) value;
       writeValue(stream, options.clickToExpandRequested);
       writeValue(stream, options.customControlsRequested);
       writeValue(stream, options.startMuted);
+    } else if (value instanceof Location) {
+      stream.write(VALUE_LOCATION_PARAMS);
+      Location location = (Location) value;
+      writeValue(stream, location.getAccuracy());
+      writeValue(stream, location.getLongitude());
+      writeValue(stream, location.getLatitude());
+      writeValue(stream, location.getTime());
     } else {
       super.writeValue(stream, value);
     }
@@ -172,6 +199,14 @@ class AdMessageCodec extends StandardMessageCodec {
   @Override
   protected Object readValueOfType(byte type, ByteBuffer buffer) {
     switch (type) {
+      case VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE:
+        {
+          final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
+          final Integer height = (Integer) readValueOfType(buffer.get(), buffer);
+          final Integer orientation = (Integer) readValueOfType(buffer.get(), buffer);
+          return new FlutterAdSize.InlineAdaptiveBannerAdSize(
+              adSizeFactory, context, width, orientation, height);
+        }
       case VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE:
         final String orientation = (String) readValueOfType(buffer.get(), buffer);
         final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
@@ -190,6 +225,9 @@ class AdMessageCodec extends StandardMessageCodec {
             .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))
             .setContentUrl((String) readValueOfType(buffer.get(), buffer))
             .setNonPersonalizedAds(booleanValueOf(readValueOfType(buffer.get(), buffer)))
+            .setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer))
+            .setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer))
+            .setLocation((Location) readValueOfType(buffer.get(), buffer))
             .build();
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
@@ -219,14 +257,18 @@ class AdMessageCodec extends StandardMessageCodec {
             (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer));
       case VALUE_ADMANAGER_AD_REQUEST:
-        return new FlutterAdManagerAdRequest.Builder()
-            .setKeywords((List<String>) readValueOfType(buffer.get(), buffer))
-            .setContentUrl((String) readValueOfType(buffer.get(), buffer))
-            .setCustomTargeting((Map<String, String>) readValueOfType(buffer.get(), buffer))
-            .setCustomTargetingLists(
-                (Map<String, List<String>>) readValueOfType(buffer.get(), buffer))
-            .setNonPersonalizedAds((Boolean) readValueOfType(buffer.get(), buffer))
-            .build();
+        FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
+        builder.setKeywords((List<String>) readValueOfType(buffer.get(), buffer));
+        builder.setContentUrl((String) readValueOfType(buffer.get(), buffer));
+        builder.setCustomTargeting((Map<String, String>) readValueOfType(buffer.get(), buffer));
+        builder.setCustomTargetingLists(
+            (Map<String, List<String>>) readValueOfType(buffer.get(), buffer));
+        builder.setNonPersonalizedAds((Boolean) readValueOfType(buffer.get(), buffer));
+        builder.setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer));
+        builder.setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer));
+        builder.setPublisherProvidedId((String) readValueOfType(buffer.get(), buffer));
+        builder.setLocation((Location) readValueOfType(buffer.get(), buffer));
+        return builder.build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);
         switch (state) {
@@ -263,13 +305,34 @@ class AdMessageCodec extends StandardMessageCodec {
             (Boolean) readValueOfType(buffer.get(), buffer),
             (Boolean) readValueOfType(buffer.get(), buffer),
             (Boolean) readValueOfType(buffer.get(), buffer));
+      case VALUE_REQUEST_CONFIGURATION_PARAMS:
+        RequestConfiguration.Builder rcb = new RequestConfiguration.Builder();
+        rcb.setMaxAdContentRating((String) readValueOfType(buffer.get(), buffer));
+        rcb.setTagForChildDirectedTreatment((Integer) readValueOfType(buffer.get(), buffer));
+        rcb.setTagForUnderAgeOfConsent((Integer) readValueOfType(buffer.get(), buffer));
+        rcb.setTestDeviceIds((List<String>) readValueOfType(buffer.get(), buffer));
+        return rcb.build();
+      case VALUE_LOCATION_PARAMS:
+        Location location = new Location("");
+        // This is necessary because StandardMessageCodec converts floats to double.
+        location.setAccuracy(((Double) readValueOfType(buffer.get(), buffer)).floatValue());
+        location.setLongitude((double) readValueOfType(buffer.get(), buffer));
+        location.setLatitude((double) readValueOfType(buffer.get(), buffer));
+        location.setTime((long) readValueOfType(buffer.get(), buffer));
+        return location;
       default:
         return super.readValueOfType(type, buffer);
     }
   }
 
   protected void writeAdSize(ByteArrayOutputStream stream, FlutterAdSize value) {
-    if (value instanceof FlutterAdSize.AnchoredAdaptiveBannerAdSize) {
+    if (value instanceof FlutterAdSize.InlineAdaptiveBannerAdSize) {
+      final InlineAdaptiveBannerAdSize size = (InlineAdaptiveBannerAdSize) value;
+      stream.write(VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE);
+      writeValue(stream, size.width);
+      writeValue(stream, size.maxHeight);
+      writeValue(stream, size.orientation);
+    } else if (value instanceof FlutterAdSize.AnchoredAdaptiveBannerAdSize) {
       stream.write(VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE);
       final FlutterAdSize.AnchoredAdaptiveBannerAdSize size =
           (FlutterAdSize.AnchoredAdaptiveBannerAdSize) value;
