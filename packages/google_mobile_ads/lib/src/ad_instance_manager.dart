@@ -611,6 +611,12 @@ class AdInstanceManager {
     );
   }
 
+  /// Gets the global [RequestConfiguration].
+  Future<RequestConfiguration> getRequestConfiguration() async {
+    return (await instanceManager.channel.invokeMethod<RequestConfiguration>(
+        'MobileAds#getRequestConfiguration'))!;
+  }
+
   /// Set the [RequestConfiguration] to apply for future ad requests.
   Future<void> updateRequestConfiguration(
       RequestConfiguration requestConfiguration) {
@@ -712,6 +718,7 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueVideoOptions = 145;
   static const int _valueInlineAdaptiveBannerAdSize = 146;
   static const int _valueLocationParams = 147;
+  static const int _valueRequestConfigurationParams = 148;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -795,6 +802,12 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.clickToExpandRequested);
       writeValue(buffer, value.customControlsRequested);
       writeValue(buffer, value.startMuted);
+    } else if (value is RequestConfiguration) {
+      buffer.putUint8(_valueRequestConfigurationParams);
+      writeValue(buffer, value.maxAdContentRating);
+      writeValue(buffer, value.tagForChildDirectedTreatment);
+      writeValue(buffer, value.tagForUnderAgeOfConsent);
+      writeValue(buffer, value.testDeviceIds);
     } else if (value is LocationParams) {
       buffer.putUint8(_valueLocationParams);
       writeValue(buffer, value.accuracy);
@@ -970,6 +983,15 @@ class AdMessageCodec extends StandardMessageCodec {
           clickToExpandRequested: readValueOfType(buffer.getUint8(), buffer),
           customControlsRequested: readValueOfType(buffer.getUint8(), buffer),
           startMuted: readValueOfType(buffer.getUint8(), buffer),
+        );
+      case _valueRequestConfigurationParams:
+        return RequestConfiguration(
+          maxAdContentRating: readValueOfType(buffer.getUint8(), buffer),
+          tagForChildDirectedTreatment:
+              readValueOfType(buffer.getUint8(), buffer),
+          tagForUnderAgeOfConsent: readValueOfType(buffer.getUint8(), buffer),
+          testDeviceIds:
+              readValueOfType(buffer.getUint8(), buffer).cast<String>(),
         );
       case _valueLocationParams:
         return LocationParams(

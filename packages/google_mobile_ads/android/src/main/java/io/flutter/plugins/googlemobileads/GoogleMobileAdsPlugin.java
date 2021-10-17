@@ -255,6 +255,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
       case "MobileAds#initialize":
         flutterMobileAds.initialize(appContext, new FlutterInitializationListener(result));
         break;
+      case "MobileAds#getRequestConfiguration":
+        result.success(flutterMobileAds.getRequestConfiguration());
+        break;
       case "MobileAds#updateRequestConfiguration":
         RequestConfiguration.Builder builder = MobileAds.getRequestConfiguration().toBuilder();
         String maxAdContentRating = call.argument("maxAdContentRating");

@@ -35,6 +35,7 @@ import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.AdapterResponseInfo;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -51,6 +52,7 @@ import io.flutter.plugin.platform.PlatformViewRegistry;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -488,6 +490,27 @@ public class GoogleMobileAdsTest {
     plugin.onMethodCall(methodCall, result);
 
     verify(result).success(ArgumentMatchers.any(FlutterInitializationStatus.class));
+  }
+
+  @Test
+  public void testGetRequestConfiguration() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
+    RequestConfiguration.Builder rcb = new RequestConfiguration.Builder();
+    rcb.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_MA);
+    rcb.setTagForChildDirectedTreatment(RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE);
+    rcb.setTagForUnderAgeOfConsent(RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_TRUE);
+    rcb.setTestDeviceIds(new ArrayList<String>(Arrays.asList("id1", "id2")));
+    RequestConfiguration rc = rcb.build();
+    doReturn(rc).when(mockMobileAds).getRequestConfiguration();
+
+    MethodCall methodCall = new MethodCall("MobileAds#getRequestConfiguration", null);
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(rc);
   }
 
   @Test(expected = IllegalArgumentException.class)

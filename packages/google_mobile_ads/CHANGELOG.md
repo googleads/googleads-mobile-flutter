@@ -5,13 +5,16 @@
     but it only works the first time the engine is attached to an activity.
   * Support for reusing the engine in another activity after the first one is destroyed is blocked 
     by this Flutter issue which affects all platform views: https://github.com/flutter/flutter/issues/88880.
+* Adds support for getRequestConfiguration API
+  * [Android API reference](https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-requestconfiguration-getrequestconfiguration)
+  * [iOS API reference](https://developers.google.com/admob/ios/api/reference/Classes/GADMobileAds#requestconfiguration)
 * Adds support for Fluid Ad Size (Ad Manager only)
   * Fluid ads dynamically adjust their height based on their width. To help display them we've added a new
     ad container, `FluidAdManagerBannerAd`, and a new widget `FluidAdWidget`.
-    You can see the [fluid_example.dart](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/fluid_example.dart) for a reference of how to load and display a fluid ad.
-  * Android - https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size
-  * iOS - https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size
-* Adds `AdSize. getCurrentOrientationAnchoredAdaptiveBannerAdSize()` to support getting an `AnchoredAdaptiveBannerAdSize` in the current orientation.
+  * You can see the [fluid_example.dart](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/fluid_example.dart) for a reference of how to load and display a fluid ad.
+  * [Android API reference](https://developers.google.com/ad-manager/mobile-ads-sdk/android/native/styles#fluid_size)
+  * [iOS API reference](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/native/native-styles#fluid_size)
+* Adds `AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize()` to support getting an `AnchoredAdaptiveBannerAdSize` in the current orientation.
   * Previously the user had to specify an orientation (portrait / landscape) to create an AnchoredAdaptiveBannerAdSize. It has been made optional with this version. SDK will determine the current orientation of the device and return an appropriate AdSize.
   * More information on anchored adaptive banners can be found here:
     * [Admob android](https://developers.google.com/admob/android/banner/anchored-adaptive)
