@@ -15,6 +15,7 @@
 #import <GoogleMobileAds/GoogleMobileAds.h>
 #import "FLTAdInstanceManager_Internal.h"
 #import "FLTGoogleMobileAdsPlugin.h"
+#import "FLTMediationNetworkExtrasProvider.h"
 #import "FLTMobileAds_Internal.h"
 
 @class FLTAdInstanceManager;
@@ -84,6 +85,9 @@
 @property BOOL nonPersonalizedAds;
 @property NSArray<NSString *> *_Nullable neighboringContentURLs;
 @property FLTLocationParams *_Nullable location;
+@property NSString *_Nullable mediationExtrasIdentifier;
+@property id<FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
+
 - (GADRequest *_Nonnull)asGADRequest;
 @end
 

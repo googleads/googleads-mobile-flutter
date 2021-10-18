@@ -95,6 +95,7 @@
 		9E4163BA26CCE99300220C78 /* FLTAppOpenAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTAppOpenAdTest.m; path = ../../../ios/Tests/FLTAppOpenAdTest.m; sourceTree = "<group>"; };
 		9E5A534726AA235D00B9438D /* FLTAdUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FLTAdUtil.h; path = ../../ios/Classes/FLTAdUtil.h; sourceTree = "<group>"; };
 		9E5A534826AA235D00B9438D /* FLTAdUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTAdUtil.m; path = ../../ios/Classes/FLTAdUtil.m; sourceTree = "<group>"; };
+		9E79682A271D415600E06158 /* FLTMediationNetworkExtrasProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FLTMediationNetworkExtrasProvider.h; path = ../../ios/Classes/FLTMediationNetworkExtrasProvider.h; sourceTree = "<group>"; };
 		9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleMobileAds.xcframework; path = "Pods/Google-Mobile-Ads-SDK/Frameworks/GoogleMobileAdsFramework-Current/GoogleMobileAds.xcframework"; sourceTree = "<group>"; };
 		9EA7474C2637CD6800E0B0E4 /* FLTBannerAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTBannerAdTest.m; path = ../../../ios/Tests/FLTBannerAdTest.m; sourceTree = "<group>"; };
 		9EA7474D2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGAMBannerAdTest.m; path = ../../../ios/Tests/FLTGAMBannerAdTest.m; sourceTree = "<group>"; };
@@ -200,6 +201,7 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				9E79682A271D415600E06158 /* FLTMediationNetworkExtrasProvider.h */,
 				9E5A534726AA235D00B9438D /* FLTAdUtil.h */,
 				9E5A534826AA235D00B9438D /* FLTAdUtil.m */,
 				9EF4E6FB26392B230007E4FE /* FLTAd_Internal.h */,

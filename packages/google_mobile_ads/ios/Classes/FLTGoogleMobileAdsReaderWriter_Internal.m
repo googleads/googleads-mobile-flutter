@@ -92,6 +92,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.nonPersonalizedAds = nonPersonalizedAds.boolValue;
       request.neighboringContentURLs = [self readValueOfType:[self readByte]];
       request.location = [self readValueOfType:[self readByte]];
+      request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
       return request;
     }
     case FLTAdMobFieldRewardItem: {
@@ -156,6 +157,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.neighboringContentURLs = [self readValueOfType:[self readByte]];
       request.pubProvidedID = [self readValueOfType:[self readByte]];
       request.location = [self readValueOfType:[self readByte]];
+      request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
       return request;
     }
     case FLTAdMobFieldAdapterInitializationState: {
@@ -278,6 +280,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.neighboringContentURLs];
     [self writeValue:request.pubProvidedID];
     [self writeValue:request.location];
+    [self writeValue:request.mediationExtrasIdentifier];
   } else if ([value isKindOfClass:[FLTAdRequest class]]) {
     [self writeByte:FLTAdMobFieldAdRequest];
     FLTAdRequest *request = value;
@@ -286,6 +289,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:@(request.nonPersonalizedAds)];
     [self writeValue:request.neighboringContentURLs];
     [self writeValue:request.location];
+    [self writeValue:request.mediationExtrasIdentifier];
   } else if ([value isKindOfClass:[FLTRewardItem class]]) {
     [self writeByte:FLTAdMobFieldRewardItem];
     FLTRewardItem *item = value;

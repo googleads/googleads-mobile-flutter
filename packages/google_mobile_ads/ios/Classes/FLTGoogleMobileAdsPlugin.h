@@ -18,6 +18,7 @@
 
 #import "FLTAdInstanceManager_Internal.h"
 #import "FLTAd_Internal.h"
+#import "FLTMediationNetworkExtrasProvider.h"
 #import "FLTMobileAds_Internal.h"
 
 #define FLTLogWarning(format, ...) \
@@ -48,6 +49,14 @@
  * Flutter plugin providing access to the Google Mobile Ads API.
  */
 @interface FLTGoogleMobileAdsPlugin : NSObject <FlutterPlugin>
+
+/**
+ * TODO - this.
+ */
++ (BOOL)registerMediationNetworkExtrasProvider:(id<FLTMediationNetworkExtrasProvider> _Nonnull)mediationNetworkExtrasProvider
+                                     registery:(id<FlutterPluginRegistry> _Nonnull)registry;
+
+
 /**
  * Adds a `FLTNativeAdFactory` used to create a `GADNativeAdView`s from a Native Ad created
  * in Dart.
