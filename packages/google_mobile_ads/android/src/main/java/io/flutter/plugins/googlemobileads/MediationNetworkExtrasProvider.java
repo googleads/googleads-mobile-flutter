@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Provides network specific parameters when constructing an ad request.
  *
- * After you register a {@code MediationNetworkExtrasProvider} using {@link
+ * <p>After you register a {@code MediationNetworkExtrasProvider} using {@link
  * GoogleMobileAdsPlugin#registerMediationNetworkExtrasProvider(FlutterEngine,
  * MediationNetworkExtrasProvider)}, the plugin will use it to pass extras when constructing ad
  * requests.
@@ -32,8 +32,8 @@ public interface MediationNetworkExtrasProvider {
 
   /**
    * Gets mediation extras that should be included for an ad request with the {@code adUnitId} and
-   * {@code identifier}, as a map from adapter classes to their corresponding extras bundle.
-   * You can refer to each network's <a
+   * {@code identifier}, as a map from adapter classes to their corresponding extras bundle. You can
+   * refer to each network's <a
    * href="https://developers.google.com/admob/android/mediation/applovin#network-specific_parameters">documentation</a>
    * to see how to find the corresponding adapter class and create its extras. This will be called
    * whenever the plugin creates an ad request.

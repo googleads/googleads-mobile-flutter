@@ -19,6 +19,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
@@ -66,7 +67,7 @@ public class FlutterBannerAdTest {
     mockAdRequest = mock(AdRequest.class);
     final FlutterAdSize mockFlutterAdSize = mock(FlutterAdSize.class);
     adSize = new AdSize(1, 2);
-    when(mockFlutterRequest.asAdRequest()).thenReturn(mockAdRequest);
+    when(mockFlutterRequest.asAdRequest(anyString())).thenReturn(mockAdRequest);
     when(mockFlutterAdSize.getAdSize()).thenReturn(adSize);
     BannerAdCreator bannerAdCreator = mock(BannerAdCreator.class);
     mockAdView = mock(AdView.class);

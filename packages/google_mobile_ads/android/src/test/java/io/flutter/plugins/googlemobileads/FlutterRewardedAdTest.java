@@ -77,7 +77,7 @@ public class FlutterRewardedAdTest {
   private void setupAdmobMocks(@Nullable FlutterServerSideVerificationOptions options) {
     FlutterAdRequest mockFlutterAdRequest = mock(FlutterAdRequest.class);
     mockAdRequest = mock(AdRequest.class);
-    when(mockFlutterAdRequest.asAdRequest()).thenReturn(mockAdRequest);
+    when(mockFlutterAdRequest.asAdRequest(anyString())).thenReturn(mockAdRequest);
     flutterRewardedAd =
         new FlutterRewardedAd(
             1, mockManager, "testId", mockFlutterAdRequest, options, mockFlutterAdLoader);
@@ -86,7 +86,8 @@ public class FlutterRewardedAdTest {
   private void setupAdManagerMocks(@Nullable FlutterServerSideVerificationOptions options) {
     FlutterAdManagerAdRequest mockAdManagerFlutterRequest = mock(FlutterAdManagerAdRequest.class);
     mockAdManagerAdRequest = mock(AdManagerAdRequest.class);
-    when(mockAdManagerFlutterRequest.asAdManagerAdRequest()).thenReturn(mockAdManagerAdRequest);
+    when(mockAdManagerFlutterRequest.asAdManagerAdRequest(anyString()))
+        .thenReturn(mockAdManagerAdRequest);
     flutterRewardedAd =
         new FlutterRewardedAd(
             1, mockManager, "testId", mockAdManagerFlutterRequest, options, mockFlutterAdLoader);
