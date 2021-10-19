@@ -157,9 +157,7 @@ class FlutterAdRequest {
     this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
   }
 
-  /**
-   * Updates the {@link AdRequest.Builder} with the properties in this {@link FlutterAdRequest}.
-   */
+  /** Updates the {@link AdRequest.Builder} with the properties in this {@link FlutterAdRequest}. */
   protected AdRequest.Builder updateAdRequestBuilder(AdRequest.Builder builder, String adUnitId) {
     if (keywords != null) {
       for (final String keyword : keywords) {
@@ -169,9 +167,13 @@ class FlutterAdRequest {
     if (contentUrl != null) {
       builder.setContentUrl(contentUrl);
     }
-    if (mediationNetworkExtrasProvider != null && mediationExtrasIdentifier != null) {
-      Map<Class<? extends MediationExtrasReceiver>, Bundle> mediationNetworkExtras =
-          mediationNetworkExtrasProvider.getMediationExtras(adUnitId, mediationExtrasIdentifier);
+
+    Map<Class<? extends MediationExtrasReceiver>, Bundle> mediationNetworkExtras =
+        mediationNetworkExtrasProvider == null
+            ? null
+            : mediationNetworkExtrasProvider.getMediationExtras(
+                adUnitId, mediationExtrasIdentifier);
+    if (mediationNetworkExtras != null) {
       // Handle npa here so we don't override any admob extras.
       if (nonPersonalizedAds != null && nonPersonalizedAds) {
         Bundle extras = mediationNetworkExtras.get(AdMobAdapter.class);
@@ -181,8 +183,8 @@ class FlutterAdRequest {
         extras.putString("npa", "1");
         mediationNetworkExtras.put(AdMobAdapter.class, extras);
       }
-      for (Map.Entry<Class<? extends MediationExtrasReceiver>, Bundle> entry
-          : mediationNetworkExtras.entrySet()) {
+      for (Map.Entry<Class<? extends MediationExtrasReceiver>, Bundle> entry :
+          mediationNetworkExtras.entrySet()) {
         builder.addNetworkExtrasBundle(entry.getKey(), entry.getValue());
       }
     } else if (nonPersonalizedAds != null && nonPersonalizedAds) {

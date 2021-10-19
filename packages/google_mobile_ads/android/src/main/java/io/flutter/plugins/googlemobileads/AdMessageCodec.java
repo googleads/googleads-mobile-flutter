@@ -77,7 +77,7 @@ class AdMessageCodec extends StandardMessageCodec {
   }
 
   void setMediationNetworkExtrasProvider(
-      @NonNull MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
+      @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
     this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
   }
 

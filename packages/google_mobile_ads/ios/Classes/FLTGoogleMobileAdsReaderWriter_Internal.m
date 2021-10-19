@@ -56,7 +56,10 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 }
 
 - (FlutterStandardReader *_Nonnull)readerWithData:(NSData *_Nonnull)data {
-  return [[FLTGoogleMobileAdsReader alloc] initWithFactory:_adSizeFactory data:data];
+  FLTGoogleMobileAdsReader *reader =
+      [[FLTGoogleMobileAdsReader alloc] initWithFactory:_adSizeFactory data:data];
+  reader.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
+  return reader;
 }
 
 - (FlutterStandardWriter *_Nonnull)writerWithData:(NSMutableData *_Nonnull)data {
@@ -93,6 +96,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.neighboringContentURLs = [self readValueOfType:[self readByte]];
       request.location = [self readValueOfType:[self readByte]];
       request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
+      request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
       return request;
     }
     case FLTAdMobFieldRewardItem: {
@@ -158,6 +162,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.pubProvidedID = [self readValueOfType:[self readByte]];
       request.location = [self readValueOfType:[self readByte]];
       request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
+      request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
       return request;
     }
     case FLTAdMobFieldAdapterInitializationState: {

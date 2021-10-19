@@ -15,9 +15,7 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.location.Location;
-import android.os.Bundle;
 import androidx.annotation.Nullable;
-import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import java.util.List;
 import java.util.Map;

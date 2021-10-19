@@ -48,9 +48,7 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   void load() {
     if (manager != null && adUnitId != null && request != null) {
       flutterAdLoader.loadInterstitial(
-          adUnitId,
-          request.asAdRequest(adUnitId),
-          new DelegatingInterstitialAdLoadCallback(this));
+          adUnitId, request.asAdRequest(adUnitId), new DelegatingInterstitialAdLoadCallback(this));
     }
   }
 

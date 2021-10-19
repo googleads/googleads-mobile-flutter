@@ -88,7 +88,7 @@
 @property NSString *_Nullable mediationExtrasIdentifier;
 @property id<FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
 
-- (GADRequest *_Nonnull)asGADRequest;
+- (GADRequest *_Nonnull)asGADRequest:(NSString *_Nonnull)adUnitId;
 @end
 
 /**
@@ -137,7 +137,7 @@
 @property NSDictionary<NSString *, NSArray<NSString *> *> *_Nullable customTargetingLists;
 @property NSString *_Nullable pubProvidedID;
 
-- (GAMRequest *_Nonnull)asGAMRequest;
+- (GAMRequest *_Nonnull)asGAMRequest:(NSString *_Nonnull)adUnitId;
 @end
 
 @protocol FLTAd <NSObject>

@@ -51,11 +51,24 @@
 @interface FLTGoogleMobileAdsPlugin : NSObject <FlutterPlugin>
 
 /**
- * TODO - this.
+ * Registers a FLTMediationNetworkExtrasProvider used to provide mediation extras when the plugin
+ * creates ad requests.
+ *
+ * @param mediationNetworkExtrasProvider the FLTMediationNetworkExtrasProvider which will be used to
+ * get extras when ad requests are created.
+ * @param registry the FlutterPluginRegistry associated with the
+ * @return whether mediationNetworkExtrasProvider was successfuly registered to a
+ * FLTGoogleMobileAdsPlugin in the registry.
  */
-+ (BOOL)registerMediationNetworkExtrasProvider:(id<FLTMediationNetworkExtrasProvider> _Nonnull)mediationNetworkExtrasProvider
++ (BOOL)registerMediationNetworkExtrasProvider:
+            (id<FLTMediationNetworkExtrasProvider> _Nonnull)mediationNetworkExtrasProvider
                                      registery:(id<FlutterPluginRegistry> _Nonnull)registry;
 
+/*
+ * Unregisters any FLTMediationNetworkExtrasProvider that was associated with the
+ * FLTGoogleMobileAdsPlugin in registry.
+ */
++ (void)unregisterMediationNetworkExtrasProvider:(id<FlutterPluginRegistry> _Nonnull)registry;
 
 /**
  * Adds a `FLTNativeAdFactory` used to create a `GADNativeAdView`s from a Native Ad created

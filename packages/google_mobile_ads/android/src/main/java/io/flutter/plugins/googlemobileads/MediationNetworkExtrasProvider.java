@@ -7,26 +7,31 @@ import io.flutter.embedding.engine.FlutterEngine;
 import java.util.Map;
 
 /**
- * Provides mediation extras for ad requests.
- * TODO - reword this
- * If you wish to provide mediation extras, implement
- * this interface and provide an instance to
- * {@link GoogleMobileAdsPlugin#registerMediationNetworkExtrasProvider(FlutterEngine,
- * MediationNetworkExtrasProvider)}.
+ * Provides network specific parameters when constructing an ad request.
+ *
+ * After you register a {@code MediationNetworkExtrasProvider} using {@link
+ * GoogleMobileAdsPlugin#registerMediationNetworkExtrasProvider(FlutterEngine,
+ * MediationNetworkExtrasProvider)}, the plugin will use it to pass extras when constructing ad
+ * requests.
  */
 public interface MediationNetworkExtrasProvider {
 
   /**
-   * Gets mediation extras that should be included for an ad request for the {@code adUnitId}
-   * and {@code identifier}.
+   * Gets mediation extras that should be included for an ad request with the {@code adUnitId} and
+   * {@code identifier}, as a map from adapter classes to their corresponding extras bundle.
+   * You can refer to each network's <a
+   * href="https://developers.google.com/admob/android/mediation/applovin#network-specific_parameters">documentation</a>
+   * to see how to find the corresponding adapter class and create its extras. This will be called
+   * whenever the plugin creates an ad request.
    *
    * @param adUnitId The ad unit for the associated ad request.
-   * @param identifier An optional identifier that comes from the associated ad request. This value
-   *                   can be provided when creating the dart ad request object, if you want to
-   *                   additional customization of mediation extras. TODO - reword this.
-   *
+   * @param identifier An optional identifier that comes from the associated dart ad request object.
+   *     This allows for additional control of which extras to include for an ad request, beyond
+   *     just the ad unit.
+   * @return A map of mediation adapter classes to their extras that should be included in the ad
+   *     request. If {@code null} is returned then no extras are added.
    */
+  @Nullable
   Map<Class<? extends MediationExtrasReceiver>, Bundle> getMediationExtras(
-      String adUnitId,
-      @Nullable String identifier);
+      String adUnitId, @Nullable String identifier);
 }

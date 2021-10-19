@@ -123,10 +123,18 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     return registerNativeAdFactory(gmaPlugin, factoryId, nativeAdFactory);
   }
 
-  /** TODO. */
+  /**
+   * Registers a {@link MediationNetworkExtrasProvider} used to provide network extras to the plugin
+   * when it creates ad requests.
+   *
+   * @param engine The {@link FlutterEngine} which should have an attached instance of this plugin.
+   * @param mediationNetworkExtrasProvider The {@link MediationNetworkExtrasProvider} which will be
+   *     used to provide network extras when ad requests are created.
+   * @return whether {@code mediationNetworkExtrasProvider} was registered to a
+   *    {@code GoogleMobileAdsPlugin} associated with {@code engine}.
+   */
   public static boolean registerMediationNetworkExtrasProvider(
-      FlutterEngine engine,
-      MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
+      FlutterEngine engine, MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
     final GoogleMobileAdsPlugin gmaPlugin =
         (GoogleMobileAdsPlugin) engine.getPlugins().get(GoogleMobileAdsPlugin.class);
     if (gmaPlugin == null) {
@@ -137,6 +145,25 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
       gmaPlugin.adMessageCodec.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
     }
     return true;
+  }
+
+  /**
+   * Unregisters any {@link MediationNetworkExtrasProvider} that have been previously registered
+   * with the plugin using {@code unregisterMediationNetworkExtrasProvider}.
+   *
+   * @param engine The {@link FlutterEngine} which should have an attached instance of this plugin.
+   */
+  public static void unregisterMediationNetworkExtrasProvider(FlutterEngine engine) {
+    final GoogleMobileAdsPlugin gmaPlugin =
+        (GoogleMobileAdsPlugin) engine.getPlugins().get(GoogleMobileAdsPlugin.class);
+    if (gmaPlugin == null) {
+      return;
+    }
+
+    if (gmaPlugin.adMessageCodec != null) {
+      gmaPlugin.adMessageCodec.setMediationNetworkExtrasProvider(null);
+    }
+    gmaPlugin.mediationNetworkExtrasProvider = null;
   }
 
   private static boolean registerNativeAdFactory(
