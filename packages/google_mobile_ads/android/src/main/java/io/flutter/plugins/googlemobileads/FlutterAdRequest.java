@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.mediation.MediationExtrasReceiver;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -174,17 +175,19 @@ class FlutterAdRequest {
             : mediationNetworkExtrasProvider.getMediationExtras(
                 adUnitId, mediationExtrasIdentifier);
     if (mediationNetworkExtras != null) {
+      Map<Class<? extends MediationExtrasReceiver>, Bundle> mediationNetworkExtrasCopy =
+          new HashMap<>(mediationNetworkExtras);
       // Handle npa here so we don't override any admob extras.
       if (nonPersonalizedAds != null && nonPersonalizedAds) {
-        Bundle extras = mediationNetworkExtras.get(AdMobAdapter.class);
+        Bundle extras = mediationNetworkExtrasCopy.get(AdMobAdapter.class);
         if (extras == null) {
           extras = new Bundle();
         }
         extras.putString("npa", "1");
-        mediationNetworkExtras.put(AdMobAdapter.class, extras);
+        mediationNetworkExtrasCopy.put(AdMobAdapter.class, extras);
       }
       for (Map.Entry<Class<? extends MediationExtrasReceiver>, Bundle> entry :
-          mediationNetworkExtras.entrySet()) {
+          mediationNetworkExtrasCopy.entrySet()) {
         builder.addNetworkExtrasBundle(entry.getKey(), entry.getValue());
       }
     } else if (nonPersonalizedAds != null && nonPersonalizedAds) {

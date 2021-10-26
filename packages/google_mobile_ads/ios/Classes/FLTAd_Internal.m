@@ -156,38 +156,52 @@
 }
 @end
 
-@implementation FLTAdRequest
-- (GADRequest *_Nonnull)asGADRequest:(NSString *_Nonnull)adUnitId {
-  GADRequest *request = [GADRequest request];
-  request.keywords = _keywords;
-  request.contentURL = _contentURL;
+@interface FLTAdRequest ()
+/// A helper method for adding network extras to the GADRequest.
+- (void)addNetworkExtrasToGADRequest:(GADRequest *_Nonnull)request
+                            adUnitId:(NSString *_Nonnull)adUnitId;
 
+@end
+
+@implementation FLTAdRequest
+
+- (void)addNetworkExtrasToGADRequest:(GADRequest *)request adUnitId:(NSString *_Nonnull)adUnitId {
   NSArray<id<GADAdNetworkExtras>> *extras =
       [_mediationNetworkExtrasProvider getMediationExtras:adUnitId
                                 mediationExtrasIdentifier:_mediationExtrasIdentifier];
+  BOOL addedNpaToGADExtras = false;
+
   if ([FLTAdUtil isNotNull:extras]) {
-    if (_nonPersonalizedAds) {
-      for (id<GADAdNetworkExtras> extra in extras) {
-        if ([extra isKindOfClass:[GADExtras class]]) {
-          GADExtras *gadExtras = (GADExtras *)extra;
-          NSMutableDictionary *newParams =
-              [[NSMutableDictionary alloc] initWithDictionary:gadExtras.additionalParameters];
-          newParams[@"npa"] = @"1";
-          gadExtras.additionalParameters = newParams;
-          [request registerAdNetworkExtras:gadExtras];
-        } else {
-          [request registerAdNetworkExtras:extra];
-        }
+    for (id<GADAdNetworkExtras> extra in extras) {
+      // If GADExtras are present and npa is true, add npa = 1 to the GADExtras
+      if ([extra isKindOfClass:[GADExtras class]] && _nonPersonalizedAds) {
+        GADExtras *gadExtras = (GADExtras *)extra;
+        NSMutableDictionary *newParams =
+            [[NSMutableDictionary alloc] initWithDictionary:gadExtras.additionalParameters];
+        newParams[@"npa"] = @"1";
+        gadExtras.additionalParameters = newParams;
+        [request registerAdNetworkExtras:gadExtras];
+        addedNpaToGADExtras = true;
+      } else {
+        [request registerAdNetworkExtras:extra];
       }
     }
-  } else if (_nonPersonalizedAds) {
+  }
+  if (_nonPersonalizedAds && !addedNpaToGADExtras) {
     GADExtras *extras = [[GADExtras alloc] init];
     extras.additionalParameters = @{@"npa" : @"1"};
     [request registerAdNetworkExtras:extras];
   }
+}
 
+- (GADRequest *_Nonnull)asGADRequest:(NSString *_Nonnull)adUnitId {
+  GADRequest *request = [GADRequest request];
+  request.keywords = _keywords;
+  request.contentURL = _contentURL;
   request.neighboringContentURLStrings = _neighboringContentURLs;
   request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
+  [self addNetworkExtrasToGADRequest:request adUnitId:adUnitId];
+
   if ([FLTAdUtil isNotNull:_location]) {
     [request setLocationWithLatitude:_location.latitude.floatValue
                            longitude:_location.longitude.floatValue
@@ -257,36 +271,13 @@
   request.contentURL = self.contentURL;
   request.neighboringContentURLStrings = self.neighboringContentURLs;
   request.publisherProvidedID = self.pubProvidedID;
-
-  NSMutableDictionary<NSString *, id> *targetingDictionary =
+  NSMutableDictionary<NSString *, NSString *> *targetingDictionary =
       [NSMutableDictionary dictionaryWithDictionary:self.customTargeting];
-  [targetingDictionary addEntriesFromDictionary:self.customTargetingLists];
-  request.customTargeting = targetingDictionary;
-
-  NSArray<id<GADAdNetworkExtras>> *extras =
-      [self.mediationNetworkExtrasProvider getMediationExtras:adUnitId
-                                    mediationExtrasIdentifier:self.mediationExtrasIdentifier];
-  if ([FLTAdUtil isNotNull:extras]) {
-    if (self.nonPersonalizedAds) {
-      for (id<GADAdNetworkExtras> extra in extras) {
-        if ([extra isKindOfClass:[GADExtras class]]) {
-          GADExtras *gadExtras = (GADExtras *)extra;
-          NSMutableDictionary *newParams =
-              [[NSMutableDictionary alloc] initWithDictionary:gadExtras.additionalParameters];
-          newParams[@"npa"] = @"1";
-          gadExtras.additionalParameters = newParams;
-          [request registerAdNetworkExtras:gadExtras];
-        } else {
-          [request registerAdNetworkExtras:extra];
-        }
-      }
-    }
-  } else if (self.nonPersonalizedAds) {
-    GADExtras *extras = [[GADExtras alloc] init];
-    extras.additionalParameters = @{@"npa" : @"1"};
-    [request registerAdNetworkExtras:extras];
+  for (NSString *key in self.customTargetingLists) {
+    targetingDictionary[key] = [self.customTargetingLists[key] componentsJoinedByString:@","];
   }
-
+  request.customTargeting = targetingDictionary;
+  [self addNetworkExtrasToGADRequest:request adUnitId:adUnitId];
   if ([FLTAdUtil isNotNull:self.location]) {
     [request setLocationWithLatitude:self.location.latitude.floatValue
                            longitude:self.location.longitude.floatValue

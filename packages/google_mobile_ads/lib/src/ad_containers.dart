@@ -236,7 +236,8 @@ class AdRequest {
         nonPersonalizedAds == other.nonPersonalizedAds &&
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
         httpTimeoutMillis == other.httpTimeoutMillis &&
-        location == other.location;
+        location == other.location &&
+        mediationExtrasIdentifier == other.mediationExtrasIdentifier;
   }
 }
 
