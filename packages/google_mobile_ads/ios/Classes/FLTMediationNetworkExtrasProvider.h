@@ -23,7 +23,7 @@
 @required
 
 /**
- * Get an array of GADAdNetworkExtras to include in the GADRequest for the given adUnitId and
+ * Gets an array of GADAdNetworkExtras to include in the GADRequest for the given adUnitId and
  * mediationExtrasIdentifier.
  *
  * @param adUnitId the ad unit id associated with the ad request

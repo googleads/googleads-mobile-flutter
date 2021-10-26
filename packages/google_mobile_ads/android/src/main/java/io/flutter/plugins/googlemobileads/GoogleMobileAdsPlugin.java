@@ -99,7 +99,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
      * @param customOptions Used to pass additional custom options to create the {@link
      *     com.google.android.gms.ads.nativead.NativeAdView}. Nullable.
      * @return a {@link com.google.android.gms.ads.nativead.NativeAdView} that is overlaid on top of
-     *     the FlutterView.
+     *     the FlutterView
      */
     NativeAdView createNativeAd(NativeAd nativeAd, Map<String, Object> customOptions);
   }
@@ -109,12 +109,12 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    * used to create {@link com.google.android.gms.ads.nativead.NativeAdView}s from a Native Ad
    * created in Dart.
    *
-   * @param engine maintains access to a GoogleMobileAdsPlugin instance.
+   * @param engine maintains access to a GoogleMobileAdsPlugin instance
    * @param factoryId a unique identifier for the ad factory. The Native Ad created in Dart includes
    *     a parameter that refers to this.
    * @param nativeAdFactory creates {@link com.google.android.gms.ads.nativead.NativeAdView}s when
-   *     Flutter NativeAds are created.
-   * @return whether the factoryId is unique and the nativeAdFactory was successfully added.
+   *     Flutter NativeAds are created
+   * @return whether the factoryId is unique and the nativeAdFactory was successfully added
    */
   public static boolean registerNativeAdFactory(
       FlutterEngine engine, String factoryId, NativeAdFactory nativeAdFactory) {
@@ -127,11 +127,11 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    * Registers a {@link MediationNetworkExtrasProvider} used to provide network extras to the plugin
    * when it creates ad requests.
    *
-   * @param engine The {@link FlutterEngine} which should have an attached instance of this plugin.
+   * @param engine The {@link FlutterEngine} which should have an attached instance of this plugin
    * @param mediationNetworkExtrasProvider The {@link MediationNetworkExtrasProvider} which will be
-   *     used to provide network extras when ad requests are created.
+   *     used to provide network extras when ad requests are created
    * @return whether {@code mediationNetworkExtrasProvider} was registered to a {@code
-   *     GoogleMobileAdsPlugin} associated with {@code engine}.
+   *     GoogleMobileAdsPlugin} associated with {@code engine}
    */
   public static boolean registerMediationNetworkExtrasProvider(
       FlutterEngine engine, MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
@@ -151,7 +151,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    * Unregisters any {@link MediationNetworkExtrasProvider} that have been previously registered
    * with the plugin using {@code unregisterMediationNetworkExtrasProvider}.
    *
-   * @param engine The {@link FlutterEngine} which should have an attached instance of this plugin.
+   * @param engine The {@link FlutterEngine} which should have an attached instance of this plugin
    */
   public static void unregisterMediationNetworkExtrasProvider(FlutterEngine engine) {
     final GoogleMobileAdsPlugin gmaPlugin =
@@ -184,12 +184,12 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    * used to create {@link com.google.android.gms.ads.nativead.NativeAdView}s from a Native Ad
    * created in Dart.
    *
-   * @param engine maintains access to a GoogleMobileAdsPlugin instance.
+   * @param engine maintains access to a GoogleMobileAdsPlugin instance
    * @param factoryId a unique identifier for the ad factory. The Native ad created in Dart includes
-   *     a parameter that refers to this.
+   *     a parameter that refers to this
    * @return the previous {@link
    *     io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory} associated with
-   *     this factoryId, or null if there was none for this factoryId.
+   *     this factoryId, or null if there was none for this factoryId
    */
   public static NativeAdFactory unregisterNativeAdFactory(FlutterEngine engine, String factoryId) {
     final FlutterPlugin gmaPlugin = engine.getPlugins().get(GoogleMobileAdsPlugin.class);
