@@ -65,7 +65,7 @@
 
 @implementation FLTAnchoredAdaptiveBannerSize
 - (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
-                             orientation:(NSString *)orientation
+                             orientation:(NSString *_Nullable)orientation
                                    width:(NSNumber *_Nonnull)width {
   GADAdSize size;
   if ([FLTAdUtil isNull:orientation]) {

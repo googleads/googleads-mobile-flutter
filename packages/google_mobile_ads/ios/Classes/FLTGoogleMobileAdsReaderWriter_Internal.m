@@ -362,10 +362,10 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeByte:FLTAdmobRequestConfigurationParams];
     GADRequestConfiguration *params = value;
     [self writeValue:params.maxAdContentRating];
-    // using nil temporarily for tagForUnderAgeOfConsent and tagForChildDirectedTreatment
+    // using null temporarily for tagForUnderAgeOfConsent and tagForChildDirectedTreatment
     // as there are no getters for them in GADRequestConfiguration.
-    [self writeValue:nil];
-    [self writeValue:nil];
+    [super writeValue:NSNull.null];
+    [super writeValue:NSNull.null];
     [self writeValue:params.testDeviceIdentifiers];
   } else if ([value isKindOfClass:[FLTLocationParams class]]) {
     [self writeByte:FLTAdmobFieldLocation];
