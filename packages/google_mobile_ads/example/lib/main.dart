@@ -14,10 +14,9 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads_example/anchored_adaptive_example.dart';
 import 'inline_adaptive_example.dart';
 import 'fluid_example.dart';
 import 'reusable_inline_example.dart';
@@ -50,9 +49,6 @@ class _MyAppState extends State<MyApp> {
 
   RewardedAd? _rewardedAd;
   int _numRewardedLoadAttempts = 0;
-
-  BannerAd? _anchoredBanner;
-  bool _loadingAnchoredBanner = false;
 
   @override
   void initState() {
@@ -154,56 +150,17 @@ class _MyAppState extends State<MyApp> {
     _rewardedAd = null;
   }
 
-  Future<void> _createAnchoredBanner(BuildContext context) async {
-    final AnchoredAdaptiveBannerAdSize? size =
-        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-            MediaQuery.of(context).size.width.truncate());
-
-    if (size == null) {
-      print('Unable to get height of anchored banner.');
-      return;
-    }
-
-    final BannerAd banner = BannerAd(
-      size: size,
-      request: request,
-      adUnitId: Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/6300978111'
-          : 'ca-app-pub-3940256099942544/2934735716',
-      listener: BannerAdListener(
-        onAdLoaded: (Ad ad) {
-          print('$BannerAd loaded.');
-          setState(() {
-            _anchoredBanner = ad as BannerAd?;
-          });
-        },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$BannerAd failedToLoad: $error');
-          ad.dispose();
-        },
-        onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
-        onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
-      ),
-    );
-    return banner.load();
-  }
-
   @override
   void dispose() {
     super.dispose();
     _interstitialAd?.dispose();
     _rewardedAd?.dispose();
-    _anchoredBanner?.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Builder(builder: (BuildContext context) {
-        if (!_loadingAnchoredBanner) {
-          _loadingAnchoredBanner = true;
-          _createAnchoredBanner(context);
-        }
         return Scaffold(
           appBar: AppBar(
             title: const Text('AdMob Plugin example app'),
@@ -230,6 +187,13 @@ class _MyAppState extends State<MyApp> {
                             builder: (context) => InlineAdaptiveExample()),
                       );
                       break;
+                    case 'Anchored adaptive':
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AnchoredAdaptiveExample()),
+                      );
+                      break;
                     default:
                       throw AssertionError('unexpected button: $result');
                   }
@@ -251,25 +215,15 @@ class _MyAppState extends State<MyApp> {
                     value: 'Inline adaptive',
                     child: Text('Inline adaptive'),
                   ),
+                  PopupMenuItem<String>(
+                    value: 'Anchored adaptive',
+                    child: Text('Anchored adaptive'),
+                  ),
                 ],
               ),
             ],
           ),
-          body: SafeArea(
-            child: Stack(
-              alignment: AlignmentDirectional.bottomCenter,
-              children: <Widget>[
-                ReusableInlineExample(),
-                if (_anchoredBanner != null)
-                  Container(
-                    color: Colors.green,
-                    width: _anchoredBanner!.size.width.toDouble(),
-                    height: _anchoredBanner!.size.height.toDouble(),
-                    child: AdWidget(ad: _anchoredBanner!),
-                  ),
-              ],
-            ),
-          ),
+          body: SafeArea(child: ReusableInlineExample()),
         );
       }),
     );
