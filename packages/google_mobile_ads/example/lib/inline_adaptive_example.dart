@@ -62,9 +62,9 @@ class _InlineAdaptiveExampleState extends State<InlineAdaptiveExample> {
         onAdLoaded: (Ad ad) async {
           print('Inline adaptive banner loaded: ${ad.responseInfo}');
 
-          // After the ad is loaded, get the most ad size from the platform
-          // ad object and use it to update the height of the container. This is
-          // necessary because the height can change after the ad is loaded.
+          // After the ad is loaded, get the platform ad size and use it to
+          // update the height of the container. This is necessary because the
+          // height can change after the ad is loaded.
           AdManagerBannerAd bannerAd = (ad as AdManagerBannerAd);
           final AdSize? size = await bannerAd.getPlatformAdSize();
           if (size == null) {
