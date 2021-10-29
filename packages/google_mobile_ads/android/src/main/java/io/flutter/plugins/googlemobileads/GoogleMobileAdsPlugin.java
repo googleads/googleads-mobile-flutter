@@ -463,10 +463,18 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         break;
       case "getAdSize":
         FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
-        if (ad instanceof FlutterBannerAd) {
+        if (ad == null) {
+          // This was called on a dart ad container that hasn't been loaded yet.
+          result.success(null);
+        } else if (ad instanceof FlutterBannerAd) {
           result.success(((FlutterBannerAd) ad).getAdSize());
         } else if (ad instanceof FlutterAdManagerBannerAd) {
           result.success(((FlutterAdManagerBannerAd) ad).getAdSize());
+        } else {
+          result.error(
+              Constants.ERROR_CODE_UNEXPECTED_AD_TYPE,
+              "Unexpected ad type for getAdSize: " + ad,
+              null);
         }
         break;
       default:

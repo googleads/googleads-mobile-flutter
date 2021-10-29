@@ -19,6 +19,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'constants.dart';
 
 /// This example demonstrates inline adaptive banner ads.
+///
+/// Loads and shows an inline adaptive banner ad in a scrolling view,
+/// and reloads the ad when the orientation changes.
 class InlineAdaptiveExample extends StatefulWidget {
   @override
   _InlineAdaptiveExampleState createState() => _InlineAdaptiveExampleState();
@@ -29,17 +32,25 @@ class _InlineAdaptiveExampleState extends State<InlineAdaptiveExample> {
   AdManagerBannerAd? _inlineAdaptiveAd;
   bool _isLoaded = false;
   AdSize? _adSize;
+  late Orientation _currentOrientation;
 
   double get _adWidth => MediaQuery.of(context).size.width - (2 * _insets);
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _currentOrientation = MediaQuery.of(context).orientation;
     _loadAd();
   }
 
   void _loadAd() async {
-    // Create the ad object and load an ad.
+    await _inlineAdaptiveAd?.dispose();
+    setState(() {
+      _inlineAdaptiveAd = null;
+      _isLoaded = false;
+    });
+
+    // Get an inline adaptive size for the current orientation.
     AdSize size = AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(
         _adWidth.truncate());
 
@@ -48,17 +59,24 @@ class _InlineAdaptiveExampleState extends State<InlineAdaptiveExample> {
       sizes: [size],
       request: AdManagerAdRequest(),
       listener: AdManagerBannerAdListener(
-        onAdLoaded: (Ad ad) {
-          setState(() {
-            // When the ad is loaded, get the ad size and use it to set
-            // the height of the ad container.
-            _inlineAdaptiveAd = ad as AdManagerBannerAd;
-            _isLoaded = true;
-            _inlineAdaptiveAd?.getPlatformAdSize().then((size) => setState(() {
-                  _adSize = size;
-                }));
-          });
+        onAdLoaded: (Ad ad) async {
           print('Inline adaptive banner loaded: ${ad.responseInfo}');
+
+          // After the ad is loaded, get the most ad size from the platform
+          // ad object and use it to update the height of the container. This is
+          // necessary because the height can change after the ad is loaded.
+          AdManagerBannerAd bannerAd = (ad as AdManagerBannerAd);
+          final AdSize? size = await bannerAd.getPlatformAdSize();
+          if (size == null) {
+            print('Error: getPlatformAdSize() returned null for $bannerAd');
+            return;
+          }
+
+          setState(() {
+            _inlineAdaptiveAd = bannerAd;
+            _isLoaded = true;
+            _adSize = size;
+          });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('Inline adaptive banner failedToLoad: $error');
@@ -67,6 +85,36 @@ class _InlineAdaptiveExampleState extends State<InlineAdaptiveExample> {
       ),
     );
     await _inlineAdaptiveAd!.load();
+  }
+
+  /// Gets a widget containing the ad, if one is loaded.
+  ///
+  /// Returns an empty container if no ad is loaded, or the orientation
+  /// has changed. Also loads a new ad if the orientation changes.
+  Widget _getAdWidget() {
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        if (_currentOrientation == orientation &&
+            _inlineAdaptiveAd != null &&
+            _isLoaded &&
+            _adSize != null) {
+          return Align(
+              child: Container(
+            width: _adWidth,
+            height: _adSize!.height.toDouble(),
+            child: AdWidget(
+              ad: _inlineAdaptiveAd!,
+            ),
+          ));
+        }
+        // Reload the ad if the orientation changes.
+        if (_currentOrientation != orientation) {
+          _currentOrientation = orientation;
+          _loadAd();
+        }
+        return Container();
+      },
+    );
   }
 
   @override
@@ -85,18 +133,8 @@ class _InlineAdaptiveExampleState extends State<InlineAdaptiveExample> {
               );
             },
             itemBuilder: (BuildContext context, int index) {
-              if (index == 1 &&
-                  _inlineAdaptiveAd != null &&
-                  _isLoaded &&
-                  _adSize != null) {
-                return Align(
-                    child: Container(
-                  width: _adWidth,
-                  height: _adSize!.height.toDouble(),
-                  child: AdWidget(
-                    ad: _inlineAdaptiveAd!,
-                  ),
-                ));
+              if (index == 1) {
+                return _getAdWidget();
               }
               return Text(
                 Constants.placeholderText,
