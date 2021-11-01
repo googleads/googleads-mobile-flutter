@@ -125,6 +125,12 @@ class AdInstanceManager {
     arguments.put("eventName", "onAppEvent");
     arguments.put("name", name);
     arguments.put("data", data);
+
+    FlutterAd ad = ads.get(adId);
+    if(ad.getClass() == FlutterAdManagerBannerAd.class){
+      ((FlutterAdManagerBannerAd) ad).recordImpression();
+    }
+    
     invokeOnAdEvent(arguments);
   }
 

@@ -348,7 +348,10 @@ void main() {
       await tester.pumpWidget(
         Builder(
           builder: (BuildContext context) {
-            AdWidget widget = AdWidget(ad: native);
+            AdWidget widget = AdWidget(
+              ad: native,
+              useHybridComposition: true,
+            );
             Widget buildWidget = widget.createElement().build();
             expect(buildWidget, isA<PlatformViewLink>());
             return widget;
@@ -372,7 +375,10 @@ void main() {
       await tester.pumpWidget(
         Builder(
           builder: (BuildContext context) {
-            AdWidget widget = AdWidget(ad: native);
+            AdWidget widget = AdWidget(
+              ad: native,
+              useHybridComposition: true,
+            );
             Widget buildWidget = widget.createElement().build();
             expect(buildWidget, isA<PlatformViewLink>());
             return widget;
