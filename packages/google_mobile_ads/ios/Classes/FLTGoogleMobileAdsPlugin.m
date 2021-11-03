@@ -97,7 +97,7 @@
 
 + (BOOL)registerMediationNetworkExtrasProvider:
             (id<FLTMediationNetworkExtrasProvider> _Nonnull)mediationNetworkExtrasProvider
-                                     registery:(id<FlutterPluginRegistry> _Nonnull)registry {
+                                      registry:(id<FlutterPluginRegistry> _Nonnull)registry {
   NSString *pluginClassName = NSStringFromClass([FLTGoogleMobileAdsPlugin class]);
   FLTGoogleMobileAdsPlugin *adMobPlugin =
       (FLTGoogleMobileAdsPlugin *)[registry valuePublishedByPlugin:pluginClassName];

@@ -57,12 +57,12 @@
  * @param mediationNetworkExtrasProvider the FLTMediationNetworkExtrasProvider which will be used to
  * get extras when ad requests are created.
  * @param registry the associated FlutterPluginRegistry the plugin will be attached to
- * @return whether mediationNetworkExtrasProvider was successfuly registered to a
+ * @return whether mediationNetworkExtrasProvider was successfully registered to a
  * FLTGoogleMobileAdsPlugin in the registry.
  */
 + (BOOL)registerMediationNetworkExtrasProvider:
             (id<FLTMediationNetworkExtrasProvider> _Nonnull)mediationNetworkExtrasProvider
-                                     registery:(id<FlutterPluginRegistry> _Nonnull)registry;
+                                      registry:(id<FlutterPluginRegistry> _Nonnull)registry;
 
 /*
  * Unregisters any FLTMediationNetworkExtrasProvider that was associated with the
