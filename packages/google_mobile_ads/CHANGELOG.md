@@ -11,6 +11,9 @@
           }
       }
       ```
+    
+## 0.13.6
+
 * Partial fix for [#265](https://github.com/googleads/googleads-mobile-flutter/issues/265).
   * The partial fix allows you to load ads from a cached flutter engine in the add to app scenario,
     but it only works the first time the engine is attached to an activity.
