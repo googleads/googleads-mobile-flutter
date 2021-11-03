@@ -59,7 +59,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   // This is always null when not using v2 embedding.
   @Nullable private FlutterPluginBinding pluginBinding;
   @Nullable private AdInstanceManager instanceManager;
-  @Nullable private ActivityPluginBinding activityBinding;
   @Nullable private AdMessageCodec adMessageCodec;
   private final Map<String, NativeAdFactory> nativeAdFactories = new HashMap<>();
   @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
@@ -245,7 +244,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
 
   @Override
   public void onAttachedToActivity(ActivityPluginBinding binding) {
-    activityBinding = binding;
     if (instanceManager != null) {
       instanceManager.setActivity(binding.getActivity());
     }
