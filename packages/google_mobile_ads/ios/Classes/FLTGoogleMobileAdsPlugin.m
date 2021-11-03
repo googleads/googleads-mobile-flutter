@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "FLTGoogleMobileAdsPlugin.h"
+#import "FLTAdUtil.h"
 
 @interface FLTGoogleMobileAdsPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
@@ -324,9 +325,17 @@
       result(nil);
     }
   } else if ([call.method isEqualToString:@"getAdSize"]) {
-    FLTBannerAd *ad = (FLTBannerAd *)[_manager adFor:call.arguments[@"adId"]];
-    result([ad getAdSize]);
-    ;
+    id<FLTAd> ad = [_manager adFor:call.arguments[@"adId"]];
+    if ([FLTAdUtil isNull:ad]) {
+      // Called on an ad that hasn't been loaded yet.
+      result(nil);
+    }
+    if ([ad isKindOfClass:[FLTBannerAd class]]) {
+      FLTBannerAd *bannerAd = (FLTBannerAd *)ad;
+      result([bannerAd getAdSize]);
+    } else {
+      result(FlutterMethodNotImplemented);
+    }
   } else {
     result(FlutterMethodNotImplemented);
   }

@@ -18,4 +18,6 @@ package io.flutter.plugins.googlemobileads;
 public class Constants {
   /** Version request agent. Should be bumped alongside plugin versions. */
   public static final String REQUEST_AGENT_PREFIX_VERSIONED = "Flutter-GMA-0.13.6";
+
+  static final String ERROR_CODE_UNEXPECTED_AD_TYPE = "unexpected_ad_type";
 }
