@@ -1,5 +1,16 @@
-## 0.13.6
+## 0.14.0
 
+* Fix for Android 12 issue [#330](https://github.com/googleads/googleads-mobile-flutter/issues/330)
+  * This will break compilation on android if you do not already set `compileSdkVersion` to `31`, or override the WorkManager dependency to < 2.7.0:
+      ```
+      dependencies {
+          implementation('androidx.work:work-runtime') {
+              version {
+                  strictly '2.6.0'
+              }
+          }
+      }
+      ```
 * Partial fix for [#265](https://github.com/googleads/googleads-mobile-flutter/issues/265).
   * The partial fix allows you to load ads from a cached flutter engine in the add to app scenario,
     but it only works the first time the engine is attached to an activity.
