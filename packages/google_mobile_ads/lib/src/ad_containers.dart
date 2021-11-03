@@ -945,9 +945,9 @@ class AdManagerBannerAd extends AdWithView {
 
   /// Returns the AdSize of the associated platform ad object.
   ///
-  /// The dimensions of the [AdSize] returned here may differ from [size],
-  /// depending on what type of [AdSize] was used.
   /// The future will resolve to null if [load] has not been called yet.
+  /// The dimensions of the [AdSize] returned here may differ from [sizes],
+  /// depending on what type of [AdSize] was used.
   Future<AdSize?> getPlatformAdSize() async {
     return await instanceManager.getAdSize(this);
   }
