@@ -53,4 +53,11 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // If you do not want to target android 12, then explicitly override the
+    // WorkManager dependency.
+    implementation('androidx.work:work-runtime') {
+        version {
+            strictly '2.6.0'
+        }
+    }
 }
