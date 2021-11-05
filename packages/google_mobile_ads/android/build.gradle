@@ -37,6 +37,7 @@ android {
             because 'previous versions have a bug impacting this android 12 behavior'
         }
       }
+      implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
       testImplementation 'junit:junit:4.12'
       testImplementation 'org.hamcrest:hamcrest:2.2'
       testImplementation 'org.mockito:mockito-inline:3.9.0'
