@@ -38,11 +38,8 @@ final class AppStateNotifier implements LifecycleEventObserver, MethodCallHandle
       "plugins.flutter.io/google_mobile_ads/app_state_event";
 
   @NonNull private MethodChannel methodChannel;
-
   @NonNull private EventChannel eventChannel;
-
   @NonNull private BinaryMessenger binaryMessenger;
-
   @Nullable private EventSink events;
 
   AppStateNotifier(BinaryMessenger binaryMessenger) {
