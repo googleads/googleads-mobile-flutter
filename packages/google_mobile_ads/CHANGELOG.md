@@ -25,6 +25,11 @@
     ```dart
       AdRequest request = AdRequest(extras: {'rdp': '1'});
     ```
+
+* Adds APIs to support passing network extras to mediation adapters.
+  * See the mediation example app [README](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/app_open_example/README.md)
+    for more details on how to use these APIs.
+    
 ## 0.13.6
 
 * Partial fix for [#265](https://github.com/googleads/googleads-mobile-flutter/issues/265).
