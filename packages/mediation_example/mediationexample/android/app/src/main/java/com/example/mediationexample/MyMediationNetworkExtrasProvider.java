@@ -4,7 +4,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.applovin.mediation.AppLovinExtras;
 import com.applovin.mediation.ApplovinAdapter;
-import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.mediation.MediationExtrasReceiver;
 import io.flutter.plugins.googlemobileads.MediationNetworkExtrasProvider;
 import java.util.HashMap;
@@ -27,9 +26,6 @@ final class MyMediationNetworkExtrasProvider implements MediationNetworkExtrasPr
     Map<Class<? extends MediationExtrasReceiver>, Bundle> extras = new HashMap<>();
     extras.put(ApplovinAdapter.class, appLovinBundle);
 
-    Bundle admobExtras = new Bundle();
-    admobExtras.putString("someString", "2");
-    extras.put(AdMobAdapter.class, admobExtras);
     return extras;
   }
 }

@@ -41,8 +41,11 @@ public class MainActivity extends FlutterActivity {
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
     super.configureFlutterEngine(flutterEngine);
 
+    // Setup a method channel for calling APIs in the AppLovin SDK.
     new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL_NAME)
         .setMethodCallHandler(new MyMediationMethodCallHandler(this));
+
+    // Register your MediationNetworkExtrasProvider to provide network extras to ad requests.
     GoogleMobileAdsPlugin.registerMediationNetworkExtrasProvider(
         flutterEngine, new MyMediationNetworkExtrasProvider());
   }

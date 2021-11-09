@@ -6,7 +6,13 @@ import 'package:mediationexample/my_method_channel.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
+  // Initialize the SDK before making an ad request.
+  // You can check each adapter's initialization status in the callback.
+  MobileAds.instance.initialize().then((initializationStatus) {
+    initializationStatus.adapterStatuses.forEach((key, value) {
+      debugPrint('Adapter status for $key: ${value.description}');
+    });
+  });
   MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
       testDeviceIds: ['32CD20B4326E0901E14763495BA1ACD8']));
   runApp(MyApp());
@@ -74,8 +80,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    // platform.setAppLovinIsAgeRestrictedUser(false)
-    //     .then((_) => _loadBannerAd());
+
+    platform.setAppLovinIsAgeRestrictedUser(true);
+    platform.setHasUserConsent(false);
     _loadBannerAd();
   }
 
@@ -87,13 +94,14 @@ class _MyHomePageState extends State<MyHomePage> {
           : 'ca-app-pub-3212738706492790/8268506793',
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          print('$ad loaded: ${ad.responseInfo}');
+          debugPrint(
+              '$ad loaded: ${ad.responseInfo?.mediationAdapterClassName}');
           setState(() {
             _bannerIsLoaded = true;
           });
         },
         onAdFailedToLoad: (ad, error) =>
-            print('$ad failed to load: ${error.message}'),
+            debugPrint('$ad failed to load: ${error.message}'),
       ),
       request: AdRequest(nonPersonalizedAds: true),
     )..load();

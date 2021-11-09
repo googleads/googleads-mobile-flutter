@@ -1,3 +1,6 @@
+#import <AppLovinSDK/AppLovinSDK.h>
+#import <Flutter/Flutter.h>
+
 #import "AppDelegate.h"
 #import "FLTGoogleMobileAdsPlugin.h"
 #import "GeneratedPluginRegistrant.h"
@@ -5,14 +8,34 @@
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application
-    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication*)application
+    didFinishLaunchingWithOptions:(NSDictionary*)launchOptions {
   [GeneratedPluginRegistrant registerWithRegistry:self];
 
-  MyFLTMediationNetworkExtrasProvider *networkExtrasProvider =
+  // Register your network extras provider if you want to provide
+  // network extras to specific ad requests.
+  MyFLTMediationNetworkExtrasProvider* networkExtrasProvider =
       [[MyFLTMediationNetworkExtrasProvider alloc] init];
   [FLTGoogleMobileAdsPlugin registerMediationNetworkExtrasProvider:networkExtrasProvider
-                                                         registery:self];
+                                                          registry:self];
+
+  // Set up a method channel for calling methods in 3P SDKs.
+  FlutterViewController* controller = (FlutterViewController*)self.window.rootViewController;
+
+  FlutterMethodChannel* methodChannel =
+      [FlutterMethodChannel methodChannelWithName:@"com.example.mediationexample/mediation-channel"
+                                  binaryMessenger:controller.binaryMessenger];
+  [methodChannel setMethodCallHandler:^(FlutterMethodCall* call, FlutterResult result) {
+    if ([call.method isEqualToString:@"setIsAgeRestrictedUser"]) {
+      [ALPrivacySettings setIsAgeRestrictedUser:call.arguments[@"isAgeRestricted"]];
+      result(nil);
+    } else if ([call.method isEqualToString:@"setHasUserConsent"]) {
+      [ALPrivacySettings setHasUserConsent:call.arguments[@"hasUserConsent"]];
+      result(nil);
+    } else {
+      result(FlutterMethodNotImplemented);
+    }
+  }];
 
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }

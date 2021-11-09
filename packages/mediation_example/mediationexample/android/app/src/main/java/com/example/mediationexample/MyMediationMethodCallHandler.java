@@ -1,7 +1,6 @@
 package com.example.mediationexample;
 
 import android.content.Context;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import com.applovin.sdk.AppLovinPrivacySettings;
 import io.flutter.plugin.common.MethodCall;
@@ -30,7 +29,8 @@ final class MyMediationMethodCallHandler implements MethodCallHandler {
         result.success(null);
         break;
       default:
-        Log.w(TAG, "Unexpected method call: " + call.method);
+        result.notImplemented();
+        break;
     }
   }
 }

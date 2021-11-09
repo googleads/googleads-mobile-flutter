@@ -2,8 +2,7 @@ import 'package:flutter/services.dart';
 
 /// A wrapper around a [MethodChannel] for 3p mediation sdks.
 ///
-/// You may need this to support calling native platform APIs in 3P SDKs used
-/// for mediation.
+/// You may need a method channel to call APIs in 3P SDKs used for mediation.
 class MyMethodChannel {
   final MethodChannel _methodChannel =
       MethodChannel('com.example.mediationexample/mediation-channel');
