@@ -33,7 +33,7 @@
   FLTAdRequest *request = OCMClassMock([FLTAdRequest class]);
   OCMStub([request keywords]).andReturn(@[ @"apple" ]);
   GADRequest *gadRequest = OCMClassMock([GADRequest class]);
-  OCMStub([request asGADRequest]).andReturn(gadRequest);
+  OCMStub([request asGADRequest:[OCMArg any]]).andReturn(gadRequest);
   FLTServerSideVerificationOptions *serverSideVerificationOptions =
       OCMClassMock([FLTServerSideVerificationOptions class]);
   GADServerSideVerificationOptions *gadOptions =
@@ -49,7 +49,7 @@
   FLTGAMAdRequest *request = OCMClassMock([FLTGAMAdRequest class]);
   OCMStub([request keywords]).andReturn(@[ @"apple" ]);
   GAMRequest *gamRequest = OCMClassMock([GAMRequest class]);
-  OCMStub([request asGAMRequest]).andReturn(gamRequest);
+  OCMStub([request asGAMRequest:[OCMArg any]]).andReturn(gamRequest);
   FLTServerSideVerificationOptions *serverSideVerificationOptions =
       OCMClassMock([FLTServerSideVerificationOptions class]);
   GADServerSideVerificationOptions *gadOptions =
@@ -177,7 +177,7 @@
   FLTAdRequest *request = OCMClassMock([FLTAdRequest class]);
   OCMStub([request keywords]).andReturn(@[ @"apple" ]);
   GADRequest *gadRequest = OCMClassMock([GADRequest class]);
-  OCMStub([request asGADRequest]).andReturn(gadRequest);
+  OCMStub([request asGADRequest:[OCMArg any]]).andReturn(gadRequest);
   [self testFailedToLoad:request];
 }
 
@@ -185,7 +185,7 @@
   FLTGAMAdRequest *request = OCMClassMock([FLTGAMAdRequest class]);
   OCMStub([request keywords]).andReturn(@[ @"apple" ]);
   GAMRequest *gamRequest = OCMClassMock([GAMRequest class]);
-  OCMStub([request asGAMRequest]).andReturn(gamRequest);
+  OCMStub([request asGAMRequest:[OCMArg any]]).andReturn(gamRequest);
   [self testFailedToLoad:request];
 }
 
@@ -222,7 +222,7 @@
   FLTAdRequest *request = OCMClassMock([FLTAdRequest class]);
   OCMStub([request keywords]).andReturn(@[ @"apple" ]);
   GADRequest *gadRequest = OCMClassMock([GADRequest class]);
-  OCMStub([request asGADRequest]).andReturn(gadRequest);
+  OCMStub([request asGADRequest:[OCMArg any]]).andReturn(gadRequest);
   [self testLoadShowRewardedAd:request
                     gadOrGAMRequest:gadRequest
       serverSideVerificationOptions:nil];

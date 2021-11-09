@@ -33,7 +33,7 @@
   FLTGAMAdRequest *request = OCMClassMock([FLTGAMAdRequest class]);
   OCMStub([request keywords]).andReturn(@[ @"apple" ]);
   GAMRequest *gadRequest = OCMClassMock([GAMRequest class]);
-  OCMStub([request asGAMRequest]).andReturn(gadRequest);
+  OCMStub([request asGAMRequest:[OCMArg any]]).andReturn(gadRequest);
 
   UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
   FLTGAMInterstitialAd *ad = [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
@@ -132,7 +132,7 @@
   FLTGAMAdRequest *request = OCMClassMock([FLTGAMAdRequest class]);
   OCMStub([request keywords]).andReturn(@[ @"apple" ]);
   GAMRequest *gadRequest = OCMClassMock([GAMRequest class]);
-  OCMStub([request asGAMRequest]).andReturn(gadRequest);
+  OCMStub([request asGAMRequest:[OCMArg any]]).andReturn(gadRequest);
 
   UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
   FLTGAMInterstitialAd *ad = [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"

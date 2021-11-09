@@ -19,7 +19,10 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.mediation.MediationExtrasReceiver;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 class FlutterAdRequest {
@@ -29,6 +32,8 @@ class FlutterAdRequest {
   @Nullable private final List<String> neighboringContentUrls;
   @Nullable private final Integer httpTimeoutMillis;
   @Nullable private final Location location;
+  @Nullable private final String mediationExtrasIdentifier;
+  @Nullable private final MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
 
   protected static class Builder {
     @Nullable private List<String> keywords;
@@ -37,6 +42,8 @@ class FlutterAdRequest {
     @Nullable private List<String> neighboringContentUrls;
     @Nullable private Integer httpTimeoutMillis;
     @Nullable private Location location;
+    @Nullable private String mediationExtrasIdentifier;
+    @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
 
     Builder setKeywords(@Nullable List<String> keywords) {
       this.keywords = keywords;
@@ -65,6 +72,17 @@ class FlutterAdRequest {
 
     Builder setLocation(@Nullable Location location) {
       this.location = location;
+      return this;
+    }
+
+    Builder setMediationNetworkExtrasIdentifier(@Nullable String mediationExtrasIdentifier) {
+      this.mediationExtrasIdentifier = mediationExtrasIdentifier;
+      return this;
+    }
+
+    Builder setMediationNetworkExtrasProvider(
+        @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
+      this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
       return this;
     }
 
@@ -98,6 +116,16 @@ class FlutterAdRequest {
       return location;
     }
 
+    @Nullable
+    protected String getMediationExtrasIdentifier() {
+      return mediationExtrasIdentifier;
+    }
+
+    @Nullable
+    protected MediationNetworkExtrasProvider getMediationNetworkExtrasProvider() {
+      return mediationNetworkExtrasProvider;
+    }
+
     FlutterAdRequest build() {
       return new FlutterAdRequest(
           keywords,
@@ -105,7 +133,9 @@ class FlutterAdRequest {
           nonPersonalizedAds,
           neighboringContentUrls,
           httpTimeoutMillis,
-          location);
+          location,
+          mediationExtrasIdentifier,
+          mediationNetworkExtrasProvider);
     }
   }
 
@@ -115,18 +145,21 @@ class FlutterAdRequest {
       @Nullable Boolean nonPersonalizedAds,
       @Nullable List<String> neighboringContentUrls,
       @Nullable Integer httpTimeoutMillis,
-      @Nullable Location location) {
+      @Nullable Location location,
+      @Nullable String mediationExtrasIdentifier,
+      @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
     this.keywords = keywords;
     this.contentUrl = contentUrl;
     this.nonPersonalizedAds = nonPersonalizedAds;
     this.neighboringContentUrls = neighboringContentUrls;
     this.httpTimeoutMillis = httpTimeoutMillis;
     this.location = location;
+    this.mediationExtrasIdentifier = mediationExtrasIdentifier;
+    this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
   }
 
-  AdRequest asAdRequest() {
-    final AdRequest.Builder builder = new AdRequest.Builder();
-
+  /** Updates the {@link AdRequest.Builder} with the properties in this {@link FlutterAdRequest}. */
+  protected AdRequest.Builder updateAdRequestBuilder(AdRequest.Builder builder, String adUnitId) {
     if (keywords != null) {
       for (final String keyword : keywords) {
         builder.addKeyword(keyword);
@@ -135,7 +168,29 @@ class FlutterAdRequest {
     if (contentUrl != null) {
       builder.setContentUrl(contentUrl);
     }
-    if (nonPersonalizedAds != null && nonPersonalizedAds) {
+
+    Map<Class<? extends MediationExtrasReceiver>, Bundle> mediationNetworkExtras =
+        mediationNetworkExtrasProvider == null
+            ? null
+            : mediationNetworkExtrasProvider.getMediationExtras(
+                adUnitId, mediationExtrasIdentifier);
+    if (mediationNetworkExtras != null) {
+      Map<Class<? extends MediationExtrasReceiver>, Bundle> mediationNetworkExtrasCopy =
+          new HashMap<>(mediationNetworkExtras);
+      // Handle npa here so we don't override any admob extras.
+      if (nonPersonalizedAds != null && nonPersonalizedAds) {
+        Bundle extras = mediationNetworkExtrasCopy.get(AdMobAdapter.class);
+        if (extras == null) {
+          extras = new Bundle();
+        }
+        extras.putString("npa", "1");
+        mediationNetworkExtrasCopy.put(AdMobAdapter.class, extras);
+      }
+      for (Map.Entry<Class<? extends MediationExtrasReceiver>, Bundle> entry :
+          mediationNetworkExtrasCopy.entrySet()) {
+        builder.addNetworkExtrasBundle(entry.getKey(), entry.getValue());
+      }
+    } else if (nonPersonalizedAds != null && nonPersonalizedAds) {
       final Bundle extras = new Bundle();
       extras.putString("npa", "1");
       builder.addNetworkExtrasBundle(AdMobAdapter.class, extras);
@@ -150,7 +205,11 @@ class FlutterAdRequest {
       builder.setLocation(location);
     }
     builder.setRequestAgent(Constants.REQUEST_AGENT_PREFIX_VERSIONED);
-    return builder.build();
+    return builder;
+  }
+
+  AdRequest asAdRequest(String adUnitId) {
+    return updateAdRequestBuilder(new AdRequest.Builder(), adUnitId).build();
   }
 
   @Nullable
@@ -183,6 +242,11 @@ class FlutterAdRequest {
     return location;
   }
 
+  @Nullable
+  protected String getMediationExtrasIdentifier() {
+    return mediationExtrasIdentifier;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -203,7 +267,9 @@ class FlutterAdRequest {
             || (location.getAccuracy() == request.location.getAccuracy()
                 && location.getLongitude() == request.location.getLongitude()
                 && location.getLatitude() == request.location.getLatitude()
-                && location.getTime() == request.location.getTime()));
+                && location.getTime() == request.location.getTime()))
+        && Objects.equals(mediationExtrasIdentifier, request.mediationExtrasIdentifier)
+        && Objects.equals(mediationNetworkExtrasProvider, request.mediationNetworkExtrasProvider);
   }
 
   @Override
@@ -214,6 +280,8 @@ class FlutterAdRequest {
         nonPersonalizedAds,
         neighboringContentUrls,
         httpTimeoutMillis,
-        location);
+        location,
+        mediationExtrasIdentifier,
+        mediationNetworkExtrasProvider);
   }
 }

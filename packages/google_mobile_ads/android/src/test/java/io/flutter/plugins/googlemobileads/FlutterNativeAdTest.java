@@ -19,6 +19,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
@@ -68,7 +69,7 @@ public class FlutterNativeAdTest {
   public void loadNativeAdWithAdManagerAdRequest() {
     final FlutterAdManagerAdRequest mockFlutterRequest = mock(FlutterAdManagerAdRequest.class);
     final AdManagerAdRequest mockRequest = mock(AdManagerAdRequest.class);
-    when(mockFlutterRequest.asAdManagerAdRequest()).thenReturn(mockRequest);
+    when(mockFlutterRequest.asAdManagerAdRequest(anyString())).thenReturn(mockRequest);
     FlutterAdLoader mockLoader = mock(FlutterAdLoader.class);
     NativeAdFactory mockNativeAdFactory = mock(NativeAdFactory.class);
     @SuppressWarnings("unchecked")
@@ -166,7 +167,7 @@ public class FlutterNativeAdTest {
   public void loadNativeAdWithAdRequest() {
     final FlutterAdRequest mockFlutterRequest = mock(FlutterAdRequest.class);
     final AdRequest mockRequest = mock(AdRequest.class);
-    when(mockFlutterRequest.asAdRequest()).thenReturn(mockRequest);
+    when(mockFlutterRequest.asAdRequest(anyString())).thenReturn(mockRequest);
     FlutterAdLoader mockLoader = mock(FlutterAdLoader.class);
     NativeAdFactory mockNativeAdFactory = mock(GoogleMobileAdsPlugin.NativeAdFactory.class);
     NativeAdView mockNativeAdView = mock(NativeAdView.class);

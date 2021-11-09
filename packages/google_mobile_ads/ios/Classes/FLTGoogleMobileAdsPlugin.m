@@ -53,6 +53,8 @@
 @implementation FLTGoogleMobileAdsPlugin {
   NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *_nativeAdFactories;
   FLTAdInstanceManager *_manager;
+  id<FLTMediationNetworkExtrasProvider> _mediationNetworkExtrasProvider;
+  FLTGoogleMobileAdsReaderWriter *_readerWriter;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -61,6 +63,8 @@
   [registrar publish:instance];
 
   FLTGoogleMobileAdsReaderWriter *readerWriter = [[FLTGoogleMobileAdsReaderWriter alloc] init];
+  instance->_readerWriter = readerWriter;
+
   NSObject<FlutterMethodCodec> *codec =
       [FlutterStandardMethodCodec codecWithReaderWriter:readerWriter];
 
@@ -89,6 +93,40 @@
   }
 
   return self;
+}
+
++ (BOOL)registerMediationNetworkExtrasProvider:
+            (id<FLTMediationNetworkExtrasProvider> _Nonnull)mediationNetworkExtrasProvider
+                                      registry:(id<FlutterPluginRegistry> _Nonnull)registry {
+  NSString *pluginClassName = NSStringFromClass([FLTGoogleMobileAdsPlugin class]);
+  FLTGoogleMobileAdsPlugin *adMobPlugin =
+      (FLTGoogleMobileAdsPlugin *)[registry valuePublishedByPlugin:pluginClassName];
+  if (!adMobPlugin) {
+    NSLog(@"Could not find a %@ instance registering mediation extras provider. The plugin may "
+          @"have not been registered.",
+          pluginClassName);
+    return NO;
+  }
+
+  adMobPlugin->_mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
+  adMobPlugin->_readerWriter.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
+
+  return YES;
+}
+
++ (void)unregisterMediationNetworkExtrasProvider:(id<FlutterPluginRegistry> _Nonnull)registry {
+  NSString *pluginClassName = NSStringFromClass([FLTGoogleMobileAdsPlugin class]);
+  FLTGoogleMobileAdsPlugin *adMobPlugin =
+      (FLTGoogleMobileAdsPlugin *)[registry valuePublishedByPlugin:pluginClassName];
+  if (!adMobPlugin) {
+    NSLog(@"Could not find a %@ instance deregistering mediation extras provider. The plugin may "
+          @"have not been registered.",
+          pluginClassName);
+    return;
+  }
+
+  adMobPlugin->_mediationNetworkExtrasProvider = nil;
+  adMobPlugin->_readerWriter.mediationNetworkExtrasProvider = nil;
 }
 
 + (BOOL)registerNativeAdFactory:(id<FlutterPluginRegistry>)registry

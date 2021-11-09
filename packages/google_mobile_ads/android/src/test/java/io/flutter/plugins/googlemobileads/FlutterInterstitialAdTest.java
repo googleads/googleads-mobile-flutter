@@ -64,7 +64,7 @@ public class FlutterInterstitialAdTest {
     final FlutterAdRequest mockFlutterRequest = mock(FlutterAdRequest.class);
     mockAdRequest = mock(AdRequest.class);
     mockFlutterAdLoader = mock(FlutterAdLoader.class);
-    when(mockFlutterRequest.asAdRequest()).thenReturn(mockAdRequest);
+    when(mockFlutterRequest.asAdRequest(anyString())).thenReturn(mockAdRequest);
 
     flutterInterstitialAd =
         new FlutterInterstitialAd(

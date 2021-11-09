@@ -190,6 +190,7 @@ class AdRequest {
     this.nonPersonalizedAds,
     this.httpTimeoutMillis,
     this.location,
+    this.mediationExtrasIdentifier,
   });
 
   /// Words or phrases describing the current user activity.
@@ -219,6 +220,14 @@ class AdRequest {
   /// Used for mediation targeting purposes.
   final LocationParams? location;
 
+  /// String identifier used in providing mediation extras.
+  ///
+  /// Only relevant if you use mediation and need to provide network extras
+  /// to the ad request. This identifier will get passed to your platform-side
+  /// mediation extras factory class, allowing for additional customization
+  /// of network extras.
+  final String? mediationExtrasIdentifier;
+
   @override
   bool operator ==(Object other) {
     return other is AdRequest &&
@@ -227,7 +236,8 @@ class AdRequest {
         nonPersonalizedAds == other.nonPersonalizedAds &&
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
         httpTimeoutMillis == other.httpTimeoutMillis &&
-        location == other.location;
+        location == other.location &&
+        mediationExtrasIdentifier == other.mediationExtrasIdentifier;
   }
 }
 
@@ -244,6 +254,7 @@ class AdManagerAdRequest extends AdRequest {
     int? httpTimeoutMillis,
     this.publisherProvidedId,
     LocationParams? location,
+    String? mediationExtrasIdentifier,
   }) : super(
           keywords: keywords,
           contentUrl: contentUrl,
@@ -251,6 +262,7 @@ class AdManagerAdRequest extends AdRequest {
           nonPersonalizedAds: nonPersonalizedAds,
           httpTimeoutMillis: httpTimeoutMillis,
           location: location,
+          mediationExtrasIdentifier: mediationExtrasIdentifier,
         );
 
   /// Key-value pairs used for custom targeting.

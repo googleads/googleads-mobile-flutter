@@ -18,6 +18,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
@@ -185,10 +186,11 @@ class FlutterNativeAd extends FlutterAd {
             : nativeAdOptions.asNativeAdOptions();
     if (request != null) {
       flutterAdLoader.loadNativeAd(
-          adUnitId, loadedListener, options, adListener, request.asAdRequest());
+          adUnitId, loadedListener, options, adListener, request.asAdRequest(adUnitId));
     } else if (adManagerRequest != null) {
+      AdManagerAdRequest adManagerAdRequest = adManagerRequest.asAdManagerAdRequest(adUnitId);
       flutterAdLoader.loadAdManagerNativeAd(
-          adUnitId, loadedListener, options, adListener, adManagerRequest.asAdManagerAdRequest());
+          adUnitId, loadedListener, options, adListener, adManagerAdRequest);
     } else {
       Log.e(TAG, "A null or invalid ad request was provided.");
     }
