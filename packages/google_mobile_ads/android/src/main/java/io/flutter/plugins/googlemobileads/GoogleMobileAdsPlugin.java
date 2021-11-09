@@ -60,6 +60,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   @Nullable private FlutterPluginBinding pluginBinding;
   @Nullable private AdInstanceManager instanceManager;
   @Nullable private AdMessageCodec adMessageCodec;
+  @Nullable private AppStateNotifier appStateNotifier;
   private final Map<String, NativeAdFactory> nativeAdFactories = new HashMap<>();
   private final FlutterMobileAdsWrapper flutterMobileAds;
   /**
@@ -188,6 +189,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         .registerViewFactory(
             "plugins.flutter.io/google_mobile_ads/ad_widget",
             new GoogleMobileAdsViewFactory(instanceManager));
+    appStateNotifier = new AppStateNotifier(binding.getBinaryMessenger());
   }
 
   @Override
@@ -408,7 +410,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 requireNonNull(instanceManager),
                 requireNonNull(call.<String>argument("adUnitId")),
                 call.<FlutterAdRequest>argument("request"),
-                call.<FlutterAdManagerAdRequest>argument("adManagerAdRequest"),
+                call.<FlutterAdManagerAdRequest>argument("adManagerRequest"),
                 new FlutterAdLoader(appContext));
         instanceManager.trackAd(appOpenAd, call.<Integer>argument("adId"));
         appOpenAd.load();

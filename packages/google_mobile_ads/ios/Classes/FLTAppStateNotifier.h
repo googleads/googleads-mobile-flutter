@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'src/ad_containers.dart';
-export 'src/ad_listeners.dart';
-export 'src/app_background_event_notifier.dart';
-export 'src/mobile_ads.dart';
-export 'src/request_configuration.dart';
+#import <Flutter/Flutter.h>
+
+@interface FLTAppStateNotifier : NSObject <FlutterStreamHandler>
+
+- (instancetype _Nonnull)initWithBinaryMessenger:
+    (NSObject<FlutterBinaryMessenger> *_Nonnull)messenger;
+
+@end

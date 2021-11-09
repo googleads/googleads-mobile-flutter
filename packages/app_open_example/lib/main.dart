@@ -51,13 +51,15 @@ class MyHomePage extends StatefulWidget {
 /// Example home page for an app open ad.
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  late AppLifecycleReactor _appLifecycleReactor;
 
   @override
   void initState() {
     super.initState();
     AppOpenAdManager appOpenAdManager = AppOpenAdManager()..loadAd();
-    WidgetsBinding.instance!
-        .addObserver(AppLifecycleReactor(appOpenAdManager: appOpenAdManager));
+    _appLifecycleReactor =
+        AppLifecycleReactor(appOpenAdManager: appOpenAdManager);
+    _appLifecycleReactor.listenToAppStateChanges();
   }
 
   void _incrementCounter() {
