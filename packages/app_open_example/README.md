@@ -83,7 +83,7 @@ public class AppOpenAdManager {
 }
 ```
 
-## Show the ad and handle fullscreen callbacks
+### Show the ad and handle fullscreen callbacks
 
 Before showing the ad, register a `FullScreenContentCallback` for each ad event
 you want to listen to.
@@ -129,7 +129,7 @@ public class AppOpenAdManager {
 If a user returns to your app after having left it by clicking on an app open
 ad, make sure they're not presented with another app open ad.
 
-## Listen for app foregrounding events
+### Listen for app foregrounding events
 
 Subscribe to `AppStateEventNotifier.appStateStream` in order to be notified of
 app foregrounding events. Note we recommend using this instead of `WidgetsBindingObserver`
