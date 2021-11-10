@@ -13,8 +13,6 @@ void main() {
       debugPrint('Adapter status for $key: ${value.description}');
     });
   });
-  MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
-      testDeviceIds: ['32CD20B4326E0901E14763495BA1ACD8']));
   runApp(MyApp());
 }
 
@@ -89,9 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _loadBannerAd() {
     _bannerAd = BannerAd(
       size: AdSize.banner,
-      adUnitId: Platform.isAndroid
-          ? 'ca-app-pub-3212738706492790/5188325229'
-          : 'ca-app-pub-3212738706492790/8268506793',
+      adUnitId: '<your-ad-unit>',
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           debugPrint(

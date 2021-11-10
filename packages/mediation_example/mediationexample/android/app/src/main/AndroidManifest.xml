@@ -4,13 +4,12 @@
   <application
         android:label="mediationexample"
         android:icon="@mipmap/ic_launcher">
-    <!-- TODO - Delete this meta data -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3212738706492790~5949485661"/>
+            android:value="TODO - add your app id"/>
         <meta-data
             android:name="applovin.sdk.key"
-            android:value="lJZ8yvFu36nGvCs3IAvhTCZ1Ti13TTODozLktbcwhNBaZ1esBXTkl7mHroKJFkW1gtmXSMR9ldlJeN9rviZdrJ"/>
+            android:value="TODO - add your applovin key"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

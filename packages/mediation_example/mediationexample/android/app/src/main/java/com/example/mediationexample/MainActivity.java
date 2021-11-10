@@ -22,6 +22,7 @@ public class MainActivity extends FlutterActivity {
     super.onCreate(savedInstanceState);
     AppLovinSdk.initializeSdk(this);
     AppLovinSdk.getInstance(this).getSettings().setVerboseLogging(true);
+    // Necessary to get test ad units in applovin
     new Thread(
             () -> {
               String adId = "";
