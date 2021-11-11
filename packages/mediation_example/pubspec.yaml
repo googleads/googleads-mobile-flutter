@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_mobile_ads:
-    path: ../../google_mobile_ads
+    path: ../google_mobile_ads
 
   # The following adds the Cupertino Icons font to your application.
 
