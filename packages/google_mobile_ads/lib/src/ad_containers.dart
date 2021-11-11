@@ -232,7 +232,7 @@ class AdRequest {
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
         httpTimeoutMillis == other.httpTimeoutMillis &&
         location == other.location &&
-        extras == other.extras;
+        mapEquals<String, String>(extras, other.extras);
   }
 }
 

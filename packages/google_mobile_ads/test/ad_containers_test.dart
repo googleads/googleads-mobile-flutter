@@ -1328,7 +1328,9 @@ void main() {
           neighboringContentUrls: <String>['url1.com', 'url2.com'],
           httpTimeoutMillis: 12345,
           location: LocationParams(
-              accuracy: 1.1, longitude: 25, latitude: 38, time: 1));
+              accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+          extras: {'key' : 'value'},
+      );
 
       final ByteData byteData = codec.encodeMessage(adRequest)!;
       expect(codec.decodeMessage(byteData), adRequest);
@@ -1344,7 +1346,9 @@ void main() {
           neighboringContentUrls: <String>['url1.com', 'url2.com'],
           httpTimeoutMillis: 12345,
           location: LocationParams(
-              accuracy: 1.1, longitude: 25, latitude: 38, time: 1));
+              accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+        extras: {'key' : 'value'},
+      );
 
       final ByteData byteData = codec.encodeMessage(adRequest)!;
       AdRequest decoded = codec.decodeMessage(byteData);
@@ -1507,6 +1511,7 @@ void main() {
         publisherProvidedId: 'test-pub-id',
         location:
             LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+        extras: {'key' : 'value'},
       );
       final ByteData byteData = codec.encodeMessage(request)!;
 
@@ -1532,6 +1537,7 @@ void main() {
         publisherProvidedId: 'test-pub-id',
         location:
             LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+        extras: {'key' : 'value'},
       );
 
       final ByteData byteData = codec.encodeMessage(request)!;
