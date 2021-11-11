@@ -190,6 +190,7 @@ class AdRequest {
     this.nonPersonalizedAds,
     this.httpTimeoutMillis,
     this.location,
+    this.extras,
   });
 
   /// Words or phrases describing the current user activity.
@@ -219,6 +220,9 @@ class AdRequest {
   /// Used for mediation targeting purposes.
   final LocationParams? location;
 
+  /// Extras to pass to the AdMob adapter.
+  final Map<String, String>? extras;
+
   @override
   bool operator ==(Object other) {
     return other is AdRequest &&
@@ -227,7 +231,8 @@ class AdRequest {
         nonPersonalizedAds == other.nonPersonalizedAds &&
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
         httpTimeoutMillis == other.httpTimeoutMillis &&
-        location == other.location;
+        location == other.location &&
+        extras == other.extras;
   }
 }
 
@@ -244,6 +249,7 @@ class AdManagerAdRequest extends AdRequest {
     int? httpTimeoutMillis,
     this.publisherProvidedId,
     LocationParams? location,
+    Map<String, String>? extras,
   }) : super(
           keywords: keywords,
           contentUrl: contentUrl,
@@ -251,6 +257,7 @@ class AdManagerAdRequest extends AdRequest {
           nonPersonalizedAds: nonPersonalizedAds,
           httpTimeoutMillis: httpTimeoutMillis,
           location: location,
+          extras: extras,
         );
 
   /// Key-value pairs used for custom targeting.

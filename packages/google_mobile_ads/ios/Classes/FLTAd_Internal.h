@@ -84,6 +84,8 @@
 @property BOOL nonPersonalizedAds;
 @property NSArray<NSString *> *_Nullable neighboringContentURLs;
 @property FLTLocationParams *_Nullable location;
+@property NSDictionary<NSString *, NSString *> *_Nullable adMobExtras;
+
 - (GADRequest *_Nonnull)asGADRequest;
 @end
 

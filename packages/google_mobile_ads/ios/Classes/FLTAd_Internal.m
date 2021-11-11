@@ -161,11 +161,7 @@
   GADRequest *request = [GADRequest request];
   request.keywords = _keywords;
   request.contentURL = _contentURL;
-  if (_nonPersonalizedAds) {
-    GADExtras *extras = [[GADExtras alloc] init];
-    extras.additionalParameters = @{@"npa" : @"1"};
-    [request registerAdNetworkExtras:extras];
-  }
+  [self addAdMobExtras:request];
   request.neighboringContentURLStrings = _neighboringContentURLs;
   request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
   if ([FLTAdUtil isNotNull:_location]) {
@@ -175,6 +171,24 @@
   }
   return request;
 }
+
+- (void)addAdMobExtras:(GADRequest *_Nonnull)request {
+  NSMutableDictionary<NSString *, NSString *> *additionalParams =
+      [[NSMutableDictionary alloc] init];
+
+  if (_nonPersonalizedAds) {
+    additionalParams[@"npa"] = @"1";
+  }
+  if (_adMobExtras) {
+    [additionalParams addEntriesFromDictionary:_adMobExtras];
+  }
+  if (additionalParams.count > 0) {
+    GADExtras *extras = [[GADExtras alloc] init];
+    extras.additionalParameters = additionalParams;
+    [request registerAdNetworkExtras:extras];
+  }
+}
+
 @end
 
 @implementation FLTGADResponseInfo
@@ -243,11 +257,7 @@
   [targetingDictionary addEntriesFromDictionary:self.customTargetingLists];
   request.customTargeting = targetingDictionary;
 
-  if (self.nonPersonalizedAds) {
-    GADExtras *extras = [[GADExtras alloc] init];
-    extras.additionalParameters = @{@"npa" : @"1"};
-    [request registerAdNetworkExtras:extras];
-  }
+  [self addAdMobExtras:request];
   if ([FLTAdUtil isNotNull:self.location]) {
     [request setLocationWithLatitude:self.location.latitude.floatValue
                            longitude:self.location.longitude.floatValue
