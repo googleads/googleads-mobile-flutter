@@ -15,9 +15,7 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.location.Location;
-import android.os.Bundle;
 import androidx.annotation.Nullable;
-import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +63,8 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
           getNeighboringContentUrls(),
           getHttpTimeoutMillis(),
           getLocation(),
-          publisherProvidedId);
+          publisherProvidedId,
+          getAdMobExtras());
     }
   }
 
@@ -78,14 +77,16 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
       @Nullable List<String> neighboringContentUrls,
       @Nullable Integer httpTimeoutMillis,
       @Nullable Location location,
-      @Nullable String publisherProvidedId) {
+      @Nullable String publisherProvidedId,
+      @Nullable Map<String, String> adMobExtras) {
     super(
         keywords,
         contentUrl,
         nonPersonalizedAds,
         neighboringContentUrls,
         httpTimeoutMillis,
-        location);
+        location,
+        adMobExtras);
     this.customTargeting = customTargeting;
     this.customTargetingLists = customTargetingLists;
     this.publisherProvidedId = publisherProvidedId;
@@ -112,11 +113,7 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
         builder.addCustomTargeting(entry.getKey(), entry.getValue());
       }
     }
-    if (getNonPersonalizedAds() != null && getNonPersonalizedAds()) {
-      final Bundle extras = new Bundle();
-      extras.putString("npa", "1");
-      builder.addNetworkExtrasBundle(AdMobAdapter.class, extras);
-    }
+    addNetworkExtras(builder);
     if (publisherProvidedId != null) {
       builder.setPublisherProvidedId(publisherProvidedId);
     }

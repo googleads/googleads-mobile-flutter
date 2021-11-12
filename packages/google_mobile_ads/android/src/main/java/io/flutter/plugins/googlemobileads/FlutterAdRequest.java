@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 class FlutterAdRequest {
@@ -29,6 +30,7 @@ class FlutterAdRequest {
   @Nullable private final List<String> neighboringContentUrls;
   @Nullable private final Integer httpTimeoutMillis;
   @Nullable private final Location location;
+  @Nullable private final Map<String, String> adMobExtras;
 
   protected static class Builder {
     @Nullable private List<String> keywords;
@@ -37,6 +39,7 @@ class FlutterAdRequest {
     @Nullable private List<String> neighboringContentUrls;
     @Nullable private Integer httpTimeoutMillis;
     @Nullable private Location location;
+    @Nullable private Map<String, String> adMobExtras;
 
     Builder setKeywords(@Nullable List<String> keywords) {
       this.keywords = keywords;
@@ -65,6 +68,11 @@ class FlutterAdRequest {
 
     Builder setLocation(@Nullable Location location) {
       this.location = location;
+      return this;
+    }
+
+    Builder setAdMobExtras(@Nullable Map<String, String> adMobExtras) {
+      this.adMobExtras = adMobExtras;
       return this;
     }
 
@@ -98,6 +106,11 @@ class FlutterAdRequest {
       return location;
     }
 
+    @Nullable
+    protected Map<String, String> getAdMobExtras() {
+      return adMobExtras;
+    }
+
     FlutterAdRequest build() {
       return new FlutterAdRequest(
           keywords,
@@ -105,7 +118,8 @@ class FlutterAdRequest {
           nonPersonalizedAds,
           neighboringContentUrls,
           httpTimeoutMillis,
-          location);
+          location,
+          adMobExtras);
     }
   }
 
@@ -115,13 +129,31 @@ class FlutterAdRequest {
       @Nullable Boolean nonPersonalizedAds,
       @Nullable List<String> neighboringContentUrls,
       @Nullable Integer httpTimeoutMillis,
-      @Nullable Location location) {
+      @Nullable Location location,
+      @Nullable Map<String, String> adMobExtras) {
     this.keywords = keywords;
     this.contentUrl = contentUrl;
     this.nonPersonalizedAds = nonPersonalizedAds;
     this.neighboringContentUrls = neighboringContentUrls;
     this.httpTimeoutMillis = httpTimeoutMillis;
     this.location = location;
+    this.adMobExtras = adMobExtras;
+  }
+
+  /** Adds network extras to the ad request builder, if any. */
+  protected void addNetworkExtras(AdRequest.Builder builder) {
+    Bundle bundle = new Bundle();
+    if (adMobExtras != null) {
+      for (Map.Entry<String, String> extra : adMobExtras.entrySet()) {
+        bundle.putString(extra.getKey(), extra.getValue());
+      }
+    }
+    if (nonPersonalizedAds != null && nonPersonalizedAds) {
+      bundle.putString("npa", "1");
+    }
+    if (!bundle.isEmpty()) {
+      builder.addNetworkExtrasBundle(AdMobAdapter.class, bundle);
+    }
   }
 
   AdRequest asAdRequest() {
@@ -135,11 +167,7 @@ class FlutterAdRequest {
     if (contentUrl != null) {
       builder.setContentUrl(contentUrl);
     }
-    if (nonPersonalizedAds != null && nonPersonalizedAds) {
-      final Bundle extras = new Bundle();
-      extras.putString("npa", "1");
-      builder.addNetworkExtrasBundle(AdMobAdapter.class, extras);
-    }
+    addNetworkExtras(builder);
     if (neighboringContentUrls != null) {
       builder.setNeighboringContentUrls(neighboringContentUrls);
     }
@@ -183,6 +211,11 @@ class FlutterAdRequest {
     return location;
   }
 
+  @Nullable
+  protected Map<String, String> getAdMobExtras() {
+    return adMobExtras;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -203,7 +236,8 @@ class FlutterAdRequest {
             || (location.getAccuracy() == request.location.getAccuracy()
                 && location.getLongitude() == request.location.getLongitude()
                 && location.getLatitude() == request.location.getLatitude()
-                && location.getTime() == request.location.getTime()));
+                && location.getTime() == request.location.getTime()))
+        && Objects.equals(adMobExtras, request.adMobExtras);
   }
 
   @Override

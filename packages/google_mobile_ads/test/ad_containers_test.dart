@@ -1322,13 +1322,15 @@ void main() {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
       final AdRequest adRequest = AdRequest(
-          keywords: <String>['1', '2', '3'],
-          contentUrl: 'contentUrl',
-          nonPersonalizedAds: false,
-          neighboringContentUrls: <String>['url1.com', 'url2.com'],
-          httpTimeoutMillis: 12345,
-          location: LocationParams(
-              accuracy: 1.1, longitude: 25, latitude: 38, time: 1));
+        keywords: <String>['1', '2', '3'],
+        contentUrl: 'contentUrl',
+        nonPersonalizedAds: false,
+        neighboringContentUrls: <String>['url1.com', 'url2.com'],
+        httpTimeoutMillis: 12345,
+        location:
+            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+        extras: {'key': 'value'},
+      );
 
       final ByteData byteData = codec.encodeMessage(adRequest)!;
       expect(codec.decodeMessage(byteData), adRequest);
@@ -1338,13 +1340,15 @@ void main() {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
       final AdRequest adRequest = AdRequest(
-          keywords: <String>['1', '2', '3'],
-          contentUrl: 'contentUrl',
-          nonPersonalizedAds: false,
-          neighboringContentUrls: <String>['url1.com', 'url2.com'],
-          httpTimeoutMillis: 12345,
-          location: LocationParams(
-              accuracy: 1.1, longitude: 25, latitude: 38, time: 1));
+        keywords: <String>['1', '2', '3'],
+        contentUrl: 'contentUrl',
+        nonPersonalizedAds: false,
+        neighboringContentUrls: <String>['url1.com', 'url2.com'],
+        httpTimeoutMillis: 12345,
+        location:
+            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+        extras: {'key': 'value'},
+      );
 
       final ByteData byteData = codec.encodeMessage(adRequest)!;
       AdRequest decoded = codec.decodeMessage(byteData);
@@ -1507,6 +1511,7 @@ void main() {
         publisherProvidedId: 'test-pub-id',
         location:
             LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+        extras: {'key': 'value'},
       );
       final ByteData byteData = codec.encodeMessage(request)!;
 
@@ -1532,6 +1537,7 @@ void main() {
         publisherProvidedId: 'test-pub-id',
         location:
             LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+        extras: {'key': 'value'},
       );
 
       final ByteData byteData = codec.encodeMessage(request)!;
