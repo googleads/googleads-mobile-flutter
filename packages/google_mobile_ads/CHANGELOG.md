@@ -2,7 +2,7 @@
 
 * Mediation is now supported in beta.
   * There are new APIs to support passing network extras to mediation adapters:
-    * [MediationNetworkExtrasProvider](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/android/src/main/java/io/flutter/plugins/googlemobileads/MediationNetworkExtrasProvider.java) and
+    * [MediationNetworkExtrasProvider](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/android/src/main/java/io/flutter/plugins/googlemobileads/MediationNetworkExtrasProvider.java)
       on Android and [FLTMediationNetworkExtrasProvider](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/ios/Classes/FLTConstants.h) on iOS
   * See the mediation example app [README](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/mediation_example/README.md)
     for more details on how to use these APIs.
