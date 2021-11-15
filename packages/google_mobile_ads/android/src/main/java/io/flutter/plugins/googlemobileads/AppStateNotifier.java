@@ -49,12 +49,12 @@ final class AppStateNotifier implements LifecycleEventObserver, MethodCallHandle
     eventChannel.setStreamHandler(this);
   }
 
-  /** Start listening for app lifecycle changes. */
+  /** Starts listening for app lifecycle changes. */
   void start() {
     ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
   }
 
-  /** Stop listening for app lifecycle changes. */
+  /** Stops listening for app lifecycle changes. */
   void stop() {
     ProcessLifecycleOwner.get().getLifecycle().removeObserver(this);
   }
