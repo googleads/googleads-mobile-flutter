@@ -1,4 +1,4 @@
-## 0.14.0
+## 1.0.0
 
 * Fix for Android 12 issue [#330](https://github.com/googleads/googleads-mobile-flutter/issues/330)
   * This will break compilation on android if you do not already set `compileSdkVersion` to `31`, or override the WorkManager dependency to < 2.7.0:
