@@ -187,9 +187,25 @@
       }
     }
   }
-  if (_nonPersonalizedAds && !addedNpaToGADExtras) {
+
+  if (!addedNpaToGADExtras) {
+    [self addAdMobExtras:request];
+  }
+}
+
+- (void)addAdMobExtras:(GADRequest *_Nonnull)request {
+  NSMutableDictionary<NSString *, NSString *> *additionalParams =
+      [[NSMutableDictionary alloc] init];
+
+  if (_nonPersonalizedAds) {
+    additionalParams[@"npa"] = @"1";
+  }
+  if (_adMobExtras) {
+    [additionalParams addEntriesFromDictionary:_adMobExtras];
+  }
+  if (additionalParams.count > 0) {
     GADExtras *extras = [[GADExtras alloc] init];
-    extras.additionalParameters = @{@"npa" : @"1"};
+    extras.additionalParameters = additionalParams;
     [request registerAdNetworkExtras:extras];
   }
 }
@@ -209,6 +225,7 @@
   }
   return request;
 }
+
 @end
 
 @implementation FLTGADResponseInfo

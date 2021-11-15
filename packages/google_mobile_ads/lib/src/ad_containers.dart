@@ -191,6 +191,7 @@ class AdRequest {
     this.httpTimeoutMillis,
     this.location,
     this.mediationExtrasIdentifier,
+    this.extras,
   });
 
   /// Words or phrases describing the current user activity.
@@ -228,6 +229,9 @@ class AdRequest {
   /// of network extras.
   final String? mediationExtrasIdentifier;
 
+  /// Extras to pass to the AdMob adapter.
+  final Map<String, String>? extras;
+
   @override
   bool operator ==(Object other) {
     return other is AdRequest &&
@@ -237,7 +241,8 @@ class AdRequest {
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
         httpTimeoutMillis == other.httpTimeoutMillis &&
         location == other.location &&
-        mediationExtrasIdentifier == other.mediationExtrasIdentifier;
+        mediationExtrasIdentifier == other.mediationExtrasIdentifier &&
+        mapEquals<String, String>(extras, other.extras);
   }
 }
 
@@ -255,6 +260,7 @@ class AdManagerAdRequest extends AdRequest {
     this.publisherProvidedId,
     LocationParams? location,
     String? mediationExtrasIdentifier,
+    Map<String, String>? extras,
   }) : super(
           keywords: keywords,
           contentUrl: contentUrl,
@@ -263,6 +269,7 @@ class AdManagerAdRequest extends AdRequest {
           httpTimeoutMillis: httpTimeoutMillis,
           location: location,
           mediationExtrasIdentifier: mediationExtrasIdentifier,
+          extras: extras,
         );
 
   /// Key-value pairs used for custom targeting.

@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -243,6 +244,24 @@ public class AdMessageCodecTest {
     assertNull(result.startMuted);
   }
 
+  public void encodeEmptyFlutterAdRequest() {
+    FlutterAdRequest adRequest = new FlutterAdRequest.Builder().build();
+    final ByteBuffer message = codec.encodeMessage(adRequest);
+
+    final FlutterAdRequest decodedRequest =
+        (FlutterAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(adRequest, decodedRequest);
+  }
+
+  public void encodeEmptyFlutterAdManagerAdRequest() {
+    FlutterAdManagerAdRequest adRequest = new FlutterAdManagerAdRequest.Builder().build();
+    final ByteBuffer message = codec.encodeMessage(adRequest);
+
+    final FlutterAdManagerAdRequest decodedRequest =
+        (FlutterAdManagerAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(adRequest, decodedRequest);
+  }
+
   @Test
   public void encodeFlutterAdRequest() {
     Location location = new Location("");
@@ -250,6 +269,7 @@ public class AdMessageCodecTest {
     location.setLongitude(1.0);
     location.setLatitude(5.0);
     location.setTime(54321);
+    Map<String, String> extras = Collections.singletonMap("key", "value");
     FlutterAdRequest adRequest =
         new FlutterAdRequest.Builder()
             .setKeywords(Arrays.asList("1", "2", "3"))
@@ -259,6 +279,7 @@ public class AdMessageCodecTest {
             .setHttpTimeoutMillis(1000)
             .setLocation(location)
             .setMediationNetworkExtrasIdentifier("identifier")
+            .setAdMobExtras(extras)
             .build();
     final ByteBuffer message = codec.encodeMessage(adRequest);
 
@@ -284,6 +305,8 @@ public class AdMessageCodecTest {
     builder.setPublisherProvidedId("pub-provided-id");
     builder.setLocation(location);
     builder.setMediationNetworkExtrasIdentifier("identifier");
+    builder.setAdMobExtras(Collections.singletonMap("key", "value"));
+
     FlutterAdManagerAdRequest flutterAdManagerAdRequest = builder.build();
 
     final ByteBuffer message = codec.encodeMessage(flutterAdManagerAdRequest);

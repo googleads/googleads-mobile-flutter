@@ -65,7 +65,8 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
           getLocation(),
           publisherProvidedId,
           getMediationExtrasIdentifier(),
-          getMediationNetworkExtrasProvider());
+          getMediationNetworkExtrasProvider(),
+          getAdMobExtras());
     }
   }
 
@@ -80,7 +81,8 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
       @Nullable Location location,
       @Nullable String publisherProvidedId,
       @Nullable String mediationExtrasIdentifier,
-      @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
+      @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider,
+      @Nullable Map<String, String> adMobExtras) {
     super(
         keywords,
         contentUrl,
@@ -89,7 +91,8 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
         httpTimeoutMillis,
         location,
         mediationExtrasIdentifier,
-        mediationNetworkExtrasProvider);
+        mediationNetworkExtrasProvider,
+        adMobExtras);
     this.customTargeting = customTargeting;
     this.customTargetingLists = customTargetingLists;
     this.publisherProvidedId = publisherProvidedId;

@@ -98,6 +98,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getPublisherProvidedId());
       writeValue(stream, request.getLocation());
       writeValue(stream, request.getMediationExtrasIdentifier());
+      writeValue(stream, request.getAdMobExtras());
     } else if (value instanceof FlutterAdRequest) {
       stream.write(VALUE_AD_REQUEST);
       final FlutterAdRequest request = (FlutterAdRequest) value;
@@ -108,6 +109,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getHttpTimeoutMillis());
       writeValue(stream, request.getLocation());
       writeValue(stream, request.getMediationExtrasIdentifier());
+      writeValue(stream, request.getAdMobExtras());
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
       stream.write(VALUE_REWARD_ITEM);
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;
@@ -238,6 +240,7 @@ class AdMessageCodec extends StandardMessageCodec {
             .setLocation((Location) readValueOfType(buffer.get(), buffer))
             .setMediationNetworkExtrasIdentifier((String) readValueOfType(buffer.get(), buffer))
             .setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider)
+            .setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer))
             .build();
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
@@ -280,6 +283,7 @@ class AdMessageCodec extends StandardMessageCodec {
         builder.setLocation((Location) readValueOfType(buffer.get(), buffer));
         builder.setMediationNetworkExtrasIdentifier((String) readValueOfType(buffer.get(), buffer));
         builder.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
+        builder.setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer));
         return builder.build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);

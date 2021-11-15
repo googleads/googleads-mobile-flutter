@@ -87,6 +87,7 @@
 @property FLTLocationParams *_Nullable location;
 @property NSString *_Nullable mediationExtrasIdentifier;
 @property id<FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
+@property NSDictionary<NSString *, NSString *> *_Nullable adMobExtras;
 
 - (GADRequest *_Nonnull)asGADRequest:(NSString *_Nonnull)adUnitId;
 @end

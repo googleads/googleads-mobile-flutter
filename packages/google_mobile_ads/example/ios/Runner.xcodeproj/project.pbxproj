@@ -23,6 +23,7 @@
 		9E5A534926AA235D00B9438D /* FLTAdUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E5A534826AA235D00B9438D /* FLTAdUtil.m */; };
 		9E79684A271FF40900E06158 /* FLTAdRequestTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E796848271FF40900E06158 /* FLTAdRequestTest.m */; };
 		9E79684B271FF40900E06158 /* FLTGAMAdRequestTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E796849271FF40900E06158 /* FLTGAMAdRequestTest.m */; };
+		9E7B9D8F273206F800C6A6AB /* FLTAppStateNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E7B9D8E273206F800C6A6AB /* FLTAppStateNotifier.m */; };
 		9EA7213725BB6517008D57E3 /* GoogleMobileAds.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */; };
 		9EA7213825BB6530008D57E3 /* GoogleMobileAds.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */; };
 		9EA7474E2637CD6800E0B0E4 /* FLTBannerAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA7474C2637CD6800E0B0E4 /* FLTBannerAdTest.m */; };
@@ -102,6 +103,8 @@
 		9E79682A271D415600E06158 /* FLTMediationNetworkExtrasProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FLTMediationNetworkExtrasProvider.h; path = ../../ios/Classes/FLTMediationNetworkExtrasProvider.h; sourceTree = "<group>"; };
 		9E796848271FF40900E06158 /* FLTAdRequestTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTAdRequestTest.m; path = ../../../ios/Tests/FLTAdRequestTest.m; sourceTree = "<group>"; };
 		9E796849271FF40900E06158 /* FLTGAMAdRequestTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGAMAdRequestTest.m; path = ../../../ios/Tests/FLTGAMAdRequestTest.m; sourceTree = "<group>"; };
+		9E7B9D8D273206F800C6A6AB /* FLTAppStateNotifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FLTAppStateNotifier.h; path = ../../ios/Classes/FLTAppStateNotifier.h; sourceTree = "<group>"; };
+		9E7B9D8E273206F800C6A6AB /* FLTAppStateNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTAppStateNotifier.m; path = ../../ios/Classes/FLTAppStateNotifier.m; sourceTree = "<group>"; };
 		9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleMobileAds.xcframework; path = "Pods/Google-Mobile-Ads-SDK/Frameworks/GoogleMobileAdsFramework-Current/GoogleMobileAds.xcframework"; sourceTree = "<group>"; };
 		9EA7474C2637CD6800E0B0E4 /* FLTBannerAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTBannerAdTest.m; path = ../../../ios/Tests/FLTBannerAdTest.m; sourceTree = "<group>"; };
 		9EA7474D2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGAMBannerAdTest.m; path = ../../../ios/Tests/FLTGAMBannerAdTest.m; sourceTree = "<group>"; };
@@ -208,6 +211,8 @@
 			isa = PBXGroup;
 			children = (
 				9E79682A271D415600E06158 /* FLTMediationNetworkExtrasProvider.h */,
+				9E7B9D8D273206F800C6A6AB /* FLTAppStateNotifier.h */,
+				9E7B9D8E273206F800C6A6AB /* FLTAppStateNotifier.m */,
 				9E5A534726AA235D00B9438D /* FLTAdUtil.h */,
 				9E5A534826AA235D00B9438D /* FLTAdUtil.m */,
 				9EF4E6FB26392B230007E4FE /* FLTAd_Internal.h */,
@@ -459,6 +464,7 @@
 				9EF4E70526392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.h in Sources */,
 				9EF4E70626392B230007E4FE /* FLTAdInstanceManager_Internal.m in Sources */,
 				9EF4E70726392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.m in Sources */,
+				9E7B9D8F273206F800C6A6AB /* FLTAppStateNotifier.m in Sources */,
 				9EF4E70826392B230007E4FE /* FLTAd_Internal.h in Sources */,
 				9E4163BB26CCE99400220C78 /* FLTAppOpenAdTest.m in Sources */,
 				9EF4E70926392B230007E4FE /* FLTGoogleMobileAdsPlugin.m in Sources */,

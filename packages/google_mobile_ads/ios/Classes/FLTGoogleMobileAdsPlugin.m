@@ -14,6 +14,7 @@
 
 #import "FLTGoogleMobileAdsPlugin.h"
 #import "FLTAdUtil.h"
+#import "FLTAppStateNotifier.h"
 
 @interface FLTGoogleMobileAdsPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
@@ -55,6 +56,7 @@
   FLTAdInstanceManager *_manager;
   id<FLTMediationNetworkExtrasProvider> _mediationNetworkExtrasProvider;
   FLTGoogleMobileAdsReaderWriter *_readerWriter;
+  FLTAppStateNotifier *_appStateNotifier;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -90,6 +92,7 @@
   if (self) {
     _nativeAdFactories = [NSMutableDictionary dictionary];
     _manager = [[FLTAdInstanceManager alloc] initWithBinaryMessenger:binaryMessenger];
+    _appStateNotifier = [[FLTAppStateNotifier alloc] initWithBinaryMessenger:binaryMessenger];
   }
 
   return self;
