@@ -156,20 +156,41 @@
 }
 @end
 
+@interface FLTAdRequest ()
+/// A helper method for adding network extras to the GADRequest.
+- (void)addNetworkExtrasToGADRequest:(GADRequest *_Nonnull)request
+                            adUnitId:(NSString *_Nonnull)adUnitId;
+
+@end
+
 @implementation FLTAdRequest
-- (GADRequest *_Nonnull)asGADRequest {
-  GADRequest *request = [GADRequest request];
-  request.keywords = _keywords;
-  request.contentURL = _contentURL;
-  [self addAdMobExtras:request];
-  request.neighboringContentURLStrings = _neighboringContentURLs;
-  request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
-  if ([FLTAdUtil isNotNull:_location]) {
-    [request setLocationWithLatitude:_location.latitude.floatValue
-                           longitude:_location.longitude.floatValue
-                            accuracy:_location.accuracy.floatValue];
+
+- (void)addNetworkExtrasToGADRequest:(GADRequest *)request adUnitId:(NSString *_Nonnull)adUnitId {
+  NSArray<id<GADAdNetworkExtras>> *extras =
+      [_mediationNetworkExtrasProvider getMediationExtras:adUnitId
+                                mediationExtrasIdentifier:_mediationExtrasIdentifier];
+  BOOL addedNpaToGADExtras = false;
+
+  if ([FLTAdUtil isNotNull:extras]) {
+    for (id<GADAdNetworkExtras> extra in extras) {
+      // If GADExtras are present and npa is true, add npa = 1 to the GADExtras
+      if ([extra isKindOfClass:[GADExtras class]] && _nonPersonalizedAds) {
+        GADExtras *gadExtras = (GADExtras *)extra;
+        NSMutableDictionary *newParams =
+            [[NSMutableDictionary alloc] initWithDictionary:gadExtras.additionalParameters];
+        newParams[@"npa"] = @"1";
+        gadExtras.additionalParameters = newParams;
+        [request registerAdNetworkExtras:gadExtras];
+        addedNpaToGADExtras = true;
+      } else {
+        [request registerAdNetworkExtras:extra];
+      }
+    }
   }
-  return request;
+
+  if (!addedNpaToGADExtras) {
+    [self addAdMobExtras:request];
+  }
 }
 
 - (void)addAdMobExtras:(GADRequest *_Nonnull)request {
@@ -187,6 +208,22 @@
     extras.additionalParameters = additionalParams;
     [request registerAdNetworkExtras:extras];
   }
+}
+
+- (GADRequest *_Nonnull)asGADRequest:(NSString *_Nonnull)adUnitId {
+  GADRequest *request = [GADRequest request];
+  request.keywords = _keywords;
+  request.contentURL = _contentURL;
+  request.neighboringContentURLStrings = _neighboringContentURLs;
+  request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
+  [self addNetworkExtrasToGADRequest:request adUnitId:adUnitId];
+
+  if ([FLTAdUtil isNotNull:_location]) {
+    [request setLocationWithLatitude:_location.latitude.floatValue
+                           longitude:_location.longitude.floatValue
+                            accuracy:_location.accuracy.floatValue];
+  }
+  return request;
 }
 
 @end
@@ -245,19 +282,19 @@
 #pragma mark - FLTGAMAdRequest
 
 @implementation FLTGAMAdRequest
-- (GADRequest *_Nonnull)asGAMRequest {
+- (GADRequest *_Nonnull)asGAMRequest:(NSString *_Nonnull)adUnitId {
   GAMRequest *request = [GAMRequest request];
   request.keywords = self.keywords;
   request.contentURL = self.contentURL;
   request.neighboringContentURLStrings = self.neighboringContentURLs;
   request.publisherProvidedID = self.pubProvidedID;
-
-  NSMutableDictionary<NSString *, id> *targetingDictionary =
+  NSMutableDictionary<NSString *, NSString *> *targetingDictionary =
       [NSMutableDictionary dictionaryWithDictionary:self.customTargeting];
-  [targetingDictionary addEntriesFromDictionary:self.customTargetingLists];
+  for (NSString *key in self.customTargetingLists) {
+    targetingDictionary[key] = [self.customTargetingLists[key] componentsJoinedByString:@","];
+  }
   request.customTargeting = targetingDictionary;
-
-  [self addAdMobExtras:request];
+  [self addNetworkExtrasToGADRequest:request adUnitId:adUnitId];
   if ([FLTAdUtil isNotNull:self.location]) {
     [request setLocationWithLatitude:self.location.latitude.floatValue
                            longitude:self.location.longitude.floatValue
@@ -283,6 +320,7 @@
 @implementation FLTBannerAd {
   GADBannerView *_bannerView;
   FLTAdRequest *_adRequest;
+  NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -293,6 +331,7 @@
   self = [super init];
   if (self) {
     _adRequest = request;
+    _adUnitId = adUnitId;
     _bannerView = [[GADBannerView alloc] initWithAdSize:size.size];
     _bannerView.adUnitID = adUnitId;
     self.adId = adId;
@@ -317,7 +356,7 @@
 
 - (void)load {
   self.bannerView.delegate = self;
-  [self.bannerView loadRequest:_adRequest.asGADRequest];
+  [self.bannerView loadRequest:[_adRequest asGADRequest:_adUnitId]];
 }
 
 - (FLTAdSize *)getAdSize {
@@ -366,6 +405,7 @@
 @implementation FLTGAMBannerAd {
   GAMBannerView *_bannerView;
   FLTGAMAdRequest *_adRequest;
+  NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -377,6 +417,7 @@
   if (self) {
     self.adId = adId;
     _adRequest = request;
+    _adUnitId = adUnitId;
     _bannerView = [[GAMBannerView alloc] initWithAdSize:sizes[0].size];
     _bannerView.adUnitID = adUnitId;
     _bannerView.rootViewController = rootViewController;
@@ -408,7 +449,7 @@
 }
 
 - (void)load {
-  [self.bannerView loadRequest:_adRequest.asGAMRequest];
+  [self.bannerView loadRequest:[_adRequest asGAMRequest:_adUnitId]];
 }
 
 #pragma mark - FlutterPlatformView
@@ -433,6 +474,7 @@
   FLTGAMAdRequest *_adRequest;
   UIScrollView *_containerView;
   CGFloat _height;
+  NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -444,6 +486,7 @@
     self.adId = adId;
     _height = -1;
     _adRequest = request;
+    _adUnitId = adUnitId;
     _bannerView = [[GAMBannerView alloc] initWithAdSize:kGADAdSizeFluid];
     _bannerView.adUnitID = adUnitId;
     _bannerView.rootViewController = rootViewController;
@@ -470,7 +513,7 @@
 }
 
 - (void)load {
-  [self.bannerView loadRequest:_adRequest.asGAMRequest];
+  [self.bannerView loadRequest:[_adRequest asGAMRequest:_adUnitId]];
 }
 
 #pragma mark - FlutterPlatformView
@@ -547,7 +590,7 @@
 
 - (void)load {
   [GADInterstitialAd loadWithAdUnitID:_adUnitId
-                              request:[_adRequest asGADRequest]
+                              request:[_adRequest asGADRequest:_adUnitId]
                     completionHandler:^(GADInterstitialAd *ad, NSError *error) {
                       if (error) {
                         [self.manager onAdFailedToLoad:self error:error];
@@ -634,7 +677,7 @@
 - (void)load {
   [GAMInterstitialAd
       loadWithAdManagerAdUnitID:_adUnitId
-                        request:[_adRequest asGAMRequest]
+                        request:[_adRequest asGAMRequest:_adUnitId]
               completionHandler:^(GAMInterstitialAd *ad, NSError *error) {
                 if (error) {
                   [self.manager onAdFailedToLoad:self error:error];
@@ -711,9 +754,9 @@
   GADRequest *request;
   if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
     FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
-    request = gamRequest.asGAMRequest;
+    request = [gamRequest asGAMRequest:_adUnitId];
   } else if ([_adRequest isKindOfClass:[FLTAdRequest class]]) {
-    request = _adRequest.asGADRequest;
+    request = [_adRequest asGADRequest:_adUnitId];
   } else {
     NSLog(@"A null or invalid ad request was provided.");
     return;
@@ -825,9 +868,9 @@
   GADRequest *request;
   if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
     FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
-    request = gamRequest.asGAMRequest;
+    request = [gamRequest asGAMRequest:_adUnitId];
   } else if ([_adRequest isKindOfClass:[FLTAdRequest class]]) {
-    request = _adRequest.asGADRequest;
+    request = [_adRequest asGADRequest:_adUnitId];
   } else {
     NSLog(@"A null or invalid ad request was provided.");
     return;
@@ -953,9 +996,9 @@
   GADRequest *request;
   if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
     FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
-    request = gamRequest.asGAMRequest;
+    request = [gamRequest asGAMRequest:_adUnitId];
   } else {
-    request = _adRequest.asGADRequest;
+    request = [_adRequest asGADRequest:_adUnitId];
   }
 
   [self.adLoader loadRequest:request];

@@ -1,4 +1,11 @@
-## 0.14.0
+## 1.0.0
+
+* Mediation is now supported in beta.
+  * There are new APIs to support passing network extras to mediation adapters:
+    * [MediationNetworkExtrasProvider](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/android/src/main/java/io/flutter/plugins/googlemobileads/MediationNetworkExtrasProvider.java)
+      on Android and [FLTMediationNetworkExtrasProvider](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/ios/Classes/FLTConstants.h) on iOS
+  * See the mediation example app [README](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/mediation_example/README.md)
+    for more details on how to use these APIs.
 
 * Fix for Android 12 issue [#330](https://github.com/googleads/googleads-mobile-flutter/issues/330)
   * This will break compilation on android if you do not already set `compileSdkVersion` to `31`, or override the WorkManager dependency to < 2.7.0:
@@ -25,6 +32,7 @@
     ```dart
       AdRequest request = AdRequest(extras: {'rdp': '1'});
     ```
+    
 ## 0.13.6
 
 * Partial fix for [#265](https://github.com/googleads/googleads-mobile-flutter/issues/265).

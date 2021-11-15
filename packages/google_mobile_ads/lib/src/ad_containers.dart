@@ -190,6 +190,7 @@ class AdRequest {
     this.nonPersonalizedAds,
     this.httpTimeoutMillis,
     this.location,
+    this.mediationExtrasIdentifier,
     this.extras,
   });
 
@@ -220,6 +221,14 @@ class AdRequest {
   /// Used for mediation targeting purposes.
   final LocationParams? location;
 
+  /// String identifier used in providing mediation extras.
+  ///
+  /// Only relevant if you use mediation and need to provide network extras
+  /// to the ad request. This identifier will get passed to your platform-side
+  /// mediation extras factory class, allowing for additional customization
+  /// of network extras.
+  final String? mediationExtrasIdentifier;
+
   /// Extras to pass to the AdMob adapter.
   final Map<String, String>? extras;
 
@@ -232,6 +241,7 @@ class AdRequest {
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
         httpTimeoutMillis == other.httpTimeoutMillis &&
         location == other.location &&
+        mediationExtrasIdentifier == other.mediationExtrasIdentifier &&
         mapEquals<String, String>(extras, other.extras);
   }
 }
@@ -249,6 +259,7 @@ class AdManagerAdRequest extends AdRequest {
     int? httpTimeoutMillis,
     this.publisherProvidedId,
     LocationParams? location,
+    String? mediationExtrasIdentifier,
     Map<String, String>? extras,
   }) : super(
           keywords: keywords,
@@ -257,6 +268,7 @@ class AdManagerAdRequest extends AdRequest {
           nonPersonalizedAds: nonPersonalizedAds,
           httpTimeoutMillis: httpTimeoutMillis,
           location: location,
+          mediationExtrasIdentifier: mediationExtrasIdentifier,
           extras: extras,
         );
 

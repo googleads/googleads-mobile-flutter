@@ -56,7 +56,10 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 }
 
 - (FlutterStandardReader *_Nonnull)readerWithData:(NSData *_Nonnull)data {
-  return [[FLTGoogleMobileAdsReader alloc] initWithFactory:_adSizeFactory data:data];
+  FLTGoogleMobileAdsReader *reader =
+      [[FLTGoogleMobileAdsReader alloc] initWithFactory:_adSizeFactory data:data];
+  reader.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
+  return reader;
 }
 
 - (FlutterStandardWriter *_Nonnull)writerWithData:(NSMutableData *_Nonnull)data {
@@ -92,6 +95,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.nonPersonalizedAds = nonPersonalizedAds.boolValue;
       request.neighboringContentURLs = [self readValueOfType:[self readByte]];
       request.location = [self readValueOfType:[self readByte]];
+      request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
+      request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
       request.adMobExtras = [self readValueOfType:[self readByte]];
       return request;
     }
@@ -157,6 +162,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.neighboringContentURLs = [self readValueOfType:[self readByte]];
       request.pubProvidedID = [self readValueOfType:[self readByte]];
       request.location = [self readValueOfType:[self readByte]];
+      request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
+      request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
       request.adMobExtras = [self readValueOfType:[self readByte]];
       return request;
     }
@@ -280,6 +287,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.neighboringContentURLs];
     [self writeValue:request.pubProvidedID];
     [self writeValue:request.location];
+    [self writeValue:request.mediationExtrasIdentifier];
     [self writeValue:request.adMobExtras];
   } else if ([value isKindOfClass:[FLTAdRequest class]]) {
     [self writeByte:FLTAdMobFieldAdRequest];
@@ -289,6 +297,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:@(request.nonPersonalizedAds)];
     [self writeValue:request.neighboringContentURLs];
     [self writeValue:request.location];
+    [self writeValue:request.mediationExtrasIdentifier];
     [self writeValue:request.adMobExtras];
   } else if ([value isKindOfClass:[FLTRewardItem class]]) {
     [self writeByte:FLTAdMobFieldRewardItem];

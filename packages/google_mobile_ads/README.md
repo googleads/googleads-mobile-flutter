@@ -1712,3 +1712,10 @@ iOS and `com.google.android.gms.ads` on Android, the `GetMessage()` can be
 looked up in [this help center
 article](//support.google.com/admob/answer/9905175) for a more detailed
 explanation and possible actions that can be taken to resolve the issue.
+
+
+## Mediation
+
+This plugin supports mediation.
+See the [mediation example app](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/mediation_example/README.md)
+for details on how to set up mediation.

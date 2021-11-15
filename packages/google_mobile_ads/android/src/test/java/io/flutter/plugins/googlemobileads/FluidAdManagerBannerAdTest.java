@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
@@ -65,7 +66,7 @@ public class FluidAdManagerBannerAdTest {
     mockManager = spy(new AdInstanceManager(mock(MethodChannel.class)));
     FlutterAdManagerAdRequest mockFlutterAdRequest = mock(FlutterAdManagerAdRequest.class);
     mockAdRequest = mock(AdManagerAdRequest.class);
-    when(mockFlutterAdRequest.asAdManagerAdRequest()).thenReturn(mockAdRequest);
+    when(mockFlutterAdRequest.asAdManagerAdRequest(anyString())).thenReturn(mockAdRequest);
     BannerAdCreator bannerAdCreator = mock(BannerAdCreator.class);
     mockAdView = mock(AdManagerAdView.class);
     doReturn(mockAdView).when(bannerAdCreator).createAdManagerAdView();

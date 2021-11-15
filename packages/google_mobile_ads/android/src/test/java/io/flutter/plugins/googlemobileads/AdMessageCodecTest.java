@@ -278,6 +278,7 @@ public class AdMessageCodecTest {
             .setNeighboringContentUrls(Arrays.asList("example.com", "test.com"))
             .setHttpTimeoutMillis(1000)
             .setLocation(location)
+            .setMediationNetworkExtrasIdentifier("identifier")
             .setAdMobExtras(extras)
             .build();
     final ByteBuffer message = codec.encodeMessage(adRequest);
@@ -303,6 +304,7 @@ public class AdMessageCodecTest {
     builder.setNonPersonalizedAds(true);
     builder.setPublisherProvidedId("pub-provided-id");
     builder.setLocation(location);
+    builder.setMediationNetworkExtrasIdentifier("identifier");
     builder.setAdMobExtras(Collections.singletonMap("key", "value"));
 
     FlutterAdManagerAdRequest flutterAdManagerAdRequest = builder.build();
