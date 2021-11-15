@@ -712,7 +712,7 @@ public class GoogleMobileAdsTest {
 
     // Method call for getAdSize.
     Result getAdSizeResult = mock(Result.class);
-    Map<String, Object> getAdSizeArgs = Collections.singletonMap("adId", 1);
+    Map<String, Object> getAdSizeArgs = Collections.singletonMap("adId", (Object) 1);
     MethodCall getAdSizeMethodCall = new MethodCall("getAdSize", getAdSizeArgs);
     pluginSpy.onMethodCall(getAdSizeMethodCall, getAdSizeResult);
 
@@ -754,12 +754,20 @@ public class GoogleMobileAdsTest {
 
     // Method call for getAdSize.
     Result getAdSizeResult = mock(Result.class);
-    Map<String, Object> getAdSizeArgs = Collections.singletonMap("adId", 1);
+    Map<String, Object> getAdSizeArgs = Collections.singletonMap("adId", (Object) 1);
     MethodCall getAdSizeMethodCall = new MethodCall("getAdSize", getAdSizeArgs);
     pluginSpy.onMethodCall(getAdSizeMethodCall, getAdSizeResult);
 
     ArgumentCaptor<FlutterAdSize> argumentCaptor = ArgumentCaptor.forClass(FlutterAdSize.class);
     verify(getAdSizeResult).success(argumentCaptor.capture());
     assertEquals(argumentCaptor.getValue().getAdSize(), adSize);
+  }
+
+  @Test
+  public void testAppStateNotifieDetachFromEngine() {
+    AppStateNotifier notifier = mock(AppStateNotifier.class);
+    GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(notifier);
+    plugin.onDetachedFromEngine(null);
+    verify(notifier).stop();
   }
 }
