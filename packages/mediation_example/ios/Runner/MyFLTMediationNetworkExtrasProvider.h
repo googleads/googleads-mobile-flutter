@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package io.flutter.plugins.googlemobileads;
+#ifndef MyFLTMediationNetworkExtrasProvider_h
+#define MyFLTMediationNetworkExtrasProvider_h
 
-/** Constants used in the plugin. */
-public class Constants {
-  /** Version request agent. Should be bumped alongside plugin versions. */
-  public static final String REQUEST_AGENT_PREFIX_VERSIONED = "Flutter-GMA-1.0.0";
+#endif /* MyFLTMediationNetworkExtrasProvider_h */
 
-  static final String ERROR_CODE_UNEXPECTED_AD_TYPE = "unexpected_ad_type";
-}
+#import <FLTMediationNetworkExtrasProvider.h>
+
+/** Provides network specific mediation extras for ad requests. */
+@interface MyFLTMediationNetworkExtrasProvider : NSObject <FLTMediationNetworkExtrasProvider>
+
+@end
