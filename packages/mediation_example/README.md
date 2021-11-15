@@ -8,10 +8,15 @@ sources, such as third party ad networks.
 
 ## Initialize the SDK
 
-When you initialize the Mobile Ads SDK, mediation and bidding adapters also get
-initialized. It is important to wait for initialization to complete before you
-load ads in order to ensure full participation from every ad network on the
-first ad request.
+Make sure to add your app id to your AndroidManifest.xml and Info.plist. This
+example project will not run until this is done. More information on how to this
+can be found [here](https://developers.google.com/admob/flutter/quick-start#import_the_mobile_ads_sdk).
+
+
+When you [initialize the Mobile Ads SDK](https://developers.google.com/admob/flutter/quick-start#initialize_the_mobile_ads_sdk),
+mediation and bidding adapters also get initialized. It is important to wait for
+initialization to complete before you load ads in order to ensure full
+participation from every ad network on the first ad request.
 
 The sample code shows you how you can check each adapter's initialization status
 prior to making an ad request.
@@ -46,14 +51,14 @@ final bannerAd = BannerAd(
 ```
 
 
-## Configuring the ad unit to use mediation in Admob or Ad Manager
+## Configure the ad unit to use mediation in Admob or Ad Manager
 This is done in the Admob or Ad Manager UI. See the following links for details
 of how to configure mediation:
 * AdMob: https://support.google.com/admob/answer/3124703?hl=en&ref_topic=7383089
 * Ad Manager: https://support.google.com/admanager/answer/7387351?hl=en&ref_topic=6373639
 
 
-## Configuring your account and ad in the mediation network's UI
+## Configure your account and ad in the mediation network's UI
 This is described in the `integrate partner networks` section in the GMA devsite
 for each network:
 * https://developers.google.com/admob/android/mediate
@@ -61,10 +66,17 @@ for each network:
 * https://developers.google.com/admob/ios/mediate
 * https://developers.google.com/ad-manager/mobile-ads-sdk/ios/mediate
 
-## Adding the mediation adapter libraries to your Android and iOS projects
+## Add the mediation adapter libraries to your Android and iOS projects
 Each network may have its own dependencies that need to be added to your `build.gradle` 
-and `podfile`. The dependencies required for each network are listed the GMA devsite 
-links above.
+and `podfile`. The dependencies required for each network are listed in the GMA
+devsite links above.
+
+There may also be additional setup required for the network. For example,
+AppLovin requires you to add its key to your [AndroidManifest.xml on Android](https://developers.google.com/admob/android/mediation/applovin#step_1_set_up_applovin)
+and [Podfile on iOS](https://developers.google.com/admob/ios/mediation/applovin#step_1_set_up_applovin).
+See the TODOs in the [AndroidManifest.xml](https://github.com/googleads/googleads-mobile-flutter/tree/master/packages/mediation_example/android/app/src/main/AndroidManifest.xml)
+and [Podfile](https://github.com/googleads/googleads-mobile-flutter/tree/master/packages/mediation_example/ios/Runner/Info.plist)
+for where to add them.
 
 ## Call APIs in the mediation network's SDK
 You can call APIs in the mediation network SDK from dart code by using a
@@ -74,7 +86,7 @@ The following sample shows you how to call privacy APIs in AppLovin:
 
 In your dart code, create a method channel:
 ```dart
-// Wraps a method channel that makes calls to AppLovin privacy APIs.
+/// Wraps a method channel that makes calls to AppLovin privacy APIs.
 class MyMethodChannel {
   final MethodChannel _methodChannel =
       MethodChannel('com.example.mediationexample/mediation-channel');
@@ -136,7 +148,7 @@ public class MainActivity extends FlutterActivity {
 ```
 
 And in your iOS application:
-```objectivec
+```objective-c
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application
@@ -215,7 +227,7 @@ class MyMediationNetworkExtrasProvider implements MediationNetworkExtrasProvider
 ```
 
 iOS Sample:
-```objectivec
+```objective-c
 
 @implementation AppDelegate
 

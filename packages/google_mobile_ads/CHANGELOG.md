@@ -14,7 +14,7 @@
 * Fixes issue [#404](https://github.com/googleads/googleads-mobile-flutter/issues/404)
   * Adds a new dart class, `AppStateEventNotifier`. You should subscribe to `AppStateEventNotifier.appStateStream`
     instead of using `WidgetsBindingObserver` to listen to app foreground/background events.
-  * See the app open [example app](https://github.com/googleads/googleads-mobile-flutter/tree/master/packages/app_open_example) for a reference
+  * See the app open [example app](https://github.com/googleads/googleads-mobile-flutter/tree/master/packages/mediation_example) for a reference
     on how to use the new API.
     
 * Adds a new parameter `extras` to `AdRequest` and `AdManagerAdRequest`.
