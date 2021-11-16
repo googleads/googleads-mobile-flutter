@@ -72,7 +72,7 @@ public class FlutterAppOpenAdTest {
   private void setupAdmobMocks() {
     FlutterAdRequest mockFlutterAdRequest = mock(FlutterAdRequest.class);
     mockAdRequest = mock(AdRequest.class);
-    when(mockFlutterAdRequest.asAdRequest()).thenReturn(mockAdRequest);
+    when(mockFlutterAdRequest.asAdRequest(anyString())).thenReturn(mockAdRequest);
     flutterAppOpenAd =
         new FlutterAppOpenAd(
             1, 2, mockManager, "testId", mockFlutterAdRequest, null, mockFlutterAdLoader);
@@ -81,7 +81,8 @@ public class FlutterAppOpenAdTest {
   private void setupAdManagerMocks() {
     FlutterAdManagerAdRequest mockAdManagerFlutterRequest = mock(FlutterAdManagerAdRequest.class);
     mockAdManagerAdRequest = mock(AdManagerAdRequest.class);
-    when(mockAdManagerFlutterRequest.asAdManagerAdRequest()).thenReturn(mockAdManagerAdRequest);
+    when(mockAdManagerFlutterRequest.asAdManagerAdRequest(anyString()))
+        .thenReturn(mockAdManagerAdRequest);
     flutterAppOpenAd =
         new FlutterAppOpenAd(
             1, 2, mockManager, "testId", null, mockAdManagerFlutterRequest, mockFlutterAdLoader);

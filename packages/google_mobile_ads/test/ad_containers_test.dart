@@ -1322,13 +1322,16 @@ void main() {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
       final AdRequest adRequest = AdRequest(
-          keywords: <String>['1', '2', '3'],
-          contentUrl: 'contentUrl',
-          nonPersonalizedAds: false,
-          neighboringContentUrls: <String>['url1.com', 'url2.com'],
-          httpTimeoutMillis: 12345,
-          location: LocationParams(
-              accuracy: 1.1, longitude: 25, latitude: 38, time: 1));
+        keywords: <String>['1', '2', '3'],
+        contentUrl: 'contentUrl',
+        nonPersonalizedAds: false,
+        neighboringContentUrls: <String>['url1.com', 'url2.com'],
+        httpTimeoutMillis: 12345,
+        location:
+            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+        mediationExtrasIdentifier: 'identifier',
+        extras: {'key': 'value'},
+      );
 
       final ByteData byteData = codec.encodeMessage(adRequest)!;
       expect(codec.decodeMessage(byteData), adRequest);
@@ -1338,13 +1341,16 @@ void main() {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
       final AdRequest adRequest = AdRequest(
-          keywords: <String>['1', '2', '3'],
-          contentUrl: 'contentUrl',
-          nonPersonalizedAds: false,
-          neighboringContentUrls: <String>['url1.com', 'url2.com'],
-          httpTimeoutMillis: 12345,
-          location: LocationParams(
-              accuracy: 1.1, longitude: 25, latitude: 38, time: 1));
+        keywords: <String>['1', '2', '3'],
+        contentUrl: 'contentUrl',
+        nonPersonalizedAds: false,
+        neighboringContentUrls: <String>['url1.com', 'url2.com'],
+        httpTimeoutMillis: 12345,
+        location:
+            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+        mediationExtrasIdentifier: 'identifier',
+        extras: {'key': 'value'},
+      );
 
       final ByteData byteData = codec.encodeMessage(adRequest)!;
       AdRequest decoded = codec.decodeMessage(byteData);
@@ -1353,9 +1359,11 @@ void main() {
       expect(decoded.contentUrl, adRequest.contentUrl);
       expect(decoded.nonPersonalizedAds, adRequest.nonPersonalizedAds);
       expect(decoded.keywords, adRequest.keywords);
+      // Time is not included on iOS.
       expect(decoded.location!.accuracy, 1.1);
       expect(decoded.location!.longitude, 25);
       expect(decoded.location!.latitude, 38);
+      expect(decoded.mediationExtrasIdentifier, 'identifier');
     });
 
     test('encode/decode $LoadAdError', () async {
@@ -1492,7 +1500,7 @@ void main() {
       );
     });
 
-    test('encode/decode AdManagerAdRequest Android', () async {
+    test('encode/decode $AdManagerAdRequest Android', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final AdManagerAdRequest request = AdManagerAdRequest(
         keywords: <String>['who'],
@@ -1507,6 +1515,8 @@ void main() {
         publisherProvidedId: 'test-pub-id',
         location:
             LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+        mediationExtrasIdentifier: 'identifier',
+        extras: {'key': 'value'},
       );
       final ByteData byteData = codec.encodeMessage(request)!;
 
@@ -1516,7 +1526,7 @@ void main() {
       );
     });
 
-    test('encode/decode AdManagerAdRequest iOS', () async {
+    test('encode/decode $AdManagerAdRequest iOS', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
       final AdManagerAdRequest request = AdManagerAdRequest(
@@ -1532,6 +1542,8 @@ void main() {
         publisherProvidedId: 'test-pub-id',
         location:
             LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
+        mediationExtrasIdentifier: 'identifier',
+        extras: {'key': 'value'},
       );
 
       final ByteData byteData = codec.encodeMessage(request)!;
@@ -1544,9 +1556,11 @@ void main() {
       expect(decoded.publisherProvidedId, request.publisherProvidedId);
       expect(decoded.customTargeting, request.customTargeting);
       expect(decoded.customTargetingLists, request.customTargetingLists);
+      // Time is not included on iOS.
       expect(decoded.location!.accuracy, 1.1);
       expect(decoded.location!.longitude, 25);
       expect(decoded.location!.latitude, 38);
+      expect(decoded.mediationExtrasIdentifier, 'identifier');
     });
   });
 }

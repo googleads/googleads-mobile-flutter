@@ -229,6 +229,8 @@
   NSArray<NSString *> *contentURLs = @[ @"url-1.com", @"url-2.com" ];
   request.neighboringContentURLs = contentURLs;
   request.location = [[FLTLocationParams alloc] initWithAccuracy:@1.5 longitude:@52 latitude:@123];
+  request.mediationExtrasIdentifier = @"identifier";
+  request.adMobExtras = @{@"key" : @"value"};
   NSData *encodedMessage = [_messageCodec encode:request];
 
   FLTAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
@@ -239,6 +241,8 @@
   XCTAssertEqualObjects(decodedRequest.location.accuracy, @1.5);
   XCTAssertEqualObjects(decodedRequest.location.longitude, @52);
   XCTAssertEqualObjects(decodedRequest.location.latitude, @123);
+  XCTAssertEqualObjects(decodedRequest.mediationExtrasIdentifier, @"identifier");
+  XCTAssertEqualObjects(decodedRequest.adMobExtras, @{@"key" : @"value"});
 }
 
 - (void)testEncodeDecodeGAMAdRequest {
@@ -252,6 +256,8 @@
   request.neighboringContentURLs = contentURLs;
   request.pubProvidedID = @"pub-id";
   request.location = [[FLTLocationParams alloc] initWithAccuracy:@1.5 longitude:@52 latitude:@123];
+  request.mediationExtrasIdentifier = @"identifier";
+  request.adMobExtras = @{@"key" : @"value"};
   NSData *encodedMessage = [_messageCodec encode:request];
 
   FLTGAMAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
@@ -266,6 +272,8 @@
   XCTAssertEqualObjects(decodedRequest.location.accuracy, @1.5);
   XCTAssertEqualObjects(decodedRequest.location.longitude, @52);
   XCTAssertEqualObjects(decodedRequest.location.latitude, @123);
+  XCTAssertEqualObjects(decodedRequest.mediationExtrasIdentifier, @"identifier");
+  XCTAssertEqualObjects(decodedRequest.adMobExtras, @{@"key" : @"value"});
 }
 
 - (void)testEncodeDecodeRewardItem {

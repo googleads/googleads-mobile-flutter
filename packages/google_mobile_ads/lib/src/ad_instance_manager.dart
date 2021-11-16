@@ -737,6 +737,8 @@ class AdMessageCodec extends StandardMessageCodec {
       }
       writeValue(buffer, value.publisherProvidedId);
       writeValue(buffer, value.location);
+      writeValue(buffer, value.mediationExtrasIdentifier);
+      writeValue(buffer, value.extras);
     } else if (value is AdRequest) {
       buffer.putUint8(_valueAdRequest);
       writeValue(buffer, value.keywords);
@@ -747,6 +749,8 @@ class AdMessageCodec extends StandardMessageCodec {
         writeValue(buffer, value.httpTimeoutMillis);
       }
       writeValue(buffer, value.location);
+      writeValue(buffer, value.mediationExtrasIdentifier);
+      writeValue(buffer, value.extras);
     } else if (value is RewardItem) {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
@@ -885,6 +889,9 @@ class AdMessageCodec extends StandardMessageCodec {
               ? readValueOfType(buffer.getUint8(), buffer)
               : null,
           location: readValueOfType(buffer.getUint8(), buffer),
+          mediationExtrasIdentifier: readValueOfType(buffer.getUint8(), buffer),
+          extras: readValueOfType(buffer.getUint8(), buffer)
+              ?.cast<String, String>(),
         );
       case _valueRewardItem:
         return RewardItem(
@@ -934,6 +941,9 @@ class AdMessageCodec extends StandardMessageCodec {
               : null,
           publisherProvidedId: readValueOfType(buffer.getUint8(), buffer),
           location: readValueOfType(buffer.getUint8(), buffer),
+          mediationExtrasIdentifier: readValueOfType(buffer.getUint8(), buffer),
+          extras: readValueOfType(buffer.getUint8(), buffer)
+              ?.cast<String, String>(),
         );
       case _valueInitializationState:
         switch (readValueOfType(buffer.getUint8(), buffer)) {

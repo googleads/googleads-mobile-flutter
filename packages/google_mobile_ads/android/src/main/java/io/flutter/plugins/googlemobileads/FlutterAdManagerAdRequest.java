@@ -15,9 +15,7 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.location.Location;
-import android.os.Bundle;
 import androidx.annotation.Nullable;
-import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +27,9 @@ import java.util.Objects;
  */
 class FlutterAdManagerAdRequest extends FlutterAdRequest {
 
-  @Nullable private Map<String, String> customTargeting;
-  @Nullable private Map<String, List<String>> customTargetingLists;
-  @Nullable private String publisherProvidedId;
+  @Nullable private final Map<String, String> customTargeting;
+  @Nullable private final Map<String, List<String>> customTargetingLists;
+  @Nullable private final String publisherProvidedId;
 
   static class Builder extends FlutterAdRequest.Builder {
 
@@ -65,7 +63,10 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
           getNeighboringContentUrls(),
           getHttpTimeoutMillis(),
           getLocation(),
-          publisherProvidedId);
+          publisherProvidedId,
+          getMediationExtrasIdentifier(),
+          getMediationNetworkExtrasProvider(),
+          getAdMobExtras());
     }
   }
 
@@ -78,30 +79,29 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
       @Nullable List<String> neighboringContentUrls,
       @Nullable Integer httpTimeoutMillis,
       @Nullable Location location,
-      @Nullable String publisherProvidedId) {
+      @Nullable String publisherProvidedId,
+      @Nullable String mediationExtrasIdentifier,
+      @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider,
+      @Nullable Map<String, String> adMobExtras) {
     super(
         keywords,
         contentUrl,
         nonPersonalizedAds,
         neighboringContentUrls,
         httpTimeoutMillis,
-        location);
+        location,
+        mediationExtrasIdentifier,
+        mediationNetworkExtrasProvider,
+        adMobExtras);
     this.customTargeting = customTargeting;
     this.customTargetingLists = customTargetingLists;
     this.publisherProvidedId = publisherProvidedId;
   }
 
-  AdManagerAdRequest asAdManagerAdRequest() {
+  AdManagerAdRequest asAdManagerAdRequest(String adUnitId) {
     final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
-    if (getKeywords() != null) {
-      for (final String keyword : getKeywords()) {
-        builder.addKeyword(keyword);
-      }
-    }
+    updateAdRequestBuilder(builder, adUnitId);
 
-    if (getContentUrl() != null) {
-      builder.setContentUrl(getContentUrl());
-    }
     if (customTargeting != null) {
       for (final Map.Entry<String, String> entry : customTargeting.entrySet()) {
         builder.addCustomTargeting(entry.getKey(), entry.getValue());
@@ -112,18 +112,9 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
         builder.addCustomTargeting(entry.getKey(), entry.getValue());
       }
     }
-    if (getNonPersonalizedAds() != null && getNonPersonalizedAds()) {
-      final Bundle extras = new Bundle();
-      extras.putString("npa", "1");
-      builder.addNetworkExtrasBundle(AdMobAdapter.class, extras);
-    }
     if (publisherProvidedId != null) {
       builder.setPublisherProvidedId(publisherProvidedId);
     }
-    if (getLocation() != null) {
-      builder.setLocation(getLocation());
-    }
-    builder.setRequestAgent(Constants.REQUEST_AGENT_PREFIX_VERSIONED);
     return builder.build();
   }
 

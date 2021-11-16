@@ -59,9 +59,10 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   // This is always null when not using v2 embedding.
   @Nullable private FlutterPluginBinding pluginBinding;
   @Nullable private AdInstanceManager instanceManager;
-  @Nullable private ActivityPluginBinding activityBinding;
   @Nullable private AdMessageCodec adMessageCodec;
+  @Nullable private AppStateNotifier appStateNotifier;
   private final Map<String, NativeAdFactory> nativeAdFactories = new HashMap<>();
+  @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
   private final FlutterMobileAdsWrapper flutterMobileAds;
   /**
    * Public constructor for the plugin. Dependency initialization is handled in lifecycle methods
@@ -98,7 +99,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
      * @param customOptions Used to pass additional custom options to create the {@link
      *     com.google.android.gms.ads.nativead.NativeAdView}. Nullable.
      * @return a {@link com.google.android.gms.ads.nativead.NativeAdView} that is overlaid on top of
-     *     the FlutterView.
+     *     the FlutterView
      */
     NativeAdView createNativeAd(NativeAd nativeAd, Map<String, Object> customOptions);
   }
@@ -108,18 +109,61 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    * used to create {@link com.google.android.gms.ads.nativead.NativeAdView}s from a Native Ad
    * created in Dart.
    *
-   * @param engine maintains access to a GoogleMobileAdsPlugin instance.
+   * @param engine maintains access to a GoogleMobileAdsPlugin instance
    * @param factoryId a unique identifier for the ad factory. The Native Ad created in Dart includes
    *     a parameter that refers to this.
    * @param nativeAdFactory creates {@link com.google.android.gms.ads.nativead.NativeAdView}s when
-   *     Flutter NativeAds are created.
-   * @return whether the factoryId is unique and the nativeAdFactory was successfully added.
+   *     Flutter NativeAds are created
+   * @return whether the factoryId is unique and the nativeAdFactory was successfully added
    */
   public static boolean registerNativeAdFactory(
       FlutterEngine engine, String factoryId, NativeAdFactory nativeAdFactory) {
     final GoogleMobileAdsPlugin gmaPlugin =
         (GoogleMobileAdsPlugin) engine.getPlugins().get(GoogleMobileAdsPlugin.class);
     return registerNativeAdFactory(gmaPlugin, factoryId, nativeAdFactory);
+  }
+
+  /**
+   * Registers a {@link MediationNetworkExtrasProvider} used to provide network extras to the plugin
+   * when it creates ad requests.
+   *
+   * @param engine The {@link FlutterEngine} which should have an attached instance of this plugin
+   * @param mediationNetworkExtrasProvider The {@link MediationNetworkExtrasProvider} which will be
+   *     used to provide network extras when ad requests are created
+   * @return whether {@code mediationNetworkExtrasProvider} was registered to a {@code
+   *     GoogleMobileAdsPlugin} associated with {@code engine}
+   */
+  public static boolean registerMediationNetworkExtrasProvider(
+      FlutterEngine engine, MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
+    final GoogleMobileAdsPlugin gmaPlugin =
+        (GoogleMobileAdsPlugin) engine.getPlugins().get(GoogleMobileAdsPlugin.class);
+    if (gmaPlugin == null) {
+      return false;
+    }
+    gmaPlugin.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
+    if (gmaPlugin.adMessageCodec != null) {
+      gmaPlugin.adMessageCodec.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
+    }
+    return true;
+  }
+
+  /**
+   * Unregisters any {@link MediationNetworkExtrasProvider} that have been previously registered
+   * with the plugin using {@code unregisterMediationNetworkExtrasProvider}.
+   *
+   * @param engine The {@link FlutterEngine} which should have an attached instance of this plugin
+   */
+  public static void unregisterMediationNetworkExtrasProvider(FlutterEngine engine) {
+    final GoogleMobileAdsPlugin gmaPlugin =
+        (GoogleMobileAdsPlugin) engine.getPlugins().get(GoogleMobileAdsPlugin.class);
+    if (gmaPlugin == null) {
+      return;
+    }
+
+    if (gmaPlugin.adMessageCodec != null) {
+      gmaPlugin.adMessageCodec.setMediationNetworkExtrasProvider(null);
+    }
+    gmaPlugin.mediationNetworkExtrasProvider = null;
   }
 
   private static boolean registerNativeAdFactory(
@@ -140,12 +184,12 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    * used to create {@link com.google.android.gms.ads.nativead.NativeAdView}s from a Native Ad
    * created in Dart.
    *
-   * @param engine maintains access to a GoogleMobileAdsPlugin instance.
+   * @param engine maintains access to a GoogleMobileAdsPlugin instance
    * @param factoryId a unique identifier for the ad factory. The Native ad created in Dart includes
-   *     a parameter that refers to this.
+   *     a parameter that refers to this
    * @return the previous {@link
    *     io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory} associated with
-   *     this factoryId, or null if there was none for this factoryId.
+   *     this factoryId, or null if there was none for this factoryId
    */
   public static NativeAdFactory unregisterNativeAdFactory(FlutterEngine engine, String factoryId) {
     final FlutterPlugin gmaPlugin = engine.getPlugins().get(GoogleMobileAdsPlugin.class);
@@ -177,6 +221,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   public void onAttachedToEngine(FlutterPluginBinding binding) {
     pluginBinding = binding;
     adMessageCodec = new AdMessageCodec(binding.getApplicationContext());
+    if (mediationNetworkExtrasProvider != null) {
+      adMessageCodec.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
+    }
     final MethodChannel channel =
         new MethodChannel(
             binding.getBinaryMessenger(),
@@ -189,6 +236,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         .registerViewFactory(
             "plugins.flutter.io/google_mobile_ads/ad_widget",
             new GoogleMobileAdsViewFactory(instanceManager));
+    appStateNotifier = new AppStateNotifier(binding.getBinaryMessenger());
   }
 
   @Override
@@ -198,7 +246,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
 
   @Override
   public void onAttachedToActivity(ActivityPluginBinding binding) {
-    activityBinding = binding;
     if (instanceManager != null) {
       instanceManager.setActivity(binding.getActivity());
     }
@@ -410,7 +457,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 requireNonNull(instanceManager),
                 requireNonNull(call.<String>argument("adUnitId")),
                 call.<FlutterAdRequest>argument("request"),
-                call.<FlutterAdManagerAdRequest>argument("adManagerAdRequest"),
+                call.<FlutterAdManagerAdRequest>argument("adManagerRequest"),
                 new FlutterAdLoader(appContext));
         instanceManager.trackAd(appOpenAd, call.<Integer>argument("adId"));
         appOpenAd.load();
@@ -463,10 +510,18 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         break;
       case "getAdSize":
         FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
-        if (ad instanceof FlutterBannerAd) {
+        if (ad == null) {
+          // This was called on a dart ad container that hasn't been loaded yet.
+          result.success(null);
+        } else if (ad instanceof FlutterBannerAd) {
           result.success(((FlutterBannerAd) ad).getAdSize());
         } else if (ad instanceof FlutterAdManagerBannerAd) {
           result.success(((FlutterAdManagerBannerAd) ad).getAdSize());
+        } else {
+          result.error(
+              Constants.ERROR_CODE_UNEXPECTED_AD_TYPE,
+              "Unexpected ad type for getAdSize: " + ad,
+              null);
         }
         break;
       default:
