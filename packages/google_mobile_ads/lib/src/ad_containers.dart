@@ -190,6 +190,8 @@ class AdRequest {
     this.nonPersonalizedAds,
     this.httpTimeoutMillis,
     this.location,
+    this.mediationExtrasIdentifier,
+    this.extras,
   });
 
   /// Words or phrases describing the current user activity.
@@ -219,6 +221,17 @@ class AdRequest {
   /// Used for mediation targeting purposes.
   final LocationParams? location;
 
+  /// String identifier used in providing mediation extras.
+  ///
+  /// Only relevant if you use mediation and need to provide network extras
+  /// to the ad request. This identifier will get passed to your platform-side
+  /// mediation extras factory class, allowing for additional customization
+  /// of network extras.
+  final String? mediationExtrasIdentifier;
+
+  /// Extras to pass to the AdMob adapter.
+  final Map<String, String>? extras;
+
   @override
   bool operator ==(Object other) {
     return other is AdRequest &&
@@ -227,7 +240,9 @@ class AdRequest {
         nonPersonalizedAds == other.nonPersonalizedAds &&
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
         httpTimeoutMillis == other.httpTimeoutMillis &&
-        location == other.location;
+        location == other.location &&
+        mediationExtrasIdentifier == other.mediationExtrasIdentifier &&
+        mapEquals<String, String>(extras, other.extras);
   }
 }
 
@@ -244,6 +259,8 @@ class AdManagerAdRequest extends AdRequest {
     int? httpTimeoutMillis,
     this.publisherProvidedId,
     LocationParams? location,
+    String? mediationExtrasIdentifier,
+    Map<String, String>? extras,
   }) : super(
           keywords: keywords,
           contentUrl: contentUrl,
@@ -251,6 +268,8 @@ class AdManagerAdRequest extends AdRequest {
           nonPersonalizedAds: nonPersonalizedAds,
           httpTimeoutMillis: httpTimeoutMillis,
           location: location,
+          mediationExtrasIdentifier: mediationExtrasIdentifier,
+          extras: extras,
         );
 
   /// Key-value pairs used for custom targeting.
@@ -950,9 +969,9 @@ class AdManagerBannerAd extends AdWithView {
 
   /// Returns the AdSize of the associated platform ad object.
   ///
-  /// The dimensions of the [AdSize] returned here may differ from [size],
-  /// depending on what type of [AdSize] was used.
   /// The future will resolve to null if [load] has not been called yet.
+  /// The dimensions of the [AdSize] returned here may differ from [sizes],
+  /// depending on what type of [AdSize] was used.
   Future<AdSize?> getPlatformAdSize() async {
     return await instanceManager.getAdSize(this);
   }
