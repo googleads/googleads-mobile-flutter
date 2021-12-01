@@ -83,6 +83,12 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     this.flutterMobileAds = flutterMobileAds;
   }
 
+  @VisibleForTesting
+  protected GoogleMobileAdsPlugin(@NonNull AppStateNotifier appStateNotifier) {
+    this.appStateNotifier = appStateNotifier;
+    this.flutterMobileAds = null;
+  }
+
   /**
    * Interface used to display a {@link com.google.android.gms.ads.nativead.NativeAd}.
    *
@@ -241,7 +247,10 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
 
   @Override
   public void onDetachedFromEngine(FlutterPluginBinding binding) {
-    // Do nothing
+    if (appStateNotifier != null) {
+      appStateNotifier.stop();
+      appStateNotifier = null;
+    }
   }
 
   @Override
