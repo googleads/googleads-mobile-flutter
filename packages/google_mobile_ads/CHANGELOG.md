@@ -1,3 +1,9 @@
+## 1.0.1
+
+* Fix for [Issue 449](https://github.com/googleads/googleads-mobile-flutter/issues/449).
+  In `LocationParams`, time is now treated as an optional parameter on Android.
+  
+
 ## 1.0.0
 
 * Mediation is now supported in beta.
