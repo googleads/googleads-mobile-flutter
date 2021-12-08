@@ -836,6 +836,8 @@ class BannerAd extends AdWithView {
   /// Creates a [BannerAd].
   ///
   /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
+  ///
+  /// [PlatformException] will be thrown on platforms other than Android and iOS.
   BannerAd({
     required this.size,
     required String adUnitId,
