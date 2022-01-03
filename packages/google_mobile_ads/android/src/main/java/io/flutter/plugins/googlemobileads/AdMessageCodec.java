@@ -334,7 +334,10 @@ class AdMessageCodec extends StandardMessageCodec {
         location.setAccuracy(((Double) readValueOfType(buffer.get(), buffer)).floatValue());
         location.setLongitude((double) readValueOfType(buffer.get(), buffer));
         location.setLatitude((double) readValueOfType(buffer.get(), buffer));
-        location.setTime((long) readValueOfType(buffer.get(), buffer));
+        Long time = (Long) readValueOfType(buffer.get(), buffer);
+        if (time != null) {
+          location.setTime(time);
+        }
         return location;
       default:
         return super.readValueOfType(type, buffer);
