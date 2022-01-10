@@ -36,6 +36,9 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterOverlayAd;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -300,6 +303,21 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
       Log.e(TAG, "method call received before instanceManager initialized: " + call.method);
       return;
     }
+
+    try {
+      doCall(call, result);
+    } catch (LinkageError e) {
+      StringWriter st = new StringWriter();
+      e.printStackTrace(new PrintWriter(st));
+
+      result.error(
+        "UnexpectedException",
+        "Unexpected exception " + e.toString() + ": " + e.getMessage() + "\n" + st.toString(),
+        null);
+    }
+  }
+
+  private void doCall(@NonNull MethodCall call, @NonNull final Result result) {
     // Use activity as context if available.
     Context context =
         (instanceManager.getActivity() != null)
