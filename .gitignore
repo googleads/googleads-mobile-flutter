@@ -73,3 +73,5 @@ yarn-error.log*
 
 .editorconfig
 .vscode/
+*.plist
+*.pbxproj
