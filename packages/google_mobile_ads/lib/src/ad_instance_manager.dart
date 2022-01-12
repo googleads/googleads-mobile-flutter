@@ -496,6 +496,28 @@ class AdInstanceManager {
     );
   }
 
+  /// Starts loading the ad if not previously loaded.
+  ///
+  /// Loading also terminates if ad is already in the process of loading.
+  Future<void> loadRewardedInterstitialAd(RewardedInterstitialAd ad) {
+    if (adIdFor(ad) != null) {
+      return Future<void>.value();
+    }
+
+    final int adId = _nextAdId++;
+    _loadedAds[adId] = ad;
+    return channel.invokeMethod<void>(
+      'loadRewardedInterstitialAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+        'adManagerRequest': ad.adManagerRequest,
+        'serverSideVerificationOptions': ad.serverSideVerificationOptions,
+      },
+    );
+  }
+
   /// Load an app open ad.
   Future<void> loadAppOpenAd(AppOpenAd ad) {
     if (adIdFor(ad) != null) {
