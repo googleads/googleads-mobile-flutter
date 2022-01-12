@@ -390,30 +390,31 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         result.success(null);
         break;
       case "loadRewardedAd":
-        final String adUnitId = requireNonNull(call.<String>argument("adUnitId"));
-        final FlutterAdRequest request = call.argument("request");
-        final FlutterAdManagerAdRequest adManagerRequest = call.argument("adManagerRequest");
-        final FlutterServerSideVerificationOptions serverSideVerificationOptions =
+        final String rewardedAdUnitId = requireNonNull(call.<String>argument("adUnitId"));
+        final FlutterAdRequest rewardedAdRequest = call.argument("request");
+        final FlutterAdManagerAdRequest rewardedAdManagerRequest =
+            call.argument("adManagerRequest");
+        final FlutterServerSideVerificationOptions rewardedAdServerSideVerificationOptions =
             call.argument("serverSideVerificationOptions");
 
         final FlutterRewardedAd rewardedAd;
-        if (request != null) {
+        if (rewardedAdRequest != null) {
           rewardedAd =
               new FlutterRewardedAd(
                   call.<Integer>argument("adId"),
                   requireNonNull(instanceManager),
-                  adUnitId,
-                  request,
-                  serverSideVerificationOptions,
+                  rewardedAdUnitId,
+                  rewardedAdRequest,
+                  rewardedAdServerSideVerificationOptions,
                   new FlutterAdLoader(context));
-        } else if (adManagerRequest != null) {
+        } else if (rewardedAdManagerRequest != null) {
           rewardedAd =
               new FlutterRewardedAd(
                   call.<Integer>argument("adId"),
                   requireNonNull(instanceManager),
-                  adUnitId,
-                  adManagerRequest,
-                  serverSideVerificationOptions,
+                  rewardedAdUnitId,
+                  rewardedAdManagerRequest,
+                  rewardedAdServerSideVerificationOptions,
                   new FlutterAdLoader(context));
         } else {
           result.error("InvalidRequest", "A null or invalid ad request was provided.", null);
@@ -460,6 +461,45 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         instanceManager.trackAd(
             adManagerInterstitialAd, requireNonNull(call.<Integer>argument("adId")));
         adManagerInterstitialAd.load();
+        result.success(null);
+        break;
+      case "loadRewardedInterstitialAd":
+        final String rewardedInterstitialAdUnitId =
+            requireNonNull(call.<String>argument("adUnitId"));
+        final FlutterAdRequest rewardedInterstitialAdRequest = call.argument("request");
+        final FlutterAdManagerAdRequest rewardedInterstitialAdManagerRequest =
+            call.argument("adManagerRequest");
+        final FlutterServerSideVerificationOptions
+            rewardedInterstitialAdServerSideVerificationOptions =
+                call.argument("serverSideVerificationOptions");
+
+        final FlutterRewardedInterstitialAd rewardedInterstitialAd;
+        if (rewardedInterstitialAdRequest != null) {
+          rewardedInterstitialAd =
+              new FlutterRewardedInterstitialAd(
+                  call.<Integer>argument("adId"),
+                  requireNonNull(instanceManager),
+                  rewardedInterstitialAdUnitId,
+                  rewardedInterstitialAdRequest,
+                  rewardedInterstitialAdServerSideVerificationOptions,
+                  new FlutterAdLoader(context));
+        } else if (rewardedInterstitialAdManagerRequest != null) {
+          rewardedInterstitialAd =
+              new FlutterRewardedInterstitialAd(
+                  call.<Integer>argument("adId"),
+                  requireNonNull(instanceManager),
+                  rewardedInterstitialAdUnitId,
+                  rewardedInterstitialAdManagerRequest,
+                  rewardedInterstitialAdServerSideVerificationOptions,
+                  new FlutterAdLoader(context));
+        } else {
+          result.error("InvalidRequest", "A null or invalid ad request was provided.", null);
+          break;
+        }
+
+        instanceManager.trackAd(
+            rewardedInterstitialAd, requireNonNull(call.<Integer>argument("adId")));
+        rewardedInterstitialAd.load();
         result.success(null);
         break;
       case "loadAppOpenAd":
