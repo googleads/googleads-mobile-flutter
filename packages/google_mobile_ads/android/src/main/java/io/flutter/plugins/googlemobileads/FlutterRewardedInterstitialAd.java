@@ -76,7 +76,8 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
   void load() {
     final RewardedInterstitialAdLoadCallback adLoadCallback = new DelegatingRewardedCallback(this);
     if (request != null) {
-      flutterAdLoader.loadRewardedInterstitial(adUnitId, request.asAdRequest(adUnitId), adLoadCallback);
+      flutterAdLoader.loadRewardedInterstitial(
+          adUnitId, request.asAdRequest(adUnitId), adLoadCallback);
     } else if (adManagerRequest != null) {
       flutterAdLoader.loadAdManagerRewardedInterstitial(
           adUnitId, adManagerRequest.asAdManagerAdRequest(adUnitId), adLoadCallback);
