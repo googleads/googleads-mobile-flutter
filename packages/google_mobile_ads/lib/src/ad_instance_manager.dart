@@ -121,6 +121,9 @@ class AdInstanceManager {
         } else if (ad is InterstitialAd) {
           ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
               ?.call(ad);
+        } else if (ad is RewardedInterstitialAd) {
+          ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
+              ?.call(ad);
         } else if (ad is AdManagerInterstitialAd) {
           ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
               ?.call(ad);
@@ -208,6 +211,8 @@ class AdInstanceManager {
       ad.rewardedAdLoadCallback.onAdLoaded.call(ad);
     } else if (ad is InterstitialAd) {
       ad.adLoadCallback.onAdLoaded.call(ad);
+    } else if (ad is RewardedInterstitialAd) {
+      ad.rewardedInterstitialAdLoadCallback.onAdLoaded.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
       ad.adLoadCallback.onAdLoaded.call(ad);
     } else if (ad is AppOpenAd) {
@@ -227,6 +232,10 @@ class AdInstanceManager {
     } else if (ad is InterstitialAd) {
       ad.dispose();
       ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
+    } else if (ad is RewardedInterstitialAd) {
+      ad.dispose();
+      ad.rewardedInterstitialAdLoadCallback.onAdFailedToLoad
+          .call(arguments['loadAdError']);
     } else if (ad is AdManagerInterstitialAd) {
       ad.dispose();
       ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
@@ -279,6 +288,8 @@ class AdInstanceManager {
       ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
     } else if (ad is InterstitialAd) {
       ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
+    } else if (ad is RewardedInterstitialAd) {
+      ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
       ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
     } else if (ad is AppOpenAd) {
@@ -292,6 +303,8 @@ class AdInstanceManager {
     if (ad is RewardedAd) {
       ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
     } else if (ad is InterstitialAd) {
+      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+    } else if (ad is RewardedInterstitialAd) {
       ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
       ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
@@ -308,6 +321,9 @@ class AdInstanceManager {
       ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
           ?.call(ad, arguments['error']);
     } else if (ad is InterstitialAd) {
+      ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
+          ?.call(ad, arguments['error']);
+    } else if (ad is RewardedInterstitialAd) {
       ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
           ?.call(ad, arguments['error']);
     } else if (ad is AdManagerInterstitialAd) {
@@ -327,6 +343,8 @@ class AdInstanceManager {
     } else if (ad is RewardedAd) {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
     } else if (ad is InterstitialAd) {
+      ad.fullScreenContentCallback?.onAdImpression?.call(ad);
+    } else if (ad is RewardedInterstitialAd) {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
