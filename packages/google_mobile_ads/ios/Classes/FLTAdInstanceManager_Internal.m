@@ -136,7 +136,7 @@
 }
 
 - (void)onRewardedInterstitialAdUserEarnedReward:(FLTRewardedInterstitialAd *_Nonnull)ad
-                              reward:(FLTRewardItem *_Nonnull)reward {
+                                          reward:(FLTRewardItem *_Nonnull)reward {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
                  @"adId" : ad.adId,

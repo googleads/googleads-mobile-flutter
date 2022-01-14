@@ -259,21 +259,25 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 }
 
 - (void)testAdInstanceManagerOnRewardedInterstitialAdUserEarnedReward {
-  FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
-                                                      request:[[FLTAdRequest alloc] init]
-                                           rootViewController:OCMClassMock([UIViewController class])
-                                serverSideVerificationOptions:nil
-                                                         adId:@1];
+  FLTRewardedInterstitialAd *ad =
+      [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                  request:[[FLTAdRequest alloc] init]
+                                       rootViewController:OCMClassMock([UIViewController class])
+                            serverSideVerificationOptions:nil
+                                                     adId:@1];
   [_manager loadAd:ad];
 
-  [_manager onRewardedInterstitialAdUserEarnedReward:ad
-                                  reward:[[FLTRewardItem alloc] initWithAmount:@(1) type:@"type"]];
+  [_manager
+      onRewardedInterstitialAdUserEarnedReward:ad
+                                        reward:[[FLTRewardItem alloc] initWithAmount:@(1)
+                                                                                type:@"type"]];
   NSData *data = [_methodCodec
       encodeMethodCall:[FlutterMethodCall
                            methodCallWithMethodName:@"onAdEvent"
                                           arguments:@{
                                             @"adId" : @1,
-                                            @"eventName" : @"onRewardedInterstitialAdUserEarnedReward",
+                                            @"eventName" :
+                                                @"onRewardedInterstitialAdUserEarnedReward",
                                             @"rewardItem" :
                                                 [[FLTRewardItem alloc] initWithAmount:@(1)
                                                                                  type:@"type"]
@@ -341,11 +345,12 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 }
 
 - (void)testFullScreenEvents {
-  FLTRewardedAd *rewardedAd = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                                      request:[[FLTAdRequest alloc] init]
-                                           rootViewController:OCMClassMock([UIViewController class])
-                                serverSideVerificationOptions:nil
-                                                         adId:@1];
+  FLTRewardedAd *rewardedAd =
+      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                      request:[[FLTAdRequest alloc] init]
+                           rootViewController:OCMClassMock([UIViewController class])
+                serverSideVerificationOptions:nil
+                                         adId:@1];
   [_manager loadAd:rewardedAd];
 
   [_manager onAdDidPresentFullScreenContent:rewardedAd];
@@ -364,11 +369,12 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   NSData *impressionData = [self getDataForEvent:@"adDidRecordImpression" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:impressionData]));
 
-  FLTRewardedInterstitialAd *rewardedInterstitialAd = [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
-                                                      request:[[FLTAdRequest alloc] init]
-                                           rootViewController:OCMClassMock([UIViewController class])
-                                serverSideVerificationOptions:nil
-                                                         adId:@2];
+  FLTRewardedInterstitialAd *rewardedInterstitialAd =
+      [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                  request:[[FLTAdRequest alloc] init]
+                                       rootViewController:OCMClassMock([UIViewController class])
+                            serverSideVerificationOptions:nil
+                                                     adId:@2];
   [_manager loadAd:rewardedInterstitialAd];
 
   [_manager onAdDidPresentFullScreenContent:rewardedInterstitialAd];
