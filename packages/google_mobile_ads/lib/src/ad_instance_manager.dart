@@ -263,11 +263,9 @@ class AdInstanceManager {
       Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     assert(arguments['rewardItem'] != null);
     if (ad is RewardedAd) {
-      ad.onUserEarnedRewardCallback
-          ?.call(ad, arguments['rewardItem']);
+      ad.onUserEarnedRewardCallback?.call(ad, arguments['rewardItem']);
     } else if (ad is RewardedInterstitialAd) {
-      ad.onUserEarnedRewardCallback
-          ?.call(ad, arguments['rewardItem']);
+      ad.onUserEarnedRewardCallback?.call(ad, arguments['rewardItem']);
     } else {
       debugPrint('invalid ad: $ad, for event name: $eventName');
     }

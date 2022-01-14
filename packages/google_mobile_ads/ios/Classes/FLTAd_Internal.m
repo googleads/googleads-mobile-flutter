@@ -835,7 +835,6 @@
 
 @end
 
-
 #pragma mark - FLTRewardedInterstitialAd
 @implementation FLTRewardedInterstitialAd {
   GADRewardedInterstitialAd *_rewardedInterstitialView;
@@ -878,45 +877,46 @@
     return;
   }
 
-  [GADRewardedInterstitialAd loadWithAdUnitID:_adUnitId
-                          request:request
-                completionHandler:^(GADRewardedInterstitialAd *_Nullable rewardedInterstitialAd, NSError *_Nullable error) {
-                  if (error) {
-                    [self.manager onAdFailedToLoad:self error:error];
-                    return;
-                  }
-                  if (self->_serverSideVerificationOptions != NULL &&
-                      ![self->_serverSideVerificationOptions isEqual:[NSNull null]]) {
-                    rewardedInterstitialAd.serverSideVerificationOptions =
-                        [self->_serverSideVerificationOptions asGADServerSideVerificationOptions];
-                  }
-                  __weak FLTRewardedInterstitialAd *weakSelf = self;
-                  rewardedInterstitialAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-                    if (weakSelf.manager == nil) {
-                      return;
-                    }
-                    [weakSelf.manager
-                        onPaidEvent:weakSelf
-                              value:[[FLTAdValue alloc] initWithValue:value.value
-                                                            precision:(NSInteger)value.precision
-                                                         currencyCode:value.currencyCode]];
-                  };
-                  rewardedInterstitialAd.fullScreenContentDelegate = self;
-                  self->_rewardedInterstitialView = rewardedInterstitialAd;
-                  [self.manager onAdLoaded:self responseInfo:rewardedInterstitialAd.responseInfo];
-                }];
+  [GADRewardedInterstitialAd
+       loadWithAdUnitID:_adUnitId
+                request:request
+      completionHandler:^(GADRewardedInterstitialAd *_Nullable rewardedInterstitialAd,
+                          NSError *_Nullable error) {
+        if (error) {
+          [self.manager onAdFailedToLoad:self error:error];
+          return;
+        }
+        if (self->_serverSideVerificationOptions != NULL &&
+            ![self->_serverSideVerificationOptions isEqual:[NSNull null]]) {
+          rewardedInterstitialAd.serverSideVerificationOptions =
+              [self->_serverSideVerificationOptions asGADServerSideVerificationOptions];
+        }
+        __weak FLTRewardedInterstitialAd *weakSelf = self;
+        rewardedInterstitialAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+          if (weakSelf.manager == nil) {
+            return;
+          }
+          [weakSelf.manager onPaidEvent:weakSelf
+                                  value:[[FLTAdValue alloc] initWithValue:value.value
+                                                                precision:(NSInteger)value.precision
+                                                             currencyCode:value.currencyCode]];
+        };
+        rewardedInterstitialAd.fullScreenContentDelegate = self;
+        self->_rewardedInterstitialView = rewardedInterstitialAd;
+        [self.manager onAdLoaded:self responseInfo:rewardedInterstitialAd.responseInfo];
+      }];
 }
 
 - (void)show {
   if (self.rewardedInterstitialAd) {
-    [self.rewardedInterstitialAd presentFromRootViewController:_rootViewController
-                          userDidEarnRewardHandler:^{
-                            GADAdReward *reward = self.rewardedInterstitialAd.adReward;
-                            FLTRewardItem *fltReward =
-                                [[FLTRewardItem alloc] initWithAmount:reward.amount
-                                                                 type:reward.type];
-                            [self.manager onRewardedInterstitialAdUserEarnedReward:self reward:fltReward];
-                          }];
+    [self.rewardedInterstitialAd
+        presentFromRootViewController:_rootViewController
+             userDidEarnRewardHandler:^{
+               GADAdReward *reward = self.rewardedInterstitialAd.adReward;
+               FLTRewardItem *fltReward = [[FLTRewardItem alloc] initWithAmount:reward.amount
+                                                                           type:reward.type];
+               [self.manager onRewardedInterstitialAdUserEarnedReward:self reward:fltReward];
+             }];
   } else {
     NSLog(@"RewardedInterstitialAd failed to show because the ad was not ready.");
   }

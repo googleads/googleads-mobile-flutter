@@ -343,15 +343,15 @@
       return;
     }
 
-    FLTRewardedInterstitialAd *ad =
-        [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                        request:request
-                             rootViewController:rootController
-                  serverSideVerificationOptions:call.arguments[@"serverSideVerificationOptions"]
-                                           adId:call.arguments[@"adId"]];
+    FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc]
+                     initWithAdUnitId:call.arguments[@"adUnitId"]
+                              request:request
+                   rootViewController:rootController
+        serverSideVerificationOptions:call.arguments[@"serverSideVerificationOptions"]
+                                 adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
-  }  else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
+  } else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
     FLTAdRequest *request;
     if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
       request = call.arguments[@"request"];

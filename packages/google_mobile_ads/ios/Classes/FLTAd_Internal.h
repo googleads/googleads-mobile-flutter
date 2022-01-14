@@ -215,7 +215,8 @@
 - (GADRewardedAd *_Nullable)rewardedAd;
 @end
 
-@interface FLTRewardedInterstitialAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTRewardedInterstitialAd
+    : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController

@@ -39,9 +39,9 @@ import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.rewarded.OnAdMetadataChangedListener;
 import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
-import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
 import io.flutter.plugins.googlemobileads.FlutterRewardedAd.FlutterRewardItem;
@@ -113,13 +113,17 @@ public class FlutterRewardedInterstitialAdTest {
             })
         .when(mockFlutterAdLoader)
         .loadAdManagerRewardedInterstitial(
-            anyString(), any(AdManagerAdRequest.class), any(RewardedInterstitialAdLoadCallback.class));
+            anyString(),
+            any(AdManagerAdRequest.class),
+            any(RewardedInterstitialAdLoadCallback.class));
 
     flutterRewardedInterstitialAd.load();
 
     verify(mockFlutterAdLoader)
         .loadAdManagerRewardedInterstitial(
-            eq("testId"), eq(mockAdManagerAdRequest), any(RewardedInterstitialAdLoadCallback.class));
+            eq("testId"),
+            eq(mockAdManagerAdRequest),
+            any(RewardedInterstitialAdLoadCallback.class));
 
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
     verify(mockManager).onAdFailedToLoad(eq(1), eq(expectedError));
@@ -144,7 +148,9 @@ public class FlutterRewardedInterstitialAdTest {
             })
         .when(mockFlutterAdLoader)
         .loadAdManagerRewardedInterstitial(
-            anyString(), any(AdManagerAdRequest.class), any(RewardedInterstitialAdLoadCallback.class));
+            anyString(),
+            any(AdManagerAdRequest.class),
+            any(RewardedInterstitialAdLoadCallback.class));
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAd).getResponseInfo();
 
@@ -168,7 +174,9 @@ public class FlutterRewardedInterstitialAdTest {
 
     verify(mockFlutterAdLoader)
         .loadAdManagerRewardedInterstitial(
-            eq("testId"), eq(mockAdManagerAdRequest), any(RewardedInterstitialAdLoadCallback.class));
+            eq("testId"),
+            eq(mockAdManagerAdRequest),
+            any(RewardedInterstitialAdLoadCallback.class));
 
     verify(mockManager).onAdLoaded(eq(1), eq(responseInfo));
     verify(mockAd).setOnPaidEventListener(any(FlutterPaidEventListener.class));
@@ -265,7 +273,9 @@ public class FlutterRewardedInterstitialAdTest {
             })
         .when(mockFlutterAdLoader)
         .loadAdManagerRewardedInterstitial(
-            anyString(), any(AdManagerAdRequest.class), any(RewardedInterstitialAdLoadCallback.class));
+            anyString(),
+            any(AdManagerAdRequest.class),
+            any(RewardedInterstitialAdLoadCallback.class));
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAd).getResponseInfo();
 
@@ -273,7 +283,9 @@ public class FlutterRewardedInterstitialAdTest {
 
     verify(mockFlutterAdLoader)
         .loadAdManagerRewardedInterstitial(
-            eq("testId"), eq(mockAdManagerAdRequest), any(RewardedInterstitialAdLoadCallback.class));
+            eq("testId"),
+            eq(mockAdManagerAdRequest),
+            any(RewardedInterstitialAdLoadCallback.class));
 
     verify(mockManager).onAdLoaded(eq(1), eq(responseInfo));
 
@@ -321,13 +333,15 @@ public class FlutterRewardedInterstitialAdTest {
               }
             })
         .when(mockFlutterAdLoader)
-        .loadRewardedInterstitial(anyString(), any(AdRequest.class), any(RewardedInterstitialAdLoadCallback.class));
+        .loadRewardedInterstitial(
+            anyString(), any(AdRequest.class), any(RewardedInterstitialAdLoadCallback.class));
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockRewardedInterstitialAd).getResponseInfo();
     flutterRewardedInterstitialAd.load();
 
     verify(mockFlutterAdLoader)
-        .loadRewardedInterstitial(eq("testId"), eq(mockAdRequest), any(RewardedInterstitialAdLoadCallback.class));
+        .loadRewardedInterstitial(
+            eq("testId"), eq(mockAdRequest), any(RewardedInterstitialAdLoadCallback.class));
 
     verify(mockManager).onAdLoaded(eq(1), eq(responseInfo));
     final AdError adError = new AdError(0, "ad", "error");
@@ -344,7 +358,8 @@ public class FlutterRewardedInterstitialAdTest {
         .setFullScreenContentCallback(any(FullScreenContentCallback.class));
 
     flutterRewardedInterstitialAd.show();
-    verify(mockRewardedInterstitialAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
+    verify(mockRewardedInterstitialAd)
+        .setFullScreenContentCallback(any(FullScreenContentCallback.class));
     verify(mockManager).onFailedToShowFullScreenContent(eq(1), eq(adError));
   }
 
@@ -364,7 +379,8 @@ public class FlutterRewardedInterstitialAdTest {
               }
             })
         .when(mockFlutterAdLoader)
-        .loadRewardedInterstitial(anyString(), any(AdRequest.class), any(RewardedInterstitialAdLoadCallback.class));
+        .loadRewardedInterstitial(
+            anyString(), any(AdRequest.class), any(RewardedInterstitialAdLoadCallback.class));
 
     flutterRewardedInterstitialAd.load();
     flutterRewardedInterstitialAd.setImmersiveMode(true);

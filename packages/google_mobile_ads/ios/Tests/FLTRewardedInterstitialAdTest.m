@@ -41,8 +41,8 @@
   OCMStub([serverSideVerificationOptions asGADServerSideVerificationOptions]).andReturn(gadOptions);
 
   [self testLoadShowRewardedInterstitialAd:request
-                    gadOrGAMRequest:gadRequest
-      serverSideVerificationOptions:serverSideVerificationOptions];
+                           gadOrGAMRequest:gadRequest
+             serverSideVerificationOptions:serverSideVerificationOptions];
 }
 
 - (void)testLoadShowRewardedInterstitialAdGAMRequest {
@@ -57,27 +57,28 @@
   OCMStub([serverSideVerificationOptions asGADServerSideVerificationOptions]).andReturn(gadOptions);
 
   [self testLoadShowRewardedInterstitialAd:request
-                    gadOrGAMRequest:gamRequest
-      serverSideVerificationOptions:serverSideVerificationOptions];
+                           gadOrGAMRequest:gamRequest
+             serverSideVerificationOptions:serverSideVerificationOptions];
 }
 
 // Helper method for testing with FLTAdRequest and FLTGAMAdRequest.
 - (void)testLoadShowRewardedInterstitialAd:(FLTAdRequest *)request
-                  gadOrGAMRequest:(GADRequest *)gadOrGAMRequest
-    serverSideVerificationOptions:(FLTServerSideVerificationOptions *)options {
+                           gadOrGAMRequest:(GADRequest *)gadOrGAMRequest
+             serverSideVerificationOptions:(FLTServerSideVerificationOptions *)options {
   UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
-  FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
-                                                      request:request
-                                           rootViewController:mockRootViewController
-                                serverSideVerificationOptions:options
-                                                         adId:@1];
+  FLTRewardedInterstitialAd *ad =
+      [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                  request:request
+                                       rootViewController:mockRootViewController
+                            serverSideVerificationOptions:options
+                                                     adId:@1];
   ad.manager = mockManager;
 
   // Stub the load call to invoke successful load callback.
   id rewardedInterstitialClassMock = OCMClassMock([GADRewardedInterstitialAd class]);
   OCMStub(ClassMethod([rewardedInterstitialClassMock loadWithAdUnitID:[OCMArg any]
-                                                  request:[OCMArg any]
-                                        completionHandler:[OCMArg any]]))
+                                                              request:[OCMArg any]
+                                                    completionHandler:[OCMArg any]]))
       .andDo(^(NSInvocation *invocation) {
         void (^completionHandler)(GADRewardedInterstitialAd *ad, NSError *error);
         [invocation getArgument:&completionHandler atIndex:4];
@@ -94,7 +95,8 @@
         [delegate adDidDismissFullScreenContent:rewardedInterstitialClassMock];
         [delegate adDidPresentFullScreenContent:rewardedInterstitialClassMock];
         [delegate adWillDismissFullScreenContent:rewardedInterstitialClassMock];
-        [delegate ad:rewardedInterstitialClassMock didFailToPresentFullScreenContentWithError:error];
+        [delegate ad:rewardedInterstitialClassMock
+            didFailToPresentFullScreenContentWithError:error];
       });
   GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
   OCMStub([rewardedInterstitialClassMock responseInfo]).andReturn(responseInfo);
@@ -104,7 +106,7 @@
   OCMStub([mockReward type]).andReturn(@"type");
   OCMStub([rewardedInterstitialClassMock adReward]).andReturn(mockReward);
   OCMStub([rewardedInterstitialClassMock presentFromRootViewController:[OCMArg any]
-                                  userDidEarnRewardHandler:[OCMArg any]])
+                                              userDidEarnRewardHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
         GADUserDidEarnRewardHandler rewardHandler;
         [invocation getArgument:&rewardHandler atIndex:3];
@@ -121,23 +123,25 @@
   OCMStub([adValue precision]).andReturn(GADAdValuePrecisionEstimated);
   OCMStub([adValue currencyCode]).andReturn(@"currencyCode");
   OCMStub([rewardedInterstitialClassMock setPaidEventHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
-                               GADPaidEventHandler handler = obj;
-                               handler(adValue);
-                               return YES;
-                             }]]);
+                                           GADPaidEventHandler handler = obj;
+                                           handler(adValue);
+                                           return YES;
+                                         }]]);
   // Call load and check expected interactions with mocks.
   [ad load];
 
-  OCMVerify(ClassMethod([rewardedInterstitialClassMock loadWithAdUnitID:[OCMArg isEqual:@"testId"]
-                                                    request:[OCMArg isEqual:gadOrGAMRequest]
-                                          completionHandler:[OCMArg any]]));
+  OCMVerify(
+      ClassMethod([rewardedInterstitialClassMock loadWithAdUnitID:[OCMArg isEqual:@"testId"]
+                                                          request:[OCMArg isEqual:gadOrGAMRequest]
+                                                completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
                        responseInfo:[OCMArg isEqual:responseInfo]]);
   OCMVerify([rewardedInterstitialClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
   XCTAssertEqual(ad.rewardedInterstitialAd, rewardedInterstitialClassMock);
   if (options != nil) {
     GADServerSideVerificationOptions *gadOptions = [options asGADServerSideVerificationOptions];
-    OCMVerify([rewardedInterstitialClassMock setServerSideVerificationOptions:[OCMArg isEqual:gadOptions]]);
+    OCMVerify([rewardedInterstitialClassMock
+        setServerSideVerificationOptions:[OCMArg isEqual:gadOptions]]);
   }
   OCMVerify([mockManager onPaidEvent:[OCMArg isEqual:ad]
                                value:[OCMArg checkWithBlock:^BOOL(id obj) {
@@ -152,8 +156,9 @@
 
   [ad show];
 
-  OCMVerify([rewardedInterstitialClassMock presentFromRootViewController:[OCMArg isEqual:mockRootViewController]
-                                    userDidEarnRewardHandler:[OCMArg any]]);
+  OCMVerify([rewardedInterstitialClassMock
+      presentFromRootViewController:[OCMArg isEqual:mockRootViewController]
+           userDidEarnRewardHandler:[OCMArg any]]);
 
   // Verify full screen callbacks.
   OCMVerify([mockManager onAdDidPresentFullScreenContent:[OCMArg isEqual:ad]]);
@@ -164,13 +169,14 @@
                                                               error:[OCMArg isEqual:error]]);
 
   // Verify reward callback.
-  OCMVerify([mockManager onRewardedInterstitialAdUserEarnedReward:[OCMArg isEqual:ad]
-                                               reward:[OCMArg checkWithBlock:^BOOL(id obj) {
-                                                 FLTRewardItem *reward = (FLTRewardItem *)obj;
-                                                 XCTAssertEqual(reward.amount, @1.0);
-                                                 XCTAssertEqual(reward.type, @"type");
-                                                 return true;
-                                               }]]);
+  OCMVerify([mockManager
+      onRewardedInterstitialAdUserEarnedReward:[OCMArg isEqual:ad]
+                                        reward:[OCMArg checkWithBlock:^BOOL(id obj) {
+                                          FLTRewardItem *reward = (FLTRewardItem *)obj;
+                                          XCTAssertEqual(reward.amount, @1.0);
+                                          XCTAssertEqual(reward.type, @"type");
+                                          return true;
+                                        }]]);
 }
 
 - (void)testFailedToLoadGADRequest {
@@ -192,18 +198,19 @@
 // Helper for testing failed to load.
 - (void)testFailedToLoad:(FLTAdRequest *)request {
   UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
-  FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
-                                                      request:request
-                                           rootViewController:mockRootViewController
-                                serverSideVerificationOptions:nil
-                                                         adId:@1];
+  FLTRewardedInterstitialAd *ad =
+      [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                  request:request
+                                       rootViewController:mockRootViewController
+                            serverSideVerificationOptions:nil
+                                                     adId:@1];
   ad.manager = mockManager;
 
   id rewardedInterstitialClassMock = OCMClassMock([GADRewardedInterstitialAd class]);
   NSError *error = OCMClassMock([NSError class]);
   OCMStub(ClassMethod([rewardedInterstitialClassMock loadWithAdUnitID:[OCMArg any]
-                                                  request:[OCMArg any]
-                                        completionHandler:[OCMArg any]]))
+                                                              request:[OCMArg any]
+                                                    completionHandler:[OCMArg any]]))
       .andDo(^(NSInvocation *invocation) {
         void (^completionHandler)(GADRewardedInterstitialAd *ad, NSError *error);
         [invocation getArgument:&completionHandler atIndex:4];
@@ -213,8 +220,8 @@
   [ad load];
 
   OCMVerify(ClassMethod([rewardedInterstitialClassMock loadWithAdUnitID:[OCMArg any]
-                                                    request:[OCMArg any]
-                                          completionHandler:[OCMArg any]]));
+                                                                request:[OCMArg any]
+                                                      completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad] error:[OCMArg isEqual:error]]);
 }
 
@@ -224,8 +231,8 @@
   GADRequest *gadRequest = OCMClassMock([GADRequest class]);
   OCMStub([request asGADRequest:[OCMArg any]]).andReturn(gadRequest);
   [self testLoadShowRewardedInterstitialAd:request
-                    gadOrGAMRequest:gadRequest
-      serverSideVerificationOptions:nil];
+                           gadOrGAMRequest:gadRequest
+             serverSideVerificationOptions:nil];
 }
 
 @end
