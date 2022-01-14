@@ -101,6 +101,7 @@ class AdInstanceManager {
         }
         break;
       case 'onRewardedAdUserEarnedReward':
+      case 'onRewardedInterstitialAdUserEarnedReward':
         _invokeOnUserEarnedReward(ad, eventName, arguments);
         break;
       case 'onBannerImpression':
@@ -261,10 +262,15 @@ class AdInstanceManager {
   void _invokeOnUserEarnedReward(
       Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     assert(arguments['rewardItem'] != null);
-    assert(ad is RewardedAd);
-    (ad as RewardedAd)
-        .onUserEarnedRewardCallback
-        ?.call(ad, arguments['rewardItem']);
+    if (ad is RewardedAd) {
+      ad.onUserEarnedRewardCallback
+          ?.call(ad, arguments['rewardItem']);
+    } else if (ad is RewardedInterstitialAd) {
+      ad.onUserEarnedRewardCallback
+          ?.call(ad, arguments['rewardItem']);
+    } else {
+      debugPrint('invalid ad: $ad, for event name: $eventName');
+    }
   }
 
   void _invokeOnAdOpened(Ad ad, String eventName) {

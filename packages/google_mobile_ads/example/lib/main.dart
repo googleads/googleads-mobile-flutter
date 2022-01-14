@@ -155,7 +155,7 @@ class _MyAppState extends State<MyApp> {
     _rewardedAd!.setImmersiveMode(true);
     _rewardedAd!.show(
         onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
+      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
     });
     _rewardedAd = null;
   }
@@ -206,7 +206,7 @@ class _MyAppState extends State<MyApp> {
     _rewardedInterstitialAd!.setImmersiveMode(true);
     _rewardedInterstitialAd!.show(
         onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type}');
+      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
     });
     _rewardedInterstitialAd = null;
   }
