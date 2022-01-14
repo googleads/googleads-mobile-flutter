@@ -633,17 +633,19 @@ void main() {
       await RewardedInterstitialAd.load(
           adUnitId: RewardedInterstitialAd.testAdUnitId,
           request: request,
-          rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewardedInterstitial = ad;
-              },
-              onAdFailedToLoad: (error) => null),
+          rewardedInterstitialAdLoadCallback:
+              RewardedInterstitialAdLoadCallback(
+                  onAdLoaded: (ad) {
+                    rewardedInterstitial = ad;
+                  },
+                  onAdFailedToLoad: (error) => null),
           serverSideVerificationOptions: ServerSideVerificationOptions(
             userId: 'test-user-id',
             customData: 'test-custom-data',
           ));
 
-      RewardedInterstitialAd createdAd = instanceManager.adFor(0) as RewardedInterstitialAd;
+      RewardedInterstitialAd createdAd =
+          instanceManager.adFor(0) as RewardedInterstitialAd;
       (createdAd).rewardedInterstitialAdLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
@@ -653,7 +655,7 @@ void main() {
           'request': request,
           'adManagerRequest': null,
           'serverSideVerificationOptions':
-          rewardedInterstitial!.serverSideVerificationOptions,
+              rewardedInterstitial!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -661,7 +663,8 @@ void main() {
       expect(rewardedInterstitial, createdAd);
 
       log.clear();
-      await rewardedInterstitial!.show(onUserEarnedReward: (ad, reward) => null);
+      await rewardedInterstitial!
+          .show(onUserEarnedReward: (ad, reward) => null);
       expect(log, <Matcher>[
         isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
           'adId': 0,
@@ -675,17 +678,19 @@ void main() {
       await RewardedInterstitialAd.loadWithAdManagerAdRequest(
           adUnitId: RewardedInterstitialAd.testAdUnitId,
           adManagerRequest: request,
-          rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewardedInterstitial = ad;
-              },
-              onAdFailedToLoad: (error) => null),
+          rewardedInterstitialAdLoadCallback:
+              RewardedInterstitialAdLoadCallback(
+                  onAdLoaded: (ad) {
+                    rewardedInterstitial = ad;
+                  },
+                  onAdFailedToLoad: (error) => null),
           serverSideVerificationOptions: ServerSideVerificationOptions(
             userId: 'test-user-id',
             customData: 'test-custom-data',
           ));
 
-      RewardedInterstitialAd createdAd = instanceManager.adFor(0) as RewardedInterstitialAd;
+      RewardedInterstitialAd createdAd =
+          instanceManager.adFor(0) as RewardedInterstitialAd;
       (createdAd).rewardedInterstitialAdLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
@@ -695,14 +700,15 @@ void main() {
           'request': null,
           'adManagerRequest': request,
           'serverSideVerificationOptions':
-          rewardedInterstitial!.serverSideVerificationOptions,
+              rewardedInterstitial!.serverSideVerificationOptions,
         }),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
 
       log.clear();
-      await rewardedInterstitial!.show(onUserEarnedReward: (ad, reward) => null);
+      await rewardedInterstitial!
+          .show(onUserEarnedReward: (ad, reward) => null);
       expect(log, <Matcher>[
         isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
           'adId': 0,
@@ -1170,12 +1176,12 @@ void main() {
       });
 
       final ByteData data =
-      instanceManager.channel.codec.encodeMethodCall(methodCall);
+          instanceManager.channel.codec.encodeMethodCall(methodCall);
 
       await instanceManager.channel.binaryMessenger.handlePlatformMessage(
         'plugins.flutter.io/google_mobile_ads',
         data,
-            (ByteData? data) {},
+        (ByteData? data) {},
       );
 
       // The ad reference should be freed when load failure occurs.
@@ -1190,7 +1196,7 @@ void main() {
       expect(result.responseInfo!.mediationAdapterClassName,
           responseInfo.mediationAdapterClassName);
       List<AdapterResponseInfo> responses =
-      result.responseInfo!.adapterResponses!;
+          result.responseInfo!.adapterResponses!;
       expect(responses.first.adapterClassName, 'adapter-name');
       expect(responses.first.latencyMillis, 500);
       expect(responses.first.description, 'message');
