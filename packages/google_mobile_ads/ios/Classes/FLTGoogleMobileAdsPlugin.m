@@ -330,7 +330,28 @@
                                            adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
-  } else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
+  } else if ([call.method isEqualToString:@"loadRewardedInterstitialAd"]) {
+    FLTAdRequest *request;
+    if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
+      request = call.arguments[@"request"];
+    } else if (![call.arguments[@"adManagerRequest"] isEqual:[NSNull null]]) {
+      request = call.arguments[@"adManagerRequest"];
+    } else {
+      result([FlutterError errorWithCode:@"InvalidRequest"
+                                 message:@"A null or invalid ad request was provided."
+                                 details:nil]);
+      return;
+    }
+
+    FLTRewardedInterstitialAd *ad =
+        [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                        request:request
+                             rootViewController:rootController
+                  serverSideVerificationOptions:call.arguments[@"serverSideVerificationOptions"]
+                                           adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
+    result(nil);
+  }  else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
     FLTAdRequest *request;
     if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
       request = call.arguments[@"request"];

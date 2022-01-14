@@ -20,6 +20,7 @@
 @class FLTBannerAd;
 @class FLTNativeAd;
 @class FLTRewardedAd;
+@class FLTRewardedInterstitialAd;
 @class FLTRewardItem;
 @class FLTAdValue;
 
@@ -42,6 +43,8 @@
 - (void)onNativeAdDidDismissScreen:(FLTNativeAd *_Nonnull)ad;
 - (void)onNativeAdWillDismissScreen:(FLTNativeAd *_Nonnull)ad;
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
+                              reward:(FLTRewardItem *_Nonnull)reward;
+- (void)onRewardedInterstitialAdUserEarnedReward:(FLTRewardedInterstitialAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward;
 - (void)onPaidEvent:(id<FLTAd> _Nonnull)ad value:(FLTAdValue *_Nonnull)value;
 - (void)onBannerImpression:(FLTBannerAd *_Nonnull)ad;
