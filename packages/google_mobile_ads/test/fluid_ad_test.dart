@@ -15,13 +15,10 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/src/ad_containers.dart';
-import 'package:google_mobile_ads/src/ad_instance_manager.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads/src/ad_instance_manager.dart';
 import 'package:pedantic/pedantic.dart';
 
 // ignore_for_file: deprecated_member_use_from_same_package
