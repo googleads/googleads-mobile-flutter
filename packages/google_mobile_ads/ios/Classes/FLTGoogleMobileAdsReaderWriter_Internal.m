@@ -36,6 +36,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldVideoOptions = 145,
   FLTAdmobFieldInlineAdaptiveAdSize = 146,
   FLTAdmobFieldLocation = 147,
+  FLTAdmobRequestConfigurationParams = 148,
 };
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
@@ -55,7 +56,10 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 }
 
 - (FlutterStandardReader *_Nonnull)readerWithData:(NSData *_Nonnull)data {
-  return [[FLTGoogleMobileAdsReader alloc] initWithFactory:_adSizeFactory data:data];
+  FLTGoogleMobileAdsReader *reader =
+      [[FLTGoogleMobileAdsReader alloc] initWithFactory:_adSizeFactory data:data];
+  reader.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
+  return reader;
 }
 
 - (FlutterStandardWriter *_Nonnull)writerWithData:(NSMutableData *_Nonnull)data {
@@ -91,6 +95,9 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.nonPersonalizedAds = nonPersonalizedAds.boolValue;
       request.neighboringContentURLs = [self readValueOfType:[self readByte]];
       request.location = [self readValueOfType:[self readByte]];
+      request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
+      request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
+      request.adMobExtras = [self readValueOfType:[self readByte]];
       return request;
     }
     case FLTAdMobFieldRewardItem: {
@@ -155,6 +162,9 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.neighboringContentURLs = [self readValueOfType:[self readByte]];
       request.pubProvidedID = [self readValueOfType:[self readByte]];
       request.location = [self readValueOfType:[self readByte]];
+      request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
+      request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
+      request.adMobExtras = [self readValueOfType:[self readByte]];
       return request;
     }
     case FLTAdMobFieldAdapterInitializationState: {
@@ -212,6 +222,14 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                  customControlsRequested:[self readValueOfType:[self readByte]]
                               startMuted:[self readValueOfType:[self readByte]]];
     }
+    case FLTAdmobRequestConfigurationParams: {
+      GADRequestConfiguration *requestConfig = [GADRequestConfiguration alloc];
+      requestConfig.maxAdContentRating = [self readValueOfType:[self readByte]];
+      [requestConfig tagForChildDirectedTreatment:[self readValueOfType:[self readByte]]];
+      [requestConfig tagForUnderAgeOfConsent:[self readValueOfType:[self readByte]]];
+      requestConfig.testDeviceIdentifiers = [self readValueOfType:[self readByte]];
+      return requestConfig;
+    }
     case FLTAdmobFieldLocation: {
       return [[FLTLocationParams alloc] initWithAccuracy:[self readValueOfType:[self readByte]]
                                                longitude:[self readValueOfType:[self readByte]]
@@ -227,7 +245,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   }
   return [super readValueOfType:type];
 }
-
 @end
 
 @implementation FLTGoogleMobileAdsWriter
@@ -270,6 +287,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.neighboringContentURLs];
     [self writeValue:request.pubProvidedID];
     [self writeValue:request.location];
+    [self writeValue:request.mediationExtrasIdentifier];
+    [self writeValue:request.adMobExtras];
   } else if ([value isKindOfClass:[FLTAdRequest class]]) {
     [self writeByte:FLTAdMobFieldAdRequest];
     FLTAdRequest *request = value;
@@ -278,6 +297,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:@(request.nonPersonalizedAds)];
     [self writeValue:request.neighboringContentURLs];
     [self writeValue:request.location];
+    [self writeValue:request.mediationExtrasIdentifier];
+    [self writeValue:request.adMobExtras];
   } else if ([value isKindOfClass:[FLTRewardItem class]]) {
     [self writeByte:FLTAdMobFieldRewardItem];
     FLTRewardItem *item = value;
@@ -350,6 +371,15 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:options.clickToExpandRequested];
     [self writeValue:options.customControlsRequested];
     [self writeValue:options.startMuted];
+  } else if ([value isKindOfClass:[GADRequestConfiguration class]]) {
+    [self writeByte:FLTAdmobRequestConfigurationParams];
+    GADRequestConfiguration *params = value;
+    [self writeValue:params.maxAdContentRating];
+    // using null temporarily for tagForUnderAgeOfConsent and tagForChildDirectedTreatment
+    // as there are no getters for them in GADRequestConfiguration.
+    [super writeValue:NSNull.null];
+    [super writeValue:NSNull.null];
+    [self writeValue:params.testDeviceIdentifiers];
   } else if ([value isKindOfClass:[FLTLocationParams class]]) {
     [self writeByte:FLTAdmobFieldLocation];
     FLTLocationParams *location = value;

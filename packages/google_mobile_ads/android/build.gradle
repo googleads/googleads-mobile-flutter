@@ -22,7 +22,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         minSdkVersion 19
@@ -31,7 +31,13 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-      api 'com.google.android.gms:play-services-ads:20.1.0'
+      api 'com.google.android.gms:play-services-ads:20.4.0'
+      constraints {
+        implementation('androidx.work:work-runtime:2.7.0') {
+            because 'previous versions have a bug impacting this android 12 behavior'
+        }
+      }
+      implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
       testImplementation 'junit:junit:4.12'
       testImplementation 'org.hamcrest:hamcrest:2.2'
       testImplementation 'org.mockito:mockito-inline:3.9.0'

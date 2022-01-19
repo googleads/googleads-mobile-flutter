@@ -13,4 +13,4 @@
 // limitations under the License.
 
 /** Versioned request agent string. */
-#define FLT_REQUEST_AGENT_VERSIONED @"Flutter-GMA-0.13.6"
+#define FLT_REQUEST_AGENT_VERSIONED @"Flutter-GMA-1.0.1"

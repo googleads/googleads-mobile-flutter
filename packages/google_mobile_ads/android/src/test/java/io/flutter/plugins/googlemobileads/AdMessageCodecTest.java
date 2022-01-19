@@ -28,6 +28,7 @@ import static org.mockito.Mockito.mock;
 import android.content.Context;
 import android.location.Location;
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.RequestConfiguration;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.AdSizeFactory;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -242,6 +244,46 @@ public class AdMessageCodecTest {
     assertNull(result.startMuted);
   }
 
+  public void encodeEmptyFlutterAdRequest() {
+    FlutterAdRequest adRequest = new FlutterAdRequest.Builder().build();
+    final ByteBuffer message = codec.encodeMessage(adRequest);
+
+    final FlutterAdRequest decodedRequest =
+        (FlutterAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(adRequest, decodedRequest);
+  }
+
+  public void encodeEmptyFlutterAdManagerAdRequest() {
+    FlutterAdManagerAdRequest adRequest = new FlutterAdManagerAdRequest.Builder().build();
+    final ByteBuffer message = codec.encodeMessage(adRequest);
+
+    final FlutterAdManagerAdRequest decodedRequest =
+        (FlutterAdManagerAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(adRequest, decodedRequest);
+  }
+
+  @Test
+  public void testEncodeLocationWithoutTime() {
+    Location location = new Location("");
+    location.setAccuracy(12345f);
+    location.setLongitude(1.0);
+    location.setLatitude(5.0);
+
+    FlutterAdRequest request = new FlutterAdRequest.Builder().setLocation(location).build();
+    ByteBuffer message = codec.encodeMessage(request);
+    FlutterAdRequest decodedRequest =
+        (FlutterAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(request, decodedRequest);
+
+    FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
+    builder.setLocation(location);
+    FlutterAdManagerAdRequest gamRequest = builder.build();
+    message = codec.encodeMessage(gamRequest);
+    final FlutterAdManagerAdRequest decodedGAMRequest =
+        (FlutterAdManagerAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(decodedGAMRequest, gamRequest);
+  }
+
   @Test
   public void encodeFlutterAdRequest() {
     Location location = new Location("");
@@ -249,6 +291,7 @@ public class AdMessageCodecTest {
     location.setLongitude(1.0);
     location.setLatitude(5.0);
     location.setTime(54321);
+    Map<String, String> extras = Collections.singletonMap("key", "value");
     FlutterAdRequest adRequest =
         new FlutterAdRequest.Builder()
             .setKeywords(Arrays.asList("1", "2", "3"))
@@ -257,6 +300,8 @@ public class AdMessageCodecTest {
             .setNeighboringContentUrls(Arrays.asList("example.com", "test.com"))
             .setHttpTimeoutMillis(1000)
             .setLocation(location)
+            .setMediationNetworkExtrasIdentifier("identifier")
+            .setAdMobExtras(extras)
             .build();
     final ByteBuffer message = codec.encodeMessage(adRequest);
 
@@ -281,6 +326,9 @@ public class AdMessageCodecTest {
     builder.setNonPersonalizedAds(true);
     builder.setPublisherProvidedId("pub-provided-id");
     builder.setLocation(location);
+    builder.setMediationNetworkExtrasIdentifier("identifier");
+    builder.setAdMobExtras(Collections.singletonMap("key", "value"));
+
     FlutterAdManagerAdRequest flutterAdManagerAdRequest = builder.build();
 
     final ByteBuffer message = codec.encodeMessage(flutterAdManagerAdRequest);
@@ -339,5 +387,30 @@ public class AdMessageCodecTest {
     assertEquals(result.width, 100);
     assertNull(result.maxHeight);
     assertNull(result.orientation);
+  }
+
+  public void encodeRequestConfiguration() {
+    RequestConfiguration.Builder requestConfigurationBuilder = new RequestConfiguration.Builder();
+    requestConfigurationBuilder.setMaxAdContentRating(
+        RequestConfiguration.MAX_AD_CONTENT_RATING_MA);
+    requestConfigurationBuilder.setTagForChildDirectedTreatment(
+        RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE);
+    requestConfigurationBuilder.setTagForUnderAgeOfConsent(
+        RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE);
+    requestConfigurationBuilder.setTestDeviceIds(Arrays.asList("test-device-id"));
+    RequestConfiguration requestConfiguration = requestConfigurationBuilder.build();
+
+    final ByteBuffer data = codec.encodeMessage(requestConfiguration);
+    final RequestConfiguration result =
+        (RequestConfiguration) codec.decodeMessage((ByteBuffer) data.position(0));
+
+    assertEquals(result.getMaxAdContentRating(), RequestConfiguration.MAX_AD_CONTENT_RATING_MA);
+    assertEquals(
+        result.getTagForChildDirectedTreatment(),
+        RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE);
+    assertEquals(
+        result.getTagForUnderAgeOfConsent(),
+        RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE);
+    assertEquals(result.getTestDeviceIds(), Arrays.asList("test-device-id"));
   }
 }
