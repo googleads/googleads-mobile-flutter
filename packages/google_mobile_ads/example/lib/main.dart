@@ -184,7 +184,7 @@ class _MyAppState extends State<MyApp> {
     _rewardedInterstitialAd!.fullScreenContentCallback =
         FullScreenContentCallback(
       onAdShowedFullScreenContent: (RewardedInterstitialAd ad) =>
-          print('ad onAdShowedFullScreenContent.'),
+          print('$ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedInterstitialAd ad) {
         print('$ad onAdDismissedFullScreenContent.');
         ad.dispose();

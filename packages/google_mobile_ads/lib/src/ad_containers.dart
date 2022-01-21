@@ -857,13 +857,8 @@ class BannerAd extends AdWithView {
   @override
   final BannerAdListener listener;
 
-  /// {@template google_mobile_ads.testAdUnitId}
-  /// A platform-specific AdMob test ad unit ID.
-  ///
-  /// This ad unit has been specially configured to always return test ads, and
-  /// developers are encouraged to use it while building and testing their apps.
-  /// {@endtemplate}
-  /// {@macro google_mobile_ads.testAdUnitId}
+  /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
+  /// demo ad units that point to specific test creatives for each format.
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/6300978111'
       : 'ca-app-pub-3940256099942544/2934735716';
@@ -1245,7 +1240,12 @@ class RewardedAd extends AdWithoutView {
   }
 }
 
-/// An [Ad] where a user has the option of interacting with in exchange for in-app rewards.
+/// Rewarded interstitials are full screen ads that reward users and can be
+/// shown without a user opt in.
+///
+/// This ad format is different than [RewardedAd] because rewarded ads require
+/// the user to opt-in to watching the video. This ad format is different than
+/// [InterstitialAd] because interstitial ads do not reward the user.
 ///
 /// Because the video assets are so large, it's a good idea to start loading an
 /// ad well in advance of when it's likely to be needed.
@@ -1261,7 +1261,7 @@ class RewardedInterstitialAd extends AdWithoutView {
   })  : adManagerRequest = null,
         super(adUnitId: adUnitId);
 
-  /// Creates a [RewardedInterstitialAd] with a [AdManagerAdRequest].
+  /// Creates a [RewardedInterstitialAd] with an [AdManagerAdRequest].
   ///
   /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
   RewardedInterstitialAd._fromAdManagerRequest({

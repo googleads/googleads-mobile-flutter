@@ -279,9 +279,9 @@
     }
 
     FLTAdRequest *request;
-    if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
+    if ([FLTAdUtil isNotNull:call.arguments[@"request"]]) {
       request = call.arguments[@"request"];
-    } else if (![call.arguments[@"adManagerRequest"] isEqual:[NSNull null]]) {
+    } else if ([FLTAdUtil isNotNull:call.arguments[@"adManagerRequest"]]) {
       request = call.arguments[@"adManagerRequest"];
     }
 
@@ -311,9 +311,9 @@
     result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedAd"]) {
     FLTAdRequest *request;
-    if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
+    if ([FLTAdUtil isNotNull:call.arguments[@"request"]]) {
       request = call.arguments[@"request"];
-    } else if (![call.arguments[@"adManagerRequest"] isEqual:[NSNull null]]) {
+    } else if ([FLTAdUtil isNotNull:call.arguments[@"adManagerRequest"]]) {
       request = call.arguments[@"adManagerRequest"];
     } else {
       result([FlutterError errorWithCode:@"InvalidRequest"
@@ -332,9 +332,9 @@
     result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedInterstitialAd"]) {
     FLTAdRequest *request;
-    if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
+    if ([FLTAdUtil isNotNull:call.arguments[@"request"]]) {
       request = call.arguments[@"request"];
-    } else if (![call.arguments[@"adManagerRequest"] isEqual:[NSNull null]]) {
+    } else if ([FLTAdUtil isNotNull:call.arguments[@"adManagerRequest"]]) {
       request = call.arguments[@"adManagerRequest"];
     } else {
       result([FlutterError errorWithCode:@"InvalidRequest"
@@ -353,9 +353,9 @@
     result(nil);
   } else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
     FLTAdRequest *request;
-    if (![call.arguments[@"request"] isEqual:[NSNull null]]) {
+    if ([FLTAdUtil isNotNull:call.arguments[@"request"]]) {
       request = call.arguments[@"request"];
-    } else if (![call.arguments[@"adManagerRequest"] isEqual:[NSNull null]]) {
+    } else if ([FLTAdUtil isNotNull:call.arguments[@"adManagerRequest"]]) {
       request = call.arguments[@"adManagerRequest"];
     } else {
       result([FlutterError errorWithCode:@"InvalidRequest"

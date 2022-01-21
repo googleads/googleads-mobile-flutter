@@ -25,7 +25,7 @@ typedef GenericAdEventCallback<Ad> = void Function(Ad ad);
 /// A callback type for when an error occurs loading a full screen ad.
 typedef FullScreenAdLoadErrorCallback = void Function(LoadAdError error);
 
-/// The callback type for when a user earns a reward from a [RewardedAd].
+/// The callback type for when a user earns a reward.
 typedef OnUserEarnedRewardCallback = void Function(
     AdWithoutView ad, RewardItem reward);
 
