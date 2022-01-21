@@ -164,7 +164,8 @@ class AdInstanceManager {
     invokeOnAdEvent(arguments);
   }
 
-  void onRewardedInterstitialAdUserEarnedReward(int adId, @NonNull FlutterRewardedAd.FlutterRewardItem reward) {
+  void onRewardedInterstitialAdUserEarnedReward(
+      int adId, @NonNull FlutterRewardedAd.FlutterRewardItem reward) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adId);
     arguments.put("eventName", "onRewardedInterstitialAdUserEarnedReward");

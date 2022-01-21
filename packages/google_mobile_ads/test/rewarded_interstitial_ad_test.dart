@@ -118,18 +118,18 @@ void main() {
           adUnitId: RewardedInterstitialAd.testAdUnitId,
           request: request,
           rewardedInterstitialAdLoadCallback:
-          RewardedInterstitialAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewardedInterstitial = ad;
-              },
-              onAdFailedToLoad: (error) => null),
+              RewardedInterstitialAdLoadCallback(
+                  onAdLoaded: (ad) {
+                    rewardedInterstitial = ad;
+                  },
+                  onAdFailedToLoad: (error) => null),
           serverSideVerificationOptions: ServerSideVerificationOptions(
             userId: 'test-user-id',
             customData: 'test-custom-data',
           ));
 
       RewardedInterstitialAd createdAd =
-      instanceManager.adFor(0) as RewardedInterstitialAd;
+          instanceManager.adFor(0) as RewardedInterstitialAd;
       (createdAd).rewardedInterstitialAdLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
@@ -139,7 +139,7 @@ void main() {
           'request': request,
           'adManagerRequest': null,
           'serverSideVerificationOptions':
-          rewardedInterstitial!.serverSideVerificationOptions,
+              rewardedInterstitial!.serverSideVerificationOptions,
         }),
       ]);
 
