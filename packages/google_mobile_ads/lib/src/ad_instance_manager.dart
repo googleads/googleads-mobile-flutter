@@ -171,6 +171,7 @@ class AdInstanceManager {
         _invokeOnAppEvent(ad, eventName, arguments);
         break;
       case 'onRewardedAdUserEarnedReward':
+      case 'onRewardedInterstitialAdUserEarnedReward':
         _invokeOnUserEarnedReward(ad, eventName, arguments);
         break;
       case 'onAdImpression':

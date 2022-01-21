@@ -15,6 +15,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
@@ -45,7 +46,8 @@ void main() {
       });
     });
 
-    test('load show rewarded interstitial', () async {
+    test('load show rewarded interstitial android', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
       RewardedInterstitialAd? rewardedInterstitial;
       AdRequest request = AdRequest();
       await RewardedInterstitialAd.load(
@@ -88,6 +90,88 @@ void main() {
           'adId': 0,
         })
       ]);
+
+      // Check paid event callback
+      Completer<List<dynamic>> paidEventCompleter = Completer<List<dynamic>>();
+      rewardedInterstitial!.onPaidEvent = (ad, value, precision, currency) {
+        paidEventCompleter.complete(<Object>[ad, value, precision, currency]);
+      };
+
+      const paidEventArgs = {
+        'valueMicros': 1.2345,
+        'precision': 0,
+        'currencyCode': 'USD',
+      };
+      await _sendAdEvent(0, 'onPaidEvent', instanceManager, paidEventArgs);
+      List<dynamic> paidEventCallback = await paidEventCompleter.future;
+      expect(paidEventCallback[0], rewardedInterstitial);
+      expect(paidEventCallback[1], 1.2345);
+      expect(paidEventCallback[2], PrecisionType.unknown);
+      expect(paidEventCallback[3], 'USD');
+    });
+
+    test('load show rewarded interstitial ios', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      RewardedInterstitialAd? rewardedInterstitial;
+      AdRequest request = AdRequest();
+      await RewardedInterstitialAd.load(
+          adUnitId: RewardedInterstitialAd.testAdUnitId,
+          request: request,
+          rewardedInterstitialAdLoadCallback:
+          RewardedInterstitialAdLoadCallback(
+              onAdLoaded: (ad) {
+                rewardedInterstitial = ad;
+              },
+              onAdFailedToLoad: (error) => null),
+          serverSideVerificationOptions: ServerSideVerificationOptions(
+            userId: 'test-user-id',
+            customData: 'test-custom-data',
+          ));
+
+      RewardedInterstitialAd createdAd =
+      instanceManager.adFor(0) as RewardedInterstitialAd;
+      (createdAd).rewardedInterstitialAdLoadCallback.onAdLoaded(createdAd);
+
+      expect(log, <Matcher>[
+        isMethodCall('loadRewardedInterstitialAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'adUnitId': RewardedInterstitialAd.testAdUnitId,
+          'request': request,
+          'adManagerRequest': null,
+          'serverSideVerificationOptions':
+          rewardedInterstitial!.serverSideVerificationOptions,
+        }),
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+      expect(rewardedInterstitial, createdAd);
+
+      log.clear();
+      await rewardedInterstitial!
+          .show(onUserEarnedReward: (ad, reward) => null);
+      expect(log, <Matcher>[
+        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
+          'adId': 0,
+        })
+      ]);
+
+      // Check paid event callback
+      Completer<List<dynamic>> paidEventCompleter = Completer<List<dynamic>>();
+      rewardedInterstitial!.onPaidEvent = (ad, value, precision, currency) {
+        paidEventCompleter.complete(<Object>[ad, value, precision, currency]);
+      };
+
+      const paidEventArgs = {
+        'valueMicros': 1.2345,
+        'precision': 0,
+        'currencyCode': 'USD',
+      };
+      await _sendAdEvent(0, 'onPaidEvent', instanceManager, paidEventArgs);
+      List<dynamic> paidEventCallback = await paidEventCompleter.future;
+      expect(paidEventCallback[0], rewardedInterstitial);
+      expect(paidEventCallback[1], 1.2345);
+      expect(paidEventCallback[2], PrecisionType.unknown);
+      expect(paidEventCallback[3], 'USD');
     });
 
     test('load show rewarded interstitial with $AdManagerAdRequest', () async {
@@ -157,7 +241,7 @@ void main() {
 
       expect(instanceManager.adFor(0), isNotNull);
 
-// Simulate onAdFailedToLoad.
+      // Simulate onAdFailedToLoad.
       AdError adError = AdError(1, 'domain', 'error-message');
       AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
           adapterClassName: 'adapter-name',
@@ -188,10 +272,10 @@ void main() {
         (ByteData? data) {},
       );
 
-// The ad reference should be freed when load failure occurs.
+      // The ad reference should be freed when load failure occurs.
       expect(instanceManager.adFor(0), isNull);
 
-// Check that load error matches.
+      // Check that load error matches.
       final LoadAdError result = await resultsCompleter.future;
       expect(result.code, 1);
       expect(result.domain, 'domain');
@@ -209,5 +293,73 @@ void main() {
       expect(responses.first.adError!.message, 'error-message');
       expect(responses.first.adError!.domain, 'domain');
     });
+
+    test('onRewardedInterstitialAdUserEarnedReward', () async {
+      final Completer<List<dynamic>> resultCompleter =
+          Completer<List<dynamic>>();
+
+      RewardedInterstitialAd? rewardedInterstitial;
+      await RewardedInterstitialAd.load(
+          adUnitId: RewardedInterstitialAd.testAdUnitId,
+          request: AdRequest(),
+          rewardedInterstitialAdLoadCallback:
+              RewardedInterstitialAdLoadCallback(
+                  onAdLoaded: (ad) {
+                    rewardedInterstitial = ad;
+                  },
+                  onAdFailedToLoad: (error) => null),
+          serverSideVerificationOptions: ServerSideVerificationOptions(
+            userId: 'test-user-id',
+            customData: 'test-custom-data',
+          ));
+
+      RewardedInterstitialAd createdAd =
+          instanceManager.adFor(0) as RewardedInterstitialAd;
+      createdAd.rewardedInterstitialAdLoadCallback.onAdLoaded(createdAd);
+      // Reward callback is now set when you call show.
+      await rewardedInterstitial!.show(
+          onUserEarnedReward: (ad, item) =>
+              resultCompleter.complete(<Object>[ad, item]));
+
+      final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+        'adId': 0,
+        'eventName': 'onRewardedInterstitialAdUserEarnedReward',
+        'rewardItem': RewardItem(1, 'one'),
+      });
+
+      final ByteData data =
+          instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+        'plugins.flutter.io/google_mobile_ads',
+        data,
+        (ByteData? data) {},
+      );
+
+      final List<dynamic> result = await resultCompleter.future;
+      expect(result[0], rewardedInterstitial!);
+      expect(result[1].amount, 1);
+      expect(result[1].type, 'one');
+    });
   });
+}
+
+Future<void> _sendAdEvent(
+    int adId, String eventName, AdInstanceManager instanceManager,
+    [Map<String, dynamic>? additionalArgs]) async {
+  Map<String, dynamic> args = {
+    'adId': adId,
+    'eventName': eventName,
+  };
+  additionalArgs?.entries
+      .forEach((element) => args[element.key] = element.value);
+  final MethodCall methodCall = MethodCall('onAdEvent', args);
+  final ByteData data =
+      instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+  return instanceManager.channel.binaryMessenger.handlePlatformMessage(
+    'plugins.flutter.io/google_mobile_ads',
+    data,
+    (ByteData? data) {},
+  );
 }
