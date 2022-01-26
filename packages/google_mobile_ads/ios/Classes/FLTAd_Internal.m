@@ -835,6 +835,122 @@
 
 @end
 
+#pragma mark - FLTRewardedInterstitialAd
+@implementation FLTRewardedInterstitialAd {
+  GADRewardedInterstitialAd *_rewardedInterstitialView;
+  FLTAdRequest *_adRequest;
+  UIViewController *_rootViewController;
+  FLTServerSideVerificationOptions *_serverSideVerificationOptions;
+  NSString *_adUnitId;
+}
+
+- (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                          request:(FLTAdRequest *_Nonnull)request
+               rootViewController:(UIViewController *_Nonnull)rootViewController
+    serverSideVerificationOptions:
+        (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions
+                             adId:(NSNumber *_Nonnull)adId {
+  self = [super init];
+  if (self) {
+    self.adId = adId;
+    _adRequest = request;
+    _rootViewController = rootViewController;
+    _serverSideVerificationOptions = serverSideVerificationOptions;
+    _adUnitId = [adUnitId copy];
+  }
+  return self;
+}
+
+- (GADRewardedInterstitialAd *_Nullable)rewardedInterstitialAd {
+  return _rewardedInterstitialView;
+}
+
+- (void)load {
+  GADRequest *request;
+  if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
+    FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
+    request = [gamRequest asGAMRequest:_adUnitId];
+  } else if ([_adRequest isKindOfClass:[FLTAdRequest class]]) {
+    request = [_adRequest asGADRequest:_adUnitId];
+  } else {
+    NSLog(@"A null or invalid ad request was provided.");
+    return;
+  }
+
+  [GADRewardedInterstitialAd
+       loadWithAdUnitID:_adUnitId
+                request:request
+      completionHandler:^(GADRewardedInterstitialAd *_Nullable rewardedInterstitialAd,
+                          NSError *_Nullable error) {
+        if (error) {
+          [self.manager onAdFailedToLoad:self error:error];
+          return;
+        }
+        if (self->_serverSideVerificationOptions != NULL &&
+            ![self->_serverSideVerificationOptions isEqual:[NSNull null]]) {
+          rewardedInterstitialAd.serverSideVerificationOptions =
+              [self->_serverSideVerificationOptions asGADServerSideVerificationOptions];
+        }
+        __weak FLTRewardedInterstitialAd *weakSelf = self;
+        rewardedInterstitialAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+          if (weakSelf.manager == nil) {
+            return;
+          }
+          [weakSelf.manager onPaidEvent:weakSelf
+                                  value:[[FLTAdValue alloc] initWithValue:value.value
+                                                                precision:(NSInteger)value.precision
+                                                             currencyCode:value.currencyCode]];
+        };
+        rewardedInterstitialAd.fullScreenContentDelegate = self;
+        self->_rewardedInterstitialView = rewardedInterstitialAd;
+        [self.manager onAdLoaded:self responseInfo:rewardedInterstitialAd.responseInfo];
+      }];
+}
+
+- (void)show {
+  if (self.rewardedInterstitialAd) {
+    [self.rewardedInterstitialAd
+        presentFromRootViewController:_rootViewController
+             userDidEarnRewardHandler:^{
+               GADAdReward *reward = self.rewardedInterstitialAd.adReward;
+               FLTRewardItem *fltReward = [[FLTRewardItem alloc] initWithAmount:reward.amount
+                                                                           type:reward.type];
+               [self.manager onRewardedInterstitialAdUserEarnedReward:self reward:fltReward];
+             }];
+  } else {
+    NSLog(@"RewardedInterstitialAd failed to show because the ad was not ready.");
+  }
+}
+
+#pragma mark - GADFullScreenContentDelegate
+
+- (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
+    didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
+  [manager didFailToPresentFullScreenContentWithError:self error:error];
+}
+
+/// Tells the delegate that the ad presented full screen content.
+- (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [manager onAdDidPresentFullScreenContent:self];
+}
+
+/// Tells the delegate that the ad dismissed full screen content.
+- (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [manager adDidDismissFullScreenContent:self];
+}
+
+- (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [manager adWillDismissFullScreenContent:self];
+}
+
+- (void)adDidRecordImpression:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [manager adDidRecordImpression:self];
+}
+
+@synthesize manager;
+
+@end
+
 #pragma mark - FLTAppOpenAd
 @implementation FLTAppOpenAd {
   GADAppOpenAd *_appOpenAd;

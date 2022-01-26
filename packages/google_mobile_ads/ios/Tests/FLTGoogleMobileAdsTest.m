@@ -258,6 +258,33 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   OCMVerify([_mockMessenger sendOnChannel:channel message:data]);
 }
 
+- (void)testAdInstanceManagerOnRewardedInterstitialAdUserEarnedReward {
+  FLTRewardedInterstitialAd *ad =
+      [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                  request:[[FLTAdRequest alloc] init]
+                                       rootViewController:OCMClassMock([UIViewController class])
+                            serverSideVerificationOptions:nil
+                                                     adId:@1];
+  [_manager loadAd:ad];
+
+  [_manager
+      onRewardedInterstitialAdUserEarnedReward:ad
+                                        reward:[[FLTRewardItem alloc] initWithAmount:@(1)
+                                                                                type:@"type"]];
+  NSData *data = [_methodCodec
+      encodeMethodCall:[FlutterMethodCall
+                           methodCallWithMethodName:@"onAdEvent"
+                                          arguments:@{
+                                            @"adId" : @1,
+                                            @"eventName" :
+                                                @"onRewardedInterstitialAdUserEarnedReward",
+                                            @"rewardItem" :
+                                                [[FLTRewardItem alloc] initWithAmount:@(1)
+                                                                                 type:@"type"]
+                                          }]];
+  OCMVerify([_mockMessenger sendOnChannel:channel message:data]);
+}
+
 - (void)testAdInstanceManagerOnPaidEvent {
   FLTNativeAd *ad =
       [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
@@ -317,27 +344,54 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   OCMVerify(([_mockMessenger sendOnChannel:channel message:willPresentData]));
 }
 
-- (void)testFullScreenEvents {
-  FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                                      request:[[FLTAdRequest alloc] init]
-                                           rootViewController:OCMClassMock([UIViewController class])
-                                serverSideVerificationOptions:nil
-                                                         adId:@1];
-  [_manager loadAd:ad];
+- (void)testFullScreenEventsRewardedAd {
+  FLTRewardedAd *rewardedAd =
+      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                      request:[[FLTAdRequest alloc] init]
+                           rootViewController:OCMClassMock([UIViewController class])
+                serverSideVerificationOptions:nil
+                                         adId:@1];
+  [_manager loadAd:rewardedAd];
 
-  [_manager onAdDidPresentFullScreenContent:ad];
+  [_manager onAdDidPresentFullScreenContent:rewardedAd];
   NSData *didPresentData = [self getDataForEvent:@"onAdDidPresentFullScreenContent" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:didPresentData]));
 
-  [_manager adDidDismissFullScreenContent:ad];
+  [_manager adDidDismissFullScreenContent:rewardedAd];
   NSData *didDismissData = [self getDataForEvent:@"adDidDismissFullScreenContent" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:didDismissData]));
 
-  [_manager adWillDismissFullScreenContent:ad];
+  [_manager adWillDismissFullScreenContent:rewardedAd];
   NSData *willDismissData = [self getDataForEvent:@"adWillDismissFullScreenContent" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:willDismissData]));
 
-  [_manager adDidRecordImpression:ad];
+  [_manager adDidRecordImpression:rewardedAd];
+  NSData *impressionData = [self getDataForEvent:@"adDidRecordImpression" adId:@1];
+  OCMVerify(([_mockMessenger sendOnChannel:channel message:impressionData]));
+}
+
+- (void)testFullScreenEventsRewardedInterstitialAd {
+  FLTRewardedInterstitialAd *rewardedInterstitialAd =
+      [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                  request:[[FLTAdRequest alloc] init]
+                                       rootViewController:OCMClassMock([UIViewController class])
+                            serverSideVerificationOptions:nil
+                                                     adId:@1];
+  [_manager loadAd:rewardedInterstitialAd];
+
+  [_manager onAdDidPresentFullScreenContent:rewardedInterstitialAd];
+  NSData *didPresentData = [self getDataForEvent:@"onAdDidPresentFullScreenContent" adId:@1];
+  OCMVerify(([_mockMessenger sendOnChannel:channel message:didPresentData]));
+
+  [_manager adDidDismissFullScreenContent:rewardedInterstitialAd];
+  NSData *didDismissData = [self getDataForEvent:@"adDidDismissFullScreenContent" adId:@1];
+  OCMVerify(([_mockMessenger sendOnChannel:channel message:didDismissData]));
+
+  [_manager adWillDismissFullScreenContent:rewardedInterstitialAd];
+  NSData *willDismissData = [self getDataForEvent:@"adWillDismissFullScreenContent" adId:@1];
+  OCMVerify(([_mockMessenger sendOnChannel:channel message:willDismissData]));
+
+  [_manager adDidRecordImpression:rewardedInterstitialAd];
   NSData *impressionData = [self getDataForEvent:@"adDidRecordImpression" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:impressionData]));
 }

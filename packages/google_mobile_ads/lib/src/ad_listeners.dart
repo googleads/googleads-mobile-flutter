@@ -25,9 +25,9 @@ typedef GenericAdEventCallback<Ad> = void Function(Ad ad);
 /// A callback type for when an error occurs loading a full screen ad.
 typedef FullScreenAdLoadErrorCallback = void Function(LoadAdError error);
 
-/// The callback type for when a user earns a reward from a [RewardedAd].
+/// The callback type for when a user earns a reward.
 typedef OnUserEarnedRewardCallback = void Function(
-    RewardedAd ad, RewardItem reward);
+    AdWithoutView ad, RewardItem reward);
 
 /// The callback type to handle an error loading an [Ad].
 typedef AdLoadErrorCallback = void Function(Ad ad, LoadAdError error);
@@ -293,6 +293,16 @@ class AdManagerInterstitialAdLoadCallback
   /// Construct a [AdManagerInterstitialAdLoadCallback].
   const AdManagerInterstitialAdLoadCallback({
     required GenericAdEventCallback<AdManagerInterstitialAd> onAdLoaded,
+    required FullScreenAdLoadErrorCallback onAdFailedToLoad,
+  }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
+}
+
+/// This class holds callbacks for loading a [RewardedInterstitialAd].
+class RewardedInterstitialAdLoadCallback
+    extends FullScreenAdLoadCallback<RewardedInterstitialAd> {
+  /// Construct a [RewardedInterstitialAdLoadCallback].
+  const RewardedInterstitialAdLoadCallback({
+    required GenericAdEventCallback<RewardedInterstitialAd> onAdLoaded,
     required FullScreenAdLoadErrorCallback onAdFailedToLoad,
   }) : super(onAdLoaded: onAdLoaded, onAdFailedToLoad: onAdFailedToLoad);
 }
