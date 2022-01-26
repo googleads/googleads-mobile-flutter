@@ -437,7 +437,7 @@ class AdInstanceManager {
 
   /// Starts loading the ad if not previously loaded.
   ///
-  /// Loading also terminates if ad is already in the process of loading.
+  /// Does nothing if we have already tried to load the ad.
   Future<void> loadBannerAd(BannerAd ad) {
     if (adIdFor(ad) != null) {
       return Future<void>.value();

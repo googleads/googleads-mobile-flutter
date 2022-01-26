@@ -318,7 +318,7 @@ public class FlutterRewardedInterstitialAdTest {
   }
 
   @Test
-  public void loadRewardedInterstitialAdFailToShow() {
+  public void loadRewardedInterstitialAd_failToShow() {
     setupAdmobMocks(null);
 
     final RewardedInterstitialAd mockRewardedInterstitialAd = mock(RewardedInterstitialAd.class);

@@ -344,7 +344,7 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   OCMVerify(([_mockMessenger sendOnChannel:channel message:willPresentData]));
 }
 
-- (void)testFullScreenEvents {
+- (void)testFullScreenEventsRewardedAd {
   FLTRewardedAd *rewardedAd =
       [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
                                       request:[[FLTAdRequest alloc] init]
@@ -368,29 +368,31 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   [_manager adDidRecordImpression:rewardedAd];
   NSData *impressionData = [self getDataForEvent:@"adDidRecordImpression" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:impressionData]));
+}
 
+- (void)testFullScreenEventsRewardedInterstitialAd {
   FLTRewardedInterstitialAd *rewardedInterstitialAd =
       [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
                                                   request:[[FLTAdRequest alloc] init]
                                        rootViewController:OCMClassMock([UIViewController class])
                             serverSideVerificationOptions:nil
-                                                     adId:@2];
+                                                     adId:@1];
   [_manager loadAd:rewardedInterstitialAd];
 
   [_manager onAdDidPresentFullScreenContent:rewardedInterstitialAd];
-  didPresentData = [self getDataForEvent:@"onAdDidPresentFullScreenContent" adId:@2];
+  didPresentData = [self getDataForEvent:@"onAdDidPresentFullScreenContent" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:didPresentData]));
 
   [_manager adDidDismissFullScreenContent:rewardedInterstitialAd];
-  didDismissData = [self getDataForEvent:@"adDidDismissFullScreenContent" adId:@2];
+  didDismissData = [self getDataForEvent:@"adDidDismissFullScreenContent" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:didDismissData]));
 
   [_manager adWillDismissFullScreenContent:rewardedInterstitialAd];
-  willDismissData = [self getDataForEvent:@"adWillDismissFullScreenContent" adId:@2];
+  willDismissData = [self getDataForEvent:@"adWillDismissFullScreenContent" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:willDismissData]));
 
   [_manager adDidRecordImpression:rewardedInterstitialAd];
-  impressionData = [self getDataForEvent:@"adDidRecordImpression" adId:@2];
+  impressionData = [self getDataForEvent:@"adDidRecordImpression" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:impressionData]));
 }
 

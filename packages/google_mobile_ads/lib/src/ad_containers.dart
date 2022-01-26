@@ -857,8 +857,13 @@ class BannerAd extends AdWithView {
   @override
   final BannerAdListener listener;
 
-  /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
-  /// demo ad units that point to specific test creatives for each format.
+  /// {@template google_mobile_ads.testAdUnitId}
+  /// A platform-specific AdMob test ad unit ID.
+  ///
+  /// This ad unit has been specially configured to always return test ads, and
+  /// developers are encouraged to use it while building and testing their apps.
+  /// {@endtemplate}
+  /// {@macro google_mobile_ads.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/6300978111'
       : 'ca-app-pub-3940256099942544/2934735716';
@@ -1031,13 +1036,9 @@ class NativeAd extends AdWithView {
   /// Options to configure the native ad request.
   final NativeAdOptions? nativeAdOptions;
 
-  /// {@template google_mobile_ads.testAdUnitId}
-  /// A platform-specific AdMob test ad unit ID.
-  ///
-  /// This ad unit has been specially configured to always return test ads, and
-  /// developers are encouraged to use it while building and testing their apps.
-  /// {@endtemplate}
-  /// {@macro google_mobile_ads.testAdUnitId}
+  /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
+  /// demo ad units that point to specific test creatives for each format.
+  @Deprecated('Use test ads from the developer page while creating the ad.')
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/2247696110'
       : 'ca-app-pub-3940256099942544/3986624511';

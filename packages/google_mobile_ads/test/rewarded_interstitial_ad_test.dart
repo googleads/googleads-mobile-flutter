@@ -51,7 +51,7 @@ void main() {
       RewardedInterstitialAd? rewardedInterstitial;
       AdRequest request = AdRequest();
       await RewardedInterstitialAd.load(
-          adUnitId: RewardedInterstitialAd.testAdUnitId,
+          adUnitId: 'test-ad-unit',
           request: request,
           rewardedInterstitialAdLoadCallback:
               RewardedInterstitialAdLoadCallback(
@@ -71,7 +71,7 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('loadRewardedInterstitialAd', arguments: <String, dynamic>{
           'adId': 0,
-          'adUnitId': RewardedInterstitialAd.testAdUnitId,
+          'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
           'serverSideVerificationOptions':
@@ -90,6 +90,38 @@ void main() {
           'adId': 0,
         })
       ]);
+
+      // Check that full screen events are passed correctly.
+      Completer<RewardedInterstitialAd> impressionCompleter =
+          Completer<RewardedInterstitialAd>();
+      Completer<RewardedInterstitialAd> failedToShowCompleter =
+          Completer<RewardedInterstitialAd>();
+      Completer<RewardedInterstitialAd> showedCompleter =
+          Completer<RewardedInterstitialAd>();
+      Completer<RewardedInterstitialAd> dismissedCompleter =
+          Completer<RewardedInterstitialAd>();
+
+      rewardedInterstitial!.fullScreenContentCallback =
+          FullScreenContentCallback(
+        onAdImpression: (ad) => impressionCompleter.complete(ad),
+        onAdShowedFullScreenContent: (ad) => showedCompleter.complete(ad),
+        onAdFailedToShowFullScreenContent: (ad, error) =>
+            failedToShowCompleter.complete(ad),
+        onAdDismissedFullScreenContent: (ad) => dismissedCompleter.complete(ad),
+      );
+
+      await _sendAdEvent(0, 'onAdImpression', instanceManager);
+      expect(await impressionCompleter.future, rewardedInterstitial);
+
+      await _sendAdEvent(0, 'onAdShowedFullScreenContent', instanceManager);
+      expect(await showedCompleter.future, rewardedInterstitial);
+
+      await _sendAdEvent(0, 'onAdDismissedFullScreenContent', instanceManager);
+      expect(await dismissedCompleter.future, rewardedInterstitial);
+
+      await _sendAdEvent(0, 'onFailedToShowFullScreenContent', instanceManager,
+          {'error': AdError(1, 'domain', 'message')});
+      expect(await failedToShowCompleter.future, rewardedInterstitial);
 
       // Check paid event callback
       Completer<List<dynamic>> paidEventCompleter = Completer<List<dynamic>>();
@@ -115,7 +147,7 @@ void main() {
       RewardedInterstitialAd? rewardedInterstitial;
       AdRequest request = AdRequest();
       await RewardedInterstitialAd.load(
-          adUnitId: RewardedInterstitialAd.testAdUnitId,
+          adUnitId: 'test-ad-unit',
           request: request,
           rewardedInterstitialAdLoadCallback:
               RewardedInterstitialAdLoadCallback(
@@ -135,7 +167,7 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('loadRewardedInterstitialAd', arguments: <String, dynamic>{
           'adId': 0,
-          'adUnitId': RewardedInterstitialAd.testAdUnitId,
+          'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
           'serverSideVerificationOptions':
@@ -178,7 +210,7 @@ void main() {
       RewardedInterstitialAd? rewardedInterstitial;
       AdManagerAdRequest request = AdManagerAdRequest();
       await RewardedInterstitialAd.loadWithAdManagerAdRequest(
-          adUnitId: RewardedInterstitialAd.testAdUnitId,
+          adUnitId: 'test-ad-unit',
           adManagerRequest: request,
           rewardedInterstitialAdLoadCallback:
               RewardedInterstitialAdLoadCallback(
@@ -198,7 +230,7 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('loadRewardedInterstitialAd', arguments: <String, dynamic>{
           'adId': 0,
-          'adUnitId': RewardedInterstitialAd.testAdUnitId,
+          'adUnitId': 'test-ad-unit',
           'request': null,
           'adManagerRequest': request,
           'serverSideVerificationOptions':
@@ -300,7 +332,7 @@ void main() {
 
       RewardedInterstitialAd? rewardedInterstitial;
       await RewardedInterstitialAd.load(
-          adUnitId: RewardedInterstitialAd.testAdUnitId,
+          adUnitId: 'test-ad-unit',
           request: AdRequest(),
           rewardedInterstitialAdLoadCallback:
               RewardedInterstitialAdLoadCallback(

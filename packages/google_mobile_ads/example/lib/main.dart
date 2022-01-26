@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> {
             print('InterstitialAd failed to load: $error.');
             _numInterstitialLoadAttempts += 1;
             _interstitialAd = null;
-            if (_numInterstitialLoadAttempts <= maxFailedLoadAttempts) {
+            if (_numInterstitialLoadAttempts < maxFailedLoadAttempts) {
               _createInterstitialAd();
             }
           },
@@ -120,7 +120,7 @@ class _MyAppState extends State<MyApp> {
             print('RewardedAd failed to load: $error');
             _rewardedAd = null;
             _numRewardedLoadAttempts += 1;
-            if (_numRewardedLoadAttempts <= maxFailedLoadAttempts) {
+            if (_numRewardedLoadAttempts < maxFailedLoadAttempts) {
               _createRewardedAd();
             }
           },
@@ -169,7 +169,7 @@ class _MyAppState extends State<MyApp> {
             print('RewardedInterstitialAd failed to load: $error');
             _rewardedInterstitialAd = null;
             _numRewardedInterstitialLoadAttempts += 1;
-            if (_numRewardedInterstitialLoadAttempts <= maxFailedLoadAttempts) {
+            if (_numRewardedInterstitialLoadAttempts < maxFailedLoadAttempts) {
               _createRewardedInterstitialAd();
             }
           },
