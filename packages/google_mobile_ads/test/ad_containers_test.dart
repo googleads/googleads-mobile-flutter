@@ -106,7 +106,7 @@ void main() {
       RewardedAd? rewarded;
       AdRequest request = AdRequest();
       await RewardedAd.load(
-          adUnitId: RewardedAd.testAdUnitId,
+          adUnitId: 'test-ad-unit',
           request: request,
           rewardedAdLoadCallback: RewardedAdLoadCallback(
               onAdLoaded: (ad) {
@@ -124,7 +124,7 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
           'adId': 0,
-          'adUnitId': RewardedAd.testAdUnitId,
+          'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
           'serverSideVerificationOptions':
@@ -146,7 +146,7 @@ void main() {
     test('load interstitial ad and set immersive mode', () async {
       InterstitialAd? interstitial;
       await InterstitialAd.load(
-        adUnitId: InterstitialAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
             onAdLoaded: (ad) {
@@ -161,7 +161,7 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('loadInterstitialAd', arguments: <String, dynamic>{
           'adId': 0,
-          'adUnitId': InterstitialAd.testAdUnitId,
+          'adUnitId': 'test-ad-unit',
           'request': interstitial!.request,
         })
       ]);
@@ -213,7 +213,7 @@ void main() {
 
     test('load banner', () async {
       final BannerAd banner = BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         size: AdSize.banner,
         listener: BannerAdListener(),
         request: AdRequest(),
@@ -223,7 +223,7 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('loadBannerAd', arguments: <String, dynamic>{
           'adId': 0,
-          'adUnitId': BannerAd.testAdUnitId,
+          'adUnitId': 'test-ad-unit',
           'request': banner.request,
           'size': AdSize.banner,
         })
@@ -237,7 +237,7 @@ void main() {
 
     test('dispose banner', () async {
       final BannerAd banner = BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         size: AdSize.banner,
         listener: BannerAdListener(),
         request: AdRequest(),
@@ -258,7 +258,7 @@ void main() {
 
     test('calling dispose without awaiting load', () {
       final BannerAd banner = BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         size: AdSize.banner,
         listener: BannerAdListener(),
         request: AdRequest(),
@@ -284,7 +284,7 @@ void main() {
           shouldRequestMultipleImages: true,
           shouldReturnUrlsForImageAssets: false);
       final NativeAd native = NativeAd(
-        adUnitId: NativeAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         factoryId: '0',
         customOptions: options,
         listener: NativeAdListener(),
@@ -296,7 +296,7 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('loadNativeAd', arguments: <String, dynamic>{
           'adId': 0,
-          'adUnitId': NativeAd.testAdUnitId,
+          'adUnitId': 'test-ad-unit',
           'request': native.request,
           'adManagerRequest': null,
           'factoryId': '0',
@@ -337,7 +337,7 @@ void main() {
 
     testWidgets('build ad widget', (WidgetTester tester) async {
       final NativeAd native = NativeAd(
-        adUnitId: NativeAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         factoryId: '0',
         listener: NativeAdListener(),
         request: AdRequest(),
@@ -361,7 +361,7 @@ void main() {
 
     testWidgets('build ad widget', (WidgetTester tester) async {
       final NativeAd native = NativeAd(
-        adUnitId: NativeAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         factoryId: '0',
         listener: NativeAdListener(),
         request: AdRequest(),
@@ -386,7 +386,7 @@ void main() {
     testWidgets('warns when ad has not been loaded',
         (WidgetTester tester) async {
       final NativeAd ad = NativeAd(
-        adUnitId: NativeAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         factoryId: '0',
         listener: NativeAdListener(),
         request: AdRequest(),
@@ -422,7 +422,7 @@ void main() {
 
     testWidgets('warns when ad object is reused', (WidgetTester tester) async {
       final NativeAd ad = NativeAd(
-        adUnitId: NativeAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         factoryId: '0',
         listener: NativeAdListener(),
         request: AdRequest(),
@@ -463,7 +463,7 @@ void main() {
 
     testWidgets('warns when the widget is reused', (WidgetTester tester) async {
       final NativeAd ad = NativeAd(
-        adUnitId: NativeAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         factoryId: '0',
         listener: NativeAdListener(),
         request: AdRequest(),
@@ -507,7 +507,7 @@ void main() {
         'ad objects can be reused if the widget holding the object is disposed',
         (WidgetTester tester) async {
       final NativeAd ad = NativeAd(
-        adUnitId: NativeAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         factoryId: '0',
         listener: NativeAdListener(),
         request: AdRequest(),
@@ -547,7 +547,7 @@ void main() {
       RewardedAd? rewarded;
       AdRequest request = AdRequest();
       await RewardedAd.load(
-          adUnitId: RewardedAd.testAdUnitId,
+          adUnitId: 'test-ad-unit',
           request: request,
           rewardedAdLoadCallback: RewardedAdLoadCallback(
               onAdLoaded: (ad) {
@@ -565,7 +565,7 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
           'adId': 0,
-          'adUnitId': RewardedAd.testAdUnitId,
+          'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
           'serverSideVerificationOptions':
@@ -589,7 +589,7 @@ void main() {
       RewardedAd? rewarded;
       AdManagerAdRequest request = AdManagerAdRequest();
       await RewardedAd.loadWithAdManagerAdRequest(
-          adUnitId: RewardedAd.testAdUnitId,
+          adUnitId: 'test-ad-unit',
           adManagerRequest: request,
           rewardedAdLoadCallback: RewardedAdLoadCallback(
               onAdLoaded: (ad) {
@@ -607,7 +607,7 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
           'adId': 0,
-          'adUnitId': RewardedAd.testAdUnitId,
+          'adUnitId': 'test-ad-unit',
           'request': null,
           'adManagerRequest': request,
           'serverSideVerificationOptions':
@@ -629,7 +629,7 @@ void main() {
     test('load show interstitial', () async {
       InterstitialAd? interstitial;
       await InterstitialAd.load(
-        adUnitId: InterstitialAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
             onAdLoaded: (ad) {
@@ -644,7 +644,7 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('loadInterstitialAd', arguments: <String, dynamic>{
           'adId': 0,
-          'adUnitId': InterstitialAd.testAdUnitId,
+          'adUnitId': 'test-ad-unit',
           'request': interstitial!.request,
         })
       ]);
@@ -725,7 +725,7 @@ void main() {
       final Completer<Ad> adEventCompleter = Completer<Ad>();
 
       final BannerAd banner = BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         size: AdSize.banner,
         listener: BannerAdListener(
           onAdLoaded: (Ad ad) => adEventCompleter.complete(ad),
@@ -757,7 +757,7 @@ void main() {
           Completer<List<dynamic>>();
 
       final BannerAd banner = BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         size: AdSize.banner,
         listener: BannerAdListener(
             onAdFailedToLoad: (Ad ad, LoadAdError error) =>
@@ -819,7 +819,7 @@ void main() {
       final Completer<LoadAdError> resultsCompleter = Completer<LoadAdError>();
       final AdRequest request = AdRequest();
       await InterstitialAd.load(
-        adUnitId: InterstitialAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         request: request,
         adLoadCallback: InterstitialAdLoadCallback(
             onAdLoaded: (ad) => null,
@@ -829,7 +829,7 @@ void main() {
       expect(log, <Matcher>[
         isMethodCall('loadInterstitialAd', arguments: <String, dynamic>{
           'adId': 0,
-          'adUnitId': InterstitialAd.testAdUnitId,
+          'adUnitId': 'test-ad-unit',
           'request': request,
         })
       ]);
@@ -1044,7 +1044,7 @@ void main() {
       final Completer<Ad> adEventCompleter = Completer<Ad>();
 
       final NativeAd native = NativeAd(
-        adUnitId: NativeAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         factoryId: 'testId',
         listener: NativeAdListener(
             onNativeAdClicked: (Ad ad) => adEventCompleter.complete(ad)),
@@ -1072,7 +1072,7 @@ void main() {
       final Completer<Ad> adEventCompleter = Completer<Ad>();
 
       final NativeAd native = NativeAd(
-        adUnitId: NativeAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         factoryId: 'testId',
         listener: NativeAdListener(
             onAdImpression: (Ad ad) => adEventCompleter.complete(ad)),
@@ -1100,7 +1100,7 @@ void main() {
       final Completer<Ad> adEventCompleter = Completer<Ad>();
 
       final BannerAd banner = BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         size: AdSize.banner,
         listener: BannerAdListener(
             onAdOpened: (Ad ad) => adEventCompleter.complete(ad)),
@@ -1128,7 +1128,7 @@ void main() {
       final Completer<Ad> adEventCompleter = Completer<Ad>();
 
       final BannerAd banner = BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         size: AdSize.banner,
         listener: BannerAdListener(
             onAdClosed: (Ad ad) => adEventCompleter.complete(ad)),
@@ -1158,7 +1158,7 @@ void main() {
 
       RewardedAd? rewarded;
       await RewardedAd.load(
-          adUnitId: RewardedAd.testAdUnitId,
+          adUnitId: 'test-ad-unit',
           request: AdRequest(),
           rewardedAdLoadCallback: RewardedAdLoadCallback(
               onAdLoaded: (ad) {
@@ -1202,7 +1202,7 @@ void main() {
       Completer<List<dynamic>> resultCompleter = Completer<List<dynamic>>();
 
       final BannerAd banner = BannerAd(
-        adUnitId: BannerAd.testAdUnitId,
+        adUnitId: 'test-ad-unit',
         size: AdSize.banner,
         listener: BannerAdListener(
           onPaidEvent: (Ad ad, double value, precision, String currencyCode) =>
