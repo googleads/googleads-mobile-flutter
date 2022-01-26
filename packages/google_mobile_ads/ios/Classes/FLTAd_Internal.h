@@ -215,6 +215,17 @@
 - (GADRewardedAd *_Nullable)rewardedAd;
 @end
 
+@interface FLTRewardedInterstitialAd
+    : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                                  request:(FLTAdRequest *_Nonnull)request
+                       rootViewController:(UIViewController *_Nonnull)rootViewController
+            serverSideVerificationOptions:
+                (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions
+                                     adId:(NSNumber *_Nonnull)adId;
+- (GADRewardedInterstitialAd *_Nullable)rewardedInterstitialAd;
+@end
+
 @interface FLTAppOpenAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request

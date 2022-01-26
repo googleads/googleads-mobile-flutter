@@ -30,6 +30,8 @@ import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
+import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
 
 /**
  * A wrapper around load methods in GMA. This exists mainly to make the Android code more testable.
@@ -84,12 +86,28 @@ public class FlutterAdLoader {
     RewardedAd.load(context, adUnitId, adRequest, loadCallback);
   }
 
+  /** Load a rewarded interstitial ad. */
+  public void loadRewardedInterstitial(
+      @NonNull String adUnitId,
+      @NonNull AdRequest adRequest,
+      @NonNull RewardedInterstitialAdLoadCallback loadCallback) {
+    RewardedInterstitialAd.load(context, adUnitId, adRequest, loadCallback);
+  }
+
   /** Load an ad manager rewarded ad. */
   public void loadAdManagerRewarded(
       @NonNull String adUnitId,
       @NonNull AdManagerAdRequest adRequest,
       @NonNull RewardedAdLoadCallback loadCallback) {
     RewardedAd.load(context, adUnitId, adRequest, loadCallback);
+  }
+
+  /** Load an ad manager rewarded interstitial ad. */
+  public void loadAdManagerRewardedInterstitial(
+      @NonNull String adUnitId,
+      @NonNull AdManagerAdRequest adRequest,
+      @NonNull RewardedInterstitialAdLoadCallback loadCallback) {
+    RewardedInterstitialAd.load(context, adUnitId, adRequest, loadCallback);
   }
 
   /** Load a native ad. */

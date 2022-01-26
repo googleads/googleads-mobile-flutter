@@ -101,6 +101,7 @@ class AdInstanceManager {
         }
         break;
       case 'onRewardedAdUserEarnedReward':
+      case 'onRewardedInterstitialAdUserEarnedReward':
         _invokeOnUserEarnedReward(ad, eventName, arguments);
         break;
       case 'onBannerImpression':
@@ -119,6 +120,9 @@ class AdInstanceManager {
           ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
               ?.call(ad);
         } else if (ad is InterstitialAd) {
+          ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
+              ?.call(ad);
+        } else if (ad is RewardedInterstitialAd) {
           ad.fullScreenContentCallback?.onAdWillDismissFullScreenContent
               ?.call(ad);
         } else if (ad is AdManagerInterstitialAd) {
@@ -167,6 +171,7 @@ class AdInstanceManager {
         _invokeOnAppEvent(ad, eventName, arguments);
         break;
       case 'onRewardedAdUserEarnedReward':
+      case 'onRewardedInterstitialAdUserEarnedReward':
         _invokeOnUserEarnedReward(ad, eventName, arguments);
         break;
       case 'onAdImpression':
@@ -208,6 +213,8 @@ class AdInstanceManager {
       ad.rewardedAdLoadCallback.onAdLoaded.call(ad);
     } else if (ad is InterstitialAd) {
       ad.adLoadCallback.onAdLoaded.call(ad);
+    } else if (ad is RewardedInterstitialAd) {
+      ad.rewardedInterstitialAdLoadCallback.onAdLoaded.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
       ad.adLoadCallback.onAdLoaded.call(ad);
     } else if (ad is AppOpenAd) {
@@ -227,6 +234,10 @@ class AdInstanceManager {
     } else if (ad is InterstitialAd) {
       ad.dispose();
       ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
+    } else if (ad is RewardedInterstitialAd) {
+      ad.dispose();
+      ad.rewardedInterstitialAdLoadCallback.onAdFailedToLoad
+          .call(arguments['loadAdError']);
     } else if (ad is AdManagerInterstitialAd) {
       ad.dispose();
       ad.adLoadCallback.onAdFailedToLoad.call(arguments['loadAdError']);
@@ -252,10 +263,13 @@ class AdInstanceManager {
   void _invokeOnUserEarnedReward(
       Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     assert(arguments['rewardItem'] != null);
-    assert(ad is RewardedAd);
-    (ad as RewardedAd)
-        .onUserEarnedRewardCallback
-        ?.call(ad, arguments['rewardItem']);
+    if (ad is RewardedAd) {
+      ad.onUserEarnedRewardCallback?.call(ad, arguments['rewardItem']);
+    } else if (ad is RewardedInterstitialAd) {
+      ad.onUserEarnedRewardCallback?.call(ad, arguments['rewardItem']);
+    } else {
+      debugPrint('invalid ad: $ad, for event name: $eventName');
+    }
   }
 
   void _invokeOnAdOpened(Ad ad, String eventName) {
@@ -279,6 +293,8 @@ class AdInstanceManager {
       ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
     } else if (ad is InterstitialAd) {
       ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
+    } else if (ad is RewardedInterstitialAd) {
+      ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
       ad.fullScreenContentCallback?.onAdShowedFullScreenContent?.call(ad);
     } else if (ad is AppOpenAd) {
@@ -292,6 +308,8 @@ class AdInstanceManager {
     if (ad is RewardedAd) {
       ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
     } else if (ad is InterstitialAd) {
+      ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
+    } else if (ad is RewardedInterstitialAd) {
       ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
       ad.fullScreenContentCallback?.onAdDismissedFullScreenContent?.call(ad);
@@ -308,6 +326,9 @@ class AdInstanceManager {
       ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
           ?.call(ad, arguments['error']);
     } else if (ad is InterstitialAd) {
+      ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
+          ?.call(ad, arguments['error']);
+    } else if (ad is RewardedInterstitialAd) {
       ad.fullScreenContentCallback?.onAdFailedToShowFullScreenContent
           ?.call(ad, arguments['error']);
     } else if (ad is AdManagerInterstitialAd) {
@@ -327,6 +348,8 @@ class AdInstanceManager {
     } else if (ad is RewardedAd) {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
     } else if (ad is InterstitialAd) {
+      ad.fullScreenContentCallback?.onAdImpression?.call(ad);
+    } else if (ad is RewardedInterstitialAd) {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
     } else if (ad is AdManagerInterstitialAd) {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
@@ -414,7 +437,7 @@ class AdInstanceManager {
 
   /// Starts loading the ad if not previously loaded.
   ///
-  /// Loading also terminates if ad is already in the process of loading.
+  /// Does nothing if we have already tried to load the ad.
   Future<void> loadBannerAd(BannerAd ad) {
     if (adIdFor(ad) != null) {
       return Future<void>.value();
@@ -486,6 +509,28 @@ class AdInstanceManager {
     _loadedAds[adId] = ad;
     return channel.invokeMethod<void>(
       'loadRewardedAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+        'adManagerRequest': ad.adManagerRequest,
+        'serverSideVerificationOptions': ad.serverSideVerificationOptions,
+      },
+    );
+  }
+
+  /// Starts loading the ad if not previously loaded.
+  ///
+  /// Loading also terminates if ad is already in the process of loading.
+  Future<void> loadRewardedInterstitialAd(RewardedInterstitialAd ad) {
+    if (adIdFor(ad) != null) {
+      return Future<void>.value();
+    }
+
+    final int adId = _nextAdId++;
+    _loadedAds[adId] = ad;
+    return channel.invokeMethod<void>(
+      'loadRewardedInterstitialAd',
       <dynamic, dynamic>{
         'adId': adId,
         'adUnitId': ad.adUnitId,
