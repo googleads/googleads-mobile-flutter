@@ -14,7 +14,7 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'dart:io';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'anchored_adaptive_example.dart';
