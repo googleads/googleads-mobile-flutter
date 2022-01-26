@@ -135,6 +135,16 @@
                }];
 }
 
+- (void)onRewardedInterstitialAdUserEarnedReward:(FLTRewardedInterstitialAd *_Nonnull)ad
+                                          reward:(FLTRewardItem *_Nonnull)reward {
+  [_channel invokeMethod:@"onAdEvent"
+               arguments:@{
+                 @"adId" : ad.adId,
+                 @"eventName" : @"onRewardedInterstitialAdUserEarnedReward",
+                 @"rewardItem" : reward,
+               }];
+}
+
 - (void)onPaidEvent:(id<FLTAd> _Nonnull)ad value:(FLTAdValue *_Nonnull)adValue {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{

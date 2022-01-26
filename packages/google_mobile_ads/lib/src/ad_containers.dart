@@ -1036,13 +1036,9 @@ class NativeAd extends AdWithView {
   /// Options to configure the native ad request.
   final NativeAdOptions? nativeAdOptions;
 
-  /// {@template google_mobile_ads.testAdUnitId}
-  /// A platform-specific AdMob test ad unit ID.
-  ///
-  /// This ad unit has been specially configured to always return test ads, and
-  /// developers are encouraged to use it while building and testing their apps.
-  /// {@endtemplate}
-  /// {@macro google_mobile_ads.testAdUnitId}
+  /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
+  /// demo ad units that point to specific test creatives for each format.
+  @Deprecated('Use test ads from the developer page while creating the ad.')
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/2247696110'
       : 'ca-app-pub-3940256099942544/3986624511';
@@ -1245,15 +1241,124 @@ class RewardedAd extends AdWithoutView {
   }
 }
 
-/// Credit information about a reward received from a [RewardedAd].
+/// Rewarded interstitials are full screen ads that reward users and can be
+/// shown without a user opt in.
+///
+/// This ad format is different than [RewardedAd] because rewarded ads require
+/// the user to opt-in to watching the video. This ad format is different than
+/// [InterstitialAd] because interstitial ads do not reward the user.
+///
+/// Because the video assets are so large, it's a good idea to start loading an
+/// ad well in advance of when it's likely to be needed.
+class RewardedInterstitialAd extends AdWithoutView {
+  /// Creates a [RewardedInterstitialAd] with an [AdRequest].
+  ///
+  /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
+  RewardedInterstitialAd._({
+    required String adUnitId,
+    required this.rewardedInterstitialAdLoadCallback,
+    required this.request,
+    this.serverSideVerificationOptions,
+  })  : adManagerRequest = null,
+        super(adUnitId: adUnitId);
+
+  /// Creates a [RewardedInterstitialAd] with an [AdManagerAdRequest].
+  ///
+  /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
+  RewardedInterstitialAd._fromAdManagerRequest({
+    required String adUnitId,
+    required this.rewardedInterstitialAdLoadCallback,
+    required this.adManagerRequest,
+    this.serverSideVerificationOptions,
+  })  : request = null,
+        super(adUnitId: adUnitId);
+
+  /// Targeting information used to fetch an [Ad].
+  final AdRequest? request;
+
+  /// Targeting information used to fetch an [Ad] using Ad Manager.
+  final AdManagerAdRequest? adManagerRequest;
+
+  /// Callbacks for events that occur when attempting to load an ad.
+  final RewardedInterstitialAdLoadCallback rewardedInterstitialAdLoadCallback;
+
+  /// {@template google_mobile_ads.testAdUnitId}
+  /// A platform-specific AdMob test ad unit ID.
+  ///
+  /// This ad unit has been specially configured to always return test ads, and
+  /// developers are encouraged to use it while building and testing their apps.
+  /// {@endtemplate}
+  /// {@macro google_mobile_ads.testAdUnitId}
+  static final String testAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/5354046379'
+      : 'ca-app-pub-3940256099942544/6978759866';
+
+  /// Optional [ServerSideVerificationOptions].
+  ServerSideVerificationOptions? serverSideVerificationOptions;
+
+  /// Callbacks to be invoked when ads show and dismiss full screen content.
+  FullScreenContentCallback<RewardedInterstitialAd>? fullScreenContentCallback;
+
+  /// Callback for when the user earns a reward.
+  OnUserEarnedRewardCallback? onUserEarnedRewardCallback;
+
+  /// Loads a [RewardedInterstitialAd] using an [AdRequest].
+  static Future<void> load({
+    required String adUnitId,
+    required AdRequest request,
+    required RewardedInterstitialAdLoadCallback
+        rewardedInterstitialAdLoadCallback,
+    ServerSideVerificationOptions? serverSideVerificationOptions,
+  }) async {
+    RewardedInterstitialAd rewardedInterstitialAd = RewardedInterstitialAd._(
+        adUnitId: adUnitId,
+        request: request,
+        rewardedInterstitialAdLoadCallback: rewardedInterstitialAdLoadCallback,
+        serverSideVerificationOptions: serverSideVerificationOptions);
+
+    await instanceManager.loadRewardedInterstitialAd(rewardedInterstitialAd);
+  }
+
+  /// Loads a [RewardedInterstitialAd] using an [AdManagerAdRequest].
+  static Future<void> loadWithAdManagerAdRequest({
+    required String adUnitId,
+    required AdManagerAdRequest adManagerRequest,
+    required RewardedInterstitialAdLoadCallback
+        rewardedInterstitialAdLoadCallback,
+    ServerSideVerificationOptions? serverSideVerificationOptions,
+  }) async {
+    RewardedInterstitialAd rewardedInterstitialAd =
+        RewardedInterstitialAd._fromAdManagerRequest(
+            adUnitId: adUnitId,
+            adManagerRequest: adManagerRequest,
+            rewardedInterstitialAdLoadCallback:
+                rewardedInterstitialAdLoadCallback,
+            serverSideVerificationOptions: serverSideVerificationOptions);
+
+    await instanceManager.loadRewardedInterstitialAd(rewardedInterstitialAd);
+  }
+
+  /// Display this on top of the application.
+  ///
+  /// Set [fullScreenContentCallback] before calling this method to be
+  /// notified of events that occur when showing the ad.
+  /// [onUserEarnedReward] will be invoked when the user earns a reward.
+  Future<void> show({required OnUserEarnedRewardCallback onUserEarnedReward}) {
+    onUserEarnedRewardCallback = onUserEarnedReward;
+    return instanceManager.showAdWithoutView(this);
+  }
+}
+
+/// Credit information about a reward received from a [RewardedAd] or
+/// [RewardedInterstitialAd].
 class RewardItem {
   /// Default constructor for [RewardItem].
   ///
-  /// This is mostly used to return [RewardItem]s for a [RewardedAd] and
-  /// shouldn't be needed to be used directly.
+  /// This is mostly used to return [RewardItem]s for a [RewardedAd] or
+  /// [RewardedInterstitialAd] and shouldn't be needed to be used directly.
   RewardItem(this.amount, this.type);
 
-  /// Credit amount rewarded from a [RewardedAd].
+  /// Credit amount rewarded from a [RewardedAd] or [RewardedInterstitialAd].
   final num amount;
 
   /// Type of credit rewarded.
