@@ -859,7 +859,8 @@ class BannerAd extends AdWithView {
 
   /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
   /// demo ad units that point to specific test creatives for each format.
-  @Deprecated('Use test ad unit ids from the developer page while creating the ad.')
+  @Deprecated(
+      'Use test ad unit ids from the developer page while creating the ad.')
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/6300978111'
       : 'ca-app-pub-3940256099942544/2934735716';
@@ -1034,7 +1035,8 @@ class NativeAd extends AdWithView {
 
   /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
   /// demo ad units that point to specific test creatives for each format.
-  @Deprecated('Use test ad unit ids from the developer page while creating the ad.')
+  @Deprecated(
+      'Use test ad unit ids from the developer page while creating the ad.')
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/2247696110'
       : 'ca-app-pub-3940256099942544/3986624511';
@@ -1068,7 +1070,8 @@ class InterstitialAd extends AdWithoutView {
 
   /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
   /// demo ad units that point to specific test creatives for each format.
-  @Deprecated('Use test ad unit ids from the developer page while creating the ad.')
+  @Deprecated(
+      'Use test ad unit ids from the developer page while creating the ad.')
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/1033173712'
       : 'ca-app-pub-3940256099942544/4411468910';
@@ -1178,7 +1181,8 @@ class RewardedAd extends AdWithoutView {
 
   /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
   /// demo ad units that point to specific test creatives for each format.
-  @Deprecated('Use test ad unit ids from the developer page while creating the ad.')
+  @Deprecated(
+      'Use test ad unit ids from the developer page while creating the ad.')
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/5224354917'
       : 'ca-app-pub-3940256099942544/1712485313';
@@ -1278,7 +1282,8 @@ class RewardedInterstitialAd extends AdWithoutView {
 
   /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
   /// demo ad units that point to specific test creatives for each format.
-  @Deprecated('Use test ad unit ids from the developer page while creating the ad.')
+  @Deprecated(
+      'Use test ad unit ids from the developer page while creating the ad.')
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/5354046379'
       : 'ca-app-pub-3940256099942544/6978759866';
