@@ -857,7 +857,8 @@ class BannerAd extends AdWithView {
   @override
   final BannerAdListener listener;
 
-  /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
+  /// Check out developer pages for [Admob](https://developers.google.com/admob/flutter/test-ads)
+  /// and [AdManager](https://developers.google.com/ad-manager/mobile-ads-sdk/flutter/test-ads) for
   /// demo ad units that point to specific test creatives for each format.
   @Deprecated(
       'Use test ad unit ids from the developer page while creating the ad.')
@@ -1033,7 +1034,8 @@ class NativeAd extends AdWithView {
   /// Options to configure the native ad request.
   final NativeAdOptions? nativeAdOptions;
 
-  /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
+  /// Check out developer pages for [Admob](https://developers.google.com/admob/flutter/test-ads)
+  /// and [AdManager](https://developers.google.com/ad-manager/mobile-ads-sdk/flutter/test-ads) for
   /// demo ad units that point to specific test creatives for each format.
   @Deprecated(
       'Use test ad unit ids from the developer page while creating the ad.')
@@ -1068,7 +1070,8 @@ class InterstitialAd extends AdWithoutView {
   /// Callbacks to be invoked when ads show and dismiss full screen content.
   FullScreenContentCallback<InterstitialAd>? fullScreenContentCallback;
 
-  /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
+  /// Check out developer pages for [Admob](https://developers.google.com/admob/flutter/test-ads)
+  /// and [AdManager](https://developers.google.com/ad-manager/mobile-ads-sdk/flutter/test-ads) for
   /// demo ad units that point to specific test creatives for each format.
   @Deprecated(
       'Use test ad unit ids from the developer page while creating the ad.')
@@ -1179,7 +1182,8 @@ class RewardedAd extends AdWithoutView {
   /// Callbacks for events that occur when attempting to load an ad.
   final RewardedAdLoadCallback rewardedAdLoadCallback;
 
-  /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
+  /// Check out developer pages for [Admob](https://developers.google.com/admob/flutter/test-ads)
+  /// and [AdManager](https://developers.google.com/ad-manager/mobile-ads-sdk/flutter/test-ads) for
   /// demo ad units that point to specific test creatives for each format.
   @Deprecated(
       'Use test ad unit ids from the developer page while creating the ad.')
