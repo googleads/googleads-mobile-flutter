@@ -1280,14 +1280,6 @@ class RewardedInterstitialAd extends AdWithoutView {
   /// Callbacks for events that occur when attempting to load an ad.
   final RewardedInterstitialAdLoadCallback rewardedInterstitialAdLoadCallback;
 
-  /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
-  /// demo ad units that point to specific test creatives for each format.
-  @Deprecated(
-      'Use test ad unit ids from the developer page while creating the ad.')
-  static final String testAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/5354046379'
-      : 'ca-app-pub-3940256099942544/6978759866';
-
   /// Optional [ServerSideVerificationOptions].
   ServerSideVerificationOptions? serverSideVerificationOptions;
 
