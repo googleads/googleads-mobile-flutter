@@ -14,11 +14,14 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import 'anchored_adaptive_example.dart';
-import 'inline_adaptive_example.dart';
 import 'fluid_example.dart';
+import 'inline_adaptive_example.dart';
 import 'reusable_inline_example.dart';
 
 void main() {
@@ -63,7 +66,9 @@ class _MyAppState extends State<MyApp> {
 
   void _createInterstitialAd() {
     InterstitialAd.load(
-        adUnitId: InterstitialAd.testAdUnitId,
+        adUnitId: Platform.isAndroid
+            ? 'ca-app-pub-3940256099942544/1033173712'
+            : 'ca-app-pub-3940256099942544/4411468910',
         request: request,
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
@@ -108,7 +113,9 @@ class _MyAppState extends State<MyApp> {
 
   void _createRewardedAd() {
     RewardedAd.load(
-        adUnitId: RewardedAd.testAdUnitId,
+        adUnitId: Platform.isAndroid
+            ? 'ca-app-pub-3940256099942544/5224354917'
+            : 'ca-app-pub-3940256099942544/1712485313',
         request: request,
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (RewardedAd ad) {
@@ -157,7 +164,9 @@ class _MyAppState extends State<MyApp> {
 
   void _createRewardedInterstitialAd() {
     RewardedInterstitialAd.load(
-        adUnitId: RewardedInterstitialAd.testAdUnitId,
+        adUnitId: Platform.isAndroid
+            ? 'ca-app-pub-3940256099942544/5354046379'
+            : 'ca-app-pub-3940256099942544/6978759866',
         request: request,
         rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
           onAdLoaded: (RewardedInterstitialAd ad) {
