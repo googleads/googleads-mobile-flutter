@@ -1,3 +1,6 @@
+## 1.0.2
+* Add support for [Rewarded Interstitial](https://support.google.com/admob/answer/9884467) (beta) ad format.
+
 ## 1.0.1
 
 * Fix for [Issue 449](https://github.com/googleads/googleads-mobile-flutter/issues/449).
