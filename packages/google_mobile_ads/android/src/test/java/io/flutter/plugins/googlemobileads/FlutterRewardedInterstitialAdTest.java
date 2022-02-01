@@ -194,6 +194,7 @@ public class FlutterRewardedInterstitialAdTest {
                 FullScreenContentCallback callback = invocation.getArgument(0);
                 callback.onAdShowedFullScreenContent();
                 callback.onAdImpression();
+                callback.onAdClicked();
                 callback.onAdDismissedFullScreenContent();
                 return null;
               }
@@ -245,6 +246,7 @@ public class FlutterRewardedInterstitialAdTest {
             ArgumentMatchers.argThat(serverSideVerificationOptionsArgumentMatcher));
     verify(mockManager).onAdShowedFullScreenContent(eq(1));
     verify(mockManager).onAdImpression(eq(1));
+    verify(mockManager).onAdClicked(eq(1));
     verify(mockManager).onAdDismissedFullScreenContent(eq(1));
     verify(mockManager).onRewardedAdUserEarnedReward(1, new FlutterRewardItem(5, "$$"));
     verify(mockManager).onAdMetadataChanged(eq(1));
