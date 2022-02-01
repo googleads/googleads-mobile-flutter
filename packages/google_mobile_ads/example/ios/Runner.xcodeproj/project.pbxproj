@@ -21,6 +21,7 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		9E4163BB26CCE99400220C78 /* FLTAppOpenAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E4163BA26CCE99300220C78 /* FLTAppOpenAdTest.m */; };
 		9E5A534926AA235D00B9438D /* FLTAdUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E5A534826AA235D00B9438D /* FLTAdUtil.m */; };
+		9E60902C27A9E7BE003D5BAB /* FLTRewardedInterstitialAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E60902B27A9E7BE003D5BAB /* FLTRewardedInterstitialAdTest.m */; };
 		9E79684A271FF40900E06158 /* FLTAdRequestTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E796848271FF40900E06158 /* FLTAdRequestTest.m */; };
 		9E79684B271FF40900E06158 /* FLTGAMAdRequestTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E796849271FF40900E06158 /* FLTGAMAdRequestTest.m */; };
 		9E7B9D8F273206F800C6A6AB /* FLTAppStateNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E7B9D8E273206F800C6A6AB /* FLTAppStateNotifier.m */; };
@@ -100,6 +101,7 @@
 		9E4163BA26CCE99300220C78 /* FLTAppOpenAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTAppOpenAdTest.m; path = ../../../ios/Tests/FLTAppOpenAdTest.m; sourceTree = "<group>"; };
 		9E5A534726AA235D00B9438D /* FLTAdUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FLTAdUtil.h; path = ../../ios/Classes/FLTAdUtil.h; sourceTree = "<group>"; };
 		9E5A534826AA235D00B9438D /* FLTAdUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTAdUtil.m; path = ../../ios/Classes/FLTAdUtil.m; sourceTree = "<group>"; };
+		9E60902B27A9E7BE003D5BAB /* FLTRewardedInterstitialAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTRewardedInterstitialAdTest.m; path = ../../../ios/Tests/FLTRewardedInterstitialAdTest.m; sourceTree = "<group>"; };
 		9E79682A271D415600E06158 /* FLTMediationNetworkExtrasProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FLTMediationNetworkExtrasProvider.h; path = ../../ios/Classes/FLTMediationNetworkExtrasProvider.h; sourceTree = "<group>"; };
 		9E796848271FF40900E06158 /* FLTAdRequestTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTAdRequestTest.m; path = ../../../ios/Tests/FLTAdRequestTest.m; sourceTree = "<group>"; };
 		9E796849271FF40900E06158 /* FLTGAMAdRequestTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGAMAdRequestTest.m; path = ../../../ios/Tests/FLTGAMAdRequestTest.m; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 		8FB13CD3248F07B80011A72F /* google_mobile_ads_exampleTests */ = {
 			isa = PBXGroup;
 			children = (
+				9E60902B27A9E7BE003D5BAB /* FLTRewardedInterstitialAdTest.m */,
 				9E796848271FF40900E06158 /* FLTAdRequestTest.m */,
 				9E796849271FF40900E06158 /* FLTGAMAdRequestTest.m */,
 				9EDE65D526F9300000783049 /* FLTFluidGAMBannerAdTest.m */,
@@ -481,6 +484,7 @@
 				8FB13CE22498136E0011A72F /* FLTGoogleMobileAdsReaderWriterTest.m in Sources */,
 				9EA747542637EC7000E0B0E4 /* FLTInterstitialAdTest.m in Sources */,
 				9EF1F00025F8351A0017A440 /* FLTGoogleMobileAdsPluginMethodCallsTest.m in Sources */,
+				9E60902C27A9E7BE003D5BAB /* FLTRewardedInterstitialAdTest.m in Sources */,
 				9EA747532637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
