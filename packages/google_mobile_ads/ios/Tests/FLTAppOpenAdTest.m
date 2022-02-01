@@ -80,8 +80,8 @@
       .andDo(^(NSInvocation *invocation) {
         id<GADFullScreenContentDelegate> delegate;
         [invocation getArgument:&delegate atIndex:2];
-        XCTAssertEqual(delegate, ad);
         [delegate adDidRecordImpression:appOpenClassMock];
+        [delegate adDidRecordClick:appOpenClassMock];
         [delegate adDidDismissFullScreenContent:appOpenClassMock];
         [delegate adDidPresentFullScreenContent:appOpenClassMock];
         [delegate adWillDismissFullScreenContent:appOpenClassMock];
@@ -109,7 +109,7 @@
                                          completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
                        responseInfo:[OCMArg isEqual:responseInfo]]);
-  OCMVerify([appOpenClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
+  OCMVerify([appOpenClassMock setFullScreenContentDelegate:[OCMArg any]]);
   XCTAssertEqual(ad.appOpenAd, appOpenClassMock);
   OCMVerify([mockManager onPaidEvent:[OCMArg isEqual:ad]
                                value:[OCMArg checkWithBlock:^BOOL(id obj) {
@@ -132,6 +132,7 @@
   OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidRecordImpression:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager adDidRecordClick:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager didFailToPresentFullScreenContentWithError:[OCMArg isEqual:ad]
                                                               error:[OCMArg isEqual:error]]);
 }

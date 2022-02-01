@@ -121,7 +121,7 @@
 
   // Check GADNativeAdDelegate methods forward to ad instance manager.
   OCMVerify([mockGADNativeAd setDelegate:[OCMArg isEqual:ad]]);
-  OCMVerify([mockManager onNativeAdClicked:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager adDidRecordClick:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager onNativeAdImpression:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager onNativeAdWillPresentScreen:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager onNativeAdDidDismissScreen:[OCMArg isEqual:ad]]);

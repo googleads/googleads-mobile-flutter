@@ -214,8 +214,8 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
                             nativeAdOptions:nil];
   [_manager loadAd:ad];
 
-  [_manager onNativeAdClicked:ad];
-  NSData *clickData = [self getDataForEvent:@"onNativeAdClicked" adId:@1];
+  [_manager adDidRecordClick:ad];
+  NSData *clickData = [self getDataForEvent:@"adDidRecordClick" adId:@1];
   OCMVerify([_mockMessenger sendOnChannel:channel message:clickData]);
 
   [_manager onNativeAdImpression:ad];
@@ -426,6 +426,19 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
       encodeMethodCall:[FlutterMethodCall
                            methodCallWithMethodName:@"onAdEvent"
                                           arguments:@{@"adId" : @1, @"eventName" : name}]];
+}
+
+- (void)testAdClick {
+  FLTRewardedInterstitialAd *rewardedInterstitialAd =
+      [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                  request:[[FLTAdRequest alloc] init]
+                                       rootViewController:OCMClassMock([UIViewController class])
+                            serverSideVerificationOptions:nil
+                                                     adId:@1];
+
+  [_manager adDidRecordClick:rewardedInterstitialAd];
+  NSData *impressionData = [self getDataForEvent:@"adDidRecordClick" adId:@1];
+  OCMVerify(([_mockMessenger sendOnChannel:channel message:impressionData]));
 }
 
 @end
