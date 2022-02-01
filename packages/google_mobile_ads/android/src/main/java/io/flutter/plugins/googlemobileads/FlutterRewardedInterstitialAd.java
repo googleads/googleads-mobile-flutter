@@ -28,7 +28,7 @@ import java.lang.ref.WeakReference;
 
 /** A wrapper for {@link RewardedInterstitialAd}. */
 class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
-  private static final String TAG = "FlutterRewardedInterstitialAd";
+  private static final String TAG = "FlutterRIAd";
 
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
