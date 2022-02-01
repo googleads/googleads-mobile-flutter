@@ -120,7 +120,6 @@ public class FluidAdManagerBannerAdTest {
                 listener.onAdClosed();
                 listener.onAdOpened();
                 listener.onAdClicked();
-                ;
                 return null;
               }
             })

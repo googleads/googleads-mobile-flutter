@@ -1,6 +1,7 @@
-## 1.0.2
-* Add support for [Rewarded Interstitial](https://support.google.com/admob/answer/9884467) (beta) ad format.
-
+## 1.2.0
+* Adds support for [Rewarded Interstitial](https://support.google.com/admob/answer/9884467) (beta) ad format.
+* Adds support for `onAdClicked` events to all ad formats. `NativeAdListener.onNativeAdClicked` is now deprecated.
+  * `FullScreenContentCallback` and `AdWithViewListeners` now have an `onAdClicked` event.
 ## 1.0.1
 
 * Fix for [Issue 449](https://github.com/googleads/googleads-mobile-flutter/issues/449).

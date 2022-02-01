@@ -217,6 +217,8 @@ class NativeAdListener extends AdWithViewListener {
             onAdClicked: onAdClicked);
 
   /// Called when a click is recorded for a [NativeAd].
+  /// @Deprecated Use [onAdClicked] instead
+  @Deprecated('Use [onAdClicked] instead')
   final void Function(NativeAd ad)? onNativeAdClicked;
 }
 
