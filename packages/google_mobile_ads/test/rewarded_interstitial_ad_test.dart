@@ -100,6 +100,8 @@ void main() {
           Completer<RewardedInterstitialAd>();
       Completer<RewardedInterstitialAd> dismissedCompleter =
           Completer<RewardedInterstitialAd>();
+      Completer<RewardedInterstitialAd> clickedCompleter =
+          Completer<RewardedInterstitialAd>();
 
       rewardedInterstitial!.fullScreenContentCallback =
           FullScreenContentCallback(
@@ -108,6 +110,7 @@ void main() {
         onAdFailedToShowFullScreenContent: (ad, error) =>
             failedToShowCompleter.complete(ad),
         onAdDismissedFullScreenContent: (ad) => dismissedCompleter.complete(ad),
+        onAdClicked: (ad) => clickedCompleter.complete(ad),
       );
 
       await _sendAdEvent(0, 'onAdImpression', instanceManager);
@@ -118,6 +121,9 @@ void main() {
 
       await _sendAdEvent(0, 'onAdDismissedFullScreenContent', instanceManager);
       expect(await dismissedCompleter.future, rewardedInterstitial);
+
+      await _sendAdEvent(0, 'onAdClicked', instanceManager);
+      expect(await clickedCompleter.future, rewardedInterstitial);
 
       await _sendAdEvent(0, 'onFailedToShowFullScreenContent', instanceManager,
           {'error': AdError(1, 'domain', 'message')});
@@ -186,6 +192,51 @@ void main() {
           'adId': 0,
         })
       ]);
+
+      // Check that full screen events are passed correctly.
+      Completer<RewardedInterstitialAd> impressionCompleter =
+          Completer<RewardedInterstitialAd>();
+      Completer<RewardedInterstitialAd> failedToShowCompleter =
+          Completer<RewardedInterstitialAd>();
+      Completer<RewardedInterstitialAd> showedCompleter =
+          Completer<RewardedInterstitialAd>();
+      Completer<RewardedInterstitialAd> dismissedCompleter =
+          Completer<RewardedInterstitialAd>();
+      Completer<RewardedInterstitialAd> clickedCompleter =
+          Completer<RewardedInterstitialAd>();
+      Completer<RewardedInterstitialAd> willDismissCompleter =
+          Completer<RewardedInterstitialAd>();
+
+      rewardedInterstitial!.fullScreenContentCallback =
+          FullScreenContentCallback(
+        onAdImpression: (ad) => impressionCompleter.complete(ad),
+        onAdShowedFullScreenContent: (ad) => showedCompleter.complete(ad),
+        onAdFailedToShowFullScreenContent: (ad, error) =>
+            failedToShowCompleter.complete(ad),
+        onAdDismissedFullScreenContent: (ad) => dismissedCompleter.complete(ad),
+        onAdClicked: (ad) => clickedCompleter.complete(ad),
+        onAdWillDismissFullScreenContent: (ad) =>
+            willDismissCompleter.complete(ad),
+      );
+
+      await _sendAdEvent(0, 'adDidRecordImpression', instanceManager);
+      expect(await impressionCompleter.future, rewardedInterstitial);
+
+      await _sendAdEvent(0, 'onAdDidPresentFullScreenContent', instanceManager);
+      expect(await showedCompleter.future, rewardedInterstitial);
+
+      await _sendAdEvent(0, 'adDidDismissFullScreenContent', instanceManager);
+      expect(await dismissedCompleter.future, rewardedInterstitial);
+
+      await _sendAdEvent(0, 'adWillDismissFullScreenContent', instanceManager);
+      expect(await dismissedCompleter.future, rewardedInterstitial);
+
+      await _sendAdEvent(0, 'adDidRecordClick', instanceManager);
+      expect(await clickedCompleter.future, rewardedInterstitial);
+
+      await _sendAdEvent(0, 'didFailToPresentFullScreenContentWithError',
+          instanceManager, {'error': AdError(1, 'domain', 'message')});
+      expect(await failedToShowCompleter.future, rewardedInterstitial);
 
       // Check paid event callback
       Completer<List<dynamic>> paidEventCompleter = Completer<List<dynamic>>();

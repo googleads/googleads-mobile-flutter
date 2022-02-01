@@ -392,6 +392,10 @@
   [manager onBannerDidDismissScreen:self];
 }
 
+- (void)bannerViewDidRecordClick:(GADBannerView *)bannerView {
+  [manager adDidRecordClick:self];
+}
+
 #pragma mark - FlutterPlatformView
 - (nonnull UIView *)view {
   return self.bannerView;
@@ -559,11 +563,64 @@
 
 @end
 
+#pragma mark - FLTFullScreenContentDelegate
+
+@interface FLTFullScreenContentDelegate : NSObject <GADFullScreenContentDelegate>
+- (instancetype _Nonnull)initWithAd:(id<FLTAd> _Nonnull)ad
+                            manager:(FLTAdInstanceManager *_Nonnull)manager;
+@property(weak) id<FLTAd> ad;
+@property(weak) FLTAdInstanceManager *manager;
+@end
+
+@implementation FLTFullScreenContentDelegate
+
+- (instancetype _Nonnull)initWithAd:(id<FLTAd> _Nonnull)ad
+                            manager:(FLTAdInstanceManager *_Nonnull)manager {
+  self = [super init];
+  if (self) {
+    self.ad = ad;
+    self.manager = manager;
+  }
+  return self;
+}
+
+@synthesize manager;
+@synthesize ad;
+
+- (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
+    didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
+  [self.manager didFailToPresentFullScreenContentWithError:self.ad error:error];
+}
+
+- (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager onAdDidPresentFullScreenContent:self.ad];
+}
+
+- (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager adDidDismissFullScreenContent:self.ad];
+}
+
+- (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager adWillDismissFullScreenContent:self.ad];
+}
+
+- (void)adDidRecordImpression:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager adDidRecordImpression:self.ad];
+}
+
+- (void)adDidRecordClick:(nonnull id<GADFullScreenPresentingAd>)ad {
+  [self.manager adDidRecordClick:self.ad];
+}
+@end
+
+#pragma mark - FLTInterstitialAd
+
 @implementation FLTInterstitialAd {
   GADInterstitialAd *_interstitialView;
   FLTAdRequest *_adRequest;
   UIViewController *_rootViewController;
   NSString *_adUnitId;
+  FLTFullScreenContentDelegate *_fullScreenContentDelegate;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -589,29 +646,31 @@
 }
 
 - (void)load {
-  [GADInterstitialAd loadWithAdUnitID:_adUnitId
-                              request:[_adRequest asGADRequest:_adUnitId]
-                    completionHandler:^(GADInterstitialAd *ad, NSError *error) {
-                      if (error) {
-                        [self.manager onAdFailedToLoad:self error:error];
-                        return;
-                      }
-                      ad.fullScreenContentDelegate = self;
-                      self->_interstitialView = ad;
-                      __weak FLTInterstitialAd *weakSelf = self;
-                      ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-                        if (weakSelf.manager == nil) {
-                          return;
-                        }
-                        [weakSelf.manager
-                            onPaidEvent:weakSelf
+  [GADInterstitialAd
+       loadWithAdUnitID:_adUnitId
+                request:[_adRequest asGADRequest:_adUnitId]
+      completionHandler:^(GADInterstitialAd *ad, NSError *error) {
+        if (error) {
+          [self.manager onAdFailedToLoad:self error:error];
+          return;
+        }
+        self->_fullScreenContentDelegate =
+            [[FLTFullScreenContentDelegate alloc] initWithAd:self manager:self.manager];
+        ad.fullScreenContentDelegate = self->_fullScreenContentDelegate;
+        self->_interstitialView = ad;
+        __weak FLTInterstitialAd *weakSelf = self;
+        ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+          if (weakSelf.manager == nil) {
+            return;
+          }
+          [weakSelf.manager onPaidEvent:weakSelf
                                   value:[[FLTAdValue alloc] initWithValue:value.value
                                                                 precision:(NSInteger)value.precision
                                                              currencyCode:value.currencyCode]];
-                      };
+        };
 
-                      [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
-                    }];
+        [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+      }];
 }
 
 - (void)show {
@@ -622,38 +681,18 @@
   }
 }
 
-#pragma mark - GADFullScreenContentDelegate
-
-- (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
-    didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
-  [self.manager didFailToPresentFullScreenContentWithError:self error:error];
-}
-
-- (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [self.manager onAdDidPresentFullScreenContent:self];
-}
-
-- (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [self.manager adDidDismissFullScreenContent:self];
-}
-
-- (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [self.manager adWillDismissFullScreenContent:self];
-}
-
-- (void)adDidRecordImpression:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [self.manager adDidRecordImpression:self];
-}
-
 @synthesize manager;
 
 @end
+
+#pragma mark - FLTGAMInterstitialAd
 
 @implementation FLTGAMInterstitialAd {
   GAMInterstitialAd *_insterstitial;
   FLTGAMAdRequest *_adRequest;
   UIViewController *_rootViewController;
   NSString *_adUnitId;
+  FLTFullScreenContentDelegate *_fullScreenContentDelegate;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -684,7 +723,9 @@
                   return;
                 }
                 [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
-                ad.fullScreenContentDelegate = self;
+                self->_fullScreenContentDelegate =
+                    [[FLTFullScreenContentDelegate alloc] initWithAd:self manager:self.manager];
+                ad.fullScreenContentDelegate = self->_fullScreenContentDelegate;
                 ad.appEventDelegate = self;
                 __weak FLTGAMInterstitialAd *weakSelf = self;
                 ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
@@ -727,6 +768,7 @@
   UIViewController *_rootViewController;
   FLTServerSideVerificationOptions *_serverSideVerificationOptions;
   NSString *_adUnitId;
+  FLTFullScreenContentDelegate *_fullScreenContentDelegate;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -785,7 +827,9 @@
                                                             precision:(NSInteger)value.precision
                                                          currencyCode:value.currencyCode]];
                   };
-                  rewardedAd.fullScreenContentDelegate = self;
+                  self->_fullScreenContentDelegate =
+                      [[FLTFullScreenContentDelegate alloc] initWithAd:self manager:self.manager];
+                  rewardedAd.fullScreenContentDelegate = self->_fullScreenContentDelegate;
                   self->_rewardedView = rewardedAd;
                   [self.manager onAdLoaded:self responseInfo:rewardedAd.responseInfo];
                 }];
@@ -806,31 +850,6 @@
   }
 }
 
-#pragma mark - GADFullScreenContentDelegate
-
-- (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
-    didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
-  [manager didFailToPresentFullScreenContentWithError:self error:error];
-}
-
-/// Tells the delegate that the ad presented full screen content.
-- (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager onAdDidPresentFullScreenContent:self];
-}
-
-/// Tells the delegate that the ad dismissed full screen content.
-- (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager adDidDismissFullScreenContent:self];
-}
-
-- (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager adWillDismissFullScreenContent:self];
-}
-
-- (void)adDidRecordImpression:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager adDidRecordImpression:self];
-}
-
 @synthesize manager;
 
 @end
@@ -842,6 +861,7 @@
   UIViewController *_rootViewController;
   FLTServerSideVerificationOptions *_serverSideVerificationOptions;
   NSString *_adUnitId;
+  FLTFullScreenContentDelegate *_fullScreenContentDelegate;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -901,7 +921,9 @@
                                                                 precision:(NSInteger)value.precision
                                                              currencyCode:value.currencyCode]];
         };
-        rewardedInterstitialAd.fullScreenContentDelegate = self;
+        self->_fullScreenContentDelegate =
+            [[FLTFullScreenContentDelegate alloc] initWithAd:self manager:self.manager];
+        rewardedInterstitialAd.fullScreenContentDelegate = self->_fullScreenContentDelegate;
         self->_rewardedInterstitialView = rewardedInterstitialAd;
         [self.manager onAdLoaded:self responseInfo:rewardedInterstitialAd.responseInfo];
       }];
@@ -922,31 +944,6 @@
   }
 }
 
-#pragma mark - GADFullScreenContentDelegate
-
-- (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
-    didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
-  [manager didFailToPresentFullScreenContentWithError:self error:error];
-}
-
-/// Tells the delegate that the ad presented full screen content.
-- (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager onAdDidPresentFullScreenContent:self];
-}
-
-/// Tells the delegate that the ad dismissed full screen content.
-- (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager adDidDismissFullScreenContent:self];
-}
-
-- (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager adWillDismissFullScreenContent:self];
-}
-
-- (void)adDidRecordImpression:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager adDidRecordImpression:self];
-}
-
 @synthesize manager;
 
 @end
@@ -958,6 +955,7 @@
   UIViewController *_rootViewController;
   NSNumber *_orientation;
   NSString *_adUnitId;
+  FLTFullScreenContentDelegate *_fullScreenContentDelegate;
 }
 
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -1020,7 +1018,10 @@
                                                            precision:(NSInteger)value.precision
                                                         currencyCode:value.currencyCode]];
                  };
-                 appOpenAd.fullScreenContentDelegate = self;
+                 self->_fullScreenContentDelegate =
+                     [[FLTFullScreenContentDelegate alloc] initWithAd:self manager:self.manager];
+                 appOpenAd.fullScreenContentDelegate = self->_fullScreenContentDelegate;
+
                  self->_appOpenAd = appOpenAd;
                  [self.manager onAdLoaded:self responseInfo:appOpenAd.responseInfo];
                }];
@@ -1032,31 +1033,6 @@
   } else {
     NSLog(@"AppOpenAd failed to show because the ad was not ready.");
   }
-}
-
-#pragma mark - GADFullScreenContentDelegate
-
-- (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
-    didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
-  [manager didFailToPresentFullScreenContentWithError:self error:error];
-}
-
-/// Tells the delegate that the ad presented full screen content.
-- (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager onAdDidPresentFullScreenContent:self];
-}
-
-/// Tells the delegate that the ad dismissed full screen content.
-- (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager adDidDismissFullScreenContent:self];
-}
-
-- (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager adWillDismissFullScreenContent:self];
-}
-
-- (void)adDidRecordImpression:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager adDidRecordImpression:self];
 }
 
 @synthesize manager;
@@ -1149,7 +1125,7 @@
 #pragma mark - GADNativeAdDelegate
 
 - (void)nativeAdDidRecordClick:(GADNativeAd *)nativeAd {
-  [manager onNativeAdClicked:self];
+  [manager adDidRecordClick:self];
 }
 
 - (void)nativeAdDidRecordImpression:(GADNativeAd *)nativeAd {

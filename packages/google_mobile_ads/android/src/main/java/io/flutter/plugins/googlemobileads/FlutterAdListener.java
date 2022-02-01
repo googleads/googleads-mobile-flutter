@@ -53,6 +53,11 @@ class FlutterAdListener extends AdListener {
   public void onAdImpression() {
     manager.onAdImpression(adId);
   }
+
+  @Override
+  public void onAdClicked() {
+    manager.onAdClicked(adId);
+  }
 }
 
 /**
@@ -86,11 +91,6 @@ class FlutterNativeAdListener extends FlutterAdListener {
   @Override
   public void onAdLoaded() {
     // Do nothing. Loaded event is handled from FlutterNativeAdLoadedListener.
-  }
-
-  @Override
-  public void onAdClicked() {
-    manager.onNativeAdClicked(adId);
   }
 }
 

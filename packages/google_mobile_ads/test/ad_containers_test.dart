@@ -1040,34 +1040,6 @@ void main() {
       expect(responses.first.adError!.domain, 'domain');
     });
 
-    test('onNativeAdClicked', () async {
-      final Completer<Ad> adEventCompleter = Completer<Ad>();
-
-      final NativeAd native = NativeAd(
-        adUnitId: 'test-ad-unit',
-        factoryId: 'testId',
-        listener: NativeAdListener(
-            onNativeAdClicked: (Ad ad) => adEventCompleter.complete(ad)),
-        request: AdRequest(),
-      );
-
-      await native.load();
-
-      final MethodCall methodCall = MethodCall('onAdEvent',
-          <dynamic, dynamic>{'adId': 0, 'eventName': 'onNativeAdClicked'});
-
-      final ByteData data =
-          instanceManager.channel.codec.encodeMethodCall(methodCall);
-
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        data,
-        (ByteData? data) {},
-      );
-
-      expect(adEventCompleter.future, completion(native));
-    });
-
     test('onNativeAdImpression', () async {
       final Completer<Ad> adEventCompleter = Completer<Ad>();
 
@@ -1561,6 +1533,210 @@ void main() {
       expect(decoded.location!.longitude, 25);
       expect(decoded.location!.latitude, 38);
       expect(decoded.mediationExtrasIdentifier, 'identifier');
+    });
+
+    test('ad click native', () async {
+      var testNativeClick = (eventName, adId) async {
+        final Completer<Ad> nativeAdClickCompleter = Completer<Ad>();
+        final Completer<Ad> adClickCompleter = Completer<Ad>();
+
+        final NativeAd native = NativeAd(
+          adUnitId: 'test-ad-unit',
+          factoryId: 'testId',
+          listener: NativeAdListener(
+              onNativeAdClicked: (Ad ad) => nativeAdClickCompleter.complete(ad),
+              onAdClicked: (ad) => adClickCompleter.complete(ad)),
+          request: AdRequest(),
+        );
+
+        await native.load();
+
+        final MethodCall methodCall = MethodCall('onAdEvent',
+            <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
+
+        final ByteData data =
+            instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+
+        expect(nativeAdClickCompleter.future, completion(native));
+        expect(adClickCompleter.future, completion(native));
+      };
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await testNativeClick('adDidRecordClick', 0);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await testNativeClick('onAdClicked', 1);
+    });
+
+    test('ad click rewarded', () async {
+      var testRewardedClick = (eventName, adId) async {
+        final Completer<Ad> adClickCompleter = Completer<Ad>();
+
+        // Load an ad
+        RewardedAd? rewarded;
+        AdRequest request = AdRequest();
+        await RewardedAd.load(
+            adUnitId: 'test-ad-unit',
+            request: request,
+            rewardedAdLoadCallback: RewardedAdLoadCallback(
+                onAdLoaded: (ad) {
+                  rewarded = ad;
+                  ad.fullScreenContentCallback = FullScreenContentCallback(
+                      onAdClicked: (ad) => adClickCompleter.complete(ad));
+                },
+                onAdFailedToLoad: (error) => null),
+            serverSideVerificationOptions: ServerSideVerificationOptions(
+              userId: 'test-user-id',
+              customData: 'test-custom-data',
+            ));
+
+        MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+          'adId': adId,
+          'eventName': 'onAdLoaded',
+        });
+
+        ByteData data =
+            instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+
+        // Handle adDidRecordClick method call
+        methodCall = MethodCall('onAdEvent',
+            <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
+
+        data = instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+        expect(adClickCompleter.future, completion(rewarded!));
+      };
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await testRewardedClick('adDidRecordClick', 0);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await testRewardedClick('onAdClicked', 1);
+    });
+
+    test('ad click interstitial', () async {
+      var testClick = (eventName, adId) async {
+        final Completer<Ad> adClickCompleter = Completer<Ad>();
+
+        // Load an ad
+        InterstitialAd? interstitialAd;
+        AdRequest request = AdRequest();
+        await InterstitialAd.load(
+          adUnitId: 'test-ad-unit',
+          request: request,
+          adLoadCallback: InterstitialAdLoadCallback(
+              onAdLoaded: (ad) {
+                interstitialAd = ad;
+                ad.fullScreenContentCallback = FullScreenContentCallback(
+                    onAdClicked: (ad) => adClickCompleter.complete(ad));
+              },
+              onAdFailedToLoad: (error) => null),
+        );
+
+        MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+          'adId': adId,
+          'eventName': 'onAdLoaded',
+        });
+
+        ByteData data =
+            instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+
+        // Handle adDidRecordClick method call
+        methodCall = MethodCall('onAdEvent',
+            <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
+
+        data = instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+        expect(adClickCompleter.future, completion(interstitialAd!));
+      };
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await testClick('adDidRecordClick', 0);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await testClick('onAdClicked', 1);
+    });
+
+    test('ad click interstitial', () async {
+      var testClick = (eventName, adId) async {
+        final Completer<Ad> adClickCompleter = Completer<Ad>();
+
+        // Load an ad
+        InterstitialAd? interstitialAd;
+        AdRequest request = AdRequest();
+        await InterstitialAd.load(
+          adUnitId: 'test-ad-unit',
+          request: request,
+          adLoadCallback: InterstitialAdLoadCallback(
+              onAdLoaded: (ad) {
+                interstitialAd = ad;
+                ad.fullScreenContentCallback = FullScreenContentCallback(
+                    onAdClicked: (ad) => adClickCompleter.complete(ad));
+              },
+              onAdFailedToLoad: (error) => null),
+        );
+
+        MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+          'adId': adId,
+          'eventName': 'onAdLoaded',
+        });
+
+        ByteData data =
+            instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+
+        // Handle adDidRecordClick method call
+        methodCall = MethodCall('onAdEvent',
+            <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
+
+        data = instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+        expect(adClickCompleter.future, completion(interstitialAd!));
+      };
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await testClick('adDidRecordClick', 0);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await testClick('onAdClicked', 1);
     });
   });
 }

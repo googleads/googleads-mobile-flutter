@@ -81,8 +81,8 @@ class AdInstanceManager {
       case 'onAppEvent':
         _invokeOnAppEvent(ad, eventName, arguments);
         break;
-      case 'onNativeAdClicked':
-        (ad as NativeAd?)?.listener.onNativeAdClicked?.call(ad as NativeAd);
+      case 'adDidRecordClick':
+        _invokeOnAdClicked(ad, eventName);
         break;
       case 'onNativeAdWillPresentScreen': // Fall through
       case 'onBannerWillPresentScreen':
@@ -158,9 +158,6 @@ class AdInstanceManager {
       case 'onAdFailedToLoad':
         _invokeOnAdFailedToLoad(ad, eventName, arguments);
         break;
-      case 'onNativeAdClicked':
-        (ad as NativeAd?)?.listener.onNativeAdClicked?.call(ad as NativeAd);
-        break;
       case 'onAdOpened':
         _invokeOnAdOpened(ad, eventName);
         break;
@@ -191,6 +188,9 @@ class AdInstanceManager {
         break;
       case 'onFluidAdHeightChanged':
         _invokeFluidAdHeightChanged(ad, arguments);
+        break;
+      case 'onAdClicked':
+        _invokeOnAdClicked(ad, eventName);
         break;
       default:
         debugPrint('invalid ad event name: $eventName');
@@ -355,6 +355,27 @@ class AdInstanceManager {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
     } else if (ad is AppOpenAd) {
       ad.fullScreenContentCallback?.onAdImpression?.call(ad);
+    } else {
+      debugPrint('invalid ad: $ad, for event name: $eventName');
+    }
+  }
+
+  void _invokeOnAdClicked(Ad ad, String eventName) {
+    if (ad is NativeAd) {
+      ad.listener.onNativeAdClicked?.call(ad);
+      ad.listener.onAdClicked?.call(ad);
+    } else if (ad is AdWithView) {
+      ad.listener.onAdClicked?.call(ad);
+    } else if (ad is RewardedAd) {
+      ad.fullScreenContentCallback?.onAdClicked?.call(ad);
+    } else if (ad is InterstitialAd) {
+      ad.fullScreenContentCallback?.onAdClicked?.call(ad);
+    } else if (ad is RewardedInterstitialAd) {
+      ad.fullScreenContentCallback?.onAdClicked?.call(ad);
+    } else if (ad is AdManagerInterstitialAd) {
+      ad.fullScreenContentCallback?.onAdClicked?.call(ad);
+    } else if (ad is AppOpenAd) {
+      ad.fullScreenContentCallback?.onAdClicked?.call(ad);
     } else {
       debugPrint('invalid ad: $ad, for event name: $eventName');
     }

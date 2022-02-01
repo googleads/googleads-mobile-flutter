@@ -94,6 +94,7 @@ void main() {
       Completer<AppOpenAd> failedToShowCompleter = Completer<AppOpenAd>();
       Completer<AppOpenAd> showedCompleter = Completer<AppOpenAd>();
       Completer<AppOpenAd> dismissedCompleter = Completer<AppOpenAd>();
+      Completer<AppOpenAd> clickedCompleter = Completer<AppOpenAd>();
 
       appOpenAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdImpression: (ad) => impressionCompleter.complete(ad),
@@ -101,9 +102,13 @@ void main() {
         onAdFailedToShowFullScreenContent: (ad, error) =>
             failedToShowCompleter.complete(ad),
         onAdDismissedFullScreenContent: (ad) => dismissedCompleter.complete(ad),
+        onAdClicked: (ad) => clickedCompleter.complete(ad),
       );
 
       await _sendAdEvent(0, 'onAdImpression', instanceManager);
+      expect(await impressionCompleter.future, appOpenAd);
+
+      await _sendAdEvent(0, 'onAdClicked', instanceManager);
       expect(await impressionCompleter.future, appOpenAd);
 
       await _sendAdEvent(0, 'onAdShowedFullScreenContent', instanceManager);
@@ -185,6 +190,7 @@ void main() {
       Completer<AppOpenAd> showedCompleter = Completer<AppOpenAd>();
       Completer<AppOpenAd> dismissedCompleter = Completer<AppOpenAd>();
       Completer<AppOpenAd> willDismissCompleter = Completer<AppOpenAd>();
+      Completer<AppOpenAd> clickedCompleter = Completer<AppOpenAd>();
 
       appOpenAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdImpression: (ad) => impressionCompleter.complete(ad),
@@ -194,10 +200,14 @@ void main() {
         onAdDismissedFullScreenContent: (ad) => dismissedCompleter.complete(ad),
         onAdWillDismissFullScreenContent: (ad) =>
             willDismissCompleter.complete(ad),
+        onAdClicked: (ad) => clickedCompleter.complete(ad),
       );
 
       await _sendAdEvent(0, 'adDidRecordImpression', instanceManager);
       expect(await impressionCompleter.future, appOpenAd);
+
+      await _sendAdEvent(0, 'adDidRecordClick', instanceManager);
+      expect(await clickedCompleter.future, appOpenAd);
 
       await _sendAdEvent(0, 'onAdDidPresentFullScreenContent', instanceManager);
       expect(await showedCompleter.future, appOpenAd);
