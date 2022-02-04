@@ -129,6 +129,7 @@ class BannerAdListener extends AdWithViewListener {
     AdEventCallback? onAdWillDismissScreen,
     AdEventCallback? onAdImpression,
     OnPaidEventCallback? onPaidEvent,
+    AdEventCallback? onAdClicked,
   }) : super(
           onAdLoaded: onAdLoaded,
           onAdFailedToLoad: onAdFailedToLoad,
@@ -137,6 +138,7 @@ class BannerAdListener extends AdWithViewListener {
           onAdWillDismissScreen: onAdWillDismissScreen,
           onAdImpression: onAdImpression,
           onPaidEvent: onPaidEvent,
+          onAdClicked: onAdClicked,
         );
 }
 
@@ -166,14 +168,17 @@ class AdManagerBannerAdListener extends BannerAdListener
     AdEventCallback? onAdImpression,
     OnPaidEventCallback? onPaidEvent,
     this.onAppEvent,
+    AdEventCallback? onAdClicked,
   }) : super(
-            onAdLoaded: onAdLoaded,
-            onAdFailedToLoad: onAdFailedToLoad,
-            onAdOpened: onAdOpened,
-            onAdWillDismissScreen: onAdWillDismissScreen,
-            onAdClosed: onAdClosed,
-            onAdImpression: onAdImpression,
-            onPaidEvent: onPaidEvent);
+          onAdLoaded: onAdLoaded,
+          onAdFailedToLoad: onAdFailedToLoad,
+          onAdOpened: onAdOpened,
+          onAdWillDismissScreen: onAdWillDismissScreen,
+          onAdClosed: onAdClosed,
+          onAdImpression: onAdImpression,
+          onPaidEvent: onPaidEvent,
+          onAdClicked: onAdClicked,
+        );
 
   /// Called when an app event is received.
   @override

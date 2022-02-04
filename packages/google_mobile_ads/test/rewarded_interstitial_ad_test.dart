@@ -19,6 +19,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
+import 'test_util.dart';
 
 // ignore_for_file: deprecated_member_use_from_same_package
 void main() {
@@ -113,20 +114,22 @@ void main() {
         onAdClicked: (ad) => clickedCompleter.complete(ad),
       );
 
-      await _sendAdEvent(0, 'onAdImpression', instanceManager);
+      await TestUtil.sendAdEvent(0, 'onAdImpression', instanceManager);
       expect(await impressionCompleter.future, rewardedInterstitial);
 
-      await _sendAdEvent(0, 'onAdShowedFullScreenContent', instanceManager);
+      await TestUtil.sendAdEvent(
+          0, 'onAdShowedFullScreenContent', instanceManager);
       expect(await showedCompleter.future, rewardedInterstitial);
 
-      await _sendAdEvent(0, 'onAdDismissedFullScreenContent', instanceManager);
+      await TestUtil.sendAdEvent(
+          0, 'onAdDismissedFullScreenContent', instanceManager);
       expect(await dismissedCompleter.future, rewardedInterstitial);
 
-      await _sendAdEvent(0, 'onAdClicked', instanceManager);
+      await TestUtil.sendAdEvent(0, 'onAdClicked', instanceManager);
       expect(await clickedCompleter.future, rewardedInterstitial);
 
-      await _sendAdEvent(0, 'onFailedToShowFullScreenContent', instanceManager,
-          {'error': AdError(1, 'domain', 'message')});
+      await TestUtil.sendAdEvent(0, 'onFailedToShowFullScreenContent',
+          instanceManager, {'error': AdError(1, 'domain', 'message')});
       expect(await failedToShowCompleter.future, rewardedInterstitial);
 
       // Check paid event callback
@@ -140,7 +143,8 @@ void main() {
         'precision': 0,
         'currencyCode': 'USD',
       };
-      await _sendAdEvent(0, 'onPaidEvent', instanceManager, paidEventArgs);
+      await TestUtil.sendAdEvent(
+          0, 'onPaidEvent', instanceManager, paidEventArgs);
       List<dynamic> paidEventCallback = await paidEventCompleter.future;
       expect(paidEventCallback[0], rewardedInterstitial);
       expect(paidEventCallback[1], 1.2345);
@@ -219,23 +223,29 @@ void main() {
             willDismissCompleter.complete(ad),
       );
 
-      await _sendAdEvent(0, 'adDidRecordImpression', instanceManager);
+      await TestUtil.sendAdEvent(0, 'adDidRecordImpression', instanceManager);
       expect(await impressionCompleter.future, rewardedInterstitial);
 
-      await _sendAdEvent(0, 'onAdDidPresentFullScreenContent', instanceManager);
+      await TestUtil.sendAdEvent(
+          0, 'onAdDidPresentFullScreenContent', instanceManager);
       expect(await showedCompleter.future, rewardedInterstitial);
 
-      await _sendAdEvent(0, 'adDidDismissFullScreenContent', instanceManager);
+      await TestUtil.sendAdEvent(
+          0, 'adDidDismissFullScreenContent', instanceManager);
       expect(await dismissedCompleter.future, rewardedInterstitial);
 
-      await _sendAdEvent(0, 'adWillDismissFullScreenContent', instanceManager);
+      await TestUtil.sendAdEvent(
+          0, 'adWillDismissFullScreenContent', instanceManager);
       expect(await dismissedCompleter.future, rewardedInterstitial);
 
-      await _sendAdEvent(0, 'adDidRecordClick', instanceManager);
+      await TestUtil.sendAdEvent(0, 'adDidRecordClick', instanceManager);
       expect(await clickedCompleter.future, rewardedInterstitial);
 
-      await _sendAdEvent(0, 'didFailToPresentFullScreenContentWithError',
-          instanceManager, {'error': AdError(1, 'domain', 'message')});
+      await TestUtil.sendAdEvent(
+          0,
+          'didFailToPresentFullScreenContentWithError',
+          instanceManager,
+          {'error': AdError(1, 'domain', 'message')});
       expect(await failedToShowCompleter.future, rewardedInterstitial);
 
       // Check paid event callback
@@ -249,7 +259,8 @@ void main() {
         'precision': 0,
         'currencyCode': 'USD',
       };
-      await _sendAdEvent(0, 'onPaidEvent', instanceManager, paidEventArgs);
+      await TestUtil.sendAdEvent(
+          0, 'onPaidEvent', instanceManager, paidEventArgs);
       List<dynamic> paidEventCallback = await paidEventCompleter.future;
       expect(paidEventCallback[0], rewardedInterstitial);
       expect(paidEventCallback[1], 1.2345);
@@ -425,24 +436,4 @@ void main() {
       expect(result[1].type, 'one');
     });
   });
-}
-
-Future<void> _sendAdEvent(
-    int adId, String eventName, AdInstanceManager instanceManager,
-    [Map<String, dynamic>? additionalArgs]) async {
-  Map<String, dynamic> args = {
-    'adId': adId,
-    'eventName': eventName,
-  };
-  additionalArgs?.entries
-      .forEach((element) => args[element.key] = element.value);
-  final MethodCall methodCall = MethodCall('onAdEvent', args);
-  final ByteData data =
-      instanceManager.channel.codec.encodeMethodCall(methodCall);
-
-  return instanceManager.channel.binaryMessenger.handlePlatformMessage(
-    'plugins.flutter.io/google_mobile_ads',
-    data,
-    (ByteData? data) {},
-  );
 }

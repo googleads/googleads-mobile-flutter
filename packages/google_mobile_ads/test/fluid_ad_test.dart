@@ -20,6 +20,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
 import 'package:pedantic/pedantic.dart';
+import 'test_util.dart';
 
 // ignore_for_file: deprecated_member_use_from_same_package
 void main() {
@@ -91,41 +92,44 @@ void main() {
         })
       ]);
 
-      await _sendAdEvent(0, 'onAdLoaded', instanceManager);
+      await TestUtil.sendAdEvent(0, 'onAdLoaded', instanceManager);
       Ad loadedAd = await loadedCompleter.future;
       expect(instanceManager.adFor(0), fluidAd);
       expect(loadedAd, loadedAd);
 
-      await _sendAdEvent(0, 'onAdImpression', instanceManager);
+      await TestUtil.sendAdEvent(0, 'onAdImpression', instanceManager);
       expect(await impressionCompleter.future, loadedAd);
 
-      await _sendAdEvent(0, 'onAdOpened', instanceManager);
+      await TestUtil.sendAdEvent(0, 'onAdOpened', instanceManager);
       expect(await openedCompleter.future, loadedAd);
 
-      await _sendAdEvent(0, 'onAdClosed', instanceManager);
+      await TestUtil.sendAdEvent(0, 'onAdClosed', instanceManager);
       expect(await closedCompleter.future, loadedAd);
 
       const heightChangedArgs = {'height': 25};
-      await _sendAdEvent(
+      await TestUtil.sendAdEvent(
           0, 'onFluidAdHeightChanged', instanceManager, heightChangedArgs);
       expect(await heightChangedCompleter.future, [fluidAd, 25]);
 
       LoadAdError error = LoadAdError(1, 'domain', 'message', null);
       var errorArgs = {'loadAdError': error};
-      await _sendAdEvent(0, 'onAdFailedToLoad', instanceManager, errorArgs);
+      await TestUtil.sendAdEvent(
+          0, 'onAdFailedToLoad', instanceManager, errorArgs);
       List<dynamic> adAndError = await failedToLoadCompleter.future;
       expect(adAndError[0], loadedAd);
       expect(adAndError[1].toString(), error.toString());
 
       const appEventArgs = {'name': 'name', 'data': '1234'};
-      await _sendAdEvent(0, 'onAppEvent', instanceManager, appEventArgs);
+      await TestUtil.sendAdEvent(
+          0, 'onAppEvent', instanceManager, appEventArgs);
       expect(await appEventCompleter.future, [fluidAd, 'name', '1234']);
 
       // will dismiss is iOS only event.
       var willDismissCompleted = false;
       unawaited(willDismissCompleter.future
           .whenComplete(() => willDismissCompleted = true));
-      await _sendAdEvent(0, 'onBannerWillDismissScreen', instanceManager);
+      await TestUtil.sendAdEvent(
+          0, 'onBannerWillDismissScreen', instanceManager);
       expect(willDismissCompleted, false);
     });
 
@@ -174,59 +178,44 @@ void main() {
         })
       ]);
 
-      await _sendAdEvent(0, 'onAdLoaded', instanceManager);
+      await TestUtil.sendAdEvent(0, 'onAdLoaded', instanceManager);
       Ad loadedAd = await loadedCompleter.future;
       expect(instanceManager.adFor(0), fluidAd);
       expect(loadedAd, loadedAd);
 
-      await _sendAdEvent(0, 'onBannerImpression', instanceManager);
+      await TestUtil.sendAdEvent(0, 'onBannerImpression', instanceManager);
       expect(await impressionCompleter.future, loadedAd);
 
-      await _sendAdEvent(0, 'onBannerWillPresentScreen', instanceManager);
+      await TestUtil.sendAdEvent(
+          0, 'onBannerWillPresentScreen', instanceManager);
       expect(await openedCompleter.future, loadedAd);
 
-      await _sendAdEvent(0, 'onBannerDidDismissScreen', instanceManager);
+      await TestUtil.sendAdEvent(
+          0, 'onBannerDidDismissScreen', instanceManager);
       expect(await closedCompleter.future, loadedAd);
 
       const heightChangedArgs = {'height': 25};
-      await _sendAdEvent(
+      await TestUtil.sendAdEvent(
           0, 'onFluidAdHeightChanged', instanceManager, heightChangedArgs);
       expect(await heightChangedCompleter.future, [fluidAd, 25]);
 
       LoadAdError error = LoadAdError(1, 'domain', 'message', null);
       var errorArgs = {'loadAdError': error};
-      await _sendAdEvent(0, 'onAdFailedToLoad', instanceManager, errorArgs);
+      await TestUtil.sendAdEvent(
+          0, 'onAdFailedToLoad', instanceManager, errorArgs);
       List<dynamic> adAndError = await failedToLoadCompleter.future;
       expect(adAndError[0], loadedAd);
       expect(adAndError[1].toString(), error.toString());
 
       const appEventArgs = {'name': 'name', 'data': '1234'};
-      await _sendAdEvent(0, 'onAppEvent', instanceManager, appEventArgs);
+      await TestUtil.sendAdEvent(
+          0, 'onAppEvent', instanceManager, appEventArgs);
       expect(await appEventCompleter.future, [fluidAd, 'name', '1234']);
 
       // will dismiss is iOS only event.
-      await _sendAdEvent(0, 'onBannerWillDismissScreen', instanceManager);
+      await TestUtil.sendAdEvent(
+          0, 'onBannerWillDismissScreen', instanceManager);
       expect(await willDismissCompleter.future, fluidAd);
     });
   });
-}
-
-Future<void> _sendAdEvent(
-    int adId, String eventName, AdInstanceManager instanceManager,
-    [Map<String, dynamic>? additionalArgs]) async {
-  Map<String, dynamic> args = {
-    'adId': adId,
-    'eventName': eventName,
-  };
-  additionalArgs?.entries
-      .forEach((element) => args[element.key] = element.value);
-  final MethodCall methodCall = MethodCall('onAdEvent', args);
-  final ByteData data =
-      instanceManager.channel.codec.encodeMethodCall(methodCall);
-
-  return instanceManager.channel.binaryMessenger.handlePlatformMessage(
-    'plugins.flutter.io/google_mobile_ads',
-    data,
-    (ByteData? data) {},
-  );
 }
