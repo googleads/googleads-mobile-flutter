@@ -4,6 +4,7 @@ version '1.0-SNAPSHOT'
 buildscript {
     repositories {
         google()
+        mavenCentral()
         jcenter()
     }
 
@@ -15,6 +16,7 @@ buildscript {
 rootProject.allprojects {
     repositories {
         google()
+        mavenCentral()
         jcenter()
     }
 }
