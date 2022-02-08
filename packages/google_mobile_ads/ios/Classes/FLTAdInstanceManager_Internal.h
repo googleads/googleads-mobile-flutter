@@ -37,7 +37,6 @@
 - (void)onAppEvent:(id<FLTAd> _Nonnull)ad
               name:(NSString *_Nullable)name
               data:(NSString *_Nullable)data;
-- (void)onNativeAdClicked:(FLTNativeAd *_Nonnull)ad;
 - (void)onNativeAdImpression:(FLTNativeAd *_Nonnull)ad;
 - (void)onNativeAdWillPresentScreen:(FLTNativeAd *_Nonnull)ad;
 - (void)onNativeAdDidDismissScreen:(FLTNativeAd *_Nonnull)ad;
@@ -56,6 +55,7 @@
 - (void)adDidDismissFullScreenContent:(id<FLTAd> _Nonnull)ad;
 - (void)adWillDismissFullScreenContent:(id<FLTAd> _Nonnull)ad;
 - (void)adDidRecordImpression:(id<FLTAd> _Nonnull)ad;
+- (void)adDidRecordClick:(id<FLTAd> _Nonnull)ad;
 - (void)didFailToPresentFullScreenContentWithError:(id<FLTAd> _Nonnull)ad
                                              error:(NSError *_Nonnull)error;
 - (void)onFluidAdHeightChanged:(id<FLTAd> _Nonnull)ad height:(CGFloat)height;

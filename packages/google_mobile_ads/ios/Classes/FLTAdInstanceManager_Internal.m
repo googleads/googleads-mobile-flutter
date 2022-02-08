@@ -105,10 +105,6 @@
                }];
 }
 
-- (void)onNativeAdClicked:(FLTNativeAd *_Nonnull)ad {
-  [self sendAdEvent:@"onNativeAdClicked" ad:ad];
-}
-
 - (void)onNativeAdImpression:(FLTNativeAd *_Nonnull)ad {
   [self sendAdEvent:@"onNativeAdImpression" ad:ad];
 }
@@ -186,6 +182,10 @@
 
 - (void)adDidRecordImpression:(id<FLTAd> _Nonnull)ad {
   [self sendAdEvent:@"adDidRecordImpression" ad:ad];
+}
+
+- (void)adDidRecordClick:(id<FLTAd> _Nonnull)ad {
+  [self sendAdEvent:@"adDidRecordClick" ad:ad];
 }
 
 - (void)didFailToPresentFullScreenContentWithError:(id<FLTAd> _Nonnull)ad

@@ -92,6 +92,7 @@
         [invocation getArgument:&delegate atIndex:2];
         XCTAssertEqual(delegate, ad);
         [delegate adDidRecordImpression:rewardedInterstitialClassMock];
+        [delegate adDidRecordClick:rewardedInterstitialClassMock];
         [delegate adDidDismissFullScreenContent:rewardedInterstitialClassMock];
         [delegate adDidPresentFullScreenContent:rewardedInterstitialClassMock];
         [delegate adWillDismissFullScreenContent:rewardedInterstitialClassMock];
@@ -137,7 +138,6 @@
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
                        responseInfo:[OCMArg isEqual:responseInfo]]);
   OCMVerify([rewardedInterstitialClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
-  XCTAssertEqual(ad.rewardedInterstitialAd, rewardedInterstitialClassMock);
   if (options != nil) {
     GADServerSideVerificationOptions *gadOptions = [options asGADServerSideVerificationOptions];
     OCMVerify([rewardedInterstitialClassMock
@@ -165,6 +165,7 @@
   OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidRecordImpression:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager adDidRecordClick:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager didFailToPresentFullScreenContentWithError:[OCMArg isEqual:ad]
                                                               error:[OCMArg isEqual:error]]);
 

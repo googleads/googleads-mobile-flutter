@@ -151,7 +151,7 @@ public class FlutterNativeAdTest {
     verify(mockNativeAdFactory).createNativeAd(eq(mockNativeAd), eq(mockOptions));
     verify(testManager).onAdOpened(eq(1));
     verify(testManager).onAdClosed(eq(1));
-    verify(testManager).onNativeAdClicked(eq(1));
+    verify(testManager).onAdClicked(eq(1));
     verify(testManager).onAdImpression(eq(1));
     verify(testManager).onAdLoaded(eq(1), eq(responseInfo));
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
@@ -237,7 +237,7 @@ public class FlutterNativeAdTest {
     verify(testManager).onAdLoaded(eq(1), eq(responseInfo));
     verify(testManager).onAdOpened(eq(1));
     verify(testManager).onAdClosed(eq(1));
-    verify(testManager).onNativeAdClicked(eq(1));
+    verify(testManager).onAdClicked(eq(1));
     verify(testManager).onAdImpression(eq(1));
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
     verify(testManager).onAdFailedToLoad(eq(1), eq(expectedError));

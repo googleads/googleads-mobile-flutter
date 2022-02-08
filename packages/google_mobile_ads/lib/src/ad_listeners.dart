@@ -73,6 +73,7 @@ abstract class AdWithViewListener {
     this.onAdImpression,
     this.onAdClosed,
     this.onPaidEvent,
+    this.onAdClicked,
   });
 
   /// Called when an ad is successfully received.
@@ -95,6 +96,9 @@ abstract class AdWithViewListener {
 
   /// Called when an impression occurs on the ad.
   final AdEventCallback? onAdImpression;
+
+  /// Called when the ad is clicked.
+  final AdEventCallback? onAdClicked;
 
   /// Callback to be invoked when an ad is estimated to have earned money.
   /// Available for allowlisted accounts only.
@@ -125,6 +129,7 @@ class BannerAdListener extends AdWithViewListener {
     AdEventCallback? onAdWillDismissScreen,
     AdEventCallback? onAdImpression,
     OnPaidEventCallback? onPaidEvent,
+    AdEventCallback? onAdClicked,
   }) : super(
           onAdLoaded: onAdLoaded,
           onAdFailedToLoad: onAdFailedToLoad,
@@ -133,6 +138,7 @@ class BannerAdListener extends AdWithViewListener {
           onAdWillDismissScreen: onAdWillDismissScreen,
           onAdImpression: onAdImpression,
           onPaidEvent: onPaidEvent,
+          onAdClicked: onAdClicked,
         );
 }
 
@@ -162,14 +168,17 @@ class AdManagerBannerAdListener extends BannerAdListener
     AdEventCallback? onAdImpression,
     OnPaidEventCallback? onPaidEvent,
     this.onAppEvent,
+    AdEventCallback? onAdClicked,
   }) : super(
-            onAdLoaded: onAdLoaded,
-            onAdFailedToLoad: onAdFailedToLoad,
-            onAdOpened: onAdOpened,
-            onAdWillDismissScreen: onAdWillDismissScreen,
-            onAdClosed: onAdClosed,
-            onAdImpression: onAdImpression,
-            onPaidEvent: onPaidEvent);
+          onAdLoaded: onAdLoaded,
+          onAdFailedToLoad: onAdFailedToLoad,
+          onAdOpened: onAdOpened,
+          onAdWillDismissScreen: onAdWillDismissScreen,
+          onAdClosed: onAdClosed,
+          onAdImpression: onAdImpression,
+          onPaidEvent: onPaidEvent,
+          onAdClicked: onAdClicked,
+        );
 
   /// Called when an app event is received.
   @override
@@ -200,6 +209,7 @@ class NativeAdListener extends AdWithViewListener {
     AdEventCallback? onAdClosed,
     AdEventCallback? onAdImpression,
     OnPaidEventCallback? onPaidEvent,
+    AdEventCallback? onAdClicked,
     this.onNativeAdClicked,
   }) : super(
             onAdLoaded: onAdLoaded,
@@ -208,9 +218,12 @@ class NativeAdListener extends AdWithViewListener {
             onAdWillDismissScreen: onAdWillDismissScreen,
             onAdClosed: onAdClosed,
             onAdImpression: onAdImpression,
-            onPaidEvent: onPaidEvent);
+            onPaidEvent: onPaidEvent,
+            onAdClicked: onAdClicked);
 
   /// Called when a click is recorded for a [NativeAd].
+  /// @Deprecated Use [onAdClicked] instead
+  @Deprecated('Use [onAdClicked] instead')
   final void Function(NativeAd ad)? onNativeAdClicked;
 }
 
@@ -226,6 +239,7 @@ class FullScreenContentCallback<Ad> {
     this.onAdFailedToShowFullScreenContent,
     this.onAdWillDismissFullScreenContent,
     this.onAdDismissedFullScreenContent,
+    this.onAdClicked,
   });
 
   /// Called when an ad shows full screen content.
@@ -239,6 +253,9 @@ class FullScreenContentCallback<Ad> {
 
   /// Called when an ad impression occurs.
   final GenericAdEventCallback<Ad>? onAdImpression;
+
+  /// Called when an ad is clicked.
+  final GenericAdEventCallback<Ad>? onAdClicked;
 
   /// Called when ad fails to show full screen content.
   final void Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent;

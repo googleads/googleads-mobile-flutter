@@ -58,6 +58,7 @@
         [invocation getArgument:&delegate atIndex:2];
         XCTAssertEqual(delegate, ad);
         [delegate adDidRecordImpression:interstitialClassMock];
+        [delegate adDidRecordClick:interstitialClassMock];
         [delegate adDidDismissFullScreenContent:interstitialClassMock];
         [delegate adDidPresentFullScreenContent:interstitialClassMock];
         [delegate adWillDismissFullScreenContent:interstitialClassMock];
@@ -109,6 +110,7 @@
   OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidRecordImpression:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager adDidRecordClick:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager didFailToPresentFullScreenContentWithError:[OCMArg isEqual:ad]
                                                               error:[OCMArg isEqual:error]]);
 }

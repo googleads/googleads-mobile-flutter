@@ -61,6 +61,9 @@
   [fluidAd.bannerView.delegate bannerViewDidRecordImpression:OCMClassMock([GADBannerView class])];
   OCMVerify([mockManager onBannerImpression:[OCMArg isEqual:fluidAd]]);
 
+  [fluidAd.bannerView.delegate bannerViewDidRecordClick:OCMClassMock([GADBannerView class])];
+  OCMVerify([mockManager adDidRecordClick:[OCMArg isEqual:fluidAd]]);
+
   // Mock callback of paid event handler.
   GADAdValue *adValue = OCMClassMock([GADAdValue class]);
   OCMStub([adValue value]).andReturn(NSDecimalNumber.one);

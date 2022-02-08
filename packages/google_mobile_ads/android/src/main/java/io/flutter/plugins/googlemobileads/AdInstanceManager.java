@@ -135,10 +135,10 @@ class AdInstanceManager {
     invokeOnAdEvent(arguments);
   }
 
-  void onNativeAdClicked(int id) {
+  void onAdClicked(int id) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", id);
-    arguments.put("eventName", "onNativeAdClicked");
+    arguments.put("eventName", "onAdClicked");
     invokeOnAdEvent(arguments);
   }
 

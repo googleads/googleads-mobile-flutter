@@ -348,12 +348,12 @@ public class GoogleMobileAdsTest {
             .build();
     testManager.trackAd(nativeAd, 0);
 
-    testManager.onNativeAdClicked(0);
+    testManager.onAdClicked(0);
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
     //noinspection rawtypes
-    assertThat(call.arguments, (Matcher) hasEntry("eventName", "onNativeAdClicked"));
+    assertThat(call.arguments, (Matcher) hasEntry("eventName", "onAdClicked"));
     //noinspection rawtypes
     assertThat(call.arguments, (Matcher) hasEntry("adId", 0));
   }
