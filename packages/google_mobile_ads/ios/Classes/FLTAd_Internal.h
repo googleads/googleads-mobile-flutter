@@ -187,7 +187,10 @@
                                      adId:(NSNumber *_Nonnull)adId;
 @end
 
-@interface FLTInterstitialAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTFullScreenAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@end
+
+@interface FLTInterstitialAd : FLTFullScreenAd
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
@@ -205,7 +208,7 @@
                                      adId:(NSNumber *_Nonnull)adId;
 @end
 
-@interface FLTRewardedAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTRewardedAd : FLTFullScreenAd
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
@@ -215,8 +218,7 @@
 - (GADRewardedAd *_Nullable)rewardedAd;
 @end
 
-@interface FLTRewardedInterstitialAd
-    : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTRewardedInterstitialAd : FLTFullScreenAd
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController
@@ -226,7 +228,7 @@
 - (GADRewardedInterstitialAd *_Nullable)rewardedInterstitialAd;
 @end
 
-@interface FLTAppOpenAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTAppOpenAd : FLTFullScreenAd
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:(UIViewController *_Nonnull)rootViewController

@@ -563,54 +563,49 @@
 
 @end
 
-#pragma mark - FLTFullScreenContentDelegate
+#pragma mark - FLTFullScreenAd
 
-@interface FLTFullScreenContentDelegate : NSObject <GADFullScreenContentDelegate>
-- (instancetype _Nonnull)initWithAd:(id<FLTAd> _Nonnull)ad
-                            manager:(FLTAdInstanceManager *_Nonnull)manager;
-@property(weak) id<FLTAd> ad;
-@property(weak) FLTAdInstanceManager *manager;
-@end
-
-@implementation FLTFullScreenContentDelegate
-
-- (instancetype _Nonnull)initWithAd:(id<FLTAd> _Nonnull)ad
-                            manager:(FLTAdInstanceManager *_Nonnull)manager {
-  self = [super init];
-  if (self) {
-    self.ad = ad;
-    self.manager = manager;
-  }
-  return self;
-}
+@implementation FLTFullScreenAd
 
 @synthesize manager;
-@synthesize ad;
+
+- (void)load {
+  // Must be overriden by subclasses
+  [NSException raise:NSInternalInconsistencyException
+              format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+}
+
+- (void)show {
+  // Must be override by subclasses
+  [NSException raise:NSInternalInconsistencyException
+              format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+}
 
 - (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
     didFailToPresentFullScreenContentWithError:(nonnull NSError *)error {
-  [self.manager didFailToPresentFullScreenContentWithError:self.ad error:error];
+  [manager didFailToPresentFullScreenContentWithError:self error:error];
 }
 
 - (void)adDidPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [self.manager onAdDidPresentFullScreenContent:self.ad];
+  [manager onAdDidPresentFullScreenContent:self];
 }
 
 - (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [self.manager adDidDismissFullScreenContent:self.ad];
+  [manager adDidDismissFullScreenContent:self];
 }
 
 - (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [self.manager adWillDismissFullScreenContent:self.ad];
+  [manager adWillDismissFullScreenContent:self];
 }
 
 - (void)adDidRecordImpression:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [self.manager adDidRecordImpression:self.ad];
+  [manager adDidRecordImpression:self];
 }
 
 - (void)adDidRecordClick:(nonnull id<GADFullScreenPresentingAd>)ad {
-  [self.manager adDidRecordClick:self.ad];
+  [manager adDidRecordClick:self];
 }
+
 @end
 
 #pragma mark - FLTInterstitialAd
@@ -620,7 +615,6 @@
   FLTAdRequest *_adRequest;
   UIViewController *_rootViewController;
   NSString *_adUnitId;
-  FLTFullScreenContentDelegate *_fullScreenContentDelegate;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -646,31 +640,30 @@
 }
 
 - (void)load {
-  [GADInterstitialAd
-       loadWithAdUnitID:_adUnitId
-                request:[_adRequest asGADRequest:_adUnitId]
-      completionHandler:^(GADInterstitialAd *ad, NSError *error) {
-        if (error) {
-          [self.manager onAdFailedToLoad:self error:error];
-          return;
-        }
-        self->_fullScreenContentDelegate =
-            [[FLTFullScreenContentDelegate alloc] initWithAd:self manager:self.manager];
-        ad.fullScreenContentDelegate = self->_fullScreenContentDelegate;
-        self->_interstitialView = ad;
-        __weak FLTInterstitialAd *weakSelf = self;
-        ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-          if (weakSelf.manager == nil) {
-            return;
-          }
-          [weakSelf.manager onPaidEvent:weakSelf
+  [GADInterstitialAd loadWithAdUnitID:_adUnitId
+                              request:[_adRequest asGADRequest:_adUnitId]
+                    completionHandler:^(GADInterstitialAd *ad, NSError *error) {
+                      if (error) {
+                        [self.manager onAdFailedToLoad:self error:error];
+                        return;
+                      }
+
+                      ad.fullScreenContentDelegate = self;
+                      self->_interstitialView = ad;
+                      __weak FLTInterstitialAd *weakSelf = self;
+                      ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+                        if (weakSelf.manager == nil) {
+                          return;
+                        }
+                        [weakSelf.manager
+                            onPaidEvent:weakSelf
                                   value:[[FLTAdValue alloc] initWithValue:value.value
                                                                 precision:(NSInteger)value.precision
                                                              currencyCode:value.currencyCode]];
-        };
+                      };
 
-        [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
-      }];
+                      [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+                    }];
 }
 
 - (void)show {
@@ -681,8 +674,6 @@
   }
 }
 
-@synthesize manager;
-
 @end
 
 #pragma mark - FLTGAMInterstitialAd
@@ -692,7 +683,6 @@
   FLTGAMAdRequest *_adRequest;
   UIViewController *_rootViewController;
   NSString *_adUnitId;
-  FLTFullScreenContentDelegate *_fullScreenContentDelegate;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -723,9 +713,7 @@
                   return;
                 }
                 [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
-                self->_fullScreenContentDelegate =
-                    [[FLTFullScreenContentDelegate alloc] initWithAd:self manager:self.manager];
-                ad.fullScreenContentDelegate = self->_fullScreenContentDelegate;
+                ad.fullScreenContentDelegate = self;
                 ad.appEventDelegate = self;
                 __weak FLTGAMInterstitialAd *weakSelf = self;
                 ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
@@ -768,7 +756,6 @@
   UIViewController *_rootViewController;
   FLTServerSideVerificationOptions *_serverSideVerificationOptions;
   NSString *_adUnitId;
-  FLTFullScreenContentDelegate *_fullScreenContentDelegate;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -827,9 +814,7 @@
                                                             precision:(NSInteger)value.precision
                                                          currencyCode:value.currencyCode]];
                   };
-                  self->_fullScreenContentDelegate =
-                      [[FLTFullScreenContentDelegate alloc] initWithAd:self manager:self.manager];
-                  rewardedAd.fullScreenContentDelegate = self->_fullScreenContentDelegate;
+                  rewardedAd.fullScreenContentDelegate = self;
                   self->_rewardedView = rewardedAd;
                   [self.manager onAdLoaded:self responseInfo:rewardedAd.responseInfo];
                 }];
@@ -850,8 +835,6 @@
   }
 }
 
-@synthesize manager;
-
 @end
 
 #pragma mark - FLTRewardedInterstitialAd
@@ -861,7 +844,6 @@
   UIViewController *_rootViewController;
   FLTServerSideVerificationOptions *_serverSideVerificationOptions;
   NSString *_adUnitId;
-  FLTFullScreenContentDelegate *_fullScreenContentDelegate;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -921,9 +903,7 @@
                                                                 precision:(NSInteger)value.precision
                                                              currencyCode:value.currencyCode]];
         };
-        self->_fullScreenContentDelegate =
-            [[FLTFullScreenContentDelegate alloc] initWithAd:self manager:self.manager];
-        rewardedInterstitialAd.fullScreenContentDelegate = self->_fullScreenContentDelegate;
+        rewardedInterstitialAd.fullScreenContentDelegate = self;
         self->_rewardedInterstitialView = rewardedInterstitialAd;
         [self.manager onAdLoaded:self responseInfo:rewardedInterstitialAd.responseInfo];
       }];
@@ -944,8 +924,6 @@
   }
 }
 
-@synthesize manager;
-
 @end
 
 #pragma mark - FLTAppOpenAd
@@ -955,7 +933,6 @@
   UIViewController *_rootViewController;
   NSNumber *_orientation;
   NSString *_adUnitId;
-  FLTFullScreenContentDelegate *_fullScreenContentDelegate;
 }
 
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
@@ -1018,9 +995,7 @@
                                                            precision:(NSInteger)value.precision
                                                         currencyCode:value.currencyCode]];
                  };
-                 self->_fullScreenContentDelegate =
-                     [[FLTFullScreenContentDelegate alloc] initWithAd:self manager:self.manager];
-                 appOpenAd.fullScreenContentDelegate = self->_fullScreenContentDelegate;
+                 appOpenAd.fullScreenContentDelegate = self;
 
                  self->_appOpenAd = appOpenAd;
                  [self.manager onAdLoaded:self responseInfo:appOpenAd.responseInfo];
@@ -1034,8 +1009,6 @@
     NSLog(@"AppOpenAd failed to show because the ad was not ready.");
   }
 }
-
-@synthesize manager;
 
 @end
 
