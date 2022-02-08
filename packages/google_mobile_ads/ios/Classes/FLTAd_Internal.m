@@ -570,13 +570,13 @@
 @synthesize manager;
 
 - (void)load {
-  // Must be overriden by subclasses
+  // Must be overridden by subclasses
   [NSException raise:NSInternalInconsistencyException
               format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
 }
 
 - (void)show {
-  // Must be override by subclasses
+  // Must be overridden by subclasses
   [NSException raise:NSInternalInconsistencyException
               format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
 }
