@@ -89,6 +89,7 @@
       .andDo(^(NSInvocation *invocation) {
         id<GADFullScreenContentDelegate> delegate;
         [invocation getArgument:&delegate atIndex:2];
+        XCTAssertEqual(delegate, ad);
         [delegate adDidRecordImpression:rewardedClassMock];
         [delegate adDidRecordClick:rewardedClassMock];
         [delegate adDidDismissFullScreenContent:rewardedClassMock];
@@ -133,7 +134,7 @@
                                           completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
                        responseInfo:[OCMArg isEqual:responseInfo]]);
-  OCMVerify([rewardedClassMock setFullScreenContentDelegate:[OCMArg any]]);
+  OCMVerify([rewardedClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
   XCTAssertEqual(ad.rewardedAd, rewardedClassMock);
   if (options != nil) {
     GADServerSideVerificationOptions *gadOptions = [options asGADServerSideVerificationOptions];

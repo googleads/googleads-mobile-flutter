@@ -56,6 +56,7 @@
       .andDo(^(NSInvocation *invocation) {
         id<GADFullScreenContentDelegate> delegate;
         [invocation getArgument:&delegate atIndex:2];
+        XCTAssertEqual(delegate, ad);
         [delegate adDidRecordImpression:interstitialClassMock];
         [delegate adDidRecordClick:interstitialClassMock];
         [delegate adDidDismissFullScreenContent:interstitialClassMock];
@@ -85,7 +86,7 @@
                                               completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
                        responseInfo:[OCMArg isEqual:mockResponseInfo]]);
-  OCMVerify([interstitialClassMock setFullScreenContentDelegate:[OCMArg any]]);
+  OCMVerify([interstitialClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
   XCTAssertEqual(ad.interstitial, interstitialClassMock);
   OCMVerify([mockManager onPaidEvent:[OCMArg isEqual:ad]
                                value:[OCMArg checkWithBlock:^BOOL(id obj) {
