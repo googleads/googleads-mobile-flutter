@@ -219,6 +219,7 @@ class AdRequest {
   /// Location data.
   ///
   /// Used for mediation targeting purposes.
+  @Deprecated('Location is not used and will be deleted in a future release')
   final LocationParams? location;
 
   /// String identifier used in providing mediation extras.
@@ -240,7 +241,6 @@ class AdRequest {
         nonPersonalizedAds == other.nonPersonalizedAds &&
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
         httpTimeoutMillis == other.httpTimeoutMillis &&
-        location == other.location &&
         mediationExtrasIdentifier == other.mediationExtrasIdentifier &&
         mapEquals<String, String>(extras, other.extras);
   }

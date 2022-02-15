@@ -134,21 +134,6 @@
 }
 @end
 
-@implementation FLTLocationParams
-
-- (instancetype _Nonnull)initWithAccuracy:(NSNumber *_Nonnull)accuracy
-                                longitude:(NSNumber *_Nonnull)longitude
-                                 latitude:(NSNumber *_Nonnull)latitude {
-  self = [super init];
-  if (self) {
-    _accuracy = accuracy;
-    _longitude = longitude;
-    _latitude = latitude;
-  }
-  return self;
-}
-@end
-
 @implementation FLTFluidSize
 - (instancetype _Nonnull)init {
   self = [self initWithAdSize:kGADAdSizeFluid];
@@ -217,12 +202,6 @@
   request.neighboringContentURLStrings = _neighboringContentURLs;
   request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
   [self addNetworkExtrasToGADRequest:request adUnitId:adUnitId];
-
-  if ([FLTAdUtil isNotNull:_location]) {
-    [request setLocationWithLatitude:_location.latitude.floatValue
-                           longitude:_location.longitude.floatValue
-                            accuracy:_location.accuracy.floatValue];
-  }
   return request;
 }
 
@@ -295,11 +274,6 @@
   }
   request.customTargeting = targetingDictionary;
   [self addNetworkExtrasToGADRequest:request adUnitId:adUnitId];
-  if ([FLTAdUtil isNotNull:self.location]) {
-    [request setLocationWithLatitude:self.location.latitude.floatValue
-                           longitude:self.location.longitude.floatValue
-                            accuracy:self.location.accuracy.floatValue];
-  }
   request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
   return request;
 }

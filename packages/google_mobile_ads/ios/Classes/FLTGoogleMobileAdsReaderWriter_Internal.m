@@ -35,7 +35,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldNativeAdOptions = 144,
   FLTAdmobFieldVideoOptions = 145,
   FLTAdmobFieldInlineAdaptiveAdSize = 146,
-  FLTAdmobFieldLocation = 147,
   FLTAdmobRequestConfigurationParams = 148,
 };
 
@@ -94,7 +93,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       NSNumber *nonPersonalizedAds = [self readValueOfType:[self readByte]];
       request.nonPersonalizedAds = nonPersonalizedAds.boolValue;
       request.neighboringContentURLs = [self readValueOfType:[self readByte]];
-      request.location = [self readValueOfType:[self readByte]];
       request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
       request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
       request.adMobExtras = [self readValueOfType:[self readByte]];
@@ -161,7 +159,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       request.nonPersonalizedAds = nonPersonalizedAds.boolValue;
       request.neighboringContentURLs = [self readValueOfType:[self readByte]];
       request.pubProvidedID = [self readValueOfType:[self readByte]];
-      request.location = [self readValueOfType:[self readByte]];
       request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
       request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
       request.adMobExtras = [self readValueOfType:[self readByte]];
@@ -230,11 +227,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
       requestConfig.testDeviceIdentifiers = [self readValueOfType:[self readByte]];
       return requestConfig;
     }
-    case FLTAdmobFieldLocation: {
-      return [[FLTLocationParams alloc] initWithAccuracy:[self readValueOfType:[self readByte]]
-                                               longitude:[self readValueOfType:[self readByte]]
-                                                latitude:[self readValueOfType:[self readByte]]];
-    }
     case FLTAdmobFieldInlineAdaptiveAdSize: {
       return [[FLTInlineAdaptiveBannerSize alloc]
           initWithFactory:_adSizeFactory
@@ -286,7 +278,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:@(request.nonPersonalizedAds)];
     [self writeValue:request.neighboringContentURLs];
     [self writeValue:request.pubProvidedID];
-    [self writeValue:request.location];
     [self writeValue:request.mediationExtrasIdentifier];
     [self writeValue:request.adMobExtras];
   } else if ([value isKindOfClass:[FLTAdRequest class]]) {
@@ -296,7 +287,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.contentURL];
     [self writeValue:@(request.nonPersonalizedAds)];
     [self writeValue:request.neighboringContentURLs];
-    [self writeValue:request.location];
     [self writeValue:request.mediationExtrasIdentifier];
     [self writeValue:request.adMobExtras];
   } else if ([value isKindOfClass:[FLTRewardItem class]]) {
@@ -380,12 +370,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [super writeValue:NSNull.null];
     [super writeValue:NSNull.null];
     [self writeValue:params.testDeviceIdentifiers];
-  } else if ([value isKindOfClass:[FLTLocationParams class]]) {
-    [self writeByte:FLTAdmobFieldLocation];
-    FLTLocationParams *location = value;
-    [self writeValue:location.accuracy];
-    [self writeValue:location.longitude];
-    [self writeValue:location.latitude];
   } else {
     [super writeValue:value];
   }

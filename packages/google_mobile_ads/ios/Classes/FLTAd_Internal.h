@@ -65,17 +65,6 @@
 - (instancetype _Nonnull)initWithOrientation:(NSString *_Nonnull)orientation;
 @end
 
-@interface FLTLocationParams : NSObject
-
-@property NSNumber *_Nullable accuracy;
-@property NSNumber *_Nullable longitude;
-@property NSNumber *_Nullable latitude;
-
-- (instancetype _Nonnull)initWithAccuracy:(NSNumber *_Nonnull)accuracy
-                                longitude:(NSNumber *_Nonnull)longitude
-                                 latitude:(NSNumber *_Nonnull)latitude;
-@end
-
 @interface FLTFluidSize : FLTAdSize
 @end
 
@@ -84,7 +73,6 @@
 @property NSString *_Nullable contentURL;
 @property BOOL nonPersonalizedAds;
 @property NSArray<NSString *> *_Nullable neighboringContentURLs;
-@property FLTLocationParams *_Nullable location;
 @property NSString *_Nullable mediationExtrasIdentifier;
 @property id<FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
 @property NSDictionary<NSString *, NSString *> *_Nullable adMobExtras;

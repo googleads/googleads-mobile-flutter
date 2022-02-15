@@ -41,10 +41,6 @@
   NSArray<NSString *> *keywords = @[ @"keyword1", @"keyword2" ];
   fltGAMAdRequest.keywords = keywords;
   fltGAMAdRequest.nonPersonalizedAds = YES;
-  FLTLocationParams *locationParams = [[FLTLocationParams alloc] initWithAccuracy:@1
-                                                                        longitude:@2
-                                                                         latitude:@3];
-  fltGAMAdRequest.location = locationParams;
   fltGAMAdRequest.mediationExtrasIdentifier = @"identifier";
   NSArray<NSString *> *neighbors = @[ @"neighbor1", @"neighbor2" ];
   fltGAMAdRequest.neighboringContentURLs = neighbors;
@@ -76,7 +72,6 @@
   XCTAssertEqualObjects(updatedExtras, extras);
   XCTAssertEqualObjects(updatedExtras.additionalParameters[@"npa"], @"1");
   OCMVerify([gamRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
-  OCMVerify([gamRequestSpy setLocationWithLatitude:3 longitude:2 accuracy:1]);
 }
 
 - (void)testAsAdRequestNoParams {
@@ -94,7 +89,6 @@
   XCTAssertNil(gamRequest.keywords);
   XCTAssertNil(gamRequest.neighboringContentURLStrings);
   XCTAssertNil([gamRequest adNetworkExtrasFor:[GADExtras class]]);
-  XCTAssertNil([gamRequest valueForKey:@"_location"]);
   XCTAssertNil(gamRequest.publisherProvidedID);
   XCTAssertTrue(gamRequest.customTargeting.count == 0);
 }

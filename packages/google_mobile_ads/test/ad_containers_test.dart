@@ -1071,8 +1071,17 @@ void main() {
         extras: {'key': 'value'},
       );
 
+      final AdRequest decodedRequest = AdRequest(
+        keywords: <String>['1', '2', '3'],
+        contentUrl: 'contentUrl',
+        nonPersonalizedAds: false,
+        neighboringContentUrls: <String>['url1.com', 'url2.com'],
+        httpTimeoutMillis: 12345,
+        mediationExtrasIdentifier: 'identifier',
+        extras: {'key': 'value'},
+      );
       final ByteData byteData = codec.encodeMessage(adRequest)!;
-      expect(codec.decodeMessage(byteData), adRequest);
+      expect(codec.decodeMessage(byteData), decodedRequest);
     });
 
     test('encode/decode AdRequest iOS', () async {
@@ -1097,10 +1106,7 @@ void main() {
       expect(decoded.contentUrl, adRequest.contentUrl);
       expect(decoded.nonPersonalizedAds, adRequest.nonPersonalizedAds);
       expect(decoded.keywords, adRequest.keywords);
-      // Time is not included on iOS.
-      expect(decoded.location!.accuracy, 1.1);
-      expect(decoded.location!.longitude, 25);
-      expect(decoded.location!.latitude, 38);
+      expect(decoded.location, null);
       expect(decoded.mediationExtrasIdentifier, 'identifier');
     });
 
@@ -1258,9 +1264,23 @@ void main() {
       );
       final ByteData byteData = codec.encodeMessage(request)!;
 
+      final AdManagerAdRequest decodedRequest = AdManagerAdRequest(
+        keywords: <String>['who'],
+        contentUrl: 'dat',
+        customTargeting: <String, String>{'boy': 'who'},
+        customTargetingLists: <String, List<String>>{
+          'him': <String>['is']
+        },
+        nonPersonalizedAds: true,
+        neighboringContentUrls: <String>['url1.com', 'url2.com'],
+        httpTimeoutMillis: 5000,
+        publisherProvidedId: 'test-pub-id',
+        mediationExtrasIdentifier: 'identifier',
+        extras: {'key': 'value'},
+      );
       expect(
         codec.decodeMessage(byteData),
-        request,
+        decodedRequest,
       );
     });
 
@@ -1294,10 +1314,7 @@ void main() {
       expect(decoded.publisherProvidedId, request.publisherProvidedId);
       expect(decoded.customTargeting, request.customTargeting);
       expect(decoded.customTargetingLists, request.customTargetingLists);
-      // Time is not included on iOS.
-      expect(decoded.location!.accuracy, 1.1);
-      expect(decoded.location!.longitude, 25);
-      expect(decoded.location!.latitude, 38);
+      expect(decoded.location, null);
       expect(decoded.mediationExtrasIdentifier, 'identifier');
     });
 
