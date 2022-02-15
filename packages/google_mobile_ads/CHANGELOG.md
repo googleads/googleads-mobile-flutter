@@ -1,3 +1,6 @@
+## 1.2.0
+* Deprecates `LocationParams` in `AdRequest` and `AdManagerAdRequest`.
+
 ## 1.1.0
 * Adds support for [Rewarded Interstitial](https://support.google.com/admob/answer/9884467) (beta) ad format.
 * Adds support for `onAdClicked` events to all ad formats. `NativeAdListener.onNativeAdClicked` is now deprecated.

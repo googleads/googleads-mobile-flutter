@@ -783,7 +783,6 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueNativeAdOptions = 144;
   static const int _valueVideoOptions = 145;
   static const int _valueInlineAdaptiveBannerAdSize = 146;
-  static const int _valueLocationParams = 147;
   static const int _valueRequestConfigurationParams = 148;
 
   @override
@@ -802,7 +801,6 @@ class AdMessageCodec extends StandardMessageCodec {
         writeValue(buffer, value.httpTimeoutMillis);
       }
       writeValue(buffer, value.publisherProvidedId);
-      writeValue(buffer, value.location);
       writeValue(buffer, value.mediationExtrasIdentifier);
       writeValue(buffer, value.extras);
     } else if (value is AdRequest) {
@@ -814,7 +812,6 @@ class AdMessageCodec extends StandardMessageCodec {
       if (defaultTargetPlatform == TargetPlatform.android) {
         writeValue(buffer, value.httpTimeoutMillis);
       }
-      writeValue(buffer, value.location);
       writeValue(buffer, value.mediationExtrasIdentifier);
       writeValue(buffer, value.extras);
     } else if (value is RewardItem) {
@@ -878,14 +875,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.tagForChildDirectedTreatment);
       writeValue(buffer, value.tagForUnderAgeOfConsent);
       writeValue(buffer, value.testDeviceIds);
-    } else if (value is LocationParams) {
-      buffer.putUint8(_valueLocationParams);
-      writeValue(buffer, value.accuracy);
-      writeValue(buffer, value.longitude);
-      writeValue(buffer, value.latitude);
-      if (defaultTargetPlatform == TargetPlatform.android) {
-        writeValue(buffer, value.time);
-      }
     } else {
       super.writeValue(buffer, value);
     }
@@ -954,7 +943,6 @@ class AdMessageCodec extends StandardMessageCodec {
           httpTimeoutMillis: (defaultTargetPlatform == TargetPlatform.android)
               ? readValueOfType(buffer.getUint8(), buffer)
               : null,
-          location: readValueOfType(buffer.getUint8(), buffer),
           mediationExtrasIdentifier: readValueOfType(buffer.getUint8(), buffer),
           extras: readValueOfType(buffer.getUint8(), buffer)
               ?.cast<String, String>(),
@@ -1006,7 +994,6 @@ class AdMessageCodec extends StandardMessageCodec {
               ? readValueOfType(buffer.getUint8(), buffer)
               : null,
           publisherProvidedId: readValueOfType(buffer.getUint8(), buffer),
-          location: readValueOfType(buffer.getUint8(), buffer),
           mediationExtrasIdentifier: readValueOfType(buffer.getUint8(), buffer),
           extras: readValueOfType(buffer.getUint8(), buffer)
               ?.cast<String, String>(),
@@ -1068,15 +1055,6 @@ class AdMessageCodec extends StandardMessageCodec {
           tagForUnderAgeOfConsent: readValueOfType(buffer.getUint8(), buffer),
           testDeviceIds:
               readValueOfType(buffer.getUint8(), buffer).cast<String>(),
-        );
-      case _valueLocationParams:
-        return LocationParams(
-          accuracy: readValueOfType(buffer.getUint8(), buffer),
-          longitude: readValueOfType(buffer.getUint8(), buffer),
-          latitude: readValueOfType(buffer.getUint8(), buffer),
-          time: (defaultTargetPlatform == TargetPlatform.android)
-              ? readValueOfType(buffer.getUint8(), buffer)
-              : null,
         );
       default:
         return super.readValueOfType(type, buffer);
