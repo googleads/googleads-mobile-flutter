@@ -679,27 +679,11 @@ class _AdWidgetState extends State<AdWidget> {
       ]);
     }
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return PlatformViewLink(
+      return AndroidView(
         viewType: '${instanceManager.channel.name}/ad_widget',
-        surfaceFactory:
-            (BuildContext context, PlatformViewController controller) {
-          return AndroidViewSurface(
-            controller: controller as AndroidViewController,
-            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
-            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-          );
-        },
-        onCreatePlatformView: (PlatformViewCreationParams params) {
-          return PlatformViewsService.initSurfaceAndroidView(
-            id: params.id,
-            viewType: '${instanceManager.channel.name}/ad_widget',
-            layoutDirection: TextDirection.ltr,
-            creationParams: instanceManager.adIdFor(widget.ad),
-            creationParamsCodec: StandardMessageCodec(),
-          )
-            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
-            ..create();
-        },
+        layoutDirection: TextDirection.ltr,
+        creationParams: instanceManager.adIdFor(widget.ad),
+        creationParamsCodec: StandardMessageCodec(),
       );
     }
 
