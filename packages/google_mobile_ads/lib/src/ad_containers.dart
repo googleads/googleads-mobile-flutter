@@ -144,7 +144,6 @@ class LoadAdError extends AdError {
 }
 
 /// Location parameters that can be configured in an ad request.
-@Deprecated('LocationParams is ignored and will be removed in a future release')
 class LocationParams {
   /// Location parameters that can be configured in an ad request.
   const LocationParams({
@@ -242,7 +241,6 @@ class AdRequest {
         nonPersonalizedAds == other.nonPersonalizedAds &&
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
         httpTimeoutMillis == other.httpTimeoutMillis &&
-        location == other.location &&
         mediationExtrasIdentifier == other.mediationExtrasIdentifier &&
         mapEquals<String, String>(extras, other.extras);
   }
