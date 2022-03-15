@@ -1,3 +1,8 @@
+## 1.2.1
+* Set new minimum height for `FluidAdWidget`.
+  This is required after Flutter v2.11.0-0.1.pre because Android platform views
+  that have no size don't load.
+
 ## 1.2.0
 * Deprecates `LocationParams` in `AdRequest` and `AdManagerAdRequest`.
 
@@ -37,7 +42,7 @@
     instead of using `WidgetsBindingObserver` to listen to app foreground/background events.
   * See the app open [example app](https://github.com/googleads/googleads-mobile-flutter/tree/master/packages/app_open_example) for a reference
     on how to use the new API.
-    
+
 * Adds a new parameter `extras` to `AdRequest` and `AdManagerAdRequest`.
   * This can be used to pass additional signals to the AdMob adapter, such as
     [CCPA](https://developers.google.com/admob/android/ccpa) signals.
@@ -46,13 +51,13 @@
     ```dart
       AdRequest request = AdRequest(extras: {'rdp': '1'});
     ```
-    
+
 ## 0.13.6
 
 * Partial fix for [#265](https://github.com/googleads/googleads-mobile-flutter/issues/265).
   * The partial fix allows you to load ads from a cached flutter engine in the add to app scenario,
     but it only works the first time the engine is attached to an activity.
-  * Support for reusing the engine in another activity after the first one is destroyed is blocked 
+  * Support for reusing the engine in another activity after the first one is destroyed is blocked
     by this Flutter issue which affects all platform views: https://github.com/flutter/flutter/issues/88880.
 * Adds support for getRequestConfiguration API
   * [Android API reference](https://developers.google.com/android/reference/com/google/android/gms/ads/MobileAds#public-static-requestconfiguration-getrequestconfiguration)
@@ -73,7 +78,7 @@
 * Adds support for inline adaptive banner ads.
   * Inline adaptive banner ads are meant to be used in scrollable content. They are of variable height and can be as tall as the device screen.
     They differ from Fluid ads in that they only resize once when the ad is loaded.
-    You can see the [inline_adaptive_example.dart](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/inline_adaptive_example.dart) for a reference of how to load and display 
+    You can see the [inline_adaptive_example.dart](https://github.com/googleads/googleads-mobile-flutter/blob/master/packages/google_mobile_ads/example/lib/inline_adaptive_example.dart) for a reference of how to load and display
     inline adaptive banners.
   * More information on inline adaptive banners can be found here:
     * [Admob android](https://developers.google.com/admob/android/banner/inline-adaptive)
@@ -90,7 +95,7 @@
 
 ## 0.13.5
 
-* Adds support for app open. 
+* Adds support for app open.
   * Implementation guidance can be found [here](https://developers.google.com/admob/flutter/app-open).
   * As a reference please also see the [example app](https://github.com/googleads/googleads-mobile-flutter/tree/master/packages/app_open_example).
   * Best practices can be found [here](https://support.google.com/admob/answer/9341964?hl=en).
@@ -135,7 +140,7 @@
 * Updates GMA Android and iOS dependencies to 20.1.0 and 8.5.0, respectively.
 * Renames APIs that use the `Publisher` prefix to `AdManager`.
 * Rewarded and Interstitial ads now provide static `load` methods and a new `FullScreenContentCallback` for full screen events.
-* Native ads use [GADNativeAdView](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/api/reference/Classes/GADNativeAdView) for iOS 
+* Native ads use [GADNativeAdView](https://developers.google.com/ad-manager/mobile-ads-sdk/ios/api/reference/Classes/GADNativeAdView) for iOS
 and [NativeAdView](https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAdView) on Android.
 * Adds support for [ResponseInfo](https://developers.google.com/admob/android/response-info).
 * Adds support for [same app key](https://developers.google.com/admob/ios/ios14#same_app_key) on iOS.
