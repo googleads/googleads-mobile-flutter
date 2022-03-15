@@ -821,7 +821,7 @@ class _FluidAdWidgetState extends State<FluidAdWidget> {
 
     return Container(
       height: max(1, height),
-      width: max(1, widget.width),
+      width: widget.width == null ? 1 : max(1, widget.width!),
       child: platformView,
     );
   }
