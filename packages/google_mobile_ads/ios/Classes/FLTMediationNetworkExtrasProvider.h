@@ -16,24 +16,24 @@
 
 /**
  * Provides network specific parameters to include in ad requests.
- * An implementation of this protocol can be passed to FLTGoogleMobileAdsPlugin using
- * registerMediationNetworkExtrasProvider
+ * An implementation of this protocol can be passed to FLTGoogleMobileAdsPlugin
+ * using registerMediationNetworkExtrasProvider
  */
 @protocol FLTMediationNetworkExtrasProvider
 @required
 
 /**
- * Gets an array of GADAdNetworkExtras to include in the GADRequest for the given adUnitId and
- * mediationExtrasIdentifier.
+ * Gets an array of GADAdNetworkExtras to include in the GADRequest for the
+ * given adUnitId and mediationExtrasIdentifier.
  *
  * @param adUnitId the ad unit id associated with the ad request
- * @param mediationExtrasIdentifier  n optional string that comes from the associated dart ad
- * request object. This allows for additional control of which extras to include for an ad request,
- * beyond just the ad unit.
+ * @param mediationExtrasIdentifier  n optional string that comes from the
+ * associated dart ad request object. This allows for additional control of
+ * which extras to include for an ad request, beyond just the ad unit.
  * @return an array of GADAdNetworkExtras to include in the ad request.
  */
-- (NSArray<id<GADAdNetworkExtras>> *_Nullable)getMediationExtras:(NSString *_Nonnull)adUnitId
-                                       mediationExtrasIdentifier:
-                                           (NSString *_Nullable)mediationExtrasIdentifier;
+- (NSArray<id<GADAdNetworkExtras>> *_Nullable)
+           getMediationExtras:(NSString *_Nonnull)adUnitId
+    mediationExtrasIdentifier:(NSString *_Nullable)mediationExtrasIdentifier;
 
 @end

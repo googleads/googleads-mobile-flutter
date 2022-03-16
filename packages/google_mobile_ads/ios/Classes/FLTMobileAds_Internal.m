@@ -19,12 +19,12 @@
   self = [self init];
   if (self) {
     switch (status.state) {
-      case GADAdapterInitializationStateNotReady:
-        _state = @(FLTAdapterInitializationStateNotReady);
-        break;
-      case GADAdapterInitializationStateReady:
-        _state = @(FLTAdapterInitializationStateReady);
-        break;
+    case GADAdapterInitializationStateNotReady:
+      _state = @(FLTAdapterInitializationStateNotReady);
+      break;
+    case GADAdapterInitializationStateReady:
+      _state = @(FLTAdapterInitializationStateReady);
+      break;
     }
     _statusDescription = status.description;
     _latency = @(status.latency);
@@ -39,8 +39,8 @@
   if (self) {
     NSMutableDictionary *newDictionary = [NSMutableDictionary dictionary];
     for (NSString *name in status.adapterStatusesByClassName.allKeys) {
-      FLTAdapterStatus *adapterStatus =
-          [[FLTAdapterStatus alloc] initWithStatus:status.adapterStatusesByClassName[name]];
+      FLTAdapterStatus *adapterStatus = [[FLTAdapterStatus alloc]
+          initWithStatus:status.adapterStatusesByClassName[name]];
       [newDictionary setValue:adapterStatus forKey:name];
     }
     _adapterStatuses = newDictionary;
@@ -50,8 +50,10 @@
 @end
 
 @implementation FLTServerSideVerificationOptions
-- (GADServerSideVerificationOptions *_Nonnull)asGADServerSideVerificationOptions {
-  GADServerSideVerificationOptions *options = [[GADServerSideVerificationOptions alloc] init];
+- (GADServerSideVerificationOptions *_Nonnull)
+    asGADServerSideVerificationOptions {
+  GADServerSideVerificationOptions *options =
+      [[GADServerSideVerificationOptions alloc] init];
   options.userIdentifier = _userIdentifier;
   options.customRewardString = _customRewardString;
   return options;

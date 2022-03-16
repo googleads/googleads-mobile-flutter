@@ -31,12 +31,14 @@
 
 - (void)testDelegates {
   FLTAdSize *size = [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)];
-  UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
-  FLTBannerAd *bannerAd = [[FLTBannerAd alloc] initWithAdUnitId:@"testId"
-                                                           size:size
-                                                        request:[[FLTAdRequest alloc] init]
-                                             rootViewController:mockRootViewController
-                                                           adId:@1];
+  UIViewController *mockRootViewController =
+      OCMClassMock([UIViewController class]);
+  FLTBannerAd *bannerAd =
+      [[FLTBannerAd alloc] initWithAdUnitId:@"testId"
+                                       size:size
+                                    request:[[FLTAdRequest alloc] init]
+                         rootViewController:mockRootViewController
+                                       adId:@1];
   bannerAd.manager = mockManager;
 
   [bannerAd load];
@@ -73,35 +75,38 @@
   OCMStub([adValue currencyCode]).andReturn(@"currencyCode");
 
   bannerAd.bannerView.paidEventHandler(adValue);
-  OCMVerify([mockManager onPaidEvent:[OCMArg isEqual:bannerAd]
-                               value:[OCMArg checkWithBlock:^BOOL(id obj) {
-                                 FLTAdValue *adValue = obj;
-                                 XCTAssertEqualObjects(
-                                     adValue.valueMicros,
-                                     [[NSDecimalNumber alloc] initWithInt:1000000]);
-                                 XCTAssertEqual(adValue.precision, GADAdValuePrecisionEstimated);
-                                 XCTAssertEqualObjects(adValue.currencyCode, @"currencyCode");
-                                 return TRUE;
-                               }]]);
+  OCMVerify([mockManager
+      onPaidEvent:[OCMArg isEqual:bannerAd]
+            value:[OCMArg checkWithBlock:^BOOL(id obj) {
+              FLTAdValue *adValue = obj;
+              XCTAssertEqualObjects(
+                  adValue.valueMicros,
+                  [[NSDecimalNumber alloc] initWithInt:1000000]);
+              XCTAssertEqual(adValue.precision, GADAdValuePrecisionEstimated);
+              XCTAssertEqualObjects(adValue.currencyCode, @"currencyCode");
+              return TRUE;
+            }]]);
 
   NSString *domain = @"domain";
   NSDictionary *userInfo = @{NSLocalizedDescriptionKey : @"description"};
   NSError *error = [NSError errorWithDomain:domain code:1 userInfo:userInfo];
   [bannerAd.bannerView.delegate bannerView:OCMClassMock([GADBannerView class])
                didFailToReceiveAdWithError:error];
-  OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:bannerAd] error:[OCMArg isEqual:error]]);
+  OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:bannerAd]
+                                    error:[OCMArg isEqual:error]]);
 }
 
 - (void)testLoad {
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
-  UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
-  FLTBannerAd *ad = [[FLTBannerAd alloc] initWithAdUnitId:@"testId"
-                                                     size:[[FLTAdSize alloc] initWithWidth:@(1)
-                                                                                    height:@(2)]
-                                                  request:request
-                                       rootViewController:mockRootViewController
-                                                     adId:@1];
+  UIViewController *mockRootViewController =
+      OCMClassMock([UIViewController class]);
+  FLTBannerAd *ad = [[FLTBannerAd alloc]
+        initWithAdUnitId:@"testId"
+                    size:[[FLTAdSize alloc] initWithWidth:@(1) height:@(2)]
+                 request:request
+      rootViewController:mockRootViewController
+                    adId:@1];
 
   XCTAssertEqual(ad.bannerView.adUnitID, @"testId");
   XCTAssertEqual(ad.bannerView.rootViewController, mockRootViewController);
@@ -113,7 +118,8 @@
 
   OCMVerify([mockView loadRequest:[OCMArg checkWithBlock:^BOOL(id obj) {
                         GADRequest *requestArg = obj;
-                        return [requestArg.keywords isEqualToArray:@[ @"apple" ]];
+                        return
+                            [requestArg.keywords isEqualToArray:@[ @"apple" ]];
                       }]]);
 }
 

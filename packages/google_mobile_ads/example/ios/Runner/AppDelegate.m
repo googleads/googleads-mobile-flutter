@@ -25,8 +25,10 @@
 - (GADNativeAdView *)createNativeAd:(GADNativeAd *)nativeAd
                       customOptions:(NSDictionary *)customOptions {
   // Create and place ad in view hierarchy.
-  GADNativeAdView *adView =
-      [[NSBundle mainBundle] loadNibNamed:@"NativeAdView" owner:nil options:nil].firstObject;
+  GADNativeAdView *adView = [[NSBundle mainBundle] loadNibNamed:@"NativeAdView"
+                                                          owner:nil
+                                                        options:nil]
+                                .firstObject;
 
   // Associate the native ad view with the native ad object. This is
   // required to make the ad clickable.
@@ -70,11 +72,13 @@
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [GeneratedPluginRegistrant registerWithRegistry:self];
 
-  NativeAdFactoryExample *nativeAdFactory = [[NativeAdFactoryExample alloc] init];
+  NativeAdFactoryExample *nativeAdFactory =
+      [[NativeAdFactoryExample alloc] init];
   [FLTGoogleMobileAdsPlugin registerNativeAdFactory:self
                                           factoryId:@"adFactoryExample"
                                     nativeAdFactory:nativeAdFactory];
-  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+  return [super application:application
+      didFinishLaunchingWithOptions:launchOptions];
 }
 
 @end

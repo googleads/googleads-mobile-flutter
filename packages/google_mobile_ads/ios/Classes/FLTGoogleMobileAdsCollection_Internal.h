@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
 #import "FLTAd_Internal.h"
 #import "FLTGoogleMobileAdsPlugin.h"
+#import <Foundation/Foundation.h>
 
 @protocol FLTAd;
 
 // Thread-safe wrapper of NSMutableDictionary.
 @interface FLTGoogleMobileAdsCollection<KeyType, ObjectType> : NSObject
-- (void)setObject:(ObjectType _Nonnull)object forKey:(KeyType<NSCopying> _Nonnull)key;
+- (void)setObject:(ObjectType _Nonnull)object
+           forKey:(KeyType<NSCopying> _Nonnull)key;
 - (void)removeObjectForKey:(KeyType _Nonnull)key;
 - (id _Nullable)objectForKey:(KeyType _Nonnull)key;
 - (NSArray<KeyType> *_Nonnull)allKeysForObject:(ObjectType _Nonnull)object;

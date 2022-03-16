@@ -23,7 +23,8 @@
   self = [super init];
   if (self) {
     _dictionary = [[NSMutableDictionary alloc] init];
-    _lockQueue = dispatch_queue_create("FLTGoogleMobileAdsCollection", DISPATCH_QUEUE_SERIAL);
+    _lockQueue = dispatch_queue_create("FLTGoogleMobileAdsCollection",
+                                       DISPATCH_QUEUE_SERIAL);
   }
   return self;
 }
