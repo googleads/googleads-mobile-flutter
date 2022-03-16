@@ -32,7 +32,8 @@
 - (void)loadAd:(id<FLTAd> _Nonnull)ad;
 - (void)dispose:(NSNumber *_Nonnull)adId;
 - (void)showAdWithID:(NSNumber *_Nonnull)adId;
-- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad responseInfo:(GADResponseInfo *_Nonnull)responseInfo;
+- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad
+      responseInfo:(GADResponseInfo *_Nonnull)responseInfo;
 - (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(NSError *_Nonnull)error;
 - (void)onAppEvent:(id<FLTAd> _Nonnull)ad
               name:(NSString *_Nullable)name
@@ -43,8 +44,10 @@
 - (void)onNativeAdWillDismissScreen:(FLTNativeAd *_Nonnull)ad;
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward;
-- (void)onRewardedInterstitialAdUserEarnedReward:(FLTRewardedInterstitialAd *_Nonnull)ad
-                                          reward:(FLTRewardItem *_Nonnull)reward;
+- (void)onRewardedInterstitialAdUserEarnedReward:
+            (FLTRewardedInterstitialAd *_Nonnull)ad
+                                          reward:
+                                              (FLTRewardItem *_Nonnull)reward;
 - (void)onPaidEvent:(id<FLTAd> _Nonnull)ad value:(FLTAdValue *_Nonnull)value;
 - (void)onBannerImpression:(FLTBannerAd *_Nonnull)ad;
 - (void)onBannerWillDismissScreen:(FLTBannerAd *_Nonnull)ad;
@@ -62,7 +65,9 @@
 - (void)disposeAllAds;
 @end
 
-@interface FLTNewGoogleMobileAdsViewFactory : NSObject <FlutterPlatformViewFactory>
+@interface FLTNewGoogleMobileAdsViewFactory
+    : NSObject <FlutterPlatformViewFactory>
 @property(readonly) FLTAdInstanceManager *_Nonnull manager;
-- (instancetype _Nonnull)initWithManager:(FLTAdInstanceManager *_Nonnull)manager;
+- (instancetype _Nonnull)initWithManager:
+    (FLTAdInstanceManager *_Nonnull)manager;
 @end

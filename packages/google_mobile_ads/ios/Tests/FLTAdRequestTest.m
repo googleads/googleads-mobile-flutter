@@ -66,7 +66,8 @@
   GADExtras *updatedExtras = [gadRequest adNetworkExtrasFor:[GADExtras class]];
   XCTAssertEqualObjects(updatedExtras, extras);
   XCTAssertEqualObjects(updatedExtras.additionalParameters[@"npa"], @"1");
-  OCMVerify([gadRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
+  OCMVerify(
+      [gadRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
 }
 
 - (void)testAsAdRequestNoParams {
@@ -137,7 +138,8 @@
   GADRequest *gadRequest = [fltAdRequest asGADRequest:@"test-ad-unit"];
 
   XCTAssertNil([gadRequest adNetworkExtrasFor:[GADExtras class]]);
-  OCMVerify([gadRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
+  OCMVerify(
+      [gadRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
 }
 
 @end

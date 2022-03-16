@@ -71,7 +71,8 @@
   GADExtras *updatedExtras = [gamRequest adNetworkExtrasFor:[GADExtras class]];
   XCTAssertEqualObjects(updatedExtras, extras);
   XCTAssertEqualObjects(updatedExtras.additionalParameters[@"npa"], @"1");
-  OCMVerify([gamRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
+  OCMVerify(
+      [gamRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
 }
 
 - (void)testAsAdRequestNoParams {
@@ -144,7 +145,8 @@
   GADRequest *gamRequest = [fltGAMAdRequest asGAMRequest:@"test-ad-unit"];
 
   XCTAssertNil([gamRequest adNetworkExtrasFor:[GADExtras class]]);
-  OCMVerify([gamRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
+  OCMVerify(
+      [gamRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
 }
 
 @end
