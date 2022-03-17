@@ -32,11 +32,6 @@ android {
     }
     dependencies {
       api 'com.google.android.gms:play-services-ads:20.6.0'
-      constraints {
-        implementation('androidx.work:work-runtime:2.7.0') {
-            because 'previous versions have a bug impacting this android 12 behavior'
-        }
-      }
       implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
       testImplementation 'junit:junit:4.12'
       testImplementation 'org.hamcrest:hamcrest:2.2'
