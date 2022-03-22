@@ -15,6 +15,7 @@
 #import "FLTAd_Internal.h"
 #import "FLTGoogleMobileAdsCollection_Internal.h"
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
+#import <GoogleMobileAds/GoogleMobileAds.h>
 
 @protocol FLTAd;
 @class FLTBannerAd;
