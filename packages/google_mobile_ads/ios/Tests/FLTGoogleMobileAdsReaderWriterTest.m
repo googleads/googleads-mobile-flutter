@@ -244,11 +244,8 @@
   FLTFluidSize *decodedSize = [_messageCodec decode:encodedMessage];
 
   XCTAssertTrue([decodedSize isKindOfClass:FLTFluidSize.class]);
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  XCTAssertEqual(decodedSize.size.size.width, kGADAdSizeFluid.size.width);
-  XCTAssertEqual(decodedSize.size.size.height, kGADAdSizeFluid.size.height);
-#pragma clang diagnostic pop
+  XCTAssertEqual(decodedSize.size.size.width, GADAdSizeFluid.size.width);
+  XCTAssertEqual(decodedSize.size.size.height, GADAdSizeFluid.size.height);
 }
 
 - (void)testEncodeDecodeAdRequest {
