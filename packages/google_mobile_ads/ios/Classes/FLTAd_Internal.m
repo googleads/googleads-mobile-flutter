@@ -155,7 +155,7 @@
 
 @implementation FLTFluidSize
 - (instancetype _Nonnull)init {
-  self = [self initWithAdSize:kGADAdSizeFluid];
+  self = [self initWithAdSize:GADAdSizeFluid];
   return self;
 }
 @end
@@ -497,7 +497,7 @@
     _height = -1;
     _adRequest = request;
     _adUnitId = adUnitId;
-    _bannerView = [[GAMBannerView alloc] initWithAdSize:kGADAdSizeFluid];
+    _bannerView = [[GAMBannerView alloc] initWithAdSize:GADAdSizeFluid];
     _bannerView.adUnitID = adUnitId;
     _bannerView.rootViewController = rootViewController;
     _bannerView.appEventDelegate = self;
@@ -1086,7 +1086,7 @@
     _adLoader =
         [[GADAdLoader alloc] initWithAdUnitID:_adUnitId
                            rootViewController:rootViewController
-                                      adTypes:@[ kGADAdLoaderAdTypeNative ]
+                                      adTypes:@[ GADAdLoaderAdTypeNative ]
                                       options:adLoaderOptions];
     _nativeAdOptions = nativeAdOptions;
     self.adLoader.delegate = self;

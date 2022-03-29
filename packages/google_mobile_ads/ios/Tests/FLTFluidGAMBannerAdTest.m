@@ -120,7 +120,7 @@
 
   id gamBannerClassMock = OCMClassMock([GAMBannerView class]);
   OCMStub([gamBannerClassMock alloc]).andReturn(gamBannerClassMock);
-  OCMStub([gamBannerClassMock initWithAdSize:kGADAdSizeFluid])
+  OCMStub([gamBannerClassMock initWithAdSize:GADAdSizeFluid])
       .andReturn(gamBannerClassMock);
 
   // Create and load an ad.
