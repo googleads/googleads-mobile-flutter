@@ -126,7 +126,7 @@ class AdapterResponseInfo {
     return '$runtimeType(adapterClassName: $adapterClassName, '
         'latencyMillis: $latencyMillis), '
         'description: $description, '
-        'credentials: $credentials, '
+        'adUnitMapping: $adUnitMapping, '
         'adError: $adError)';
   }
 }
