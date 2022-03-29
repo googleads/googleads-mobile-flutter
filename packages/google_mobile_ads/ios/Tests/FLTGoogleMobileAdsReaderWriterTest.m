@@ -445,6 +445,7 @@
   OCMStub([mockGADResponseInfo dictionaryRepresentation])
       .andReturn(descriptionsDict);
   OCMStub([mockGADResponseInfo credentials]).andReturn(credentialsDict);
+  OCMStub([mockGADResponseInfo adUnitMapping]).andReturn(credentialsDict);
   OCMStub([mockGADResponseInfo error]).andReturn(error);
 
   FLTGADAdNetworkResponseInfo *adNetworkResponseInfo =
@@ -473,6 +474,7 @@
                         @"{\n    descriptions = dict;\n}");
   XCTAssertEqualObjects(decodedInfo.credentialsDescription,
                         @"{\n    credentials = dict;\n}");
+  XCTAssertEqualObjects(decodedInfo.adUnitMapping, credentialsDict);
   XCTAssertEqual(decodedInfo.error.code, 1);
   XCTAssertEqualObjects(decodedInfo.error.domain, @"domain");
   XCTAssertEqualObjects(decodedInfo.error.localizedDescription, @"error");

@@ -829,6 +829,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.latencyMillis);
       writeValue(buffer, value.description);
       writeValue(buffer, value.credentials);
+      writeValue(buffer, value.adUnitMapping);
       writeValue(buffer, value.adError);
     } else if (value is LoadAdError) {
       buffer.putUint8(_valueLoadAdError);
@@ -965,6 +966,8 @@ class AdMessageCodec extends StandardMessageCodec {
             latencyMillis: readValueOfType(buffer.getUint8(), buffer),
             description: readValueOfType(buffer.getUint8(), buffer),
             credentials: readValueOfType(buffer.getUint8(), buffer),
+            adUnitMapping:
+                _deepCastStringMap(readValueOfType(buffer.getUint8(), buffer)),
             adError: readValueOfType(buffer.getUint8(), buffer));
       case _valueLoadAdError:
         return LoadAdError(
@@ -1067,6 +1070,16 @@ class AdMessageCodec extends StandardMessageCodec {
       (dynamic key, dynamic value) => MapEntry<String, List<T>>(
         key,
         value?.cast<T>(),
+      ),
+    );
+  }
+
+  Map<String, String> _deepCastStringMap(Map<dynamic, dynamic>? map) {
+    if (map == null) return {};
+    return map.map<String, String>(
+      (dynamic key, dynamic value) => MapEntry<String, String>(
+        key,
+        value,
       ),
     );
   }

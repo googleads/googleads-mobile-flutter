@@ -259,7 +259,19 @@
         [[NSNumber alloc] initWithDouble:responseInfo.latency * 1000];
     _latency = @(timeInMillis.longValue);
     _dictionaryDescription = responseInfo.dictionaryRepresentation.description;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     _credentialsDescription = responseInfo.credentials.description;
+#pragma clang diagnostic pop
+    _adUnitMapping = [[NSMutableDictionary alloc] init];
+    for (NSString *key in responseInfo.adUnitMapping) {
+      if ([responseInfo.adUnitMapping[key] isKindOfClass:NSObject.class]) {
+        NSObject *value = ((NSObject *)responseInfo.adUnitMapping[key]);
+        [_adUnitMapping setValue:value.description forKey:key];
+      } else {
+        [_adUnitMapping setValue:@"Unrecognized credential" forKey:key];
+      }
+    }
     _error = responseInfo.error;
   }
   return self;

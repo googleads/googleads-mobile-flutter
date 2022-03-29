@@ -96,6 +96,7 @@ class AdapterResponseInfo {
     required this.latencyMillis,
     required this.description,
     required this.credentials,
+    required this.adUnitMapping,
     this.adError,
   });
 
@@ -111,7 +112,11 @@ class AdapterResponseInfo {
   final String description;
 
   /// A string description of adapter credentials specified in the AdMob or Ad Manager UI.
+  @Deprecated('Use [adUnitMapping] instead')
   final String credentials;
+
+  /// Network configuration set on the AdMob UI.
+  final Map<String, String> adUnitMapping;
 
   /// The error that occurred while rendering the ad.
   final AdError? adError;

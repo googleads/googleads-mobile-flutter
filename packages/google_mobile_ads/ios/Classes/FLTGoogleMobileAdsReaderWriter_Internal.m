@@ -124,6 +124,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     NSNumber *latency = [self readValueOfType:[self readByte]];
     NSString *dictionaryDescription = [self readValueOfType:[self readByte]];
     NSString *credentialsDescription = [self readValueOfType:[self readByte]];
+    NSDictionary<NSString *, NSString *> *adUnitMapping =
+        [self readValueOfType:[self readByte]];
     NSError *error = [self readValueOfType:[self readByte]];
     FLTGADAdNetworkResponseInfo *adNetworkResponseInfo =
         [[FLTGADAdNetworkResponseInfo alloc] init];
@@ -131,6 +133,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     adNetworkResponseInfo.latency = latency;
     adNetworkResponseInfo.dictionaryDescription = dictionaryDescription;
     adNetworkResponseInfo.credentialsDescription = credentialsDescription;
+    adNetworkResponseInfo.adUnitMapping = adUnitMapping;
     adNetworkResponseInfo.error = error;
     return adNetworkResponseInfo;
   }
@@ -318,6 +321,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:networkResponseInfo.latency];
     [self writeValue:networkResponseInfo.dictionaryDescription];
     [self writeValue:networkResponseInfo.credentialsDescription];
+    [self writeValue:networkResponseInfo.adUnitMapping];
     [self writeValue:networkResponseInfo.error];
   } else if ([value isKindOfClass:[FLTLoadAdError class]]) {
     [self writeByte:FLTAdMobFieldLoadError];

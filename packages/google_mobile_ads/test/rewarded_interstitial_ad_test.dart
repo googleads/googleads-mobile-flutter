@@ -342,6 +342,7 @@ void main() {
           latencyMillis: 500,
           description: 'message',
           credentials: 'credentials',
+          adUnitMapping: {'key': 'value'},
           adError: adError);
 
       List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
@@ -383,6 +384,7 @@ void main() {
       expect(responses.first.latencyMillis, 500);
       expect(responses.first.description, 'message');
       expect(responses.first.credentials, 'credentials');
+      expect(responses.first.adUnitMapping, {'key': 'value'});
       expect(responses.first.adError!.code, 1);
       expect(responses.first.adError!.message, 'error-message');
       expect(responses.first.adError!.domain, 'domain');
