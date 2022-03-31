@@ -1,4 +1,4 @@
-## 1.2.1
+## 1.2.0
 * Set new minimum height for `FluidAdWidget`.
   This is required after Flutter v2.11.0-0.1.pre because Android platform views
   that have no size don't load.
@@ -6,8 +6,6 @@
   * [Android release notes](https://developers.google.com/admob/android/rel-notes)
   * [iOS release notes](https://developers.google.com/admob/ios/rel-notes)
 * Deprecate `AdapterResponseInfo.credentials` in favor of `adUnitMapping`
-
-## 1.2.0
 * Deprecates `LocationParams` in `AdRequest` and `AdManagerAdRequest`.
 
 ## 1.1.0
