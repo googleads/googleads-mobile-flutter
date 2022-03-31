@@ -118,6 +118,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, responseInfo.getLatencyMillis());
       writeValue(stream, responseInfo.getDescription());
       writeValue(stream, responseInfo.getCredentials());
+      writeValue(stream, responseInfo.getAdUnitMapping());
       writeValue(stream, responseInfo.getError());
     } else if (value instanceof FlutterResponseInfo) {
       stream.write(VALUE_RESPONSE_INFO);
@@ -240,6 +241,7 @@ class AdMessageCodec extends StandardMessageCodec {
             (long) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
+            (Map<String, String>) readValueOfType(buffer.get(), buffer),
             (FlutterAdError) readValueOfType(buffer.get(), buffer));
       case VALUE_RESPONSE_INFO:
         return new FlutterResponseInfo(

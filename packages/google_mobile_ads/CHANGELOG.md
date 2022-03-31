@@ -5,6 +5,7 @@
 * Update GMA Android dependency to 20.6.0 and iOS to 8.13.0.
   * [Android release notes](https://developers.google.com/admob/android/rel-notes)
   * [iOS release notes](https://developers.google.com/admob/ios/rel-notes)
+* Deprecate `AdapterResponseInfo.credentials` in favor of `adUnitMapping`
 
 ## 1.2.0
 * Deprecates `LocationParams` in `AdRequest` and `AdManagerAdRequest`.
