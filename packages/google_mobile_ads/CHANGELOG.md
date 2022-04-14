@@ -1,3 +1,6 @@
+## 1.3.0
+* Adds support for programmatically opening the debug options menu using`MobileAds.openDebugMenu(String adUnitId)`
+
 ## 1.2.0
 * Set new minimum height for `FluidAdWidget`.
   This is required after Flutter v2.11.0-0.1.pre because Android platform views
