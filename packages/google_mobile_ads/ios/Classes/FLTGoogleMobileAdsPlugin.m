@@ -225,6 +225,15 @@
                  isEqualToString:@"MobileAds#disableMediationInitialization"]) {
     [GADMobileAds.sharedInstance disableMediationInitialization];
     result(nil);
+  } else if ([call.method isEqualToString:@"MobileAds#openDebugMenu"]) {
+    NSString *adUnitId = call.arguments[@"adUnitId"];
+    GADDebugOptionsViewController *debugOptionsViewController =
+        [GADDebugOptionsViewController
+            debugOptionsViewControllerWithAdUnitID:adUnitId];
+    [rootController presentViewController:debugOptionsViewController
+                                 animated:YES
+                               completion:nil];
+    result(nil);
   } else if ([call.method isEqualToString:@"MobileAds#getVersionString"]) {
     result([GADMobileAds.sharedInstance sdkVersion]);
   } else if ([call.method

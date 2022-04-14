@@ -656,6 +656,23 @@ public class GoogleMobileAdsTest {
   }
 
   @Test
+  public void testOpenDebugMenu() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
+    MethodCall methodCall =
+        new MethodCall(
+            "MobileAds#openDebugMenu", Collections.singletonMap("adUnitId", "test-ad-unit"));
+    Result result = mock(Result.class);
+
+    plugin.onMethodCall(methodCall, result);
+
+    verify(mockMobileAds).openDebugMenu(eq(mockActivity), eq("test-ad-unit"));
+    verify(result).success(null);
+  }
+
+  @Test
   public void testGetAnchoredAdaptiveBannerAdSize() {
     // Setup mocks
     AdInstanceManager testManagerSpy = spy(testManager);

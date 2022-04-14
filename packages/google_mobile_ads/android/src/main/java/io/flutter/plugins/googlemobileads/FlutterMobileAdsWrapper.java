@@ -55,4 +55,9 @@ public class FlutterMobileAdsWrapper {
   public RequestConfiguration getRequestConfiguration() {
     return MobileAds.getRequestConfiguration();
   }
+
+  /** Wrapper for openDebugMenu. */
+  public void openDebugMenu(Context context, String adUnitId) {
+    MobileAds.openDebugMenu(context, adUnitId);
+  }
 }
