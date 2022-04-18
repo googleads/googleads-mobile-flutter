@@ -311,9 +311,21 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         instanceManager.disposeAllAds();
         result.success(null);
         break;
-
       case "MobileAds#initialize":
         flutterMobileAds.initialize(context, new FlutterInitializationListener(result));
+        break;
+      case "MobileAds#openAdInspector":
+        flutterMobileAds.openAdInspector(
+            context,
+            adInspectorError -> {
+              if (adInspectorError != null) {
+                String errorCode = Integer.toString(adInspectorError.getCode());
+                result.error(
+                    errorCode, adInspectorError.getMessage(), adInspectorError.getDomain());
+              } else {
+                result.success(null);
+              }
+            });
         break;
       case "MobileAds#getRequestConfiguration":
         result.success(flutterMobileAds.getRequestConfiguration());

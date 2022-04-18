@@ -17,6 +17,7 @@ package io.flutter.plugins.googlemobileads;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnAdInspectorClosedListener;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
@@ -59,5 +60,10 @@ public class FlutterMobileAdsWrapper {
   /** Wrapper for openDebugMenu. */
   public void openDebugMenu(Context context, String adUnitId) {
     MobileAds.openDebugMenu(context, adUnitId);
+  }
+
+  /** Open the ad inspector. */
+  public void openAdInspector(Context context, OnAdInspectorClosedListener listener) {
+    MobileAds.openAdInspector(context, listener);
   }
 }
