@@ -669,7 +669,7 @@ public class GoogleMobileAdsTest {
     plugin.onMethodCall(methodCall, result);
 
     verify(mockMobileAds).openDebugMenu(eq(mockActivity), eq("test-ad-unit"));
-    verify(result).success(null);
+    verify(result).success(isNull());
   }
 
   @Test

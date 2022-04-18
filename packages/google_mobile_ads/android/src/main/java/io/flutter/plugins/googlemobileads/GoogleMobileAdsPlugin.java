@@ -563,8 +563,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         result.success(flutterMobileAds.getVersionString());
         break;
       case "MobileAds#openDebugMenu":
-        flutterMobileAds.openDebugMenu(context, call.argument("adUnitId"));
-        result.success(flutterMobileAds.getVersionString());
+        String adUnitId = call.argument("adUnitId");
+        flutterMobileAds.openDebugMenu(context, adUnitId);
+        result.success(null);
         break;
       case "getAdSize":
         FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
