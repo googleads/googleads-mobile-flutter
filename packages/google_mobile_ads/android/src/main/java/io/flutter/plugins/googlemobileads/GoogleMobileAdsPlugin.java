@@ -87,7 +87,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   protected GoogleMobileAdsPlugin(@NonNull AppStateNotifier appStateNotifier) {
     this.appStateNotifier = appStateNotifier;
     this.flutterMobileAds = new FlutterMobileAdsWrapper();
-    ;
   }
 
   /**
