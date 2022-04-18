@@ -23,6 +23,10 @@
 @interface FLTGoogleMobileAdsPluginMethodCallsTest : XCTestCase
 @end
 
+@interface FLTGoogleMobileAdsPlugin ()
+@property UIViewController *rootController;
+@end
+
 @implementation FLTGoogleMobileAdsPluginMethodCallsTest {
   FLTGoogleMobileAdsPlugin *_fltGoogleMobileAdsPlugin;
   FLTAdInstanceManager *_mockAdInstanceManager;
@@ -351,12 +355,14 @@
     returnedResult = result;
   };
 
-  id partialMock = OCMPartialMock(
-      UIApplication.sharedApplication.delegate.window.rootViewController);
+  FLTGoogleMobileAdsPlugin *mockPlugin =
+      OCMPartialMock(_fltGoogleMobileAdsPlugin);
+  UIViewController *mockUIViewController = OCMClassMock(UIViewController.class);
+  OCMStub([mockPlugin rootController]).andReturn(mockUIViewController);
 
   [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
-  OCMVerify([partialMock
+  OCMVerify([mockUIViewController
       presentViewController:[OCMArg isKindOfClass:[GADDebugOptionsViewController
                                                       class]]
                    animated:[OCMArg any]

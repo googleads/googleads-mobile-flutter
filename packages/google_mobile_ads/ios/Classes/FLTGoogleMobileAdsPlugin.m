@@ -188,10 +188,13 @@
   return factory;
 }
 
+- (UIViewController *)rootController {
+  return UIApplication.sharedApplication.delegate.window.rootViewController;
+}
+
 - (void)handleMethodCall:(FlutterMethodCall *)call
                   result:(FlutterResult)result {
-  UIViewController *rootController =
-      UIApplication.sharedApplication.delegate.window.rootViewController;
+  UIViewController *rootController = self.rootController;
 
   if ([call.method isEqualToString:@"MobileAds#initialize"]) {
     FLTInitializationHandler *handler =
