@@ -1,4 +1,4 @@
-// Copyright 2021 Google LLC
+// Copyright 2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'src/ad_containers.dart';
-export 'src/ad_listeners.dart';
-export 'src/app_background_event_notifier.dart';
-export 'src/mobile_ads.dart';
-export 'src/request_configuration.dart';
-export 'src/ump/user_messaging_platform.dart';
-export 'src/ump/consent_request_parameters.dart';
-export 'src/ump/consent_information.dart';
+/// Error information about why a form operation failed.
+class FormError {
+
+  FormError({required this.errorCode, required this.message});
+
+  final int errorCode;
+  final String? message;
+}
