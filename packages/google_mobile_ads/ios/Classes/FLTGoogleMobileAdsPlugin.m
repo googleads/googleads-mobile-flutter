@@ -188,10 +188,13 @@
   return factory;
 }
 
+- (UIViewController *)rootController {
+  return UIApplication.sharedApplication.delegate.window.rootViewController;
+}
+
 - (void)handleMethodCall:(FlutterMethodCall *)call
                   result:(FlutterResult)result {
-  UIViewController *rootController =
-      UIApplication.sharedApplication.delegate.window.rootViewController;
+  UIViewController *rootController = self.rootController;
 
   if ([call.method isEqualToString:@"MobileAds#initialize"]) {
     FLTInitializationHandler *handler =
@@ -224,6 +227,15 @@
   } else if ([call.method
                  isEqualToString:@"MobileAds#disableMediationInitialization"]) {
     [GADMobileAds.sharedInstance disableMediationInitialization];
+    result(nil);
+  } else if ([call.method isEqualToString:@"MobileAds#openDebugMenu"]) {
+    NSString *adUnitId = call.arguments[@"adUnitId"];
+    GADDebugOptionsViewController *debugOptionsViewController =
+        [GADDebugOptionsViewController
+            debugOptionsViewControllerWithAdUnitID:adUnitId];
+    [rootController presentViewController:debugOptionsViewController
+                                 animated:YES
+                               completion:nil];
     result(nil);
   } else if ([call.method isEqualToString:@"MobileAds#getVersionString"]) {
     result([GADMobileAds.sharedInstance sdkVersion]);

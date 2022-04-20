@@ -23,6 +23,10 @@
 @interface FLTGoogleMobileAdsPluginMethodCallsTest : XCTestCase
 @end
 
+@interface FLTGoogleMobileAdsPlugin ()
+@property UIViewController *rootController;
+@end
+
 @implementation FLTGoogleMobileAdsPluginMethodCallsTest {
   FLTGoogleMobileAdsPlugin *_fltGoogleMobileAdsPlugin;
   FLTAdInstanceManager *_mockAdInstanceManager;
@@ -337,6 +341,34 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertEqual(returnedResult, [GADMobileAds.sharedInstance sdkVersion]);
+}
+
+- (void)testOpenDebugMenu {
+  FlutterMethodCall *methodCall = [FlutterMethodCall
+      methodCallWithMethodName:@"MobileAds#openDebugMenu"
+                     arguments:@{@"adUnitId" : @"test-ad-unit"}];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  FLTGoogleMobileAdsPlugin *mockPlugin =
+      OCMPartialMock(_fltGoogleMobileAdsPlugin);
+  UIViewController *mockUIViewController = OCMClassMock(UIViewController.class);
+  OCMStub([mockPlugin rootController]).andReturn(mockUIViewController);
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  OCMVerify([mockUIViewController
+      presentViewController:[OCMArg isKindOfClass:[GADDebugOptionsViewController
+                                                      class]]
+                   animated:[OCMArg any]
+                 completion:[OCMArg isNil]]);
+  XCTAssertTrue(resultInvoked);
+  XCTAssertEqual(returnedResult, nil);
 }
 
 - (void)testGetRequestConfiguration {

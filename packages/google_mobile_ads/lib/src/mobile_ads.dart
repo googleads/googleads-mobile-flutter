@@ -122,6 +122,14 @@ class MobileAds {
     return instanceManager.getVersionString();
   }
 
+  /// Opens the debug menu for the [adUnitId].
+  ///
+  /// Returns a Future that completes when the platform side api has been
+  /// invoked.
+  Future<void> openDebugMenu(String adUnitId) {
+    return instanceManager.openDebugMenu(adUnitId);
+  }
+
   /// Internal init to cleanup state for hot restart.
   /// This is a workaround for https://github.com/flutter/flutter/issues/7160.
   void _init() {

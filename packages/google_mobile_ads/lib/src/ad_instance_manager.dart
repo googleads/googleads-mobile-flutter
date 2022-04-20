@@ -760,6 +760,19 @@ class AdInstanceManager {
     return (await instanceManager.channel
         .invokeMethod<String>('MobileAds#getVersionString'))!;
   }
+
+  /// Opens the debug menu.
+  ///
+  /// Returns a Future that completes when the platform side api has been
+  /// invoked.
+  Future<void> openDebugMenu(String adUnitId) async {
+    return channel.invokeMethod<void>(
+      'MobileAds#openDebugMenu',
+      <dynamic, dynamic>{
+        'adUnitId': adUnitId,
+      },
+    );
+  }
 }
 
 @visibleForTesting

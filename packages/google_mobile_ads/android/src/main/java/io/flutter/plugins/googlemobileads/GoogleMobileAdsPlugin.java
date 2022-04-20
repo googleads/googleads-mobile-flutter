@@ -86,7 +86,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   @VisibleForTesting
   protected GoogleMobileAdsPlugin(@NonNull AppStateNotifier appStateNotifier) {
     this.appStateNotifier = appStateNotifier;
-    this.flutterMobileAds = null;
+    this.flutterMobileAds = new FlutterMobileAdsWrapper();
   }
 
   /**
@@ -560,6 +560,11 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         break;
       case "MobileAds#getVersionString":
         result.success(flutterMobileAds.getVersionString());
+        break;
+      case "MobileAds#openDebugMenu":
+        String adUnitId = call.argument("adUnitId");
+        flutterMobileAds.openDebugMenu(context, adUnitId);
+        result.success(null);
         break;
       case "getAdSize":
         FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
