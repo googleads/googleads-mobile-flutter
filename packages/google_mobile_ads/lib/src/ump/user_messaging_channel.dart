@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'consent_form.dart';
@@ -76,18 +77,34 @@ class UserMessagingChannel {
         'consentInformation': consentInfo,
       },))!;
 
-    switch (consentStatus) {
-      case 0:
-        return ConsentStatus.unknown;
-      case 1:
-        return ConsentStatus.notRequired;
-      case 2:
-        return ConsentStatus.required;
-      case 3:
-        return ConsentStatus.unknown;
-      default:
-        debugPrint('Error: unknown ConsentStatus value: $consentStatus');
-        return ConsentStatus.unknown;
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      switch (consentStatus) {
+        case 0:
+          return ConsentStatus.unknown;
+        case 1:
+          return ConsentStatus.required;
+        case 2:
+          return ConsentStatus.notRequired;
+        case 3:
+          return ConsentStatus.obtained;
+        default:
+          debugPrint('Error: unknown ConsentStatus value: $consentStatus');
+          return ConsentStatus.unknown;
+      }
+    } else {
+      switch (consentStatus) {
+        case 0:
+          return ConsentStatus.unknown;
+        case 1:
+          return ConsentStatus.notRequired;
+        case 2:
+          return ConsentStatus.required;
+        case 3:
+          return ConsentStatus.obtained;
+        default:
+          debugPrint('Error: unknown ConsentStatus value: $consentStatus');
+          return ConsentStatus.unknown;
+      }
     }
   }
 

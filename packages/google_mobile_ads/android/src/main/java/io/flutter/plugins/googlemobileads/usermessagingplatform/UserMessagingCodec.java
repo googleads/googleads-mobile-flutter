@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import com.google.android.ump.ConsentDebugSettings;
 import com.google.android.ump.ConsentForm;
 import com.google.android.ump.ConsentInformation;
-import com.google.android.ump.ConsentInformation.ConsentStatus;
 import com.google.android.ump.ConsentRequestParameters;
 import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
