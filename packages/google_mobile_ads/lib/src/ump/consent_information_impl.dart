@@ -12,50 +12,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'consent_information.dart';
 import 'consent_request_parameters.dart';
-import 'form_error.dart';
+import 'user_messaging_channel.dart';
 
-/// Callback to be invoked when consent info is successfully updated.
-typedef OnConsentInfoUpdateSuccessListener = void Function();
+/// Implementation for ConsentInformation.
+class ConsentInformationImpl extends ConsentInformation {
+  /// Constructor for [ConsentInformationImpl].
+  ConsentInformationImpl(this.platformHash);
 
-/// Callback to be invoked when consent info failed to update.
-typedef OnConsentInfoUpdateFailureListener = void Function(FormError error);
+  /// An identifier to the corresponding platform object.
+  final int platformHash;
 
-/// Consent status values.
-enum ConsentStatus {
-  /// User consent not required.
-  notRequired,
-
-  /// User consent obtained.
-  obtained,
-
-  /// User consent required but not yet obtained.
-  required,
-
-  /// Consent status is unknown.
-  unknown,
-}
-
-/// Utility methods for collecting consent from users.
-abstract class ConsentInformation {
   /// Requests a consent information update.
   void requestConsentInfoUpdate(
       ConsentRequestParameters params,
       OnConsentInfoUpdateSuccessListener successListener,
-      OnConsentInfoUpdateFailureListener failureListener);
+      OnConsentInfoUpdateFailureListener failureListener) {
+    UserMessagingChannel.instance.requestConsentInfoUpdate(
+        params, successListener, failureListener, this);
+  }
 
   /// Returns true if a ConsentForm is available, false otherwise.
-  Future<bool> isConsentFormAvailable();
+  @override
+  Future<bool> isConsentFormAvailable() {
+    return UserMessagingChannel.instance.isConsentFormAvailable(this);
+  }
 
   /// Get the user’s consent status.
   ///
   /// This value is cached between app sessions and can be read before
   /// requesting updated parameters.
-  Future<ConsentStatus> getConsentStatus();
+  @override
+  Future<ConsentStatus> getConsentStatus() {
+    return UserMessagingChannel.instance.getConsentStatus(this);
+  }
 
   /// Resets the consent information to initialized status.
   ///
   /// Should only be used for testing. Returns a [Future] that completes when
   /// the platform API has been called.
-  Future<void> reset();
+  @override
+  Future<void> reset() {
+    return UserMessagingChannel.instance.reset(this);
+  }
 }

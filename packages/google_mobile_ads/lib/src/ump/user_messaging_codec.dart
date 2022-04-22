@@ -15,8 +15,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import 'consent_form.dart';
-import 'consent_information.dart';
+import 'consent_form_impl.dart';
+import 'consent_information_impl.dart';
 import 'consent_request_parameters.dart';
 
 /// Codec for coding and decoding types in the UMP SDK.
@@ -35,12 +35,12 @@ class UserMessagingCodec extends StandardMessageCodec {
     } else if (value is ConsentDebugSettings) {
       buffer.putUint8(_valueConsentDebugSettings);
       writeValue(buffer, value.debugGeography);
-    } else if (value is ConsentInformation) {
+    } else if (value is ConsentInformationImpl) {
       buffer.putUint8(_valueConsentInformation);
-      writeValue(buffer, value.hash);
-    } else if (value is ConsentForm) {
+      writeValue(buffer, value.platformHash);
+    } else if (value is ConsentFormImpl) {
       buffer.putUint8(_valueConsentForm);
-      writeValue(buffer, value.hash);
+      writeValue(buffer, value.platformHash);
     } else {
       super.writeValue(buffer, value);
     }
@@ -51,10 +51,10 @@ class UserMessagingCodec extends StandardMessageCodec {
     switch (type) {
       case _valueConsentInformation:
         final int hashCode = readValueOfType(buffer.getUint8(), buffer);
-        return ConsentInformation(hashCode);
+        return ConsentInformationImpl(hashCode);
       case _valueConsentForm:
         final int hashCode = readValueOfType(buffer.getUint8(), buffer);
-        return ConsentForm(hashCode);
+        return ConsentFormImpl(hashCode);
       default:
         return super.readValueOfType(type, buffer);
     }
