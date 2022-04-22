@@ -14,15 +14,14 @@
 
 /// Parameters sent on updating user consent info.
 class ConsentRequestParameters {
-
-  ConsentRequestParameters({this.tagForUnderAgeOfConsent, this.consentDebugSettings});
+  ConsentRequestParameters(
+      {this.tagForUnderAgeOfConsent, this.consentDebugSettings});
 
   bool? tagForUnderAgeOfConsent;
   ConsentDebugSettings? consentDebugSettings;
 }
 
 class ConsentDebugSettings {
-
   ConsentDebugSettings({this.debugGeography});
   int? debugGeography;
 }

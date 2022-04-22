@@ -25,9 +25,7 @@ import 'user_messaging_platform.dart';
 
 /// Platform channel for ump sdk.
 class UserMessagingChannel {
-
-  static const _methodChannelName =
-      'plugins.flutter.io/google_mobile_ads/ump';
+  static const _methodChannelName = 'plugins.flutter.io/google_mobile_ads/ump';
 
   static UserMessagingChannel instance = UserMessagingChannel();
 
@@ -45,7 +43,8 @@ class UserMessagingChannel {
     }
   }
 
-  void requestConsentInfoUpdate(ConsentRequestParameters params,
+  void requestConsentInfoUpdate(
+      ConsentRequestParameters params,
       OnConsentInfoUpdateSuccessListener successListener,
       OnConsentInfoUpdateFailureListener failureListener,
       ConsentInformation consentInformation) async {
@@ -55,19 +54,22 @@ class UserMessagingChannel {
         <dynamic, dynamic>{
           'params': params,
           'contentInformation': consentInformation,
-        },);
+        },
+      );
       successListener();
     } on PlatformException catch (e) {
-      failureListener(FormError(errorCode: int.parse(e.code), message: e.message));
+      failureListener(
+          FormError(errorCode: int.parse(e.code), message: e.message));
     }
   }
 
   Future<bool> isConsentFormAvailable(ConsentInformation consentInfo) async {
     return (await _methodChannel.invokeMethod<bool>(
-        'ConsentInfo#isConsentFormAvailable',
-        <dynamic, dynamic>{
-          'consentInformation': consentInfo,
-        },))!;
+      'ConsentInfo#isConsentFormAvailable',
+      <dynamic, dynamic>{
+        'consentInformation': consentInfo,
+      },
+    ))!;
   }
 
   Future<ConsentStatus> getConsentStatus(ConsentInformation consentInfo) async {
@@ -75,7 +77,8 @@ class UserMessagingChannel {
       'ConsentInformation#getConsentStatus',
       <dynamic, dynamic>{
         'consentInformation': consentInfo,
-      },))!;
+      },
+    ))!;
 
     if (defaultTargetPlatform == TargetPlatform.iOS) {
       switch (consentStatus) {
@@ -110,32 +113,33 @@ class UserMessagingChannel {
 
   Future<void> reset(ConsentInformation consentInfo) async {
     return _methodChannel.invokeMethod<void>(
-        'ConsentInformation#reset',
-        <dynamic, dynamic>{
-          'consentInformation': consentInfo,
-        },);
+      'ConsentInformation#reset',
+      <dynamic, dynamic>{
+        'consentInformation': consentInfo,
+      },
+    );
   }
 
-  void loadConsentForm(
-      OnConsentFormLoadSuccessListener successListener,
+  void loadConsentForm(OnConsentFormLoadSuccessListener successListener,
       OnConsentFormLoadFailureListener failureListener) async {
     try {
-      ConsentForm form = (await _methodChannel.invokeMethod<ConsentForm>(
-        'UserMessagingPlatform#loadConsentForm'))!;
+      ConsentForm form = (await _methodChannel
+          .invokeMethod<ConsentForm>('UserMessagingPlatform#loadConsentForm'))!;
       successListener(form);
     } on PlatformException catch (e) {
-      failureListener(FormError(errorCode: int.parse(e.code), message: e.message));
+      failureListener(
+          FormError(errorCode: int.parse(e.code), message: e.message));
     }
   }
 
-  void show(
-      ConsentForm consentForm,
+  void show(ConsentForm consentForm,
       OnConsentFormDismissedListener onConsentFormDismissedListener) async {
-      FormError? formError = (await _methodChannel.invokeMethod<FormError?>(
-          'ConsentForm#show',
-        <dynamic, dynamic>{
-          'consentForm': consentForm,
-        },));
-      onConsentFormDismissedListener(formError);
+    FormError? formError = (await _methodChannel.invokeMethod<FormError?>(
+      'ConsentForm#show',
+      <dynamic, dynamic>{
+        'consentForm': consentForm,
+      },
+    ));
+    onConsentFormDismissedListener(formError);
   }
 }

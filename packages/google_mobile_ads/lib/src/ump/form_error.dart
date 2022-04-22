@@ -14,7 +14,6 @@
 
 /// Error information about why a form operation failed.
 class FormError {
-
   FormError({required this.errorCode, required this.message});
 
   final int errorCode;

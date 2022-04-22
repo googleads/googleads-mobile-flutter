@@ -26,7 +26,8 @@ import 'reusable_inline_example.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.updateRequestConfiguration(RequestConfiguration(testDeviceIds: ['32CD20B4326E0901E14763495BA1ACD8']));
+  MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
+      testDeviceIds: ['32CD20B4326E0901E14763495BA1ACD8']));
   MobileAds.instance.initialize();
   runApp(MyApp());
 }
@@ -68,31 +69,34 @@ class _MyAppState extends State<MyApp> {
 
   void _obtainConsent() async {
     var consentDebugSettings = ConsentDebugSettings(debugGeography: 1);
-    var params = ConsentRequestParameters(tagForUnderAgeOfConsent: false, consentDebugSettings: consentDebugSettings);
+    var params = ConsentRequestParameters(
+        tagForUnderAgeOfConsent: false,
+        consentDebugSettings: consentDebugSettings);
     var consentInfo = await UserMessagingPlatform.getConsentInformation();
 
     // Reset the UMP SDK state for testing purposes
     await consentInfo.reset();
     consentInfo.requestConsentInfoUpdate(
-        params,
-        () async {
-          debugPrint('Requested consent info update success');
-          if (await consentInfo.isConsentFormAvailable()) {
-            _loadForm(consentInfo);
-          } else {
-            debugPrint('Consent form not available');
-          }
-        },
-        (error) {
-          debugPrint('Error requesting consent info update: $error');
-        },);
+      params,
+      () async {
+        debugPrint('Requested consent info update success');
+        if (await consentInfo.isConsentFormAvailable()) {
+          _loadForm(consentInfo);
+        } else {
+          debugPrint('Consent form not available');
+        }
+      },
+      (error) {
+        debugPrint('Error requesting consent info update: $error');
+      },
+    );
   }
 
   void _loadForm(ConsentInformation consentInformation) async {
     UserMessagingPlatform.loadConsentForm(
       (consentForm) async {
         ConsentStatus status = await consentInformation.getConsentStatus();
-        if (status ==  ConsentStatus.required) {
+        if (status == ConsentStatus.required) {
           consentForm.show((formError) {
             if (formError != null) {
               debugPrint('Error showing consent form: $formError');
@@ -103,7 +107,8 @@ class _MyAppState extends State<MyApp> {
       },
       (formError) {
         debugPrint('Error loading consent form: $formError');
-      },);
+      },
+    );
   }
 
   void _createInterstitialAd() {

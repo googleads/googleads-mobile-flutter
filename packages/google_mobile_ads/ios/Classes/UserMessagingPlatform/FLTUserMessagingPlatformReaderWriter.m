@@ -31,12 +31,11 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
 @property NSMutableDictionary<NSNumber *, UMPConsentForm *> *consentFormDict;
 @end
 
-@interface FLTUserMessagingPlatformReaderWriter()
+@interface FLTUserMessagingPlatformReaderWriter ()
 @property NSMutableDictionary<NSNumber *, UMPConsentForm *> *consentFormDict;
 @end
 
 @implementation FLTUserMessagingPlatformReaderWriter
-
 
 - (instancetype _Nonnull)init {
   self = [super init];
@@ -47,38 +46,39 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
 }
 
 - (FlutterStandardReader *_Nonnull)readerWithData:(NSData *_Nonnull)data {
-  FLTUserMessagingPlatformReader *reader = [[FLTUserMessagingPlatformReader alloc] initWithData:data];
+  FLTUserMessagingPlatformReader *reader =
+      [[FLTUserMessagingPlatformReader alloc] initWithData:data];
   reader.consentFormDict = self.consentFormDict;
   return reader;
 }
 
 - (FlutterStandardWriter *_Nonnull)writerWithData:
     (NSMutableData *_Nonnull)data {
-  FLTUserMessagingPlatformWriter *writer = [[FLTUserMessagingPlatformWriter alloc] initWithData:data];
+  FLTUserMessagingPlatformWriter *writer =
+      [[FLTUserMessagingPlatformWriter alloc] initWithData:data];
   writer.consentFormDict = self.consentFormDict;
   return writer;
 }
 @end
 
-
 @implementation FLTUserMessagingPlatformWriter
 
 - (void)writeValue:(id _Nonnull)value {
   if ([value isKindOfClass:[UMPConsentForm class]]) {
-    UMPConsentForm *form = (UMPConsentForm *) value;
-    NSNumber * hash = [[NSNumber alloc] initWithInteger:form.hash];
+    UMPConsentForm *form = (UMPConsentForm *)value;
+    NSNumber *hash = [[NSNumber alloc] initWithInteger:form.hash];
     _consentFormDict[hash] = form;
     [self writeByte:FLTValueConsentForm];
     [self writeValue:hash];
   } else if ([value isKindOfClass:[UMPConsentInformation class]]) {
     [self writeByte:FLTValueConsentInformation];
-    // iOS just uses UMPConsentInformation.sharedInstance, so this value doesn't matter.
+    // iOS just uses UMPConsentInformation.sharedInstance, so this value doesn't
+    // matter.
     [self writeValue:@(-1)];
   } else {
     [super writeValue:value];
   }
 }
-
 
 @end
 
@@ -87,36 +87,32 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
 - (id _Nullable)readValueOfType:(UInt8)type {
   FLTUserMessagingPlatformField field = (FLTUserMessagingPlatformField)type;
   switch (field) {
-    case FLTValueConsentInformation:
-      // Dart sends a value which is used for Android, but not needed for iOS
-      [self readValueOfType:[self readByte]];
-      return UMPConsentInformation.sharedInstance;
-    case FLTValueConsentRequestParameters:{
-      UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
-      NSNumber *tfuac = [self readValueOfType:[self readByte]];
-      
-      parameters.tagForUnderAgeOfConsent = tfuac.boolValue;
-      UMPDebugSettings *debugSettings = [self readValueOfType:[self readByte]];
-      parameters.debugSettings = debugSettings;
-      return parameters;
-    }
-    case FLTValueConsentDebugSettings: {
-      UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
-      NSNumber *geography = [self readValueOfType:[self readByte]];
-      debugSettings.geography = geography.intValue;
-      return debugSettings;
-    }
-    case FLTValueConsentForm: {
-      NSNumber *hash = [self readValueOfType:[self readByte]];
-      return _consentFormDict[hash];
-    }
-    default:
-      return [super readValueOfType:type];
+  case FLTValueConsentInformation:
+    // Dart sends a value which is used for Android, but not needed for iOS
+    [self readValueOfType:[self readByte]];
+    return UMPConsentInformation.sharedInstance;
+  case FLTValueConsentRequestParameters: {
+    UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
+    NSNumber *tfuac = [self readValueOfType:[self readByte]];
+
+    parameters.tagForUnderAgeOfConsent = tfuac.boolValue;
+    UMPDebugSettings *debugSettings = [self readValueOfType:[self readByte]];
+    parameters.debugSettings = debugSettings;
+    return parameters;
+  }
+  case FLTValueConsentDebugSettings: {
+    UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
+    NSNumber *geography = [self readValueOfType:[self readByte]];
+    debugSettings.geography = geography.intValue;
+    return debugSettings;
+  }
+  case FLTValueConsentForm: {
+    NSNumber *hash = [self readValueOfType:[self readByte]];
+    return _consentFormDict[hash];
+  }
+  default:
+    return [super readValueOfType:type];
   }
 }
 
 @end
-
-
-
-

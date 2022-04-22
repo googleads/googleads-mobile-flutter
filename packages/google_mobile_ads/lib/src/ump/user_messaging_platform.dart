@@ -17,12 +17,11 @@ import 'consent_information.dart';
 import 'form_error.dart';
 import 'user_messaging_channel.dart';
 
-
-typedef OnConsentFormLoadSuccessListener = void Function(ConsentForm consentForm);
+typedef OnConsentFormLoadSuccessListener = void Function(
+    ConsentForm consentForm);
 typedef OnConsentFormLoadFailureListener = void Function(FormError formError);
 
 class UserMessagingPlatform {
-
   /// Gets [ConsentInformation].
   ///
   ///
@@ -30,9 +29,9 @@ class UserMessagingPlatform {
     return UserMessagingChannel.instance.getConsentInformation();
   }
 
-  static void loadConsentForm(
-      OnConsentFormLoadSuccessListener successListener,
+  static void loadConsentForm(OnConsentFormLoadSuccessListener successListener,
       OnConsentFormLoadFailureListener failureListener) {
-    UserMessagingChannel.instance.loadConsentForm(successListener, failureListener);
+    UserMessagingChannel.instance
+        .loadConsentForm(successListener, failureListener);
   }
 }

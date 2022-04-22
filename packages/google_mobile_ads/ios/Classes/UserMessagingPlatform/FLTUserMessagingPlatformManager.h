@@ -15,7 +15,6 @@
 #import <Flutter/Flutter.h>
 #import <Foundation/Foundation.h>
 
-
 @interface FLTUserMessagingPlatformManager : NSObject
 
 - (instancetype _Nonnull)initWithBinaryMessenger:

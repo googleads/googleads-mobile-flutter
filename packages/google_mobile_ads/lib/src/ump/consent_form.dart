@@ -19,7 +19,6 @@ import 'form_error.dart';
 typedef OnConsentFormDismissedListener = void Function(FormError? formError);
 
 class ConsentForm {
-
   ConsentForm(this.hash);
 
   final int hash;

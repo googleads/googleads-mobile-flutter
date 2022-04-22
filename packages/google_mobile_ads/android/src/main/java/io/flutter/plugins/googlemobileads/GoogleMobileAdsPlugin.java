@@ -245,8 +245,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
             "plugins.flutter.io/google_mobile_ads/ad_widget",
             new GoogleMobileAdsViewFactory(instanceManager));
     appStateNotifier = new AppStateNotifier(binding.getBinaryMessenger());
-    userMessagingPlatformManager = new UserMessagingPlatformManager(
-        binding.getBinaryMessenger(), binding.getApplicationContext());
+    userMessagingPlatformManager =
+        new UserMessagingPlatformManager(
+            binding.getBinaryMessenger(), binding.getApplicationContext());
   }
 
   @Override

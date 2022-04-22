@@ -20,16 +20,9 @@ import 'form_error.dart';
 typedef OnConsentInfoUpdateSuccessListener = void Function();
 typedef OnConsentInfoUpdateFailureListener = void Function(FormError error);
 
-
-enum ConsentStatus {
-  unknown,
-  notRequired,
-  required,
-  obtained
-}
+enum ConsentStatus { unknown, notRequired, required, obtained }
 
 class ConsentInformation {
-
   ConsentInformation(this.hash);
 
   /// An identifier to the corresponding platform object.
@@ -58,5 +51,4 @@ class ConsentInformation {
   Future<void> reset() {
     return UserMessagingChannel.instance.reset(this);
   }
-
 }

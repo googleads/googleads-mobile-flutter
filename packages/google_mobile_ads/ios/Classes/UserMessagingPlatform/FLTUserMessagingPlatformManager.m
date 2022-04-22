@@ -13,26 +13,26 @@
 // limitations under the License.
 
 #import "FLTUserMessagingPlatformManager.h"
-#import "FLTUserMessagingPlatformReaderWriter.h"
 #import "../FLTAdUtil.h"
+#import "FLTUserMessagingPlatformReaderWriter.h"
 #include <UserMessagingPlatform/UserMessagingPlatform.h>
-
 
 @implementation FLTUserMessagingPlatformManager {
   FlutterMethodChannel *_methodChannel;
 }
 
 - (instancetype _Nonnull)initWithBinaryMessenger:
-(NSObject<FlutterBinaryMessenger> *_Nonnull)binaryMessenger {
+    (NSObject<FlutterBinaryMessenger> *_Nonnull)binaryMessenger {
   self = [self init];
   if (self) {
     NSObject<FlutterMethodCodec> *methodCodec = [FlutterStandardMethodCodec
-        codecWithReaderWriter:[[FLTUserMessagingPlatformReaderWriter alloc] init]];
+        codecWithReaderWriter:[[FLTUserMessagingPlatformReaderWriter alloc]
+                                  init]];
     _methodChannel = [[FlutterMethodChannel alloc]
            initWithName:@"plugins.flutter.io/google_mobile_ads/ump"
         binaryMessenger:binaryMessenger
                   codec:methodCodec];
-    
+
     FLTUserMessagingPlatformManager *__weak weakSelf = self;
     [_methodChannel setMethodCallHandler:^(FlutterMethodCall *_Nonnull call,
                                            FlutterResult _Nonnull result) {
@@ -47,55 +47,70 @@
   if ([call.method isEqualToString:@"ConsentInformation#reset"]) {
     [UMPConsentInformation.sharedInstance reset];
     result(nil);
-  } else if ([call.method isEqualToString:@"ConsentInformation#getConsentStatus"]) {
-    UMPConsentStatus status = UMPConsentInformation.sharedInstance.consentStatus;
-    result([[NSNumber alloc] initWithInteger: status]);
-  } else if ([call.method isEqualToString:@"UserMessagingPlatform#getConsentInformation"]) {
+  } else if ([call.method
+                 isEqualToString:@"ConsentInformation#getConsentStatus"]) {
+    UMPConsentStatus status =
+        UMPConsentInformation.sharedInstance.consentStatus;
+    result([[NSNumber alloc] initWithInteger:status]);
+  } else if ([call.method isEqualToString:
+                              @"UserMessagingPlatform#getConsentInformation"]) {
     result(UMPConsentInformation.sharedInstance);
-  } else if ([call.method isEqualToString:@"ConsentInfo#requestConsentInfoUpdate"]) {
+  } else if ([call.method
+                 isEqualToString:@"ConsentInfo#requestConsentInfoUpdate"]) {
     UMPRequestParameters *parameters = call.arguments[@"params"];
-    [UMPConsentInformation.sharedInstance requestConsentInfoUpdateWithParameters:parameters completionHandler:^(NSError * _Nullable error) {
-      if ([FLTAdUtil isNull:error]) {
-        result(nil);
-      } else {
-        result([FlutterError
-                errorWithCode:[[NSString alloc] initWithFormat:@"%ld", error.code]
-                  message:error.domain
-                  details:error.localizedDescription]);
-      }
-    }];
-  } else if ([call.method isEqualToString:@"UserMessagingPlatform#loadConsentForm"]) {
+    [UMPConsentInformation.sharedInstance
+        requestConsentInfoUpdateWithParameters:parameters
+                             completionHandler:^(NSError *_Nullable error) {
+                               if ([FLTAdUtil isNull:error]) {
+                                 result(nil);
+                               } else {
+                                 result([FlutterError
+                                     errorWithCode:[[NSString alloc]
+                                                       initWithFormat:@"%ld",
+                                                                      error
+                                                                          .code]
+                                           message:error.domain
+                                           details:error.localizedDescription]);
+                               }
+                             }];
+  } else if ([call.method
+                 isEqualToString:@"UserMessagingPlatform#loadConsentForm"]) {
     [UMPConsentForm
         loadWithCompletionHandler:^(UMPConsentForm *form, NSError *loadError) {
           if ([FLTAdUtil isNull:loadError]) {
             result(form);
           } else {
             result([FlutterError
-                    errorWithCode:[[NSString alloc] initWithFormat:@"%ld", loadError.code]
+                errorWithCode:[[NSString alloc]
+                                  initWithFormat:@"%ld", loadError.code]
                       message:loadError.domain
                       details:loadError.localizedDescription]);
           }
         }];
-  } else if ([call.method isEqualToString:@"ConsentInfo#isConsentFormAvailable"]) {
-    BOOL isAvailable = UMPConsentInformation.sharedInstance.formStatus == UMPFormStatusAvailable;
+  } else if ([call.method
+                 isEqualToString:@"ConsentInfo#isConsentFormAvailable"]) {
+    BOOL isAvailable = UMPConsentInformation.sharedInstance.formStatus ==
+                       UMPFormStatusAvailable;
     result([[NSNumber alloc] initWithBool:isAvailable]);
   } else if ([call.method isEqualToString:@"ConsentForm#show"]) {
     UMPConsentForm *consentForm = call.arguments[@"consentForm"];
-    [consentForm presentFromViewController: UIApplication.sharedApplication.delegate.window.rootViewController
-                         completionHandler:^(NSError * _Nullable error) {
-      if ([FLTAdUtil isNull:error]) {
-        result(nil);
-      } else {
-        result([FlutterError
-                errorWithCode:[[NSString alloc] initWithFormat:@"%ld", error.code]
-                  message:error.domain
-                  details:error.localizedDescription]);
-      }
-    }];
+    [consentForm
+        presentFromViewController:UIApplication.sharedApplication.delegate
+                                      .window.rootViewController
+                completionHandler:^(NSError *_Nullable error) {
+                  if ([FLTAdUtil isNull:error]) {
+                    result(nil);
+                  } else {
+                    result([FlutterError
+                        errorWithCode:[[NSString alloc]
+                                          initWithFormat:@"%ld", error.code]
+                              message:error.domain
+                              details:error.localizedDescription]);
+                  }
+                }];
   } else {
     result(FlutterMethodNotImplemented);
   }
 }
-
 
 @end

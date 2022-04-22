@@ -62,38 +62,42 @@ public class UserMessagingCodec extends StandardMessageCodec {
   @Override
   protected Object readValueOfType(byte type, ByteBuffer buffer) {
     switch (type) {
-      case VALUE_CONSENT_INFORMATION: {
-        Integer hash = (Integer) readValueOfType(buffer.get(), buffer);
-        return consentInformationMap.get(hash);
-      }
-      case VALUE_CONSENT_REQUEST_PARAMETERS: {
-        Boolean tfuac = (Boolean) readValueOfType(buffer.get(), buffer);
-        ConsentDebugSettings debugSettings = (ConsentDebugSettings) readValueOfType(buffer.get(),
-            buffer);
-        ConsentRequestParameters.Builder builder = new ConsentRequestParameters.Builder();
+      case VALUE_CONSENT_INFORMATION:
+        {
+          Integer hash = (Integer) readValueOfType(buffer.get(), buffer);
+          return consentInformationMap.get(hash);
+        }
+      case VALUE_CONSENT_REQUEST_PARAMETERS:
+        {
+          Boolean tfuac = (Boolean) readValueOfType(buffer.get(), buffer);
+          ConsentDebugSettings debugSettings =
+              (ConsentDebugSettings) readValueOfType(buffer.get(), buffer);
+          ConsentRequestParameters.Builder builder = new ConsentRequestParameters.Builder();
 
-        if (tfuac != null) {
-          builder.setTagForUnderAgeOfConsent(tfuac);
+          if (tfuac != null) {
+            builder.setTagForUnderAgeOfConsent(tfuac);
+          }
+          if (debugSettings != null) {
+            builder.setConsentDebugSettings(debugSettings);
+          }
+          return builder.build();
         }
-        if (debugSettings != null) {
-          builder.setConsentDebugSettings(debugSettings);
+      case VALUE_CONSENT_DEBUG_SETTINGS:
+        {
+          Integer settings = (Integer) readValueOfType(buffer.get(), buffer);
+          ConsentDebugSettings.Builder builder = new ConsentDebugSettings.Builder(context);
+          if (settings != null) {
+            builder.setDebugGeography(settings);
+          }
+          // TODO - remove this
+          builder.setForceTesting(true);
+          return builder.build();
         }
-        return builder.build();
-      }
-      case VALUE_CONSENT_DEBUG_SETTINGS: {
-        Integer settings = (Integer) readValueOfType(buffer.get(), buffer);
-        ConsentDebugSettings.Builder builder = new ConsentDebugSettings.Builder(context);
-        if (settings != null) {
-          builder.setDebugGeography(settings);
+      case VALUE_CONSENT_FORM:
+        {
+          Integer hash = (Integer) readValueOfType(buffer.get(), buffer);
+          return consentFormMap.get(hash);
         }
-        // TODO - remove this
-        builder.setForceTesting(true);
-        return builder.build();
-      }
-      case VALUE_CONSENT_FORM: {
-        Integer hash = (Integer) readValueOfType(buffer.get(), buffer);
-        return consentFormMap.get(hash);
-      }
       default:
         return super.readValueOfType(type, buffer);
     }

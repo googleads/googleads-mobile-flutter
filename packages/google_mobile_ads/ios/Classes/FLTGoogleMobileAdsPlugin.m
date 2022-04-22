@@ -102,8 +102,8 @@
         [[FLTAdInstanceManager alloc] initWithBinaryMessenger:binaryMessenger];
     _appStateNotifier =
         [[FLTAppStateNotifier alloc] initWithBinaryMessenger:binaryMessenger];
-    _userMessagingPlatformManager =
-        [[FLTUserMessagingPlatformManager alloc] initWithBinaryMessenger:binaryMessenger];
+    _userMessagingPlatformManager = [[FLTUserMessagingPlatformManager alloc]
+        initWithBinaryMessenger:binaryMessenger];
   }
 
   return self;

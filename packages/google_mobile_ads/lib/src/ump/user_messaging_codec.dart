@@ -21,7 +21,6 @@ import 'consent_request_parameters.dart';
 
 /// Codec for coding and decoding types in the ump sdk.
 class UserMessagingCodec extends StandardMessageCodec {
-
   static const int _valueConsentInformation = 128;
   static const int _valueConsentRequestParameters = 129;
   static const int _valueConsentDebugSettings = 130;
