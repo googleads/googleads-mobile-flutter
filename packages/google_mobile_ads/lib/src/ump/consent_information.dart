@@ -12,22 +12,44 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:google_mobile_ads/src/ump/user_messaging_channel.dart';
-
 import 'consent_request_parameters.dart';
 import 'form_error.dart';
+import 'user_messaging_channel.dart';
 
+/// Callback to be invoked when consent info is successfully updated.
 typedef OnConsentInfoUpdateSuccessListener = void Function();
+
+/// Callback to be invoked when consent info failed to update.
 typedef OnConsentInfoUpdateFailureListener = void Function(FormError error);
 
-enum ConsentStatus { unknown, notRequired, required, obtained }
+/// Consent status values.
+enum ConsentStatus {
+  /// User consent not required.
+  notRequired,
 
+  /// User consent obtained.
+  obtained,
+
+  /// User consent required but not yet obtained.
+  required,
+
+  /// Consent status is unknown.
+  unknown,
+}
+
+/// Utility methods for collecting consent from users.
 class ConsentInformation {
+  /// Constructor for [ConsentInformation].
+  ///
+  /// Should not be instantiated directly.
+  /// Instead use [UserMessagingPlatform.getConsentInformation()];
+  /// TODO - make this an abstract class.
   ConsentInformation(this.hash);
 
   /// An identifier to the corresponding platform object.
   final int hash;
 
+  /// Requests a consent information update.
   void requestConsentInfoUpdate(
       ConsentRequestParameters params,
       OnConsentInfoUpdateSuccessListener successListener,
@@ -36,10 +58,15 @@ class ConsentInformation {
         params, successListener, failureListener, this);
   }
 
+  /// Returns true if a ConsentForm is available, false otherwise.
   Future<bool> isConsentFormAvailable() {
     return UserMessagingChannel.instance.isConsentFormAvailable(this);
   }
 
+  /// Get the user’s consent status.
+  ///
+  /// This value is cached between app sessions and can be read before
+  /// requesting updated parameters.
   Future<ConsentStatus> getConsentStatus() {
     return UserMessagingChannel.instance.getConsentStatus(this);
   }

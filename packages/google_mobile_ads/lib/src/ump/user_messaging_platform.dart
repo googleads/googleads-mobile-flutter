@@ -17,18 +17,24 @@ import 'consent_information.dart';
 import 'form_error.dart';
 import 'user_messaging_channel.dart';
 
+/// Callback to be invoked when a consent form loads successfully
 typedef OnConsentFormLoadSuccessListener = void Function(
     ConsentForm consentForm);
+
+/// Callback to be invoked when a consent form failed to load.
 typedef OnConsentFormLoadFailureListener = void Function(FormError formError);
 
+/// Entry point for the User Messaging Platform SDK.
 class UserMessagingPlatform {
-  /// Gets [ConsentInformation].
-  ///
-  ///
+  /// Gets the [ConsentInformation].
   static Future<ConsentInformation> getConsentInformation() {
     return UserMessagingChannel.instance.getConsentInformation();
   }
 
+  /// Loads a ConsentForm.
+  ///
+  /// Check that [ConsentInformation.isConsentFormAvailable()] returns true
+  /// prior to calling this method.
   static void loadConsentForm(OnConsentFormLoadSuccessListener successListener,
       OnConsentFormLoadFailureListener failureListener) {
     UserMessagingChannel.instance

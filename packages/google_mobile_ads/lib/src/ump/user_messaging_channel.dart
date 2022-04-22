@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -23,7 +22,7 @@ import 'form_error.dart';
 import 'user_messaging_codec.dart';
 import 'user_messaging_platform.dart';
 
-/// Platform channel for ump sdk.
+/// Platform channel for UMP SDK.
 class UserMessagingChannel {
   static const _methodChannelName = 'plugins.flutter.io/google_mobile_ads/ump';
 

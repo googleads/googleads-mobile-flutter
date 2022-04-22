@@ -14,14 +14,24 @@
 
 /// Parameters sent on updating user consent info.
 class ConsentRequestParameters {
+  /// Construct a [ConsentRequestParameters].
   ConsentRequestParameters(
       {this.tagForUnderAgeOfConsent, this.consentDebugSettings});
 
+  /// Tag for underage of consent.
+  ///
+  /// False means users are not underage.
   bool? tagForUnderAgeOfConsent;
+
+  /// Debug settings to hardcode in test requests.
   ConsentDebugSettings? consentDebugSettings;
 }
 
+/// Debug settings to hardcode in test requests.
 class ConsentDebugSettings {
   ConsentDebugSettings({this.debugGeography});
   int? debugGeography;
+
+  /// TODO - define debugGeography enum
+  /// TODO - add test device identifiers
 }

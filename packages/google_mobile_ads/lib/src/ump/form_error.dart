@@ -14,8 +14,12 @@
 
 /// Error information about why a form operation failed.
 class FormError {
+  /// Init a [FormError] with the errorCode and message.
   FormError({required this.errorCode, required this.message});
 
+  /// TODO - update error codes. Maybe add enum
   final int errorCode;
+
+  /// The message describing the error.
   final String? message;
 }

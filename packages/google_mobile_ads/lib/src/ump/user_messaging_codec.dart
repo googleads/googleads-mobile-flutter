@@ -14,12 +14,12 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:google_mobile_ads/src/ump/consent_form.dart';
 
+import 'consent_form.dart';
 import 'consent_information.dart';
 import 'consent_request_parameters.dart';
 
-/// Codec for coding and decoding types in the ump sdk.
+/// Codec for coding and decoding types in the UMP SDK.
 class UserMessagingCodec extends StandardMessageCodec {
   static const int _valueConsentInformation = 128;
   static const int _valueConsentRequestParameters = 129;
