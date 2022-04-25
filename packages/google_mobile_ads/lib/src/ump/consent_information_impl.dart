@@ -25,6 +25,7 @@ class ConsentInformationImpl extends ConsentInformation {
   final int platformHash;
 
   /// Requests a consent information update.
+  @override
   void requestConsentInfoUpdate(
       ConsentRequestParameters params,
       OnConsentInfoUpdateSuccessListener successListener,

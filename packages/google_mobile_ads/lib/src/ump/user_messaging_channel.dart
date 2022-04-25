@@ -33,6 +33,7 @@ class UserMessagingChannel {
     StandardMethodCodec(UserMessagingCodec()),
   );
 
+  /// Get the current connsent information.
   Future<ConsentInformation> getConsentInformation() async {
     try {
       return (await _methodChannel.invokeMethod<ConsentInformation>(
@@ -42,6 +43,10 @@ class UserMessagingChannel {
     }
   }
 
+  /// Request a consent information update with [params].
+  ///
+  /// Invokes [successListener] or [failureListener] depending on if there was
+  /// an error.
   void requestConsentInfoUpdate(
       ConsentRequestParameters params,
       OnConsentInfoUpdateSuccessListener successListener,
@@ -62,6 +67,7 @@ class UserMessagingChannel {
     }
   }
 
+  /// Returns a future indicating whether a consent form is available.
   Future<bool> isConsentFormAvailable(ConsentInformation consentInfo) async {
     return (await _methodChannel.invokeMethod<bool>(
       'ConsentInfo#isConsentFormAvailable',
@@ -71,6 +77,7 @@ class UserMessagingChannel {
     ))!;
   }
 
+  /// Gets the consent status.
   Future<ConsentStatus> getConsentStatus(ConsentInformation consentInfo) async {
     int consentStatus = (await _methodChannel.invokeMethod<int>(
       'ConsentInformation#getConsentStatus',
@@ -110,6 +117,7 @@ class UserMessagingChannel {
     }
   }
 
+  /// Invokes reset API,
   Future<void> reset(ConsentInformation consentInfo) async {
     return _methodChannel.invokeMethod<void>(
       'ConsentInformation#reset',
@@ -119,6 +127,7 @@ class UserMessagingChannel {
     );
   }
 
+  /// Loads a consent form and calls the corresponding listener.
   void loadConsentForm(OnConsentFormLoadSuccessListener successListener,
       OnConsentFormLoadFailureListener failureListener) async {
     try {
@@ -131,6 +140,7 @@ class UserMessagingChannel {
     }
   }
 
+  /// Show the consent form.
   void show(ConsentForm consentForm,
       OnConsentFormDismissedListener onConsentFormDismissedListener) async {
     FormError? formError = (await _methodChannel.invokeMethod<FormError?>(
