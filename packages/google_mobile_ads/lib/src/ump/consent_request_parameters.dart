@@ -32,11 +32,23 @@ class ConsentDebugSettings {
   /// Construct a [ConsentDebugSettings].
   ConsentDebugSettings({this.debugGeography, this.testIdentifiers});
 
-  /// Debug geography. TODO - define debugGeography enum
-  int? debugGeography;
+  /// Debug geography for testing geography.
+  DebugGeography? debugGeography;
 
   /// List of device identifier strings.
   ///
   /// Debug features are enabled for devices with these identifiers.
   List<String>? testIdentifiers;
+}
+
+/// Debug values for testing geography.
+enum DebugGeography {
+  /// Debug geography disabled.
+  debugGeographyDisabled,
+
+  /// Geography appears as in EEA for debug devices.
+  debugGeographyEea,
+
+  /// Geography appears as not in EEA for debug devices.
+  debugGeographyNotEea
 }

@@ -34,7 +34,7 @@ class UserMessagingCodec extends StandardMessageCodec {
       writeValue(buffer, value.consentDebugSettings);
     } else if (value is ConsentDebugSettings) {
       buffer.putUint8(_valueConsentDebugSettings);
-      writeValue(buffer, value.debugGeography);
+      writeValue(buffer, value.debugGeography?.index);
       writeValue(buffer, value.testIdentifiers);
     } else if (value is ConsentInformationImpl) {
       buffer.putUint8(_valueConsentInformation);

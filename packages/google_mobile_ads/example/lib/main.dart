@@ -68,7 +68,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _obtainConsent() async {
-    var consentDebugSettings = ConsentDebugSettings(debugGeography: 1);
+    var consentDebugSettings = ConsentDebugSettings(
+        debugGeography: DebugGeography.debugGeographyDisabled);
     var params = ConsentRequestParameters(
         tagForUnderAgeOfConsent: false,
         consentDebugSettings: consentDebugSettings);
