@@ -26,6 +26,7 @@ import 'user_messaging_platform.dart';
 class UserMessagingChannel {
   static const _methodChannelName = 'plugins.flutter.io/google_mobile_ads/ump';
 
+  /// The static [UserMessagingChannel] instance.
   static UserMessagingChannel instance = UserMessagingChannel();
 
   final MethodChannel _methodChannel = MethodChannel(
