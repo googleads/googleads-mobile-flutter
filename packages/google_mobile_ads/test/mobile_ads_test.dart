@@ -185,7 +185,7 @@ void main() {
 
       AdInspectorError? error = await completer.future;
       expect(error!.message, 'message');
-      expect(error.code, 1);
+      expect(error.code, '1');
       expect(error.domain, 'details');
     });
 
