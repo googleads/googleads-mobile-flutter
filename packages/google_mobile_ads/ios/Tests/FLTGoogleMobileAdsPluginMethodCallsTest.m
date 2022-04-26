@@ -372,9 +372,9 @@
 }
 
 - (void)testOpenAdInspectorSuccess {
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"MobileAds#openAdInspector"
-                     arguments:@{}];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#openAdInspector"
+                                        arguments:@{}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -386,26 +386,29 @@
   id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
   OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
       .andReturn((GADMobileAds *)gadMobileAdsClassMock);
-  
-  OCMStub([gadMobileAdsClassMock presentAdInspectorFromViewController:[OCMArg any] completionHandler:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation) {
-      GADAdInspectorCompletionHandler completionHandler;
-      [invocation getArgument:&completionHandler atIndex:3];
-      completionHandler(nil);
-    });
 
+  OCMStub([gadMobileAdsClassMock
+              presentAdInspectorFromViewController:[OCMArg any]
+                                 completionHandler:[OCMArg any]])
+      .andDo(^(NSInvocation *invocation) {
+        GADAdInspectorCompletionHandler completionHandler;
+        [invocation getArgument:&completionHandler atIndex:3];
+        completionHandler(nil);
+      });
 
   [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
-  OCMVerify([gadMobileAdsClassMock presentAdInspectorFromViewController:[OCMArg any] completionHandler:[OCMArg any]]);
+  OCMVerify([gadMobileAdsClassMock
+      presentAdInspectorFromViewController:[OCMArg any]
+                         completionHandler:[OCMArg any]]);
   XCTAssertTrue(resultInvoked);
   XCTAssertEqual(returnedResult, nil);
 }
 
 - (void)testOpenAdInspectorError {
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"MobileAds#openAdInspector"
-                     arguments:@{}];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#openAdInspector"
+                                        arguments:@{}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -421,21 +424,24 @@
     NSLocalizedDescriptionKey : @"message",
   };
   NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
-  
-  OCMStub([gadMobileAdsClassMock presentAdInspectorFromViewController:[OCMArg any] completionHandler:[OCMArg any]])
-    .andDo(^(NSInvocation *invocation) {
-      GADAdInspectorCompletionHandler completionHandler;
-      [invocation getArgument:&completionHandler atIndex:3];
-      completionHandler(error);
-    });
 
+  OCMStub([gadMobileAdsClassMock
+              presentAdInspectorFromViewController:[OCMArg any]
+                                 completionHandler:[OCMArg any]])
+      .andDo(^(NSInvocation *invocation) {
+        GADAdInspectorCompletionHandler completionHandler;
+        [invocation getArgument:&completionHandler atIndex:3];
+        completionHandler(error);
+      });
 
   [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
-  OCMVerify([gadMobileAdsClassMock presentAdInspectorFromViewController:[OCMArg any] completionHandler:[OCMArg any]]);
+  OCMVerify([gadMobileAdsClassMock
+      presentAdInspectorFromViewController:[OCMArg any]
+                         completionHandler:[OCMArg any]]);
   XCTAssertTrue(resultInvoked);
   FlutterError *resultError = (FlutterError *)returnedResult;
-  
+
   XCTAssertEqualObjects(resultError.code, @"1");
   XCTAssertEqualObjects(resultError.message, @"message");
   XCTAssertEqualObjects(resultError.details, @"domain");

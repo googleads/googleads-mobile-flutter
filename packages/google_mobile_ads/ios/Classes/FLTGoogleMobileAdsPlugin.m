@@ -238,16 +238,20 @@
                                completion:nil];
     result(nil);
   } else if ([call.method isEqualToString:@"MobileAds#openAdInspector"]) {
-    [GADMobileAds.sharedInstance presentAdInspectorFromViewController:rootController
-      completionHandler:^(NSError *error) {
-      if (error) {
-        result([FlutterError errorWithCode:[NSString stringWithFormat:@"%ld", (long) error.code]
-                                   message:error.localizedDescription
-                                   details:error.domain]);
-      } else {
-        result(nil);
-      }
-    }];
+    [GADMobileAds.sharedInstance
+        presentAdInspectorFromViewController:rootController
+                           completionHandler:^(NSError *error) {
+                             if (error) {
+                               result([FlutterError
+                                   errorWithCode:[NSString stringWithFormat:
+                                                               @"%ld",
+                                                               (long)error.code]
+                                         message:error.localizedDescription
+                                         details:error.domain]);
+                             } else {
+                               result(nil);
+                             }
+                           }];
   } else if ([call.method isEqualToString:@"MobileAds#getVersionString"]) {
     result([GADMobileAds.sharedInstance sdkVersion]);
   } else if ([call.method

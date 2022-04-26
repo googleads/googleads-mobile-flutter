@@ -781,8 +781,8 @@ class AdInstanceManager {
       await channel.invokeMethod<void>('MobileAds#openAdInspector');
       listener(null);
     } on PlatformException catch (e) {
-      var error = AdInspectorError(
-          code: e.code, domain: e.details, message: e.message);
+      var error =
+          AdInspectorError(code: e.code, domain: e.details, message: e.message);
       listener(error);
     }
   }
