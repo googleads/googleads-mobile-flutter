@@ -30,10 +30,13 @@ class ConsentRequestParameters {
 /// Debug settings to hardcode in test requests.
 class ConsentDebugSettings {
   /// Construct a [ConsentDebugSettings].
-  ConsentDebugSettings({this.debugGeography});
+  ConsentDebugSettings({this.debugGeography, this.testIdentifiers});
 
   /// Debug geography. TODO - define debugGeography enum
   int? debugGeography;
 
-  /// TODO - add test device identifiers
+  /// List of device identifier strings.
+  ///
+  /// Debug features are enabled for devices with these identifiers.
+  List<String>? testIdentifiers;
 }

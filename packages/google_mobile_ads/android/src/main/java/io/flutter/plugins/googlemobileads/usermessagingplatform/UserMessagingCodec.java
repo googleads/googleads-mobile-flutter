@@ -24,6 +24,7 @@ import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserMessagingCodec extends StandardMessageCodec {
@@ -85,12 +86,16 @@ public class UserMessagingCodec extends StandardMessageCodec {
       case VALUE_CONSENT_DEBUG_SETTINGS:
         {
           Integer settings = (Integer) readValueOfType(buffer.get(), buffer);
+          List<String> testIdentifiers = (List<String>) readValueOfType(buffer.get(), buffer);
           ConsentDebugSettings.Builder builder = new ConsentDebugSettings.Builder(context);
           if (settings != null) {
             builder.setDebugGeography(settings);
           }
-          // TODO - remove this
-          builder.setForceTesting(true);
+          if (testIdentifiers != null) {
+            for (String testIdentifier : testIdentifiers) {
+              builder.addTestDeviceHashedId(testIdentifier);
+            }
+          }
           return builder.build();
         }
       case VALUE_CONSENT_FORM:

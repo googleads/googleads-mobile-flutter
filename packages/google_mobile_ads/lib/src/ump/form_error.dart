@@ -17,7 +17,12 @@ class FormError {
   /// Init a [FormError] with the errorCode and message.
   FormError({required this.errorCode, required this.message});
 
-  /// TODO - update error codes. Maybe add enum
+  /// Code for the error.
+  ///
+  /// These come from corresponding Android and iOS platform objects.
+  /// See https://developers.google.com/admob/ump/android/api/reference/com/google/android/ump/FormError.ErrorCode
+  /// and https://developers.google.com/admob/ump/ios/api/reference/Enums/UMPFormErrorCode
+  /// for detailed error code descriptions.
   final int errorCode;
 
   /// The message describing the error.

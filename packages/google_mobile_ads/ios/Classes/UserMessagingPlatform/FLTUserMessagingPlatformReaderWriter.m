@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "FLTUserMessagingPlatformReaderWriter.h"
+#import "../FLTAdUtil.h"
 #include <UserMessagingPlatform/UserMessagingPlatform.h>
 
 // The type values below must be consistent for each platform.
@@ -103,7 +104,14 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
   case FLTValueConsentDebugSettings: {
     UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
     NSNumber *geography = [self readValueOfType:[self readByte]];
-    debugSettings.geography = geography.intValue;
+    NSArray<NSString *> *testIdentifiers =
+        [self readValueOfType:[self readByte]];
+    if ([FLTAdUtil isNotNull:geography]) {
+      debugSettings.geography = geography.intValue;
+    }
+    if ([FLTAdUtil isNotNull:testIdentifiers]) {
+      debugSettings.testDeviceIdentifiers = testIdentifiers;
+    }
     return debugSettings;
   }
   case FLTValueConsentForm: {
