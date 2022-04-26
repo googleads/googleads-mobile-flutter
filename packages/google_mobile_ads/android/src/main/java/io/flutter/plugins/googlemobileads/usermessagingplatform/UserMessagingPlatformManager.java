@@ -34,6 +34,7 @@ import io.flutter.plugin.common.StandardMethodCodec;
 public class UserMessagingPlatformManager implements MethodCallHandler {
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/google_mobile_ads/ump";
+  private static final String INTERNAL_ERROR_CODE = "UserMessagingPlatformManager";
 
   private final UserMessagingCodec userMessagingCodec;
   private final MethodChannel methodChannel;
@@ -61,8 +62,8 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
         {
           ConsentInformation consentInformation = call.argument("consentInformation");
           if (consentInformation == null) {
-            // TODO = update the errors
-            result.error("2", "Unable to find ConsentInfo in ConsentInfo#reset", null);
+            result.error(
+                INTERNAL_ERROR_CODE, "Unable to find ConsentInfo in ConsentInfo#reset", null);
           } else {
             consentInformation.reset();
             result.success(null);
@@ -73,8 +74,8 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
         {
           ConsentInformation consentInformation = call.argument("consentInformation");
           if (consentInformation == null) {
-            // TODO = update the errors
-            result.error("2", "Unable to find ConsentInfo in ConsentInfo#reset", null);
+            result.error(
+                INTERNAL_ERROR_CODE, "Unable to find ConsentInfo in ConsentInfo#reset", null);
           } else {
             result.success(consentInformation.getConsentStatus());
           }
@@ -92,16 +93,17 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
           ConsentRequestParameters consentRequestParameters = call.argument("params");
           ConsentInformation consentInformation = call.argument("contentInformation");
           if (activity == null) {
-            // TODO - update error codes
             result.error(
-                "1",
+                INTERNAL_ERROR_CODE,
                 "ConsentInfo#requestConsentInfoUpdate called before plugin has been registered to an activity.",
                 null);
             break;
           }
           if (consentInformation == null) {
             result.error(
-                "2", "Unable to find ConsentInfo in ConsentInfo#requestConsentInfoUpdate", null);
+                INTERNAL_ERROR_CODE,
+                "Unable to find ConsentInfo in ConsentInfo#requestConsentInfoUpdate",
+                null);
             break;
           }
           consentInformation.requestConsentInfoUpdate(
@@ -129,7 +131,9 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
           ConsentInformation consentInformation = call.argument("consentInformation");
           if (consentInformation == null) {
             result.error(
-                "2", "Unable to find ConsentInfo in ConsentInfo#requestConsentInfoUpdate", null);
+                INTERNAL_ERROR_CODE,
+                "Unable to find ConsentInfo in ConsentInfo#requestConsentInfoUpdate",
+                null);
           } else {
             result.success(consentInformation.isConsentFormAvailable());
           }
@@ -139,9 +143,10 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
         {
           ConsentForm consentForm = call.argument("consentForm");
           if (consentForm == null) {
-            // TODO - update these error codes
             result.error(
-                "2", "Unable to find ConsentInfo in ConsentInfo#requestConsentInfoUpdate", null);
+                INTERNAL_ERROR_CODE,
+                "Unable to find ConsentInfo in ConsentInfo#requestConsentInfoUpdate",
+                null);
           } else {
             consentForm.show(activity, (result::success));
           }
