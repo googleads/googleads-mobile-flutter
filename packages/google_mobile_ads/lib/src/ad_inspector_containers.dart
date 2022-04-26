@@ -19,13 +19,13 @@ typedef OnAdInspectorClosedListener = void Function(AdInspectorError?);
 class AdInspectorError {
   /// Create an AdInspectorError with the given code, domain and message.
   AdInspectorError({
-    required this.code,
-    required this.domain,
-    required this.message,
+    this.code,
+    this.domain,
+    this.message,
   });
 
   /// Code to identifier the error.
-  final int code;
+  final String? code;
 
   /// The domain from which the error came.
   final String? domain;

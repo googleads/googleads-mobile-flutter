@@ -782,7 +782,7 @@ class AdInstanceManager {
       listener(null);
     } on PlatformException catch (e) {
       var error = AdInspectorError(
-          code: int.parse(e.code), domain: e.details, message: e.message);
+          code: e.code, domain: e.details, message: e.message);
       listener(error);
     }
   }
