@@ -26,8 +26,6 @@ import 'reusable_inline_example.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
-      testDeviceIds: ['32CD20B4326E0901E14763495BA1ACD8']));
   MobileAds.instance.initialize();
   runApp(MyApp());
 }

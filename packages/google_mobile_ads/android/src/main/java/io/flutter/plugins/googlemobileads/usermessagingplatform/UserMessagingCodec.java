@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Codec for UMP SDK. */
 public class UserMessagingCodec extends StandardMessageCodec {
 
   private static final byte VALUE_CONSENT_INFORMATION = (byte) 128;
