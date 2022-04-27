@@ -64,52 +64,6 @@ class _MyAppState extends State<MyApp> {
     _createInterstitialAd();
     _createRewardedAd();
     _createRewardedInterstitialAd();
-    _obtainConsent();
-  }
-
-  void _obtainConsent() async {
-    var consentDebugSettings = ConsentDebugSettings(
-        debugGeography: DebugGeography.debugGeographyDisabled);
-    var params = ConsentRequestParameters(
-        tagForUnderAgeOfConsent: false,
-        consentDebugSettings: consentDebugSettings);
-    var consentInfo = await UserMessagingPlatform.getConsentInformation();
-
-    // Reset the UMP SDK state for testing purposes
-    await consentInfo.reset();
-    consentInfo.requestConsentInfoUpdate(
-      params,
-      () async {
-        debugPrint('Requested consent info update success');
-        if (await consentInfo.isConsentFormAvailable()) {
-          _loadForm(consentInfo);
-        } else {
-          debugPrint('Consent form not available');
-        }
-      },
-      (error) {
-        debugPrint('Error requesting consent info update: $error');
-      },
-    );
-  }
-
-  void _loadForm(ConsentInformation consentInformation) async {
-    UserMessagingPlatform.loadConsentForm(
-      (consentForm) async {
-        ConsentStatus status = await consentInformation.getConsentStatus();
-        if (status == ConsentStatus.required) {
-          consentForm.show((formError) {
-            if (formError != null) {
-              debugPrint('Error showing consent form: $formError');
-            }
-            _loadForm(consentInformation);
-          });
-        }
-      },
-      (formError) {
-        debugPrint('Error loading consent form: $formError');
-      },
-    );
   }
 
   void _createInterstitialAd() {
