@@ -19,10 +19,15 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.ump.ConsentForm;
+import com.google.android.ump.ConsentForm.OnConsentFormDismissedListener;
 import com.google.android.ump.ConsentInformation;
+import com.google.android.ump.ConsentInformation.OnConsentInfoUpdateFailureListener;
+import com.google.android.ump.ConsentInformation.OnConsentInfoUpdateSuccessListener;
 import com.google.android.ump.ConsentRequestParameters;
 import com.google.android.ump.FormError;
 import com.google.android.ump.UserMessagingPlatform;
+import com.google.android.ump.UserMessagingPlatform.OnConsentFormLoadFailureListener;
+import com.google.android.ump.UserMessagingPlatform.OnConsentFormLoadSuccessListener;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -38,7 +43,7 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
 
   private final UserMessagingCodec userMessagingCodec;
   private final MethodChannel methodChannel;
-  private Context context;
+  private final Context context;
 
   @Nullable private Activity activity;
 
@@ -51,12 +56,12 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
     this.context = context;
   }
 
-  public void setActivity(Activity activity) {
+  public void setActivity(@Nullable Activity activity) {
     this.activity = activity;
   }
 
   @Override
-  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+  public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
     switch (call.method) {
       case "ConsentInformation#reset":
         {
@@ -109,21 +114,35 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
           consentInformation.requestConsentInfoUpdate(
               activity,
               consentRequestParameters,
-              () -> {
-                result.success(null);
+              new OnConsentInfoUpdateSuccessListener() {
+                @Override
+                public void onConsentInfoUpdateSuccess() {
+                  result.success(null);
+                }
               },
-              (FormError error) -> {
-                result.error(Integer.toString(error.getErrorCode()), error.getMessage(), null);
+              new OnConsentInfoUpdateFailureListener() {
+                @Override
+                public void onConsentInfoUpdateFailure(FormError error) {
+                  result.error(Integer.toString(error.getErrorCode()), error.getMessage(), null);
+                }
               });
           break;
         }
       case "UserMessagingPlatform#loadConsentForm":
         UserMessagingPlatform.loadConsentForm(
             context,
-            result::success,
-            (FormError formError) -> {
-              result.error(
-                  Integer.toString(formError.getErrorCode()), formError.getMessage(), null);
+            new OnConsentFormLoadSuccessListener() {
+              @Override
+              public void onConsentFormLoadSuccess(ConsentForm consentForm) {
+                result.success(consentForm);
+              }
+            },
+            new OnConsentFormLoadFailureListener() {
+              @Override
+              public void onConsentFormLoadFailure(FormError formError) {
+                result.error(
+                    Integer.toString(formError.getErrorCode()), formError.getMessage(), null);
+              }
             });
         break;
       case "ConsentInfo#isConsentFormAvailable":
@@ -148,7 +167,14 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
                 "Unable to find ConsentInfo in ConsentInfo#requestConsentInfoUpdate",
                 null);
           } else {
-            consentForm.show(activity, (result::success));
+            consentForm.show(
+                activity,
+                new OnConsentFormDismissedListener() {
+                  @Override
+                  public void onConsentFormDismissed(@Nullable FormError formError) {
+                    result.success(formError);
+                  }
+                });
           }
           break;
         }
