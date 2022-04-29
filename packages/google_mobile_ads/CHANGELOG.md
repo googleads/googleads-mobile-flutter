@@ -1,5 +1,6 @@
 ## 1.3.0
 * Adds support for programmatically opening the debug options menu using`MobileAds.openDebugMenu(String adUnitId)`
+* Adds support for Ad inspector APIs
 
 ## 1.2.0
 * Set new minimum height for `FluidAdWidget`.

@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:async';
+
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads/src/ad_inspector_containers.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -147,6 +150,43 @@ void main() {
       expect(status.state, AdapterInitializationState.notReady);
       expect(status.description, 'desc');
       expect(status.latency, 0);
+    });
+
+    test('$MobileAds.openAdInspector success', () async {
+      MethodChannel(
+        'plugins.flutter.io/google_mobile_ads',
+        StandardMethodCodec(AdMessageCodec()),
+      ).setMockMethodCallHandler((MethodCall methodCall) async {
+        return null;
+      });
+
+      Completer<AdInspectorError?> completer = Completer<AdInspectorError?>();
+      MobileAds.instance.openAdInspector((error) {
+        completer.complete(error);
+      });
+
+      AdInspectorError? error = await completer.future;
+      expect(error, null);
+    });
+
+    test('$MobileAds.openAdInspector error', () async {
+      MethodChannel(
+        'plugins.flutter.io/google_mobile_ads',
+        StandardMethodCodec(AdMessageCodec()),
+      ).setMockMethodCallHandler((MethodCall methodCall) async {
+        throw PlatformException(
+            code: '1', details: 'details', message: 'message');
+      });
+
+      Completer<AdInspectorError?> completer = Completer<AdInspectorError?>();
+      MobileAds.instance.openAdInspector((error) {
+        completer.complete(error);
+      });
+
+      AdInspectorError? error = await completer.future;
+      expect(error!.message, 'message');
+      expect(error.code, '1');
+      expect(error.domain, 'details');
     });
 
     test('$MobileAds.setSameAppKeyEnabled', () async {
