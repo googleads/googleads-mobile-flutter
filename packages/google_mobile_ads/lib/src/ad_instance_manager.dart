@@ -19,6 +19,7 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:google_mobile_ads/src/ad_inspector_containers.dart';
 import 'package:google_mobile_ads/src/ad_listeners.dart';
 import 'package:google_mobile_ads/src/mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
@@ -772,6 +773,18 @@ class AdInstanceManager {
         'adUnitId': adUnitId,
       },
     );
+  }
+
+  /// Send a platform message to open the ad inspector.
+  void openAdInspector(OnAdInspectorClosedListener listener) async {
+    try {
+      await channel.invokeMethod<void>('MobileAds#openAdInspector');
+      listener(null);
+    } on PlatformException catch (e) {
+      var error =
+          AdInspectorError(code: e.code, domain: e.details, message: e.message);
+      listener(error);
+    }
   }
 }
 

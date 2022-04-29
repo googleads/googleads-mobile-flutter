@@ -19,8 +19,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import com.google.android.gms.ads.AdInspectorError;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnAdInspectorClosedListener;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
@@ -311,9 +313,24 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         instanceManager.disposeAllAds();
         result.success(null);
         break;
-
       case "MobileAds#initialize":
         flutterMobileAds.initialize(context, new FlutterInitializationListener(result));
+        break;
+      case "MobileAds#openAdInspector":
+        flutterMobileAds.openAdInspector(
+            context,
+            new OnAdInspectorClosedListener() {
+              @Override
+              public void onAdInspectorClosed(@Nullable AdInspectorError adInspectorError) {
+                if (adInspectorError != null) {
+                  String errorCode = Integer.toString(adInspectorError.getCode());
+                  result.error(
+                      errorCode, adInspectorError.getMessage(), adInspectorError.getDomain());
+                } else {
+                  result.success(null);
+                }
+              }
+            });
         break;
       case "MobileAds#getRequestConfiguration":
         result.success(flutterMobileAds.getRequestConfiguration());
