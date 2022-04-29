@@ -55,8 +55,8 @@
   } else if ([call.method isEqualToString:
                               @"UserMessagingPlatform#getConsentInformation"]) {
     result(UMPConsentInformation.sharedInstance);
-  } else if ([call.method
-                 isEqualToString:@"ConsentInfo#requestConsentInfoUpdate"]) {
+  } else if ([call.method isEqualToString:
+                              @"ConsentInformation#requestConsentInfoUpdate"]) {
     UMPRequestParameters *parameters = call.arguments[@"params"];
     [UMPConsentInformation.sharedInstance
         requestConsentInfoUpdateWithParameters:parameters
@@ -87,8 +87,8 @@
                       details:loadError.localizedDescription]);
           }
         }];
-  } else if ([call.method
-                 isEqualToString:@"ConsentInfo#isConsentFormAvailable"]) {
+  } else if ([call.method isEqualToString:
+                              @"ConsentInformation#isConsentFormAvailable"]) {
     BOOL isAvailable = UMPConsentInformation.sharedInstance.formStatus ==
                        UMPFormStatusAvailable;
     result([[NSNumber alloc] initWithBool:isAvailable]);

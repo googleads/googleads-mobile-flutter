@@ -25,6 +25,13 @@ class ConsentRequestParameters {
 
   /// Debug settings to hardcode in test requests.
   ConsentDebugSettings? consentDebugSettings;
+
+  @override
+  bool operator ==(Object other) {
+    return other is ConsentRequestParameters &&
+        tagForUnderAgeOfConsent == other.tagForUnderAgeOfConsent &&
+        consentDebugSettings == other.consentDebugSettings;
+  }
 }
 
 /// Debug settings to hardcode in test requests.
@@ -39,6 +46,13 @@ class ConsentDebugSettings {
   ///
   /// Debug features are enabled for devices with these identifiers.
   List<String>? testIdentifiers;
+
+  @override
+  bool operator ==(Object other) {
+    return other is ConsentDebugSettings &&
+        debugGeography == other.debugGeography &&
+        testIdentifiers == other.testIdentifiers;
+  }
 }
 
 /// Debug values for testing geography.

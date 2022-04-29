@@ -68,7 +68,9 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
           ConsentInformation consentInformation = call.argument("consentInformation");
           if (consentInformation == null) {
             result.error(
-                INTERNAL_ERROR_CODE, "Unable to find ConsentInfo in ConsentInfo#reset", null);
+                INTERNAL_ERROR_CODE,
+                "Unable to find ConsentInfo in ConsentInformation#reset",
+                null);
           } else {
             consentInformation.reset();
             result.success(null);
@@ -80,7 +82,9 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
           ConsentInformation consentInformation = call.argument("consentInformation");
           if (consentInformation == null) {
             result.error(
-                INTERNAL_ERROR_CODE, "Unable to find ConsentInfo in ConsentInfo#reset", null);
+                INTERNAL_ERROR_CODE,
+                "Unable to find ConsentInfo in ConsentInformation#reset",
+                null);
           } else {
             result.success(consentInformation.getConsentStatus());
           }
@@ -93,21 +97,21 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
           result.success(consentInformation);
           break;
         }
-      case "ConsentInfo#requestConsentInfoUpdate":
+      case "ConsentInformation#requestConsentInfoUpdate":
         {
           ConsentRequestParameters consentRequestParameters = call.argument("params");
-          ConsentInformation consentInformation = call.argument("contentInformation");
+          ConsentInformation consentInformation = call.argument("consentInformation");
           if (activity == null) {
             result.error(
                 INTERNAL_ERROR_CODE,
-                "ConsentInfo#requestConsentInfoUpdate called before plugin has been registered to an activity.",
+                "ConsentInformation#requestConsentInfoUpdate called before plugin has been registered to an activity.",
                 null);
             break;
           }
           if (consentInformation == null) {
             result.error(
                 INTERNAL_ERROR_CODE,
-                "Unable to find ConsentInfo in ConsentInfo#requestConsentInfoUpdate",
+                "Unable to find ConsentInfo in ConsentInformation#requestConsentInfoUpdate",
                 null);
             break;
           }
@@ -145,13 +149,13 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
               }
             });
         break;
-      case "ConsentInfo#isConsentFormAvailable":
+      case "ConsentInformation#isConsentFormAvailable":
         {
           ConsentInformation consentInformation = call.argument("consentInformation");
           if (consentInformation == null) {
             result.error(
                 INTERNAL_ERROR_CODE,
-                "Unable to find ConsentInfo in ConsentInfo#requestConsentInfoUpdate",
+                "Unable to find ConsentInfo in ConsentInformation#requestConsentInfoUpdate",
                 null);
           } else {
             result.success(consentInformation.isConsentFormAvailable());
@@ -164,7 +168,7 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
           if (consentForm == null) {
             result.error(
                 INTERNAL_ERROR_CODE,
-                "Unable to find ConsentInfo in ConsentInfo#requestConsentInfoUpdate",
+                "Unable to find ConsentInfo in ConsentInformation#requestConsentInfoUpdate",
                 null);
           } else {
             consentForm.show(
@@ -172,7 +176,12 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
                 new OnConsentFormDismissedListener() {
                   @Override
                   public void onConsentFormDismissed(@Nullable FormError formError) {
-                    result.success(formError);
+                    if (formError != null) {
+                      result.error(
+                          Integer.toString(formError.getErrorCode()), formError.getMessage(), null);
+                    } else {
+                      result.success(null);
+                    }
                   }
                 });
           }
