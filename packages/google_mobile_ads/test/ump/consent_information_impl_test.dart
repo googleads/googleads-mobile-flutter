@@ -71,7 +71,7 @@ void main() {
     test('requestConsentInfoUpdate() success', () async {
       when(mockChannel.requestConsentInfoUpdate(any, any, any, any))
           .thenAnswer((invocation) {
-            invocation.positionalArguments[1]();
+        invocation.positionalArguments[1]();
       });
 
       ConsentInformationImpl consentInfo = ConsentInformationImpl(1);
@@ -85,7 +85,8 @@ void main() {
           (error) => errorCompleter.complete(error));
 
       await successCompleter.future;
-      verify(mockChannel.requestConsentInfoUpdate(params, any, any, consentInfo));
+      verify(
+          mockChannel.requestConsentInfoUpdate(params, any, any, consentInfo));
       expect(successCompleter.isCompleted, true);
       expect(errorCompleter.isCompleted, false);
     });
@@ -104,11 +105,12 @@ void main() {
 
       consentInfo.requestConsentInfoUpdate(
           params,
-              () => successCompleter.complete(),
-              (error) => errorCompleter.complete(error));
+          () => successCompleter.complete(),
+          (error) => errorCompleter.complete(error));
 
       FormError responseError = await errorCompleter.future;
-      verify(mockChannel.requestConsentInfoUpdate(params, any, any, consentInfo));
+      verify(
+          mockChannel.requestConsentInfoUpdate(params, any, any, consentInfo));
       expect(successCompleter.isCompleted, false);
       expect(errorCompleter.isCompleted, true);
       expect(responseError, formError);

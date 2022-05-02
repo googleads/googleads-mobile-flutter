@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -28,7 +27,6 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('UserMessagingCodec', () {
-
     /// Sut.
     final UserMessagingCodec codec = UserMessagingCodec();
 
