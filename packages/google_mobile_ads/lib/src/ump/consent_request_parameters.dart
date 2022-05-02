@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:flutter/foundation.dart';
+
 /// Parameters sent on updating user consent info.
 class ConsentRequestParameters {
   /// Construct a [ConsentRequestParameters].
@@ -51,7 +53,7 @@ class ConsentDebugSettings {
   bool operator ==(Object other) {
     return other is ConsentDebugSettings &&
         debugGeography == other.debugGeography &&
-        testIdentifiers == other.testIdentifiers;
+        listEquals(testIdentifiers, other.testIdentifiers);
   }
 }
 

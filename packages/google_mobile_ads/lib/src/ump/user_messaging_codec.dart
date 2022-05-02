@@ -63,7 +63,8 @@ class UserMessagingCodec extends StandardMessageCodec {
         if (debugGeographyInt != null) {
           debugGeography = DebugGeography.values[debugGeographyInt];
         }
-        List<String>? testIds = readValueOfType(buffer.getUint8(), buffer);
+        List<String>? testIds =
+          readValueOfType(buffer.getUint8(), buffer)?.cast<String>();
         return ConsentDebugSettings(
             debugGeography: debugGeography, testIdentifiers: testIds);
       case _valueConsentInformation:

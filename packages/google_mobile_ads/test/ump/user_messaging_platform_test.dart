@@ -14,7 +14,6 @@
 
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_mobile_ads/src/ump/consent_form.dart';
@@ -24,7 +23,6 @@ import 'package:google_mobile_ads/src/ump/form_error.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:google_mobile_ads/src/ump/user_messaging_channel.dart';
-import 'package:google_mobile_ads/src/ump/user_messaging_codec.dart';
 
 import 'user_messaging_platform_test.mocks.dart';
 
