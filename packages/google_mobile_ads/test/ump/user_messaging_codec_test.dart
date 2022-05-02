@@ -32,10 +32,6 @@ void main() {
     /// Sut.
     final UserMessagingCodec codec = UserMessagingCodec();
 
-    setUpAll(() async {
-
-    });
-
     test('encode and decode ConsentInformation', () async {
       ConsentInformationImpl info = ConsentInformationImpl(12345);
       final ByteData? byteData = codec.encodeMessage(info);
