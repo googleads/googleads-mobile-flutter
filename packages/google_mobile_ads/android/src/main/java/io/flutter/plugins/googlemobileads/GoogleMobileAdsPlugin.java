@@ -38,6 +38,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterOverlayAd;
+import io.flutter.plugins.googlemobileads.usermessagingplatform.UserMessagingPlatformManager;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +64,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   @Nullable private AdInstanceManager instanceManager;
   @Nullable private AdMessageCodec adMessageCodec;
   @Nullable private AppStateNotifier appStateNotifier;
+  @Nullable private UserMessagingPlatformManager userMessagingPlatformManager;
   private final Map<String, NativeAdFactory> nativeAdFactories = new HashMap<>();
   @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
   private final FlutterMobileAdsWrapper flutterMobileAds;
@@ -245,6 +247,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
             "plugins.flutter.io/google_mobile_ads/ad_widget",
             new GoogleMobileAdsViewFactory(instanceManager));
     appStateNotifier = new AppStateNotifier(binding.getBinaryMessenger());
+    userMessagingPlatformManager =
+        new UserMessagingPlatformManager(
+            binding.getBinaryMessenger(), binding.getApplicationContext());
   }
 
   @Override
@@ -263,6 +268,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     if (adMessageCodec != null) {
       adMessageCodec.setContext(binding.getActivity());
     }
+    if (userMessagingPlatformManager != null) {
+      userMessagingPlatformManager.setActivity(binding.getActivity());
+    }
   }
 
   @Override
@@ -274,6 +282,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     if (instanceManager != null) {
       instanceManager.setActivity(null);
     }
+    if (userMessagingPlatformManager != null) {
+      userMessagingPlatformManager.setActivity(null);
+    }
   }
 
   @Override
@@ -284,6 +295,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     if (adMessageCodec != null) {
       adMessageCodec.setContext(binding.getActivity());
     }
+    if (userMessagingPlatformManager != null) {
+      userMessagingPlatformManager.setActivity(binding.getActivity());
+    }
   }
 
   @Override
@@ -293,6 +307,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     }
     if (instanceManager != null) {
       instanceManager.setActivity(null);
+    }
+    if (userMessagingPlatformManager != null) {
+      userMessagingPlatformManager.setActivity(null);
     }
   }
 

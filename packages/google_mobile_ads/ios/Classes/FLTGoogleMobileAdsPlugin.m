@@ -15,6 +15,7 @@
 #import "FLTGoogleMobileAdsPlugin.h"
 #import "FLTAdUtil.h"
 #import "FLTAppStateNotifier.h"
+#import "UserMessagingPlatform/FLTUserMessagingPlatformManager.h"
 
 @interface FLTGoogleMobileAdsPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
@@ -58,6 +59,7 @@
   id<FLTMediationNetworkExtrasProvider> _mediationNetworkExtrasProvider;
   FLTGoogleMobileAdsReaderWriter *_readerWriter;
   FLTAppStateNotifier *_appStateNotifier;
+  FLTUserMessagingPlatformManager *_userMessagingPlatformManager;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -100,6 +102,8 @@
         [[FLTAdInstanceManager alloc] initWithBinaryMessenger:binaryMessenger];
     _appStateNotifier =
         [[FLTAppStateNotifier alloc] initWithBinaryMessenger:binaryMessenger];
+    _userMessagingPlatformManager = [[FLTUserMessagingPlatformManager alloc]
+        initWithBinaryMessenger:binaryMessenger];
   }
 
   return self;
