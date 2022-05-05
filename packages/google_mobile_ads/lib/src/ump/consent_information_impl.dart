@@ -57,4 +57,10 @@ class ConsentInformationImpl extends ConsentInformation {
   Future<void> reset() {
     return UserMessagingChannel.instance.reset(this);
   }
+
+  @override
+  bool operator ==(other) {
+    return other is ConsentInformationImpl &&
+        other.platformHash == platformHash;
+  }
 }

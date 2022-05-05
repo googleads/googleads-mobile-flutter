@@ -50,6 +50,23 @@ class UserMessagingCodec extends StandardMessageCodec {
   @override
   dynamic readValueOfType(dynamic type, ReadBuffer buffer) {
     switch (type) {
+      case _valueConsentRequestParameters:
+        bool? tfuac = readValueOfType(buffer.getUint8(), buffer);
+        ConsentDebugSettings? debugSettings =
+            readValueOfType(buffer.getUint8(), buffer);
+        return ConsentRequestParameters(
+            tagForUnderAgeOfConsent: tfuac,
+            consentDebugSettings: debugSettings);
+      case _valueConsentDebugSettings:
+        int? debugGeographyInt = readValueOfType(buffer.getUint8(), buffer);
+        DebugGeography? debugGeography;
+        if (debugGeographyInt != null) {
+          debugGeography = DebugGeography.values[debugGeographyInt];
+        }
+        List<String>? testIds =
+            readValueOfType(buffer.getUint8(), buffer)?.cast<String>();
+        return ConsentDebugSettings(
+            debugGeography: debugGeography, testIdentifiers: testIds);
       case _valueConsentInformation:
         final int hashCode = readValueOfType(buffer.getUint8(), buffer);
         return ConsentInformationImpl(hashCode);

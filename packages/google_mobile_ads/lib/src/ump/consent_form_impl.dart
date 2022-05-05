@@ -28,4 +28,9 @@ class ConsentFormImpl extends ConsentForm {
   void show(OnConsentFormDismissedListener onConsentFormDismissedListener) {
     UserMessagingChannel.instance.show(this, onConsentFormDismissedListener);
   }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ConsentFormImpl && platformHash == other.platformHash;
+  }
 }

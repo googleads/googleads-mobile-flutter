@@ -27,4 +27,11 @@ class FormError {
 
   /// The message describing the error.
   final String? message;
+
+  @override
+  bool operator ==(Object other) {
+    return other is FormError &&
+        errorCode == other.errorCode &&
+        message == other.message;
+  }
 }

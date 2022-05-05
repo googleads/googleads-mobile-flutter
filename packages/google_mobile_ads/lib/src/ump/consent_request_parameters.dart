@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:flutter/foundation.dart';
+
 /// Parameters sent on updating user consent info.
 class ConsentRequestParameters {
   /// Construct a [ConsentRequestParameters].
@@ -25,6 +27,13 @@ class ConsentRequestParameters {
 
   /// Debug settings to hardcode in test requests.
   ConsentDebugSettings? consentDebugSettings;
+
+  @override
+  bool operator ==(Object other) {
+    return other is ConsentRequestParameters &&
+        tagForUnderAgeOfConsent == other.tagForUnderAgeOfConsent &&
+        consentDebugSettings == other.consentDebugSettings;
+  }
 }
 
 /// Debug settings to hardcode in test requests.
@@ -39,6 +48,13 @@ class ConsentDebugSettings {
   ///
   /// Debug features are enabled for devices with these identifiers.
   List<String>? testIdentifiers;
+
+  @override
+  bool operator ==(Object other) {
+    return other is ConsentDebugSettings &&
+        debugGeography == other.debugGeography &&
+        listEquals(testIdentifiers, other.testIdentifiers);
+  }
 }
 
 /// Debug values for testing geography.
