@@ -238,6 +238,7 @@ public class UserMessagingPlatformManagerTest {
     manager.onMethodCall(methodCall, result);
 
     verify(result).success(eq(consentInformation));
+    mockedUmp.close();
   }
 
   @Test
@@ -265,6 +266,7 @@ public class UserMessagingPlatformManagerTest {
 
     FormError formError = mock(FormError.class);
     errorCaptor.getValue().onConsentFormLoadFailure(formError);
+    mockedUmp.close();
   }
 
   @Test
