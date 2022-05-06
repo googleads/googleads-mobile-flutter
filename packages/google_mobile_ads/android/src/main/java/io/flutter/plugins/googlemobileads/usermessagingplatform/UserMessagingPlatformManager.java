@@ -83,7 +83,7 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
           if (consentInformation == null) {
             result.error(
                 INTERNAL_ERROR_CODE,
-                "Unable to find ConsentInfo in ConsentInformation#reset",
+                "Unable to find ConsentInfo in ConsentInformation#getConsentStatus",
                 null);
           } else {
             result.success(consentInformation.getConsentStatus());
@@ -99,7 +99,6 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
         }
       case "ConsentInformation#requestConsentInfoUpdate":
         {
-          ConsentRequestParameters consentRequestParameters = call.argument("params");
           ConsentInformation consentInformation = call.argument("consentInformation");
           if (activity == null) {
             result.error(
@@ -115,6 +114,11 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
                 null);
             break;
           }
+          ConsentRequestParametersWrapper requestParamsWrapper = call.argument("params");
+          ConsentRequestParameters consentRequestParameters =
+              (requestParamsWrapper == null)
+                  ? new ConsentRequestParameters.Builder().build()
+                  : requestParamsWrapper.getAsConsentRequestParameters(activity);
           consentInformation.requestConsentInfoUpdate(
               activity,
               consentRequestParameters,
@@ -155,7 +159,7 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
           if (consentInformation == null) {
             result.error(
                 INTERNAL_ERROR_CODE,
-                "Unable to find ConsentInfo in ConsentInformation#requestConsentInfoUpdate",
+                "Unable to find ConsentInfo in ConsentInformation#isConsentFormAvailable",
                 null);
           } else {
             result.success(consentInformation.isConsentFormAvailable());
@@ -166,10 +170,7 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
         {
           ConsentForm consentForm = call.argument("consentForm");
           if (consentForm == null) {
-            result.error(
-                INTERNAL_ERROR_CODE,
-                "Unable to find ConsentInfo in ConsentInformation#requestConsentInfoUpdate",
-                null);
+            result.error(INTERNAL_ERROR_CODE, "ConsentForm#show", null);
           } else {
             consentForm.show(
                 activity,

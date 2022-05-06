@@ -16,10 +16,8 @@ package io.flutter.plugins.googlemobileads.usermessagingplatform;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
-import com.google.android.ump.ConsentDebugSettings;
 import com.google.android.ump.ConsentForm;
 import com.google.android.ump.ConsentInformation;
-import com.google.android.ump.ConsentRequestParameters;
 import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -52,6 +50,16 @@ public class UserMessagingCodec extends StandardMessageCodec {
       stream.write(VALUE_CONSENT_INFORMATION);
       consentInformationMap.put(value.hashCode(), (ConsentInformation) value);
       writeValue(stream, value.hashCode());
+    } else if (value instanceof ConsentRequestParametersWrapper) {
+      stream.write(VALUE_CONSENT_REQUEST_PARAMETERS);
+      ConsentRequestParametersWrapper params = (ConsentRequestParametersWrapper) value;
+      writeValue(stream, params.getTfuac());
+      writeValue(stream, params.getDebugSettings());
+    } else if (value instanceof ConsentDebugSettingsWrapper) {
+      stream.write(VALUE_CONSENT_DEBUG_SETTINGS);
+      ConsentDebugSettingsWrapper debugSettings = (ConsentDebugSettingsWrapper) value;
+      writeValue(stream, debugSettings.getDebugGeography());
+      writeValue(stream, debugSettings.getTestIdentifiers());
     } else if (value instanceof ConsentForm) {
       stream.write(VALUE_CONSENT_FORM);
       consentFormMap.put(value.hashCode(), (ConsentForm) value);
@@ -72,32 +80,15 @@ public class UserMessagingCodec extends StandardMessageCodec {
       case VALUE_CONSENT_REQUEST_PARAMETERS:
         {
           Boolean tfuac = (Boolean) readValueOfType(buffer.get(), buffer);
-          ConsentDebugSettings debugSettings =
-              (ConsentDebugSettings) readValueOfType(buffer.get(), buffer);
-          ConsentRequestParameters.Builder builder = new ConsentRequestParameters.Builder();
-
-          if (tfuac != null) {
-            builder.setTagForUnderAgeOfConsent(tfuac);
-          }
-          if (debugSettings != null) {
-            builder.setConsentDebugSettings(debugSettings);
-          }
-          return builder.build();
+          ConsentDebugSettingsWrapper debugSettings =
+              (ConsentDebugSettingsWrapper) readValueOfType(buffer.get(), buffer);
+          return new ConsentRequestParametersWrapper(tfuac, debugSettings);
         }
       case VALUE_CONSENT_DEBUG_SETTINGS:
         {
-          Integer settings = (Integer) readValueOfType(buffer.get(), buffer);
+          Integer debugGeoInt = (Integer) readValueOfType(buffer.get(), buffer);
           List<String> testIdentifiers = (List<String>) readValueOfType(buffer.get(), buffer);
-          ConsentDebugSettings.Builder builder = new ConsentDebugSettings.Builder(context);
-          if (settings != null) {
-            builder.setDebugGeography(settings);
-          }
-          if (testIdentifiers != null) {
-            for (String testIdentifier : testIdentifiers) {
-              builder.addTestDeviceHashedId(testIdentifier);
-            }
-          }
-          return builder.build();
+          return new ConsentDebugSettingsWrapper(debugGeoInt, testIdentifiers);
         }
       case VALUE_CONSENT_FORM:
         {
