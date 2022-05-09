@@ -42,6 +42,10 @@
   return self;
 }
 
+- (UIViewController *)rootController {
+  return UIApplication.sharedApplication.delegate.window.rootViewController;
+}
+
 - (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call
                   result:(FlutterResult _Nonnull)result {
   if ([call.method isEqualToString:@"ConsentInformation#reset"]) {
@@ -95,8 +99,7 @@
   } else if ([call.method isEqualToString:@"ConsentForm#show"]) {
     UMPConsentForm *consentForm = call.arguments[@"consentForm"];
     [consentForm
-        presentFromViewController:UIApplication.sharedApplication.delegate
-                                      .window.rootViewController
+        presentFromViewController:self.rootController
                 completionHandler:^(NSError *_Nullable error) {
                   if ([FLTAdUtil isNull:error]) {
                     result(nil);
