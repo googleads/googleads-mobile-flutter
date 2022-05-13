@@ -16,10 +16,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:google_mobile_ads/src/ump/consent_form.dart';
-import 'package:google_mobile_ads/src/ump/consent_form_impl.dart';
 import 'package:google_mobile_ads/src/ump/consent_information_impl.dart';
-import 'package:google_mobile_ads/src/ump/form_error.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:google_mobile_ads/src/ump/user_messaging_channel.dart';
@@ -47,44 +44,6 @@ void main() {
 
       expect(result, info);
       verify(mockChannel.getConsentInformation());
-    });
-
-    test('loadConsentForm() success', () async {
-      ConsentForm form = ConsentFormImpl(2);
-
-      when(mockChannel.loadConsentForm(any, any)).thenAnswer(
-          (realInvocation) => realInvocation.positionalArguments[0](form));
-
-      Completer<ConsentForm> successCompleter = Completer<ConsentForm>();
-      Completer<FormError> errorCompleter = Completer<FormError>();
-
-      UserMessagingPlatform.loadConsentForm(
-          (consentForm) => successCompleter.complete(consentForm),
-          (formError) => errorCompleter.complete(formError));
-
-      ConsentForm responseForm = await successCompleter.future;
-      expect(successCompleter.isCompleted, true);
-      expect(errorCompleter.isCompleted, false);
-      expect(form, responseForm);
-    });
-
-    test('loadConsentForm() failure', () async {
-      FormError formError = FormError(errorCode: 1, message: 'message');
-
-      when(mockChannel.loadConsentForm(any, any)).thenAnswer(
-          (realInvocation) => realInvocation.positionalArguments[1](formError));
-
-      Completer<ConsentForm> successCompleter = Completer<ConsentForm>();
-      Completer<FormError> errorCompleter = Completer<FormError>();
-
-      UserMessagingPlatform.loadConsentForm(
-          (consentForm) => successCompleter.complete(consentForm),
-          (formError) => errorCompleter.complete(formError));
-
-      FormError responseError = await errorCompleter.future;
-      expect(formError, responseError);
-      expect(successCompleter.isCompleted, false);
-      expect(errorCompleter.isCompleted, true);
     });
   });
 }

@@ -4,12 +4,11 @@
 
 import 'dart:async' as _i4;
 
-import 'package:google_mobile_ads/src/ump/consent_form.dart' as _i7;
+import 'package:google_mobile_ads/src/ump/consent_form.dart' as _i6;
 import 'package:google_mobile_ads/src/ump/consent_information.dart' as _i2;
 import 'package:google_mobile_ads/src/ump/consent_request_parameters.dart'
     as _i5;
 import 'package:google_mobile_ads/src/ump/user_messaging_channel.dart' as _i3;
-import 'package:google_mobile_ads/src/ump/user_messaging_platform.dart' as _i6;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: comment_references
@@ -72,8 +71,8 @@ class MockUserMessagingChannel extends _i1.Mock
               #loadConsentForm, [successListener, failureListener]),
           returnValueForMissingStub: null);
   @override
-  void show(_i7.ConsentForm? consentForm,
-          _i7.OnConsentFormDismissedListener? onConsentFormDismissedListener) =>
+  void show(_i6.ConsentForm? consentForm,
+          _i6.OnConsentFormDismissedListener? onConsentFormDismissedListener) =>
       super.noSuchMethod(
           Invocation.method(
               #show, [consentForm, onConsentFormDismissedListener]),
