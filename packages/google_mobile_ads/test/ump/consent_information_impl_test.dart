@@ -22,7 +22,7 @@ import 'package:google_mobile_ads/src/ump/user_messaging_channel.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'user_messaging_platform_test.mocks.dart';
+import 'consent_information_impl_test.mocks.dart';
 
 @GenerateMocks([UserMessagingChannel])
 void main() {
@@ -30,51 +30,49 @@ void main() {
 
   group('ConsentInformationImpl', () {
     late MockUserMessagingChannel mockChannel;
+    late ConsentInformationImpl consentInfo;
 
     setUp(() async {
       mockChannel = MockUserMessagingChannel();
       UserMessagingChannel.instance = mockChannel;
+      consentInfo = ConsentInformationImpl();
     });
 
     test('reset()', () async {
-      when(mockChannel.reset(any)).thenAnswer((_) => Future<void>.value());
+      when(mockChannel.reset()).thenAnswer((_) => Future<void>.value());
 
-      ConsentInformationImpl consentInfo = ConsentInformationImpl(1);
       await consentInfo.reset();
 
-      verify(mockChannel.reset(consentInfo));
+      verify(mockChannel.reset());
     });
 
     test('getConsentStatus()', () async {
       ConsentStatus status = ConsentStatus.required;
-      when(mockChannel.getConsentStatus(any))
+      when(mockChannel.getConsentStatus())
           .thenAnswer((_) => Future.value(status));
 
-      ConsentInformationImpl consentInfo = ConsentInformationImpl(1);
       ConsentStatus responseStatus = await consentInfo.getConsentStatus();
 
-      verify(mockChannel.getConsentStatus(consentInfo));
+      verify(mockChannel.getConsentStatus());
       expect(responseStatus, status);
     });
 
     test('isConsentFormAvailable()', () async {
-      when(mockChannel.isConsentFormAvailable(any))
+      when(mockChannel.isConsentFormAvailable())
           .thenAnswer((_) => Future.value(false));
 
-      ConsentInformationImpl consentInfo = ConsentInformationImpl(1);
       bool isConsentFormAvailable = await consentInfo.isConsentFormAvailable();
 
-      verify(mockChannel.isConsentFormAvailable(consentInfo));
+      verify(mockChannel.isConsentFormAvailable());
       expect(isConsentFormAvailable, false);
     });
 
     test('requestConsentInfoUpdate() success', () async {
-      when(mockChannel.requestConsentInfoUpdate(any, any, any, any))
+      when(mockChannel.requestConsentInfoUpdate(any, any, any))
           .thenAnswer((invocation) {
         invocation.positionalArguments[1]();
       });
 
-      ConsentInformationImpl consentInfo = ConsentInformationImpl(1);
       ConsentRequestParameters params = ConsentRequestParameters();
       Completer<void> successCompleter = Completer<void>();
       Completer<FormError> errorCompleter = Completer<FormError>();
@@ -85,20 +83,18 @@ void main() {
           (error) => errorCompleter.complete(error));
 
       await successCompleter.future;
-      verify(
-          mockChannel.requestConsentInfoUpdate(params, any, any, consentInfo));
+      verify(mockChannel.requestConsentInfoUpdate(params, any, any));
       expect(successCompleter.isCompleted, true);
       expect(errorCompleter.isCompleted, false);
     });
 
     test('requestConsentInfoUpdate() failure', () async {
       FormError formError = FormError(errorCode: 1, message: 'msg');
-      when(mockChannel.requestConsentInfoUpdate(any, any, any, any))
+      when(mockChannel.requestConsentInfoUpdate(any, any, any))
           .thenAnswer((invocation) {
         invocation.positionalArguments[2](formError);
       });
 
-      ConsentInformationImpl consentInfo = ConsentInformationImpl(1);
       ConsentRequestParameters params = ConsentRequestParameters();
       Completer<void> successCompleter = Completer<void>();
       Completer<FormError> errorCompleter = Completer<FormError>();
@@ -109,8 +105,7 @@ void main() {
           (error) => errorCompleter.complete(error));
 
       FormError responseError = await errorCompleter.future;
-      verify(
-          mockChannel.requestConsentInfoUpdate(params, any, any, consentInfo));
+      verify(mockChannel.requestConsentInfoUpdate(params, any, any));
       expect(successCompleter.isCompleted, false);
       expect(errorCompleter.isCompleted, true);
       expect(responseError, formError);

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:google_mobile_ads/src/ump/consent_information_impl.dart';
+
 import 'consent_request_parameters.dart';
 import 'form_error.dart';
 
@@ -58,4 +60,7 @@ abstract class ConsentInformation {
   /// Should only be used for testing. Returns a [Future] that completes when
   /// the platform API has been called.
   Future<void> reset();
+
+  /// The static [ConsentInformation] instance.
+  static ConsentInformation instance = ConsentInformationImpl();
 }

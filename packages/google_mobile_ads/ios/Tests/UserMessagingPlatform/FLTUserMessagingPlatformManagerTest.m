@@ -80,17 +80,6 @@
   OCMVerify([mockUmpConsentInformation consentStatus]);
 }
 
-- (void)testGetConsentInformation {
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"UserMessagingPlatform#getConsentInformation"
-                     arguments:@{}];
-
-  [umpManager handleMethodCall:methodCall result:flutterResult];
-
-  XCTAssertTrue(resultInvoked);
-  XCTAssertEqualObjects(returnedResult, mockUmpConsentInformation);
-}
-
 - (void)testRequestConsentInfoUpdate_success {
   UMPRequestParameters *params = OCMClassMock([UMPRequestParameters class]);
 

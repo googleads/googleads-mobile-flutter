@@ -14,10 +14,7 @@
 
 package io.flutter.plugins.googlemobileads.usermessagingplatform;
 
-import android.content.Context;
-import androidx.annotation.NonNull;
 import com.google.android.ump.ConsentForm;
-import com.google.android.ump.ConsentInformation;
 import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -28,29 +25,19 @@ import java.util.Map;
 /** Codec for UMP SDK. */
 public class UserMessagingCodec extends StandardMessageCodec {
 
-  private static final byte VALUE_CONSENT_INFORMATION = (byte) 128;
   private static final byte VALUE_CONSENT_REQUEST_PARAMETERS = (byte) 129;
   private static final byte VALUE_CONSENT_DEBUG_SETTINGS = (byte) 130;
   private static final byte VALUE_CONSENT_FORM = (byte) 131;
 
-  private final Context context;
-
   private final Map<Integer, ConsentForm> consentFormMap;
-  private final Map<Integer, ConsentInformation> consentInformationMap;
 
-  UserMessagingCodec(@NonNull Context context) {
-    this.context = context;
+  UserMessagingCodec() {
     consentFormMap = new HashMap<>();
-    consentInformationMap = new HashMap<>();
   }
 
   @Override
   protected void writeValue(ByteArrayOutputStream stream, Object value) {
-    if (value instanceof ConsentInformation) {
-      stream.write(VALUE_CONSENT_INFORMATION);
-      consentInformationMap.put(value.hashCode(), (ConsentInformation) value);
-      writeValue(stream, value.hashCode());
-    } else if (value instanceof ConsentRequestParametersWrapper) {
+    if (value instanceof ConsentRequestParametersWrapper) {
       stream.write(VALUE_CONSENT_REQUEST_PARAMETERS);
       ConsentRequestParametersWrapper params = (ConsentRequestParametersWrapper) value;
       writeValue(stream, params.getTfuac());
@@ -72,11 +59,6 @@ public class UserMessagingCodec extends StandardMessageCodec {
   @Override
   protected Object readValueOfType(byte type, ByteBuffer buffer) {
     switch (type) {
-      case VALUE_CONSENT_INFORMATION:
-        {
-          Integer hash = (Integer) readValueOfType(buffer.get(), buffer);
-          return consentInformationMap.get(hash);
-        }
       case VALUE_CONSENT_REQUEST_PARAMETERS:
         {
           Boolean tfuac = (Boolean) readValueOfType(buffer.get(), buffer);

@@ -19,7 +19,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import android.app.Activity;
@@ -42,6 +41,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,71 +59,52 @@ public class UserMessagingPlatformManagerTest {
   private UserMessagingPlatformManager manager;
   private Activity activity;
 
+  private MockedStatic<UserMessagingPlatform> mockedUmp;
+  private ConsentInformation mockConsentInformation;
+
   @Before
   public void setup() {
     context = ApplicationProvider.getApplicationContext();
     mockMessenger = mock(BinaryMessenger.class);
     manager = new UserMessagingPlatformManager(mockMessenger, context);
     activity = mock(Activity.class);
+    mockConsentInformation = mock(ConsentInformation.class);
+    mockedUmp = Mockito.mockStatic(UserMessagingPlatform.class);
+    mockedUmp
+        .when(
+            () -> {
+              UserMessagingPlatform.getConsentInformation(any());
+            })
+        .thenReturn(mockConsentInformation);
+  }
+
+  @After
+  public void tearDown() {
+    mockedUmp.close();
   }
 
   @Test
   public void testConsentInformation_reset() {
-    ConsentInformation consentInformation = mock(ConsentInformation.class);
-    Map<String, Object> args = Collections.singletonMap("consentInformation", consentInformation);
+    Map<String, Object> args = Collections.emptyMap();
     MethodCall methodCall = new MethodCall("ConsentInformation#reset", args);
     Result result = mock(Result.class);
 
     manager.onMethodCall(methodCall, result);
 
-    verify(consentInformation).reset();
+    verify(mockConsentInformation).reset();
     verify(result).success(isNull());
   }
 
   @Test
-  public void testConsentInformation_reset_error() {
-    ConsentInformation consentInformation = mock(ConsentInformation.class);
-    // Provide incorrect argument mapping
-    Map<String, Object> args = Collections.singletonMap("abcdef", consentInformation);
-    MethodCall methodCall = new MethodCall("ConsentInformation#reset", args);
-    Result result = mock(Result.class);
-
-    manager.onMethodCall(methodCall, result);
-
-    verify(consentInformation, never()).reset();
-    verify(result)
-        .error(
-            eq("UserMessagingPlatformManager"),
-            eq("Unable to find ConsentInfo in ConsentInformation#reset"),
-            isNull());
-  }
-
-  @Test
   public void testConsentInformation_getConsentStatus() {
-    ConsentInformation consentInformation = mock(ConsentInformation.class);
-    doReturn(ConsentStatus.REQUIRED).when(consentInformation).getConsentStatus();
-    Map<String, Object> args = Collections.singletonMap("consentInformation", consentInformation);
+    doReturn(ConsentStatus.REQUIRED).when(mockConsentInformation).getConsentStatus();
+    Map<String, Object> args = Collections.emptyMap();
     MethodCall methodCall = new MethodCall("ConsentInformation#getConsentStatus", args);
     Result result = mock(Result.class);
 
     manager.onMethodCall(methodCall, result);
 
     verify(result).success(eq(ConsentStatus.REQUIRED));
-  }
-
-  @Test
-  public void testConsentInformation_getConsentStatus_error() {
-    // Provide incorrect argument mapping
-    MethodCall methodCall = new MethodCall("ConsentInformation#getConsentStatus", null);
-    Result result = mock(Result.class);
-
-    manager.onMethodCall(methodCall, result);
-
-    verify(result)
-        .error(
-            eq("UserMessagingPlatformManager"),
-            eq("Unable to find ConsentInfo in ConsentInformation#getConsentStatus"),
-            isNull());
   }
 
   @Test
@@ -144,29 +125,12 @@ public class UserMessagingPlatformManagerTest {
   }
 
   @Test
-  public void testConsentInformation_requestConsentInfoUpdate_errorNoConsentInfo() {
-    manager.setActivity(activity);
-    MethodCall methodCall = new MethodCall("ConsentInformation#requestConsentInfoUpdate", null);
-    Result result = mock(Result.class);
-
-    manager.onMethodCall(methodCall, result);
-
-    verify(result)
-        .error(
-            eq("UserMessagingPlatformManager"),
-            eq("Unable to find ConsentInfo in ConsentInformation#requestConsentInfoUpdate"),
-            isNull());
-  }
-
-  @Test
   public void testConsentInformation_requestConsentInfoUpdate_success() {
     manager.setActivity(activity);
-    ConsentInformation consentInformation = mock(ConsentInformation.class);
     ConsentRequestParametersWrapper paramsWrapper = mock(ConsentRequestParametersWrapper.class);
     ConsentRequestParameters params = mock(ConsentRequestParameters.class);
     doReturn(params).when(paramsWrapper).getAsConsentRequestParameters(any());
     Map<String, Object> args = new HashMap<>();
-    args.put("consentInformation", consentInformation);
     args.put("params", paramsWrapper);
     MethodCall methodCall = new MethodCall("ConsentInformation#requestConsentInfoUpdate", args);
     Result result = mock(Result.class);
@@ -177,7 +141,7 @@ public class UserMessagingPlatformManagerTest {
         ArgumentCaptor.forClass(OnConsentInfoUpdateSuccessListener.class);
     ArgumentCaptor<OnConsentInfoUpdateFailureListener> errorCaptor =
         ArgumentCaptor.forClass(OnConsentInfoUpdateFailureListener.class);
-    verify(consentInformation)
+    verify(mockConsentInformation)
         .requestConsentInfoUpdate(
             eq(activity), eq(params), successCaptor.capture(), errorCaptor.capture());
 
@@ -193,9 +157,9 @@ public class UserMessagingPlatformManagerTest {
 
   @Test
   public void testConsentInformation_isConsentFormAvailable() {
-    ConsentInformation consentInformation = mock(ConsentInformation.class);
-    doReturn(false).when(consentInformation).isConsentFormAvailable();
-    Map<String, Object> args = Collections.singletonMap("consentInformation", consentInformation);
+    doReturn(false).when(mockConsentInformation).isConsentFormAvailable();
+    Map<String, Object> args =
+        Collections.singletonMap("consentInformation", mockConsentInformation);
     MethodCall methodCall = new MethodCall("ConsentInformation#isConsentFormAvailable", args);
     Result result = mock(Result.class);
 
@@ -205,46 +169,7 @@ public class UserMessagingPlatformManagerTest {
   }
 
   @Test
-  public void testConsentInformation_isConsentFormAvailable_errorNoConsentInfo() {
-    ConsentInformation consentInformation = mock(ConsentInformation.class);
-    Map<String, Object> args = Collections.singletonMap("abcdef", consentInformation);
-    MethodCall methodCall = new MethodCall("ConsentInformation#isConsentFormAvailable", args);
-    Result result = mock(Result.class);
-
-    manager.onMethodCall(methodCall, result);
-
-    verify(result)
-        .error(
-            eq("UserMessagingPlatformManager"),
-            eq("Unable to find ConsentInfo in ConsentInformation#isConsentFormAvailable"),
-            isNull());
-  }
-
-  @Test
-  public void testUserMessagingPlatform_getConsentInformation() {
-    ConsentInformation consentInformation = mock(ConsentInformation.class);
-    MockedStatic<UserMessagingPlatform> mockedUmp = Mockito.mockStatic(UserMessagingPlatform.class);
-    mockedUmp
-        .when(
-            () -> {
-              UserMessagingPlatform.getConsentInformation(any());
-            })
-        .thenReturn(consentInformation);
-
-    doReturn(false).when(consentInformation).isConsentFormAvailable();
-    MethodCall methodCall = new MethodCall("UserMessagingPlatform#getConsentInformation", null);
-    Result result = mock(Result.class);
-
-    manager.onMethodCall(methodCall, result);
-
-    verify(result).success(eq(consentInformation));
-    mockedUmp.close();
-  }
-
-  @Test
   public void testUserMessagingPlatform_loadConsentForm() {
-    MockedStatic<UserMessagingPlatform> mockedUmp = Mockito.mockStatic(UserMessagingPlatform.class);
-
     MethodCall methodCall = new MethodCall("UserMessagingPlatform#loadConsentForm", null);
     Result result = mock(Result.class);
 
@@ -266,7 +191,6 @@ public class UserMessagingPlatformManagerTest {
 
     FormError formError = mock(FormError.class);
     errorCaptor.getValue().onConsentFormLoadFailure(formError);
-    mockedUmp.close();
   }
 
   @Test

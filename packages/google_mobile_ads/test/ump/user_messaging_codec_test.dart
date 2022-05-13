@@ -17,25 +17,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_mobile_ads/src/ump/consent_form.dart';
 import 'package:google_mobile_ads/src/ump/consent_form_impl.dart';
-import 'package:google_mobile_ads/src/ump/consent_information_impl.dart';
 import 'package:google_mobile_ads/src/ump/user_messaging_codec.dart';
-import 'package:mockito/annotations.dart';
-import 'package:google_mobile_ads/src/ump/user_messaging_channel.dart';
 
-@GenerateMocks([UserMessagingChannel])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('UserMessagingCodec', () {
     /// Sut.
     final UserMessagingCodec codec = UserMessagingCodec();
-
-    test('encode and decode ConsentInformation', () async {
-      ConsentInformationImpl info = ConsentInformationImpl(12345);
-      final ByteData? byteData = codec.encodeMessage(info);
-      ConsentInformationImpl decodedInfo = codec.decodeMessage(byteData);
-      expect(decodedInfo, info);
-    });
 
     test('encode and decode empty ConsentRequestParameters', () async {
       ConsentRequestParameters params = ConsentRequestParameters();

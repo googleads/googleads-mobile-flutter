@@ -57,9 +57,6 @@
         UMPConsentInformation.sharedInstance.consentStatus;
     result([[NSNumber alloc] initWithInteger:status]);
   } else if ([call.method isEqualToString:
-                              @"UserMessagingPlatform#getConsentInformation"]) {
-    result(UMPConsentInformation.sharedInstance);
-  } else if ([call.method isEqualToString:
                               @"ConsentInformation#requestConsentInfoUpdate"]) {
     UMPRequestParameters *parameters = call.arguments[@"params"];
     [UMPConsentInformation.sharedInstance

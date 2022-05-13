@@ -32,14 +32,6 @@
       [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
 }
 
-- (void)testConsentInformation {
-  UMPConsentInformation *consentInfo = UMPConsentInformation.sharedInstance;
-  NSData *encodedMessage = [messageCodec encode:consentInfo];
-
-  UMPConsentInformation *decoded = [messageCodec decode:encodedMessage];
-  XCTAssertEqualObjects(decoded, consentInfo);
-}
-
 - (void)testRequestParams_default {
   UMPRequestParameters *requestParameters = [[UMPRequestParameters alloc] init];
   NSData *encodedMessage = [messageCodec encode:requestParameters];

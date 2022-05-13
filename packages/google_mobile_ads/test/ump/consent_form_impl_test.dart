@@ -21,7 +21,7 @@ import 'package:google_mobile_ads/src/ump/user_messaging_channel.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'user_messaging_platform_test.mocks.dart';
+import 'consent_form_impl_test.mocks.dart';
 
 @GenerateMocks([UserMessagingChannel])
 void main() {
