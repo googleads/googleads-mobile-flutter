@@ -65,5 +65,15 @@ void main() {
       expect(errorCompleter.isCompleted, true);
       expect(error, completedError);
     });
+
+    test('dispose()', () async {
+      ConsentFormImpl form = ConsentFormImpl(1);
+
+      when(mockChannel.disposeConsentForm(form))
+          .thenAnswer((realInvocation) => Future.value());
+
+      await form.dispose();
+      verify(mockChannel.disposeConsentForm(form));
+    });
   });
 }

@@ -49,7 +49,6 @@ public class UserMessagingCodec extends StandardMessageCodec {
       writeValue(stream, debugSettings.getTestIdentifiers());
     } else if (value instanceof ConsentForm) {
       stream.write(VALUE_CONSENT_FORM);
-      consentFormMap.put(value.hashCode(), (ConsentForm) value);
       writeValue(stream, value.hashCode());
     } else {
       super.writeValue(stream, value);
@@ -80,5 +79,13 @@ public class UserMessagingCodec extends StandardMessageCodec {
       default:
         return super.readValueOfType(type, buffer);
     }
+  }
+
+  void trackConsentForm(ConsentForm form) {
+    consentFormMap.put(form.hashCode(), form);
+  }
+
+  void disposeConsentForm(ConsentForm form) {
+    consentFormMap.remove(form.hashCode());
   }
 }

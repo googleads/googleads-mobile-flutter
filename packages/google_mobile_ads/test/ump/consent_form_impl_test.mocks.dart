@@ -67,4 +67,9 @@ class MockUserMessagingChannel extends _i1.Mock
           Invocation.method(
               #show, [consentForm, onConsentFormDismissedListener]),
           returnValueForMissingStub: null);
+  @override
+  _i5.Future<void> disposeConsentForm(_i6.ConsentForm? consentForm) =>
+      (super.noSuchMethod(Invocation.method(#disposeConsentForm, [consentForm]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i5.Future<void>);
 }

@@ -52,6 +52,7 @@ class UserMessagingChannel {
       successListener();
     } on PlatformException catch (e) {
       failureListener(
+          // TODO - Fix internal error form errors
           FormError(errorCode: int.parse(e.code), message: e.message));
     }
   }
@@ -131,6 +132,15 @@ class UserMessagingChannel {
       onConsentFormDismissedListener(
           FormError(errorCode: int.parse(e.code), message: e.message));
     }
-    ;
+  }
+
+  /// Free platform resources associated with the [ConsentForm].
+  Future<void> disposeConsentForm(ConsentForm consentForm) {
+    return _methodChannel.invokeMethod<void>(
+      'ConsentForm#dispose',
+      <dynamic, dynamic>{
+        'consentForm': consentForm,
+      },
+    );
   }
 }

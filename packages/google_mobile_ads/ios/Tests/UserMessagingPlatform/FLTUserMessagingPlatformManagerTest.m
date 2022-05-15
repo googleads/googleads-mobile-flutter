@@ -17,6 +17,7 @@
 #import <XCTest/XCTest.h>
 
 #import "../../Classes/UserMessagingPlatform/FLTUserMessagingPlatformManager.h"
+#import "../../Classes/UserMessagingPlatform/FLTUserMessagingPlatformReaderWriter.h"
 
 @interface FLTUserMessagingPlatformManagerTest : XCTestCase
 @end
@@ -135,7 +136,7 @@
   XCTAssertEqualObjects(resultError.details, @"description");
 }
 
-- (void)testLoadConsentForm_success {
+- (void)testLoadConsentForm_successAndDispose {
   FlutterMethodCall *methodCall = [FlutterMethodCall
       methodCallWithMethodName:@"UserMessagingPlatform#loadConsentForm"
                      arguments:@{}];
@@ -148,11 +149,17 @@
         completionHandler(mockUmpConsentForm, nil);
       });
 
-  [umpManager handleMethodCall:methodCall result:flutterResult];
+  FLTUserMessagingPlatformManager *partialMock = OCMPartialMock(umpManager);
+  FLTUserMessagingPlatformReaderWriter *mockReaderWriter =
+      OCMClassMock([FLTUserMessagingPlatformReaderWriter class]);
+  OCMStub([partialMock readerWriter]).andReturn(mockReaderWriter);
+
+  [partialMock handleMethodCall:methodCall result:flutterResult];
 
   XCTAssertTrue(resultInvoked);
   XCTAssertEqual(returnedResult, mockUmpConsentForm);
   OCMVerify([mockUmpConsentForm loadWithCompletionHandler:[OCMArg any]]);
+  OCMVerify([mockReaderWriter trackConsentForm:mockUmpConsentForm]);
 }
 
 - (void)testLoadConsentForm_error {

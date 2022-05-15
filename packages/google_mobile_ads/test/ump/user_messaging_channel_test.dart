@@ -242,5 +242,21 @@ void main() {
       expect(arguments, {'consentForm': consentForm});
       expect(error, FormError(errorCode: 55, message: 'msg'));
     });
+
+    test('disposeConsentForm()', () async {
+      String? method;
+      dynamic arguments;
+      methodChannel.setMockMethodCallHandler((MethodCall call) async {
+        method = call.method;
+        arguments = call.arguments;
+        return Future<void>.value();
+      });
+
+      ConsentForm consentForm = ConsentFormImpl(1);
+      await channel.disposeConsentForm(consentForm);
+
+      expect(method, equals('ConsentForm#dispose'));
+      expect(arguments, {'consentForm': consentForm});
+    });
   });
 }

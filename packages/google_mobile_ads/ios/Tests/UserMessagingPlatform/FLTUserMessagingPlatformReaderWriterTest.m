@@ -79,10 +79,14 @@
                         debugSettings.testDeviceIdentifiers);
 }
 
-- (void)testConsentForm {
+- (void)testConsentFormTrackAndDispose {
   UMPConsentForm *form1 = OCMClassMock([UMPConsentForm class]);
   UMPConsentForm *form2 = OCMClassMock([UMPConsentForm class]);
   UMPConsentForm *form3 = OCMClassMock([UMPConsentForm class]);
+
+  [readerWriter trackConsentForm:form1];
+  [readerWriter trackConsentForm:form2];
+  [readerWriter trackConsentForm:form3];
 
   NSData *encodedMessage1 = [messageCodec encode:form1];
   NSData *encodedMessage2 = [messageCodec encode:form2];
@@ -95,6 +99,17 @@
   XCTAssertEqual(form1, decoded1);
   XCTAssertEqual(form2, decoded2);
   XCTAssertEqual(form3, decoded3);
+
+  [readerWriter disposeConsentForm:form1];
+  [readerWriter disposeConsentForm:form2];
+  [readerWriter disposeConsentForm:form3];
+
+  decoded1 = [messageCodec decode:encodedMessage1];
+  decoded2 = [messageCodec decode:encodedMessage2];
+  decoded3 = [messageCodec decode:encodedMessage3];
+  XCTAssertNil(decoded1);
+  XCTAssertNil(decoded2);
+  XCTAssertNil(decoded3);
 }
 
 @end

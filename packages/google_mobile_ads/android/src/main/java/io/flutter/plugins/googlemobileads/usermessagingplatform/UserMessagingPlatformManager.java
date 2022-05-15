@@ -16,8 +16,10 @@ package io.flutter.plugins.googlemobileads.usermessagingplatform;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import com.google.android.ump.ConsentForm;
 import com.google.android.ump.ConsentForm.OnConsentFormDismissedListener;
 import com.google.android.ump.ConsentInformation;
@@ -39,7 +41,7 @@ import io.flutter.plugin.common.StandardMethodCodec;
 public class UserMessagingPlatformManager implements MethodCallHandler {
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/google_mobile_ads/ump";
-  private static final String INTERNAL_ERROR_CODE = "UserMessagingPlatformManager";
+  private static final String INTERNAL_ERROR_CODE = "UMPManager";
 
   private final UserMessagingCodec userMessagingCodec;
   private final MethodChannel methodChannel;
@@ -50,6 +52,17 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
 
   public UserMessagingPlatformManager(BinaryMessenger binaryMessenger, Context context) {
     userMessagingCodec = new UserMessagingCodec();
+    methodChannel =
+        new MethodChannel(
+            binaryMessenger, METHOD_CHANNEL_NAME, new StandardMethodCodec(userMessagingCodec));
+    methodChannel.setMethodCallHandler(this);
+    this.context = context;
+  }
+
+  @VisibleForTesting
+  UserMessagingPlatformManager(
+      BinaryMessenger binaryMessenger, Context context, UserMessagingCodec userMessagingCodec) {
+    this.userMessagingCodec = userMessagingCodec;
     methodChannel =
         new MethodChannel(
             binaryMessenger, METHOD_CHANNEL_NAME, new StandardMethodCodec(userMessagingCodec));
@@ -123,6 +136,7 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
             new OnConsentFormLoadSuccessListener() {
               @Override
               public void onConsentFormLoadSuccess(ConsentForm consentForm) {
+                userMessagingCodec.trackConsentForm(consentForm);
                 result.success(consentForm);
               }
             },
@@ -159,6 +173,17 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
                   }
                 });
           }
+          break;
+        }
+      case "ConsentForm#dispose":
+        {
+          ConsentForm consentForm = call.argument("consentForm");
+          if (consentForm == null) {
+            Log.w(INTERNAL_ERROR_CODE, "Called dispose on ad that has been freed");
+          } else {
+            userMessagingCodec.disposeConsentForm(consentForm);
+          }
+          result.success(null);
           break;
         }
       default:

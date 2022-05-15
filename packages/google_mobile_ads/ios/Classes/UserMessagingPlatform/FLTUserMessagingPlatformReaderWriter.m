@@ -45,6 +45,16 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
   return self;
 }
 
+- (void)trackConsentForm:(UMPConsentForm *)consentForm {
+  NSNumber *hash = [[NSNumber alloc] initWithInteger:consentForm.hash];
+  _consentFormDict[hash] = consentForm;
+}
+
+- (void)disposeConsentForm:(UMPConsentForm *)consentForm {
+  NSNumber *hash = [[NSNumber alloc] initWithInteger:consentForm.hash];
+  [_consentFormDict removeObjectForKey:hash];
+}
+
 - (FlutterStandardReader *_Nonnull)readerWithData:(NSData *_Nonnull)data {
   FLTUserMessagingPlatformReader *reader =
       [[FLTUserMessagingPlatformReader alloc] initWithData:data];
@@ -67,7 +77,6 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
   if ([value isKindOfClass:[UMPConsentForm class]]) {
     UMPConsentForm *form = (UMPConsentForm *)value;
     NSNumber *hash = [[NSNumber alloc] initWithInteger:form.hash];
-    _consentFormDict[hash] = form;
     [self writeByte:FLTValueConsentForm];
     [self writeValue:hash];
   } else if ([value isKindOfClass:[UMPRequestParameters class]]) {

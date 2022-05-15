@@ -32,6 +32,11 @@ abstract class ConsentForm {
   /// Shows the consent form.
   void show(OnConsentFormDismissedListener onConsentFormDismissedListener);
 
+  /// Free platform resources associated with this object.
+  ///
+  /// Returns a future that completes when the platform resources are freed.
+  Future<void> dispose();
+
   /// Loads a ConsentForm.
   ///
   /// Check that [ConsentInformation.isConsentFormAvailable()] returns true

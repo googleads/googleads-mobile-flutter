@@ -15,6 +15,7 @@
 package io.flutter.plugins.googlemobileads.usermessagingplatform;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
 import com.google.android.ump.ConsentForm;
@@ -118,8 +119,15 @@ public class UserMessagingCodecTest {
   @Test
   public void testConsentForm() {
     ConsentForm form = mock(ConsentForm.class);
+    codec.trackConsentForm(form);
     final ByteBuffer message = codec.encodeMessage(form);
+
     ConsentForm decoded = (ConsentForm) codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(form, decoded);
+
+    // Untrack consent form and verify that value is null
+    codec.disposeConsentForm(form);
+    decoded = (ConsentForm) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertNull(decoded);
   }
 }

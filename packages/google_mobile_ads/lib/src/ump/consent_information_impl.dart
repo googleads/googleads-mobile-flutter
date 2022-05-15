@@ -21,7 +21,6 @@ class ConsentInformationImpl extends ConsentInformation {
   /// Constructor for [ConsentInformationImpl].
   ConsentInformationImpl();
 
-  /// Requests a consent information update.
   @override
   void requestConsentInfoUpdate(
       ConsentRequestParameters params,
@@ -31,25 +30,16 @@ class ConsentInformationImpl extends ConsentInformation {
         .requestConsentInfoUpdate(params, successListener, failureListener);
   }
 
-  /// Returns true if a ConsentForm is available, false otherwise.
   @override
   Future<bool> isConsentFormAvailable() {
     return UserMessagingChannel.instance.isConsentFormAvailable();
   }
 
-  /// Get the user’s consent status.
-  ///
-  /// This value is cached between app sessions and can be read before
-  /// requesting updated parameters.
   @override
   Future<ConsentStatus> getConsentStatus() {
     return UserMessagingChannel.instance.getConsentStatus();
   }
 
-  /// Resets the consent information to initialized status.
-  ///
-  /// Should only be used for testing. Returns a [Future] that completes when
-  /// the platform API has been called.
   @override
   Future<void> reset() {
     return UserMessagingChannel.instance.reset();

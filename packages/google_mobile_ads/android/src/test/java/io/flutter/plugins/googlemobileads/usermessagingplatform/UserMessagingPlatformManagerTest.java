@@ -57,6 +57,7 @@ public class UserMessagingPlatformManagerTest {
   private Context context;
   private BinaryMessenger mockMessenger;
   private UserMessagingPlatformManager manager;
+  private UserMessagingCodec userMessagingCodec;
   private Activity activity;
 
   private MockedStatic<UserMessagingPlatform> mockedUmp;
@@ -64,9 +65,10 @@ public class UserMessagingPlatformManagerTest {
 
   @Before
   public void setup() {
+    userMessagingCodec = mock(UserMessagingCodec.class);
     context = ApplicationProvider.getApplicationContext();
     mockMessenger = mock(BinaryMessenger.class);
-    manager = new UserMessagingPlatformManager(mockMessenger, context);
+    manager = new UserMessagingPlatformManager(mockMessenger, context, userMessagingCodec);
     activity = mock(Activity.class);
     mockConsentInformation = mock(ConsentInformation.class);
     mockedUmp = Mockito.mockStatic(UserMessagingPlatform.class);
@@ -117,7 +119,7 @@ public class UserMessagingPlatformManagerTest {
 
     verify(result)
         .error(
-            eq("UserMessagingPlatformManager"),
+            eq("UMPManager"),
             eq(
                 "ConsentInformation#requestConsentInfoUpdate called before plugin has been "
                     + "registered to an activity."),
@@ -169,7 +171,7 @@ public class UserMessagingPlatformManagerTest {
   }
 
   @Test
-  public void testUserMessagingPlatform_loadConsentForm() {
+  public void testUserMessagingPlatform_loadConsentFormAndDispose() {
     MethodCall methodCall = new MethodCall("UserMessagingPlatform#loadConsentForm", null);
     Result result = mock(Result.class);
 
@@ -188,9 +190,18 @@ public class UserMessagingPlatformManagerTest {
     successCaptor.getValue().onConsentFormLoadSuccess(consentForm);
 
     verify(result).success(eq(consentForm));
+    verify(userMessagingCodec).trackConsentForm(consentForm);
 
     FormError formError = mock(FormError.class);
     errorCaptor.getValue().onConsentFormLoadFailure(formError);
+
+    // Dispose
+    Map<String, Object> args = Collections.singletonMap("consentForm", consentForm);
+    methodCall = new MethodCall("ConsentForm#dispose", args);
+    manager.onMethodCall(methodCall, result);
+
+    verify(userMessagingCodec).disposeConsentForm(consentForm);
+    verify(result).success(null);
   }
 
   @Test
@@ -222,6 +233,6 @@ public class UserMessagingPlatformManagerTest {
     MethodCall methodCall = new MethodCall("ConsentForm#show", null);
     Result result = mock(Result.class);
     manager.onMethodCall(methodCall, result);
-    verify(result).error(eq("UserMessagingPlatformManager"), eq("ConsentForm#show"), isNull());
+    verify(result).error(eq("UMPManager"), eq("ConsentForm#show"), isNull());
   }
 }
