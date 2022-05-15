@@ -14,10 +14,13 @@
 
 package io.flutter.plugins.googlemobileads.usermessagingplatform;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.ump.ConsentForm;
 import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +39,7 @@ public class UserMessagingCodec extends StandardMessageCodec {
   }
 
   @Override
-  protected void writeValue(ByteArrayOutputStream stream, Object value) {
+  protected void writeValue(@NonNull ByteArrayOutputStream stream, @NonNull Object value) {
     if (value instanceof ConsentRequestParametersWrapper) {
       stream.write(VALUE_CONSENT_REQUEST_PARAMETERS);
       ConsentRequestParametersWrapper params = (ConsentRequestParametersWrapper) value;
@@ -55,8 +58,25 @@ public class UserMessagingCodec extends StandardMessageCodec {
     }
   }
 
+  @Nullable
+  private List<String> asList(@Nullable Object maybeList) {
+    if (maybeList == null) {
+      return null;
+    }
+    List<String> stringList = new ArrayList<>();
+    if (maybeList instanceof List) {
+      List<?> list = (List<?>) maybeList;
+      for (Object obj : list) {
+        if (obj instanceof String) {
+          stringList.add((String) obj);
+        }
+      }
+    }
+    return stringList;
+  }
+
   @Override
-  protected Object readValueOfType(byte type, ByteBuffer buffer) {
+  protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
     switch (type) {
       case VALUE_CONSENT_REQUEST_PARAMETERS:
         {
@@ -68,7 +88,7 @@ public class UserMessagingCodec extends StandardMessageCodec {
       case VALUE_CONSENT_DEBUG_SETTINGS:
         {
           Integer debugGeoInt = (Integer) readValueOfType(buffer.get(), buffer);
-          List<String> testIdentifiers = (List<String>) readValueOfType(buffer.get(), buffer);
+          List<String> testIdentifiers = asList(readValueOfType(buffer.get(), buffer));
           return new ConsentDebugSettingsWrapper(debugGeoInt, testIdentifiers);
         }
       case VALUE_CONSENT_FORM:
