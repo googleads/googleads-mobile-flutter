@@ -71,6 +71,19 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
     _consentFormDict[hash] = form;
     [self writeByte:FLTValueConsentForm];
     [self writeValue:hash];
+  } else if ([value isKindOfClass:[UMPRequestParameters class]]) {
+    UMPRequestParameters *params = (UMPRequestParameters *)value;
+
+    [self writeByte:FLTValueConsentRequestParameters];
+    [self writeValue:[[NSNumber alloc]
+                         initWithBool:params.tagForUnderAgeOfConsent]];
+    [self writeValue:params.debugSettings];
+  } else if ([value isKindOfClass:[UMPDebugSettings class]]) {
+    UMPDebugSettings *debugSettings = (UMPDebugSettings *)value;
+    [self writeByte:FLTValueConsentDebugSettings];
+    [self
+        writeValue:[[NSNumber alloc] initWithInteger:debugSettings.geography]];
+    [self writeValue:debugSettings.testDeviceIdentifiers];
   } else if ([value isKindOfClass:[UMPConsentInformation class]]) {
     [self writeByte:FLTValueConsentInformation];
     // iOS just uses UMPConsentInformation.sharedInstance, so this value doesn't

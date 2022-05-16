@@ -20,4 +20,7 @@
 - (instancetype _Nonnull)initWithBinaryMessenger:
     (NSObject<FlutterBinaryMessenger> *_Nonnull)binaryMessenger;
 
+- (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call
+                  result:(FlutterResult _Nonnull)result;
+
 @end
