@@ -19,3 +19,4 @@ export 'src/mobile_ads.dart';
 export 'src/request_configuration.dart';
 export 'src/ump/consent_request_parameters.dart';
 export 'src/ump/consent_information.dart';
+export 'src/ump/consent_form.dart';
