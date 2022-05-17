@@ -14,13 +14,11 @@
 
 import 'dart:async';
 
-import 'package:google_mobile_ads/src/ump/consent_form.dart';
 import 'package:google_mobile_ads/src/ump/consent_form_impl.dart';
 import 'package:google_mobile_ads/src/ump/form_error.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:google_mobile_ads/src/ump/consent_information_impl.dart';
 import 'package:google_mobile_ads/src/ump/user_messaging_channel.dart';
 import 'package:google_mobile_ads/src/ump/user_messaging_codec.dart';
 
@@ -36,40 +34,15 @@ void main() {
       channel = UserMessagingChannel(methodChannel);
     });
 
-    test('getConsentInformation() success', () async {
-      ConsentInformation consentInformation = ConsentInformationImpl(1);
-
-      methodChannel.setMockMethodCallHandler((MethodCall call) async {
-        expect(
-            call.method, equals('UserMessagingPlatform#getConsentInformation'));
-        return Future<dynamic>.value(consentInformation);
-      });
-
-      ConsentInformation response = await channel.getConsentInformation();
-      expect(response, equals(consentInformation));
-    });
-
-    test('getConsentInformation() error', () async {
-      methodChannel.setMockMethodCallHandler((MethodCall call) async {
-        throw PlatformException(
-            code: 'code', message: 'message', details: 'details');
-      });
-      expect(() async {
-        await channel.getConsentInformation();
-      }, throwsException);
-    });
-
     test('requestConsentInfoUpdate() success', () async {
       ConsentRequestParameters params = ConsentRequestParameters(
           tagForUnderAgeOfConsent: true,
           consentDebugSettings: ConsentDebugSettings());
-      ConsentInformationImpl consentInfo = ConsentInformationImpl(1);
 
       methodChannel.setMockMethodCallHandler((MethodCall call) async {
         expect(
             call.method, equals('ConsentInformation#requestConsentInfoUpdate'));
-        expect(call.arguments,
-            equals({'params': params, 'consentInformation': consentInfo}));
+        expect(call.arguments, equals({'params': params}));
         return Future<dynamic>.value();
       });
 
@@ -80,7 +53,7 @@ void main() {
         successCompleter.complete();
       }, (error) {
         failureCompleter.complete(error);
-      }, consentInfo);
+      });
       await successCompleter.future;
 
       expect(successCompleter.isCompleted, true);
@@ -91,13 +64,11 @@ void main() {
       ConsentRequestParameters params = ConsentRequestParameters(
           tagForUnderAgeOfConsent: true,
           consentDebugSettings: ConsentDebugSettings());
-      ConsentInformationImpl consentInfo = ConsentInformationImpl(1);
 
       methodChannel.setMockMethodCallHandler((MethodCall call) async {
         expect(
             call.method, equals('ConsentInformation#requestConsentInfoUpdate'));
-        expect(call.arguments,
-            equals({'params': params, 'consentInformation': consentInfo}));
+        expect(call.arguments, equals({'params': params}));
         return Future.error(PlatformException(
             code: '1', message: 'message', details: 'details'));
       });
@@ -106,11 +77,15 @@ void main() {
       Completer<FormError> failureCompleter = Completer<FormError>();
 
       // Test function
-      channel.requestConsentInfoUpdate(params, () {
-        successCompleter.complete();
-      }, (error) {
-        failureCompleter.complete(error);
-      }, consentInfo);
+      channel.requestConsentInfoUpdate(
+        params,
+        () {
+          successCompleter.complete();
+        },
+        (error) {
+          failureCompleter.complete(error);
+        },
+      );
 
       FormError error = await failureCompleter.future;
       expect(successCompleter.isCompleted, false);
@@ -120,48 +95,44 @@ void main() {
     });
 
     test('isConsentFormAvailable() true', () async {
-      ConsentInformationImpl consentInfo = ConsentInformationImpl(1);
       methodChannel.setMockMethodCallHandler((MethodCall call) async {
         expect(
             call.method, equals('ConsentInformation#isConsentFormAvailable'));
-        expect(call.arguments, equals({'consentInformation': consentInfo}));
+        expect(call.arguments, null);
         return Future<dynamic>.value(true);
       });
 
-      bool isAvailable = await channel.isConsentFormAvailable(consentInfo);
+      bool isAvailable = await channel.isConsentFormAvailable();
 
       expect(isAvailable, true);
     });
 
     test('isConsentFormAvailable() false', () async {
-      ConsentInformationImpl consentInfo = ConsentInformationImpl(1);
       methodChannel.setMockMethodCallHandler((MethodCall call) async {
         expect(
             call.method, equals('ConsentInformation#isConsentFormAvailable'));
-        expect(call.arguments, equals({'consentInformation': consentInfo}));
+        expect(call.arguments, null);
         return Future<dynamic>.value(false);
       });
 
-      bool isAvailable = await channel.isConsentFormAvailable(consentInfo);
+      bool isAvailable = await channel.isConsentFormAvailable();
 
       expect(isAvailable, false);
     });
 
     test('getConsentStatus()', () async {
-      ConsentInformationImpl consentInfo = ConsentInformationImpl(1);
       methodChannel.setMockMethodCallHandler((MethodCall call) async {
         expect(call.method, equals('ConsentInformation#getConsentStatus'));
-        expect(call.arguments, equals({'consentInformation': consentInfo}));
+        expect(call.arguments, null);
         return Future<dynamic>.value(1);
       });
 
-      ConsentStatus status = await channel.getConsentStatus(consentInfo);
+      ConsentStatus status = await channel.getConsentStatus();
 
       expect(status, ConsentStatus.notRequired);
     });
 
     test('reset()', () async {
-      ConsentInformationImpl consentInfo = ConsentInformationImpl(1);
       String? method;
       dynamic arguments;
       methodChannel.setMockMethodCallHandler((MethodCall call) async {
@@ -170,10 +141,10 @@ void main() {
         return Future<void>.value();
       });
 
-      await channel.reset(consentInfo);
+      await channel.reset();
 
       expect(method, equals('ConsentInformation#reset'));
-      expect(arguments, equals({'consentInformation': consentInfo}));
+      expect(arguments, null);
     });
 
     test('loadConsentForm() success', () async {
@@ -269,6 +240,22 @@ void main() {
       expect(method, equals('ConsentForm#show'));
       expect(arguments, {'consentForm': consentForm});
       expect(error, FormError(errorCode: 55, message: 'msg'));
+    });
+
+    test('disposeConsentForm()', () async {
+      String? method;
+      dynamic arguments;
+      methodChannel.setMockMethodCallHandler((MethodCall call) async {
+        method = call.method;
+        arguments = call.arguments;
+        return Future<void>.value();
+      });
+
+      ConsentForm consentForm = ConsentFormImpl(1);
+      await channel.disposeConsentForm(consentForm);
+
+      expect(method, equals('ConsentForm#dispose'));
+      expect(arguments, {'consentForm': consentForm});
     });
   });
 }

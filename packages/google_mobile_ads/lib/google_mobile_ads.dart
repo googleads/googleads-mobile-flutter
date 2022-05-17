@@ -17,6 +17,6 @@ export 'src/ad_listeners.dart';
 export 'src/app_background_event_notifier.dart';
 export 'src/mobile_ads.dart';
 export 'src/request_configuration.dart';
-export 'src/ump/user_messaging_platform.dart';
 export 'src/ump/consent_request_parameters.dart';
 export 'src/ump/consent_information.dart';
+export 'src/ump/consent_form.dart';

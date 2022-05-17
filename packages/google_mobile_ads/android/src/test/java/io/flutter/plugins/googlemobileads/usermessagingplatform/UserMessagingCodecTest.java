@@ -15,11 +15,10 @@
 package io.flutter.plugins.googlemobileads.usermessagingplatform;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
-import androidx.test.core.app.ApplicationProvider;
 import com.google.android.ump.ConsentForm;
-import com.google.android.ump.ConsentInformation;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.List;
@@ -36,16 +35,7 @@ public class UserMessagingCodecTest {
 
   @Before
   public void setup() {
-    codec = new UserMessagingCodec(ApplicationProvider.getApplicationContext());
-  }
-
-  @Test
-  public void testConsentInformation() {
-    ConsentInformation consentInformation = mock(ConsentInformation.class);
-    final ByteBuffer message = codec.encodeMessage(consentInformation);
-    ConsentInformation decoded =
-        (ConsentInformation) codec.decodeMessage((ByteBuffer) message.position(0));
-    assertEquals(consentInformation, decoded);
+    codec = new UserMessagingCodec();
   }
 
   @Test
@@ -129,8 +119,15 @@ public class UserMessagingCodecTest {
   @Test
   public void testConsentForm() {
     ConsentForm form = mock(ConsentForm.class);
+    codec.trackConsentForm(form);
     final ByteBuffer message = codec.encodeMessage(form);
+
     ConsentForm decoded = (ConsentForm) codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(form, decoded);
+
+    // Untrack consent form and verify that value is null
+    codec.disposeConsentForm(form);
+    decoded = (ConsentForm) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertNull(decoded);
   }
 }

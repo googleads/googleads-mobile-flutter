@@ -13,6 +13,12 @@
 // limitations under the License.
 
 #import <Flutter/Flutter.h>
+#include <UserMessagingPlatform/UserMessagingPlatform.h>
 
 @interface FLTUserMessagingPlatformReaderWriter : FlutterStandardReaderWriter
+
+- (void)trackConsentForm:(UMPConsentForm *)consentForm;
+
+- (void)disposeConsentForm:(UMPConsentForm *)consentForm;
+
 @end

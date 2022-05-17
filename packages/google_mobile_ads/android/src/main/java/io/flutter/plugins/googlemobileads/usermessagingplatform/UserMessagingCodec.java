@@ -14,13 +14,13 @@
 
 package io.flutter.plugins.googlemobileads.usermessagingplatform;
 
-import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.ump.ConsentForm;
-import com.google.android.ump.ConsentInformation;
 import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,29 +28,19 @@ import java.util.Map;
 /** Codec for UMP SDK. */
 public class UserMessagingCodec extends StandardMessageCodec {
 
-  private static final byte VALUE_CONSENT_INFORMATION = (byte) 128;
   private static final byte VALUE_CONSENT_REQUEST_PARAMETERS = (byte) 129;
   private static final byte VALUE_CONSENT_DEBUG_SETTINGS = (byte) 130;
   private static final byte VALUE_CONSENT_FORM = (byte) 131;
 
-  private final Context context;
-
   private final Map<Integer, ConsentForm> consentFormMap;
-  private final Map<Integer, ConsentInformation> consentInformationMap;
 
-  UserMessagingCodec(@NonNull Context context) {
-    this.context = context;
+  UserMessagingCodec() {
     consentFormMap = new HashMap<>();
-    consentInformationMap = new HashMap<>();
   }
 
   @Override
-  protected void writeValue(ByteArrayOutputStream stream, Object value) {
-    if (value instanceof ConsentInformation) {
-      stream.write(VALUE_CONSENT_INFORMATION);
-      consentInformationMap.put(value.hashCode(), (ConsentInformation) value);
-      writeValue(stream, value.hashCode());
-    } else if (value instanceof ConsentRequestParametersWrapper) {
+  protected void writeValue(@NonNull ByteArrayOutputStream stream, @NonNull Object value) {
+    if (value instanceof ConsentRequestParametersWrapper) {
       stream.write(VALUE_CONSENT_REQUEST_PARAMETERS);
       ConsentRequestParametersWrapper params = (ConsentRequestParametersWrapper) value;
       writeValue(stream, params.getTfuac());
@@ -62,21 +52,32 @@ public class UserMessagingCodec extends StandardMessageCodec {
       writeValue(stream, debugSettings.getTestIdentifiers());
     } else if (value instanceof ConsentForm) {
       stream.write(VALUE_CONSENT_FORM);
-      consentFormMap.put(value.hashCode(), (ConsentForm) value);
       writeValue(stream, value.hashCode());
     } else {
       super.writeValue(stream, value);
     }
   }
 
-  @Override
-  protected Object readValueOfType(byte type, ByteBuffer buffer) {
-    switch (type) {
-      case VALUE_CONSENT_INFORMATION:
-        {
-          Integer hash = (Integer) readValueOfType(buffer.get(), buffer);
-          return consentInformationMap.get(hash);
+  @Nullable
+  private List<String> asList(@Nullable Object maybeList) {
+    if (maybeList == null) {
+      return null;
+    }
+    List<String> stringList = new ArrayList<>();
+    if (maybeList instanceof List) {
+      List<?> list = (List<?>) maybeList;
+      for (Object obj : list) {
+        if (obj instanceof String) {
+          stringList.add((String) obj);
         }
+      }
+    }
+    return stringList;
+  }
+
+  @Override
+  protected Object readValueOfType(byte type, @NonNull ByteBuffer buffer) {
+    switch (type) {
       case VALUE_CONSENT_REQUEST_PARAMETERS:
         {
           Boolean tfuac = (Boolean) readValueOfType(buffer.get(), buffer);
@@ -87,7 +88,7 @@ public class UserMessagingCodec extends StandardMessageCodec {
       case VALUE_CONSENT_DEBUG_SETTINGS:
         {
           Integer debugGeoInt = (Integer) readValueOfType(buffer.get(), buffer);
-          List<String> testIdentifiers = (List<String>) readValueOfType(buffer.get(), buffer);
+          List<String> testIdentifiers = asList(readValueOfType(buffer.get(), buffer));
           return new ConsentDebugSettingsWrapper(debugGeoInt, testIdentifiers);
         }
       case VALUE_CONSENT_FORM:
@@ -98,5 +99,13 @@ public class UserMessagingCodec extends StandardMessageCodec {
       default:
         return super.readValueOfType(type, buffer);
     }
+  }
+
+  void trackConsentForm(ConsentForm form) {
+    consentFormMap.put(form.hashCode(), form);
+  }
+
+  void disposeConsentForm(ConsentForm form) {
+    consentFormMap.remove(form.hashCode());
   }
 }

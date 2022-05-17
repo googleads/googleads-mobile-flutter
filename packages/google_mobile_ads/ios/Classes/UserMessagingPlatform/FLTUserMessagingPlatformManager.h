@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "FLTUserMessagingPlatformReaderWriter.h"
 #import <Flutter/Flutter.h>
 #import <Foundation/Foundation.h>
 
 @interface FLTUserMessagingPlatformManager : NSObject
+
+@property FLTUserMessagingPlatformReaderWriter *_Nonnull readerWriter;
 
 - (instancetype _Nonnull)initWithBinaryMessenger:
     (NSObject<FlutterBinaryMessenger> *_Nonnull)binaryMessenger;

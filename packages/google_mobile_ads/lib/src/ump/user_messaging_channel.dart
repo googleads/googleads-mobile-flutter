@@ -20,7 +20,6 @@ import 'consent_information.dart';
 import 'consent_request_parameters.dart';
 import 'form_error.dart';
 import 'user_messaging_codec.dart';
-import 'user_messaging_platform.dart';
 
 /// Platform channel for UMP SDK.
 class UserMessagingChannel {
@@ -35,16 +34,6 @@ class UserMessagingChannel {
 
   final MethodChannel _methodChannel;
 
-  /// Get the current consent information.
-  Future<ConsentInformation> getConsentInformation() async {
-    try {
-      return (await _methodChannel.invokeMethod<ConsentInformation>(
-          'UserMessagingPlatform#getConsentInformation'))!;
-    } on PlatformException catch (e) {
-      return Future.error(e);
-    }
-  }
-
   /// Request a consent information update with [params].
   ///
   /// Invokes [successListener] or [failureListener] depending on if there was
@@ -52,41 +41,32 @@ class UserMessagingChannel {
   void requestConsentInfoUpdate(
       ConsentRequestParameters params,
       OnConsentInfoUpdateSuccessListener successListener,
-      OnConsentInfoUpdateFailureListener failureListener,
-      ConsentInformation consentInformation) async {
+      OnConsentInfoUpdateFailureListener failureListener) async {
     try {
       await _methodChannel.invokeMethod<void>(
         'ConsentInformation#requestConsentInfoUpdate',
         <dynamic, dynamic>{
           'params': params,
-          'consentInformation': consentInformation,
         },
       );
       successListener();
     } on PlatformException catch (e) {
       failureListener(
+          // TODO - Fix internal error form errors
           FormError(errorCode: int.parse(e.code), message: e.message));
     }
   }
 
   /// Returns a future indicating whether a consent form is available.
-  Future<bool> isConsentFormAvailable(ConsentInformation consentInfo) async {
-    return (await _methodChannel.invokeMethod<bool>(
-      'ConsentInformation#isConsentFormAvailable',
-      <dynamic, dynamic>{
-        'consentInformation': consentInfo,
-      },
-    ))!;
+  Future<bool> isConsentFormAvailable() async {
+    return (await _methodChannel
+        .invokeMethod<bool>('ConsentInformation#isConsentFormAvailable'))!;
   }
 
   /// Gets the consent status.
-  Future<ConsentStatus> getConsentStatus(ConsentInformation consentInfo) async {
-    int consentStatus = (await _methodChannel.invokeMethod<int>(
-      'ConsentInformation#getConsentStatus',
-      <dynamic, dynamic>{
-        'consentInformation': consentInfo,
-      },
-    ))!;
+  Future<ConsentStatus> getConsentStatus() async {
+    int consentStatus = (await _methodChannel
+        .invokeMethod<int>('ConsentInformation#getConsentStatus'))!;
 
     if (defaultTargetPlatform == TargetPlatform.iOS) {
       switch (consentStatus) {
@@ -120,13 +100,8 @@ class UserMessagingChannel {
   }
 
   /// Invokes reset API,
-  Future<void> reset(ConsentInformation consentInfo) async {
-    return _methodChannel.invokeMethod<void>(
-      'ConsentInformation#reset',
-      <dynamic, dynamic>{
-        'consentInformation': consentInfo,
-      },
-    );
+  Future<void> reset() async {
+    return _methodChannel.invokeMethod<void>('ConsentInformation#reset');
   }
 
   /// Loads a consent form and calls the corresponding listener.
@@ -157,6 +132,15 @@ class UserMessagingChannel {
       onConsentFormDismissedListener(
           FormError(errorCode: int.parse(e.code), message: e.message));
     }
-    ;
+  }
+
+  /// Free platform resources associated with the [ConsentForm].
+  Future<void> disposeConsentForm(ConsentForm consentForm) {
+    return _methodChannel.invokeMethod<void>(
+      'ConsentForm#dispose',
+      <dynamic, dynamic>{
+        'consentForm': consentForm,
+      },
+    );
   }
 }

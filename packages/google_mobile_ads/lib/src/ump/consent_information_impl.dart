@@ -19,48 +19,29 @@ import 'user_messaging_channel.dart';
 /// Implementation for ConsentInformation.
 class ConsentInformationImpl extends ConsentInformation {
   /// Constructor for [ConsentInformationImpl].
-  ConsentInformationImpl(this.platformHash);
+  ConsentInformationImpl();
 
-  /// An identifier to the corresponding platform object.
-  final int platformHash;
-
-  /// Requests a consent information update.
   @override
   void requestConsentInfoUpdate(
       ConsentRequestParameters params,
       OnConsentInfoUpdateSuccessListener successListener,
       OnConsentInfoUpdateFailureListener failureListener) {
-    UserMessagingChannel.instance.requestConsentInfoUpdate(
-        params, successListener, failureListener, this);
+    UserMessagingChannel.instance
+        .requestConsentInfoUpdate(params, successListener, failureListener);
   }
 
-  /// Returns true if a ConsentForm is available, false otherwise.
   @override
   Future<bool> isConsentFormAvailable() {
-    return UserMessagingChannel.instance.isConsentFormAvailable(this);
+    return UserMessagingChannel.instance.isConsentFormAvailable();
   }
 
-  /// Get the user’s consent status.
-  ///
-  /// This value is cached between app sessions and can be read before
-  /// requesting updated parameters.
   @override
   Future<ConsentStatus> getConsentStatus() {
-    return UserMessagingChannel.instance.getConsentStatus(this);
+    return UserMessagingChannel.instance.getConsentStatus();
   }
 
-  /// Resets the consent information to initialized status.
-  ///
-  /// Should only be used for testing. Returns a [Future] that completes when
-  /// the platform API has been called.
   @override
   Future<void> reset() {
-    return UserMessagingChannel.instance.reset(this);
-  }
-
-  @override
-  bool operator ==(other) {
-    return other is ConsentInformationImpl &&
-        other.platformHash == platformHash;
+    return UserMessagingChannel.instance.reset();
   }
 }

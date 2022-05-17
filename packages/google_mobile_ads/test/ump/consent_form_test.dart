@@ -14,39 +14,26 @@
 
 import 'dart:async';
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_mobile_ads/src/ump/consent_form.dart';
 import 'package:google_mobile_ads/src/ump/consent_form_impl.dart';
-import 'package:google_mobile_ads/src/ump/consent_information_impl.dart';
 import 'package:google_mobile_ads/src/ump/form_error.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:google_mobile_ads/src/ump/user_messaging_channel.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:google_mobile_ads/src/ump/user_messaging_channel.dart';
 
-import 'user_messaging_platform_test.mocks.dart';
+import 'consent_form_test.mocks.dart';
 
 @GenerateMocks([UserMessagingChannel])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('UserMessagingPlatform', () {
+  group('ConsentForm', () {
     late MockUserMessagingChannel mockChannel;
-    setUpAll(() async {
+
+    setUp(() async {
       mockChannel = MockUserMessagingChannel();
       UserMessagingChannel.instance = mockChannel;
-    });
-
-    test('getConsentInformation()', () async {
-      ConsentInformation info = ConsentInformationImpl(1);
-      when(mockChannel.getConsentInformation())
-          .thenAnswer((realInvocation) => Future.value(info));
-
-      ConsentInformation result =
-          await UserMessagingPlatform.getConsentInformation();
-
-      expect(result, info);
-      verify(mockChannel.getConsentInformation());
     });
 
     test('loadConsentForm() success', () async {
@@ -58,7 +45,7 @@ void main() {
       Completer<ConsentForm> successCompleter = Completer<ConsentForm>();
       Completer<FormError> errorCompleter = Completer<FormError>();
 
-      UserMessagingPlatform.loadConsentForm(
+      ConsentForm.loadConsentForm(
           (consentForm) => successCompleter.complete(consentForm),
           (formError) => errorCompleter.complete(formError));
 
@@ -77,7 +64,7 @@ void main() {
       Completer<ConsentForm> successCompleter = Completer<ConsentForm>();
       Completer<FormError> errorCompleter = Completer<FormError>();
 
-      UserMessagingPlatform.loadConsentForm(
+      ConsentForm.loadConsentForm(
           (consentForm) => successCompleter.complete(consentForm),
           (formError) => errorCompleter.complete(formError));
 

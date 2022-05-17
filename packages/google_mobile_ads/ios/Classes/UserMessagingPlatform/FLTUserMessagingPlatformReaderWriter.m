@@ -18,7 +18,6 @@
 
 // The type values below must be consistent for each platform.
 typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
-  FLTValueConsentInformation = 128,
   FLTValueConsentRequestParameters = 129,
   FLTValueConsentDebugSettings = 130,
   FLTValueConsentForm = 131,
@@ -46,6 +45,16 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
   return self;
 }
 
+- (void)trackConsentForm:(UMPConsentForm *)consentForm {
+  NSNumber *hash = [[NSNumber alloc] initWithInteger:consentForm.hash];
+  _consentFormDict[hash] = consentForm;
+}
+
+- (void)disposeConsentForm:(UMPConsentForm *)consentForm {
+  NSNumber *hash = [[NSNumber alloc] initWithInteger:consentForm.hash];
+  [_consentFormDict removeObjectForKey:hash];
+}
+
 - (FlutterStandardReader *_Nonnull)readerWithData:(NSData *_Nonnull)data {
   FLTUserMessagingPlatformReader *reader =
       [[FLTUserMessagingPlatformReader alloc] initWithData:data];
@@ -68,7 +77,6 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
   if ([value isKindOfClass:[UMPConsentForm class]]) {
     UMPConsentForm *form = (UMPConsentForm *)value;
     NSNumber *hash = [[NSNumber alloc] initWithInteger:form.hash];
-    _consentFormDict[hash] = form;
     [self writeByte:FLTValueConsentForm];
     [self writeValue:hash];
   } else if ([value isKindOfClass:[UMPRequestParameters class]]) {
@@ -84,11 +92,6 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
     [self
         writeValue:[[NSNumber alloc] initWithInteger:debugSettings.geography]];
     [self writeValue:debugSettings.testDeviceIdentifiers];
-  } else if ([value isKindOfClass:[UMPConsentInformation class]]) {
-    [self writeByte:FLTValueConsentInformation];
-    // iOS just uses UMPConsentInformation.sharedInstance, so this value doesn't
-    // matter.
-    [self writeValue:@(-1)];
   } else {
     [super writeValue:value];
   }
@@ -101,10 +104,6 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
 - (id _Nullable)readValueOfType:(UInt8)type {
   FLTUserMessagingPlatformField field = (FLTUserMessagingPlatformField)type;
   switch (field) {
-  case FLTValueConsentInformation:
-    // Dart sends a value which is used for Android, but not needed for iOS
-    [self readValueOfType:[self readByte]];
-    return UMPConsentInformation.sharedInstance;
   case FLTValueConsentRequestParameters: {
     UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
     NSNumber *tfuac = [self readValueOfType:[self readByte]];

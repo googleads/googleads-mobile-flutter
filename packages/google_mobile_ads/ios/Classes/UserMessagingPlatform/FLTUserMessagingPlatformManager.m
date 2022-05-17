@@ -25,9 +25,9 @@
     (NSObject<FlutterBinaryMessenger> *_Nonnull)binaryMessenger {
   self = [self init];
   if (self) {
-    NSObject<FlutterMethodCodec> *methodCodec = [FlutterStandardMethodCodec
-        codecWithReaderWriter:[[FLTUserMessagingPlatformReaderWriter alloc]
-                                  init]];
+    self.readerWriter = [[FLTUserMessagingPlatformReaderWriter alloc] init];
+    NSObject<FlutterMethodCodec> *methodCodec =
+        [FlutterStandardMethodCodec codecWithReaderWriter:_readerWriter];
     _methodChannel = [[FlutterMethodChannel alloc]
            initWithName:@"plugins.flutter.io/google_mobile_ads/ump"
         binaryMessenger:binaryMessenger
@@ -57,9 +57,6 @@
         UMPConsentInformation.sharedInstance.consentStatus;
     result([[NSNumber alloc] initWithInteger:status]);
   } else if ([call.method isEqualToString:
-                              @"UserMessagingPlatform#getConsentInformation"]) {
-    result(UMPConsentInformation.sharedInstance);
-  } else if ([call.method isEqualToString:
                               @"ConsentInformation#requestConsentInfoUpdate"]) {
     UMPRequestParameters *parameters = call.arguments[@"params"];
     [UMPConsentInformation.sharedInstance
@@ -82,6 +79,7 @@
     [UMPConsentForm
         loadWithCompletionHandler:^(UMPConsentForm *form, NSError *loadError) {
           if ([FLTAdUtil isNull:loadError]) {
+            [self.readerWriter trackConsentForm:form];
             result(form);
           } else {
             result([FlutterError
@@ -111,6 +109,15 @@
                               details:error.localizedDescription]);
                   }
                 }];
+  } else if ([call.method isEqualToString:@"ConsentForm#dispose"]) {
+    UMPConsentForm *consentForm = call.arguments[@"consentForm"];
+    if ([FLTAdUtil isNotNull:consentForm]) {
+      [_readerWriter disposeConsentForm:consentForm];
+    } else {
+      NSLog(@"FLTUserMessagingPlatformManager - consentForm resources already "
+            @"freed");
+    }
+    result(nil);
   } else {
     result(FlutterMethodNotImplemented);
   }

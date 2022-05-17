@@ -16,8 +16,10 @@ package io.flutter.plugins.googlemobileads.usermessagingplatform;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import com.google.android.ump.ConsentForm;
 import com.google.android.ump.ConsentForm.OnConsentFormDismissedListener;
 import com.google.android.ump.ConsentInformation;
@@ -39,16 +41,28 @@ import io.flutter.plugin.common.StandardMethodCodec;
 public class UserMessagingPlatformManager implements MethodCallHandler {
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/google_mobile_ads/ump";
-  private static final String INTERNAL_ERROR_CODE = "UserMessagingPlatformManager";
+  private static final String INTERNAL_ERROR_CODE = "UMPManager";
 
   private final UserMessagingCodec userMessagingCodec;
   private final MethodChannel methodChannel;
   private final Context context;
+  @Nullable private ConsentInformation consentInformation;
 
   @Nullable private Activity activity;
 
   public UserMessagingPlatformManager(BinaryMessenger binaryMessenger, Context context) {
-    userMessagingCodec = new UserMessagingCodec(context);
+    userMessagingCodec = new UserMessagingCodec();
+    methodChannel =
+        new MethodChannel(
+            binaryMessenger, METHOD_CHANNEL_NAME, new StandardMethodCodec(userMessagingCodec));
+    methodChannel.setMethodCallHandler(this);
+    this.context = context;
+  }
+
+  @VisibleForTesting
+  UserMessagingPlatformManager(
+      BinaryMessenger binaryMessenger, Context context, UserMessagingCodec userMessagingCodec) {
+    this.userMessagingCodec = userMessagingCodec;
     methodChannel =
         new MethodChannel(
             binaryMessenger, METHOD_CHANNEL_NAME, new StandardMethodCodec(userMessagingCodec));
@@ -60,57 +74,35 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
     this.activity = activity;
   }
 
+  private ConsentInformation getConsentInformation() {
+    if (consentInformation != null) {
+      return consentInformation;
+    }
+
+    consentInformation = UserMessagingPlatform.getConsentInformation(context);
+    return consentInformation;
+  }
+
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
     switch (call.method) {
       case "ConsentInformation#reset":
         {
-          ConsentInformation consentInformation = call.argument("consentInformation");
-          if (consentInformation == null) {
-            result.error(
-                INTERNAL_ERROR_CODE,
-                "Unable to find ConsentInfo in ConsentInformation#reset",
-                null);
-          } else {
-            consentInformation.reset();
-            result.success(null);
-          }
+          getConsentInformation().reset();
+          result.success(null);
           break;
         }
       case "ConsentInformation#getConsentStatus":
         {
-          ConsentInformation consentInformation = call.argument("consentInformation");
-          if (consentInformation == null) {
-            result.error(
-                INTERNAL_ERROR_CODE,
-                "Unable to find ConsentInfo in ConsentInformation#getConsentStatus",
-                null);
-          } else {
-            result.success(consentInformation.getConsentStatus());
-          }
-          break;
-        }
-      case "UserMessagingPlatform#getConsentInformation":
-        {
-          ConsentInformation consentInformation =
-              UserMessagingPlatform.getConsentInformation(context);
-          result.success(consentInformation);
+          result.success(getConsentInformation().getConsentStatus());
           break;
         }
       case "ConsentInformation#requestConsentInfoUpdate":
         {
-          ConsentInformation consentInformation = call.argument("consentInformation");
           if (activity == null) {
             result.error(
                 INTERNAL_ERROR_CODE,
                 "ConsentInformation#requestConsentInfoUpdate called before plugin has been registered to an activity.",
-                null);
-            break;
-          }
-          if (consentInformation == null) {
-            result.error(
-                INTERNAL_ERROR_CODE,
-                "Unable to find ConsentInfo in ConsentInformation#requestConsentInfoUpdate",
                 null);
             break;
           }
@@ -119,21 +111,23 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
               (requestParamsWrapper == null)
                   ? new ConsentRequestParameters.Builder().build()
                   : requestParamsWrapper.getAsConsentRequestParameters(activity);
-          consentInformation.requestConsentInfoUpdate(
-              activity,
-              consentRequestParameters,
-              new OnConsentInfoUpdateSuccessListener() {
-                @Override
-                public void onConsentInfoUpdateSuccess() {
-                  result.success(null);
-                }
-              },
-              new OnConsentInfoUpdateFailureListener() {
-                @Override
-                public void onConsentInfoUpdateFailure(FormError error) {
-                  result.error(Integer.toString(error.getErrorCode()), error.getMessage(), null);
-                }
-              });
+          getConsentInformation()
+              .requestConsentInfoUpdate(
+                  activity,
+                  consentRequestParameters,
+                  new OnConsentInfoUpdateSuccessListener() {
+                    @Override
+                    public void onConsentInfoUpdateSuccess() {
+                      result.success(null);
+                    }
+                  },
+                  new OnConsentInfoUpdateFailureListener() {
+                    @Override
+                    public void onConsentInfoUpdateFailure(FormError error) {
+                      result.error(
+                          Integer.toString(error.getErrorCode()), error.getMessage(), null);
+                    }
+                  });
           break;
         }
       case "UserMessagingPlatform#loadConsentForm":
@@ -142,6 +136,7 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
             new OnConsentFormLoadSuccessListener() {
               @Override
               public void onConsentFormLoadSuccess(ConsentForm consentForm) {
+                userMessagingCodec.trackConsentForm(consentForm);
                 result.success(consentForm);
               }
             },
@@ -155,15 +150,7 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
         break;
       case "ConsentInformation#isConsentFormAvailable":
         {
-          ConsentInformation consentInformation = call.argument("consentInformation");
-          if (consentInformation == null) {
-            result.error(
-                INTERNAL_ERROR_CODE,
-                "Unable to find ConsentInfo in ConsentInformation#isConsentFormAvailable",
-                null);
-          } else {
-            result.success(consentInformation.isConsentFormAvailable());
-          }
+          result.success(getConsentInformation().isConsentFormAvailable());
           break;
         }
       case "ConsentForm#show":
@@ -186,6 +173,17 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
                   }
                 });
           }
+          break;
+        }
+      case "ConsentForm#dispose":
+        {
+          ConsentForm consentForm = call.argument("consentForm");
+          if (consentForm == null) {
+            Log.w(INTERNAL_ERROR_CODE, "Called dispose on ad that has been freed");
+          } else {
+            userMessagingCodec.disposeConsentForm(consentForm);
+          }
+          result.success(null);
           break;
         }
       default:

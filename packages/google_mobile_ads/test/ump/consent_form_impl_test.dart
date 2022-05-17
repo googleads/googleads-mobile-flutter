@@ -21,7 +21,7 @@ import 'package:google_mobile_ads/src/ump/user_messaging_channel.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'user_messaging_platform_test.mocks.dart';
+import 'consent_form_impl_test.mocks.dart';
 
 @GenerateMocks([UserMessagingChannel])
 void main() {
@@ -64,6 +64,16 @@ void main() {
 
       expect(errorCompleter.isCompleted, true);
       expect(error, completedError);
+    });
+
+    test('dispose()', () async {
+      ConsentFormImpl form = ConsentFormImpl(1);
+
+      when(mockChannel.disposeConsentForm(form))
+          .thenAnswer((realInvocation) => Future.value());
+
+      await form.dispose();
+      verify(mockChannel.disposeConsentForm(form));
     });
   });
 }

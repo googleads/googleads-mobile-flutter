@@ -23,10 +23,14 @@ class ConsentFormImpl extends ConsentForm {
   /// Identifier to the underlying platform object.
   final int platformHash;
 
-  /// Shows the consent form.
   @override
   void show(OnConsentFormDismissedListener onConsentFormDismissedListener) {
     UserMessagingChannel.instance.show(this, onConsentFormDismissedListener);
+  }
+
+  @override
+  Future<void> dispose() {
+    return UserMessagingChannel.instance.disposeConsentForm(this);
   }
 
   @override
