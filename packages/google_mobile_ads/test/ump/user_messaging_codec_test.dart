@@ -15,7 +15,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:google_mobile_ads/src/ump/consent_form.dart';
 import 'package:google_mobile_ads/src/ump/consent_form_impl.dart';
 import 'package:google_mobile_ads/src/ump/user_messaging_codec.dart';
 

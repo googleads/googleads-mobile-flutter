@@ -14,7 +14,6 @@
 
 import 'dart:async';
 
-import 'package:google_mobile_ads/src/ump/consent_form.dart';
 import 'package:google_mobile_ads/src/ump/consent_form_impl.dart';
 import 'package:google_mobile_ads/src/ump/form_error.dart';
 import 'package:flutter/services.dart';
