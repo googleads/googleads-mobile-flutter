@@ -1,6 +1,11 @@
 ## 1.3.0
 * Adds support for programmatically opening the debug options menu using`MobileAds.openDebugMenu(String adUnitId)`
-* Adds support for Ad inspector APIs
+* Adds support for Ad inspector APIs. See the [AdMob](https://developers.google.com/admob/flutter/ad-inspector)
+  and [Ad Manager](https://developers.google.com/ad-manager/mobile-ads-sdk/flutter/ad-inspector)
+  sites for integration guides.
+* Adds support for User Messaging Platform. See the [AdMob](https://developers.google.com/admob/flutter/eu-consent)
+  and [Ad Manager](https://developers.google.com/ad-manager/mobile-ads-sdk/flutter/eu-consent)
+  sites for integration guides.
 
 ## 1.2.0
 * Set new minimum height for `FluidAdWidget`.
