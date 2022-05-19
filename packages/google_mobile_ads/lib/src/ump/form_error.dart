@@ -26,7 +26,7 @@ class FormError {
   final int errorCode;
 
   /// The message describing the error.
-  final String? message;
+  final String message;
 
   @override
   bool operator ==(Object other) {

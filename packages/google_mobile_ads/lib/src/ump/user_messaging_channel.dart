@@ -52,8 +52,7 @@ class UserMessagingChannel {
       successListener();
     } on PlatformException catch (e) {
       failureListener(
-          // TODO - Fix internal error form errors
-          FormError(errorCode: int.parse(e.code), message: e.message));
+          FormError(errorCode: int.parse(e.code), message: e.message ?? ''));
     }
   }
 
@@ -113,7 +112,7 @@ class UserMessagingChannel {
       successListener(form);
     } on PlatformException catch (e) {
       failureListener(
-          FormError(errorCode: int.parse(e.code), message: e.message));
+          FormError(errorCode: int.parse(e.code), message: e.message ?? ''));
     }
   }
 
@@ -130,7 +129,7 @@ class UserMessagingChannel {
       onConsentFormDismissedListener(null);
     } on PlatformException catch (e) {
       onConsentFormDismissedListener(
-          FormError(errorCode: int.parse(e.code), message: e.message));
+          FormError(errorCode: int.parse(e.code), message: e.message ?? ''));
     }
   }
 
