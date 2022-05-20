@@ -119,7 +119,7 @@ public class UserMessagingPlatformManagerTest {
 
     verify(result)
         .error(
-            eq("UMPManager"),
+            eq("0"),
             eq(
                 "ConsentInformation#requestConsentInfoUpdate called before plugin has been "
                     + "registered to an activity."),
@@ -233,6 +233,6 @@ public class UserMessagingPlatformManagerTest {
     MethodCall methodCall = new MethodCall("ConsentForm#show", null);
     Result result = mock(Result.class);
     manager.onMethodCall(methodCall, result);
-    verify(result).error(eq("UMPManager"), eq("ConsentForm#show"), isNull());
+    verify(result).error(eq("0"), eq("ConsentForm#show"), isNull());
   }
 }

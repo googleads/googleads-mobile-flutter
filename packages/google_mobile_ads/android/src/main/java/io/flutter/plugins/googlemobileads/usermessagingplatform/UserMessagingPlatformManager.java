@@ -41,7 +41,8 @@ import io.flutter.plugin.common.StandardMethodCodec;
 public class UserMessagingPlatformManager implements MethodCallHandler {
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/google_mobile_ads/ump";
-  private static final String INTERNAL_ERROR_CODE = "UMPManager";
+  /** Use 0 for error code internal to the Flutter plugin. */
+  private static final String INTERNAL_ERROR_CODE = "0";
 
   private final UserMessagingCodec userMessagingCodec;
   private final MethodChannel methodChannel;

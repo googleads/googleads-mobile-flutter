@@ -19,14 +19,17 @@ class FormError {
 
   /// Code for the error.
   ///
-  /// These come from corresponding Android and iOS platform objects.
-  /// See https://developers.google.com/admob/ump/android/api/reference/com/google/android/ump/FormError.ErrorCode
-  /// and https://developers.google.com/admob/ump/ios/api/reference/Enums/UMPFormErrorCode
-  /// for detailed error code descriptions.
+  /// A value of 0 means that the error is internal to the Flutter plugin.
+  /// All other error codes come from the corresponding Android and iOS platform
+  /// objects.
+  /// See https://developers.google.com/admob/ump/android/api/reference/com/google/android/ump/FormError.ErrorCode,
+  /// https://developers.google.com/admob/ump/ios/api/reference/Enums/UMPFormErrorCode,
+  /// and https://developers.google.com/admob/ump/ios/api/reference/Enums/UMPRequestErrorCode
+  /// for platform specific error code descriptions.
   final int errorCode;
 
   /// The message describing the error.
-  final String? message;
+  final String message;
 
   @override
   bool operator ==(Object other) {

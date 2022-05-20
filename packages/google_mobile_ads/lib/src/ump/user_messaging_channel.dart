@@ -51,9 +51,7 @@ class UserMessagingChannel {
       );
       successListener();
     } on PlatformException catch (e) {
-      failureListener(
-          // TODO - Fix internal error form errors
-          FormError(errorCode: int.parse(e.code), message: e.message));
+      failureListener(_formErrorFromPlatformException(e));
     }
   }
 
@@ -112,8 +110,7 @@ class UserMessagingChannel {
           .invokeMethod<ConsentForm>('UserMessagingPlatform#loadConsentForm'))!;
       successListener(form);
     } on PlatformException catch (e) {
-      failureListener(
-          FormError(errorCode: int.parse(e.code), message: e.message));
+      failureListener(_formErrorFromPlatformException(e));
     }
   }
 
@@ -129,9 +126,13 @@ class UserMessagingChannel {
       );
       onConsentFormDismissedListener(null);
     } on PlatformException catch (e) {
-      onConsentFormDismissedListener(
-          FormError(errorCode: int.parse(e.code), message: e.message));
+      onConsentFormDismissedListener(_formErrorFromPlatformException(e));
     }
+  }
+
+  FormError _formErrorFromPlatformException(PlatformException e) {
+    return FormError(
+        errorCode: int.tryParse(e.code) ?? -1, message: e.message ?? '');
   }
 
   /// Free platform resources associated with the [ConsentForm].
