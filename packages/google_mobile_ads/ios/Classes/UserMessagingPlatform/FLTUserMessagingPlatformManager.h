@@ -1,4 +1,4 @@
-// Copyright 2021 Google LLC
+// Copyright 2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,11 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export 'src/ad_containers.dart';
-export 'src/ad_listeners.dart';
-export 'src/app_background_event_notifier.dart';
-export 'src/mobile_ads.dart';
-export 'src/request_configuration.dart';
-export 'src/ump/consent_request_parameters.dart';
-export 'src/ump/consent_information.dart';
-export 'src/ump/consent_form.dart';
+#include "FLTUserMessagingPlatformReaderWriter.h"
+#import <Flutter/Flutter.h>
+#import <Foundation/Foundation.h>
+
+@interface FLTUserMessagingPlatformManager : NSObject
+
+@property FLTUserMessagingPlatformReaderWriter *_Nonnull readerWriter;
+
+- (instancetype _Nonnull)initWithBinaryMessenger:
+    (NSObject<FlutterBinaryMessenger> *_Nonnull)binaryMessenger;
+
+- (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call
+                  result:(FlutterResult _Nonnull)result;
+
+@end
