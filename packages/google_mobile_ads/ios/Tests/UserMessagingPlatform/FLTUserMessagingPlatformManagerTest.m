@@ -132,8 +132,8 @@
                            completionHandler:[OCMArg any]]);
   FlutterError *resultError = (FlutterError *)returnedResult;
   XCTAssertEqualObjects(resultError.code, @"1");
-  XCTAssertEqualObjects(resultError.message, @"domain");
-  XCTAssertEqualObjects(resultError.details, @"description");
+  XCTAssertEqualObjects(resultError.details, @"domain");
+  XCTAssertEqualObjects(resultError.message, @"description");
 }
 
 - (void)testLoadConsentForm_successAndDispose {
@@ -183,8 +183,8 @@
   OCMVerify([mockUmpConsentForm loadWithCompletionHandler:[OCMArg any]]);
   FlutterError *resultError = (FlutterError *)returnedResult;
   XCTAssertEqualObjects(resultError.code, @"1");
-  XCTAssertEqualObjects(resultError.message, @"domain");
-  XCTAssertEqualObjects(resultError.details, @"description");
+  XCTAssertEqualObjects(resultError.details, @"domain");
+  XCTAssertEqualObjects(resultError.message, @"description");
 }
 
 - (void)testIsConsentFormAvailable_available {
@@ -270,8 +270,8 @@
                               completionHandler:[OCMArg any]]);
   FlutterError *resultError = (FlutterError *)returnedResult;
   XCTAssertEqualObjects(resultError.code, @"1");
-  XCTAssertEqualObjects(resultError.message, @"domain");
-  XCTAssertEqualObjects(resultError.details, @"description");
+  XCTAssertEqualObjects(resultError.details, @"domain");
+  XCTAssertEqualObjects(resultError.message, @"description");
 }
 
 @end

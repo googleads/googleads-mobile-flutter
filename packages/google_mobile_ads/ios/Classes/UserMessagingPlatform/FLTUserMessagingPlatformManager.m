@@ -70,8 +70,8 @@
                                                        initWithFormat:@"%ld",
                                                                       error
                                                                           .code]
-                                           message:error.domain
-                                           details:error.localizedDescription]);
+                                           message:error.localizedDescription
+                                           details:error.domain]);
                                }
                              }];
   } else if ([call.method
@@ -85,8 +85,8 @@
             result([FlutterError
                 errorWithCode:[[NSString alloc]
                                   initWithFormat:@"%ld", loadError.code]
-                      message:loadError.domain
-                      details:loadError.localizedDescription]);
+                      message:loadError.localizedDescription
+                      details:loadError.domain]);
           }
         }];
   } else if ([call.method isEqualToString:
@@ -105,8 +105,8 @@
                     result([FlutterError
                         errorWithCode:[[NSString alloc]
                                           initWithFormat:@"%ld", error.code]
-                              message:error.domain
-                              details:error.localizedDescription]);
+                              message:error.localizedDescription
+                              details:error.domain]);
                   }
                 }];
   } else if ([call.method isEqualToString:@"ConsentForm#dispose"]) {
