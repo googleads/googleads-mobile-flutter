@@ -38,7 +38,8 @@
       OCMClassMock([FLTServerSideVerificationOptions class]);
   GADServerSideVerificationOptions *gadOptions =
       OCMClassMock([GADServerSideVerificationOptions class]);
-  OCMStub([serverSideVerificationOptions asGADServerSideVerificationOptions]).andReturn(gadOptions);
+  OCMStub([serverSideVerificationOptions asGADServerSideVerificationOptions])
+      .andReturn(gadOptions);
 
   [self testLoadShowRewardedAd:request
                     gadOrGAMRequest:gadRequest
@@ -54,7 +55,8 @@
       OCMClassMock([FLTServerSideVerificationOptions class]);
   GADServerSideVerificationOptions *gadOptions =
       OCMClassMock([GADServerSideVerificationOptions class]);
-  OCMStub([serverSideVerificationOptions asGADServerSideVerificationOptions]).andReturn(gadOptions);
+  OCMStub([serverSideVerificationOptions asGADServerSideVerificationOptions])
+      .andReturn(gadOptions);
 
   [self testLoadShowRewardedAd:request
                     gadOrGAMRequest:gamRequest
@@ -65,12 +67,14 @@
 - (void)testLoadShowRewardedAd:(FLTAdRequest *)request
                   gadOrGAMRequest:(GADRequest *)gadOrGAMRequest
     serverSideVerificationOptions:(FLTServerSideVerificationOptions *)options {
-  UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
-  FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                                      request:request
-                                           rootViewController:mockRootViewController
-                                serverSideVerificationOptions:options
-                                                         adId:@1];
+  UIViewController *mockRootViewController =
+      OCMClassMock([UIViewController class]);
+  FLTRewardedAd *ad =
+      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                      request:request
+                           rootViewController:mockRootViewController
+                serverSideVerificationOptions:options
+                                         adId:@1];
   ad.manager = mockManager;
 
   // Stub the load call to invoke successful load callback.
@@ -91,10 +95,12 @@
         [invocation getArgument:&delegate atIndex:2];
         XCTAssertEqual(delegate, ad);
         [delegate adDidRecordImpression:rewardedClassMock];
+        [delegate adDidRecordClick:rewardedClassMock];
         [delegate adDidDismissFullScreenContent:rewardedClassMock];
         [delegate adDidPresentFullScreenContent:rewardedClassMock];
         [delegate adWillDismissFullScreenContent:rewardedClassMock];
-        [delegate ad:rewardedClassMock didFailToPresentFullScreenContentWithError:error];
+        [delegate ad:rewardedClassMock
+            didFailToPresentFullScreenContentWithError:error];
       });
   GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
   OCMStub([rewardedClassMock responseInfo]).andReturn(responseInfo);
@@ -112,7 +118,8 @@
       });
   // Prevent calls to setServerSideVerificationOptions if options is nil.
   if (options == nil) {
-    OCMReject([rewardedClassMock setServerSideVerificationOptions:[OCMArg any]]);
+    OCMReject(
+        [rewardedClassMock setServerSideVerificationOptions:[OCMArg any]]);
   }
 
   // Mock callback of paid event handler.
@@ -120,57 +127,67 @@
   OCMStub([adValue value]).andReturn(NSDecimalNumber.one);
   OCMStub([adValue precision]).andReturn(GADAdValuePrecisionEstimated);
   OCMStub([adValue currencyCode]).andReturn(@"currencyCode");
-  OCMStub([rewardedClassMock setPaidEventHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
-                               GADPaidEventHandler handler = obj;
-                               handler(adValue);
-                               return YES;
-                             }]]);
+  OCMStub([rewardedClassMock
+      setPaidEventHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
+        GADPaidEventHandler handler = obj;
+        handler(adValue);
+        return YES;
+      }]]);
   // Call load and check expected interactions with mocks.
   [ad load];
 
-  OCMVerify(ClassMethod([rewardedClassMock loadWithAdUnitID:[OCMArg isEqual:@"testId"]
-                                                    request:[OCMArg isEqual:gadOrGAMRequest]
-                                          completionHandler:[OCMArg any]]));
+  OCMVerify(ClassMethod([rewardedClassMock
+       loadWithAdUnitID:[OCMArg isEqual:@"testId"]
+                request:[OCMArg isEqual:gadOrGAMRequest]
+      completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
                        responseInfo:[OCMArg isEqual:responseInfo]]);
-  OCMVerify([rewardedClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
+  OCMVerify(
+      [rewardedClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
   XCTAssertEqual(ad.rewardedAd, rewardedClassMock);
   if (options != nil) {
-    GADServerSideVerificationOptions *gadOptions = [options asGADServerSideVerificationOptions];
-    OCMVerify([rewardedClassMock setServerSideVerificationOptions:[OCMArg isEqual:gadOptions]]);
+    GADServerSideVerificationOptions *gadOptions =
+        [options asGADServerSideVerificationOptions];
+    OCMVerify([rewardedClassMock
+        setServerSideVerificationOptions:[OCMArg isEqual:gadOptions]]);
   }
-  OCMVerify([mockManager onPaidEvent:[OCMArg isEqual:ad]
-                               value:[OCMArg checkWithBlock:^BOOL(id obj) {
-                                 FLTAdValue *adValue = obj;
-                                 XCTAssertEqualObjects(
-                                     adValue.valueMicros,
-                                     [[NSDecimalNumber alloc] initWithInt:1000000]);
-                                 XCTAssertEqual(adValue.precision, GADAdValuePrecisionEstimated);
-                                 XCTAssertEqualObjects(adValue.currencyCode, @"currencyCode");
-                                 return TRUE;
-                               }]]);
+  OCMVerify([mockManager
+      onPaidEvent:[OCMArg isEqual:ad]
+            value:[OCMArg checkWithBlock:^BOOL(id obj) {
+              FLTAdValue *adValue = obj;
+              XCTAssertEqualObjects(
+                  adValue.valueMicros,
+                  [[NSDecimalNumber alloc] initWithInt:1000000]);
+              XCTAssertEqual(adValue.precision, GADAdValuePrecisionEstimated);
+              XCTAssertEqualObjects(adValue.currencyCode, @"currencyCode");
+              return TRUE;
+            }]]);
 
   [ad show];
 
-  OCMVerify([rewardedClassMock presentFromRootViewController:[OCMArg isEqual:mockRootViewController]
-                                    userDidEarnRewardHandler:[OCMArg any]]);
+  OCMVerify([rewardedClassMock
+      presentFromRootViewController:[OCMArg isEqual:mockRootViewController]
+           userDidEarnRewardHandler:[OCMArg any]]);
 
   // Verify full screen callbacks.
   OCMVerify([mockManager onAdDidPresentFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidRecordImpression:[OCMArg isEqual:ad]]);
-  OCMVerify([mockManager didFailToPresentFullScreenContentWithError:[OCMArg isEqual:ad]
-                                                              error:[OCMArg isEqual:error]]);
+  OCMVerify([mockManager adDidRecordClick:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager
+      didFailToPresentFullScreenContentWithError:[OCMArg isEqual:ad]
+                                           error:[OCMArg isEqual:error]]);
 
   // Verify reward callback.
-  OCMVerify([mockManager onRewardedAdUserEarnedReward:[OCMArg isEqual:ad]
-                                               reward:[OCMArg checkWithBlock:^BOOL(id obj) {
-                                                 FLTRewardItem *reward = (FLTRewardItem *)obj;
-                                                 XCTAssertEqual(reward.amount, @1.0);
-                                                 XCTAssertEqual(reward.type, @"type");
-                                                 return true;
-                                               }]]);
+  OCMVerify([mockManager
+      onRewardedAdUserEarnedReward:[OCMArg isEqual:ad]
+                            reward:[OCMArg checkWithBlock:^BOOL(id obj) {
+                              FLTRewardItem *reward = (FLTRewardItem *)obj;
+                              XCTAssertEqual(reward.amount, @1.0);
+                              XCTAssertEqual(reward.type, @"type");
+                              return true;
+                            }]]);
 }
 
 - (void)testFailedToLoadGADRequest {
@@ -191,12 +208,14 @@
 
 // Helper for testing failed to load.
 - (void)testFailedToLoad:(FLTAdRequest *)request {
-  UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
-  FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                                      request:request
-                                           rootViewController:mockRootViewController
-                                serverSideVerificationOptions:nil
-                                                         adId:@1];
+  UIViewController *mockRootViewController =
+      OCMClassMock([UIViewController class]);
+  FLTRewardedAd *ad =
+      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                      request:request
+                           rootViewController:mockRootViewController
+                serverSideVerificationOptions:nil
+                                         adId:@1];
   ad.manager = mockManager;
 
   id rewardedClassMock = OCMClassMock([GADRewardedAd class]);
@@ -215,7 +234,8 @@
   OCMVerify(ClassMethod([rewardedClassMock loadWithAdUnitID:[OCMArg any]
                                                     request:[OCMArg any]
                                           completionHandler:[OCMArg any]]));
-  OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad] error:[OCMArg isEqual:error]]);
+  OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad]
+                                    error:[OCMArg isEqual:error]]);
 }
 
 - (void)testServerSideVerificationOptionsNil {

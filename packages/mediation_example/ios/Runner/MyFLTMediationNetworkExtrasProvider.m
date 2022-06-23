@@ -20,10 +20,11 @@
 @implementation MyFLTMediationNetworkExtrasProvider
 
 /** Provide mediation extras for specific ad requests. */
-- (NSArray<id<GADAdNetworkExtras>> *_Nullable)getMediationExtras:(NSString *_Nonnull)adUnitId
-                                       mediationExtrasIdentifier:
-                                           (NSString *_Nullable)mediationExtrasIdentifier {
-  GADMAdapterAppLovinExtras *appLovinExtras = [[GADMAdapterAppLovinExtras alloc] init];
+- (NSArray<id<GADAdNetworkExtras>> *_Nullable)
+           getMediationExtras:(NSString *_Nonnull)adUnitId
+    mediationExtrasIdentifier:(NSString *_Nullable)mediationExtrasIdentifier {
+  GADMAdapterAppLovinExtras *appLovinExtras =
+      [[GADMAdapterAppLovinExtras alloc] init];
   appLovinExtras.muteAudio = NO;
 
   return @[ appLovinExtras ];

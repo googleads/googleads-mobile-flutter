@@ -52,4 +52,9 @@ class FlutterFullScreenContentCallback extends FullScreenContentCallback {
   public void onAdImpression() {
     manager.onAdImpression(adId);
   }
+
+  @Override
+  public void onAdClicked() {
+    manager.onAdClicked(adId);
+  }
 }

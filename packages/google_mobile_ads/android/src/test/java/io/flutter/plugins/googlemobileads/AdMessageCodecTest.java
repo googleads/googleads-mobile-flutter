@@ -26,7 +26,6 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import android.content.Context;
-import android.location.Location;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.RequestConfiguration;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
@@ -286,11 +285,6 @@ public class AdMessageCodecTest {
 
   @Test
   public void encodeFlutterAdRequest() {
-    Location location = new Location("");
-    location.setAccuracy(12345f);
-    location.setLongitude(1.0);
-    location.setLatitude(5.0);
-    location.setTime(54321);
     Map<String, String> extras = Collections.singletonMap("key", "value");
     FlutterAdRequest adRequest =
         new FlutterAdRequest.Builder()
@@ -299,7 +293,6 @@ public class AdMessageCodecTest {
             .setNonPersonalizedAds(false)
             .setNeighboringContentUrls(Arrays.asList("example.com", "test.com"))
             .setHttpTimeoutMillis(1000)
-            .setLocation(location)
             .setMediationNetworkExtrasIdentifier("identifier")
             .setAdMobExtras(extras)
             .build();
@@ -312,11 +305,6 @@ public class AdMessageCodecTest {
 
   @Test
   public void encodeFlutterAdManagerAdRequest() {
-    Location location = new Location("");
-    location.setAccuracy(12345f);
-    location.setLongitude(1.0);
-    location.setLatitude(5.0);
-    location.setTime(54321);
     FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
     builder.setKeywords(Arrays.asList("1", "2", "3"));
     builder.setContentUrl("contentUrl");
@@ -325,7 +313,6 @@ public class AdMessageCodecTest {
         Collections.singletonMap("cherry", Collections.singletonList("pie")));
     builder.setNonPersonalizedAds(true);
     builder.setPublisherProvidedId("pub-provided-id");
-    builder.setLocation(location);
     builder.setMediationNetworkExtrasIdentifier("identifier");
     builder.setAdMobExtras(Collections.singletonMap("key", "value"));
 
@@ -356,8 +343,10 @@ public class AdMessageCodecTest {
   @Test
   public void encodeFlutterLoadAdError() {
     List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
+    Map<String, String> adUnitMapping = Collections.singletonMap("key", "value");
     adapterResponseInfos.add(
-        new FlutterAdapterResponseInfo("adapter-class", 9999, "description", "credentials", null));
+        new FlutterAdapterResponseInfo(
+            "adapter-class", 9999, "description", "credentials", adUnitMapping, null));
     FlutterResponseInfo info =
         new FlutterResponseInfo("responseId", "className", adapterResponseInfos);
     final ByteBuffer message =

@@ -35,9 +35,10 @@
 }
 
 - (void)setUp {
-  _readerWriter =
-      [[FLTGoogleMobileAdsReaderWriter alloc] initWithFactory:[[FLTTestAdSizeFactory alloc] init]];
-  _messageCodec = [FlutterStandardMessageCodec codecWithReaderWriter:_readerWriter];
+  _readerWriter = [[FLTGoogleMobileAdsReaderWriter alloc]
+      initWithFactory:[[FLTTestAdSizeFactory alloc] init]];
+  _messageCodec =
+      [FlutterStandardMessageCodec codecWithReaderWriter:_readerWriter];
 }
 
 - (void)testEncodeDecodeAdSize {
@@ -50,16 +51,20 @@
 }
 
 - (void)testEncodeDecodeRequestConfiguration {
-  GADRequestConfiguration *requestConfiguration = [GADRequestConfiguration alloc];
+  GADRequestConfiguration *requestConfiguration =
+      [GADRequestConfiguration alloc];
   requestConfiguration.maxAdContentRating = GADMaxAdContentRatingMatureAudience;
-  [GADMobileAds.sharedInstance.requestConfiguration tagForChildDirectedTreatment:YES];
+  [GADMobileAds.sharedInstance.requestConfiguration
+      tagForChildDirectedTreatment:YES];
   [GADMobileAds.sharedInstance.requestConfiguration tagForUnderAgeOfConsent:NO];
-  NSArray<NSString *> *testDeviceIds = [[NSArray alloc] initWithObjects:@"test-device-id", nil];
+  NSArray<NSString *> *testDeviceIds =
+      [[NSArray alloc] initWithObjects:@"test-device-id", nil];
   requestConfiguration.testDeviceIdentifiers = testDeviceIds;
   NSData *encodedMessage = [_messageCodec encode:requestConfiguration];
 
   GADRequestConfiguration *decodedSize = [_messageCodec decode:encodedMessage];
-  XCTAssertEqualObjects(decodedSize.maxAdContentRating, GADMaxAdContentRatingMatureAudience);
+  XCTAssertEqualObjects(decodedSize.maxAdContentRating,
+                        GADMaxAdContentRatingMatureAudience);
   XCTAssertEqualObjects(decodedSize.testDeviceIdentifiers, testDeviceIds);
 }
 
@@ -78,10 +83,13 @@
 
   NSData *encodedMessage = [_messageCodec encode:inlineAdaptiveBannerSize];
 
-  FLTInlineAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  FLTInlineAdaptiveBannerSize *decodedSize =
+      [_messageCodec decode:encodedMessage];
   XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
-  XCTAssertEqualObjects(decodedSize.maxHeight, inlineAdaptiveBannerSize.maxHeight);
-  XCTAssertEqualObjects(decodedSize.orientation, inlineAdaptiveBannerSize.orientation);
+  XCTAssertEqualObjects(decodedSize.maxHeight,
+                        inlineAdaptiveBannerSize.maxHeight);
+  XCTAssertEqualObjects(decodedSize.orientation,
+                        inlineAdaptiveBannerSize.orientation);
 }
 
 - (void)testEncodeDecodeInlineAdaptiveBannerAdSize_portraitOrientation {
@@ -99,17 +107,21 @@
 
   NSData *encodedMessage = [_messageCodec encode:inlineAdaptiveBannerSize];
 
-  FLTInlineAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  FLTInlineAdaptiveBannerSize *decodedSize =
+      [_messageCodec decode:encodedMessage];
   XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
-  XCTAssertEqualObjects(decodedSize.maxHeight, inlineAdaptiveBannerSize.maxHeight);
-  XCTAssertEqualObjects(decodedSize.orientation, inlineAdaptiveBannerSize.orientation);
+  XCTAssertEqualObjects(decodedSize.maxHeight,
+                        inlineAdaptiveBannerSize.maxHeight);
+  XCTAssertEqualObjects(decodedSize.orientation,
+                        inlineAdaptiveBannerSize.orientation);
 }
 
 - (void)testEncodeDecodeInlineAdaptiveBannerAdSize_landscapeOrientation {
   GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(25, 10));
 
   FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
-  OCMStub([factory landscapeInlineAdaptiveBannerAdSizeWithWidth:@(23)]).andReturn(testAdSize);
+  OCMStub([factory landscapeInlineAdaptiveBannerAdSizeWithWidth:@(23)])
+      .andReturn(testAdSize);
 
   FLTInlineAdaptiveBannerSize *inlineAdaptiveBannerSize =
       [[FLTInlineAdaptiveBannerSize alloc] initWithFactory:factory
@@ -119,17 +131,21 @@
 
   NSData *encodedMessage = [_messageCodec encode:inlineAdaptiveBannerSize];
 
-  FLTInlineAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  FLTInlineAdaptiveBannerSize *decodedSize =
+      [_messageCodec decode:encodedMessage];
   XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
-  XCTAssertEqualObjects(decodedSize.maxHeight, inlineAdaptiveBannerSize.maxHeight);
-  XCTAssertEqualObjects(decodedSize.orientation, inlineAdaptiveBannerSize.orientation);
+  XCTAssertEqualObjects(decodedSize.maxHeight,
+                        inlineAdaptiveBannerSize.maxHeight);
+  XCTAssertEqualObjects(decodedSize.orientation,
+                        inlineAdaptiveBannerSize.orientation);
 }
 
 - (void)testEncodeDecodeInlineAdaptiveBannerAdSize_withMaxHeight {
   GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(25, 10));
 
   FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
-  OCMStub([factory inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:@(23) maxHeight:@50])
+  OCMStub([factory inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:@(23)
+                                                         maxHeight:@50])
       .andReturn(testAdSize);
 
   FLTInlineAdaptiveBannerSize *inlineAdaptiveBannerSize =
@@ -140,17 +156,21 @@
 
   NSData *encodedMessage = [_messageCodec encode:inlineAdaptiveBannerSize];
 
-  FLTInlineAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  FLTInlineAdaptiveBannerSize *decodedSize =
+      [_messageCodec decode:encodedMessage];
   XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
-  XCTAssertEqualObjects(decodedSize.maxHeight, inlineAdaptiveBannerSize.maxHeight);
-  XCTAssertEqualObjects(decodedSize.orientation, inlineAdaptiveBannerSize.orientation);
+  XCTAssertEqualObjects(decodedSize.maxHeight,
+                        inlineAdaptiveBannerSize.maxHeight);
+  XCTAssertEqualObjects(decodedSize.orientation,
+                        inlineAdaptiveBannerSize.orientation);
 }
 
 - (void)testEncodeDecodeAnchoredAdaptiveBannerAdSize_portraitOrientation {
   GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(23, 34));
 
   FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
-  OCMStub([factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:@(23)]).andReturn(testAdSize);
+  OCMStub([factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:@(23)])
+      .andReturn(testAdSize);
 
   FLTAnchoredAdaptiveBannerSize *size =
       [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory
@@ -158,7 +178,8 @@
                                                        width:@(23)];
   NSData *encodedMessage = [_messageCodec encode:size];
 
-  FLTAnchoredAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  FLTAnchoredAdaptiveBannerSize *decodedSize =
+      [_messageCodec decode:encodedMessage];
   XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
 }
 
@@ -166,7 +187,8 @@
   GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(34, 45));
 
   FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
-  OCMStub([factory landscapeAnchoredAdaptiveBannerAdSizeWithWidth:@(34)]).andReturn(testAdSize);
+  OCMStub([factory landscapeAnchoredAdaptiveBannerAdSizeWithWidth:@(34)])
+      .andReturn(testAdSize);
 
   FLTAnchoredAdaptiveBannerSize *size =
       [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory
@@ -174,7 +196,8 @@
                                                        width:@(34)];
   NSData *encodedMessage = [_messageCodec encode:size];
 
-  FLTAnchoredAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  FLTAnchoredAdaptiveBannerSize *decodedSize =
+      [_messageCodec decode:encodedMessage];
   XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
 }
 
@@ -182,19 +205,24 @@
   GADAdSize testAdSize = GADAdSizeFromCGSize(CGSizeMake(45, 56));
 
   FLTAdSizeFactory *factory = OCMClassMock([FLTAdSizeFactory class]);
-  OCMStub([factory currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:@(45)])
+  OCMStub(
+      [factory currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:@(45)])
       .andReturn(testAdSize);
 
   FLTAnchoredAdaptiveBannerSize *size =
-      [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory orientation:NULL width:@(45)];
+      [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory
+                                                 orientation:NULL
+                                                       width:@(45)];
   NSData *encodedMessage = [_messageCodec encode:size];
 
-  FLTAnchoredAdaptiveBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
+  FLTAnchoredAdaptiveBannerSize *decodedSize =
+      [_messageCodec decode:encodedMessage];
   XCTAssertEqual(decodedSize.size.size.width, testAdSize.size.width);
 }
 
 - (void)testEncodeDecodeSmartBannerAdSize {
-  FLTSmartBannerSize *size = [[FLTSmartBannerSize alloc] initWithOrientation:@"landscape"];
+  FLTSmartBannerSize *size =
+      [[FLTSmartBannerSize alloc] initWithOrientation:@"landscape"];
 
   NSData *encodedMessage = [_messageCodec encode:size];
   FLTSmartBannerSize *decodedSize = [_messageCodec decode:encodedMessage];
@@ -202,8 +230,10 @@
   XCTAssertTrue([decodedSize isKindOfClass:FLTSmartBannerSize.class]);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  XCTAssertEqual(decodedSize.size.size.width, kGADAdSizeSmartBannerPortrait.size.width);
-  XCTAssertEqual(decodedSize.size.size.height, kGADAdSizeSmartBannerPortrait.size.height);
+  XCTAssertEqual(decodedSize.size.size.width,
+                 kGADAdSizeSmartBannerPortrait.size.width);
+  XCTAssertEqual(decodedSize.size.size.height,
+                 kGADAdSizeSmartBannerPortrait.size.height);
 #pragma clang diagnostic pop
 }
 
@@ -214,11 +244,8 @@
   FLTFluidSize *decodedSize = [_messageCodec decode:encodedMessage];
 
   XCTAssertTrue([decodedSize isKindOfClass:FLTFluidSize.class]);
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  XCTAssertEqual(decodedSize.size.size.width, kGADAdSizeFluid.size.width);
-  XCTAssertEqual(decodedSize.size.size.height, kGADAdSizeFluid.size.height);
-#pragma clang diagnostic pop
+  XCTAssertEqual(decodedSize.size.size.width, GADAdSizeFluid.size.width);
+  XCTAssertEqual(decodedSize.size.size.height, GADAdSizeFluid.size.height);
 }
 
 - (void)testEncodeDecodeAdRequest {
@@ -228,7 +255,6 @@
   request.nonPersonalizedAds = YES;
   NSArray<NSString *> *contentURLs = @[ @"url-1.com", @"url-2.com" ];
   request.neighboringContentURLs = contentURLs;
-  request.location = [[FLTLocationParams alloc] initWithAccuracy:@1.5 longitude:@52 latitude:@123];
   request.mediationExtrasIdentifier = @"identifier";
   request.adMobExtras = @{@"key" : @"value"};
   NSData *encodedMessage = [_messageCodec encode:request];
@@ -238,10 +264,8 @@
   XCTAssertEqualObjects(decodedRequest.contentURL, @"banana");
   XCTAssertTrue(decodedRequest.nonPersonalizedAds);
   XCTAssertEqualObjects(decodedRequest.neighboringContentURLs, contentURLs);
-  XCTAssertEqualObjects(decodedRequest.location.accuracy, @1.5);
-  XCTAssertEqualObjects(decodedRequest.location.longitude, @52);
-  XCTAssertEqualObjects(decodedRequest.location.latitude, @123);
-  XCTAssertEqualObjects(decodedRequest.mediationExtrasIdentifier, @"identifier");
+  XCTAssertEqualObjects(decodedRequest.mediationExtrasIdentifier,
+                        @"identifier");
   XCTAssertEqualObjects(decodedRequest.adMobExtras, @{@"key" : @"value"});
 }
 
@@ -255,7 +279,6 @@
   NSArray<NSString *> *contentURLs = @[ @"url-1.com", @"url-2.com" ];
   request.neighboringContentURLs = contentURLs;
   request.pubProvidedID = @"pub-id";
-  request.location = [[FLTLocationParams alloc] initWithAccuracy:@1.5 longitude:@52 latitude:@123];
   request.mediationExtrasIdentifier = @"identifier";
   request.adMobExtras = @{@"key" : @"value"};
   NSData *encodedMessage = [_messageCodec encode:request];
@@ -263,21 +286,21 @@
   FLTGAMAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
   XCTAssertTrue([decodedRequest.keywords isEqualToArray:@[ @"apple" ]]);
   XCTAssertEqualObjects(decodedRequest.contentURL, @"banana");
-  XCTAssertTrue([decodedRequest.customTargeting isEqualToDictionary:@{@"table" : @"linen"}]);
-  XCTAssertTrue(
-      [decodedRequest.customTargetingLists isEqualToDictionary:@{@"go" : @[ @"lakers" ]}]);
+  XCTAssertTrue([decodedRequest.customTargeting
+      isEqualToDictionary:@{@"table" : @"linen"}]);
+  XCTAssertTrue([decodedRequest.customTargetingLists
+      isEqualToDictionary:@{@"go" : @[ @"lakers" ]}]);
   XCTAssertTrue(decodedRequest.nonPersonalizedAds);
   XCTAssertEqualObjects(decodedRequest.neighboringContentURLs, contentURLs);
   XCTAssertEqualObjects(decodedRequest.pubProvidedID, @"pub-id");
-  XCTAssertEqualObjects(decodedRequest.location.accuracy, @1.5);
-  XCTAssertEqualObjects(decodedRequest.location.longitude, @52);
-  XCTAssertEqualObjects(decodedRequest.location.latitude, @123);
-  XCTAssertEqualObjects(decodedRequest.mediationExtrasIdentifier, @"identifier");
+  XCTAssertEqualObjects(decodedRequest.mediationExtrasIdentifier,
+                        @"identifier");
   XCTAssertEqualObjects(decodedRequest.adMobExtras, @{@"key" : @"value"});
 }
 
 - (void)testEncodeDecodeRewardItem {
-  FLTRewardItem *item = [[FLTRewardItem alloc] initWithAmount:@(1) type:@"apple"];
+  FLTRewardItem *item = [[FLTRewardItem alloc] initWithAmount:@(1)
+                                                         type:@"apple"];
   NSData *encodedMessage = [_messageCodec encode:item];
 
   FLTRewardItem *decodedItem = [_messageCodec decode:encodedMessage];
@@ -292,36 +315,44 @@
   serverSideVerificationOptions.userIdentifier = @"user-id";
   NSData *encodedMessage = [_messageCodec encode:serverSideVerificationOptions];
 
-  FLTServerSideVerificationOptions *decoded = [_messageCodec decode:encodedMessage];
+  FLTServerSideVerificationOptions *decoded =
+      [_messageCodec decode:encodedMessage];
   XCTAssertEqualObjects(decoded.customRewardString,
                         serverSideVerificationOptions.customRewardString);
-  XCTAssertEqualObjects(decoded.userIdentifier, serverSideVerificationOptions.userIdentifier);
+  XCTAssertEqualObjects(decoded.userIdentifier,
+                        serverSideVerificationOptions.userIdentifier);
 
   // With customRewardString not defined.
-  serverSideVerificationOptions = [[FLTServerSideVerificationOptions alloc] init];
+  serverSideVerificationOptions =
+      [[FLTServerSideVerificationOptions alloc] init];
   serverSideVerificationOptions.userIdentifier = @"user-id";
   encodedMessage = [_messageCodec encode:serverSideVerificationOptions];
   decoded = [_messageCodec decode:encodedMessage];
   XCTAssertEqualObjects(decoded.customRewardString,
                         serverSideVerificationOptions.customRewardString);
-  XCTAssertEqualObjects(decoded.userIdentifier, serverSideVerificationOptions.userIdentifier);
+  XCTAssertEqualObjects(decoded.userIdentifier,
+                        serverSideVerificationOptions.userIdentifier);
 
   // With userId not defined.
-  serverSideVerificationOptions = [[FLTServerSideVerificationOptions alloc] init];
+  serverSideVerificationOptions =
+      [[FLTServerSideVerificationOptions alloc] init];
   serverSideVerificationOptions.customRewardString = @"reward";
   encodedMessage = [_messageCodec encode:serverSideVerificationOptions];
   decoded = [_messageCodec decode:encodedMessage];
   XCTAssertEqualObjects(decoded.customRewardString,
                         serverSideVerificationOptions.customRewardString);
-  XCTAssertEqualObjects(decoded.userIdentifier, serverSideVerificationOptions.userIdentifier);
+  XCTAssertEqualObjects(decoded.userIdentifier,
+                        serverSideVerificationOptions.userIdentifier);
 
   // Both undefined.
-  serverSideVerificationOptions = [[FLTServerSideVerificationOptions alloc] init];
+  serverSideVerificationOptions =
+      [[FLTServerSideVerificationOptions alloc] init];
   encodedMessage = [_messageCodec encode:serverSideVerificationOptions];
   decoded = [_messageCodec decode:encodedMessage];
   XCTAssertEqualObjects(decoded.customRewardString,
                         serverSideVerificationOptions.customRewardString);
-  XCTAssertEqualObjects(decoded.userIdentifier, serverSideVerificationOptions.userIdentifier);
+  XCTAssertEqualObjects(decoded.userIdentifier,
+                        serverSideVerificationOptions.userIdentifier);
 }
 
 - (void)testEncodeDecodeNSError {
@@ -342,8 +373,10 @@
   NSString *className = @"test-class-name";
   OCMStub([mockResponseInfo responseIdentifier]).andReturn(identifier);
   OCMStub([mockResponseInfo adNetworkClassName]).andReturn(className);
-  NSDictionary *userInfo =
-      @{NSLocalizedDescriptionKey : @"message", GADErrorUserInfoKeyResponseInfo : mockResponseInfo};
+  NSDictionary *userInfo = @{
+    NSLocalizedDescriptionKey : @"message",
+    GADErrorUserInfoKeyResponseInfo : mockResponseInfo
+  };
   NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
   FLTLoadAdError *loadAdError = [[FLTLoadAdError alloc] initWithError:error];
 
@@ -353,13 +386,16 @@
   XCTAssertEqual(decodedError.code, 1);
   XCTAssertEqualObjects(decodedError.domain, @"domain");
   XCTAssertEqualObjects(decodedError.message, @"message");
-  XCTAssertEqualObjects(decodedError.responseInfo.adNetworkClassName, className);
-  XCTAssertEqualObjects(decodedError.responseInfo.responseIdentifier, identifier);
+  XCTAssertEqualObjects(decodedError.responseInfo.adNetworkClassName,
+                        className);
+  XCTAssertEqualObjects(decodedError.responseInfo.responseIdentifier,
+                        identifier);
   XCTAssertTrue(decodedError.responseInfo.adNetworkInfoArray.count == 0);
 }
 
 - (void)testEncodeDecodeFLTGADLoadErrorWithResponseInfo {
-  GADAdNetworkResponseInfo *mockNetworkResponse = OCMClassMock([GADAdNetworkResponseInfo class]);
+  GADAdNetworkResponseInfo *mockNetworkResponse =
+      OCMClassMock([GADAdNetworkResponseInfo class]);
   OCMStub([mockNetworkResponse adNetworkClassName]).andReturn(@"adapter-class");
 
   GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
@@ -367,9 +403,13 @@
   NSString *className = @"test-class-name";
   OCMStub([mockResponseInfo responseIdentifier]).andReturn(identifier);
   OCMStub([mockResponseInfo adNetworkClassName]).andReturn(className);
-  OCMStub([mockResponseInfo adNetworkInfoArray]).andReturn(@[ mockNetworkResponse ]);
-  NSDictionary *userInfo =
-      @{NSLocalizedDescriptionKey : @"message", GADErrorUserInfoKeyResponseInfo : mockResponseInfo};
+  OCMStub([mockResponseInfo adNetworkInfoArray]).andReturn(@[
+    mockNetworkResponse
+  ]);
+  NSDictionary *userInfo = @{
+    NSLocalizedDescriptionKey : @"message",
+    GADErrorUserInfoKeyResponseInfo : mockResponseInfo
+  };
   NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
   FLTLoadAdError *loadAdError = [[FLTLoadAdError alloc] initWithError:error];
 
@@ -379,10 +419,13 @@
   XCTAssertEqual(decodedError.code, 1);
   XCTAssertEqualObjects(decodedError.domain, @"domain");
   XCTAssertEqualObjects(decodedError.message, @"message");
-  XCTAssertEqualObjects(decodedError.responseInfo.adNetworkClassName, className);
-  XCTAssertEqualObjects(decodedError.responseInfo.responseIdentifier, identifier);
+  XCTAssertEqualObjects(decodedError.responseInfo.adNetworkClassName,
+                        className);
+  XCTAssertEqualObjects(decodedError.responseInfo.responseIdentifier,
+                        identifier);
   XCTAssertTrue(decodedError.responseInfo.adNetworkInfoArray.count == 1);
-  XCTAssertEqualObjects(decodedError.responseInfo.adNetworkInfoArray.firstObject.adNetworkClassName,
+  XCTAssertEqualObjects(decodedError.responseInfo.adNetworkInfoArray.firstObject
+                            .adNetworkClassName,
                         @"adapter-class");
 }
 
@@ -395,15 +438,19 @@
   OCMStub([error code]).andReturn(1);
   OCMStub([error localizedDescription]).andReturn(@"error");
 
-  GADAdNetworkResponseInfo *mockGADResponseInfo = OCMClassMock([GADAdNetworkResponseInfo class]);
+  GADAdNetworkResponseInfo *mockGADResponseInfo =
+      OCMClassMock([GADAdNetworkResponseInfo class]);
   OCMStub([mockGADResponseInfo adNetworkClassName]).andReturn(@"adapter-class");
   OCMStub([mockGADResponseInfo latency]).andReturn(123.1234);
-  OCMStub([mockGADResponseInfo dictionaryRepresentation]).andReturn(descriptionsDict);
+  OCMStub([mockGADResponseInfo dictionaryRepresentation])
+      .andReturn(descriptionsDict);
   OCMStub([mockGADResponseInfo credentials]).andReturn(credentialsDict);
+  OCMStub([mockGADResponseInfo adUnitMapping]).andReturn(credentialsDict);
   OCMStub([mockGADResponseInfo error]).andReturn(error);
 
   FLTGADAdNetworkResponseInfo *adNetworkResponseInfo =
-      [[FLTGADAdNetworkResponseInfo alloc] initWithResponseInfo:mockGADResponseInfo];
+      [[FLTGADAdNetworkResponseInfo alloc]
+          initWithResponseInfo:mockGADResponseInfo];
 
   FLTGADResponseInfo *responseInfo = [[FLTGADResponseInfo alloc] init];
   responseInfo.adNetworkClassName = @"class-name";
@@ -411,18 +458,23 @@
   responseInfo.adNetworkInfoArray = @[ adNetworkResponseInfo ];
 
   NSData *encodedMessage = [_messageCodec encode:responseInfo];
-  FLTGADResponseInfo *decodedResponseInfo = [_messageCodec decode:encodedMessage];
+  FLTGADResponseInfo *decodedResponseInfo =
+      [_messageCodec decode:encodedMessage];
 
   XCTAssertEqualObjects(decodedResponseInfo.adNetworkClassName, @"class-name");
   XCTAssertEqualObjects(decodedResponseInfo.responseIdentifier, @"identifier");
   XCTAssertEqual(decodedResponseInfo.adNetworkInfoArray.count, 1);
 
-  FLTGADAdNetworkResponseInfo *decodedInfo = decodedResponseInfo.adNetworkInfoArray.firstObject;
+  FLTGADAdNetworkResponseInfo *decodedInfo =
+      decodedResponseInfo.adNetworkInfoArray.firstObject;
 
   XCTAssertEqualObjects(decodedInfo.adNetworkClassName, @"adapter-class");
   XCTAssertEqualObjects(decodedInfo.latency, @(123123));
-  XCTAssertEqualObjects(decodedInfo.dictionaryDescription, @"{\n    descriptions = dict;\n}");
-  XCTAssertEqualObjects(decodedInfo.credentialsDescription, @"{\n    credentials = dict;\n}");
+  XCTAssertEqualObjects(decodedInfo.dictionaryDescription,
+                        @"{\n    descriptions = dict;\n}");
+  XCTAssertEqualObjects(decodedInfo.credentialsDescription,
+                        @"{\n    credentials = dict;\n}");
+  XCTAssertEqualObjects(decodedInfo.adUnitMapping, credentialsDict);
   XCTAssertEqual(decodedInfo.error.code, 1);
   XCTAssertEqualObjects(decodedInfo.error.domain, @"domain");
   XCTAssertEqualObjects(decodedInfo.error.localizedDescription, @"error");
@@ -432,8 +484,10 @@
   GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
   OCMStub([mockResponseInfo responseIdentifier]).andReturn(nil);
   OCMStub([mockResponseInfo adNetworkClassName]).andReturn(nil);
-  NSDictionary *userInfo =
-      @{NSLocalizedDescriptionKey : @"message", GADErrorUserInfoKeyResponseInfo : mockResponseInfo};
+  NSDictionary *userInfo = @{
+    NSLocalizedDescriptionKey : @"message",
+    GADErrorUserInfoKeyResponseInfo : mockResponseInfo
+  };
   NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
   FLTLoadAdError *loadAdError = [[FLTLoadAdError alloc] initWithError:error];
 
@@ -467,7 +521,8 @@
 
   NSData *encodedMessage = [_messageCodec encode:status];
 
-  FLTInitializationStatus *decodedStatus = [_messageCodec decode:encodedMessage];
+  FLTInitializationStatus *decodedStatus =
+      [_messageCodec decode:encodedMessage];
   XCTAssertEqual(decodedStatus.adapterStatuses.count, 1);
   XCTAssertEqualObjects(decodedStatus.adapterStatuses.allKeys[0], @"name");
   XCTAssertNil(decodedStatus.adapterStatuses.allValues[0].state);
@@ -494,7 +549,8 @@
   return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
 }
 
-- (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *)width {
+- (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *)width {
   return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
 }
 @end

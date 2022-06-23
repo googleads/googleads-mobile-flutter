@@ -12,23 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Flutter/Flutter.h>
 #import "FLTAd_Internal.h"
 #import "FLTMediationNetworkExtrasProvider.h"
+#import <Flutter/Flutter.h>
 
 @class FLTAdSizeFactory;
 
 @interface FLTGoogleMobileAdsReaderWriter : FlutterStandardReaderWriter
 @property(readonly) FLTAdSizeFactory *_Nonnull adSizeFactory;
-@property id<FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
+@property id<
+    FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
 
-- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory;
+- (instancetype _Nonnull)initWithFactory:
+    (FLTAdSizeFactory *_Nonnull)adSizeFactory;
 @end
 
 @interface FLTGoogleMobileAdsReader : FlutterStandardReader
 @property(readonly) FLTAdSizeFactory *_Nonnull adSizeFactory;
-@property id<FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
+@property id<
+    FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
 
-- (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)adSizeFactory
+- (instancetype _Nonnull)initWithFactory:
+                             (FLTAdSizeFactory *_Nonnull)adSizeFactory
                                     data:(NSData *_Nonnull)data;
 @end
