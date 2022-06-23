@@ -443,6 +443,9 @@
     _bannerView.rootViewController = rootViewController;
     _bannerView.appEventDelegate = self;
     _bannerView.delegate = self;
+    if (sizes[0].size.size.width == 1){
+        _bannerView.enableManualImpressions = YES;
+    }
 
     NSMutableArray<NSValue *> *validAdSizes =
         [NSMutableArray arrayWithCapacity:sizes.count];
@@ -466,7 +469,7 @@
   return self;
 }
 
-- (GADBannerView *_Nonnull)bannerView {
+- (GAMBannerView *_Nonnull)bannerView {
   return _bannerView;
 }
 
@@ -481,9 +484,10 @@
 }
 
 #pragma mark - GADAppEventDelegate
-- (void)adView:(nonnull GADBannerView *)banner
+- (void)adView:(nonnull GAMBannerView *)banner
     didReceiveAppEvent:(nonnull NSString *)name
               withInfo:(nullable NSString *)info {
+  [banner recordImpression];
   [self.manager onAppEvent:self name:name data:info];
 }
 
