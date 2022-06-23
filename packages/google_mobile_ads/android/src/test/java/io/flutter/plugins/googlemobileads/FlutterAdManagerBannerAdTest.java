@@ -123,6 +123,7 @@ public class FlutterAdManagerBannerAdTest {
                 listener.onAdImpression();
                 listener.onAdClosed();
                 listener.onAdOpened();
+                listener.onAdClicked();
                 return null;
               }
             })
@@ -140,6 +141,7 @@ public class FlutterAdManagerBannerAdTest {
     verify(mockManager).onAdImpression(eq(1));
     verify(mockManager).onAdClosed(eq(1));
     verify(mockManager).onAdOpened(eq(1));
+    verify(mockManager).onAdClicked(eq(1));
     assertEquals(flutterBannerAd.getPlatformView().getView(), mockAdView);
   }
 

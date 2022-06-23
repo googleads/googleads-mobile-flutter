@@ -21,7 +21,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
-import android.location.Location;
 import android.os.Bundle;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
@@ -42,18 +41,11 @@ public class FlutterAdRequestTest {
     assertNull(adRequest.getContentUrl());
     assertTrue(adRequest.getNeighboringContentUrls().isEmpty());
     assertTrue(adRequest.getKeywords().isEmpty());
-    assertNull(adRequest.getLocation());
     assertNull(adRequest.getNetworkExtrasBundle(AdMobAdapter.class));
   }
 
   @Test
   public void testAsAdRequest_allParams() {
-    Location location = new Location("");
-    location.setAccuracy(1);
-    location.setLongitude(2);
-    location.setLatitude(3);
-    location.setTime(12345);
-
     MediationNetworkExtrasProvider provider = mock(MediationNetworkExtrasProvider.class);
     Bundle bundle = new Bundle();
     bundle.putString("npa", "0");
@@ -63,7 +55,6 @@ public class FlutterAdRequestTest {
 
     FlutterAdRequest flutterAdRequest =
         new Builder()
-            .setLocation(location)
             .setKeywords(Collections.singletonList("keyword"))
             .setContentUrl("content-url")
             .setNeighboringContentUrls(Collections.singletonList("neighbor"))
@@ -78,10 +69,6 @@ public class FlutterAdRequestTest {
     assertEquals(adRequest.getKeywords(), Collections.singleton("keyword"));
     assertEquals(adRequest.getContentUrl(), "content-url");
     assertEquals(adRequest.getNeighboringContentUrls(), Collections.singletonList("neighbor"));
-    assertEquals(adRequest.getLocation().getAccuracy(), 1, 0);
-    assertEquals(adRequest.getLocation().getLongitude(), 2, 0);
-    assertEquals(adRequest.getLocation().getLatitude(), 3, 0);
-    assertEquals(adRequest.getLocation().getTime(), 12345);
     // Previous value of "npa" should get overridden.
     assertEquals(adRequest.getNetworkExtrasBundle(AdMobAdapter.class).get("npa"), "1");
   }

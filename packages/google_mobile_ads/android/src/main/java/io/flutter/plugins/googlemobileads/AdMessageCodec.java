@@ -16,7 +16,6 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
-import android.location.Location;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -54,7 +53,6 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_NATIVE_AD_OPTIONS = (byte) 144;
   private static final byte VALUE_VIDEO_OPTIONS = (byte) 145;
   private static final byte VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE = (byte) 146;
-  private static final byte VALUE_LOCATION_PARAMS = (byte) 147;
   private static final byte VALUE_REQUEST_CONFIGURATION_PARAMS = (byte) 148;
 
   @NonNull Context context;
@@ -96,7 +94,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getNeighboringContentUrls());
       writeValue(stream, request.getHttpTimeoutMillis());
       writeValue(stream, request.getPublisherProvidedId());
-      writeValue(stream, request.getLocation());
       writeValue(stream, request.getMediationExtrasIdentifier());
       writeValue(stream, request.getAdMobExtras());
     } else if (value instanceof FlutterAdRequest) {
@@ -107,7 +104,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getNonPersonalizedAds());
       writeValue(stream, request.getNeighboringContentUrls());
       writeValue(stream, request.getHttpTimeoutMillis());
-      writeValue(stream, request.getLocation());
       writeValue(stream, request.getMediationExtrasIdentifier());
       writeValue(stream, request.getAdMobExtras());
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
@@ -122,6 +118,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, responseInfo.getLatencyMillis());
       writeValue(stream, responseInfo.getDescription());
       writeValue(stream, responseInfo.getCredentials());
+      writeValue(stream, responseInfo.getAdUnitMapping());
       writeValue(stream, responseInfo.getError());
     } else if (value instanceof FlutterResponseInfo) {
       stream.write(VALUE_RESPONSE_INFO);
@@ -193,13 +190,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, options.clickToExpandRequested);
       writeValue(stream, options.customControlsRequested);
       writeValue(stream, options.startMuted);
-    } else if (value instanceof Location) {
-      stream.write(VALUE_LOCATION_PARAMS);
-      Location location = (Location) value;
-      writeValue(stream, location.getAccuracy());
-      writeValue(stream, location.getLongitude());
-      writeValue(stream, location.getLatitude());
-      writeValue(stream, location.getTime());
     } else {
       super.writeValue(stream, value);
     }
@@ -237,7 +227,6 @@ class AdMessageCodec extends StandardMessageCodec {
             .setNonPersonalizedAds(booleanValueOf(readValueOfType(buffer.get(), buffer)))
             .setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer))
             .setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer))
-            .setLocation((Location) readValueOfType(buffer.get(), buffer))
             .setMediationNetworkExtrasIdentifier((String) readValueOfType(buffer.get(), buffer))
             .setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider)
             .setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer))
@@ -252,6 +241,7 @@ class AdMessageCodec extends StandardMessageCodec {
             (long) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
+            (Map<String, String>) readValueOfType(buffer.get(), buffer),
             (FlutterAdError) readValueOfType(buffer.get(), buffer));
       case VALUE_RESPONSE_INFO:
         return new FlutterResponseInfo(
@@ -280,7 +270,6 @@ class AdMessageCodec extends StandardMessageCodec {
         builder.setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer));
         builder.setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer));
         builder.setPublisherProvidedId((String) readValueOfType(buffer.get(), buffer));
-        builder.setLocation((Location) readValueOfType(buffer.get(), buffer));
         builder.setMediationNetworkExtrasIdentifier((String) readValueOfType(buffer.get(), buffer));
         builder.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
         builder.setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer));
@@ -328,17 +317,6 @@ class AdMessageCodec extends StandardMessageCodec {
         rcb.setTagForUnderAgeOfConsent((Integer) readValueOfType(buffer.get(), buffer));
         rcb.setTestDeviceIds((List<String>) readValueOfType(buffer.get(), buffer));
         return rcb.build();
-      case VALUE_LOCATION_PARAMS:
-        Location location = new Location("");
-        // This is necessary because StandardMessageCodec converts floats to double.
-        location.setAccuracy(((Double) readValueOfType(buffer.get(), buffer)).floatValue());
-        location.setLongitude((double) readValueOfType(buffer.get(), buffer));
-        location.setLatitude((double) readValueOfType(buffer.get(), buffer));
-        Long time = (Long) readValueOfType(buffer.get(), buffer);
-        if (time != null) {
-          location.setTime(time);
-        }
-        return location;
       default:
         return super.readValueOfType(type, buffer);
     }

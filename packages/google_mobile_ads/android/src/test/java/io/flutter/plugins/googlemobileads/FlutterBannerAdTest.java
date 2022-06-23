@@ -114,6 +114,7 @@ public class FlutterBannerAdTest {
                 AdListener listener = invocation.getArgument(0);
                 listener.onAdLoaded();
                 listener.onAdImpression();
+                listener.onAdClicked();
                 listener.onAdClosed();
                 listener.onAdOpened();
                 return null;
@@ -149,6 +150,7 @@ public class FlutterBannerAdTest {
     verify(mockAdView).setAdSize(adSize);
     verify(mockManager).onAdLoaded(eq(1), eq(responseInfo));
     verify(mockManager).onAdImpression(eq(1));
+    verify(mockManager).onAdClicked(eq(1));
     verify(mockManager).onAdClosed(eq(1));
     verify(mockManager).onAdOpened(eq(1));
     assertEquals(flutterBannerAd.getPlatformView().getView(), mockAdView);

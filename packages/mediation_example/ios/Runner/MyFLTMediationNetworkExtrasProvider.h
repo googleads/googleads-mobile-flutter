@@ -20,6 +20,7 @@
 #import <FLTMediationNetworkExtrasProvider.h>
 
 /** Provides network specific mediation extras for ad requests. */
-@interface MyFLTMediationNetworkExtrasProvider : NSObject <FLTMediationNetworkExtrasProvider>
+@interface MyFLTMediationNetworkExtrasProvider
+    : NSObject <FLTMediationNetworkExtrasProvider>
 
 @end

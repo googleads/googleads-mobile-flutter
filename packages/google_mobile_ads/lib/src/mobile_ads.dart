@@ -14,6 +14,7 @@
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'ad_inspector_containers.dart';
 import 'ad_instance_manager.dart';
 import 'request_configuration.dart';
 import 'package:flutter/foundation.dart';
@@ -120,6 +121,19 @@ class MobileAds {
   /// Gets the version string of Google Mobile Ads SDK.
   Future<String> getVersionString() {
     return instanceManager.getVersionString();
+  }
+
+  /// Opens the debug menu for the [adUnitId].
+  ///
+  /// Returns a Future that completes when the platform side api has been
+  /// invoked.
+  Future<void> openDebugMenu(String adUnitId) {
+    return instanceManager.openDebugMenu(adUnitId);
+  }
+
+  /// Open the ad inspector.
+  void openAdInspector(OnAdInspectorClosedListener listener) async {
+    instanceManager.openAdInspector(listener);
   }
 
   /// Internal init to cleanup state for hot restart.
