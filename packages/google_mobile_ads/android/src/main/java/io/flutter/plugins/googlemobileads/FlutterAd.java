@@ -113,7 +113,6 @@ abstract class FlutterAd {
     @NonNull private final String adapterClassName;
     private final long latencyMillis;
     @NonNull private final String description;
-    @NonNull private final String credentials;
     @NonNull private final Map<String, String> adUnitMapping;
     @Nullable private FlutterAdError error;
 
@@ -122,13 +121,11 @@ abstract class FlutterAd {
       this.latencyMillis = responseInfo.getLatencyMillis();
       this.description = responseInfo.toString();
       if (responseInfo.getCredentials() != null) {
-        this.credentials = responseInfo.getCredentials().toString();
         this.adUnitMapping = new HashMap<>();
         for (String key : responseInfo.getCredentials().keySet()) {
           adUnitMapping.put(key, responseInfo.getCredentials().get(key).toString());
         }
       } else {
-        credentials = "unknown credentials";
         adUnitMapping = new HashMap<>();
       }
       if (responseInfo.getAdError() != null) {
@@ -140,13 +137,11 @@ abstract class FlutterAd {
         @NonNull String adapterClassName,
         long latencyMillis,
         @NonNull String description,
-        @NonNull String credentials,
         @NonNull Map<String, String> adUnitMapping,
         @Nullable FlutterAdError error) {
       this.adapterClassName = adapterClassName;
       this.latencyMillis = latencyMillis;
       this.description = description;
-      this.credentials = credentials;
       this.adUnitMapping = adUnitMapping;
       this.error = error;
     }
@@ -163,11 +158,6 @@ abstract class FlutterAd {
     @NonNull
     public String getDescription() {
       return description;
-    }
-
-    @NonNull
-    public String getCredentials() {
-      return credentials;
     }
 
     @NonNull
@@ -192,14 +182,13 @@ abstract class FlutterAd {
       return Objects.equals(adapterClassName, that.adapterClassName)
           && latencyMillis == that.latencyMillis
           && Objects.equals(description, that.description)
-          && Objects.equals(credentials, that.credentials)
           && Objects.equals(error, that.error)
           && Objects.equals(adUnitMapping, that.adUnitMapping);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(adapterClassName, latencyMillis, description, credentials, error);
+      return Objects.hash(adapterClassName, latencyMillis, description, error);
     }
   }
 

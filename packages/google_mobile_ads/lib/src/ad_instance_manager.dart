@@ -854,7 +854,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.adapterClassName);
       writeValue(buffer, value.latencyMillis);
       writeValue(buffer, value.description);
-      writeValue(buffer, value.credentials);
       writeValue(buffer, value.adUnitMapping);
       writeValue(buffer, value.adError);
     } else if (value is LoadAdError) {
@@ -991,7 +990,6 @@ class AdMessageCodec extends StandardMessageCodec {
             adapterClassName: readValueOfType(buffer.getUint8(), buffer),
             latencyMillis: readValueOfType(buffer.getUint8(), buffer),
             description: readValueOfType(buffer.getUint8(), buffer),
-            credentials: readValueOfType(buffer.getUint8(), buffer),
             adUnitMapping:
                 _deepCastStringMap(readValueOfType(buffer.getUint8(), buffer)),
             adError: readValueOfType(buffer.getUint8(), buffer));
