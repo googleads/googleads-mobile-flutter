@@ -607,9 +607,9 @@
   [manager didFailToPresentFullScreenContentWithError:self error:error];
 }
 
-- (void)adDidPresentFullScreenContent:
+- (void)adWillPresentFullScreenContent:
     (nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager onAdDidPresentFullScreenContent:self];
+  [manager adWillPresentFullScreenContent:self];
 }
 
 - (void)adDidDismissFullScreenContent:

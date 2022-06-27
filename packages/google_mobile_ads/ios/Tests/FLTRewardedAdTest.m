@@ -97,7 +97,7 @@
         [delegate adDidRecordImpression:rewardedClassMock];
         [delegate adDidRecordClick:rewardedClassMock];
         [delegate adDidDismissFullScreenContent:rewardedClassMock];
-        [delegate adDidPresentFullScreenContent:rewardedClassMock];
+        [delegate adWillPresentFullScreenContent:rewardedClassMock];
         [delegate adWillDismissFullScreenContent:rewardedClassMock];
         [delegate ad:rewardedClassMock
             didFailToPresentFullScreenContentWithError:error];
@@ -170,7 +170,7 @@
            userDidEarnRewardHandler:[OCMArg any]]);
 
   // Verify full screen callbacks.
-  OCMVerify([mockManager onAdDidPresentFullScreenContent:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidRecordImpression:[OCMArg isEqual:ad]]);

@@ -110,7 +110,7 @@ class AdInstanceManager {
       case 'onNativeAdImpression': // Fall through
         _invokeOnAdImpression(ad, eventName);
         break;
-      case 'onAdDidPresentFullScreenContent':
+      case 'adWillPresentFullScreenContent':
         _invokeOnAdShowedFullScreenContent(ad, eventName);
         break;
       case 'adDidDismissFullScreenContent':

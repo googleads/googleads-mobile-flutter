@@ -227,7 +227,7 @@ void main() {
       expect(await impressionCompleter.future, rewardedInterstitial);
 
       await TestUtil.sendAdEvent(
-          0, 'onAdDidPresentFullScreenContent', instanceManager);
+          0, 'adWillPresentFullScreenContent', instanceManager);
       expect(await showedCompleter.future, rewardedInterstitial);
 
       await TestUtil.sendAdEvent(
