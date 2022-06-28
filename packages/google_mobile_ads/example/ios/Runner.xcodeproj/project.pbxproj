@@ -33,6 +33,7 @@
 		9EA7474F2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA7474D2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m */; };
 		9EA747532637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA747512637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m */; };
 		9EA747542637EC7000E0B0E4 /* FLTInterstitialAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA747522637EC7000E0B0E4 /* FLTInterstitialAdTest.m */; };
+		9EAB4721286A4C73004456D0 /* FLTNSString.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EAB471F286A4C73004456D0 /* FLTNSString.m */; };
 		9EB9FE53280F6CA200DDBB4F /* FLTUserMessagingPlatformManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EB9FE51280F6CA200DDBB4F /* FLTUserMessagingPlatformManager.m */; };
 		9EB9FE56280F6F2100DDBB4F /* FLTUserMessagingPlatformReaderWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EB9FE55280F6F2100DDBB4F /* FLTUserMessagingPlatformReaderWriter.m */; };
 		9EB9FE59280F86D100DDBB4F /* UserMessagingPlatform.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EB9FE57280F853D00DDBB4F /* UserMessagingPlatform.xcframework */; };
@@ -119,6 +120,8 @@
 		9EA7474D2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGAMBannerAdTest.m; path = ../../../ios/Tests/FLTGAMBannerAdTest.m; sourceTree = "<group>"; };
 		9EA747512637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGamInterstitialAdTest.m; path = ../../../ios/Tests/FLTGamInterstitialAdTest.m; sourceTree = "<group>"; };
 		9EA747522637EC7000E0B0E4 /* FLTInterstitialAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTInterstitialAdTest.m; path = ../../../ios/Tests/FLTInterstitialAdTest.m; sourceTree = "<group>"; };
+		9EAB471F286A4C73004456D0 /* FLTNSString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTNSString.m; path = ../../ios/Classes/FLTNSString.m; sourceTree = "<group>"; };
+		9EAB4720286A4C73004456D0 /* FLTNSString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FLTNSString.h; path = ../../ios/Classes/FLTNSString.h; sourceTree = "<group>"; };
 		9EB9FE51280F6CA200DDBB4F /* FLTUserMessagingPlatformManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTUserMessagingPlatformManager.m; sourceTree = "<group>"; };
 		9EB9FE52280F6CA200DDBB4F /* FLTUserMessagingPlatformManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLTUserMessagingPlatformManager.h; sourceTree = "<group>"; };
 		9EB9FE54280F6F2100DDBB4F /* FLTUserMessagingPlatformReaderWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLTUserMessagingPlatformReaderWriter.h; sourceTree = "<group>"; };
@@ -229,6 +232,8 @@
 			isa = PBXGroup;
 			children = (
 				9EB9FE50280F6CA200DDBB4F /* UserMessagingPlatform */,
+				9EAB4720286A4C73004456D0 /* FLTNSString.h */,
+				9EAB471F286A4C73004456D0 /* FLTNSString.m */,
 				9E79682A271D415600E06158 /* FLTMediationNetworkExtrasProvider.h */,
 				9E7B9D8D273206F800C6A6AB /* FLTAppStateNotifier.h */,
 				9E7B9D8E273206F800C6A6AB /* FLTAppStateNotifier.m */,
@@ -521,6 +526,7 @@
 				9EA7474E2637CD6800E0B0E4 /* FLTBannerAdTest.m in Sources */,
 				8FB13CE22498136E0011A72F /* FLTGoogleMobileAdsReaderWriterTest.m in Sources */,
 				9EB9FE53280F6CA200DDBB4F /* FLTUserMessagingPlatformManager.m in Sources */,
+				9EAB4721286A4C73004456D0 /* FLTNSString.m in Sources */,
 				9EA747542637EC7000E0B0E4 /* FLTInterstitialAdTest.m in Sources */,
 				9EF1F00025F8351A0017A440 /* FLTGoogleMobileAdsPluginMethodCallsTest.m in Sources */,
 				9E7A912E2825E14C005FD19A /* FLTUserMessagingPlatformReaderWriterTest.m in Sources */,

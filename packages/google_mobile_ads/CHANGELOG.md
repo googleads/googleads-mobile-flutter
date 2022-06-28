@@ -1,3 +1,8 @@
+## 2.0.0
+* Update GMA Android dependency to 21.0.0 and iOS to 9.6.0
+* Remove `credentials` from `AdapterResponseInfo`, which is replaced with
+  `adUnitMapping`.
+
 ## 1.3.0
 * Adds support for programmatically opening the debug options menu using`MobileAds.openDebugMenu(String adUnitId)`
 * Adds support for Ad inspector APIs. See the [AdMob](https://developers.google.com/admob/flutter/ad-inspector)

@@ -15,6 +15,7 @@
 #import "FLTUserMessagingPlatformManager.h"
 #import "../FLTAdUtil.h"
 #import "FLTUserMessagingPlatformReaderWriter.h"
+#import "FLTNSString.h"
 #include <UserMessagingPlatform/UserMessagingPlatform.h>
 
 @implementation FLTUserMessagingPlatformManager {
@@ -66,10 +67,7 @@
                                  result(nil);
                                } else {
                                  result([FlutterError
-                                     errorWithCode:[[NSString alloc]
-                                                       initWithFormat:@"%ld",
-                                                                      error
-                                                                          .code]
+                                         errorWithCode:[[NSString alloc] initWithInt: error.code]
                                            message:error.localizedDescription
                                            details:error.domain]);
                                }
@@ -83,8 +81,7 @@
             result(form);
           } else {
             result([FlutterError
-                errorWithCode:[[NSString alloc]
-                                  initWithFormat:@"%ld", loadError.code]
+                errorWithCode:[[NSString alloc] initWithInt: loadError.code]
                       message:loadError.localizedDescription
                       details:loadError.domain]);
           }
@@ -103,8 +100,7 @@
                     result(nil);
                   } else {
                     result([FlutterError
-                        errorWithCode:[[NSString alloc]
-                                          initWithFormat:@"%ld", error.code]
+                        errorWithCode:[[NSString alloc] initWithInt: error.code]
                               message:error.localizedDescription
                               details:error.domain]);
                   }
