@@ -428,8 +428,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         final FlutterAdRequest rewardedAdRequest = call.argument("request");
         final FlutterAdManagerAdRequest rewardedAdManagerRequest =
             call.argument("adManagerRequest");
-        final FlutterServerSideVerificationOptions rewardedAdServerSideVerificationOptions =
-            call.argument("serverSideVerificationOptions");
 
         final FlutterRewardedAd rewardedAd;
         if (rewardedAdRequest != null) {
@@ -439,7 +437,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   rewardedAdUnitId,
                   rewardedAdRequest,
-                  rewardedAdServerSideVerificationOptions,
                   new FlutterAdLoader(context));
         } else if (rewardedAdManagerRequest != null) {
           rewardedAd =
@@ -448,7 +445,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   rewardedAdUnitId,
                   rewardedAdManagerRequest,
-                  rewardedAdServerSideVerificationOptions,
                   new FlutterAdLoader(context));
         } else {
           result.error("InvalidRequest", "A null or invalid ad request was provided.", null);
@@ -503,9 +499,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         final FlutterAdRequest rewardedInterstitialAdRequest = call.argument("request");
         final FlutterAdManagerAdRequest rewardedInterstitialAdManagerRequest =
             call.argument("adManagerRequest");
-        final FlutterServerSideVerificationOptions
-            rewardedInterstitialAdServerSideVerificationOptions =
-                call.argument("serverSideVerificationOptions");
 
         final FlutterRewardedInterstitialAd rewardedInterstitialAd;
         if (rewardedInterstitialAdRequest != null) {
@@ -515,7 +508,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   rewardedInterstitialAdUnitId,
                   rewardedInterstitialAdRequest,
-                  rewardedInterstitialAdServerSideVerificationOptions,
                   new FlutterAdLoader(context));
         } else if (rewardedInterstitialAdManagerRequest != null) {
           rewardedInterstitialAd =
@@ -524,7 +516,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   rewardedInterstitialAdUnitId,
                   rewardedInterstitialAdManagerRequest,
-                  rewardedInterstitialAdServerSideVerificationOptions,
                   new FlutterAdLoader(context));
         } else {
           result.error("InvalidRequest", "A null or invalid ad request was provided.", null);

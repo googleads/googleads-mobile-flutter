@@ -407,8 +407,6 @@
         [[FLTRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                         request:request
                              rootViewController:rootController
-                  serverSideVerificationOptions:
-                      call.arguments[@"serverSideVerificationOptions"]
                                            adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
@@ -427,12 +425,10 @@
     }
 
     FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc]
-                     initWithAdUnitId:call.arguments[@"adUnitId"]
-                              request:request
-                   rootViewController:rootController
-        serverSideVerificationOptions:call.arguments
-                                          [@"serverSideVerificationOptions"]
-                                 adId:call.arguments[@"adId"]];
+          initWithAdUnitId:call.arguments[@"adUnitId"]
+                   request:request
+        rootViewController:rootController
+                      adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAppOpenAd"]) {

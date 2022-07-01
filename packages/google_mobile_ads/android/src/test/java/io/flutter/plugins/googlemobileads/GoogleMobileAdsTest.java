@@ -415,7 +415,7 @@ public class GoogleMobileAdsTest {
   public void flutterAdListener_onRewardedAdUserEarnedReward() {
     FlutterAdLoader mockFlutterAdLoader = mock(FlutterAdLoader.class);
     final FlutterRewardedAd ad =
-        new FlutterRewardedAd(0, testManager, "testId", request, null, mockFlutterAdLoader);
+        new FlutterRewardedAd(0, testManager, "testId", request, mockFlutterAdLoader);
     testManager.trackAd(ad, 0);
 
     testManager.onRewardedAdUserEarnedReward(

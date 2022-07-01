@@ -64,18 +64,12 @@
 - (void)testLoadRewardedAd {
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
-  FLTServerSideVerificationOptions *serverSideVerificationOptions =
-      [[FLTServerSideVerificationOptions alloc] init];
-  serverSideVerificationOptions.customRewardString = @"reward";
-  serverSideVerificationOptions.userIdentifier = @"user-id";
   FlutterMethodCall *methodCall =
       [FlutterMethodCall methodCallWithMethodName:@"loadRewardedAd"
                                         arguments:@{
                                           @"adId" : @2,
                                           @"adUnitId" : @"testId",
                                           @"request" : request,
-                                          @"serverSideVerificationOptions" :
-                                              serverSideVerificationOptions
                                         }];
 
   __block bool resultInvoked = false;
@@ -92,11 +86,8 @@
   BOOL (^verificationBlock)(FLTRewardedAd *) = ^BOOL(FLTRewardedAd *ad) {
     FLTAdRequest *adRequest = [ad valueForKey:@"_adRequest"];
     NSString *adUnit = [ad valueForKey:@"_adUnitId"];
-    FLTServerSideVerificationOptions *options =
-        [ad valueForKey:@"_serverSideVerificationOptions"];
     XCTAssertEqualObjects(adRequest, request);
     XCTAssertEqualObjects(adUnit, @"testId");
-    XCTAssertEqualObjects(options, serverSideVerificationOptions);
     return YES;
   };
   OCMVerify([_mockAdInstanceManager

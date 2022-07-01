@@ -781,22 +781,18 @@
   GADRewardedAd *_rewardedView;
   FLTAdRequest *_adRequest;
   UIViewController *_rootViewController;
-  FLTServerSideVerificationOptions *_serverSideVerificationOptions;
   NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                          request:(FLTAdRequest *_Nonnull)request
-               rootViewController:(UIViewController *_Nonnull)rootViewController
-    serverSideVerificationOptions:(FLTServerSideVerificationOptions *_Nullable)
-                                      serverSideVerificationOptions
-                             adId:(NSNumber *_Nonnull)adId {
+                         request:(FLTAdRequest *_Nonnull)request
+              rootViewController:(UIViewController *_Nonnull)rootViewController
+                            adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _rootViewController = rootViewController;
-    _serverSideVerificationOptions = serverSideVerificationOptions;
     _adUnitId = [adUnitId copy];
   }
   return self;
@@ -818,37 +814,31 @@
     return;
   }
 
-  [GADRewardedAd
-       loadWithAdUnitID:_adUnitId
-                request:request
-      completionHandler:^(GADRewardedAd *_Nullable rewardedAd,
-                          NSError *_Nullable error) {
-        if (error) {
-          [self.manager onAdFailedToLoad:self error:error];
-          return;
-        }
-        if (self->_serverSideVerificationOptions != NULL &&
-            ![self->_serverSideVerificationOptions isEqual:[NSNull null]]) {
-          rewardedAd.serverSideVerificationOptions =
-              [self->_serverSideVerificationOptions
-                      asGADServerSideVerificationOptions];
-        }
-        __weak FLTRewardedAd *weakSelf = self;
-        rewardedAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-          if (weakSelf.manager == nil) {
-            return;
-          }
-          [weakSelf.manager
-              onPaidEvent:weakSelf
-                    value:[[FLTAdValue alloc]
-                              initWithValue:value.value
-                                  precision:(NSInteger)value.precision
-                               currencyCode:value.currencyCode]];
-        };
-        rewardedAd.fullScreenContentDelegate = self;
-        self->_rewardedView = rewardedAd;
-        [self.manager onAdLoaded:self responseInfo:rewardedAd.responseInfo];
-      }];
+  [GADRewardedAd loadWithAdUnitID:_adUnitId
+                          request:request
+                completionHandler:^(GADRewardedAd *_Nullable rewardedAd,
+                                    NSError *_Nullable error) {
+                  if (error) {
+                    [self.manager onAdFailedToLoad:self error:error];
+                    return;
+                  }
+                  __weak FLTRewardedAd *weakSelf = self;
+                  rewardedAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+                    if (weakSelf.manager == nil) {
+                      return;
+                    }
+                    [weakSelf.manager
+                        onPaidEvent:weakSelf
+                              value:[[FLTAdValue alloc]
+                                        initWithValue:value.value
+                                            precision:(NSInteger)value.precision
+                                         currencyCode:value.currencyCode]];
+                  };
+                  rewardedAd.fullScreenContentDelegate = self;
+                  self->_rewardedView = rewardedAd;
+                  [self.manager onAdLoaded:self
+                              responseInfo:rewardedAd.responseInfo];
+                }];
 }
 
 - (void)show {
@@ -886,22 +876,18 @@
   GADRewardedInterstitialAd *_rewardedInterstitialView;
   FLTAdRequest *_adRequest;
   UIViewController *_rootViewController;
-  FLTServerSideVerificationOptions *_serverSideVerificationOptions;
   NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                          request:(FLTAdRequest *_Nonnull)request
-               rootViewController:(UIViewController *_Nonnull)rootViewController
-    serverSideVerificationOptions:(FLTServerSideVerificationOptions *_Nullable)
-                                      serverSideVerificationOptions
-                             adId:(NSNumber *_Nonnull)adId {
+                         request:(FLTAdRequest *_Nonnull)request
+              rootViewController:(UIViewController *_Nonnull)rootViewController
+                            adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _rootViewController = rootViewController;
-    _serverSideVerificationOptions = serverSideVerificationOptions;
     _adUnitId = [adUnitId copy];
   }
   return self;
@@ -932,12 +918,6 @@
         if (error) {
           [self.manager onAdFailedToLoad:self error:error];
           return;
-        }
-        if (self->_serverSideVerificationOptions != NULL &&
-            ![self->_serverSideVerificationOptions isEqual:[NSNull null]]) {
-          rewardedInterstitialAd.serverSideVerificationOptions =
-              [self->_serverSideVerificationOptions
-                      asGADServerSideVerificationOptions];
         }
         __weak FLTRewardedInterstitialAd *weakSelf = self;
         rewardedInterstitialAd.paidEventHandler =
