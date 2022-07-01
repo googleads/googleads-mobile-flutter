@@ -145,7 +145,8 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
 
   public void setServerSideVerificationOptions(FlutterServerSideVerificationOptions options) {
     if (rewardedInterstitialAd != null) {
-      rewardedInterstitialAd.setServerSideVerificationOptions(options.asServerSideVerificationOptions());
+      rewardedInterstitialAd.setServerSideVerificationOptions(
+          options.asServerSideVerificationOptions());
     } else {
       Log.e(TAG, "RewardedInterstitialAd is null in setServerSideVerificationOptions");
     }

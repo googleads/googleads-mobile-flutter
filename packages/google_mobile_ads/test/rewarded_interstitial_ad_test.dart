@@ -39,6 +39,7 @@ void main() {
           case 'loadRewardedInterstitialAd':
           case 'showAdWithoutView':
           case 'disposeAd':
+          case 'setSSV':
             return Future<void>.value();
           default:
             assert(false);
@@ -52,14 +53,13 @@ void main() {
       RewardedInterstitialAd? rewardedInterstitial;
       AdRequest request = AdRequest();
       await RewardedInterstitialAd.load(
-          adUnitId: 'test-ad-unit',
-          request: request,
-          rewardedInterstitialAdLoadCallback:
-              RewardedInterstitialAdLoadCallback(
-                  onAdLoaded: (ad) {
-                    rewardedInterstitial = ad;
-                  },
-                  onAdFailedToLoad: (error) => null),
+        adUnitId: 'test-ad-unit',
+        request: request,
+        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewardedInterstitial = ad;
+            },
+            onAdFailedToLoad: (error) => null),
       );
 
       RewardedInterstitialAd createdAd =
@@ -152,14 +152,13 @@ void main() {
       RewardedInterstitialAd? rewardedInterstitial;
       AdRequest request = AdRequest();
       await RewardedInterstitialAd.load(
-          adUnitId: 'test-ad-unit',
-          request: request,
-          rewardedInterstitialAdLoadCallback:
-              RewardedInterstitialAdLoadCallback(
-                  onAdLoaded: (ad) {
-                    rewardedInterstitial = ad;
-                  },
-                  onAdFailedToLoad: (error) => null),
+        adUnitId: 'test-ad-unit',
+        request: request,
+        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewardedInterstitial = ad;
+            },
+            onAdFailedToLoad: (error) => null),
       );
 
       RewardedInterstitialAd createdAd =
@@ -262,14 +261,13 @@ void main() {
       RewardedInterstitialAd? rewardedInterstitial;
       AdManagerAdRequest request = AdManagerAdRequest();
       await RewardedInterstitialAd.loadWithAdManagerAdRequest(
-          adUnitId: 'test-ad-unit',
-          adManagerRequest: request,
-          rewardedInterstitialAdLoadCallback:
-              RewardedInterstitialAdLoadCallback(
-                  onAdLoaded: (ad) {
-                    rewardedInterstitial = ad;
-                  },
-                  onAdFailedToLoad: (error) => null),
+        adUnitId: 'test-ad-unit',
+        adManagerRequest: request,
+        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewardedInterstitial = ad;
+            },
+            onAdFailedToLoad: (error) => null),
       );
 
       RewardedInterstitialAd createdAd =
@@ -378,14 +376,13 @@ void main() {
 
       RewardedInterstitialAd? rewardedInterstitial;
       await RewardedInterstitialAd.load(
-          adUnitId: 'test-ad-unit',
-          request: AdRequest(),
-          rewardedInterstitialAdLoadCallback:
-              RewardedInterstitialAdLoadCallback(
-                  onAdLoaded: (ad) {
-                    rewardedInterstitial = ad;
-                  },
-                  onAdFailedToLoad: (error) => null),
+        adUnitId: 'test-ad-unit',
+        request: AdRequest(),
+        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewardedInterstitial = ad;
+            },
+            onAdFailedToLoad: (error) => null),
       );
 
       RewardedInterstitialAd createdAd =
@@ -415,6 +412,34 @@ void main() {
       expect(result[0], rewardedInterstitial!);
       expect(result[1].amount, 1);
       expect(result[1].type, 'one');
+    });
+
+    test('setServerSideVerificationOptions', () async {
+      final adLoadCompleter = Completer<RewardedInterstitialAd>();
+      await RewardedInterstitialAd.load(
+        adUnitId: 'test-ad-unit',
+        request: AdRequest(),
+        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              adLoadCompleter.complete(ad);
+            },
+            onAdFailedToLoad: (_) => null),
+      );
+
+      await TestUtil.sendAdEvent(0, 'onAdLoaded', instanceManager);
+      expect(adLoadCompleter.isCompleted, true);
+      final ad = await adLoadCompleter.future;
+
+      log.clear();
+      final ssv =
+          ServerSideVerificationOptions(userId: 'id', customData: 'data');
+      await ad.setServerSideOptions(ssv);
+      expect(log, <Matcher>[
+        isMethodCall('setSSV', arguments: <dynamic, dynamic>{
+          'adId': 0,
+          'options': ssv,
+        }),
+      ]);
     });
   });
 }

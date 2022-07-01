@@ -487,15 +487,18 @@
     }
   } else if ([call.method isEqualToString:@"setSSV"]) {
     id<FLTAd> ad = [_manager adFor:call.arguments[@"adId"]];
-    FLTServerSideVerificationOptions* options = call.arguments[@"serverSideVerificationOptions"];
+    FLTServerSideVerificationOptions *options =
+        call.arguments[@"serverSideVerificationOptions"];
     if ([ad isKindOfClass:[FLTRewardedAd class]]) {
       FLTRewardedAd *rewardedAd = (FLTRewardedAd *)ad;
       [rewardedAd setServerSideVerificationOptions:options];
     } else if ([ad isKindOfClass:[FLTRewardedInterstitialAd class]]) {
-      FLTRewardedInterstitialAd *rewardedInterstitialAd = (FLTRewardedInterstitialAd *)ad;
+      FLTRewardedInterstitialAd *rewardedInterstitialAd =
+          (FLTRewardedInterstitialAd *)ad;
       [rewardedInterstitialAd setServerSideVerificationOptions:options];
     } else {
-      NSLog(@"Error - setSSV called on missing or invalid ad id: %@", call.arguments[@"adId"]);
+      NSLog(@"Error - setSSV called on missing or invalid ad id: %@",
+            call.arguments[@"adId"]);
     }
     result(nil);
   } else {

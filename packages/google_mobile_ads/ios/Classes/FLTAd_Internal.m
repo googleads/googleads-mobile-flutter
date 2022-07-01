@@ -868,14 +868,16 @@
   }
 }
 
-- (void)setServerSideVerificationOptions:(FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions {
+- (void)setServerSideVerificationOptions:
+    (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions {
   if (_rewardedView) {
-    _rewardedView.serverSideVerificationOptions = [serverSideVerificationOptions asGADServerSideVerificationOptions];
+    _rewardedView.serverSideVerificationOptions =
+        [serverSideVerificationOptions asGADServerSideVerificationOptions];
   } else {
-    NSLog(@"Error - rewardedView is nil in FLTRewardedAd.setServerSideVerificationOptions");
+    NSLog(@"Error - rewardedView is nil in "
+          @"FLTRewardedAd.setServerSideVerificationOptions");
   }
 }
-
 
 @end
 
@@ -976,12 +978,14 @@
   }
 }
 
-- (void)setServerSideVerificationOptions:(FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions {
+- (void)setServerSideVerificationOptions:
+    (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions {
   if (_rewardedInterstitialView) {
     _rewardedInterstitialView.serverSideVerificationOptions =
-      [serverSideVerificationOptions asGADServerSideVerificationOptions];
+        [serverSideVerificationOptions asGADServerSideVerificationOptions];
   } else {
-    NSLog(@"Error - rewardedView is nil in FLTRewardedInterstitialAd.setServerSideVerificationOptions");
+    NSLog(@"Error - rewardedView is nil in "
+          @"FLTRewardedInterstitialAd.setServerSideVerificationOptions");
   }
 }
 

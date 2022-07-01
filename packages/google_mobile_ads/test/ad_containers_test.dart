@@ -106,13 +106,13 @@ void main() {
       RewardedAd? rewarded;
       AdRequest request = AdRequest();
       await RewardedAd.load(
-          adUnitId: 'test-ad-unit',
-          request: request,
-          rewardedAdLoadCallback: RewardedAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewarded = ad;
-              },
-              onAdFailedToLoad: (error) => null),
+        adUnitId: 'test-ad-unit',
+        request: request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewarded = ad;
+            },
+            onAdFailedToLoad: (error) => null),
       );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
@@ -483,13 +483,14 @@ void main() {
       RewardedAd? rewarded;
       AdRequest request = AdRequest();
       await RewardedAd.load(
-          adUnitId: 'test-ad-unit',
-          request: request,
-          rewardedAdLoadCallback: RewardedAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewarded = ad;
-              },
-              onAdFailedToLoad: (error) => null),);
+        adUnitId: 'test-ad-unit',
+        request: request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewarded = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -519,13 +520,13 @@ void main() {
       RewardedAd? rewarded;
       AdManagerAdRequest request = AdManagerAdRequest();
       await RewardedAd.loadWithAdManagerAdRequest(
-          adUnitId: 'test-ad-unit',
-          adManagerRequest: request,
-          rewardedAdLoadCallback: RewardedAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewarded = ad;
-              },
-              onAdFailedToLoad: (error) => null),
+        adUnitId: 'test-ad-unit',
+        adManagerRequest: request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewarded = ad;
+            },
+            onAdFailedToLoad: (error) => null),
       );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;

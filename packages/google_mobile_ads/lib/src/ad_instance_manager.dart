@@ -762,8 +762,9 @@ class AdInstanceManager {
 
   /// Set server side verification options on the ad.
   Future<void> setServerSideVerificationOptions(
-      ServerSideVerificationOptions options,
-      Ad ad,) {
+    ServerSideVerificationOptions options,
+    Ad ad,
+  ) {
     return channel.invokeMethod<void>(
       'setSSV',
       <dynamic, dynamic>{
