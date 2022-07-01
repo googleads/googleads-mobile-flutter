@@ -868,6 +868,15 @@
   }
 }
 
+- (void)setServerSideVerificationOptions:(FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions {
+  if (_rewardedView) {
+    _rewardedView.serverSideVerificationOptions = [serverSideVerificationOptions asGADServerSideVerificationOptions];
+  } else {
+    NSLog(@"Error - rewardedView is nil in FLTRewardedAd.setServerSideVerificationOptions");
+  }
+}
+
+
 @end
 
 #pragma mark - FLTRewardedInterstitialAd
@@ -964,6 +973,15 @@
   } else {
     NSLog(
         @"RewardedInterstitialAd failed to show because the ad was not ready.");
+  }
+}
+
+- (void)setServerSideVerificationOptions:(FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions {
+  if (_rewardedInterstitialView) {
+    _rewardedInterstitialView.serverSideVerificationOptions =
+      [serverSideVerificationOptions asGADServerSideVerificationOptions];
+  } else {
+    NSLog(@"Error - rewardedView is nil in FLTRewardedInterstitialAd.setServerSideVerificationOptions");
   }
 }
 

@@ -170,6 +170,14 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
     rewardedAd = null;
   }
 
+  public void setServerSideVerificationOptions(FlutterServerSideVerificationOptions options) {
+    if (rewardedAd != null) {
+      rewardedAd.setServerSideVerificationOptions(options.asServerSideVerificationOptions());
+    } else {
+      Log.e(TAG, "RewardedAd is null in setServerSideVerificationOptions");
+    }
+  }
+
   /**
    * This class delegates various rewarded ad callbacks to FlutterRewardedAd. Maintains a weak
    * reference to avoid memory leaks.

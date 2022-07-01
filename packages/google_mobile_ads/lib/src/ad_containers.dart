@@ -1241,6 +1241,11 @@ class RewardedAd extends AdWithoutView {
     onUserEarnedRewardCallback = onUserEarnedReward;
     return instanceManager.showAdWithoutView(this);
   }
+
+  /// Set [ServerSideVerificationOptions] for the ad.
+  Future<void> setServerSideOptions(ServerSideVerificationOptions options) {
+    return instanceManager.setServerSideVerificationOptions(options, this);
+  }
 }
 
 /// Rewarded interstitials are full screen ads that reward users and can be
@@ -1337,6 +1342,11 @@ class RewardedInterstitialAd extends AdWithoutView {
   Future<void> show({required OnUserEarnedRewardCallback onUserEarnedReward}) {
     onUserEarnedRewardCallback = onUserEarnedReward;
     return instanceManager.showAdWithoutView(this);
+  }
+
+  /// Set [ServerSideVerificationOptions] for the ad.
+  Future<void> setServerSideOptions(ServerSideVerificationOptions options) {
+    return instanceManager.setServerSideVerificationOptions(options, this);
   }
 }
 

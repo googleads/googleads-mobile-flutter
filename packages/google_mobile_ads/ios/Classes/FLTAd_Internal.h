@@ -226,6 +226,7 @@
                                       serverSideVerificationOptions
                              adId:(NSNumber *_Nonnull)adId;
 - (GADRewardedAd *_Nullable)rewardedAd;
+- (void)setServerSideVerificationOptions:(FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
 @end
 
 @interface FLTRewardedInterstitialAd : FLTFullScreenAd
@@ -237,6 +238,7 @@
                                       serverSideVerificationOptions
                              adId:(NSNumber *_Nonnull)adId;
 - (GADRewardedInterstitialAd *_Nullable)rewardedInterstitialAd;
+- (void)setServerSideVerificationOptions:(FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
 @end
 
 @interface FLTAppOpenAd : FLTFullScreenAd

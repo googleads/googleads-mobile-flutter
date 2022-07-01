@@ -762,6 +762,19 @@ class AdInstanceManager {
         .invokeMethod<String>('MobileAds#getVersionString'))!;
   }
 
+  /// Set server side verification options on the ad.
+  Future<void> setServerSideVerificationOptions(
+      ServerSideVerificationOptions options,
+      Ad ad,) {
+    return channel.invokeMethod<void>(
+      'setSSV',
+      <dynamic, dynamic>{
+        'adId': adIdFor(ad),
+        'options': options,
+      },
+    );
+  }
+
   /// Opens the debug menu.
   ///
   /// Returns a Future that completes when the platform side api has been

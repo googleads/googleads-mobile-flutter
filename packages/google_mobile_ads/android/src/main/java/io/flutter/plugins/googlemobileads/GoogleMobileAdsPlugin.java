@@ -600,7 +600,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         flutterMobileAds.openDebugMenu(context, adUnitId);
         result.success(null);
         break;
-      case "getAdSize":
+      case "getAdSize": {
         FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
         if (ad == null) {
           // This was called on a dart ad container that hasn't been loaded yet.
@@ -616,6 +616,21 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
               null);
         }
         break;
+      }
+      case "setSSV": {
+        FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
+        final FlutterServerSideVerificationOptions options =
+            call.argument("serverSideVerificationOptions");
+        if (ad instanceof FlutterRewardedAd) {
+          ((FlutterRewardedAd) ad).setServerSideVerificationOptions(options);
+        } else if (ad instanceof FlutterRewardedInterstitialAd) {
+          ((FlutterRewardedInterstitialAd) ad).setServerSideVerificationOptions(options);
+        } else {
+          Log.w(TAG, "Error - setSSV called on non-rewarded ad");
+          result.success(null);
+        }
+        break;
+      }
       default:
         result.notImplemented();
     }
