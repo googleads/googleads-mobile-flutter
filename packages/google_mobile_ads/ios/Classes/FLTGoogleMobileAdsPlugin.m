@@ -248,7 +248,8 @@
                            completionHandler:^(NSError *error) {
                              if (error) {
                                result([FlutterError
-                                   errorWithCode:[[NSString alloc] initWithInt: error.code]
+                                   errorWithCode:[[NSString alloc]
+                                                     initWithInt:error.code]
                                          message:error.localizedDescription
                                          details:error.domain]);
                              } else {

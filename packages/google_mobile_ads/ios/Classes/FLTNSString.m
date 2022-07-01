@@ -14,10 +14,10 @@
 
 #import "FLTNSString.h"
 
-@implementation NSString(FLTNSStringExtension)
+@implementation NSString (FLTNSStringExtension)
 
 - (instancetype _Nonnull)initWithInt:(NSInteger)integer {
-  self = [self initWithFormat:@"%ld", (long) integer];
+  self = [self initWithFormat:@"%ld", (long)integer];
   return self;
 }
 

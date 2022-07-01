@@ -15,7 +15,7 @@
 #import <Foundation/Foundation.h>
 
 /// Category extensions for NSString
-@interface NSString(FLTNSStringExtension)
+@interface NSString (FLTNSStringExtension)
 
 - (instancetype _Nonnull)initWithInt:(NSInteger)integer;
 
