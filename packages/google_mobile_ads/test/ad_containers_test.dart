@@ -113,10 +113,7 @@ void main() {
                 rewarded = ad;
               },
               onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+      );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -127,8 +124,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions':
-              rewarded!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -494,11 +489,7 @@ void main() {
               onAdLoaded: (ad) {
                 rewarded = ad;
               },
-              onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+              onAdFailedToLoad: (error) => null),);
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -509,8 +500,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions':
-              rewarded!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -537,10 +526,7 @@ void main() {
                 rewarded = ad;
               },
               onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+      );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -551,8 +537,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': null,
           'adManagerRequest': request,
-          'serverSideVerificationOptions':
-              rewarded!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -803,7 +787,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions': null,
         })
       ]);
 
@@ -902,11 +885,7 @@ void main() {
               onAdLoaded: (ad) {
                 rewarded = ad;
               },
-              onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+              onAdFailedToLoad: (error) => null));
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       createdAd.rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -1373,11 +1352,7 @@ void main() {
                   ad.fullScreenContentCallback = FullScreenContentCallback(
                       onAdClicked: (ad) => adClickCompleter.complete(ad));
                 },
-                onAdFailedToLoad: (error) => null),
-            serverSideVerificationOptions: ServerSideVerificationOptions(
-              userId: 'test-user-id',
-              customData: 'test-custom-data',
-            ));
+                onAdFailedToLoad: (error) => null));
 
         MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
           'adId': adId,

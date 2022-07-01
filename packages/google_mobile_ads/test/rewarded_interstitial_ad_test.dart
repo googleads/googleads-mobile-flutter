@@ -60,10 +60,7 @@ void main() {
                     rewardedInterstitial = ad;
                   },
                   onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+      );
 
       RewardedInterstitialAd createdAd =
           instanceManager.adFor(0) as RewardedInterstitialAd;
@@ -75,8 +72,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions':
-              rewardedInterstitial!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -165,10 +160,7 @@ void main() {
                     rewardedInterstitial = ad;
                   },
                   onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+      );
 
       RewardedInterstitialAd createdAd =
           instanceManager.adFor(0) as RewardedInterstitialAd;
@@ -180,8 +172,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions':
-              rewardedInterstitial!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -280,10 +270,7 @@ void main() {
                     rewardedInterstitial = ad;
                   },
                   onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+      );
 
       RewardedInterstitialAd createdAd =
           instanceManager.adFor(0) as RewardedInterstitialAd;
@@ -295,8 +282,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': null,
           'adManagerRequest': request,
-          'serverSideVerificationOptions':
-              rewardedInterstitial!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -329,7 +314,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions': null,
         })
       ]);
 
@@ -402,10 +386,7 @@ void main() {
                     rewardedInterstitial = ad;
                   },
                   onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+      );
 
       RewardedInterstitialAd createdAd =
           instanceManager.adFor(0) as RewardedInterstitialAd;
