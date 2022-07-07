@@ -88,7 +88,7 @@
         [delegate adDidRecordImpression:appOpenClassMock];
         [delegate adDidRecordClick:appOpenClassMock];
         [delegate adDidDismissFullScreenContent:appOpenClassMock];
-        [delegate adDidPresentFullScreenContent:appOpenClassMock];
+        [delegate adWillPresentFullScreenContent:appOpenClassMock];
         [delegate adWillDismissFullScreenContent:appOpenClassMock];
         [delegate ad:appOpenClassMock
             didFailToPresentFullScreenContentWithError:error];
@@ -138,7 +138,7 @@
       presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);
 
   // Verify full screen callbacks.
-  OCMVerify([mockManager onAdDidPresentFullScreenContent:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidRecordImpression:[OCMArg isEqual:ad]]);

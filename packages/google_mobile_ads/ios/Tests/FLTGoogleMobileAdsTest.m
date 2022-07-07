@@ -374,9 +374,9 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
                                adId:@1];
   [_manager loadAd:rewardedAd];
 
-  [_manager onAdDidPresentFullScreenContent:rewardedAd];
+  [_manager adWillPresentFullScreenContent:rewardedAd];
   NSData *didPresentData =
-      [self getDataForEvent:@"onAdDidPresentFullScreenContent" adId:@1];
+      [self getDataForEvent:@"adWillPresentFullScreenContent" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:didPresentData]));
 
   [_manager adDidDismissFullScreenContent:rewardedAd];
@@ -405,9 +405,9 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
                                    adId:@1];
   [_manager loadAd:rewardedInterstitialAd];
 
-  [_manager onAdDidPresentFullScreenContent:rewardedInterstitialAd];
+  [_manager adWillPresentFullScreenContent:rewardedInterstitialAd];
   NSData *didPresentData =
-      [self getDataForEvent:@"onAdDidPresentFullScreenContent" adId:@1];
+      [self getDataForEvent:@"adWillPresentFullScreenContent" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:didPresentData]));
 
   [_manager adDidDismissFullScreenContent:rewardedInterstitialAd];

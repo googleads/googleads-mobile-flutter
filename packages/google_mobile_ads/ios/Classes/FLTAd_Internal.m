@@ -259,10 +259,6 @@
         [[NSNumber alloc] initWithDouble:responseInfo.latency * 1000];
     _latency = @(timeInMillis.longValue);
     _dictionaryDescription = responseInfo.dictionaryRepresentation.description;
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    _credentialsDescription = responseInfo.credentials.description;
-#pragma clang diagnostic pop
     _adUnitMapping = [[NSMutableDictionary alloc] init];
     for (NSString *key in responseInfo.adUnitMapping) {
       if ([responseInfo.adUnitMapping[key] isKindOfClass:NSObject.class]) {
@@ -611,9 +607,9 @@
   [manager didFailToPresentFullScreenContentWithError:self error:error];
 }
 
-- (void)adDidPresentFullScreenContent:
+- (void)adWillPresentFullScreenContent:
     (nonnull id<GADFullScreenPresentingAd>)ad {
-  [manager onAdDidPresentFullScreenContent:self];
+  [manager adWillPresentFullScreenContent:self];
 }
 
 - (void)adDidDismissFullScreenContent:

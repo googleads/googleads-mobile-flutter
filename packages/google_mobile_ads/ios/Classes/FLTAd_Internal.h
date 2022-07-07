@@ -99,7 +99,6 @@
 @property NSString *_Nullable adNetworkClassName;
 @property NSNumber *_Nullable latency;
 @property NSString *_Nullable dictionaryDescription;
-@property NSString *_Nullable credentialsDescription;
 @property NSDictionary<NSString *, NSString *> *_Nullable adUnitMapping;
 @property NSError *_Nullable error;
 

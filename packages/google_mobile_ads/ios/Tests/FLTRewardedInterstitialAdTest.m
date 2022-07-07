@@ -102,7 +102,7 @@
         [delegate adDidRecordImpression:rewardedInterstitialClassMock];
         [delegate adDidRecordClick:rewardedInterstitialClassMock];
         [delegate adDidDismissFullScreenContent:rewardedInterstitialClassMock];
-        [delegate adDidPresentFullScreenContent:rewardedInterstitialClassMock];
+        [delegate adWillPresentFullScreenContent:rewardedInterstitialClassMock];
         [delegate adWillDismissFullScreenContent:rewardedInterstitialClassMock];
         [delegate ad:rewardedInterstitialClassMock
             didFailToPresentFullScreenContentWithError:error];
@@ -175,7 +175,7 @@
            userDidEarnRewardHandler:[OCMArg any]]);
 
   // Verify full screen callbacks.
-  OCMVerify([mockManager onAdDidPresentFullScreenContent:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidRecordImpression:[OCMArg isEqual:ad]]);

@@ -15,6 +15,7 @@
 #import "FLTGoogleMobileAdsPlugin.h"
 #import "FLTAdUtil.h"
 #import "FLTAppStateNotifier.h"
+#import "FLTNSString.h"
 #import "UserMessagingPlatform/FLTUserMessagingPlatformManager.h"
 
 @interface FLTGoogleMobileAdsPlugin ()
@@ -247,9 +248,8 @@
                            completionHandler:^(NSError *error) {
                              if (error) {
                                result([FlutterError
-                                   errorWithCode:[NSString stringWithFormat:
-                                                               @"%ld",
-                                                               (long)error.code]
+                                   errorWithCode:[[NSString alloc]
+                                                     initWithInt:error.code]
                                          message:error.localizedDescription
                                          details:error.domain]);
                              } else {

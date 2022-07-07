@@ -195,8 +195,8 @@ public class GoogleMobileAdsTest {
     doReturn("domain").when(adError).getDomain();
     doReturn("message").when(adError).getMessage();
 
-    Bundle credentials = mock(Bundle.class);
-    doReturn("credentials").when(credentials).toString();
+    Bundle credentials = new Bundle();
+    credentials.putString("key", "value");
 
     AdapterResponseInfo adapterInfo = mock(AdapterResponseInfo.class);
     doReturn("adapter-class").when(adapterInfo).getAdapterClassName();
