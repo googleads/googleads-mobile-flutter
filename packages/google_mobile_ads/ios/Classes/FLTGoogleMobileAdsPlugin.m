@@ -481,7 +481,8 @@
     } else {
       result(FlutterMethodNotImplemented);
     }
-  } else if ([call.method isEqualToString:@"setSSV"]) {
+  } else if ([call.method
+                 isEqualToString:@"setServerSideVerificationOptions"]) {
     id<FLTAd> ad = [_manager adFor:call.arguments[@"adId"]];
     FLTServerSideVerificationOptions *options =
         call.arguments[@"serverSideVerificationOptions"];
@@ -493,7 +494,8 @@
           (FLTRewardedInterstitialAd *)ad;
       [rewardedInterstitialAd setServerSideVerificationOptions:options];
     } else {
-      NSLog(@"Error - setSSV called on missing or invalid ad id: %@",
+      NSLog(@"Error - setServerSideVerificationOptions called on missing or "
+            @"invalid ad id: %@",
             call.arguments[@"adId"]);
     }
     result(nil);

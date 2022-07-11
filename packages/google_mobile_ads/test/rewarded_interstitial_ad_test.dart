@@ -39,7 +39,7 @@ void main() {
           case 'loadRewardedInterstitialAd':
           case 'showAdWithoutView':
           case 'disposeAd':
-          case 'setSSV':
+          case 'setServerSideVerificationOptions':
             return Future<void>.value();
           default:
             assert(false);
@@ -435,10 +435,11 @@ void main() {
           ServerSideVerificationOptions(userId: 'id', customData: 'data');
       await ad.setServerSideOptions(ssv);
       expect(log, <Matcher>[
-        isMethodCall('setSSV', arguments: <dynamic, dynamic>{
-          'adId': 0,
-          'options': ssv,
-        }),
+        isMethodCall('setServerSideVerificationOptions',
+            arguments: <dynamic, dynamic>{
+              'adId': 0,
+              'options': ssv,
+            }),
       ]);
     });
   });

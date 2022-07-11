@@ -609,17 +609,20 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
           }
           break;
         }
-      case "setSSV":
+      case "setServerSideVerificationOptions":
         {
           FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
           final FlutterServerSideVerificationOptions options =
               call.argument("serverSideVerificationOptions");
-          if (ad instanceof FlutterRewardedAd) {
+          if (ad == null) {
+            Log.w(TAG, "Error - null ad in setServerSideVerificationOptions");
+            result.success(null);
+          } else if (ad instanceof FlutterRewardedAd) {
             ((FlutterRewardedAd) ad).setServerSideVerificationOptions(options);
           } else if (ad instanceof FlutterRewardedInterstitialAd) {
             ((FlutterRewardedInterstitialAd) ad).setServerSideVerificationOptions(options);
           } else {
-            Log.w(TAG, "Error - setSSV called on non-rewarded ad");
+            Log.w(TAG, "Error - setServerSideVerificationOptions called on " + "non-rewarded ad");
             result.success(null);
           }
           break;

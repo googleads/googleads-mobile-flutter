@@ -766,7 +766,7 @@ class AdInstanceManager {
     Ad ad,
   ) {
     return channel.invokeMethod<void>(
-      'setSSV',
+      'setServerSideVerificationOptions',
       <dynamic, dynamic>{
         'adId': adIdFor(ad),
         'options': options,
