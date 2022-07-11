@@ -868,7 +868,7 @@ public class GoogleMobileAdsTest {
   }
 
   @Test
-  public void testAppStateNotifieDetachFromEngine() {
+  public void testAppStateNotifyDetachFromEngine() {
     AppStateNotifier notifier = mock(AppStateNotifier.class);
     GoogleMobileAdsPlugin plugin = new GoogleMobileAdsPlugin(notifier);
     plugin.onDetachedFromEngine(null);
