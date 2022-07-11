@@ -33,9 +33,11 @@ import android.content.Context;
 import android.os.Bundle;
 import androidx.test.core.app.ApplicationProvider;
 import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdInspectorError;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.AdapterResponseInfo;
+import com.google.android.gms.ads.OnAdInspectorClosedListener;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
@@ -193,8 +195,8 @@ public class GoogleMobileAdsTest {
     doReturn("domain").when(adError).getDomain();
     doReturn("message").when(adError).getMessage();
 
-    Bundle credentials = mock(Bundle.class);
-    doReturn("credentials").when(credentials).toString();
+    Bundle credentials = new Bundle();
+    credentials.putString("key", "value");
 
     AdapterResponseInfo adapterInfo = mock(AdapterResponseInfo.class);
     doReturn("adapter-class").when(adapterInfo).getAdapterClassName();
@@ -348,12 +350,12 @@ public class GoogleMobileAdsTest {
             .build();
     testManager.trackAd(nativeAd, 0);
 
-    testManager.onNativeAdClicked(0);
+    testManager.onAdClicked(0);
 
     final MethodCall call = getLastMethodCall();
     assertEquals("onAdEvent", call.method);
     //noinspection rawtypes
-    assertThat(call.arguments, (Matcher) hasEntry("eventName", "onNativeAdClicked"));
+    assertThat(call.arguments, (Matcher) hasEntry("eventName", "onAdClicked"));
     //noinspection rawtypes
     assertThat(call.arguments, (Matcher) hasEntry("adId", 0));
   }
@@ -492,6 +494,60 @@ public class GoogleMobileAdsTest {
     plugin.onMethodCall(methodCall, result);
 
     verify(result).success(ArgumentMatchers.any(FlutterInitializationStatus.class));
+  }
+
+  @Test
+  public void openAdInspector_error() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
+
+    doAnswer(
+            invocation -> {
+              OnAdInspectorClosedListener listener = invocation.getArgument(1);
+              final AdInspectorError error = mock(AdInspectorError.class);
+              doReturn(1).when(error).getCode();
+              doReturn("domain").when(error).getDomain();
+              doReturn("message").when(error).getMessage();
+              listener.onAdInspectorClosed(error);
+              return null;
+            })
+        .when(mockMobileAds)
+        .openAdInspector(
+            ArgumentMatchers.any(Context.class),
+            ArgumentMatchers.any(OnAdInspectorClosedListener.class));
+
+    MethodCall methodCall = new MethodCall("MobileAds#openAdInspector", null);
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).error(eq("1"), eq("message"), eq("domain"));
+  }
+
+  @Test
+  public void openAdInspector_success() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
+
+    doAnswer(
+            invocation -> {
+              OnAdInspectorClosedListener listener = invocation.getArgument(1);
+              listener.onAdInspectorClosed(null);
+              return null;
+            })
+        .when(mockMobileAds)
+        .openAdInspector(
+            ArgumentMatchers.any(Context.class),
+            ArgumentMatchers.any(OnAdInspectorClosedListener.class));
+
+    MethodCall methodCall = new MethodCall("MobileAds#openAdInspector", null);
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(null);
   }
 
   @Test
@@ -653,6 +709,23 @@ public class GoogleMobileAdsTest {
     // Verify that mockMobileAds.getVersionString() was called and a value is returned.
     verify(mockMobileAds).getVersionString();
     verify(result).success("Test-SDK-Version");
+  }
+
+  @Test
+  public void testOpenDebugMenu() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
+    MethodCall methodCall =
+        new MethodCall(
+            "MobileAds#openDebugMenu", Collections.singletonMap("adUnitId", "test-ad-unit"));
+    Result result = mock(Result.class);
+
+    plugin.onMethodCall(methodCall, result);
+
+    verify(mockMobileAds).openDebugMenu(eq(mockActivity), eq("test-ad-unit"));
+    verify(result).success(isNull());
   }
 
   @Test

@@ -135,10 +135,10 @@ class AdInstanceManager {
     invokeOnAdEvent(arguments);
   }
 
-  void onNativeAdClicked(int id) {
+  void onAdClicked(int id) {
     Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", id);
-    arguments.put("eventName", "onNativeAdClicked");
+    arguments.put("eventName", "onAdClicked");
     invokeOnAdEvent(arguments);
   }
 
@@ -160,6 +160,15 @@ class AdInstanceManager {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adId);
     arguments.put("eventName", "onRewardedAdUserEarnedReward");
+    arguments.put("rewardItem", reward);
+    invokeOnAdEvent(arguments);
+  }
+
+  void onRewardedInterstitialAdUserEarnedReward(
+      int adId, @NonNull FlutterRewardedAd.FlutterRewardItem reward) {
+    final Map<Object, Object> arguments = new HashMap<>();
+    arguments.put("adId", adId);
+    arguments.put("eventName", "onRewardedInterstitialAdUserEarnedReward");
     arguments.put("rewardItem", reward);
     invokeOnAdEvent(arguments);
   }

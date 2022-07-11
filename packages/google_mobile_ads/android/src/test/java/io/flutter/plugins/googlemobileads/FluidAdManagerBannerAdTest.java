@@ -119,6 +119,7 @@ public class FluidAdManagerBannerAdTest {
                 listener.onAdImpression();
                 listener.onAdClosed();
                 listener.onAdOpened();
+                listener.onAdClicked();
                 return null;
               }
             })
@@ -137,6 +138,7 @@ public class FluidAdManagerBannerAdTest {
     verify(mockManager).onAdImpression(eq(1));
     verify(mockManager).onAdClosed(eq(1));
     verify(mockManager).onAdOpened(eq(1));
+    verify(mockManager).onAdClicked(eq(1));
 
     // Verify that ad is correctly put into container view.
     FluidAdManagerBannerAd spy = spy(fluidAd);

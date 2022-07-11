@@ -23,8 +23,8 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
-import com.google.android.gms.common.internal.Preconditions;
 import io.flutter.plugin.platform.PlatformView;
+import io.flutter.util.Preconditions;
 import java.util.List;
 
 /**

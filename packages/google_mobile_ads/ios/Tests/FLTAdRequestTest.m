@@ -41,10 +41,6 @@
   NSArray<NSString *> *keywords = @[ @"keyword1", @"keyword2" ];
   fltAdRequest.keywords = keywords;
   fltAdRequest.nonPersonalizedAds = YES;
-  FLTLocationParams *locationParams = [[FLTLocationParams alloc] initWithAccuracy:@1
-                                                                        longitude:@2
-                                                                         latitude:@3];
-  fltAdRequest.location = locationParams;
   fltAdRequest.mediationExtrasIdentifier = @"identifier";
   NSArray<NSString *> *neighbors = @[ @"neighbor1", @"neighbor2" ];
   fltAdRequest.neighboringContentURLs = neighbors;
@@ -70,8 +66,8 @@
   GADExtras *updatedExtras = [gadRequest adNetworkExtrasFor:[GADExtras class]];
   XCTAssertEqualObjects(updatedExtras, extras);
   XCTAssertEqualObjects(updatedExtras.additionalParameters[@"npa"], @"1");
-  OCMVerify([gadRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
-  OCMVerify([gadRequestSpy setLocationWithLatitude:3 longitude:2 accuracy:1]);
+  OCMVerify(
+      [gadRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
 }
 
 - (void)testAsAdRequestNoParams {
@@ -89,7 +85,6 @@
   XCTAssertNil(gadRequest.keywords);
   XCTAssertNil(gadRequest.neighboringContentURLStrings);
   XCTAssertNil([gadRequest adNetworkExtrasFor:[GADExtras class]]);
-  XCTAssertNil([gadRequest valueForKey:@"_location"]);
 }
 
 - (void)testGADExtrasAddedWhenNpaSpecified {
@@ -143,7 +138,8 @@
   GADRequest *gadRequest = [fltAdRequest asGADRequest:@"test-ad-unit"];
 
   XCTAssertNil([gadRequest adNetworkExtrasFor:[GADExtras class]]);
-  OCMVerify([gadRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
+  OCMVerify(
+      [gadRequestSpy registerAdNetworkExtras:[OCMArg isEqual:testExtras]]);
 }
 
 @end

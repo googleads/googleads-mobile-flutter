@@ -14,7 +14,6 @@
 
 package io.flutter.plugins.googlemobileads;
 
-import android.location.Location;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import java.util.List;
@@ -62,7 +61,6 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
           getNonPersonalizedAds(),
           getNeighboringContentUrls(),
           getHttpTimeoutMillis(),
-          getLocation(),
           publisherProvidedId,
           getMediationExtrasIdentifier(),
           getMediationNetworkExtrasProvider(),
@@ -78,7 +76,6 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
       @Nullable Boolean nonPersonalizedAds,
       @Nullable List<String> neighboringContentUrls,
       @Nullable Integer httpTimeoutMillis,
-      @Nullable Location location,
       @Nullable String publisherProvidedId,
       @Nullable String mediationExtrasIdentifier,
       @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider,
@@ -89,7 +86,6 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
         nonPersonalizedAds,
         neighboringContentUrls,
         httpTimeoutMillis,
-        location,
         mediationExtrasIdentifier,
         mediationNetworkExtrasProvider,
         adMobExtras);
