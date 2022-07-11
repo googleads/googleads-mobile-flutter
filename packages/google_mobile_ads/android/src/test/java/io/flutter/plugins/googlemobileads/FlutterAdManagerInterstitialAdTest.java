@@ -164,6 +164,7 @@ public class FlutterAdManagerInterstitialAdTest {
                 callback.onAdShowedFullScreenContent();
                 callback.onAdImpression();
                 callback.onAdDismissedFullScreenContent();
+                callback.onAdClicked();
                 return null;
               }
             })
@@ -176,6 +177,7 @@ public class FlutterAdManagerInterstitialAdTest {
     verify(mockAdManagerAd).setAppEventListener(any(AppEventListener.class));
     verify(mockManager).onAdShowedFullScreenContent(eq(1));
     verify(mockManager).onAdImpression(eq(1));
+    verify(mockManager).onAdClicked(eq(1));
     verify(mockManager).onAdDismissedFullScreenContent(eq(1));
     assertNull(flutterAdManagerInterstitialAd.getPlatformView());
   }

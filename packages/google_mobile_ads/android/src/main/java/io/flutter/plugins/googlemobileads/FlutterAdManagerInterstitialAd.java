@@ -28,7 +28,7 @@ import java.lang.ref.WeakReference;
  * Google Mobile Ads Plugin.
  */
 class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
-  private static final String TAG = "FlutterAdManagerInterstitialAd";
+  private static final String TAG = "FltGAMInterstitialAd";
 
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
