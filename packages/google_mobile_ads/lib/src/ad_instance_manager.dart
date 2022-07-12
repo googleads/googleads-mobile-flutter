@@ -363,7 +363,6 @@ class AdInstanceManager {
 
   void _invokeOnAdClicked(Ad ad, String eventName) {
     if (ad is NativeAd) {
-      ad.listener.onNativeAdClicked?.call(ad);
       ad.listener.onAdClicked?.call(ad);
     } else if (ad is AdWithView) {
       ad.listener.onAdClicked?.call(ad);

@@ -1318,7 +1318,6 @@ void main() {
           adUnitId: 'test-ad-unit',
           factoryId: 'testId',
           listener: NativeAdListener(
-              onNativeAdClicked: (Ad ad) => nativeAdClickCompleter.complete(ad),
               onAdClicked: (ad) => adClickCompleter.complete(ad)),
           request: AdRequest(),
         );
