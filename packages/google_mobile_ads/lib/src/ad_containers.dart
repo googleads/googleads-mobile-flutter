@@ -1158,7 +1158,6 @@ class RewardedAd extends AdWithoutView {
     required String adUnitId,
     required this.rewardedAdLoadCallback,
     required this.request,
-    this.serverSideVerificationOptions,
   })  : adManagerRequest = null,
         super(adUnitId: adUnitId);
 
@@ -1169,7 +1168,6 @@ class RewardedAd extends AdWithoutView {
     required String adUnitId,
     required this.rewardedAdLoadCallback,
     required this.adManagerRequest,
-    this.serverSideVerificationOptions,
   })  : request = null,
         super(adUnitId: adUnitId);
 
@@ -1191,9 +1189,6 @@ class RewardedAd extends AdWithoutView {
       ? 'ca-app-pub-3940256099942544/5224354917'
       : 'ca-app-pub-3940256099942544/1712485313';
 
-  /// Optional [ServerSideVerificationOptions].
-  ServerSideVerificationOptions? serverSideVerificationOptions;
-
   /// Callbacks to be invoked when ads show and dismiss full screen content.
   FullScreenContentCallback<RewardedAd>? fullScreenContentCallback;
 
@@ -1205,13 +1200,11 @@ class RewardedAd extends AdWithoutView {
     required String adUnitId,
     required AdRequest request,
     required RewardedAdLoadCallback rewardedAdLoadCallback,
-    ServerSideVerificationOptions? serverSideVerificationOptions,
   }) async {
     RewardedAd rewardedAd = RewardedAd._(
         adUnitId: adUnitId,
         request: request,
-        rewardedAdLoadCallback: rewardedAdLoadCallback,
-        serverSideVerificationOptions: serverSideVerificationOptions);
+        rewardedAdLoadCallback: rewardedAdLoadCallback);
 
     await instanceManager.loadRewardedAd(rewardedAd);
   }
@@ -1221,13 +1214,11 @@ class RewardedAd extends AdWithoutView {
     required String adUnitId,
     required AdManagerAdRequest adManagerRequest,
     required RewardedAdLoadCallback rewardedAdLoadCallback,
-    ServerSideVerificationOptions? serverSideVerificationOptions,
   }) async {
     RewardedAd rewardedAd = RewardedAd._fromAdManagerRequest(
         adUnitId: adUnitId,
         adManagerRequest: adManagerRequest,
-        rewardedAdLoadCallback: rewardedAdLoadCallback,
-        serverSideVerificationOptions: serverSideVerificationOptions);
+        rewardedAdLoadCallback: rewardedAdLoadCallback);
 
     await instanceManager.loadRewardedAd(rewardedAd);
   }
@@ -1240,6 +1231,11 @@ class RewardedAd extends AdWithoutView {
   Future<void> show({required OnUserEarnedRewardCallback onUserEarnedReward}) {
     onUserEarnedRewardCallback = onUserEarnedReward;
     return instanceManager.showAdWithoutView(this);
+  }
+
+  /// Set [ServerSideVerificationOptions] for the ad.
+  Future<void> setServerSideOptions(ServerSideVerificationOptions options) {
+    return instanceManager.setServerSideVerificationOptions(options, this);
   }
 }
 
@@ -1260,7 +1256,6 @@ class RewardedInterstitialAd extends AdWithoutView {
     required String adUnitId,
     required this.rewardedInterstitialAdLoadCallback,
     required this.request,
-    this.serverSideVerificationOptions,
   })  : adManagerRequest = null,
         super(adUnitId: adUnitId);
 
@@ -1271,7 +1266,6 @@ class RewardedInterstitialAd extends AdWithoutView {
     required String adUnitId,
     required this.rewardedInterstitialAdLoadCallback,
     required this.adManagerRequest,
-    this.serverSideVerificationOptions,
   })  : request = null,
         super(adUnitId: adUnitId);
 
@@ -1283,9 +1277,6 @@ class RewardedInterstitialAd extends AdWithoutView {
 
   /// Callbacks for events that occur when attempting to load an ad.
   final RewardedInterstitialAdLoadCallback rewardedInterstitialAdLoadCallback;
-
-  /// Optional [ServerSideVerificationOptions].
-  ServerSideVerificationOptions? serverSideVerificationOptions;
 
   /// Callbacks to be invoked when ads show and dismiss full screen content.
   FullScreenContentCallback<RewardedInterstitialAd>? fullScreenContentCallback;
@@ -1299,13 +1290,11 @@ class RewardedInterstitialAd extends AdWithoutView {
     required AdRequest request,
     required RewardedInterstitialAdLoadCallback
         rewardedInterstitialAdLoadCallback,
-    ServerSideVerificationOptions? serverSideVerificationOptions,
   }) async {
     RewardedInterstitialAd rewardedInterstitialAd = RewardedInterstitialAd._(
         adUnitId: adUnitId,
         request: request,
-        rewardedInterstitialAdLoadCallback: rewardedInterstitialAdLoadCallback,
-        serverSideVerificationOptions: serverSideVerificationOptions);
+        rewardedInterstitialAdLoadCallback: rewardedInterstitialAdLoadCallback);
 
     await instanceManager.loadRewardedInterstitialAd(rewardedInterstitialAd);
   }
@@ -1316,15 +1305,13 @@ class RewardedInterstitialAd extends AdWithoutView {
     required AdManagerAdRequest adManagerRequest,
     required RewardedInterstitialAdLoadCallback
         rewardedInterstitialAdLoadCallback,
-    ServerSideVerificationOptions? serverSideVerificationOptions,
   }) async {
     RewardedInterstitialAd rewardedInterstitialAd =
         RewardedInterstitialAd._fromAdManagerRequest(
             adUnitId: adUnitId,
             adManagerRequest: adManagerRequest,
             rewardedInterstitialAdLoadCallback:
-                rewardedInterstitialAdLoadCallback,
-            serverSideVerificationOptions: serverSideVerificationOptions);
+                rewardedInterstitialAdLoadCallback);
 
     await instanceManager.loadRewardedInterstitialAd(rewardedInterstitialAd);
   }
@@ -1337,6 +1324,11 @@ class RewardedInterstitialAd extends AdWithoutView {
   Future<void> show({required OnUserEarnedRewardCallback onUserEarnedReward}) {
     onUserEarnedRewardCallback = onUserEarnedReward;
     return instanceManager.showAdWithoutView(this);
+  }
+
+  /// Set [ServerSideVerificationOptions] for the ad.
+  Future<void> setServerSideOptions(ServerSideVerificationOptions options) {
+    return instanceManager.setServerSideVerificationOptions(options, this);
   }
 }
 

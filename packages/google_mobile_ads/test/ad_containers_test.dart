@@ -49,6 +49,7 @@ void main() {
           case 'loadInterstitialAd':
           case 'loadAdManagerInterstitialAd':
           case 'loadAdManagerBannerAd':
+          case 'setServerSideVerificationOptions':
             return Future<void>.value();
           case 'getAdSize':
             return Future<dynamic>.value(AdSize.banner);
@@ -102,21 +103,18 @@ void main() {
       ]);
     });
 
-    test('load rewarded ad and set immersive mode', () async {
+    test('load rewarded ad and set immersive mode and ssv', () async {
       RewardedAd? rewarded;
       AdRequest request = AdRequest();
       await RewardedAd.load(
-          adUnitId: 'test-ad-unit',
-          request: request,
-          rewardedAdLoadCallback: RewardedAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewarded = ad;
-              },
-              onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+        adUnitId: 'test-ad-unit',
+        request: request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewarded = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -127,19 +125,27 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions':
-              rewarded!.serverSideVerificationOptions,
         }),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
       expect(rewarded, createdAd);
 
+      // Set immersive mode
       log.clear();
       await createdAd.setImmersiveMode(true);
       expect(log, <Matcher>[
         isMethodCall('setImmersiveMode',
             arguments: {'adId': 0, 'immersiveModeEnabled': true})
+      ]);
+
+      // Set ssv
+      log.clear();
+      final ssv = ServerSideVerificationOptions();
+      await createdAd.setServerSideOptions(ssv);
+      expect(log, <Matcher>[
+        isMethodCall('setServerSideVerificationOptions',
+            arguments: {'adId': 0, 'serverSideVerificationOptions': ssv})
       ]);
     });
 
@@ -488,17 +494,14 @@ void main() {
       RewardedAd? rewarded;
       AdRequest request = AdRequest();
       await RewardedAd.load(
-          adUnitId: 'test-ad-unit',
-          request: request,
-          rewardedAdLoadCallback: RewardedAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewarded = ad;
-              },
-              onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+        adUnitId: 'test-ad-unit',
+        request: request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewarded = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -509,8 +512,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions':
-              rewarded!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -530,17 +531,14 @@ void main() {
       RewardedAd? rewarded;
       AdManagerAdRequest request = AdManagerAdRequest();
       await RewardedAd.loadWithAdManagerAdRequest(
-          adUnitId: 'test-ad-unit',
-          adManagerRequest: request,
-          rewardedAdLoadCallback: RewardedAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewarded = ad;
-              },
-              onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+        adUnitId: 'test-ad-unit',
+        adManagerRequest: request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewarded = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -551,8 +549,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': null,
           'adManagerRequest': request,
-          'serverSideVerificationOptions':
-              rewarded!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -803,7 +799,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions': null,
         })
       ]);
 
@@ -902,11 +897,7 @@ void main() {
               onAdLoaded: (ad) {
                 rewarded = ad;
               },
-              onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+              onAdFailedToLoad: (error) => null));
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       createdAd.rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -1373,11 +1364,7 @@ void main() {
                   ad.fullScreenContentCallback = FullScreenContentCallback(
                       onAdClicked: (ad) => adClickCompleter.complete(ad));
                 },
-                onAdFailedToLoad: (error) => null),
-            serverSideVerificationOptions: ServerSideVerificationOptions(
-              userId: 'test-user-id',
-              customData: 'test-custom-data',
-            ));
+                onAdFailedToLoad: (error) => null));
 
         MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
           'adId': adId,

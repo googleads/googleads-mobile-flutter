@@ -536,7 +536,6 @@ class AdInstanceManager {
         'adUnitId': ad.adUnitId,
         'request': ad.request,
         'adManagerRequest': ad.adManagerRequest,
-        'serverSideVerificationOptions': ad.serverSideVerificationOptions,
       },
     );
   }
@@ -558,7 +557,6 @@ class AdInstanceManager {
         'adUnitId': ad.adUnitId,
         'request': ad.request,
         'adManagerRequest': ad.adManagerRequest,
-        'serverSideVerificationOptions': ad.serverSideVerificationOptions,
       },
     );
   }
@@ -760,6 +758,20 @@ class AdInstanceManager {
   Future<String> getVersionString() async {
     return (await instanceManager.channel
         .invokeMethod<String>('MobileAds#getVersionString'))!;
+  }
+
+  /// Set server side verification options on the ad.
+  Future<void> setServerSideVerificationOptions(
+    ServerSideVerificationOptions options,
+    Ad ad,
+  ) {
+    return channel.invokeMethod<void>(
+      'setServerSideVerificationOptions',
+      <dynamic, dynamic>{
+        'adId': adIdFor(ad),
+        'serverSideVerificationOptions': options,
+      },
+    );
   }
 
   /// Opens the debug menu.
