@@ -49,6 +49,7 @@ void main() {
           case 'loadInterstitialAd':
           case 'loadAdManagerInterstitialAd':
           case 'loadAdManagerBannerAd':
+          case 'setServerSideVerificationOptions':
             return Future<void>.value();
           case 'getAdSize':
             return Future<dynamic>.value(AdSize.banner);
@@ -102,7 +103,7 @@ void main() {
       ]);
     });
 
-    test('load rewarded ad and set immersive mode', () async {
+    test('load rewarded ad and set immersive mode and ssv', () async {
       RewardedAd? rewarded;
       AdRequest request = AdRequest();
       await RewardedAd.load(
@@ -130,11 +131,21 @@ void main() {
       expect(instanceManager.adFor(0), isNotNull);
       expect(rewarded, createdAd);
 
+      // Set immersive mode
       log.clear();
       await createdAd.setImmersiveMode(true);
       expect(log, <Matcher>[
         isMethodCall('setImmersiveMode',
             arguments: {'adId': 0, 'immersiveModeEnabled': true})
+      ]);
+
+      // Set ssv
+      log.clear();
+      final ssv = ServerSideVerificationOptions();
+      await createdAd.setServerSideOptions(ssv);
+      expect(log, <Matcher>[
+        isMethodCall('setServerSideVerificationOptions',
+            arguments: {'adId': 0, 'serverSideVerificationOptions': ssv})
       ]);
     });
 

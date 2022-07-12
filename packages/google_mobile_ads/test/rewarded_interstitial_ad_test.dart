@@ -438,7 +438,7 @@ void main() {
         isMethodCall('setServerSideVerificationOptions',
             arguments: <dynamic, dynamic>{
               'adId': 0,
-              'options': ssv,
+              'serverSideVerificationOptions': ssv,
             }),
       ]);
     });

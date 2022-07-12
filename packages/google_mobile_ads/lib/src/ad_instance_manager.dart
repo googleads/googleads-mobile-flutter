@@ -769,7 +769,7 @@ class AdInstanceManager {
       'setServerSideVerificationOptions',
       <dynamic, dynamic>{
         'adId': adIdFor(ad),
-        'options': options,
+        'serverSideVerificationOptions': options,
       },
     );
   }
