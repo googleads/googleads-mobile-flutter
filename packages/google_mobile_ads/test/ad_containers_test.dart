@@ -1056,8 +1056,6 @@ void main() {
         nonPersonalizedAds: false,
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
         httpTimeoutMillis: 12345,
-        location:
-            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
         mediationExtrasIdentifier: 'identifier',
         extras: {'key': 'value'},
       );
@@ -1084,8 +1082,6 @@ void main() {
         nonPersonalizedAds: false,
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
         httpTimeoutMillis: 12345,
-        location:
-            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
         mediationExtrasIdentifier: 'identifier',
         extras: {'key': 'value'},
       );
@@ -1097,7 +1093,6 @@ void main() {
       expect(decoded.contentUrl, adRequest.contentUrl);
       expect(decoded.nonPersonalizedAds, adRequest.nonPersonalizedAds);
       expect(decoded.keywords, adRequest.keywords);
-      expect(decoded.location, null);
       expect(decoded.mediationExtrasIdentifier, 'identifier');
     });
 
@@ -1248,8 +1243,6 @@ void main() {
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
         httpTimeoutMillis: 5000,
         publisherProvidedId: 'test-pub-id',
-        location:
-            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
         mediationExtrasIdentifier: 'identifier',
         extras: {'key': 'value'},
       );
@@ -1289,8 +1282,6 @@ void main() {
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
         httpTimeoutMillis: 5000,
         publisherProvidedId: 'test-pub-id',
-        location:
-            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
         mediationExtrasIdentifier: 'identifier',
         extras: {'key': 'value'},
       );
@@ -1305,20 +1296,17 @@ void main() {
       expect(decoded.publisherProvidedId, request.publisherProvidedId);
       expect(decoded.customTargeting, request.customTargeting);
       expect(decoded.customTargetingLists, request.customTargetingLists);
-      expect(decoded.location, null);
       expect(decoded.mediationExtrasIdentifier, 'identifier');
     });
 
     test('ad click native', () async {
       var testNativeClick = (eventName, adId) async {
-        final Completer<Ad> nativeAdClickCompleter = Completer<Ad>();
         final Completer<Ad> adClickCompleter = Completer<Ad>();
 
         final NativeAd native = NativeAd(
           adUnitId: 'test-ad-unit',
           factoryId: 'testId',
           listener: NativeAdListener(
-              onNativeAdClicked: (Ad ad) => nativeAdClickCompleter.complete(ad),
               onAdClicked: (ad) => adClickCompleter.complete(ad)),
           request: AdRequest(),
         );
@@ -1337,7 +1325,6 @@ void main() {
           (ByteData? data) {},
         );
 
-        expect(nativeAdClickCompleter.future, completion(native));
         expect(adClickCompleter.future, completion(native));
       };
 
