@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import 'dart:async';
-import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -143,40 +142,6 @@ class LoadAdError extends AdError {
   }
 }
 
-/// Location parameters that can be configured in an ad request.
-class LocationParams {
-  /// Location parameters that can be configured in an ad request.
-  const LocationParams({
-    required this.accuracy,
-    required this.longitude,
-    required this.latitude,
-    this.time,
-  });
-
-  /// The accuracy in meters.
-  final double accuracy;
-
-  /// The longitude in degrees.
-  final double longitude;
-
-  /// The latitude in degrees.
-  final double latitude;
-
-  /// The UTC time, in milliseconds since epoch (January 1, 1970).
-  ///
-  /// This is required on Android, and ignored on iOS.
-  final int? time;
-
-  @override
-  bool operator ==(Object other) {
-    return other is LocationParams &&
-        accuracy == other.accuracy &&
-        longitude == other.longitude &&
-        latitude == other.latitude &&
-        time == other.time;
-  }
-}
-
 /// Targeting info per the AdMob API.
 ///
 /// This class's properties mirror the native AdRequest API. See for example:
@@ -189,7 +154,6 @@ class AdRequest {
     this.neighboringContentUrls,
     this.nonPersonalizedAds,
     this.httpTimeoutMillis,
-    this.location,
     this.mediationExtrasIdentifier,
     this.extras,
   });
@@ -215,12 +179,6 @@ class AdRequest {
   ///
   /// This is only supported in Android. This value is ignored on iOS.
   final int? httpTimeoutMillis;
-
-  /// Location data.
-  ///
-  /// Used for mediation targeting purposes.
-  @Deprecated('Location is not used and will be deleted in a future release')
-  final LocationParams? location;
 
   /// String identifier used in providing mediation extras.
   ///
@@ -258,7 +216,6 @@ class AdManagerAdRequest extends AdRequest {
     bool? nonPersonalizedAds,
     int? httpTimeoutMillis,
     this.publisherProvidedId,
-    LocationParams? location,
     String? mediationExtrasIdentifier,
     Map<String, String>? extras,
   }) : super(
@@ -267,7 +224,6 @@ class AdManagerAdRequest extends AdRequest {
           neighboringContentUrls: neighboringContentUrls,
           nonPersonalizedAds: nonPersonalizedAds,
           httpTimeoutMillis: httpTimeoutMillis,
-          location: location,
           mediationExtrasIdentifier: mediationExtrasIdentifier,
           extras: extras,
         );

@@ -7,12 +7,13 @@
   `RewardedAd.setServerSideVerificationOptions()` and 
   `RewardedInterstitialAd.setServerSideVerificationOptions()`. This lets you
   update the ssv after the ad is loaded.
-* Deletes static `testAdUnitId` parameters. See the
+* Removes static `testAdUnitId` parameters. See the
   [Admob](https://developers.google.com/admob/flutter/test-ads) and 
   [AdManager](https://developers.google.com/ad-manager/mobile-ads-sdk/flutter/test-ads)
   documentation for up to date test ad units.
-* Deletes `NativeAdListener.onNativeAdClicked`. You should use `onAdClicked`
+* Removes `NativeAdListener.onNativeAdClicked`. You should use `onAdClicked`
   instead, which present on all ad listeners.
+* Removes `AdRequest.location`
 
 ## 1.3.0
 * Adds support for programmatically opening the debug options menu using`MobileAds.openDebugMenu(String adUnitId)`

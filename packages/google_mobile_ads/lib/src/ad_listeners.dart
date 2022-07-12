@@ -219,7 +219,6 @@ class NativeAdListener extends AdWithViewListener {
             onAdImpression: onAdImpression,
             onPaidEvent: onPaidEvent,
             onAdClicked: onAdClicked);
-
 }
 
 /// Callback events for for full screen ads, such as Rewarded and Interstitial.
