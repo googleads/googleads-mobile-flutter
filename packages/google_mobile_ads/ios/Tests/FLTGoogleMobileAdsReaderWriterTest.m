@@ -431,7 +431,7 @@
 
 - (void)testEncodeDecodeFLTGADResponseInfo {
   NSDictionary *descriptionsDict = @{@"descriptions" : @"dict"};
-  NSDictionary *credentialsDict = @{@"credentials" : @"dict"};
+  NSDictionary *adUnitMappingsDict = @{@"credentials" : @"dict"};
 
   NSError *error = OCMClassMock([NSError class]);
   OCMStub([error domain]).andReturn(@"domain");
@@ -444,8 +444,7 @@
   OCMStub([mockGADResponseInfo latency]).andReturn(123.1234);
   OCMStub([mockGADResponseInfo dictionaryRepresentation])
       .andReturn(descriptionsDict);
-  OCMStub([mockGADResponseInfo credentials]).andReturn(credentialsDict);
-  OCMStub([mockGADResponseInfo adUnitMapping]).andReturn(credentialsDict);
+  OCMStub([mockGADResponseInfo adUnitMapping]).andReturn(adUnitMappingsDict);
   OCMStub([mockGADResponseInfo error]).andReturn(error);
 
   FLTGADAdNetworkResponseInfo *adNetworkResponseInfo =
@@ -472,9 +471,7 @@
   XCTAssertEqualObjects(decodedInfo.latency, @(123123));
   XCTAssertEqualObjects(decodedInfo.dictionaryDescription,
                         @"{\n    descriptions = dict;\n}");
-  XCTAssertEqualObjects(decodedInfo.credentialsDescription,
-                        @"{\n    credentials = dict;\n}");
-  XCTAssertEqualObjects(decodedInfo.adUnitMapping, credentialsDict);
+  XCTAssertEqualObjects(decodedInfo.adUnitMapping, adUnitMappingsDict);
   XCTAssertEqual(decodedInfo.error.code, 1);
   XCTAssertEqualObjects(decodedInfo.error.domain, @"domain");
   XCTAssertEqualObjects(decodedInfo.error.localizedDescription, @"error");

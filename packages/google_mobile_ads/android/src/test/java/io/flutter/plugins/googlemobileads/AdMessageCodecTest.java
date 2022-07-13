@@ -345,8 +345,7 @@ public class AdMessageCodecTest {
     List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
     Map<String, String> adUnitMapping = Collections.singletonMap("key", "value");
     adapterResponseInfos.add(
-        new FlutterAdapterResponseInfo(
-            "adapter-class", 9999, "description", "credentials", adUnitMapping, null));
+        new FlutterAdapterResponseInfo("adapter-class", 9999, "description", adUnitMapping, null));
     FlutterResponseInfo info =
         new FlutterResponseInfo("responseId", "className", adapterResponseInfos);
     final ByteBuffer message =

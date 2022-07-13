@@ -214,7 +214,7 @@ void main() {
       expect(await clickedCompleter.future, appOpenAd);
 
       await TestUtil.sendAdEvent(
-          0, 'onAdDidPresentFullScreenContent', instanceManager);
+          0, 'adWillPresentFullScreenContent', instanceManager);
       expect(await showedCompleter.future, appOpenAd);
 
       await TestUtil.sendAdEvent(

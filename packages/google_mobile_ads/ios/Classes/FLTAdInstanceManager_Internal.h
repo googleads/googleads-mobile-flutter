@@ -55,7 +55,7 @@
 - (void)onBannerDidDismissScreen:(FLTBannerAd *_Nonnull)ad;
 - (void)onBannerWillPresentScreen:(FLTBannerAd *_Nonnull)ad;
 
-- (void)onAdDidPresentFullScreenContent:(id<FLTAd> _Nonnull)ad;
+- (void)adWillPresentFullScreenContent:(id<FLTAd> _Nonnull)ad;
 - (void)adDidDismissFullScreenContent:(id<FLTAd> _Nonnull)ad;
 - (void)adWillDismissFullScreenContent:(id<FLTAd> _Nonnull)ad;
 - (void)adDidRecordImpression:(id<FLTAd> _Nonnull)ad;

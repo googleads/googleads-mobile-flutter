@@ -1,3 +1,20 @@
+## 2.0.0
+* Updates GMA Android dependency to 21.0.0 and iOS to 9.6.0
+* Removes `credentials` from `AdapterResponseInfo`, which is replaced with
+  `adUnitMapping`.
+* Removes `serverSideVerificationOptions` from `RewardedAd.load()` and 
+  `RewardedInterstitialAd.load()`, replacing them with setters 
+  `RewardedAd.setServerSideVerificationOptions()` and 
+  `RewardedInterstitialAd.setServerSideVerificationOptions()`. This lets you
+  update the ssv after the ad is loaded.
+* Removes static `testAdUnitId` parameters. See the
+  [Admob](https://developers.google.com/admob/flutter/test-ads) and 
+  [AdManager](https://developers.google.com/ad-manager/mobile-ads-sdk/flutter/test-ads)
+  documentation for up to date test ad units.
+* Removes `NativeAdListener.onNativeAdClicked`. You should use `onAdClicked`
+  instead, which present on all ad listeners.
+* Removes `AdRequest.location`
+
 ## 1.3.0
 * Adds support for programmatically opening the debug options menu using`MobileAds.openDebugMenu(String adUnitId)`
 * Adds support for Ad inspector APIs. See the [AdMob](https://developers.google.com/admob/flutter/ad-inspector)
