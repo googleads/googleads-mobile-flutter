@@ -246,11 +246,10 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 
 - (void)testAdInstanceManagerOnRewardedAdUserEarnedReward {
   FLTRewardedAd *ad = [[FLTRewardedAd alloc]
-                   initWithAdUnitId:@"testId"
-                            request:[[FLTAdRequest alloc] init]
-                 rootViewController:OCMClassMock([UIViewController class])
-      serverSideVerificationOptions:nil
-                               adId:@1];
+        initWithAdUnitId:@"testId"
+                 request:[[FLTAdRequest alloc] init]
+      rootViewController:OCMClassMock([UIViewController class])
+                    adId:@1];
   [_manager loadAd:ad];
 
   [_manager onRewardedAdUserEarnedReward:ad
@@ -274,11 +273,10 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 
 - (void)testAdInstanceManagerOnRewardedInterstitialAdUserEarnedReward {
   FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc]
-                   initWithAdUnitId:@"testId"
-                            request:[[FLTAdRequest alloc] init]
-                 rootViewController:OCMClassMock([UIViewController class])
-      serverSideVerificationOptions:nil
-                               adId:@1];
+        initWithAdUnitId:@"testId"
+                 request:[[FLTAdRequest alloc] init]
+      rootViewController:OCMClassMock([UIViewController class])
+                    adId:@1];
   [_manager loadAd:ad];
 
   [_manager
@@ -367,16 +365,15 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 
 - (void)testFullScreenEventsRewardedAd {
   FLTRewardedAd *rewardedAd = [[FLTRewardedAd alloc]
-                   initWithAdUnitId:@"testId"
-                            request:[[FLTAdRequest alloc] init]
-                 rootViewController:OCMClassMock([UIViewController class])
-      serverSideVerificationOptions:nil
-                               adId:@1];
+        initWithAdUnitId:@"testId"
+                 request:[[FLTAdRequest alloc] init]
+      rootViewController:OCMClassMock([UIViewController class])
+                    adId:@1];
   [_manager loadAd:rewardedAd];
 
-  [_manager onAdDidPresentFullScreenContent:rewardedAd];
+  [_manager adWillPresentFullScreenContent:rewardedAd];
   NSData *didPresentData =
-      [self getDataForEvent:@"onAdDidPresentFullScreenContent" adId:@1];
+      [self getDataForEvent:@"adWillPresentFullScreenContent" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:didPresentData]));
 
   [_manager adDidDismissFullScreenContent:rewardedAd];
@@ -398,16 +395,15 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 - (void)testFullScreenEventsRewardedInterstitialAd {
   FLTRewardedInterstitialAd *rewardedInterstitialAd =
       [[FLTRewardedInterstitialAd alloc]
-                       initWithAdUnitId:@"testId"
-                                request:[[FLTAdRequest alloc] init]
-                     rootViewController:OCMClassMock([UIViewController class])
-          serverSideVerificationOptions:nil
-                                   adId:@1];
+            initWithAdUnitId:@"testId"
+                     request:[[FLTAdRequest alloc] init]
+          rootViewController:OCMClassMock([UIViewController class])
+                        adId:@1];
   [_manager loadAd:rewardedInterstitialAd];
 
-  [_manager onAdDidPresentFullScreenContent:rewardedInterstitialAd];
+  [_manager adWillPresentFullScreenContent:rewardedInterstitialAd];
   NSData *didPresentData =
-      [self getDataForEvent:@"onAdDidPresentFullScreenContent" adId:@1];
+      [self getDataForEvent:@"adWillPresentFullScreenContent" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:didPresentData]));
 
   [_manager adDidDismissFullScreenContent:rewardedInterstitialAd];
@@ -463,11 +459,10 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 - (void)testAdClick {
   FLTRewardedInterstitialAd *rewardedInterstitialAd =
       [[FLTRewardedInterstitialAd alloc]
-                       initWithAdUnitId:@"testId"
-                                request:[[FLTAdRequest alloc] init]
-                     rootViewController:OCMClassMock([UIViewController class])
-          serverSideVerificationOptions:nil
-                                   adId:@1];
+            initWithAdUnitId:@"testId"
+                     request:[[FLTAdRequest alloc] init]
+          rootViewController:OCMClassMock([UIViewController class])
+                        adId:@1];
 
   [_manager adDidRecordClick:rewardedInterstitialAd];
   NSData *impressionData = [self getDataForEvent:@"adDidRecordClick" adId:@1];

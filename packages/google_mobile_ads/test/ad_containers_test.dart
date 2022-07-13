@@ -49,6 +49,7 @@ void main() {
           case 'loadInterstitialAd':
           case 'loadAdManagerInterstitialAd':
           case 'loadAdManagerBannerAd':
+          case 'setServerSideVerificationOptions':
             return Future<void>.value();
           case 'getAdSize':
             return Future<dynamic>.value(AdSize.banner);
@@ -102,21 +103,18 @@ void main() {
       ]);
     });
 
-    test('load rewarded ad and set immersive mode', () async {
+    test('load rewarded ad and set immersive mode and ssv', () async {
       RewardedAd? rewarded;
       AdRequest request = AdRequest();
       await RewardedAd.load(
-          adUnitId: 'test-ad-unit',
-          request: request,
-          rewardedAdLoadCallback: RewardedAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewarded = ad;
-              },
-              onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+        adUnitId: 'test-ad-unit',
+        request: request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewarded = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -127,19 +125,27 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions':
-              rewarded!.serverSideVerificationOptions,
         }),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
       expect(rewarded, createdAd);
 
+      // Set immersive mode
       log.clear();
       await createdAd.setImmersiveMode(true);
       expect(log, <Matcher>[
         isMethodCall('setImmersiveMode',
             arguments: {'adId': 0, 'immersiveModeEnabled': true})
+      ]);
+
+      // Set ssv
+      log.clear();
+      final ssv = ServerSideVerificationOptions();
+      await createdAd.setServerSideOptions(ssv);
+      expect(log, <Matcher>[
+        isMethodCall('setServerSideVerificationOptions',
+            arguments: {'adId': 0, 'serverSideVerificationOptions': ssv})
       ]);
     });
 
@@ -494,17 +500,14 @@ void main() {
       RewardedAd? rewarded;
       AdRequest request = AdRequest();
       await RewardedAd.load(
-          adUnitId: 'test-ad-unit',
-          request: request,
-          rewardedAdLoadCallback: RewardedAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewarded = ad;
-              },
-              onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+        adUnitId: 'test-ad-unit',
+        request: request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewarded = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -515,8 +518,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions':
-              rewarded!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -536,17 +537,14 @@ void main() {
       RewardedAd? rewarded;
       AdManagerAdRequest request = AdManagerAdRequest();
       await RewardedAd.loadWithAdManagerAdRequest(
-          adUnitId: 'test-ad-unit',
-          adManagerRequest: request,
-          rewardedAdLoadCallback: RewardedAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewarded = ad;
-              },
-              onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+        adUnitId: 'test-ad-unit',
+        adManagerRequest: request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewarded = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -557,8 +555,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': null,
           'adManagerRequest': request,
-          'serverSideVerificationOptions':
-              rewarded!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -670,7 +666,6 @@ void main() {
           adapterClassName: 'adapter-name',
           latencyMillis: 500,
           description: 'message',
-          credentials: 'credentials',
           adUnitMapping: {'key': 'value'},
           adError: adError);
 
@@ -712,7 +707,6 @@ void main() {
       expect(responses.first.adapterClassName, 'adapter-name');
       expect(responses.first.latencyMillis, 500);
       expect(responses.first.description, 'message');
-      expect(responses.first.credentials, 'credentials');
       expect(responses.first.adUnitMapping, {'key': 'value'});
       expect(responses.first.adError!.code, 1);
       expect(responses.first.adError!.message, 'error-message');
@@ -747,7 +741,6 @@ void main() {
           adapterClassName: 'adapter-name',
           latencyMillis: 500,
           description: 'message',
-          credentials: 'credentials',
           adUnitMapping: {'key': 'value'},
           adError: adError);
 
@@ -789,7 +782,6 @@ void main() {
       expect(responses.first.adapterClassName, 'adapter-name');
       expect(responses.first.latencyMillis, 500);
       expect(responses.first.description, 'message');
-      expect(responses.first.credentials, 'credentials');
       expect(responses.first.adUnitMapping, {'key': 'value'});
       expect(responses.first.adError!.code, 1);
       expect(responses.first.adError!.message, 'error-message');
@@ -813,7 +805,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions': null,
         })
       ]);
 
@@ -825,7 +816,6 @@ void main() {
           adapterClassName: 'adapter-name',
           latencyMillis: 500,
           description: 'message',
-          credentials: 'credentials',
           adUnitMapping: {'key': 'value'},
           adError: adError);
 
@@ -867,7 +857,6 @@ void main() {
       expect(responses.first.adapterClassName, 'adapter-name');
       expect(responses.first.latencyMillis, 500);
       expect(responses.first.description, 'message');
-      expect(responses.first.credentials, 'credentials');
       expect(responses.first.adUnitMapping, {'key': 'value'});
       expect(responses.first.adError!.code, 1);
       expect(responses.first.adError!.message, 'error-message');
@@ -914,11 +903,7 @@ void main() {
               onAdLoaded: (ad) {
                 rewarded = ad;
               },
-              onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+              onAdFailedToLoad: (error) => null));
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       createdAd.rewardedAdLoadCallback.onAdLoaded(createdAd);
@@ -1077,8 +1062,6 @@ void main() {
         nonPersonalizedAds: false,
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
         httpTimeoutMillis: 12345,
-        location:
-            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
         mediationExtrasIdentifier: 'identifier',
         extras: {'key': 'value'},
       );
@@ -1105,8 +1088,6 @@ void main() {
         nonPersonalizedAds: false,
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
         httpTimeoutMillis: 12345,
-        location:
-            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
         mediationExtrasIdentifier: 'identifier',
         extras: {'key': 'value'},
       );
@@ -1118,7 +1099,6 @@ void main() {
       expect(decoded.contentUrl, adRequest.contentUrl);
       expect(decoded.nonPersonalizedAds, adRequest.nonPersonalizedAds);
       expect(decoded.keywords, adRequest.keywords);
-      expect(decoded.location, null);
       expect(decoded.mediationExtrasIdentifier, 'identifier');
     });
 
@@ -1269,8 +1249,6 @@ void main() {
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
         httpTimeoutMillis: 5000,
         publisherProvidedId: 'test-pub-id',
-        location:
-            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
         mediationExtrasIdentifier: 'identifier',
         extras: {'key': 'value'},
       );
@@ -1310,8 +1288,6 @@ void main() {
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
         httpTimeoutMillis: 5000,
         publisherProvidedId: 'test-pub-id',
-        location:
-            LocationParams(accuracy: 1.1, longitude: 25, latitude: 38, time: 1),
         mediationExtrasIdentifier: 'identifier',
         extras: {'key': 'value'},
       );
@@ -1326,20 +1302,17 @@ void main() {
       expect(decoded.publisherProvidedId, request.publisherProvidedId);
       expect(decoded.customTargeting, request.customTargeting);
       expect(decoded.customTargetingLists, request.customTargetingLists);
-      expect(decoded.location, null);
       expect(decoded.mediationExtrasIdentifier, 'identifier');
     });
 
     test('ad click native', () async {
       var testNativeClick = (eventName, adId) async {
-        final Completer<Ad> nativeAdClickCompleter = Completer<Ad>();
         final Completer<Ad> adClickCompleter = Completer<Ad>();
 
         final NativeAd native = NativeAd(
           adUnitId: 'test-ad-unit',
           factoryId: 'testId',
           listener: NativeAdListener(
-              onNativeAdClicked: (Ad ad) => nativeAdClickCompleter.complete(ad),
               onAdClicked: (ad) => adClickCompleter.complete(ad)),
           request: AdRequest(),
         );
@@ -1358,7 +1331,6 @@ void main() {
           (ByteData? data) {},
         );
 
-        expect(nativeAdClickCompleter.future, completion(native));
         expect(adClickCompleter.future, completion(native));
       };
 
@@ -1385,11 +1357,7 @@ void main() {
                   ad.fullScreenContentCallback = FullScreenContentCallback(
                       onAdClicked: (ad) => adClickCompleter.complete(ad));
                 },
-                onAdFailedToLoad: (error) => null),
-            serverSideVerificationOptions: ServerSideVerificationOptions(
-              userId: 'test-user-id',
-              customData: 'test-custom-data',
-            ));
+                onAdFailedToLoad: (error) => null));
 
         MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
           'adId': adId,

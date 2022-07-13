@@ -175,8 +175,8 @@
   [self sendAdEvent:@"onBannerWillPresentScreen" ad:ad];
 }
 
-- (void)onAdDidPresentFullScreenContent:(id<FLTAd> _Nonnull)ad {
-  [self sendAdEvent:@"onAdDidPresentFullScreenContent" ad:ad];
+- (void)adWillPresentFullScreenContent:(id<FLTAd> _Nonnull)ad {
+  [self sendAdEvent:@"adWillPresentFullScreenContent" ad:ad];
 }
 
 - (void)adDidDismissFullScreenContent:(id<FLTAd> _Nonnull)ad {

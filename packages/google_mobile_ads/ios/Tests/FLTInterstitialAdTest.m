@@ -62,7 +62,7 @@
         [delegate adDidRecordImpression:interstitialClassMock];
         [delegate adDidRecordClick:interstitialClassMock];
         [delegate adDidDismissFullScreenContent:interstitialClassMock];
-        [delegate adDidPresentFullScreenContent:interstitialClassMock];
+        [delegate adWillPresentFullScreenContent:interstitialClassMock];
         [delegate adWillDismissFullScreenContent:interstitialClassMock];
         [delegate ad:interstitialClassMock
             didFailToPresentFullScreenContentWithError:error];
@@ -113,7 +113,7 @@
       presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);
 
   // Verify full screen callbacks.
-  OCMVerify([mockManager onAdDidPresentFullScreenContent:[OCMArg isEqual:ad]]);
+  OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidRecordImpression:[OCMArg isEqual:ad]]);
