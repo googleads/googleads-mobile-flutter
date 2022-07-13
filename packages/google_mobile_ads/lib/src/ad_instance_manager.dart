@@ -110,7 +110,7 @@ class AdInstanceManager {
       case 'onNativeAdImpression': // Fall through
         _invokeOnAdImpression(ad, eventName);
         break;
-      case 'onAdDidPresentFullScreenContent':
+      case 'adWillPresentFullScreenContent':
         _invokeOnAdShowedFullScreenContent(ad, eventName);
         break;
       case 'adDidDismissFullScreenContent':
@@ -363,7 +363,6 @@ class AdInstanceManager {
 
   void _invokeOnAdClicked(Ad ad, String eventName) {
     if (ad is NativeAd) {
-      ad.listener.onNativeAdClicked?.call(ad);
       ad.listener.onAdClicked?.call(ad);
     } else if (ad is AdWithView) {
       ad.listener.onAdClicked?.call(ad);
@@ -536,7 +535,6 @@ class AdInstanceManager {
         'adUnitId': ad.adUnitId,
         'request': ad.request,
         'adManagerRequest': ad.adManagerRequest,
-        'serverSideVerificationOptions': ad.serverSideVerificationOptions,
       },
     );
   }
@@ -558,7 +556,6 @@ class AdInstanceManager {
         'adUnitId': ad.adUnitId,
         'request': ad.request,
         'adManagerRequest': ad.adManagerRequest,
-        'serverSideVerificationOptions': ad.serverSideVerificationOptions,
       },
     );
   }
@@ -762,6 +759,20 @@ class AdInstanceManager {
         .invokeMethod<String>('MobileAds#getVersionString'))!;
   }
 
+  /// Set server side verification options on the ad.
+  Future<void> setServerSideVerificationOptions(
+    ServerSideVerificationOptions options,
+    Ad ad,
+  ) {
+    return channel.invokeMethod<void>(
+      'setServerSideVerificationOptions',
+      <dynamic, dynamic>{
+        'adId': adIdFor(ad),
+        'serverSideVerificationOptions': options,
+      },
+    );
+  }
+
   /// Opens the debug menu.
   ///
   /// Returns a Future that completes when the platform side api has been
@@ -854,7 +865,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.adapterClassName);
       writeValue(buffer, value.latencyMillis);
       writeValue(buffer, value.description);
-      writeValue(buffer, value.credentials);
       writeValue(buffer, value.adUnitMapping);
       writeValue(buffer, value.adError);
     } else if (value is LoadAdError) {
@@ -991,7 +1001,6 @@ class AdMessageCodec extends StandardMessageCodec {
             adapterClassName: readValueOfType(buffer.getUint8(), buffer),
             latencyMillis: readValueOfType(buffer.getUint8(), buffer),
             description: readValueOfType(buffer.getUint8(), buffer),
-            credentials: readValueOfType(buffer.getUint8(), buffer),
             adUnitMapping:
                 _deepCastStringMap(readValueOfType(buffer.getUint8(), buffer)),
             adError: readValueOfType(buffer.getUint8(), buffer));

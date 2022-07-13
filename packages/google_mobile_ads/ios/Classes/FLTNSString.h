@@ -1,4 +1,4 @@
-// Copyright 2021 Google LLC
+// Copyright 2022 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package io.flutter.plugins.googlemobileads;
+#import <Foundation/Foundation.h>
 
-/** Constants used in the plugin. */
-public class Constants {
-  /** Version request agent. Should be bumped alongside plugin versions. */
-  public static final String REQUEST_AGENT_PREFIX_VERSIONED = "Flutter-GMA-2.0.0";
+/// Category extensions for NSString
+@interface NSString (FLTNSStringExtension)
 
-  static final String ERROR_CODE_UNEXPECTED_AD_TYPE = "unexpected_ad_type";
-}
+- (instancetype _Nonnull)initWithInt:(NSInteger)integer;
+
+@end

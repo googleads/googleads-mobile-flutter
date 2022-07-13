@@ -15,6 +15,7 @@
 #import "FLTGoogleMobileAdsPlugin.h"
 #import "FLTAdUtil.h"
 #import "FLTAppStateNotifier.h"
+#import "FLTNSString.h"
 #import "UserMessagingPlatform/FLTUserMessagingPlatformManager.h"
 
 @interface FLTGoogleMobileAdsPlugin ()
@@ -247,9 +248,8 @@
                            completionHandler:^(NSError *error) {
                              if (error) {
                                result([FlutterError
-                                   errorWithCode:[NSString stringWithFormat:
-                                                               @"%ld",
-                                                               (long)error.code]
+                                   errorWithCode:[[NSString alloc]
+                                                     initWithInt:error.code]
                                          message:error.localizedDescription
                                          details:error.domain]);
                              } else {
@@ -407,8 +407,6 @@
         [[FLTRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                         request:request
                              rootViewController:rootController
-                  serverSideVerificationOptions:
-                      call.arguments[@"serverSideVerificationOptions"]
                                            adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
@@ -427,12 +425,10 @@
     }
 
     FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc]
-                     initWithAdUnitId:call.arguments[@"adUnitId"]
-                              request:request
-                   rootViewController:rootController
-        serverSideVerificationOptions:call.arguments
-                                          [@"serverSideVerificationOptions"]
-                                 adId:call.arguments[@"adId"]];
+          initWithAdUnitId:call.arguments[@"adUnitId"]
+                   request:request
+        rootViewController:rootController
+                      adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
@@ -485,6 +481,24 @@
     } else {
       result(FlutterMethodNotImplemented);
     }
+  } else if ([call.method
+                 isEqualToString:@"setServerSideVerificationOptions"]) {
+    id<FLTAd> ad = [_manager adFor:call.arguments[@"adId"]];
+    FLTServerSideVerificationOptions *options =
+        call.arguments[@"serverSideVerificationOptions"];
+    if ([ad isKindOfClass:[FLTRewardedAd class]]) {
+      FLTRewardedAd *rewardedAd = (FLTRewardedAd *)ad;
+      [rewardedAd setServerSideVerificationOptions:options];
+    } else if ([ad isKindOfClass:[FLTRewardedInterstitialAd class]]) {
+      FLTRewardedInterstitialAd *rewardedInterstitialAd =
+          (FLTRewardedInterstitialAd *)ad;
+      [rewardedInterstitialAd setServerSideVerificationOptions:options];
+    } else {
+      NSLog(@"Error - setServerSideVerificationOptions called on missing or "
+            @"invalid ad id: %@",
+            call.arguments[@"adId"]);
+    }
+    result(nil);
   } else {
     result(FlutterMethodNotImplemented);
   }

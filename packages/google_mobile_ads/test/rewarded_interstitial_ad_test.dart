@@ -39,6 +39,7 @@ void main() {
           case 'loadRewardedInterstitialAd':
           case 'showAdWithoutView':
           case 'disposeAd':
+          case 'setServerSideVerificationOptions':
             return Future<void>.value();
           default:
             assert(false);
@@ -52,18 +53,14 @@ void main() {
       RewardedInterstitialAd? rewardedInterstitial;
       AdRequest request = AdRequest();
       await RewardedInterstitialAd.load(
-          adUnitId: 'test-ad-unit',
-          request: request,
-          rewardedInterstitialAdLoadCallback:
-              RewardedInterstitialAdLoadCallback(
-                  onAdLoaded: (ad) {
-                    rewardedInterstitial = ad;
-                  },
-                  onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+        adUnitId: 'test-ad-unit',
+        request: request,
+        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewardedInterstitial = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
 
       RewardedInterstitialAd createdAd =
           instanceManager.adFor(0) as RewardedInterstitialAd;
@@ -75,8 +72,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions':
-              rewardedInterstitial!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -157,18 +152,14 @@ void main() {
       RewardedInterstitialAd? rewardedInterstitial;
       AdRequest request = AdRequest();
       await RewardedInterstitialAd.load(
-          adUnitId: 'test-ad-unit',
-          request: request,
-          rewardedInterstitialAdLoadCallback:
-              RewardedInterstitialAdLoadCallback(
-                  onAdLoaded: (ad) {
-                    rewardedInterstitial = ad;
-                  },
-                  onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+        adUnitId: 'test-ad-unit',
+        request: request,
+        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewardedInterstitial = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
 
       RewardedInterstitialAd createdAd =
           instanceManager.adFor(0) as RewardedInterstitialAd;
@@ -180,8 +171,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions':
-              rewardedInterstitial!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -227,7 +216,7 @@ void main() {
       expect(await impressionCompleter.future, rewardedInterstitial);
 
       await TestUtil.sendAdEvent(
-          0, 'onAdDidPresentFullScreenContent', instanceManager);
+          0, 'adWillPresentFullScreenContent', instanceManager);
       expect(await showedCompleter.future, rewardedInterstitial);
 
       await TestUtil.sendAdEvent(
@@ -272,18 +261,14 @@ void main() {
       RewardedInterstitialAd? rewardedInterstitial;
       AdManagerAdRequest request = AdManagerAdRequest();
       await RewardedInterstitialAd.loadWithAdManagerAdRequest(
-          adUnitId: 'test-ad-unit',
-          adManagerRequest: request,
-          rewardedInterstitialAdLoadCallback:
-              RewardedInterstitialAdLoadCallback(
-                  onAdLoaded: (ad) {
-                    rewardedInterstitial = ad;
-                  },
-                  onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+        adUnitId: 'test-ad-unit',
+        adManagerRequest: request,
+        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewardedInterstitial = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
 
       RewardedInterstitialAd createdAd =
           instanceManager.adFor(0) as RewardedInterstitialAd;
@@ -295,8 +280,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': null,
           'adManagerRequest': request,
-          'serverSideVerificationOptions':
-              rewardedInterstitial!.serverSideVerificationOptions,
         }),
       ]);
 
@@ -329,7 +312,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'serverSideVerificationOptions': null,
         })
       ]);
 
@@ -341,7 +323,6 @@ void main() {
           adapterClassName: 'adapter-name',
           latencyMillis: 500,
           description: 'message',
-          credentials: 'credentials',
           adUnitMapping: {'key': 'value'},
           adError: adError);
 
@@ -383,7 +364,6 @@ void main() {
       expect(responses.first.adapterClassName, 'adapter-name');
       expect(responses.first.latencyMillis, 500);
       expect(responses.first.description, 'message');
-      expect(responses.first.credentials, 'credentials');
       expect(responses.first.adUnitMapping, {'key': 'value'});
       expect(responses.first.adError!.code, 1);
       expect(responses.first.adError!.message, 'error-message');
@@ -396,18 +376,14 @@ void main() {
 
       RewardedInterstitialAd? rewardedInterstitial;
       await RewardedInterstitialAd.load(
-          adUnitId: 'test-ad-unit',
-          request: AdRequest(),
-          rewardedInterstitialAdLoadCallback:
-              RewardedInterstitialAdLoadCallback(
-                  onAdLoaded: (ad) {
-                    rewardedInterstitial = ad;
-                  },
-                  onAdFailedToLoad: (error) => null),
-          serverSideVerificationOptions: ServerSideVerificationOptions(
-            userId: 'test-user-id',
-            customData: 'test-custom-data',
-          ));
+        adUnitId: 'test-ad-unit',
+        request: AdRequest(),
+        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewardedInterstitial = ad;
+            },
+            onAdFailedToLoad: (error) => null),
+      );
 
       RewardedInterstitialAd createdAd =
           instanceManager.adFor(0) as RewardedInterstitialAd;
@@ -436,6 +412,35 @@ void main() {
       expect(result[0], rewardedInterstitial!);
       expect(result[1].amount, 1);
       expect(result[1].type, 'one');
+    });
+
+    test('setServerSideVerificationOptions', () async {
+      final adLoadCompleter = Completer<RewardedInterstitialAd>();
+      await RewardedInterstitialAd.load(
+        adUnitId: 'test-ad-unit',
+        request: AdRequest(),
+        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+            onAdLoaded: (ad) {
+              adLoadCompleter.complete(ad);
+            },
+            onAdFailedToLoad: (_) => null),
+      );
+
+      await TestUtil.sendAdEvent(0, 'onAdLoaded', instanceManager);
+      expect(adLoadCompleter.isCompleted, true);
+      final ad = await adLoadCompleter.future;
+
+      log.clear();
+      final ssv =
+          ServerSideVerificationOptions(userId: 'id', customData: 'data');
+      await ad.setServerSideOptions(ssv);
+      expect(log, <Matcher>[
+        isMethodCall('setServerSideVerificationOptions',
+            arguments: <dynamic, dynamic>{
+              'adId': 0,
+              'serverSideVerificationOptions': ssv,
+            }),
+      ]);
     });
   });
 }

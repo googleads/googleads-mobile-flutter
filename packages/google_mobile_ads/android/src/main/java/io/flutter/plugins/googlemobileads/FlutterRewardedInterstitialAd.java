@@ -35,7 +35,6 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @NonNull private final FlutterAdLoader flutterAdLoader;
   @Nullable private final FlutterAdRequest request;
   @Nullable private final FlutterAdManagerAdRequest adManagerRequest;
-  @Nullable private final FlutterServerSideVerificationOptions serverSideVerificationOptions;
   @Nullable RewardedInterstitialAd rewardedInterstitialAd;
 
   /** Constructor for AdMob Ad Request. */
@@ -44,14 +43,12 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdRequest request,
-      @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions,
       @NonNull FlutterAdLoader flutterAdLoader) {
     super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.request = request;
     this.adManagerRequest = null;
-    this.serverSideVerificationOptions = serverSideVerificationOptions;
     this.flutterAdLoader = flutterAdLoader;
   }
 
@@ -61,14 +58,12 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdManagerAdRequest adManagerRequest,
-      @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions,
       @NonNull FlutterAdLoader flutterAdLoader) {
     super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.adManagerRequest = adManagerRequest;
     this.request = null;
-    this.serverSideVerificationOptions = serverSideVerificationOptions;
     this.flutterAdLoader = flutterAdLoader;
   }
 
@@ -88,10 +83,6 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
 
   void onAdLoaded(@NonNull RewardedInterstitialAd rewardedInterstitialAd) {
     FlutterRewardedInterstitialAd.this.rewardedInterstitialAd = rewardedInterstitialAd;
-    if (serverSideVerificationOptions != null) {
-      rewardedInterstitialAd.setServerSideVerificationOptions(
-          serverSideVerificationOptions.asServerSideVerificationOptions());
-    }
     rewardedInterstitialAd.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
     manager.onAdLoaded(adId, rewardedInterstitialAd.getResponseInfo());
   }
@@ -141,6 +132,15 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @Override
   void dispose() {
     rewardedInterstitialAd = null;
+  }
+
+  public void setServerSideVerificationOptions(FlutterServerSideVerificationOptions options) {
+    if (rewardedInterstitialAd != null) {
+      rewardedInterstitialAd.setServerSideVerificationOptions(
+          options.asServerSideVerificationOptions());
+    } else {
+      Log.e(TAG, "RewardedInterstitialAd is null in setServerSideVerificationOptions");
+    }
   }
 
   /**

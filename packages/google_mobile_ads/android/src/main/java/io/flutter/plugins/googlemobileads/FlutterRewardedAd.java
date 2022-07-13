@@ -34,7 +34,6 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   @NonNull private final FlutterAdLoader flutterAdLoader;
   @Nullable private final FlutterAdRequest request;
   @Nullable private final FlutterAdManagerAdRequest adManagerRequest;
-  @Nullable private final FlutterServerSideVerificationOptions serverSideVerificationOptions;
   @Nullable RewardedAd rewardedAd;
 
   /** A wrapper for {@link RewardItem}. */
@@ -76,14 +75,12 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdRequest request,
-      @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions,
       @NonNull FlutterAdLoader flutterAdLoader) {
     super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.request = request;
     this.adManagerRequest = null;
-    this.serverSideVerificationOptions = serverSideVerificationOptions;
     this.flutterAdLoader = flutterAdLoader;
   }
 
@@ -93,14 +90,12 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdManagerAdRequest adManagerRequest,
-      @Nullable FlutterServerSideVerificationOptions serverSideVerificationOptions,
       @NonNull FlutterAdLoader flutterAdLoader) {
     super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.adManagerRequest = adManagerRequest;
     this.request = null;
-    this.serverSideVerificationOptions = serverSideVerificationOptions;
     this.flutterAdLoader = flutterAdLoader;
   }
 
@@ -119,10 +114,6 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
   void onAdLoaded(@NonNull RewardedAd rewardedAd) {
     FlutterRewardedAd.this.rewardedAd = rewardedAd;
-    if (serverSideVerificationOptions != null) {
-      rewardedAd.setServerSideVerificationOptions(
-          serverSideVerificationOptions.asServerSideVerificationOptions());
-    }
     rewardedAd.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
     manager.onAdLoaded(adId, rewardedAd.getResponseInfo());
   }
@@ -168,6 +159,14 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   @Override
   void dispose() {
     rewardedAd = null;
+  }
+
+  public void setServerSideVerificationOptions(FlutterServerSideVerificationOptions options) {
+    if (rewardedAd != null) {
+      rewardedAd.setServerSideVerificationOptions(options.asServerSideVerificationOptions());
+    } else {
+      Log.e(TAG, "RewardedAd is null in setServerSideVerificationOptions");
+    }
   }
 
   /**
