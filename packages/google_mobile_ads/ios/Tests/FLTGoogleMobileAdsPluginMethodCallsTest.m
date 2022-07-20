@@ -614,7 +614,7 @@
   [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
   XCTAssertTrue(resultInvoked);
-  OCMVerify([mockAd setServerSideVerificationOptions:[OCMArg isEqual:mockSsv]]);
+  OCMVerify([mockAd setServerSideVerificationOptions:[OCMArg isEqual:mockSSV]]);
 }
 
 - (void)testServerSideVerificationOptions_nullAd {
