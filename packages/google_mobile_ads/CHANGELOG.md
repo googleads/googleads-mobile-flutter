@@ -14,6 +14,9 @@
 * Removes `NativeAdListener.onNativeAdClicked`. You should use `onAdClicked`
   instead, which present on all ad listeners.
 * Removes `AdRequest.location`
+* Bug fix for [issue 580](https://github.com/googleads/googleads-mobile-flutter/issues/580).
+  Adds a workaround on Android to wait for the ad widget to become visible
+  before attaching the platform view.
 
 ## 1.3.0
 * Adds support for programmatically opening the debug options menu using`MobileAds.openDebugMenu(String adUnitId)`
