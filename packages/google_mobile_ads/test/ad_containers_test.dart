@@ -18,9 +18,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -372,7 +370,7 @@ void main() {
 
       // PlatformViewLink should now be present instead of VisibilityDetector
       final detectors = tester.widgetList(find.byType(VisibilityDetector));
-      // expect(detectors.isEmpty, true);
+      expect(detectors.isEmpty, true);
       final platformViewLink = tester.widget(find.byType(PlatformViewLink));
       expect(platformViewLink, isNotNull);
 
