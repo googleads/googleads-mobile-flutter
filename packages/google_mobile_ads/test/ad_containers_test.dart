@@ -20,7 +20,9 @@ import 'package:google_mobile_ads/src/ad_instance_manager.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 // ignore_for_file: deprecated_member_use_from_same_package
 void main() {
@@ -282,7 +284,8 @@ void main() {
       expect(instanceManager.adFor(0), isNotNull);
     });
 
-    testWidgets('build ad widget', (WidgetTester tester) async {
+    testWidgets('build ad widget iOS', (WidgetTester tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final NativeAd native = NativeAd(
         adUnitId: 'test-ad-unit',
         factoryId: '0',
@@ -293,41 +296,89 @@ void main() {
       await native.load();
 
       await tester.pumpWidget(
-        Builder(
-          builder: (BuildContext context) {
-            AdWidget widget = AdWidget(ad: native);
-            Widget buildWidget = widget.createElement().build();
-            expect(buildWidget, isA<PlatformViewLink>());
-            return widget;
-          },
+        MaterialApp(
+          home: Material(
+            child: SingleChildScrollView(
+              child: Column(
+                key: UniqueKey(),
+                children: [
+                  SizedBox.fromSize(size: Size(200, 1000)),
+                  Container(
+                    height: 200,
+                    width: 200,
+                    child: AdWidget(ad: native),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       );
+      await tester.pumpAndSettle();
+
+      final uiKitView = tester.widget(find.byType(UiKitView));
+      expect(uiKitView, isNotNull);
 
       await native.dispose();
+      debugDefaultTargetPlatformOverride = null;
     });
 
-    testWidgets('build ad widget', (WidgetTester tester) async {
-      final NativeAd native = NativeAd(
+    testWidgets('Build ad widget Android', (WidgetTester tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      // Create a loaded ad
+      final ad = NativeAd(
         adUnitId: 'test-ad-unit',
         factoryId: '0',
         listener: NativeAdListener(),
         request: AdRequest(),
       );
+      await ad.load();
 
-      await native.load();
-
+      // Render ad in a scrolling view
+      VisibilityDetectorController.instance.updateInterval = Duration.zero;
       await tester.pumpWidget(
-        Builder(
-          builder: (BuildContext context) {
-            AdWidget widget = AdWidget(ad: native);
-            Widget buildWidget = widget.createElement().build();
-            expect(buildWidget, isA<PlatformViewLink>());
-            return widget;
-          },
+        MaterialApp(
+          home: Material(
+            child: SingleChildScrollView(
+              child: Column(
+                key: UniqueKey(),
+                children: [
+                  SizedBox.fromSize(size: Size(200, 1000)),
+                  Container(
+                    height: 200,
+                    width: 200,
+                    child: AdWidget(ad: ad),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       );
+      await tester.pumpAndSettle();
 
-      await native.dispose();
+      // On initial render, VisibilityRender should be in the UI
+      final visibilityDetectorWidget =
+          tester.widget(find.byKey(Key('android-platform-view-0')));
+      expect(visibilityDetectorWidget, isNotNull);
+      expect(visibilityDetectorWidget, isA<VisibilityDetector>());
+      final platformViewLinks =
+          tester.widgetList(find.byType(PlatformViewLink));
+      expect(platformViewLinks.isEmpty, true);
+
+      // Drag the ad widget into view
+      await tester.drag(find.byType(SingleChildScrollView), Offset(0.0, -1000));
+      await tester.pumpAndSettle();
+
+      // PlatformViewLink should now be present instead of VisibilityDetector
+      final detectors = tester.widgetList(find.byType(VisibilityDetector));
+      // expect(detectors.isEmpty, true);
+      final platformViewLink = tester.widget(find.byType(PlatformViewLink));
+      expect(platformViewLink, isNotNull);
+
+      // Reset platform override
+      await ad.dispose();
+      debugDefaultTargetPlatformOverride = null;
     });
 
     testWidgets('warns when ad has not been loaded',
