@@ -1,3 +1,8 @@
+## 2.0.1
+* Bug fix for [issue 580](https://github.com/googleads/googleads-mobile-flutter/issues/580).
+  Adds a workaround on Android to wait for the ad widget to become visible
+  before attaching the platform view.
+
 ## 2.0.0
 * Updates GMA Android dependency to 21.0.0 and iOS to 9.6.0
 * Removes `credentials` from `AdapterResponseInfo`, which is replaced with
@@ -14,9 +19,6 @@
 * Removes `NativeAdListener.onNativeAdClicked`. You should use `onAdClicked`
   instead, which present on all ad listeners.
 * Removes `AdRequest.location`
-* Bug fix for [issue 580](https://github.com/googleads/googleads-mobile-flutter/issues/580).
-  Adds a workaround on Android to wait for the ad widget to become visible
-  before attaching the platform view.
 
 ## 1.3.0
 * Adds support for programmatically opening the debug options menu using`MobileAds.openDebugMenu(String adUnitId)`
