@@ -31,6 +31,7 @@ dependencies:
   meta: ^1.0.4
   flutter:
     sdk: flutter
+  visibility_detector: ^0.3.3
 
 dev_dependencies:
   pedantic: ^1.11.0
