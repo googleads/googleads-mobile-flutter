@@ -277,7 +277,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   }
 }
 
-- (void)writeValue:(id _Nonnull)value {
+- (void)writeValue:(id)value {
   if ([value isKindOfClass:[FLTAdSize class]]) {
     [self writeAdSize:value];
   } else if ([value isKindOfClass:[FLTGAMAdRequest class]]) {
