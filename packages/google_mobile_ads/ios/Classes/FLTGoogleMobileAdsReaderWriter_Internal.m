@@ -113,7 +113,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     NSString *adNetworkClassName = [self readValueOfType:[self readByte]];
     NSArray<FLTGADAdNetworkResponseInfo *> *adNetworkInfoArray =
         [self readValueOfType:[self readByte]];
-    FLTGADAdNetworkResponseInfo *loadedResponseInfo = [self readValueOfType:[self readByte]];
+    FLTGADAdNetworkResponseInfo *loadedResponseInfo =
+        [self readValueOfType:[self readByte]];
     FLTGADResponseInfo *gadResponseInfo = [[FLTGADResponseInfo alloc] init];
     gadResponseInfo.adNetworkClassName = adNetworkClassName;
     gadResponseInfo.responseIdentifier = responseIdentifier;

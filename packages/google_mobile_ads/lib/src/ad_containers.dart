@@ -66,9 +66,9 @@ class ResponseInfo {
   @protected
   const ResponseInfo(
       {this.responseId,
-        this.mediationAdapterClassName,
-        this.adapterResponses,
-        this.loadedAdapterResponseInfo});
+      this.mediationAdapterClassName,
+      this.adapterResponses,
+      this.loadedAdapterResponseInfo});
 
   /// An identifier for the loaded ad.
   final String? responseId;

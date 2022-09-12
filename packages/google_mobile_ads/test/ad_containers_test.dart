@@ -706,16 +706,16 @@ void main() {
       // Simulate onAdFailedToLoad.
       AdError adError = AdError(1, 'domain', 'error-message');
       AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
-          adapterClassName: 'adapter-name',
-          latencyMillis: 500,
-          description: 'message',
-          adUnitMapping: {'key': 'value'},
-          adError: adError,
-          adSourceName: 'adSourceName',
-          adSourceId: 'adSourceId',
-          adSourceInstanceName: 'adSourceInstanceName',
-          adSourceInstanceId: 'adSourceInstanceId',
-        );
+        adapterClassName: 'adapter-name',
+        latencyMillis: 500,
+        description: 'message',
+        adUnitMapping: {'key': 'value'},
+        adError: adError,
+        adSourceName: 'adSourceName',
+        adSourceId: 'adSourceId',
+        adSourceInstanceName: 'adSourceInstanceName',
+        adSourceInstanceId: 'adSourceInstanceId',
+      );
 
       List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
       ResponseInfo responseInfo = ResponseInfo(
@@ -786,16 +786,16 @@ void main() {
       // Simulate onAdFailedToLoad.
       AdError adError = AdError(1, 'domain', 'error-message');
       AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
-          adapterClassName: 'adapter-name',
-          latencyMillis: 500,
-          description: 'message',
-          adUnitMapping: {'key': 'value'},
-          adError: adError,
-          adSourceName: 'adSourceName',
-          adSourceId: 'adSourceId',
-          adSourceInstanceName: 'adSourceInstanceName',
-          adSourceInstanceId: 'adSourceInstanceId',
-        );
+        adapterClassName: 'adapter-name',
+        latencyMillis: 500,
+        description: 'message',
+        adUnitMapping: {'key': 'value'},
+        adError: adError,
+        adSourceName: 'adSourceName',
+        adSourceId: 'adSourceId',
+        adSourceInstanceName: 'adSourceInstanceName',
+        adSourceInstanceId: 'adSourceInstanceId',
+      );
 
       List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
       ResponseInfo responseInfo = ResponseInfo(
@@ -866,16 +866,16 @@ void main() {
       // Simulate onAdFailedToLoad.
       AdError adError = AdError(1, 'domain', 'error-message');
       AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
-          adapterClassName: 'adapter-name',
-          latencyMillis: 500,
-          description: 'message',
-          adUnitMapping: {'key': 'value'},
-          adError: adError,
-          adSourceName: 'adSourceName',
-          adSourceId: 'adSourceId',
-          adSourceInstanceName: 'adSourceInstanceName',
-          adSourceInstanceId: 'adSourceInstanceId',
-        );
+        adapterClassName: 'adapter-name',
+        latencyMillis: 500,
+        description: 'message',
+        adUnitMapping: {'key': 'value'},
+        adError: adError,
+        adSourceName: 'adSourceName',
+        adSourceId: 'adSourceId',
+        adSourceInstanceName: 'adSourceInstanceName',
+        adSourceInstanceId: 'adSourceInstanceId',
+      );
 
       List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
       ResponseInfo responseInfo = ResponseInfo(
@@ -997,12 +997,12 @@ void main() {
         });
 
         ByteData data =
-        instanceManager.channel.codec.encodeMethodCall(methodCall);
+            instanceManager.channel.codec.encodeMethodCall(methodCall);
 
         await instanceManager.channel.binaryMessenger.handlePlatformMessage(
           'plugins.flutter.io/google_mobile_ads',
           data,
-              (ByteData? data) {},
+          (ByteData? data) {},
         );
         final ad = await loadCompleter.future;
 
@@ -1026,7 +1026,6 @@ void main() {
         expect(loadedResponse.adSourceId, 'adSourceId');
         expect(loadedResponse.adSourceInstanceName, 'adSourceInstanceName');
         expect(loadedResponse.adSourceInstanceId, 'adSourceInstanceId');
-
       };
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await testAdapterResponseInfo(0);

@@ -106,7 +106,6 @@
 @property NSString *_Nullable adSourceName;
 @property NSString *_Nullable adSourceInstanceName;
 
-
 - (instancetype _Nonnull)initWithResponseInfo:
     (GADAdNetworkResponseInfo *_Nonnull)responseInfo;
 @end

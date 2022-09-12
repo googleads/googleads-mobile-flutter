@@ -63,7 +63,8 @@ abstract class FlutterAd {
       }
       this.adapterResponses = adapterResponseInfos;
       if (responseInfo.getLoadedAdapterResponseInfo() != null) {
-        this.loadedAdapterResponseInfo = new FlutterAdapterResponseInfo(responseInfo.getLoadedAdapterResponseInfo());
+        this.loadedAdapterResponseInfo =
+            new FlutterAdapterResponseInfo(responseInfo.getLoadedAdapterResponseInfo());
       } else {
         this.loadedAdapterResponseInfo = null;
       }
