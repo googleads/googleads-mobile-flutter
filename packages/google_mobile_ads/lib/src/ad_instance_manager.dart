@@ -860,6 +860,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.responseId);
       writeValue(buffer, value.mediationAdapterClassName);
       writeValue(buffer, value.adapterResponses);
+      writeValue(buffer, value.loadedAdapterResponseInfo);
     } else if (value is AdapterResponseInfo) {
       buffer.putUint8(_valueAdapterResponseInfo);
       writeValue(buffer, value.adapterClassName);
@@ -867,6 +868,10 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.description);
       writeValue(buffer, value.adUnitMapping);
       writeValue(buffer, value.adError);
+      writeValue(buffer, value.adSourceName);
+      writeValue(buffer, value.adSourceId);
+      writeValue(buffer, value.adSourceInstanceName);
+      writeValue(buffer, value.adSourceInstanceId);
     } else if (value is LoadAdError) {
       buffer.putUint8(_valueLoadAdError);
       writeValue(buffer, value.code);
@@ -995,6 +1000,7 @@ class AdMessageCodec extends StandardMessageCodec {
           mediationAdapterClassName: readValueOfType(buffer.getUint8(), buffer),
           adapterResponses: readValueOfType(buffer.getUint8(), buffer)
               ?.cast<AdapterResponseInfo>(),
+          loadedAdapterResponseInfo: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueAdapterResponseInfo:
         return AdapterResponseInfo(
@@ -1003,7 +1009,11 @@ class AdMessageCodec extends StandardMessageCodec {
             description: readValueOfType(buffer.getUint8(), buffer),
             adUnitMapping:
                 _deepCastStringMap(readValueOfType(buffer.getUint8(), buffer)),
-            adError: readValueOfType(buffer.getUint8(), buffer));
+            adError: readValueOfType(buffer.getUint8(), buffer),
+            adSourceName: readValueOfType(buffer.getUint8(), buffer),
+            adSourceId: readValueOfType(buffer.getUint8(), buffer),
+            adSourceInstanceName: readValueOfType(buffer.getUint8(), buffer),
+            adSourceInstanceId: readValueOfType(buffer.getUint8(), buffer));
       case _valueLoadAdError:
         return LoadAdError(
           readValueOfType(buffer.getUint8(), buffer),

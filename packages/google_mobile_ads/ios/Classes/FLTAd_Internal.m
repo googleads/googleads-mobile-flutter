@@ -243,6 +243,7 @@
                                initWithResponseInfo:adNetworkInfo]];
     }
     _adNetworkInfoArray = infoArray;
+    _loadedAdNetworkResponseInfo = [[FLTGADAdNetworkResponseInfo alloc] initWithResponseInfo:responseInfo.loadedAdNetworkResponseInfo];
   }
   return self;
 }
@@ -269,6 +270,11 @@
       }
     }
     _error = responseInfo.error;
+    
+    _adSourceName = responseInfo.adSourceName;
+    _adSourceInstanceName = responseInfo.adSourceInstanceName;
+    _adSourceInstanceID = responseInfo.adSourceInstanceID;
+    _adSourceID = responseInfo.adSourceID;
   }
   return self;
 }

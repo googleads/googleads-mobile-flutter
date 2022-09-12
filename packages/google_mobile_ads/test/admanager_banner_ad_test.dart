@@ -147,7 +147,12 @@ void main() {
             latencyMillis: 500,
             description: 'message',
             adUnitMapping: {'key': 'value'},
-            adError: adError);
+            adError: adError,
+            adSourceName: 'adSourceName',
+            adSourceId: 'adSourceId',
+            adSourceInstanceName: 'adSourceInstanceName',
+            adSourceInstanceId: 'adSourceInstanceId',
+          );
 
         List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
         ResponseInfo responseInfo = ResponseInfo(
