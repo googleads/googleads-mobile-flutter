@@ -1,3 +1,11 @@
+## 2.1.0
+* Updates GMA dependencies to 21.2.0 (Android) and 9.10.0 (iOS):
+* Adds `loadedAdapterResponseInfo` to `ResponseInfo` and the following fields to
+  `AdapterResponseInfo`:
+  * adSourceID
+  * adSourceInstanceId
+  * adSourceInstanceName
+  * adSourceName
 ## 2.0.1
 * Bug fix for [issue 580](https://github.com/googleads/googleads-mobile-flutter/issues/580).
   Adds a workaround on Android to wait for the ad widget to become visible
