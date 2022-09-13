@@ -201,6 +201,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    *     io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory} associated with
    *     this factoryId, or null if there was none for this factoryId
    */
+  @Nullable
   public static NativeAdFactory unregisterNativeAdFactory(FlutterEngine engine, String factoryId) {
     final FlutterPlugin gmaPlugin = engine.getPlugins().get(GoogleMobileAdsPlugin.class);
     if (gmaPlugin != null) {
