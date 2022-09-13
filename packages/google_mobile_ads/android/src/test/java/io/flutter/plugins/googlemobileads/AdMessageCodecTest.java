@@ -262,6 +262,28 @@ public class AdMessageCodecTest {
   }
 
   @Test
+  public void testEncodeLocationWithoutTime() {
+    Location location = new Location("");
+    location.setAccuracy(12345f);
+    location.setLongitude(1.0);
+    location.setLatitude(5.0);
+
+    FlutterAdRequest request = new FlutterAdRequest.Builder().setLocation(location).build();
+    ByteBuffer message = codec.encodeMessage(request);
+    FlutterAdRequest decodedRequest =
+        (FlutterAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(request, decodedRequest);
+
+    FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
+    builder.setLocation(location);
+    FlutterAdManagerAdRequest gamRequest = builder.build();
+    message = codec.encodeMessage(gamRequest);
+    final FlutterAdManagerAdRequest decodedGAMRequest =
+        (FlutterAdManagerAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(decodedGAMRequest, gamRequest);
+  }
+
+  @Test
   public void encodeFlutterAdRequest() {
     Map<String, String> extras = Collections.singletonMap("key", "value");
     FlutterAdRequest adRequest =
