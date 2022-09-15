@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		5C7E63AC163134A326635FC7 /* libPods-google_mobile_ads_exampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B4B811D89E676EBD37E2E206 /* libPods-google_mobile_ads_exampleTests.a */; };
 		8FB13CDD248F07D90011A72F /* FLTGoogleMobileAdsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB13CDC248F07D90011A72F /* FLTGoogleMobileAdsTest.m */; };
 		8FB13CE22498136E0011A72F /* FLTGoogleMobileAdsReaderWriterTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FB13CE12498136E0011A72F /* FLTGoogleMobileAdsReaderWriterTest.m */; };
 		8FC897F52411A9F100415930 /* NativeAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FC897F42411A9F100415930 /* NativeAdView.xib */; };
@@ -52,7 +53,6 @@
 		9EF4E70C26392B230007E4FE /* FLTMobileAds_Internal.h in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6FF26392B230007E4FE /* FLTMobileAds_Internal.h */; };
 		9EF4E7102639410D0007E4FE /* FLTRewardedAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E70F2639410D0007E4FE /* FLTRewardedAdTest.m */; };
 		9EF4E7142639D4B30007E4FE /* FLTNativeAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E7132639D4B30007E4FE /* FLTNativeAdTest.m */; };
-		C4247E08A145B7C14603446E /* libPods-google_mobile_ads_exampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BDCE5C673B60CB3659CEFE9 /* libPods-google_mobile_ads_exampleTests.a */; };
 		FBE669D215209F1F44CEEB21 /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F369F228D3A43519CEE308 /* libPods-Runner.a */; };
 /* End PBXBuildFile section */
 
@@ -82,9 +82,8 @@
 /* Begin PBXFileReference section */
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
-		185186B2D682FC21FE7F9077 /* Pods-google_mobile_ads_exampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-google_mobile_ads_exampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-google_mobile_ads_exampleTests/Pods-google_mobile_ads_exampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
-		6BDCE5C673B60CB3659CEFE9 /* libPods-google_mobile_ads_exampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-google_mobile_ads_exampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		41FDEFDDDE2EF7FC7A8F36B5 /* Pods-google_mobile_ads_exampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-google_mobile_ads_exampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-google_mobile_ads_exampleTests/Pods-google_mobile_ads_exampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		7AFFD8ED1D35381100E5BB4D /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7AFFD8EE1D35381100E5BB4D /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -142,8 +141,9 @@
 		9EF4E6FF26392B230007E4FE /* FLTMobileAds_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FLTMobileAds_Internal.h; path = ../../ios/Classes/FLTMobileAds_Internal.h; sourceTree = "<group>"; };
 		9EF4E70F2639410D0007E4FE /* FLTRewardedAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTRewardedAdTest.m; path = ../../../ios/Tests/FLTRewardedAdTest.m; sourceTree = "<group>"; };
 		9EF4E7132639D4B30007E4FE /* FLTNativeAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTNativeAdTest.m; path = ../../../ios/Tests/FLTNativeAdTest.m; sourceTree = "<group>"; };
+		B4B811D89E676EBD37E2E206 /* libPods-google_mobile_ads_exampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-google_mobile_ads_exampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0B22AB9B287C9F711EAAF48 /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-google_mobile_ads_exampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-google_mobile_ads_exampleTests/Pods-google_mobile_ads_exampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CE82265EF05E2A9632B25E60 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
-		E7E26991231DD855BEEE69EB /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-google_mobile_ads_exampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-google_mobile_ads_exampleTests/Pods-google_mobile_ads_exampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F74051031B69F8124E38352E /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -154,7 +154,7 @@
 			files = (
 				9EB9FE59280F86D100DDBB4F /* UserMessagingPlatform.xcframework in Frameworks */,
 				9EA7213725BB6517008D57E3 /* GoogleMobileAds.xcframework in Frameworks */,
-				C4247E08A145B7C14603446E /* libPods-google_mobile_ads_exampleTests.a in Frameworks */,
+				5C7E63AC163134A326635FC7 /* libPods-google_mobile_ads_exampleTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,8 +175,8 @@
 			children = (
 				CE82265EF05E2A9632B25E60 /* Pods-Runner.debug.xcconfig */,
 				F74051031B69F8124E38352E /* Pods-Runner.release.xcconfig */,
-				E7E26991231DD855BEEE69EB /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */,
-				185186B2D682FC21FE7F9077 /* Pods-google_mobile_ads_exampleTests.release.xcconfig */,
+				C0B22AB9B287C9F711EAAF48 /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */,
+				41FDEFDDDE2EF7FC7A8F36B5 /* Pods-google_mobile_ads_exampleTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -187,7 +187,7 @@
 				9EB9FE57280F853D00DDBB4F /* UserMessagingPlatform.xcframework */,
 				9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */,
 				83F369F228D3A43519CEE308 /* libPods-Runner.a */,
-				6BDCE5C673B60CB3659CEFE9 /* libPods-google_mobile_ads_exampleTests.a */,
+				B4B811D89E676EBD37E2E206 /* libPods-google_mobile_ads_exampleTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -321,7 +321,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8FB13CDB248F07B80011A72F /* Build configuration list for PBXNativeTarget "google_mobile_ads_exampleTests" */;
 			buildPhases = (
-				2A2457F6E7000417AF1E283D /* [CP] Check Pods Manifest.lock */,
+				89AD8E00A7365C448495871F /* [CP] Check Pods Manifest.lock */,
 				8FB13CCE248F07B80011A72F /* Sources */,
 				8FB13CCF248F07B80011A72F /* Frameworks */,
 				8FB13CD0248F07B80011A72F /* Resources */,
@@ -363,7 +363,7 @@
 		97C146E61CF9000F007C117D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = "The Chromium Authors";
 				TargetAttributes = {
 					8FB13CD1248F07B80011A72F = {
@@ -419,28 +419,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2A2457F6E7000417AF1E283D /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-google_mobile_ads_exampleTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		2C1A4E9A6849F7CC6B679EA5 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -472,6 +450,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed\n/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" thin\n";
+		};
+		89AD8E00A7365C448495871F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-google_mobile_ads_exampleTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
 		};
 		9740EEB61CF901F6004384FC /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -573,7 +573,7 @@
 /* Begin XCBuildConfiguration section */
 		8FB13CD9248F07B80011A72F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E7E26991231DD855BEEE69EB /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */;
+			baseConfigurationReference = C0B22AB9B287C9F711EAAF48 /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -610,7 +610,7 @@
 		};
 		8FB13CDA248F07B80011A72F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 185186B2D682FC21FE7F9077 /* Pods-google_mobile_ads_exampleTests.release.xcconfig */;
+			baseConfigurationReference = 41FDEFDDDE2EF7FC7A8F36B5 /* Pods-google_mobile_ads_exampleTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

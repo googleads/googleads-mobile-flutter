@@ -101,6 +101,10 @@
 @property NSString *_Nullable dictionaryDescription;
 @property NSDictionary<NSString *, NSString *> *_Nullable adUnitMapping;
 @property NSError *_Nullable error;
+@property NSString *_Nullable adSourceInstanceID;
+@property NSString *_Nullable adSourceID;
+@property NSString *_Nullable adSourceName;
+@property NSString *_Nullable adSourceInstanceName;
 
 - (instancetype _Nonnull)initWithResponseInfo:
     (GADAdNetworkResponseInfo *_Nonnull)responseInfo;
@@ -113,6 +117,7 @@
 @property NSString *_Nullable responseIdentifier;
 @property NSString *_Nullable adNetworkClassName;
 @property NSArray<FLTGADAdNetworkResponseInfo *> *_Nullable adNetworkInfoArray;
+@property FLTGADAdNetworkResponseInfo *_Nullable loadedAdNetworkResponseInfo;
 
 - (instancetype _Nonnull)initWithResponseInfo:
     (GADResponseInfo *_Nonnull)responseInfo;

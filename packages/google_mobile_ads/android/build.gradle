@@ -31,7 +31,7 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-      api 'com.google.android.gms:play-services-ads:21.0.0'
+      api 'com.google.android.gms:play-services-ads:21.2.0'
       implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
       testImplementation 'junit:junit:4.12'
       testImplementation 'org.hamcrest:hamcrest:2.2'

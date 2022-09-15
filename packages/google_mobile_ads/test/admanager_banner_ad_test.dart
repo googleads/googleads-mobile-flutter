@@ -143,11 +143,16 @@ void main() {
         await banner.load();
         AdError adError = AdError(1, 'domain', 'error-message');
         AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
-            adapterClassName: 'adapter-name',
-            latencyMillis: 500,
-            description: 'message',
-            adUnitMapping: {'key': 'value'},
-            adError: adError);
+          adapterClassName: 'adapter-name',
+          latencyMillis: 500,
+          description: 'message',
+          adUnitMapping: {'key': 'value'},
+          adError: adError,
+          adSourceName: 'adSourceName',
+          adSourceId: 'adSourceId',
+          adSourceInstanceName: 'adSourceInstanceName',
+          adSourceInstanceId: 'adSourceInstanceId',
+        );
 
         List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
         ResponseInfo responseInfo = ResponseInfo(

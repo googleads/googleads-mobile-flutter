@@ -52,6 +52,7 @@ abstract class FlutterAd {
     @Nullable private final String responseId;
     @Nullable private final String mediationAdapterClassName;
     @NonNull private final List<FlutterAdapterResponseInfo> adapterResponses;
+    @Nullable private final FlutterAdapterResponseInfo loadedAdapterResponseInfo;
 
     FlutterResponseInfo(@NonNull ResponseInfo responseInfo) {
       this.responseId = responseInfo.getResponseId();
@@ -61,15 +62,23 @@ abstract class FlutterAd {
         adapterResponseInfos.add(new FlutterAdapterResponseInfo(adapterInfo));
       }
       this.adapterResponses = adapterResponseInfos;
+      if (responseInfo.getLoadedAdapterResponseInfo() != null) {
+        this.loadedAdapterResponseInfo =
+            new FlutterAdapterResponseInfo(responseInfo.getLoadedAdapterResponseInfo());
+      } else {
+        this.loadedAdapterResponseInfo = null;
+      }
     }
 
     FlutterResponseInfo(
         @Nullable String responseId,
         @Nullable String mediationAdapterClassName,
-        @NonNull List<FlutterAdapterResponseInfo> adapterResponseInfos) {
+        @NonNull List<FlutterAdapterResponseInfo> adapterResponseInfos,
+        @Nullable FlutterAdapterResponseInfo loadedAdapterResponseInfo) {
       this.responseId = responseId;
       this.mediationAdapterClassName = mediationAdapterClassName;
       this.adapterResponses = adapterResponseInfos;
+      this.loadedAdapterResponseInfo = loadedAdapterResponseInfo;
     }
 
     @Nullable
@@ -87,6 +96,11 @@ abstract class FlutterAd {
       return adapterResponses;
     }
 
+    @Nullable
+    FlutterAdapterResponseInfo getLoadedAdapterResponseInfo() {
+      return loadedAdapterResponseInfo;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
       if (obj == this) {
@@ -98,12 +112,14 @@ abstract class FlutterAd {
       FlutterResponseInfo that = (FlutterResponseInfo) obj;
       return Objects.equals(responseId, that.responseId)
           && Objects.equals(mediationAdapterClassName, that.mediationAdapterClassName)
-          && Objects.equals(adapterResponses, that.adapterResponses);
+          && Objects.equals(adapterResponses, that.adapterResponses)
+          && Objects.equals(loadedAdapterResponseInfo, that.loadedAdapterResponseInfo);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(responseId, mediationAdapterClassName);
+      return Objects.hash(
+          responseId, mediationAdapterClassName, adapterResponses, loadedAdapterResponseInfo);
     }
   }
 
@@ -115,6 +131,10 @@ abstract class FlutterAd {
     @NonNull private final String description;
     @NonNull private final Map<String, String> adUnitMapping;
     @Nullable private FlutterAdError error;
+    @Nullable private String adSourceName;
+    @Nullable private String adSourceId;
+    @Nullable private String adSourceInstanceName;
+    @Nullable private String adSourceInstanceId;
 
     FlutterAdapterResponseInfo(@NonNull AdapterResponseInfo responseInfo) {
       this.adapterClassName = responseInfo.getAdapterClassName();
@@ -131,6 +151,10 @@ abstract class FlutterAd {
       if (responseInfo.getAdError() != null) {
         this.error = new FlutterAdError(responseInfo.getAdError());
       }
+      adSourceName = responseInfo.getAdSourceName();
+      adSourceId = responseInfo.getAdSourceId();
+      adSourceInstanceName = responseInfo.getAdSourceInstanceName();
+      adSourceInstanceId = responseInfo.getAdSourceInstanceId();
     }
 
     FlutterAdapterResponseInfo(
@@ -138,12 +162,20 @@ abstract class FlutterAd {
         long latencyMillis,
         @NonNull String description,
         @NonNull Map<String, String> adUnitMapping,
-        @Nullable FlutterAdError error) {
+        @Nullable FlutterAdError error,
+        @Nullable String adSourceName,
+        @Nullable String adSourceId,
+        @Nullable String adSourceInstanceName,
+        @Nullable String adSourceInstanceId) {
       this.adapterClassName = adapterClassName;
       this.latencyMillis = latencyMillis;
       this.description = description;
       this.adUnitMapping = adUnitMapping;
       this.error = error;
+      this.adSourceName = adSourceName;
+      this.adSourceId = adSourceId;
+      this.adSourceInstanceName = adSourceInstanceName;
+      this.adSourceInstanceId = adSourceInstanceId;
     }
 
     @NonNull
@@ -170,6 +202,26 @@ abstract class FlutterAd {
       return error;
     }
 
+    @Nullable
+    public String getAdSourceName() {
+      return adSourceName;
+    }
+
+    @Nullable
+    public String getAdSourceId() {
+      return adSourceId;
+    }
+
+    @Nullable
+    public String getAdSourceInstanceName() {
+      return adSourceInstanceName;
+    }
+
+    @Nullable
+    public String getAdSourceInstanceId() {
+      return adSourceInstanceId;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
       if (obj == this) {
@@ -183,12 +235,24 @@ abstract class FlutterAd {
           && latencyMillis == that.latencyMillis
           && Objects.equals(description, that.description)
           && Objects.equals(error, that.error)
-          && Objects.equals(adUnitMapping, that.adUnitMapping);
+          && Objects.equals(adUnitMapping, that.adUnitMapping)
+          && Objects.equals(adSourceName, that.adSourceName)
+          && Objects.equals(adSourceId, that.adSourceId)
+          && Objects.equals(adSourceInstanceName, that.adSourceInstanceName)
+          && Objects.equals(adSourceInstanceId, that.adSourceInstanceId);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(adapterClassName, latencyMillis, description, error);
+      return Objects.hash(
+          adapterClassName,
+          latencyMillis,
+          description,
+          error,
+          adSourceName,
+          adSourceId,
+          adSourceInstanceName,
+          adSourceInstanceId);
     }
   }
 
