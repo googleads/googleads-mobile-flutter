@@ -210,7 +210,6 @@ class NativeAdListener extends AdWithViewListener {
     AdEventCallback? onAdImpression,
     OnPaidEventCallback? onPaidEvent,
     AdEventCallback? onAdClicked,
-    this.onNativeAdClicked,
   }) : super(
             onAdLoaded: onAdLoaded,
             onAdFailedToLoad: onAdFailedToLoad,
@@ -220,11 +219,6 @@ class NativeAdListener extends AdWithViewListener {
             onAdImpression: onAdImpression,
             onPaidEvent: onPaidEvent,
             onAdClicked: onAdClicked);
-
-  /// Called when a click is recorded for a [NativeAd].
-  /// @Deprecated Use [onAdClicked] instead
-  @Deprecated('Use [onAdClicked] instead')
-  final void Function(NativeAd ad)? onNativeAdClicked;
 }
 
 /// Callback events for for full screen ads, such as Rewarded and Interstitial.

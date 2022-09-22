@@ -14,7 +14,7 @@
 
 #import "FLTUserMessagingPlatformManager.h"
 #import "../FLTAdUtil.h"
-#import "FLTNSString.h"
+#import "../FLTNSString.h"
 #import "FLTUserMessagingPlatformReaderWriter.h"
 #include <UserMessagingPlatform/UserMessagingPlatform.h>
 

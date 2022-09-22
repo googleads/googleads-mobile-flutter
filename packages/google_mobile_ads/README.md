@@ -1,5 +1,7 @@
 # Google Mobile Ads for Flutter
 
+This is [fork](https://github.com/Innim/googleads-mobile-flutter) of `google_mobile_ads`.
+
 [![google_mobile_ads](https://github.com/googleads/googleads-mobile-flutter/actions/workflows/google_mobile_ads.yaml/badge.svg)](https://github.com/googleads/googleads-mobile-flutter/actions/workflows/google_mobile_ads.yaml)
 
 This repository contains the source code for the Google Mobile Ads Flutter

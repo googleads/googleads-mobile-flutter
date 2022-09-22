@@ -64,18 +64,12 @@
 - (void)testLoadRewardedAd {
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
-  FLTServerSideVerificationOptions *serverSideVerificationOptions =
-      [[FLTServerSideVerificationOptions alloc] init];
-  serverSideVerificationOptions.customRewardString = @"reward";
-  serverSideVerificationOptions.userIdentifier = @"user-id";
   FlutterMethodCall *methodCall =
       [FlutterMethodCall methodCallWithMethodName:@"loadRewardedAd"
                                         arguments:@{
                                           @"adId" : @2,
                                           @"adUnitId" : @"testId",
                                           @"request" : request,
-                                          @"serverSideVerificationOptions" :
-                                              serverSideVerificationOptions
                                         }];
 
   __block bool resultInvoked = false;
@@ -92,11 +86,8 @@
   BOOL (^verificationBlock)(FLTRewardedAd *) = ^BOOL(FLTRewardedAd *ad) {
     FLTAdRequest *adRequest = [ad valueForKey:@"_adRequest"];
     NSString *adUnit = [ad valueForKey:@"_adUnitId"];
-    FLTServerSideVerificationOptions *options =
-        [ad valueForKey:@"_serverSideVerificationOptions"];
     XCTAssertEqualObjects(adRequest, request);
     XCTAssertEqualObjects(adUnit, @"testId");
-    XCTAssertEqualObjects(options, serverSideVerificationOptions);
     return YES;
   };
   OCMVerify([_mockAdInstanceManager
@@ -570,4 +561,111 @@
   XCTAssertEqualObjects(returnedGetAdSizeResult.width, @1);
   XCTAssertEqualObjects(returnedGetAdSizeResult.height, @2);
 }
+
+- (void)testServerSideVerificationOptions_rewardedAd {
+  // Mock having already loaded an ad
+  FLTRewardedAd *mockAd = OCMClassMock([FLTRewardedAd class]);
+  OCMStub([_mockAdInstanceManager adFor:[OCMArg isEqual:@1]]).andReturn(mockAd);
+
+  // Method calls to set ssv
+  FLTServerSideVerificationOptions *mockSSV =
+      OCMClassMock([FLTServerSideVerificationOptions class]);
+  FlutterMethodCall *methodCall = [FlutterMethodCall
+      methodCallWithMethodName:@"setServerSideVerificationOptions"
+                     arguments:@{
+                       @"adId" : @(1),
+                       @"adUnitId" : @"ad-unit-id",
+                       @"serverSideVerificationOptions" : mockSSV,
+                     }];
+
+  __block bool resultInvoked = false;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  OCMVerify([mockAd setServerSideVerificationOptions:[OCMArg isEqual:mockSSV]]);
+}
+
+- (void)testServerSideVerificationOptions_rewardedInterstitialAd {
+  // Mock having already loaded an ad
+  FLTRewardedInterstitialAd *mockAd =
+      OCMClassMock([FLTRewardedInterstitialAd class]);
+  OCMStub([_mockAdInstanceManager adFor:[OCMArg isEqual:@1]]).andReturn(mockAd);
+
+  // Method calls to set ssv
+  FLTServerSideVerificationOptions *mockSSV =
+      OCMClassMock([FLTServerSideVerificationOptions class]);
+  FlutterMethodCall *methodCall = [FlutterMethodCall
+      methodCallWithMethodName:@"setServerSideVerificationOptions"
+                     arguments:@{
+                       @"adId" : @(1),
+                       @"adUnitId" : @"ad-unit-id",
+                       @"serverSideVerificationOptions" : mockSSV,
+                     }];
+
+  __block bool resultInvoked = false;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  OCMVerify([mockAd setServerSideVerificationOptions:[OCMArg isEqual:mockSSV]]);
+}
+
+- (void)testServerSideVerificationOptions_nullAd {
+  // Try to set ssv without any ads being loaded
+  FLTServerSideVerificationOptions *mockSSV =
+      OCMClassMock([FLTServerSideVerificationOptions class]);
+  FlutterMethodCall *methodCall = [FlutterMethodCall
+      methodCallWithMethodName:@"setServerSideVerificationOptions"
+                     arguments:@{
+                       @"adId" : @(1),
+                       @"adUnitId" : @"ad-unit-id",
+                       @"serverSideVerificationOptions" : mockSSV,
+                     }];
+
+  __block bool resultInvoked = false;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  // Result still invoked - no op
+  XCTAssertTrue(resultInvoked);
+}
+
+- (void)testServerSideVerificationOptions_invalidAdType {
+  // Mock having already loaded an ad that does not support ssv
+  // Strict mock will fail if there are any interactions
+  FLTBannerAd *mockAd = OCMStrictClassMock([FLTBannerAd class]);
+  OCMStub([_mockAdInstanceManager adFor:[OCMArg isEqual:@1]]).andReturn(mockAd);
+
+  // Try to set ssv without any ads being loaded
+  FLTServerSideVerificationOptions *mockSSV =
+      OCMClassMock([FLTServerSideVerificationOptions class]);
+  FlutterMethodCall *methodCall = [FlutterMethodCall
+      methodCallWithMethodName:@"setServerSideVerificationOptions"
+                     arguments:@{
+                       @"adId" : @(1),
+                       @"adUnitId" : @"ad-unit-id",
+                       @"serverSideVerificationOptions" : mockSSV,
+                     }];
+
+  __block bool resultInvoked = false;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  // Result still invoked - no op
+  XCTAssertTrue(resultInvoked);
+}
+
 @end

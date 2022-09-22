@@ -34,16 +34,8 @@
   OCMStub([request keywords]).andReturn(@[ @"apple" ]);
   GADRequest *gadRequest = OCMClassMock([GADRequest class]);
   OCMStub([request asGADRequest:[OCMArg any]]).andReturn(gadRequest);
-  FLTServerSideVerificationOptions *serverSideVerificationOptions =
-      OCMClassMock([FLTServerSideVerificationOptions class]);
-  GADServerSideVerificationOptions *gadOptions =
-      OCMClassMock([GADServerSideVerificationOptions class]);
-  OCMStub([serverSideVerificationOptions asGADServerSideVerificationOptions])
-      .andReturn(gadOptions);
 
-  [self testLoadShowRewardedAd:request
-                    gadOrGAMRequest:gadRequest
-      serverSideVerificationOptions:serverSideVerificationOptions];
+  [self testLoadShowRewardedAd:request gadOrGAMRequest:gadRequest];
 }
 
 - (void)testLoadShowRewardedAdGAMRequest {
@@ -51,29 +43,19 @@
   OCMStub([request keywords]).andReturn(@[ @"apple" ]);
   GAMRequest *gamRequest = OCMClassMock([GAMRequest class]);
   OCMStub([request asGAMRequest:[OCMArg any]]).andReturn(gamRequest);
-  FLTServerSideVerificationOptions *serverSideVerificationOptions =
-      OCMClassMock([FLTServerSideVerificationOptions class]);
-  GADServerSideVerificationOptions *gadOptions =
-      OCMClassMock([GADServerSideVerificationOptions class]);
-  OCMStub([serverSideVerificationOptions asGADServerSideVerificationOptions])
-      .andReturn(gadOptions);
 
-  [self testLoadShowRewardedAd:request
-                    gadOrGAMRequest:gamRequest
-      serverSideVerificationOptions:serverSideVerificationOptions];
+  [self testLoadShowRewardedAd:request gadOrGAMRequest:gamRequest];
 }
 
 // Helper method for testing with FLTAdRequest and FLTGAMAdRequest.
 - (void)testLoadShowRewardedAd:(FLTAdRequest *)request
-                  gadOrGAMRequest:(GADRequest *)gadOrGAMRequest
-    serverSideVerificationOptions:(FLTServerSideVerificationOptions *)options {
+               gadOrGAMRequest:(GADRequest *)gadOrGAMRequest {
   UIViewController *mockRootViewController =
       OCMClassMock([UIViewController class]);
   FLTRewardedAd *ad =
       [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
                                       request:request
                            rootViewController:mockRootViewController
-                serverSideVerificationOptions:options
                                          adId:@1];
   ad.manager = mockManager;
 
@@ -116,11 +98,6 @@
         [invocation getArgument:&rewardHandler atIndex:3];
         rewardHandler();
       });
-  // Prevent calls to setServerSideVerificationOptions if options is nil.
-  if (options == nil) {
-    OCMReject(
-        [rewardedClassMock setServerSideVerificationOptions:[OCMArg any]]);
-  }
 
   // Mock callback of paid event handler.
   GADAdValue *adValue = OCMClassMock([GADAdValue class]);
@@ -145,12 +122,6 @@
   OCMVerify(
       [rewardedClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
   XCTAssertEqual(ad.rewardedAd, rewardedClassMock);
-  if (options != nil) {
-    GADServerSideVerificationOptions *gadOptions =
-        [options asGADServerSideVerificationOptions];
-    OCMVerify([rewardedClassMock
-        setServerSideVerificationOptions:[OCMArg isEqual:gadOptions]]);
-  }
   OCMVerify([mockManager
       onPaidEvent:[OCMArg isEqual:ad]
             value:[OCMArg checkWithBlock:^BOOL(id obj) {
@@ -163,6 +134,20 @@
               return TRUE;
             }]]);
 
+  // Set SSV and verify interactions with mocks
+  FLTServerSideVerificationOptions *serverSideVerificationOptions =
+      OCMClassMock([FLTServerSideVerificationOptions class]);
+  GADServerSideVerificationOptions *gadOptions =
+      OCMClassMock([GADServerSideVerificationOptions class]);
+  OCMStub([serverSideVerificationOptions asGADServerSideVerificationOptions])
+      .andReturn(gadOptions);
+
+  [ad setServerSideVerificationOptions:serverSideVerificationOptions];
+
+  OCMVerify([rewardedClassMock
+      setServerSideVerificationOptions:[OCMArg isEqual:gadOptions]]);
+
+  // Show the ad and verify callbacks invoked
   [ad show];
 
   OCMVerify([rewardedClassMock
@@ -214,7 +199,6 @@
       [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
                                       request:request
                            rootViewController:mockRootViewController
-                serverSideVerificationOptions:nil
                                          adId:@1];
   ad.manager = mockManager;
 
@@ -236,16 +220,6 @@
                                           completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad]
                                     error:[OCMArg isEqual:error]]);
-}
-
-- (void)testServerSideVerificationOptionsNil {
-  FLTAdRequest *request = OCMClassMock([FLTAdRequest class]);
-  OCMStub([request keywords]).andReturn(@[ @"apple" ]);
-  GADRequest *gadRequest = OCMClassMock([GADRequest class]);
-  OCMStub([request asGADRequest:[OCMArg any]]).andReturn(gadRequest);
-  [self testLoadShowRewardedAd:request
-                    gadOrGAMRequest:gadRequest
-      serverSideVerificationOptions:nil];
 }
 
 @end
