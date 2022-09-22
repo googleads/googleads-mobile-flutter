@@ -363,7 +363,6 @@ class AdInstanceManager {
 
   void _invokeOnAdClicked(Ad ad, String eventName) {
     if (ad is NativeAd) {
-      ad.listener.onNativeAdClicked?.call(ad);
       ad.listener.onAdClicked?.call(ad);
     } else if (ad is AdWithView) {
       ad.listener.onAdClicked?.call(ad);
@@ -536,7 +535,6 @@ class AdInstanceManager {
         'adUnitId': ad.adUnitId,
         'request': ad.request,
         'adManagerRequest': ad.adManagerRequest,
-        'serverSideVerificationOptions': ad.serverSideVerificationOptions,
       },
     );
   }
@@ -558,7 +556,6 @@ class AdInstanceManager {
         'adUnitId': ad.adUnitId,
         'request': ad.request,
         'adManagerRequest': ad.adManagerRequest,
-        'serverSideVerificationOptions': ad.serverSideVerificationOptions,
       },
     );
   }
@@ -760,6 +757,20 @@ class AdInstanceManager {
   Future<String> getVersionString() async {
     return (await instanceManager.channel
         .invokeMethod<String>('MobileAds#getVersionString'))!;
+  }
+
+  /// Set server side verification options on the ad.
+  Future<void> setServerSideVerificationOptions(
+    ServerSideVerificationOptions options,
+    Ad ad,
+  ) {
+    return channel.invokeMethod<void>(
+      'setServerSideVerificationOptions',
+      <dynamic, dynamic>{
+        'adId': adIdFor(ad),
+        'serverSideVerificationOptions': options,
+      },
+    );
   }
 
   /// Opens the debug menu.

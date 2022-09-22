@@ -218,25 +218,25 @@
 @end
 
 @interface FLTRewardedAd : FLTFullScreenAd
-- (instancetype _Nonnull)
-                 initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                          request:(FLTAdRequest *_Nonnull)request
-               rootViewController:(UIViewController *_Nonnull)rootViewController
-    serverSideVerificationOptions:(FLTServerSideVerificationOptions *_Nullable)
-                                      serverSideVerificationOptions
-                             adId:(NSNumber *_Nonnull)adId;
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                                  request:(FLTAdRequest *_Nonnull)request
+                       rootViewController:
+                           (UIViewController *_Nonnull)rootViewController
+                                     adId:(NSNumber *_Nonnull)adId;
 - (GADRewardedAd *_Nullable)rewardedAd;
+- (void)setServerSideVerificationOptions:
+    (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
 @end
 
 @interface FLTRewardedInterstitialAd : FLTFullScreenAd
-- (instancetype _Nonnull)
-                 initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                          request:(FLTAdRequest *_Nonnull)request
-               rootViewController:(UIViewController *_Nonnull)rootViewController
-    serverSideVerificationOptions:(FLTServerSideVerificationOptions *_Nullable)
-                                      serverSideVerificationOptions
-                             adId:(NSNumber *_Nonnull)adId;
+- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                                  request:(FLTAdRequest *_Nonnull)request
+                       rootViewController:
+                           (UIViewController *_Nonnull)rootViewController
+                                     adId:(NSNumber *_Nonnull)adId;
 - (GADRewardedInterstitialAd *_Nullable)rewardedInterstitialAd;
+- (void)setServerSideVerificationOptions:
+    (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
 @end
 
 @interface FLTAppOpenAd : FLTFullScreenAd

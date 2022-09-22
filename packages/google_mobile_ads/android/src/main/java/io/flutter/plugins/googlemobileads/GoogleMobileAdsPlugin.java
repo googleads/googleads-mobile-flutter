@@ -204,6 +204,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    *     io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory} associated with
    *     this factoryId, or null if there was none for this factoryId
    */
+  @Nullable
   public static NativeAdFactory unregisterNativeAdFactory(FlutterEngine engine, String factoryId) {
     final FlutterPlugin gmaPlugin = engine.getPlugins().get(GoogleMobileAdsPlugin.class);
     if (gmaPlugin != null) {
@@ -446,8 +447,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         final FlutterAdRequest rewardedAdRequest = call.argument("request");
         final FlutterAdManagerAdRequest rewardedAdManagerRequest =
             call.argument("adManagerRequest");
-        final FlutterServerSideVerificationOptions rewardedAdServerSideVerificationOptions =
-            call.argument("serverSideVerificationOptions");
 
         final FlutterRewardedAd rewardedAd;
         if (rewardedAdRequest != null) {
@@ -457,7 +456,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   rewardedAdUnitId,
                   rewardedAdRequest,
-                  rewardedAdServerSideVerificationOptions,
                   new FlutterAdLoader(context));
         } else if (rewardedAdManagerRequest != null) {
           rewardedAd =
@@ -466,7 +464,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   rewardedAdUnitId,
                   rewardedAdManagerRequest,
-                  rewardedAdServerSideVerificationOptions,
                   new FlutterAdLoader(context));
         } else {
           result.error("InvalidRequest", "A null or invalid ad request was provided.", null);
@@ -521,9 +518,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         final FlutterAdRequest rewardedInterstitialAdRequest = call.argument("request");
         final FlutterAdManagerAdRequest rewardedInterstitialAdManagerRequest =
             call.argument("adManagerRequest");
-        final FlutterServerSideVerificationOptions
-            rewardedInterstitialAdServerSideVerificationOptions =
-                call.argument("serverSideVerificationOptions");
 
         final FlutterRewardedInterstitialAd rewardedInterstitialAd;
         if (rewardedInterstitialAdRequest != null) {
@@ -533,7 +527,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   rewardedInterstitialAdUnitId,
                   rewardedInterstitialAdRequest,
-                  rewardedInterstitialAdServerSideVerificationOptions,
                   new FlutterAdLoader(context));
         } else if (rewardedInterstitialAdManagerRequest != null) {
           rewardedInterstitialAd =
@@ -542,7 +535,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   rewardedInterstitialAdUnitId,
                   rewardedInterstitialAdManagerRequest,
-                  rewardedInterstitialAdServerSideVerificationOptions,
                   new FlutterAdLoader(context));
         } else {
           result.error("InvalidRequest", "A null or invalid ad request was provided.", null);
@@ -619,21 +611,40 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         result.success(null);
         break;
       case "getAdSize":
-        FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
-        if (ad == null) {
-          // This was called on a dart ad container that hasn't been loaded yet.
-          result.success(null);
-        } else if (ad instanceof FlutterBannerAd) {
-          result.success(((FlutterBannerAd) ad).getAdSize());
-        } else if (ad instanceof FlutterAdManagerBannerAd) {
-          result.success(((FlutterAdManagerBannerAd) ad).getAdSize());
-        } else {
-          result.error(
-              Constants.ERROR_CODE_UNEXPECTED_AD_TYPE,
-              "Unexpected ad type for getAdSize: " + ad,
-              null);
+        {
+          FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
+          if (ad == null) {
+            // This was called on a dart ad container that hasn't been loaded yet.
+            result.success(null);
+          } else if (ad instanceof FlutterBannerAd) {
+            result.success(((FlutterBannerAd) ad).getAdSize());
+          } else if (ad instanceof FlutterAdManagerBannerAd) {
+            result.success(((FlutterAdManagerBannerAd) ad).getAdSize());
+          } else {
+            result.error(
+                Constants.ERROR_CODE_UNEXPECTED_AD_TYPE,
+                "Unexpected ad type for getAdSize: " + ad,
+                null);
+          }
+          break;
         }
-        break;
+      case "setServerSideVerificationOptions":
+        {
+          FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
+          final FlutterServerSideVerificationOptions options =
+              call.argument("serverSideVerificationOptions");
+          if (ad == null) {
+            Log.w(TAG, "Error - null ad in setServerSideVerificationOptions");
+          } else if (ad instanceof FlutterRewardedAd) {
+            ((FlutterRewardedAd) ad).setServerSideVerificationOptions(options);
+          } else if (ad instanceof FlutterRewardedInterstitialAd) {
+            ((FlutterRewardedInterstitialAd) ad).setServerSideVerificationOptions(options);
+          } else {
+            Log.w(TAG, "Error - setServerSideVerificationOptions called on " + "non-rewarded ad");
+          }
+          result.success(null);
+          break;
+        }
       default:
         result.notImplemented();
     }

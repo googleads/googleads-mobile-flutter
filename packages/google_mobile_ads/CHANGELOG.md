@@ -1,7 +1,24 @@
+## 2.0.1
+* Bug fix for [issue 580](https://github.com/googleads/googleads-mobile-flutter/issues/580).
+  Adds a workaround on Android to wait for the ad widget to become visible
+  before attaching the platform view.
+
 ## 2.0.0
-* Update GMA Android dependency to 21.0.0 and iOS to 9.6.0
-* Remove `credentials` from `AdapterResponseInfo`, which is replaced with
+* Updates GMA Android dependency to 21.0.0 and iOS to 9.6.0
+* Removes `credentials` from `AdapterResponseInfo`, which is replaced with
   `adUnitMapping`.
+* Removes `serverSideVerificationOptions` from `RewardedAd.load()` and 
+  `RewardedInterstitialAd.load()`, replacing them with setters 
+  `RewardedAd.setServerSideVerificationOptions()` and 
+  `RewardedInterstitialAd.setServerSideVerificationOptions()`. This lets you
+  update the ssv after the ad is loaded.
+* Removes static `testAdUnitId` parameters. See the
+  [Admob](https://developers.google.com/admob/flutter/test-ads) and 
+  [AdManager](https://developers.google.com/ad-manager/mobile-ads-sdk/flutter/test-ads)
+  documentation for up to date test ad units.
+* Removes `NativeAdListener.onNativeAdClicked`. You should use `onAdClicked`
+  instead, which present on all ad listeners.
+* Removes `AdRequest.location`
 
 ## 1.3.0
 * Adds support for programmatically opening the debug options menu using`MobileAds.openDebugMenu(String adUnitId)`
