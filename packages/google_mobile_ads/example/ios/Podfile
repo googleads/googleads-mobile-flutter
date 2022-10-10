@@ -39,5 +39,5 @@ end
 
 # Add test dependency matching google_mobile_ads.podspec.
 target 'google_mobile_ads_exampleTests' do
-  pod 'OCMock','3.9'
+  pod 'OCMock','3.6'
 end
