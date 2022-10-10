@@ -22,6 +22,6 @@ Google Mobile Ads plugin for Flutter.
 
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'Tests/**/*'
-    test_spec.dependency 'OCMock','3.6'
+    test_spec.dependency 'OCMock','3.9'
   end
 end
