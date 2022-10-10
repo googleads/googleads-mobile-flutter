@@ -591,7 +591,9 @@
 
 #pragma mark - FLTFullScreenAd
 
-@implementation FLTFullScreenAd
+@implementation FLTFullScreenAd {
+  BOOL _statusBarVisibilityBeforeAdShow;
+}
 
 @synthesize manager;
 
@@ -616,6 +618,13 @@
 
 - (void)adWillPresentFullScreenContent:
     (nonnull id<GADFullScreenPresentingAd>)ad {
+  // Manually hide the status bar. This is a fix for
+  // https://github.com/googleads/googleads-mobile-flutter/issues/191
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  _statusBarVisibilityBeforeAdShow = UIApplication.sharedApplication.statusBarHidden;
+  UIApplication.sharedApplication.statusBarHidden = YES;
+#pragma clang diagnostic pop
   [manager adWillPresentFullScreenContent:self];
 }
 
@@ -626,6 +635,10 @@
 
 - (void)adWillDismissFullScreenContent:
     (nonnull id<GADFullScreenPresentingAd>)ad {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  UIApplication.sharedApplication.statusBarHidden = _statusBarVisibilityBeforeAdShow;
+#pragma clang diagnostic pop
   [manager adWillDismissFullScreenContent:self];
 }
 
