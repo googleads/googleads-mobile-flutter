@@ -103,6 +103,12 @@
         handler(adValue);
         return YES;
       }]]);
+
+  // Setup mock for UIApplication.sharedInstance
+  id uiApplicationClassMock = OCMClassMock([UIApplication class]);
+  OCMStub(ClassMethod([uiApplicationClassMock sharedApplication]))
+      .andReturn(uiApplicationClassMock);
+
   // Call load and check expected interactions with mocks.
   [ad load];
 
@@ -152,7 +158,7 @@
   // Verify that we hide status bar
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  XCTAssertTrue(UIApplication.sharedApplication.statusBarHidden);
+  OCMVerify([uiApplicationClassMock setStatusBarHidden:YES]);
 #pragma clang diagnostic pop
 
   [fullScreenContentDelegate adDidRecordImpression:rewardedClassMock];
@@ -168,7 +174,7 @@
   OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  XCTAssertFalse(UIApplication.sharedApplication.statusBarHidden);
+  OCMVerify([uiApplicationClassMock setStatusBarHidden:NO]);
 #pragma clang diagnostic pop
 
   [ad ad:rewardedClassMock didFailToPresentFullScreenContentWithError:error];

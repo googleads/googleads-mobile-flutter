@@ -624,7 +624,7 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
   _statusBarVisibilityBeforeAdShow =
       UIApplication.sharedApplication.statusBarHidden;
-  UIApplication.sharedApplication.statusBarHidden = YES;
+  [UIApplication.sharedApplication setStatusBarHidden:YES];
 #pragma clang diagnostic pop
   [manager adWillPresentFullScreenContent:self];
 }
@@ -638,8 +638,8 @@
     (nonnull id<GADFullScreenPresentingAd>)ad {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  UIApplication.sharedApplication.statusBarHidden =
-      _statusBarVisibilityBeforeAdShow;
+  [UIApplication.sharedApplication
+      setStatusBarHidden:_statusBarVisibilityBeforeAdShow];
 #pragma clang diagnostic pop
   [manager adWillDismissFullScreenContent:self];
 }
