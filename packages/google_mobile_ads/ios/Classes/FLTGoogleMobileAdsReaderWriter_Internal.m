@@ -116,7 +116,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     FLTGADAdNetworkResponseInfo *loadedResponseInfo =
         [self readValueOfType:[self readByte]];
     NSDictionary<NSString *, id> *extrasDictionary =
-      [self readValueOfType:[self readByte]];
+        [self readValueOfType:[self readByte]];
     FLTGADResponseInfo *gadResponseInfo = [[FLTGADResponseInfo alloc] init];
     gadResponseInfo.adNetworkClassName = adNetworkClassName;
     gadResponseInfo.responseIdentifier = responseIdentifier;
@@ -147,7 +147,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     adNetworkResponseInfo.adSourceID = adSourceID;
     adNetworkResponseInfo.adSourceInstanceName = adSourceInstanceName;
     adNetworkResponseInfo.adSourceInstanceID = adSourceInstanceID;
-    
+
     return adNetworkResponseInfo;
   }
   case FLTAdMobFieldLoadError: {
