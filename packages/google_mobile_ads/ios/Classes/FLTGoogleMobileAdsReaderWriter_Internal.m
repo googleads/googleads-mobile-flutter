@@ -115,11 +115,14 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
         [self readValueOfType:[self readByte]];
     FLTGADAdNetworkResponseInfo *loadedResponseInfo =
         [self readValueOfType:[self readByte]];
+    NSDictionary<NSString *, id> *extrasDictionary =
+      [self readValueOfType:[self readByte]];
     FLTGADResponseInfo *gadResponseInfo = [[FLTGADResponseInfo alloc] init];
     gadResponseInfo.adNetworkClassName = adNetworkClassName;
     gadResponseInfo.responseIdentifier = responseIdentifier;
     gadResponseInfo.adNetworkInfoArray = adNetworkInfoArray;
     gadResponseInfo.loadedAdNetworkResponseInfo = loadedResponseInfo;
+    gadResponseInfo.extrasDictionary = extrasDictionary;
     return gadResponseInfo;
   }
   case FLTAdmobFieldGADAdNetworkResponseInfo: {
@@ -133,7 +136,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     NSString *adSourceID = [self readValueOfType:[self readByte]];
     NSString *adSourceInstanceName = [self readValueOfType:[self readByte]];
     NSString *adSourceInstanceID = [self readValueOfType:[self readByte]];
-
     FLTGADAdNetworkResponseInfo *adNetworkResponseInfo =
         [[FLTGADAdNetworkResponseInfo alloc] init];
     adNetworkResponseInfo.adNetworkClassName = adNetworkClassName;
@@ -145,6 +147,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     adNetworkResponseInfo.adSourceID = adSourceID;
     adNetworkResponseInfo.adSourceInstanceName = adSourceInstanceName;
     adNetworkResponseInfo.adSourceInstanceID = adSourceInstanceID;
+    
     return adNetworkResponseInfo;
   }
   case FLTAdMobFieldLoadError: {
@@ -320,11 +323,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:item.type];
   } else if ([value isKindOfClass:[FLTGADResponseInfo class]]) {
     [self writeByte:FLTAdmobFieldGadResponseInfo];
-    GADResponseInfo *responseInfo = value;
+    FLTGADResponseInfo *responseInfo = value;
     [self writeValue:responseInfo.responseIdentifier];
     [self writeValue:responseInfo.adNetworkClassName];
     [self writeValue:responseInfo.adNetworkInfoArray];
     [self writeValue:responseInfo.loadedAdNetworkResponseInfo];
+    [self writeValue:responseInfo.extrasDictionary];
   } else if ([value isKindOfClass:[FLTGADAdNetworkResponseInfo class]]) {
     [self writeByte:FLTAdmobFieldGADAdNetworkResponseInfo];
     FLTGADAdNetworkResponseInfo *networkResponseInfo = value;

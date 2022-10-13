@@ -245,6 +245,7 @@
     _adNetworkInfoArray = infoArray;
     _loadedAdNetworkResponseInfo = [[FLTGADAdNetworkResponseInfo alloc]
         initWithResponseInfo:responseInfo.loadedAdNetworkResponseInfo];
+    _extrasDictionary = responseInfo.extrasDictionary;
   }
   return self;
 }

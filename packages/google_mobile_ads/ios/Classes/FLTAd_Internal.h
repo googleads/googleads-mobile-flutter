@@ -118,6 +118,7 @@
 @property NSString *_Nullable adNetworkClassName;
 @property NSArray<FLTGADAdNetworkResponseInfo *> *_Nullable adNetworkInfoArray;
 @property FLTGADAdNetworkResponseInfo *_Nullable loadedAdNetworkResponseInfo;
+@property NSDictionary<NSString *, id> *_Nullable extrasDictionary;
 
 - (instancetype _Nonnull)initWithResponseInfo:
     (GADResponseInfo *_Nonnull)responseInfo;

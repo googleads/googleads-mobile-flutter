@@ -130,6 +130,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, responseInfo.getMediationAdapterClassName());
       writeValue(stream, responseInfo.getAdapterResponses());
       writeValue(stream, responseInfo.getLoadedAdapterResponseInfo());
+      writeValue(stream, responseInfo.getResponseExtras());
     } else if (value instanceof FlutterAd.FlutterLoadAdError) {
       stream.write(VALUE_LOAD_AD_ERROR);
       final FlutterAd.FlutterLoadAdError error = (FlutterAd.FlutterLoadAdError) value;
@@ -255,7 +256,8 @@ class AdMessageCodec extends StandardMessageCodec {
             (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
             (List<FlutterAdapterResponseInfo>) readValueOfType(buffer.get(), buffer),
-            (FlutterAdapterResponseInfo) readValueOfType(buffer.get(), buffer));
+            (FlutterAdapterResponseInfo) readValueOfType(buffer.get(), buffer),
+            (Map<String, String>) readValueOfType(buffer.get(), buffer));
       case VALUE_LOAD_AD_ERROR:
         return new FlutterAd.FlutterLoadAdError(
             (Integer) readValueOfType(buffer.get(), buffer),

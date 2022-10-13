@@ -344,9 +344,14 @@ public class AdMessageCodecTest {
             "adSourceId",
             "adSourceInstanceName",
             "adSourceInstanceId");
+    Map<String, String> responseExtras = Collections.singletonMap("key", "value");
     FlutterResponseInfo info =
         new FlutterResponseInfo(
-            "responseId", "className", adapterResponseInfos, loadedAdapterResponseInfo);
+            "responseId",
+            "className",
+            adapterResponseInfos,
+            loadedAdapterResponseInfo,
+            responseExtras);
     final ByteBuffer message =
         codec.encodeMessage(new FlutterBannerAd.FlutterLoadAdError(1, "domain", "message", info));
 

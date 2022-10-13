@@ -68,7 +68,8 @@ class ResponseInfo {
       {this.responseId,
       this.mediationAdapterClassName,
       this.adapterResponses,
-      this.loadedAdapterResponseInfo});
+      this.loadedAdapterResponseInfo,
+      required this.responseExtras});
 
   /// An identifier for the loaded ad.
   final String? responseId;
@@ -87,12 +88,16 @@ class ResponseInfo {
   /// This is null if the ad failed to load.
   final AdapterResponseInfo? loadedAdapterResponseInfo;
 
+  /// Map of extra information about the ad response.
+  final Map<String, dynamic> responseExtras;
+
   @override
   String toString() {
     return '$runtimeType(responseId: $responseId, '
         'mediationAdapterClassName: $mediationAdapterClassName, '
         'adapterResponses: $adapterResponses, '
-        'loadedAdapterResponseInfo: $loadedAdapterResponseInfo)';
+        'loadedAdapterResponseInfo: $loadedAdapterResponseInfo), '
+        'responseExtras: $responseExtras';
   }
 }
 
