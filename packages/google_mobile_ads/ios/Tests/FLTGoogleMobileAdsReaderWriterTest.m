@@ -476,6 +476,7 @@
   responseInfo.responseIdentifier = @"identifier";
   responseInfo.adNetworkInfoArray = @[ adNetworkResponseInfo ];
   responseInfo.loadedAdNetworkResponseInfo = loadedNetworkResponseInfo;
+  responseInfo.extrasDictionary = @{@"key" : @"value"};
 
   NSData *encodedMessage = [_messageCodec encode:responseInfo];
   FLTGADResponseInfo *decodedResponseInfo =
@@ -483,6 +484,8 @@
 
   XCTAssertEqualObjects(decodedResponseInfo.adNetworkClassName, @"class-name");
   XCTAssertEqualObjects(decodedResponseInfo.responseIdentifier, @"identifier");
+  XCTAssertEqualObjects(decodedResponseInfo.extrasDictionary,
+                        @{@"key" : @"value"});
   XCTAssertEqual(decodedResponseInfo.adNetworkInfoArray.count, 1);
 
   FLTGADAdNetworkResponseInfo *decodedInfo =
