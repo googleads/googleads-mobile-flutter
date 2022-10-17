@@ -18,7 +18,7 @@ on:
   pull_request:
     paths:
       - "packages/google_mobile_ads/**"
-      - "packages/app_open_example/**"
+      - "samples/app_open_example/**"
       - ".github/workflows/app_open_example.yaml"
   push:
     branches:
@@ -73,7 +73,7 @@ jobs:
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Flutter Analyze"
         run: |
-          cd packages/app_open_example/
+          cd samples/app_open_example/
           flutter analyze
       - name: "Flutter Format"
         run: |
