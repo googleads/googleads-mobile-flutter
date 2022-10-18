@@ -99,11 +99,11 @@ class FlutterNativeAd extends FlutterAd {
 
     FlutterNativeAd build() {
       if (manager == null) {
-        throw new IllegalStateException("AdInstanceManager cannot not be null.");
+        throw new IllegalStateException("AdInstanceManager cannot be null.");
       } else if (adUnitId == null) {
-        throw new IllegalStateException("AdUnitId cannot not be null.");
+        throw new IllegalStateException("AdUnitId cannot be null.");
       } else if (adFactory == null) {
-        throw new IllegalStateException("NativeAdFactory cannot not be null.");
+        throw new IllegalStateException("NativeAdFactory cannot be null.");
       } else if (request == null && adManagerRequest == null) {
         throw new IllegalStateException("adRequest or addManagerRequest must be non-null.");
       }
