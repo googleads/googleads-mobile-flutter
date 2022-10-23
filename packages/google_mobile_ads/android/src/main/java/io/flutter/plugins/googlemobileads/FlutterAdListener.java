@@ -94,6 +94,14 @@ class FlutterNativeAdListener extends FlutterAdListener {
   }
 }
 
+/** Listener for adloader ads. */
+class FlutterAdLoaderAdListener extends FlutterAdListener {
+
+  FlutterAdLoaderAdListener(int adId, AdInstanceManager manager) {
+    super(adId, manager);
+  }
+}
+
 /** {@link OnNativeAdLoadedListener} for native ads. */
 class FlutterNativeAdLoadedListener implements OnNativeAdLoadedListener {
 

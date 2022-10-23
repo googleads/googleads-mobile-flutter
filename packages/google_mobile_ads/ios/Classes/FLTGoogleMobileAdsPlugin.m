@@ -434,6 +434,21 @@
         nativeTemplateStyle:call.arguments[@"nativeTemplateStyle"]];
     [_manager loadAd:ad];
     result(nil);
+  } else if ([call.method isEqualToString:@"loadAdLoaderAd"]) {
+    FLTAdRequest *request;
+    if ([FLTAdUtil isNotNull:call.arguments[@"request"]]) {
+      request = call.arguments[@"request"];
+    } else if ([FLTAdUtil isNotNull:call.arguments[@"adManagerRequest"]]) {
+      request = call.arguments[@"adManagerRequest"];
+    }
+
+    FLTAdLoaderAd *ad =
+        [[FLTAdLoaderAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                        request:request
+                             rootViewController:rootController
+                                           adId:call.arguments[@"adId"]];
+    [_manager loadAd:ad];
+    result(nil);
   } else if ([call.method isEqualToString:@"loadInterstitialAd"]) {
     FLTInterstitialAd *ad =
         [[FLTInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
@@ -524,6 +539,31 @@
     } else {
       result(nil);
     }
+  } else if ([call.method isEqualToString:@"getAdLoaderAdType"]) {
+    id<FLTAd> ad = [_manager adFor:call.arguments[@"adId"]];
+    if ([FLTAdUtil isNull:ad]) {
+      // Called on an ad that hasn't been loaded yet.
+      result(nil);
+    }
+    if ([ad isKindOfClass:[FLTAdLoaderAd class]]) {
+      FLTAdLoaderAd *adLoaderAd = (FLTAdLoaderAd *)ad;
+      FLTAdLoaderAdType adLoaderType = [adLoaderAd adLoaderAdType];
+      result([[NSNumber alloc] initWithInteger:adLoaderType]);
+    } else {
+      result(FlutterMethodNotImplemented);
+    }
+  } else if ([call.method isEqualToString:@"getFormatId"]) {
+    id<FLTAd> ad = [_manager adFor:call.arguments[@"adId"]];
+    if ([FLTAdUtil isNull:ad]) {
+      // Called on an ad that hasn't been loaded yet.
+      result(nil);
+    }
+    if ([ad isKindOfClass:[FLTAdLoaderAd class]]) {
+      FLTAdLoaderAd *adLoaderAd = (FLTAdLoaderAd *)ad;
+      result([adLoaderAd formatId]);
+    } else {
+      result(FlutterMethodNotImplemented);
+    }
   } else if ([call.method isEqualToString:@"getAdSize"]) {
     id<FLTAd> ad = [_manager adFor:call.arguments[@"adId"]];
     if ([FLTAdUtil isNull:ad]) {
@@ -533,6 +573,9 @@
     if ([ad isKindOfClass:[FLTBannerAd class]]) {
       FLTBannerAd *bannerAd = (FLTBannerAd *)ad;
       result([bannerAd getAdSize]);
+    } else if ([ad isKindOfClass:[FLTAdLoaderAd class]]) {
+      FLTAdLoaderAd *adLoaderAd = (FLTAdLoaderAd *)ad;
+      result([adLoaderAd adSize]);
     } else {
       result(FlutterMethodNotImplemented);
     }

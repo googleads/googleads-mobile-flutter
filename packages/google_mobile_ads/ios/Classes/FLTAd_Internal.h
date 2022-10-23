@@ -300,6 +300,23 @@
 - (GADAdLoader *_Nonnull)adLoader;
 @end
 
+typedef NS_ENUM(NSInteger, FLTAdLoaderAdType) {
+  FLTAdLoaderAdTypeUnknown = 0,
+};
+
+@interface FLTAdLoaderAd
+    : FLTBaseAd <FLTAd, FlutterPlatformView, GADAdLoaderDelegate>
+@property(readonly, nonnull) GADAdLoader *adLoader;
+@property(readonly) FLTAdLoaderAdType adLoaderAdType;
+@property(readonly, nullable) FLTAdSize *adSize;
+@property(readonly, nullable) NSString *formatId;
+- (nonnull instancetype)initWithAdUnitId:(nonnull NSString *)adUnitId
+                                 request:(nonnull FLTAdRequest *)request
+                      rootViewController:
+                          (nonnull UIViewController *)rootViewController
+                                    adId:(nonnull NSNumber *)adId;
+@end
+
 @interface FLTRewardItem : NSObject
 @property(readonly) NSNumber *_Nonnull amount;
 @property(readonly) NSString *_Nonnull type;

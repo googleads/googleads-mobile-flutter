@@ -137,4 +137,21 @@ public class FlutterAdLoader {
         .build()
         .loadAd(adManagerAdRequest);
   }
+
+  /** Load an ad loader ad. */
+  public void loadAdLoaderAd(
+      @NonNull String adUnitId, @NonNull AdListener adListener, @NonNull AdRequest request) {
+    new AdLoader.Builder(context, adUnitId).withAdListener(adListener).build().loadAd(request);
+  }
+
+  /** Load an ad manager ad loader ad. */
+  public void loadAdManagerAdLoaderAd(
+      @NonNull String adUnitId,
+      @NonNull AdListener adListener,
+      @NonNull AdManagerAdRequest adManagerAdRequest) {
+    new AdLoader.Builder(context, adUnitId)
+        .withAdListener(adListener)
+        .build()
+        .loadAd(adManagerAdRequest);
+  }
 }

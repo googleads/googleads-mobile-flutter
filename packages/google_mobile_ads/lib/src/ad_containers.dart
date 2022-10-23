@@ -1081,6 +1081,77 @@ class NativeAd extends AdWithView {
   }
 }
 
+/// Type of ad served by [AdLoaderAd]
+enum AdLoaderAdType {
+  /// Unknown ad type
+  unknown,
+}
+
+/// An AdLoaderAd.
+///
+/// A widget which uses the platforms' ad loader (an [AdLoader]
+/// (https://developers.google.com/android/reference/com/google/android/gms/ads/AdLoader)
+/// on Android, or a [GADAdLoader]
+/// (https://developers.google.com/ad-manager/mobile-ads-sdk/ios/api/reference/Classes/GADAdLoader)
+/// on iOS) to allow receiving multiple ad types for a given request.
+///
+/// These types are:
+///
+/// * A "banner" ad, ([AdManagerAdView]
+/// (https://developers.google.com/android/reference/com/google/android/gms/ads/admanager/AdManagerAdView)
+/// on Android and [GAMBannerView]
+/// (https://developers.google.com/ad-manager/mobile-ads-sdk/ios/api/reference/Classes/GAMBannerView.html)
+/// on iOS)
+///
+/// * A "custom" ad, ([NativeCustomFormatAd]
+/// (https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeCustomFormatAd)
+/// on Android and [GADCustomNativeAd]
+/// (https://developers.google.com/admob/ios/api/reference/Classes/GADCustomNativeAd.html) on iOS)
+///
+/// * A "native" ad, ([NativeAd]
+/// (https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAd)
+/// on Android and [GADNativeAd]
+/// (https://developers.google.com/admob/ios/api/reference/Classes/GADNativeAd.html) on iOS)
+class AdLoaderAd extends AdWithView {
+  /// Creates an [AdLoaderAd]
+  ///
+  /// A valid [adUnitId], nonnull [listener] and nonnull [request] are required.
+  AdLoaderAd({
+    required String adUnitId,
+    required this.listener,
+    required AdRequest request,
+  }) : super(adUnitId: adUnitId, listener: listener) {
+    if (request is AdManagerAdRequest) {
+      adManagerRequest = request;
+    } else {
+      this.request = request;
+    }
+  }
+
+  /// A listener for receiving events in the ad lifecycle.
+  @override
+  final AdLoaderAdListener listener;
+
+  /// Targeting information used to fetch an [Ad].
+  AdRequest? request;
+
+  /// Targeting information used to fetch an [Ad] with Ad Manager.
+  AdManagerAdRequest? adManagerRequest;
+
+  @override
+  Future<void> load() => instanceManager.loadAdLoaderAd(this);
+
+  /// Returns the AdLoaderAdType of the currently served ad.
+  Future<AdLoaderAdType> getAdLoaderAdType() =>
+      instanceManager.getAdLoaderAdType(this);
+
+  /// Returns the AdSize of the associated platform ad object.
+  Future<AdSize?> getPlatformAdSize() => instanceManager.getAdSize(this);
+
+  /// Returns the formatId of the served Custom ad.
+  Future<String?> getFormatId() => instanceManager.getFormatId(this);
+}
+
 /// A full-screen interstitial ad for the Google Mobile Ads Plugin.
 class InterstitialAd extends AdWithoutView {
   /// Creates an [InterstitialAd].

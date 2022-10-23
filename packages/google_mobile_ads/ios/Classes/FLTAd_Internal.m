@@ -1197,6 +1197,68 @@
 
 @end
 
+#pragma mark - FLTAdLoaderAd
+
+@implementation FLTAdLoaderAd {
+  NSString *_adUnitId;
+  FLTAdRequest *_adRequest;
+}
+
+- (nonnull instancetype)initWithAdUnitId:(nonnull NSString *)adUnitId
+                                 request:(nonnull FLTAdRequest *)request
+                      rootViewController:
+                          (nonnull UIViewController *)rootViewController
+                                    adId:(nonnull NSNumber *)adId {
+  self = [super init];
+  if (self) {
+    self.adId = adId;
+    _adUnitId = adUnitId;
+    _adRequest = request;
+    _adLoaderAdType = FLTAdLoaderAdTypeUnknown;
+    _adSize = nil;
+    _formatId = nil;
+
+    NSMutableArray *adTypes = [[NSMutableArray alloc] init];
+    NSMutableArray *options = [[NSMutableArray alloc] init];
+
+    _adLoader = [[GADAdLoader alloc] initWithAdUnitID:_adUnitId
+                                   rootViewController:rootViewController
+                                              adTypes:adTypes
+                                              options:options];
+    _adLoader.delegate = self;
+  }
+  return self;
+}
+
+#pragma mark - FLTAd
+
+- (void)load {
+  GADRequest *request;
+  if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
+    request = [(FLTGAMAdRequest *)_adRequest asGAMRequest:_adUnitId];
+  } else {
+    request = [_adRequest asGADRequest:_adUnitId];
+  }
+  [_adLoader loadRequest:request];
+}
+
+#pragma mark - GADAdLoaderDelegate
+
+- (void)adLoader:(nonnull GADAdLoader *)adLoader
+    didFailToReceiveAdWithError:(nonnull NSError *)error {
+  [manager onAdFailedToLoad:self error:error];
+}
+
+#pragma mark - FlutterPlatformView
+
+- (nonnull UIView *)view {
+  return nil; // TODO not great
+}
+
+@synthesize manager;
+
+@end
+
 @implementation FLTRewardItem
 - (instancetype _Nonnull)initWithAmount:(NSNumber *_Nonnull)amount
                                    type:(NSString *_Nonnull)type {

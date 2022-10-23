@@ -221,6 +221,42 @@ class NativeAdListener extends AdWithViewListener {
             onAdClicked: onAdClicked);
 }
 
+/// A listener for receiving notifications for the lifecycle of an [AdLoaderAd]
+class AdLoaderAdListener extends AdWithViewListener {
+  /// Constructs an [AdLoaderAdListener] with the provided event callbacks.
+  ///
+  /// Typically you will override [onAdLoaded] and [onAdFailedToLoad]:
+  /// ```dart
+  /// AdLoaderAdListener(
+  ///   onAdLoaded: (ad) {
+  ///     // Ad successfully loaded - display an AdWidget with the ad.
+  ///   },
+  ///   onAdFailedToLoad: (ad, error) {
+  ///     // Ad failed to load - log the error and dispose the ad.
+  ///   },
+  ///   ...
+  /// )
+  /// ```
+  AdLoaderAdListener({
+    AdEventCallback? onAdLoaded,
+    AdLoadErrorCallback? onAdFailedToLoad,
+    AdEventCallback? onAdOpened,
+    AdEventCallback? onAdWillDismissScreen,
+    AdEventCallback? onAdClosed,
+    AdEventCallback? onAdImpression,
+    OnPaidEventCallback? onPaidEvent,
+    AdEventCallback? onAdClicked,
+  }) : super(
+            onAdLoaded: onAdLoaded,
+            onAdFailedToLoad: onAdFailedToLoad,
+            onAdOpened: onAdOpened,
+            onAdWillDismissScreen: onAdWillDismissScreen,
+            onAdClosed: onAdClosed,
+            onAdImpression: onAdImpression,
+            onPaidEvent: onPaidEvent,
+            onAdClicked: onAdClicked);
+}
+
 /// Callback events for for full screen ads, such as Rewarded and Interstitial.
 class FullScreenContentCallback<Ad> {
   /// Construct a new [FullScreenContentCallback].

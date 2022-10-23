@@ -453,6 +453,41 @@ class AdInstanceManager {
         },
       );
 
+  Future<String?> getFormatId(Ad ad) =>
+      instanceManager.channel.invokeMethod<String>(
+        'getFormatId',
+        <dynamic, dynamic>{
+          'adId': adIdFor(ad),
+        },
+      );
+
+  Future<AdLoaderAdType> getAdLoaderAdType(Ad ad) async {
+    int adLoaderAdType = (await instanceManager.channel.invokeMethod<int>(
+      'getAdLoaderAdType',
+      <dynamic, dynamic>{
+        'adId': adIdFor(ad),
+      },
+    ))!;
+
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      switch (adLoaderAdType) {
+        case 0:
+          return AdLoaderAdType.unknown;
+        default:
+          debugPrint('Error: unknown AdLoaderAdType value: $adLoaderAdType');
+          return AdLoaderAdType.unknown;
+      }
+    } else {
+      switch (adLoaderAdType) {
+        case 0:
+          return AdLoaderAdType.unknown;
+        default:
+          debugPrint('Error: unknown AdLoaderAdType value: $adLoaderAdType');
+          return AdLoaderAdType.unknown;
+      }
+    }
+  }
+
   /// Returns null if an invalid [adId] was passed in.
   Ad? adFor(int adId) => _loadedAds[adId];
 
@@ -529,6 +564,27 @@ class AdInstanceManager {
         'nativeAdOptions': ad.nativeAdOptions,
         'customOptions': ad.customOptions,
         'nativeTemplateStyle': ad.nativeTemplateStyle,
+      },
+    );
+  }
+
+  /// Starts loading the ad if not previously loaded.
+  ///
+  /// Loading also terminates if ad is already in the process of loading.
+  Future<void> loadAdLoaderAd(AdLoaderAd ad) {
+    if (adIdFor(ad) != null) {
+      return Future<void>.value();
+    }
+
+    final int adId = _nextAdId++;
+    _loadedAds[adId] = ad;
+    return channel.invokeMethod<void>(
+      'loadAdLoaderAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+        'adManagerRequest': ad.adManagerRequest,
       },
     );
   }

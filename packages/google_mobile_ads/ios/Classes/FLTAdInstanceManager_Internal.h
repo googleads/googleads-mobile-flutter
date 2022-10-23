@@ -18,6 +18,7 @@
 #import <GoogleMobileAds/GoogleMobileAds.h>
 
 @protocol FLTAd;
+@class FLTAdLoaderAd;
 @class FLTBannerAd;
 @class FLTNativeAd;
 @class FLTRewardedAd;
