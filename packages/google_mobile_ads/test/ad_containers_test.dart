@@ -54,6 +54,7 @@ void main() {
               case 'setImmersiveMode':
               case 'loadBannerAd':
               case 'loadNativeAd':
+              case 'loadAdLoaderAd':
               case 'showAdWithoutView':
               case 'disposeAd':
               case 'loadRewardedAd':

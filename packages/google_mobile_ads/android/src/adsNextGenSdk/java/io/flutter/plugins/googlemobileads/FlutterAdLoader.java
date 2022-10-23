@@ -29,6 +29,7 @@ import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdLoaderCallba
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdRequest;
 import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAd;
 import com.google.android.libraries.ads.mobile.sdk.rewardedinterstitial.RewardedInterstitialAd;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -118,5 +119,24 @@ public class FlutterAdLoader {
       @NonNull NativeAdLoaderCallback nativeAdLoaderCallback,
       @NonNull NativeAdOptions nativeAdOptions) {
     loadNativeAd(adUnitId, nativeAdLoaderCallback, nativeAdOptions);
+  }
+
+  /** Load an ad loader ad. */
+  public void loadAdLoaderAd(
+      @NonNull String adUnitId,
+      @NonNull NativeAdLoaderCallback adLoaderAdLoaderCallback) {
+    List<NativeAdType> nativeAdTypes = new ArrayList<>();
+
+    NativeAdLoader.load(
+        new NativeAdRequest.Builder(adUnitId, nativeAdTypes)
+            .build(),
+        adLoaderAdLoaderCallback);
+  }
+
+  /** Load an ad manager ad loader ad. */
+  public void loadAdManagerAdLoaderAd(
+      @NonNull String adUnitId,
+      @NonNull NativeAdLoaderCallback adLoaderAdLoaderCallback) {
+    loadAdLoaderAd(adUnitId, adLoaderAdLoaderCallback);
   }
 }
