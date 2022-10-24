@@ -46,6 +46,13 @@
                                    (NSDictionary *_Nullable)customOptions;
 @end
 
+@protocol FLTCustomAdFactory
+@required
+- (nullable UIView *)
+    createCustomNativeAd:(nonnull GADCustomNativeAd *)customNativeAd
+           customOptions:(nullable NSDictionary *)customOptions;
+@end
+
 /**
  * Flutter plugin providing access to the Google Mobile Ads API.
  */
@@ -95,6 +102,10 @@
                 nativeAdFactory:
                     (id<FLTNativeAdFactory> _Nonnull)nativeAdFactory;
 
++ (BOOL)registerCustomAdFactory:(nonnull id<FlutterPluginRegistry>)registry
+                       formatId:(nonnull NSString *)formatId
+                customAdFactory:(nonnull id<FLTCustomAdFactory>)customAdFactory;
+
 /**
  * Unregisters a `FLTNativeAdFactory` used to create `GADNativeAdView`s from a
  * Native Ad created in Dart.
@@ -108,4 +119,8 @@
 + (id<FLTNativeAdFactory> _Nullable)
     unregisterNativeAdFactory:(id<FlutterPluginRegistry> _Nonnull)registry
                     factoryId:(NSString *_Nonnull)factoryId;
+
++ (nullable id<FLTCustomAdFactory>)
+    unregisterCustomAdFactory:(nonnull id<FlutterPluginRegistry>)registry
+                     formatId:(nonnull NSString *)formatId;
 @end

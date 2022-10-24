@@ -21,6 +21,7 @@ import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback;
 import com.google.android.libraries.ads.mobile.sdk.common.AdValue;
 import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError;
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
+import com.google.android.libraries.ads.mobile.sdk.nativead.CustomNativeAd;
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd;
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdEventCallback;
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdLoaderCallback;
@@ -170,6 +171,13 @@ class FlutterAdLoaderAdLoadedListener implements NativeAdLoaderCallback {
   public void onBannerAdLoaded(@NonNull BannerAd bannerAd) {
     if (callbackWeakReference.get() != null) {
       callbackWeakReference.get().onBannerAdLoaded(bannerAd);
+    }
+  }
+
+  @Override
+  public void onCustomNativeAdLoaded(@NonNull CustomNativeAd customNativeAd) {
+    if (callbackWeakReference.get() != null) {
+      callbackWeakReference.get().onCustomNativeAdLoaded(customNativeAd);
     }
   }
 }

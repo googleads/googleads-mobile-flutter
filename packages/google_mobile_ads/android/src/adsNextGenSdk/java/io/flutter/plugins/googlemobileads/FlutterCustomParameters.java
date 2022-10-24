@@ -1,0 +1,28 @@
+package io.flutter.plugins.googlemobileads;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import io.flutter.plugins.googlemobileads.CustomAdFactory;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+class FlutterCustomParameters {
+  @NonNull final List<String> formatIds;
+  @Nullable final Map<String, Object> viewOptions;
+
+  FlutterCustomParameters(
+      @NonNull List<String> formatIds, @Nullable Map<String, Object> viewOptions) {
+    this.formatIds = formatIds;
+    this.viewOptions = viewOptions;
+  }
+
+  FlutterAdLoaderAd.CustomParameters asCustomParameters(
+      @NonNull Map<String, CustomAdFactory> availableFactories) {
+    Map<String, CustomAdFactory> factories = new HashMap<>();
+    for (String formatId : formatIds) {
+      factories.put(formatId, availableFactories.get(formatId));
+    }
+    return new FlutterAdLoaderAd.CustomParameters(factories, viewOptions);
+  }
+}

@@ -44,6 +44,10 @@
 - (void)onNativeAdWillPresentScreen:(nonnull id<FLTAd>)ad;
 - (void)onNativeAdDidDismissScreen:(nonnull id<FLTAd>)ad;
 - (void)onNativeAdWillDismissScreen:(nonnull id<FLTAd>)ad;
+- (void)onCustomNativeAdImpression:(nonnull id<FLTAd>)ad;
+- (void)onCustomNativeAdWillPresentScreen:(nonnull id<FLTAd>)ad;
+- (void)onCustomNativeAdDidDismissScreen:(nonnull id<FLTAd>)ad;
+- (void)onCustomNativeAdWillDismissScreen:(nonnull id<FLTAd>)ad;
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward;
 - (void)onRewardedInterstitialAdUserEarnedReward:
