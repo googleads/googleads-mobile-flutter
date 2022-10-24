@@ -102,14 +102,17 @@ class AdInstanceManager {
         break;
       case 'onNativeAdWillPresentScreen': // Fall through
       case 'onBannerWillPresentScreen':
+      case 'onCustomNativeWillPresentScreen':
         _invokeOnAdOpened(ad, eventName);
         break;
       case 'onNativeAdDidDismissScreen': // Fall through
       case 'onBannerDidDismissScreen':
+      case 'onCustomNativeAdDidDismissScreen':
         _invokeOnAdClosed(ad, eventName);
         break;
       case 'onBannerWillDismissScreen': // Fall through
       case 'onNativeAdWillDismissScreen':
+      case 'onCustomNativeAdWillDismissScreen':
         if (ad is AdWithView) {
           ad.listener.onAdWillDismissScreen?.call(ad);
         } else {
@@ -123,6 +126,7 @@ class AdInstanceManager {
       case 'onBannerImpression':
       case 'adDidRecordImpression': // Fall through
       case 'onNativeAdImpression': // Fall through
+      case 'onCustomNativeAdImpression':
         _invokeOnAdImpression(ad, eventName);
         break;
       case 'adWillPresentFullScreenContent':
@@ -475,6 +479,8 @@ class AdInstanceManager {
           return AdLoaderAdType.unknown;
         case 1:
           return AdLoaderAdType.banner;
+        case 2:
+          return AdLoaderAdType.custom;
         default:
           debugPrint('Error: unknown AdLoaderAdType value: $adLoaderAdType');
           return AdLoaderAdType.unknown;
@@ -485,6 +491,8 @@ class AdInstanceManager {
           return AdLoaderAdType.unknown;
         case 1:
           return AdLoaderAdType.banner;
+        case 2:
+          return AdLoaderAdType.custom;
         default:
           debugPrint('Error: unknown AdLoaderAdType value: $adLoaderAdType');
           return AdLoaderAdType.unknown;
@@ -590,6 +598,7 @@ class AdInstanceManager {
         'request': ad.request,
         'adManagerRequest': ad.adManagerRequest,
         'banner': ad.banner,
+        'custom': ad.custom,
       },
     );
   }
@@ -925,6 +934,7 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueMediationExtras = 154;
   static const int _valueAdManagerAdViewOptions = 155;
   static const int _valueBannerParameters = 156;
+  static const int _valueCustomParameters = 157;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -1068,6 +1078,10 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueBannerParameters);
       writeValue(buffer, value.sizes);
       writeValue(buffer, value.adManagerAdViewOptions);
+    } else if (value is CustomParameters) {
+      buffer.putUint8(_valueCustomParameters);
+      writeValue(buffer, value.formatIds);
+      writeValue(buffer, value.viewOptions);
     } else {
       super.writeValue(buffer, value);
     }
@@ -1300,6 +1314,12 @@ class AdMessageCodec extends StandardMessageCodec {
         return BannerParameters(
           sizes: readValueOfType(buffer.getUint8(), buffer)?.cast<AdSize>(),
           adManagerAdViewOptions: readValueOfType(buffer.getUint8(), buffer),
+        );
+      case _valueCustomParameters:
+        return CustomParameters(
+          formatIds: readValueOfType(buffer.getUint8(), buffer).cast<String>(),
+          viewOptions: readValueOfType(buffer.getUint8(), buffer)
+              ?.cast<String, Object>(),
         );
       default:
         return super.readValueOfType(type, buffer);

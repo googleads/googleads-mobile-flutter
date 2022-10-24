@@ -581,6 +581,22 @@ public class AdMessageCodecTest {
     assertEquals(result.sizes.get(0).height, 2);
     assertNull(result.adManagerAdViewOptions.manualImpressionsEnabled);
   }
+
+  @Test
+  public void encodeCustomParameters() {
+    final ByteBuffer data =
+        codec.encodeMessage(
+            new FlutterCustomParameters(
+                Collections.singletonList("format-id"), Collections.singletonMap("key", "value")));
+
+    final FlutterCustomParameters result =
+        (FlutterCustomParameters) codec.decodeMessage((ByteBuffer) data.position(0));
+
+    assertEquals(result.formatIds.size(), 1);
+    assertEquals(result.formatIds.get(0), "format-id");
+    assertEquals(result.viewOptions.size(), 1);
+    assertEquals(result.viewOptions.get("key"), "value");
+  }
 }
 
 class DummyMediationExtras extends FlutterMediationExtras {

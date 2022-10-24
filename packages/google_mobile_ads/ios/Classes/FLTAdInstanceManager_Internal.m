@@ -126,6 +126,22 @@
   [self sendAdEvent:@"onNativeAdWillDismissScreen" ad:ad];
 }
 
+- (void)onCustomNativeAdImpression:(nonnull id<FLTAd>)ad {
+  [self sendAdEvent:@"onCustomNativeAdImpression" ad:ad];
+}
+
+- (void)onCustomNativeAdWillPresentScreen:(nonnull id<FLTAd>)ad {
+  [self sendAdEvent:@"onCustomNativeAdWillPresentScreen" ad:ad];
+}
+
+- (void)onCustomNativeAdDidDismissScreen:(nonnull id<FLTAd>)ad {
+  [self sendAdEvent:@"onCustomNativeAdDidDismissScreen" ad:ad];
+}
+
+- (void)onCustomNativeAdWillDismissScreen:(nonnull id<FLTAd>)ad {
+  [self sendAdEvent:@"onCustomNativeAdWillDismissScreen" ad:ad];
+}
+
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward {
   [_channel invokeMethod:@"onAdEvent"

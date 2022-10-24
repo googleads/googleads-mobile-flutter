@@ -635,5 +635,35 @@ void main() {
         expect(result.adManagerAdViewOptions?.manualImpressionsEnabled, true);
       }
     });
+
+    test('encode/decode minimal $CustomParameters', () {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        debugDefaultTargetPlatformOverride = platform;
+        ByteData byteData = codec.encodeMessage(CustomParameters(
+          formatIds: ['test-format-id'],
+        ))!;
+
+        CustomParameters result = codec.decodeMessage(byteData);
+        expect(result.formatIds, ['test-format-id']);
+        expect(result.viewOptions, null);
+      }
+    });
+
+    test('encode/decode $CustomParameters', () {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        debugDefaultTargetPlatformOverride = platform;
+        ByteData byteData = codec.encodeMessage(CustomParameters(formatIds: [
+          'test-format-id'
+        ], viewOptions: <String, Object>{
+          'key': 'value',
+        }))!;
+
+        CustomParameters result = codec.decodeMessage(byteData);
+        expect(result.formatIds, ['test-format-id']);
+        expect(result.viewOptions, <String, Object>{
+          'key': 'value',
+        });
+      }
+    });
   });
 }

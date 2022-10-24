@@ -24,6 +24,7 @@
 
 @class FLTAdInstanceManager;
 @protocol FLTNativeAdFactory;
+@protocol FLTCustomAdFactory;
 
 @interface FLTAdSize : NSObject
 @property(readonly) GADAdSize size;
@@ -312,6 +313,7 @@
 typedef NS_ENUM(NSInteger, FLTAdLoaderAdType) {
   FLTAdLoaderAdTypeUnknown = 0,
   FLTAdLoaderAdTypeBanner = 1,
+  FLTAdLoaderAdTypeCustom = 2,
 };
 
 @interface FLTBannerParameters : NSObject
@@ -322,10 +324,20 @@ typedef NS_ENUM(NSInteger, FLTAdLoaderAdType) {
                                   (nullable FLTAdManagerAdViewOptions *)options;
 @end
 
+@interface FLTCustomParameters : NSObject
+@property(readonly, nonnull) NSArray<NSString *> *formatIds;
+@property(readonly, nullable) NSDictionary<NSString *, id> *viewOptions;
+@property(nullable) NSDictionary<NSString *, id<FLTCustomAdFactory>> *factories;
+- (nonnull instancetype)
+    initWithFormatIds:(nonnull NSArray<NSString *> *)formatIds
+          viewOptions:(NSDictionary<NSString *, id> *_Nullable)viewOptions;
+@end
+
 @interface FLTAdLoaderAd
     : FLTBaseAd <FLTAd, FlutterPlatformView, GADAdLoaderDelegate,
                  GAMBannerAdLoaderDelegate, GADBannerViewDelegate,
-                 GADAppEventDelegate>
+                 GADAppEventDelegate, GADCustomNativeAdLoaderDelegate,
+                 GADCustomNativeAdDelegate>
 @property(readonly, nonnull) GADAdLoader *adLoader;
 @property(readonly) FLTAdLoaderAdType adLoaderAdType;
 @property(readonly, nullable) FLTAdSize *adSize;
@@ -335,7 +347,8 @@ typedef NS_ENUM(NSInteger, FLTAdLoaderAdType) {
                request:(nonnull FLTAdRequest *)request
     rootViewController:(nonnull UIViewController *)rootViewController
                   adId:(nonnull NSNumber *)adId
-                banner:(nullable FLTBannerParameters *)bannerParameters;
+                banner:(nullable FLTBannerParameters *)bannerParameters
+                custom:(nullable FLTCustomParameters *)customParameters;
 @end
 
 @interface FLTRewardItem : NSObject

@@ -833,6 +833,33 @@
   XCTAssertNil(options.manualImpressionsEnabled);
 }
 
+- (void)testEncodeDecodeCustomParameters {
+  FLTCustomParameters *parameters = [[FLTCustomParameters alloc]
+      initWithFormatIds:@[ @"formatId0", @"formatId1" ]
+            viewOptions:@{@"key" : @"value"}];
+
+  NSData *encodedMessage = [_messageCodec encode:parameters];
+
+  FLTCustomParameters *decodedParameters =
+      [_messageCodec decode:encodedMessage];
+
+  NSArray<NSString *> *formatIds = decodedParameters.formatIds;
+
+  XCTAssertEqual(formatIds.count, 2);
+  XCTAssertEqualObjects(formatIds[0], @"formatId0");
+  XCTAssertEqualObjects(formatIds[1], @"formatId1");
+
+  NSDictionary<NSString *, id> *viewOptions = decodedParameters.viewOptions;
+
+  XCTAssertNotNil(viewOptions);
+  XCTAssertEqualObjects(viewOptions[@"key"], @"value");
+
+  NSDictionary<NSString *, id<FLTCustomAdFactory>> *factories =
+      decodedParameters.factories;
+
+  XCTAssertEqual(factories.count, 0);
+}
+
 @end
 
 @implementation FLTTestAdSizeFactory

@@ -24,6 +24,8 @@
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @property NSMutableDictionary<NSString *, id<FLTNativeAdFactory>>
     *nativeAdFactories;
+@property NSMutableDictionary<NSString *, id<FLTCustomAdFactory>>
+    *customAdFactories;
 @end
 
 /// Initialization handler for GMASDK. Invokes result at most once.
@@ -66,6 +68,7 @@
 
 @implementation FLTGoogleMobileAdsPlugin {
   NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *_nativeAdFactories;
+  NSMutableDictionary<NSString *, id<FLTCustomAdFactory>> *_customAdFactories;
   FLTAdInstanceManager *_manager;
   id<FLTMediationNetworkExtrasProvider> _mediationNetworkExtrasProvider;
   FLTGoogleMobileAdsReaderWriter *_readerWriter;
@@ -117,6 +120,7 @@
   self = [self init];
   if (self) {
     _nativeAdFactories = [NSMutableDictionary dictionary];
+    _customAdFactories = [NSMutableDictionary dictionary];
     _manager =
         [[FLTAdInstanceManager alloc] initWithBinaryMessenger:binaryMessenger];
     _appStateNotifier =
@@ -198,6 +202,33 @@
   return YES;
 }
 
++ (BOOL)registerCustomAdFactory:(id<FlutterPluginRegistry>)registry
+                       formatId:(NSString *)formatId
+                customAdFactory:(id<FLTCustomAdFactory>)customAdFactory {
+  NSString *pluginClassName =
+      NSStringFromClass([FLTGoogleMobileAdsPlugin class]);
+  FLTGoogleMobileAdsPlugin *adMobPlugin = (FLTGoogleMobileAdsPlugin *)[registry
+      valuePublishedByPlugin:pluginClassName];
+  if (!adMobPlugin) {
+    NSString *reason =
+        [NSString stringWithFormat:@"Could not find a %@ instance. The plugin "
+                                   @"may have not been registered.",
+                                   pluginClassName];
+    @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                   reason:reason
+                                 userInfo:nil];
+  }
+
+  if (adMobPlugin.customAdFactories[formatId]) {
+    NSLog(@"A CustomAdFactory with the following formatId already exists: %@",
+          formatId);
+    return NO;
+  }
+
+  [adMobPlugin.customAdFactories setValue:customAdFactory forKey:formatId];
+  return YES;
+}
+
 + (id<FLTNativeAdFactory>)unregisterNativeAdFactory:
                               (id<FlutterPluginRegistry>)registry
                                           factoryId:(NSString *)factoryId {
@@ -208,6 +239,19 @@
   id<FLTNativeAdFactory> factory = adMobPlugin.nativeAdFactories[factoryId];
   if (factory)
     [adMobPlugin.nativeAdFactories removeObjectForKey:factoryId];
+  return factory;
+}
+
++ (id<FLTCustomAdFactory>)unregisterCustomAdFactory:
+                              (id<FlutterPluginRegistry>)registry
+                                           formatId:(NSString *)formatId {
+  FLTGoogleMobileAdsPlugin *adMobPlugin = (FLTGoogleMobileAdsPlugin *)[registry
+      valuePublishedByPlugin:NSStringFromClass(
+                                 [FLTGoogleMobileAdsPlugin class])];
+
+  id<FLTCustomAdFactory> factory = adMobPlugin.customAdFactories[formatId];
+  if (factory)
+    [adMobPlugin.customAdFactories removeObjectForKey:formatId];
   return factory;
 }
 
@@ -435,6 +479,24 @@
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAdLoaderAd"]) {
+    FLTCustomParameters *custom = call.arguments[@"custom"];
+    if ([FLTAdUtil isNotNull:custom]) {
+      for (NSString *formatId in custom.formatIds) {
+        id<FLTCustomAdFactory> factory = _customAdFactories[formatId];
+        if (!factory) {
+          NSString *message = [NSString
+              stringWithFormat:@"Can't find CustomAdFactory with id: %@",
+                               formatId];
+          result([FlutterError errorWithCode:@"AdLoaderAdError"
+                                     message:message
+                                     details:nil]);
+          return;
+        }
+
+        [custom.factories setValue:factory forKey:formatId];
+      }
+    }
+
     FLTAdRequest *request;
     if ([FLTAdUtil isNotNull:call.arguments[@"request"]]) {
       request = call.arguments[@"request"];
@@ -447,7 +509,8 @@
                                         request:request
                              rootViewController:rootController
                                            adId:call.arguments[@"adId"]
-                                         banner:call.arguments[@"banner"]];
+                                         banner:call.arguments[@"banner"]
+                                         custom:custom];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadInterstitialAd"]) {
