@@ -861,6 +861,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.mediationAdapterClassName);
       writeValue(buffer, value.adapterResponses);
       writeValue(buffer, value.loadedAdapterResponseInfo);
+      writeValue(buffer, value.responseExtras);
     } else if (value is AdapterResponseInfo) {
       buffer.putUint8(_valueAdapterResponseInfo);
       writeValue(buffer, value.adapterClassName);
@@ -1001,6 +1002,8 @@ class AdMessageCodec extends StandardMessageCodec {
           adapterResponses: readValueOfType(buffer.getUint8(), buffer)
               ?.cast<AdapterResponseInfo>(),
           loadedAdapterResponseInfo: readValueOfType(buffer.getUint8(), buffer),
+          responseExtras: _deepCastStringKeyDynamicValueMap(
+              readValueOfType(buffer.getUint8(), buffer)),
         );
       case _valueAdapterResponseInfo:
         return AdapterResponseInfo(
@@ -1123,6 +1126,17 @@ class AdMessageCodec extends StandardMessageCodec {
     if (map == null) return {};
     return map.map<String, String>(
       (dynamic key, dynamic value) => MapEntry<String, String>(
+        key,
+        value,
+      ),
+    );
+  }
+
+  Map<String, dynamic> _deepCastStringKeyDynamicValueMap(
+      Map<dynamic, dynamic>? map) {
+    if (map == null) return {};
+    return map.map<String, dynamic>(
+      (dynamic key, dynamic value) => MapEntry<String, dynamic>(
         key,
         value,
       ),

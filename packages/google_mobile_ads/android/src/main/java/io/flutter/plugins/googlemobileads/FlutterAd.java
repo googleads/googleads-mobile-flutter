@@ -53,6 +53,7 @@ abstract class FlutterAd {
     @Nullable private final String mediationAdapterClassName;
     @NonNull private final List<FlutterAdapterResponseInfo> adapterResponses;
     @Nullable private final FlutterAdapterResponseInfo loadedAdapterResponseInfo;
+    @NonNull private final Map<String, String> responseExtras;
 
     FlutterResponseInfo(@NonNull ResponseInfo responseInfo) {
       this.responseId = responseInfo.getResponseId();
@@ -68,17 +69,28 @@ abstract class FlutterAd {
       } else {
         this.loadedAdapterResponseInfo = null;
       }
+      Map<String, String> extras = new HashMap<>();
+      if (responseInfo.getResponseExtras() != null) {
+        for (String key : responseInfo.getResponseExtras().keySet()) {
+          Object value = responseInfo.getResponseExtras().get(key);
+          extras.put(key, value.toString());
+        }
+      }
+
+      this.responseExtras = extras;
     }
 
     FlutterResponseInfo(
         @Nullable String responseId,
         @Nullable String mediationAdapterClassName,
         @NonNull List<FlutterAdapterResponseInfo> adapterResponseInfos,
-        @Nullable FlutterAdapterResponseInfo loadedAdapterResponseInfo) {
+        @Nullable FlutterAdapterResponseInfo loadedAdapterResponseInfo,
+        @NonNull Map<String, String> responseExtras) {
       this.responseId = responseId;
       this.mediationAdapterClassName = mediationAdapterClassName;
       this.adapterResponses = adapterResponseInfos;
       this.loadedAdapterResponseInfo = loadedAdapterResponseInfo;
+      this.responseExtras = responseExtras;
     }
 
     @Nullable
@@ -99,6 +111,11 @@ abstract class FlutterAd {
     @Nullable
     FlutterAdapterResponseInfo getLoadedAdapterResponseInfo() {
       return loadedAdapterResponseInfo;
+    }
+
+    @NonNull
+    Map<String, String> getResponseExtras() {
+      return responseExtras;
     }
 
     @Override

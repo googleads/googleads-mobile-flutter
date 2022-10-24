@@ -336,6 +336,7 @@ void main() {
         responseId: 'id',
         mediationAdapterClassName: 'className',
         adapterResponses: adapterResponses,
+        responseExtras: {'key': 12345},
       );
 
       final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
@@ -364,6 +365,7 @@ void main() {
       expect(result.responseInfo!.responseId, responseInfo.responseId);
       expect(result.responseInfo!.mediationAdapterClassName,
           responseInfo.mediationAdapterClassName);
+      expect(result.responseInfo!.responseExtras, responseInfo.responseExtras);
       List<AdapterResponseInfo> responses =
           result.responseInfo!.adapterResponses!;
       expect(responses.first.adapterClassName, 'adapter-name');

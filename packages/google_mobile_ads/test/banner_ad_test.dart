@@ -158,6 +158,7 @@ void main() {
           responseId: 'id',
           mediationAdapterClassName: 'className',
           adapterResponses: adapterResponses,
+          responseExtras: {'key': 'value'},
         );
 
         final MethodCall methodCall =
@@ -184,6 +185,8 @@ void main() {
         expect(results[1].responseInfo.responseId, responseInfo.responseId);
         expect(results[1].responseInfo.mediationAdapterClassName,
             responseInfo.mediationAdapterClassName);
+        expect(results[1].responseInfo.responseExtras,
+            responseInfo.responseExtras);
         List<AdapterResponseInfo> responses =
             results[1].responseInfo.adapterResponses;
         expect(responses.first.adapterClassName, 'adapter-name');
