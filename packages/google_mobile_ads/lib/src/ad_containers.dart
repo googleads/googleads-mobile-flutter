@@ -1152,6 +1152,9 @@ enum AdLoaderAdType {
 
   /// Banner ad type
   banner,
+
+  /// Custom ad type
+  custom,
 }
 
 /// An AdLoaderAd.
@@ -1188,6 +1191,7 @@ class AdLoaderAd extends AdWithView {
     required this.listener,
     required AdRequest request,
     this.banner,
+    this.custom,
   }) : super(adUnitId: adUnitId, listener: listener) {
     if (request is AdManagerAdRequest) {
       adManagerRequest = request;
@@ -1208,6 +1212,9 @@ class AdLoaderAd extends AdWithView {
 
   /// Optional parameters used to configure served "banner" ads
   final BannerParameters? banner;
+
+  /// Optional parameters used to configure served "custom" ads
+  final CustomParameters? custom;
 
   @override
   Future<void> load() => instanceManager.loadAdLoaderAd(this);
@@ -1674,6 +1681,30 @@ class BannerParameters {
     return other is BannerParameters &&
         listEquals<AdSize>(sizes, other.sizes) &&
         adManagerAdViewOptions == other.adManagerAdViewOptions;
+  }
+}
+
+/// Central configuration item for custom format requests served
+/// by an [AdLoaderAd]
+class CustomParameters {
+  /// A list of format IDs, corresponding to those in the
+  /// Google Ad Manager console
+  final List<String> formatIds;
+
+  /// View options used to create the Platform view
+  ///
+  /// These options are passed to the platform's `CustomAdFactory`
+  Map<String, Object>? viewOptions;
+
+  /// Construct a [CustomParameters] instance, used by an [AdLoaderAd] to
+  /// configure custom view
+  CustomParameters({required this.formatIds, this.viewOptions});
+
+  @override
+  bool operator ==(other) {
+    return other is CustomParameters &&
+        listEquals<String>(formatIds, other.formatIds) &&
+        mapEquals<String, Object>(viewOptions, other.viewOptions);
   }
 }
 

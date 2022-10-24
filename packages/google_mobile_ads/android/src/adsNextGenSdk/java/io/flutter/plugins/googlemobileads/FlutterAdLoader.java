@@ -126,11 +126,16 @@ public class FlutterAdLoader {
   public void loadAdLoaderAd(
       @NonNull String adUnitId,
       @NonNull NativeAdLoaderCallback adLoaderAdLoaderCallback,
-      @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters) {
+      @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters,
+      @Nullable FlutterAdLoaderAd.CustomParameters customParameters) {
     List<NativeAdType> nativeAdTypes = new ArrayList<>();
 
     if (bannerParameters != null) {
       nativeAdTypes.add(NativeAdType.BANNER);
+    }
+
+    if (customParameters != null) {
+      nativeAdTypes.add(NativeAdType.CUSTOM_NATIVE);
     }
 
     NativeAdRequest.Builder builder = new NativeAdRequest.Builder(adUnitId, nativeAdTypes);
@@ -142,6 +147,10 @@ public class FlutterAdLoader {
       }
     }
 
+    if (customParameters != null) {
+      builder.setCustomFormatIds(new ArrayList<>(customParameters.factories.keySet()));
+    }
+
     NativeAdLoader.load(
         builder.build(),
         adLoaderAdLoaderCallback);
@@ -151,7 +160,8 @@ public class FlutterAdLoader {
   public void loadAdManagerAdLoaderAd(
       @NonNull String adUnitId,
       @NonNull NativeAdLoaderCallback adLoaderAdLoaderCallback,
-      @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters) {
-    loadAdLoaderAd(adUnitId, adLoaderAdLoaderCallback, bannerParameters);
+      @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters,
+      @Nullable FlutterAdLoaderAd.CustomParameters customParameters) {
+    loadAdLoaderAd(adUnitId, adLoaderAdLoaderCallback, bannerParameters, customParameters);
   }
 }

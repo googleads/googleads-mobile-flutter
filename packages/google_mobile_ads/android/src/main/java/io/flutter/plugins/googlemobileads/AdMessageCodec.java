@@ -69,6 +69,7 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_MEDIATION_EXTRAS = (byte) 154;
   private static final byte VALUE_AD_MANAGER_AD_VIEW_OPTIONS = (byte) 155;
   private static final byte VALUE_BANNER_PARAMETERS = (byte) 156;
+  private static final byte VALUE_CUSTOM_PARAMETERS = (byte) 157;
 
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
@@ -268,6 +269,11 @@ class AdMessageCodec extends StandardMessageCodec {
       FlutterBannerParameters bannerParameters = (FlutterBannerParameters) value;
       writeValue(stream, bannerParameters.sizes);
       writeValue(stream, bannerParameters.adManagerAdViewOptions);
+    } else if (value instanceof FlutterCustomParameters) {
+      stream.write(VALUE_CUSTOM_PARAMETERS);
+      FlutterCustomParameters customParameters = (FlutterCustomParameters) value;
+      writeValue(stream, customParameters.formatIds);
+      writeValue(stream, customParameters.viewOptions);
     } else {
       super.writeValue(stream, value);
     }
@@ -460,6 +466,10 @@ class AdMessageCodec extends StandardMessageCodec {
         return new FlutterBannerParameters(
             (List<FlutterAdSize>) readValueOfType(buffer.get(), buffer),
             (FlutterAdManagerAdViewOptions) readValueOfType(buffer.get(), buffer));
+      case VALUE_CUSTOM_PARAMETERS:
+        return new FlutterCustomParameters(
+            (List<String>) readValueOfType(buffer.get(), buffer),
+            (Map<String, Object>) readValueOfType(buffer.get(), buffer));
       default:
         return super.readValueOfType(type, buffer);
     }

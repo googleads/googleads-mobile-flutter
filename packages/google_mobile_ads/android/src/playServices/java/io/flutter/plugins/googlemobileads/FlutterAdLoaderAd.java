@@ -24,13 +24,17 @@ import com.google.android.gms.ads.BaseAdView;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.formats.AdManagerAdViewOptions;
 import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
+import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
+import com.google.android.gms.ads.nativead.NativeCustomFormatAd.OnCustomFormatAdLoadedListener;
 import io.flutter.plugin.platform.PlatformView;
+import java.util.Map;
 
 /**
  * A central wrapper for {@link AdManagerAdView}, {@link NativeCustomFormatAd} and {@link NativeAd}
  * instances served for a single {@link AdRequest} or {@link AdManagerAdRequest}
  */
-class FlutterAdLoaderAd extends FlutterAd implements OnAdManagerAdViewLoadedListener {
+class FlutterAdLoaderAd extends FlutterAd
+    implements OnAdManagerAdViewLoadedListener, OnCustomFormatAdLoadedListener {
   private static final String TAG = "FlutterAdLoaderAd";
 
   @NonNull private final AdInstanceManager manager;
@@ -42,6 +46,7 @@ class FlutterAdLoaderAd extends FlutterAd implements OnAdManagerAdViewLoadedList
   @Nullable private String formatId;
   @Nullable private View view;
   @Nullable protected BannerParameters bannerParameters;
+  @Nullable protected CustomParameters customParameters;
 
   static class Builder {
     @Nullable private AdInstanceManager manager;
@@ -51,6 +56,8 @@ class FlutterAdLoaderAd extends FlutterAd implements OnAdManagerAdViewLoadedList
     @Nullable private Integer id;
     @Nullable private FlutterAdLoader adLoader;
     @Nullable private FlutterBannerParameters bannerParameters;
+    @Nullable private FlutterCustomParameters customParameters;
+    @Nullable private Map<String, CustomAdFactory> customFactories;
 
     public Builder setId(int id) {
       this.id = id;
@@ -87,6 +94,17 @@ class FlutterAdLoaderAd extends FlutterAd implements OnAdManagerAdViewLoadedList
       return this;
     }
 
+    public Builder setCustom(@Nullable FlutterCustomParameters customParameters) {
+      this.customParameters = customParameters;
+      return this;
+    }
+
+    public Builder withAvailableCustomFactories(
+        @NonNull Map<String, CustomAdFactory> customFactories) {
+      this.customFactories = customFactories;
+      return this;
+    }
+
     FlutterAdLoaderAd build() {
       if (manager == null) {
         throw new IllegalStateException("manager must be provided");
@@ -114,6 +132,12 @@ class FlutterAdLoaderAd extends FlutterAd implements OnAdManagerAdViewLoadedList
                 new FlutterAdManagerAdViewLoadedListener(adLoaderAd));
       }
 
+      if (customParameters != null) {
+        adLoaderAd.customParameters =
+            customParameters.asCustomParameters(
+                new FlutterCustomFormatAdLoadedListener(adLoaderAd), customFactories);
+      }
+
       return adLoaderAd;
     }
   }
@@ -130,6 +154,21 @@ class FlutterAdLoaderAd extends FlutterAd implements OnAdManagerAdViewLoadedList
       this.listener = listener;
       this.adSizes = adSizes;
       this.adManagerAdViewOptions = adManagerAdViewOptions;
+    }
+  }
+
+  static class CustomParameters {
+    @NonNull final OnCustomFormatAdLoadedListener listener;
+    @NonNull final Map<String, CustomAdFactory> factories;
+    @Nullable final Map<String, Object> viewOptions;
+
+    CustomParameters(
+        @NonNull OnCustomFormatAdLoadedListener listener,
+        @NonNull Map<String, CustomAdFactory> factories,
+        @Nullable Map<String, Object> viewOptions) {
+      this.listener = listener;
+      this.factories = factories;
+      this.viewOptions = viewOptions;
     }
   }
 
@@ -174,13 +213,17 @@ class FlutterAdLoaderAd extends FlutterAd implements OnAdManagerAdViewLoadedList
     // As of 20.0.0 of GMA, mockito is unable to mock AdLoader.
     if (request != null) {
       adLoader.loadAdLoaderAd(
-          adUnitId, adListener, request.asAdRequest(adUnitId), bannerParameters);
+          adUnitId, adListener, request.asAdRequest(adUnitId), bannerParameters, customParameters);
       return;
     }
 
     if (adManagerRequest != null) {
       adLoader.loadAdManagerAdLoaderAd(
-          adUnitId, adListener, adManagerRequest.asAdManagerAdRequest(adUnitId), bannerParameters);
+          adUnitId,
+          adListener,
+          adManagerRequest.asAdManagerAdRequest(adUnitId),
+          bannerParameters,
+          customParameters);
       return;
     }
 
@@ -220,6 +263,15 @@ class FlutterAdLoaderAd extends FlutterAd implements OnAdManagerAdViewLoadedList
     view = adView;
     type = AdLoaderAdType.BANNER;
     manager.onAdLoaded(adId, adView.getResponseInfo());
+  }
+
+  @Override
+  public void onCustomFormatAdLoaded(@NonNull NativeCustomFormatAd ad) {
+    formatId = ad.getCustomFormatId();
+    view =
+        customParameters.factories.get(formatId).createCustomAd(ad, customParameters.viewOptions);
+    type = AdLoaderAdType.CUSTOM;
+    manager.onAdLoaded(adId, null);
   }
 
   @Override
