@@ -1,5 +1,5 @@
 name: adaptive_banner_example
-description: Example project for demoing banner ads.
+description: Example project for demoing adaptive banner ads.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

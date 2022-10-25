@@ -1,6 +1,6 @@
-# banner_example
+# adaptive_banner_example
 
-An example project that demonstrates loading and showing banner ads.
+An example project that demonstrates loading and showing adaptive banner ads.
 
 ## Always test with test ads
 
@@ -26,7 +26,7 @@ final size = await AdSize.
 
 
 ### Load an ad
-The sample shows how to load a banner ad.
+The sample shows how to load an adaptive banner ad.
 
 ```
 BannerAd(
