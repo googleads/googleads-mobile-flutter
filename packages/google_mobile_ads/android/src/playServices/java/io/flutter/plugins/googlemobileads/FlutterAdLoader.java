@@ -16,6 +16,7 @@ package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
@@ -140,18 +141,33 @@ public class FlutterAdLoader {
 
   /** Load an ad loader ad. */
   public void loadAdLoaderAd(
-      @NonNull String adUnitId, @NonNull AdListener adListener, @NonNull AdRequest request) {
-    new AdLoader.Builder(context, adUnitId).withAdListener(adListener).build().loadAd(request);
+      @NonNull String adUnitId,
+      @NonNull AdListener adListener,
+      @NonNull AdRequest request,
+      @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters) {
+    AdLoader.Builder builder = new AdLoader.Builder(context, adUnitId);
+    if (bannerParameters != null) {
+      builder = builder.forAdManagerAdView(bannerParameters.listener, bannerParameters.adSizes);
+      if (bannerParameters.adManagerAdViewOptions != null) {
+        builder.withAdManagerAdViewOptions(bannerParameters.adManagerAdViewOptions);
+      }
+    }
+    builder.withAdListener(adListener).build().loadAd(request);
   }
 
   /** Load an ad manager ad loader ad. */
   public void loadAdManagerAdLoaderAd(
       @NonNull String adUnitId,
       @NonNull AdListener adListener,
-      @NonNull AdManagerAdRequest adManagerAdRequest) {
-    new AdLoader.Builder(context, adUnitId)
-        .withAdListener(adListener)
-        .build()
-        .loadAd(adManagerAdRequest);
+      @NonNull AdManagerAdRequest adManagerAdRequest,
+      @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters) {
+    AdLoader.Builder builder = new AdLoader.Builder(context, adUnitId);
+    if (bannerParameters != null) {
+      builder = builder.forAdManagerAdView(bannerParameters.listener, bannerParameters.adSizes);
+      if (bannerParameters.adManagerAdViewOptions != null) {
+        builder.withAdManagerAdViewOptions(bannerParameters.adManagerAdViewOptions);
+      }
+    }
+    builder.withAdListener(adListener).build().loadAd(adManagerAdRequest);
   }
 }

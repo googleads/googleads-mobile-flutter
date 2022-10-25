@@ -1,10 +1,16 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.util.Log;
+import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.libraries.ads.mobile.sdk.banner.AdSize;
+import com.google.android.libraries.ads.mobile.sdk.banner.AdView;
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAd;
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdLoaderCallback;
+import io.flutter.plugin.platform.PlatformView;
+import java.util.List;
 
 class FlutterAdLoaderAd extends FlutterAd implements FlutterAdLoadedListener, NativeAdLoaderCallback {
   private static final String TAG = "FlutterAdLoaderAd";
@@ -16,6 +22,8 @@ class FlutterAdLoaderAd extends FlutterAd implements FlutterAdLoadedListener, Na
   @Nullable private FlutterAdManagerAdRequest adManagerRequest;
   @Nullable private AdLoaderAdType type;
   @Nullable private String formatId;
+  @Nullable private View view;
+  @Nullable protected BannerParameters bannerParameters;
 
   static class Builder {
     @Nullable private AdInstanceManager manager;
@@ -24,6 +32,7 @@ class FlutterAdLoaderAd extends FlutterAd implements FlutterAdLoadedListener, Na
     @Nullable private FlutterAdManagerAdRequest adManagerRequest;
     @Nullable private Integer id;
     @Nullable private FlutterAdLoader adLoader;
+    @Nullable private FlutterBannerParameters bannerParameters;
 
     public Builder setId(int id) {
       this.id = id;
@@ -47,6 +56,11 @@ class FlutterAdLoaderAd extends FlutterAd implements FlutterAdLoadedListener, Na
 
     public Builder setAdManagerRequest(@NonNull FlutterAdManagerAdRequest adManagerRequest) {
       this.adManagerRequest = adManagerRequest;
+      return this;
+    }
+
+    public Builder setBanner(@Nullable FlutterBannerParameters bannerParameters) {
+      this.bannerParameters = bannerParameters;
       return this;
     }
 
@@ -75,7 +89,24 @@ class FlutterAdLoaderAd extends FlutterAd implements FlutterAdLoadedListener, Na
       } else {
         adLoaderAd = new FlutterAdLoaderAd(id, manager, adUnitId, request, adLoader);
       }
+
+      if (bannerParameters != null) {
+        adLoaderAd.bannerParameters = bannerParameters.asBannerParameters();
+      }
+
       return adLoaderAd;
+    }
+  }
+
+  static class BannerParameters {
+    @NonNull final List<AdSize> adSizes;
+    @Nullable final FlutterAdManagerAdViewOptions adManagerAdViewOptions;
+
+    BannerParameters(
+        @NonNull List<AdSize> adSizes,
+        @Nullable FlutterAdManagerAdViewOptions adManagerAdViewOptions) {
+      this.adSizes = adSizes;
+      this.adManagerAdViewOptions = adManagerAdViewOptions;
     }
   }
 
@@ -119,9 +150,9 @@ class FlutterAdLoaderAd extends FlutterAd implements FlutterAdLoadedListener, Na
     // Note we delegate loading the ad to FlutterAdLoader mainly for testing purposes.
     // As of 20.0.0 of GMA, mockito is unable to mock AdLoader.
     if (request != null) {
-      adLoader.loadAdLoaderAd(adUnitId, loadedListener);
+      adLoader.loadAdLoaderAd(adUnitId, loadedListener, bannerParameters);
     } else if (adManagerRequest != null) {
-      adLoader.loadAdManagerAdLoaderAd(adUnitId, loadedListener);
+      adLoader.loadAdManagerAdLoaderAd(adUnitId, loadedListener, bannerParameters);
     } else {
       Log.e(TAG, "A null or invalid ad request was provided.");
     }
@@ -143,7 +174,19 @@ class FlutterAdLoaderAd extends FlutterAd implements FlutterAdLoadedListener, Na
   }
 
   @Override
-  public void onAdLoaded() {}
+  @Nullable
+  public PlatformView getPlatformView() {
+    if (view == null) {
+      return null;
+    }
+
+    return new FlutterPlatformView(view);
+  }
+
+  @Override
+  public void onAdLoaded() {
+    //  handled by onBannerAdLoaded
+  }
 
   @Override
   public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
@@ -151,5 +194,28 @@ class FlutterAdLoaderAd extends FlutterAd implements FlutterAdLoadedListener, Na
   }
 
   @Override
-  void dispose() {}
+  public void onBannerAdLoaded(@NonNull BannerAd bannerAd) {
+    AdView adView = new AdView(manager.getActivity());
+    adView.registerBannerAd(bannerAd, manager.getActivity());
+
+    view = adView;
+    type = AdLoaderAdType.BANNER;
+
+    bannerAd.setAdEventCallback(new FlutterBannerAdListener(adId, manager, this));
+
+    manager.onAdLoaded(adId, bannerAd.getResponseInfo());
+  }
+
+  @Override
+  void dispose() {
+    if (view == null) {
+      return;
+    }
+
+    if (view instanceof AdView) {
+      ((AdView) view).destroy();
+    }
+
+    view = null;
+  }
 }

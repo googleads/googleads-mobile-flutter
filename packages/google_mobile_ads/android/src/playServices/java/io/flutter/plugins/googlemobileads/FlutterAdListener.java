@@ -16,6 +16,8 @@ package io.flutter.plugins.googlemobileads;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
+import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
 import java.lang.ref.WeakReference;
@@ -115,6 +117,23 @@ class FlutterNativeAdLoadedListener implements OnNativeAdLoadedListener {
   public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
     if (listenerWeakReference.get() != null) {
       listenerWeakReference.get().onNativeAdLoaded(nativeAd);
+    }
+  }
+}
+
+/** {@link OnAdManagerAdViewLoadedListener} for banner ads. */
+class FlutterAdManagerAdViewLoadedListener implements OnAdManagerAdViewLoadedListener {
+
+  private final WeakReference<OnAdManagerAdViewLoadedListener> reference;
+
+  FlutterAdManagerAdViewLoadedListener(OnAdManagerAdViewLoadedListener listener) {
+    reference = new WeakReference<>(listener);
+  }
+
+  @Override
+  public void onAdManagerAdViewLoaded(AdManagerAdView adView) {
+    if (reference.get() != null) {
+      reference.get().onAdManagerAdViewLoaded(adView);
     }
   }
 }

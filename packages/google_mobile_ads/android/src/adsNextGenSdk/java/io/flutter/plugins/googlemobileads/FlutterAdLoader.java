@@ -17,6 +17,7 @@ package io.flutter.plugins.googlemobileads;
 import android.content.Context;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.google.android.libraries.ads.mobile.sdk.appopen.AppOpenAd;
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback;
@@ -124,19 +125,33 @@ public class FlutterAdLoader {
   /** Load an ad loader ad. */
   public void loadAdLoaderAd(
       @NonNull String adUnitId,
-      @NonNull NativeAdLoaderCallback adLoaderAdLoaderCallback) {
+      @NonNull NativeAdLoaderCallback adLoaderAdLoaderCallback,
+      @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters) {
     List<NativeAdType> nativeAdTypes = new ArrayList<>();
 
+    if (bannerParameters != null) {
+      nativeAdTypes.add(NativeAdType.BANNER);
+    }
+
+    NativeAdRequest.Builder builder = new NativeAdRequest.Builder(adUnitId, nativeAdTypes);
+
+    if (bannerParameters != null) {
+      builder.setAdSizes(bannerParameters.adSizes);
+      if (bannerParameters.adManagerAdViewOptions != null) {
+        builder.setManualImpressionEnabled(bannerParameters.adManagerAdViewOptions.manualImpressionsEnabled);
+      }
+    }
+
     NativeAdLoader.load(
-        new NativeAdRequest.Builder(adUnitId, nativeAdTypes)
-            .build(),
+        builder.build(),
         adLoaderAdLoaderCallback);
   }
 
   /** Load an ad manager ad loader ad. */
   public void loadAdManagerAdLoaderAd(
       @NonNull String adUnitId,
-      @NonNull NativeAdLoaderCallback adLoaderAdLoaderCallback) {
-    loadAdLoaderAd(adUnitId, adLoaderAdLoaderCallback);
+      @NonNull NativeAdLoaderCallback adLoaderAdLoaderCallback,
+      @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters) {
+    loadAdLoaderAd(adUnitId, adLoaderAdLoaderCallback, bannerParameters);
   }
 }
