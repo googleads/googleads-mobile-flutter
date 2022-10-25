@@ -473,6 +473,8 @@ class AdInstanceManager {
       switch (adLoaderAdType) {
         case 0:
           return AdLoaderAdType.unknown;
+        case 1:
+          return AdLoaderAdType.banner;
         default:
           debugPrint('Error: unknown AdLoaderAdType value: $adLoaderAdType');
           return AdLoaderAdType.unknown;
@@ -481,6 +483,8 @@ class AdInstanceManager {
       switch (adLoaderAdType) {
         case 0:
           return AdLoaderAdType.unknown;
+        case 1:
+          return AdLoaderAdType.banner;
         default:
           debugPrint('Error: unknown AdLoaderAdType value: $adLoaderAdType');
           return AdLoaderAdType.unknown;
@@ -585,6 +589,7 @@ class AdInstanceManager {
         'adUnitId': ad.adUnitId,
         'request': ad.request,
         'adManagerRequest': ad.adManagerRequest,
+        'banner': ad.banner,
       },
     );
   }
@@ -918,6 +923,8 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueNativeTemplateType = 152;
   static const int _valueColor = 153;
   static const int _valueMediationExtras = 154;
+  static const int _valueAdManagerAdViewOptions = 155;
+  static const int _valueBannerParameters = 156;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -1054,6 +1061,13 @@ class AdMessageCodec extends StandardMessageCodec {
     } else if (value is NativeTemplateFontStyle) {
       buffer.putUint8(_valueNativeTemplateFontStyle);
       writeValue(buffer, value.index);
+    } else if (value is AdManagerAdViewOptions) {
+      buffer.putUint8(_valueAdManagerAdViewOptions);
+      writeValue(buffer, value.manualImpressionsEnabled);
+    } else if (value is BannerParameters) {
+      buffer.putUint8(_valueBannerParameters);
+      writeValue(buffer, value.sizes);
+      writeValue(buffer, value.adManagerAdViewOptions);
     } else {
       super.writeValue(buffer, value);
     }
@@ -1278,6 +1292,15 @@ class AdMessageCodec extends StandardMessageCodec {
       case _valueNativeTemplateFontStyle:
         return NativeTemplateFontStyle
             .values[readValueOfType(buffer.getUint8(), buffer)];
+      case _valueAdManagerAdViewOptions:
+        return AdManagerAdViewOptions(
+          manualImpressionsEnabled: readValueOfType(buffer.getUint8(), buffer),
+        );
+      case _valueBannerParameters:
+        return BannerParameters(
+          sizes: readValueOfType(buffer.getUint8(), buffer)?.cast<AdSize>(),
+          adManagerAdViewOptions: readValueOfType(buffer.getUint8(), buffer),
+        );
       default:
         return super.readValueOfType(type, buffer);
     }

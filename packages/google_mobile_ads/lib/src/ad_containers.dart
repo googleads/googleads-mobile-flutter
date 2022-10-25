@@ -1085,6 +1085,9 @@ class NativeAd extends AdWithView {
 enum AdLoaderAdType {
   /// Unknown ad type
   unknown,
+
+  /// Banner ad type
+  banner,
 }
 
 /// An AdLoaderAd.
@@ -1120,6 +1123,7 @@ class AdLoaderAd extends AdWithView {
     required String adUnitId,
     required this.listener,
     required AdRequest request,
+    this.banner,
   }) : super(adUnitId: adUnitId, listener: listener) {
     if (request is AdManagerAdRequest) {
       adManagerRequest = request;
@@ -1137,6 +1141,9 @@ class AdLoaderAd extends AdWithView {
 
   /// Targeting information used to fetch an [Ad] with Ad Manager.
   AdManagerAdRequest? adManagerRequest;
+
+  /// Optional parameters used to configure served "banner" ads
+  final BannerParameters? banner;
 
   @override
   Future<void> load() => instanceManager.loadAdLoaderAd(this);
@@ -1555,6 +1562,50 @@ enum AdChoicesPlacement {
 
   /// Bottom left corner.
   bottomLeftCorner
+}
+
+/// Used to configure ad manager ad view requests.
+class AdManagerAdViewOptions {
+  /// Whether manual impression reporting is enabled
+  ///
+  /// Default value is false.
+  final bool? manualImpressionsEnabled;
+
+  /// Construct an [AdManagerAdViewOptions], an optional class used to further customize
+  /// ad manager ad view requests.
+  AdManagerAdViewOptions({
+    this.manualImpressionsEnabled,
+  });
+
+  @override
+  bool operator ==(other) {
+    return other is AdManagerAdViewOptions &&
+        manualImpressionsEnabled == other.manualImpressionsEnabled;
+  }
+}
+
+/// Central configuration item for ad manager ad view requests served by
+/// an [AdLoaderAd].
+class BannerParameters {
+  /// List of sizes the [AdLoaderAd] should expect
+  final List<AdSize> sizes;
+
+  /// Additional options used when configuring the ad manager ad view
+  final AdManagerAdViewOptions? adManagerAdViewOptions;
+
+  /// Construct a [BannerParameters], used by an [AdLoaderAd] to configure
+  /// ad manager ad views
+  BannerParameters({
+    required this.sizes,
+    this.adManagerAdViewOptions,
+  });
+
+  @override
+  bool operator ==(other) {
+    return other is BannerParameters &&
+        listEquals<AdSize>(sizes, other.sizes) &&
+        adManagerAdViewOptions == other.adManagerAdViewOptions;
+  }
 }
 
 /// Used to configure native ad requests.

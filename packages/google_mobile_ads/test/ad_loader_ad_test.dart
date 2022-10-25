@@ -67,6 +67,7 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
+          'banner': null,
         })
       ]);
 
@@ -89,6 +90,32 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': null,
           'adManagerRequest': request,
+          'banner': null,
+        })
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+    });
+
+    test('load with $BannerParameters', () async {
+      final BannerParameters banner = BannerParameters(
+        sizes: [AdSize.banner],
+      );
+      final AdLoaderAd adLoaderAd = AdLoaderAd(
+        adUnitId: 'test-ad-unit',
+        listener: AdLoaderAdListener(),
+        request: AdRequest(),
+        banner: banner,
+      );
+
+      await adLoaderAd.load();
+      expect(log, <Matcher>[
+        isMethodCall('loadAdLoaderAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'adUnitId': 'test-ad-unit',
+          'request': adLoaderAd.request,
+          'adManagerRequest': null,
+          'banner': banner,
         })
       ]);
 
@@ -223,6 +250,187 @@ void main() {
 
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       await testOnAdFailedToLoad('onAdFailedToLoad', 1);
+    });
+
+    test('onAdOpened event', () async {
+      var testOnAdOpened = (eventName, adId) async {
+        final Completer<Ad> completer = Completer<Ad>();
+
+        final AdLoaderAd ad = AdLoaderAd(
+          adUnitId: 'test-ad-unit',
+          listener:
+              AdLoaderAdListener(onAdOpened: (ad) => completer.complete(ad)),
+          request: AdRequest(),
+        );
+
+        await ad.load();
+
+        final MethodCall methodCall = MethodCall('onAdEvent',
+            <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
+
+        final ByteData data =
+            instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+
+        expect(completer.future, completion(ad));
+      };
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await testOnAdOpened('onBannerWillPresentScreen', 0);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await testOnAdOpened('onAdOpened', 1);
+    });
+
+    test('onAdWillDismissScreen event', () async {
+      var testOnAdWillDismissScreen = (eventName, adId) async {
+        final Completer<Ad> completer = Completer<Ad>();
+
+        final AdLoaderAd ad = AdLoaderAd(
+          adUnitId: 'test-ad-unit',
+          listener: AdLoaderAdListener(
+              onAdWillDismissScreen: (ad) => completer.complete(ad)),
+          request: AdRequest(),
+        );
+
+        await ad.load();
+
+        final MethodCall methodCall = MethodCall('onAdEvent',
+            <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
+
+        final ByteData data =
+            instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+
+        expect(completer.future, completion(ad));
+      };
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await testOnAdWillDismissScreen('onBannerWillDismissScreen', 0);
+    });
+
+    test('onAdClosed event', () async {
+      var testOnAdClosed = (eventName, adId) async {
+        final Completer<Ad> completer = Completer<Ad>();
+
+        final AdLoaderAd ad = AdLoaderAd(
+          adUnitId: 'test-ad-unit',
+          listener:
+              AdLoaderAdListener(onAdClosed: (ad) => completer.complete(ad)),
+          request: AdRequest(),
+        );
+
+        await ad.load();
+
+        final MethodCall methodCall = MethodCall('onAdEvent',
+            <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
+
+        final ByteData data =
+            instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+
+        expect(completer.future, completion(ad));
+      };
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await testOnAdClosed('onBannerDidDismissScreen', 0);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await testOnAdClosed('onAdClosed', 1);
+    });
+
+    test('onAdImpression event', () async {
+      var testOnAdImpression = (eventName, adId) async {
+        final Completer<Ad> completer = Completer<Ad>();
+
+        final AdLoaderAd ad = AdLoaderAd(
+          adUnitId: 'test-ad-unit',
+          listener: AdLoaderAdListener(
+              onAdImpression: (ad) => completer.complete(ad)),
+          request: AdRequest(),
+        );
+
+        await ad.load();
+
+        final MethodCall methodCall = MethodCall('onAdEvent',
+            <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
+
+        final ByteData data =
+            instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+
+        expect(completer.future, completion(ad));
+      };
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await testOnAdImpression('onBannerImpression', 0);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await testOnAdImpression('onAdImpression', 1);
+    });
+
+    test('onPaidEvent event', () async {
+      var testOnPaidEvent = (eventName, adId) async {
+        final Completer<Ad> completer = Completer<Ad>();
+
+        final AdLoaderAd ad = AdLoaderAd(
+          adUnitId: 'test-ad-unit',
+          listener: AdLoaderAdListener(
+              onPaidEvent: (ad, micros, precision, currency) =>
+                  completer.complete(ad)),
+          request: AdRequest(),
+        );
+
+        await ad.load();
+
+        final MethodCall methodCall =
+            MethodCall('onAdEvent', <dynamic, dynamic>{
+          'adId': adId,
+          'eventName': eventName,
+          'valueMicros': 0,
+          'precision': 0,
+          'currencyCode': 'AUD'
+        });
+
+        final ByteData data =
+            instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+
+        expect(completer.future, completion(ad));
+      };
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await testOnPaidEvent('onPaidEvent', 0);
     });
 
     test('onAdClicked event', () async {

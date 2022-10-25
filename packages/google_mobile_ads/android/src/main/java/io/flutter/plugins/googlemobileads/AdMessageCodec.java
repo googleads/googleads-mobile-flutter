@@ -69,6 +69,8 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_NATIVE_TEMPLATE_TYPE = (byte) 152;
   private static final byte VALUE_COLOR = (byte) 153;
   private static final byte VALUE_MEDIATION_EXTRAS = (byte) 154;
+  private static final byte VALUE_AD_MANAGER_AD_VIEW_OPTIONS = (byte) 155;
+  private static final byte VALUE_BANNER_PARAMETERS = (byte) 156;
 
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
@@ -259,6 +261,15 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, Color.red(colorValue));
       writeValue(stream, Color.green(colorValue));
       writeValue(stream, Color.blue(colorValue));
+    } else if (value instanceof FlutterAdManagerAdViewOptions) {
+      stream.write(VALUE_AD_MANAGER_AD_VIEW_OPTIONS);
+      FlutterAdManagerAdViewOptions options = (FlutterAdManagerAdViewOptions) value;
+      writeValue(stream, options.manualImpressionsEnabled);
+    } else if (value instanceof FlutterBannerParameters) {
+      stream.write(VALUE_BANNER_PARAMETERS);
+      FlutterBannerParameters bannerParameters = (FlutterBannerParameters) value;
+      writeValue(stream, bannerParameters.sizes);
+      writeValue(stream, bannerParameters.adManagerAdViewOptions);
     } else {
       super.writeValue(stream, value);
     }
@@ -445,6 +456,12 @@ class AdMessageCodec extends StandardMessageCodec {
         final Integer green = (Integer) readValueOfType(buffer.get(), buffer);
         final Integer blue = (Integer) readValueOfType(buffer.get(), buffer);
         return new ColorDrawable(Color.argb(alpha, red, green, blue));
+      case VALUE_AD_MANAGER_AD_VIEW_OPTIONS:
+        return new FlutterAdManagerAdViewOptions((Boolean) readValueOfType(buffer.get(), buffer));
+      case VALUE_BANNER_PARAMETERS:
+        return new FlutterBannerParameters(
+            (List<FlutterAdSize>) readValueOfType(buffer.get(), buffer),
+            (FlutterAdManagerAdViewOptions) readValueOfType(buffer.get(), buffer));
       default:
         return super.readValueOfType(type, buffer);
     }

@@ -460,6 +460,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                     adLoaderSupplier != null
                         ? adLoaderSupplier.get()
                         : new FlutterAdLoader(context))
+                .setBanner(call.<FlutterBannerParameters>argument("banner"))
                 .build();
         instanceManager.trackAd(adLoaderAd, call.<Integer>argument("adId"));
         adLoaderAd.load();

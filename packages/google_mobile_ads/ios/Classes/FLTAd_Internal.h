@@ -285,6 +285,15 @@
 - (NSArray<GADAdLoaderOptions *> *_Nonnull)asGADAdLoaderOptions;
 @end
 
+@interface FLTAdManagerAdViewOptions : NSObject
+@property(readonly, nullable) NSNumber *manualImpressionsEnabled;
+
+- (nonnull instancetype)initWithManualImpressionsEnabled:
+    (nullable NSNumber *)manualImpressionsEnabled;
+
+- (nonnull NSArray<GADAdLoaderOptions *> *)asGADAdLoaderOptions;
+@end
+
 @interface FLTNativeAd
     : FLTBaseAd <FLTAd, FlutterPlatformView, GADNativeAdDelegate,
                  GADNativeAdLoaderDelegate>
@@ -302,19 +311,31 @@
 
 typedef NS_ENUM(NSInteger, FLTAdLoaderAdType) {
   FLTAdLoaderAdTypeUnknown = 0,
+  FLTAdLoaderAdTypeBanner = 1,
 };
 
+@interface FLTBannerParameters : NSObject
+@property(readonly, nonnull) NSArray<FLTAdSize *> *sizes;
+@property(readonly, nullable) FLTAdManagerAdViewOptions *options;
+- (nonnull instancetype)initWithSizes:(nonnull NSArray<FLTAdSize *> *)sizes
+                              options:
+                                  (nullable FLTAdManagerAdViewOptions *)options;
+@end
+
 @interface FLTAdLoaderAd
-    : FLTBaseAd <FLTAd, FlutterPlatformView, GADAdLoaderDelegate>
+    : FLTBaseAd <FLTAd, FlutterPlatformView, GADAdLoaderDelegate,
+                 GAMBannerAdLoaderDelegate, GADBannerViewDelegate,
+                 GADAppEventDelegate>
 @property(readonly, nonnull) GADAdLoader *adLoader;
 @property(readonly) FLTAdLoaderAdType adLoaderAdType;
 @property(readonly, nullable) FLTAdSize *adSize;
 @property(readonly, nullable) NSString *formatId;
-- (nonnull instancetype)initWithAdUnitId:(nonnull NSString *)adUnitId
-                                 request:(nonnull FLTAdRequest *)request
-                      rootViewController:
-                          (nonnull UIViewController *)rootViewController
-                                    adId:(nonnull NSNumber *)adId;
+- (nonnull instancetype)
+      initWithAdUnitId:(nonnull NSString *)adUnitId
+               request:(nonnull FLTAdRequest *)request
+    rootViewController:(nonnull UIViewController *)rootViewController
+                  adId:(nonnull NSNumber *)adId
+                banner:(nullable FLTBannerParameters *)bannerParameters;
 @end
 
 @interface FLTRewardItem : NSObject
