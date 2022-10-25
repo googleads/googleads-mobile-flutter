@@ -29,7 +29,8 @@
       [[FLTAdLoaderAd alloc] initWithAdUnitId:@"testAdUnitId"
                                       request:[[FLTAdRequest alloc] init]
                            rootViewController:viewController
-                                         adId:@0];
+                                         adId:@0
+                                       banner:nil];
 
   ad.manager = manager;
 
@@ -44,6 +45,74 @@
 
   OCMVerify([manager onAdFailedToLoad:[OCMArg isEqual:ad]
                                 error:[OCMArg isEqual:error]]);
+}
+
+- (void)testBannerDelegates {
+  UIViewController *viewController = OCMClassMock([UIViewController class]);
+  FLTAdInstanceManager *manager = OCMClassMock([FLTAdInstanceManager class]);
+
+  FLTAdSize *adSize = [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)];
+  FLTAdLoaderAd *ad = [[FLTAdLoaderAd alloc]
+        initWithAdUnitId:@"testAdUnitId"
+                 request:[[FLTAdRequest alloc] init]
+      rootViewController:viewController
+                    adId:@0
+                  banner:[[FLTBannerParameters alloc] initWithSizes:@[ adSize ]
+                                                            options:nil]];
+
+  ad.manager = manager;
+
+  [ad load];
+
+  // GAMBannerAdLoaderDelegate
+  NSArray<NSValue *> *validSizes = [ad validBannerSizesForAdLoader:ad.adLoader];
+  XCTAssertEqual(validSizes.count, 1);
+  XCTAssertEqualObjects(validSizes[0], NSValueFromGADAdSize(adSize.size));
+
+  GAMBannerView *bannerView = OCMClassMock([GAMBannerView class]);
+  OCMStub([bannerView adSize]).andReturn(GADAdSizeFromCGSize(CGSizeMake(0, 0)));
+  OCMStub([bannerView recordImpression]);
+
+  [ad adLoader:ad.adLoader didReceiveGAMBannerView:bannerView];
+
+  XCTAssertEqual([ad adLoaderAdType], FLTAdLoaderAdTypeBanner);
+
+  OCMVerify([bannerView setAppEventDelegate:[OCMArg isEqual:ad]]);
+  OCMVerify([bannerView setDelegate:[OCMArg isEqual:ad]]);
+  OCMVerify([manager onAdLoaded:[OCMArg isEqual:ad]
+                   responseInfo:[OCMArg isEqual:nil]]);
+
+  FLTAdSize *size = [ad adSize];
+  XCTAssertEqualObjects(size.width, @0);
+  XCTAssertEqualObjects(size.height, @0);
+
+  OCMVerify([bannerView adSize]);
+
+  // GADBannerViewDelegate
+  NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:nil];
+  [ad bannerView:bannerView didFailToReceiveAdWithError:error];
+  OCMVerify([manager onAdFailedToLoad:[OCMArg isEqual:ad] error:error]);
+
+  [ad bannerViewDidRecordImpression:bannerView];
+  OCMVerify([manager onBannerImpression:[OCMArg isEqual:ad]]);
+
+  [ad bannerViewDidRecordClick:bannerView];
+  OCMVerify([manager adDidRecordClick:[OCMArg isEqual:ad]]);
+
+  [ad bannerViewWillPresentScreen:bannerView];
+  OCMVerify([manager onBannerWillPresentScreen:[OCMArg isEqual:ad]]);
+
+  [ad bannerViewWillDismissScreen:bannerView];
+  OCMVerify([manager onBannerWillDismissScreen:[OCMArg isEqual:ad]]);
+
+  [ad bannerViewDidDismissScreen:bannerView];
+  OCMVerify([manager onBannerDidDismissScreen:[OCMArg isEqual:ad]]);
+
+  // GADAppEventDelegate
+  [ad adView:bannerView didReceiveAppEvent:@"name" withInfo:@"info"];
+  OCMVerify([manager onAppEvent:[OCMArg isEqual:ad]
+                           name:[OCMArg isEqual:@"name"]
+                           data:[OCMArg isEqual:@"info"]]);
 }
 
 - (void)testLoadAdLoaderAd {
@@ -64,7 +133,8 @@
   FLTAdLoaderAd *ad = [[FLTAdLoaderAd alloc] initWithAdUnitId:@"testAdUnitId"
                                                       request:request
                                            rootViewController:viewController
-                                                         adId:@1];
+                                                         adId:@1
+                                                       banner:nil];
 
   XCTAssertEqual(ad.adLoader.adUnitID, @"testAdUnitId");
   XCTAssertEqual(ad.adLoader.delegate, ad);

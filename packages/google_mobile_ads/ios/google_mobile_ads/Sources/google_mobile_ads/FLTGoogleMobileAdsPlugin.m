@@ -453,7 +453,8 @@
         [[FLTAdLoaderAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                         request:request
                              rootViewController:rootController
-                                           adId:call.arguments[@"adId"]];
+                                           adId:call.arguments[@"adId"]
+                                         banner:call.arguments[@"banner"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadInterstitialAd"]) {

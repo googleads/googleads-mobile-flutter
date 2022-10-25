@@ -165,4 +165,11 @@ class FlutterAdLoaderAdLoadedListener implements NativeAdLoaderCallback {
       callbackWeakReference.get().onAdFailedToLoad(loadAdError);
     }
   }
+
+  @Override
+  public void onBannerAdLoaded(@NonNull BannerAd bannerAd) {
+    if (callbackWeakReference.get() != null) {
+      callbackWeakReference.get().onBannerAdLoaded(bannerAd);
+    }
+  }
 }
