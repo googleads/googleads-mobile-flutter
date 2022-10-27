@@ -32,7 +32,7 @@ import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateS
 import java.util.Map;
 
 /** A wrapper for {@link NativeAd}. */
-class FlutterNativeAd extends FlutterAd {
+class FlutterNativeAd extends FlutterAd implements OnNativeAdLoadedListener {
   private static final String TAG = "FlutterNativeAd";
 
   @NonNull private final AdInstanceManager manager;
@@ -248,7 +248,8 @@ class FlutterNativeAd extends FlutterAd {
     return null;
   }
 
-  void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+  @Override
+  public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
     if (nativeTemplateStyle != null) {
       templateView = nativeTemplateStyle.asTemplateView(context);
       templateView.setNativeAd(nativeAd);
