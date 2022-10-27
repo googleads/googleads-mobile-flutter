@@ -20,11 +20,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.google.android.libraries.ads.mobile.sdk.appopen.AppOpenAd;
+import com.google.android.libraries.ads.mobile.sdk.common.AdChoicesPlacement;
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback;
 import com.google.android.libraries.ads.mobile.sdk.common.AdRequest;
 import com.google.android.libraries.ads.mobile.sdk.common.VideoOptions;
 import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAd;
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd.NativeAdType;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd.NativeMediaAspectRatio;
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdLoader;
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdLoaderCallback;
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdRequest;
@@ -127,7 +129,8 @@ public class FlutterAdLoader {
       @NonNull String adUnitId,
       @NonNull NativeAdLoaderCallback adLoaderAdLoaderCallback,
       @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters,
-      @Nullable FlutterAdLoaderAd.CustomParameters customParameters) {
+      @Nullable FlutterAdLoaderAd.CustomParameters customParameters,
+      @Nullable FlutterAdLoaderAd.NativeParameters nativeParameters) {
     List<NativeAdType> nativeAdTypes = new ArrayList<>();
 
     if (bannerParameters != null) {
@@ -136,6 +139,10 @@ public class FlutterAdLoader {
 
     if (customParameters != null) {
       nativeAdTypes.add(NativeAdType.CUSTOM_NATIVE);
+    }
+
+    if (nativeParameters != null) {
+      nativeAdTypes.add(NativeAdType.NATIVE);
     }
 
     NativeAdRequest.Builder builder = new NativeAdRequest.Builder(adUnitId, nativeAdTypes);
@@ -151,6 +158,15 @@ public class FlutterAdLoader {
       builder.setCustomFormatIds(new ArrayList<>(customParameters.factories.keySet()));
     }
 
+    if (nativeParameters != null && nativeParameters.nativeAdOptions != null) {
+      builder.setAdChoicesPlacement(convertAdChoicesPlacement(nativeParameters.nativeAdOptions.getAdChoicesPlacement()));
+      builder.setMediaAspectRatio(convertMediaAspectRatio(nativeParameters.nativeAdOptions.getMediaAspectRatio()));
+      com.google.android.gms.ads.VideoOptions videoOptions = nativeParameters.nativeAdOptions.getVideoOptions();
+      if (videoOptions != null) {
+        builder.setVideoOptions(convertVideoOptions(videoOptions));
+      }
+    }
+
     NativeAdLoader.load(
         builder.build(),
         adLoaderAdLoaderCallback);
@@ -161,7 +177,48 @@ public class FlutterAdLoader {
       @NonNull String adUnitId,
       @NonNull NativeAdLoaderCallback adLoaderAdLoaderCallback,
       @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters,
-      @Nullable FlutterAdLoaderAd.CustomParameters customParameters) {
-    loadAdLoaderAd(adUnitId, adLoaderAdLoaderCallback, bannerParameters, customParameters);
+      @Nullable FlutterAdLoaderAd.CustomParameters customParameters,
+      @Nullable FlutterAdLoaderAd.NativeParameters nativeParameters) {
+    loadAdLoaderAd(adUnitId, adLoaderAdLoaderCallback, bannerParameters, customParameters, nativeParameters);
+  }
+
+  static AdChoicesPlacement convertAdChoicesPlacement(int adChoicesPlacement) {
+    switch(adChoicesPlacement) {
+    case NativeAdOptions.ADCHOICES_BOTTOM_LEFT:
+      return AdChoicesPlacement.BOTTOM_LEFT;
+    case NativeAdOptions.ADCHOICES_BOTTOM_RIGHT:
+      return AdChoicesPlacement.BOTTOM_RIGHT;
+    case NativeAdOptions.ADCHOICES_TOP_LEFT:
+      return AdChoicesPlacement.TOP_LEFT;
+    case NativeAdOptions.ADCHOICES_TOP_RIGHT:
+      return AdChoicesPlacement.TOP_RIGHT;
+    default:
+      return AdChoicesPlacement.TOP_RIGHT;
+    }
+  }
+
+  static NativeMediaAspectRatio convertMediaAspectRatio(int mediaAspectRatio) {
+    switch(mediaAspectRatio) {
+    case NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_ANY:
+      return NativeMediaAspectRatio.ANY;
+    case NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_LANDSCAPE:
+      return NativeMediaAspectRatio.LANDSCAPE;
+    case NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_PORTRAIT:
+      return NativeMediaAspectRatio.PORTRAIT;
+    case NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_SQUARE:
+      return NativeMediaAspectRatio.SQUARE;
+    case NativeAdOptions.NATIVE_MEDIA_ASPECT_RATIO_UNKNOWN:
+      return NativeMediaAspectRatio.UNKNOWN;
+    default:
+      return NativeMediaAspectRatio.UNKNOWN;
+    }
+  }
+
+  static VideoOptions convertVideoOptions(com.google.android.gms.ads.VideoOptions videoOptions) {
+    return new VideoOptions.Builder()
+      .setClickToExpandRequested(videoOptions.getClickToExpandRequested())
+      .setCustomControlsRequested(videoOptions.getCustomControlsRequested())
+      .setStartMuted(videoOptions.getStartMuted())
+      .build();
   }
 }

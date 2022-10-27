@@ -4,4 +4,5 @@ enum AdLoaderAdType {
   UNKNOWN,
   BANNER,
   CUSTOM,
+  NATIVE,
 }

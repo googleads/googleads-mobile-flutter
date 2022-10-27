@@ -31,7 +31,8 @@
                            rootViewController:viewController
                                          adId:@0
                                        banner:nil
-                                       custom:nil];
+                                       custom:nil
+                                       native:nil];
 
   ad.manager = manager;
 
@@ -60,7 +61,8 @@
                     adId:@0
                   banner:[[FLTBannerParameters alloc] initWithSizes:@[ adSize ]
                                                             options:nil]
-                  custom:nil];
+                  custom:nil
+                  native:nil];
 
   ad.manager = manager;
 
@@ -134,7 +136,8 @@
                            rootViewController:viewController
                                          adId:@0
                                        banner:nil
-                                       custom:custom];
+                                       custom:custom
+                                       native:nil];
 
   ad.manager = manager;
 
@@ -179,6 +182,61 @@
   OCMVerify([manager onCustomNativeAdDidDismissScreen:[OCMArg isEqual:ad]]);
 }
 
+- (void)testNativeDelegates {
+  UIViewController *viewController = OCMClassMock([UIViewController class]);
+  FLTAdInstanceManager *manager = OCMClassMock([FLTAdInstanceManager class]);
+
+  FLTNativeParameters *native =
+      [[FLTNativeParameters alloc] initWithFactoryId:@"factoryId"
+                                     nativeAdOptions:nil
+                                         viewOptions:nil];
+  id<FLTNativeAdFactory> factory =
+      OCMProtocolMock(@protocol(FLTNativeAdFactory));
+  native.factory = factory;
+
+  FLTAdLoaderAd *ad =
+      [[FLTAdLoaderAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                      request:[[FLTAdRequest alloc] init]
+                           rootViewController:viewController
+                                         adId:@0
+                                       banner:nil
+                                       custom:nil
+                                       native:native];
+
+  ad.manager = manager;
+
+  [ad load];
+
+  // GADNativeAdLoaderDelegate
+  GADNativeAd *nativeAd = OCMClassMock([GADNativeAd class]);
+
+  [ad adLoader:ad.adLoader didReceiveNativeAd:nativeAd];
+
+  XCTAssertEqual([ad adLoaderAdType], FLTAdLoaderAdTypeNative);
+
+  OCMVerify([nativeAd setDelegate:[OCMArg isEqual:ad]]);
+  OCMVerify([factory createNativeAd:[OCMArg isEqual:nativeAd]
+                      customOptions:[OCMArg isEqual:nil]]);
+  OCMVerify([manager onAdLoaded:[OCMArg isEqual:ad]
+                   responseInfo:[OCMArg isEqual:nil]]);
+
+  // GADNativeAdDelegate
+  [ad nativeAdDidRecordImpression:nativeAd];
+  OCMVerify([manager onNativeAdImpression:[OCMArg isEqual:ad]]);
+
+  [ad nativeAdDidRecordClick:nativeAd];
+  OCMVerify([manager adDidRecordClick:[OCMArg isEqual:ad]]);
+
+  [ad nativeAdWillPresentScreen:nativeAd];
+  OCMVerify([manager onNativeAdWillPresentScreen:[OCMArg isEqual:ad]]);
+
+  [ad nativeAdWillDismissScreen:nativeAd];
+  OCMVerify([manager onNativeAdWillDismissScreen:[OCMArg isEqual:ad]]);
+
+  [ad nativeAdDidDismissScreen:nativeAd];
+  OCMVerify([manager onNativeAdDidDismissScreen:[OCMArg isEqual:ad]]);
+}
+
 - (void)testLoadAdLoaderAd {
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
@@ -199,7 +257,8 @@
                                            rootViewController:viewController
                                                          adId:@1
                                                        banner:nil
-                                                       custom:nil];
+                                                       custom:nil
+                                                       native:nil];
 
   XCTAssertEqual(ad.adLoader.adUnitID, @"testAdUnitId");
   XCTAssertEqual(ad.adLoader.delegate, ad);
