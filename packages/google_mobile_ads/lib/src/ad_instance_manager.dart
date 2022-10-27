@@ -1007,16 +1007,16 @@ class AdMessageCodec extends StandardMessageCodec {
         );
       case _valueAdapterResponseInfo:
         return AdapterResponseInfo(
-            adapterClassName: readValueOfType(buffer.getUint8(), buffer),
+            adapterClassName: _safeReadString(buffer),
             latencyMillis: readValueOfType(buffer.getUint8(), buffer),
-            description: readValueOfType(buffer.getUint8(), buffer),
+            description: _safeReadString(buffer),
             adUnitMapping:
                 _deepCastStringMap(readValueOfType(buffer.getUint8(), buffer)),
             adError: readValueOfType(buffer.getUint8(), buffer),
-            adSourceName: readValueOfType(buffer.getUint8(), buffer),
-            adSourceId: readValueOfType(buffer.getUint8(), buffer),
-            adSourceInstanceName: readValueOfType(buffer.getUint8(), buffer),
-            adSourceInstanceId: readValueOfType(buffer.getUint8(), buffer));
+            adSourceName: _safeReadString(buffer),
+            adSourceId: _safeReadString(buffer),
+            adSourceInstanceName: _safeReadString(buffer),
+            adSourceInstanceId: _safeReadString(buffer));
       case _valueLoadAdError:
         return LoadAdError(
           readValueOfType(buffer.getUint8(), buffer),
@@ -1141,6 +1141,13 @@ class AdMessageCodec extends StandardMessageCodec {
         value,
       ),
     );
+  }
+
+  /// Reads the next value as a non-nullable string.
+  ///
+  /// Returns '' if the next value is null.
+  String _safeReadString(ReadBuffer buffer) {
+    return readValueOfType(buffer.getUint8(), buffer) ?? '';
   }
 
   void writeAdSize(WriteBuffer buffer, AdSize value) {
