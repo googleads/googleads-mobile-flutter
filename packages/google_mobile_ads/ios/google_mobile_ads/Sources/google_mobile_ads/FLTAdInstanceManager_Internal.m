@@ -110,19 +110,19 @@
                }];
 }
 
-- (void)onNativeAdImpression:(FLTNativeAd *_Nonnull)ad {
+- (void)onNativeAdImpression:(nonnull id<FLTAd>)ad {
   [self sendAdEvent:@"onNativeAdImpression" ad:ad];
 }
 
-- (void)onNativeAdWillPresentScreen:(FLTNativeAd *_Nonnull)ad {
+- (void)onNativeAdWillPresentScreen:(nonnull id<FLTAd>)ad {
   [self sendAdEvent:@"onNativeAdWillPresentScreen" ad:ad];
 }
 
-- (void)onNativeAdDidDismissScreen:(FLTNativeAd *_Nonnull)ad {
+- (void)onNativeAdDidDismissScreen:(nonnull id<FLTAd>)ad {
   [self sendAdEvent:@"onNativeAdDidDismissScreen" ad:ad];
 }
 
-- (void)onNativeAdWillDismissScreen:(FLTNativeAd *_Nonnull)ad {
+- (void)onNativeAdWillDismissScreen:(nonnull id<FLTAd>)ad {
   [self sendAdEvent:@"onNativeAdWillDismissScreen" ad:ad];
 }
 
@@ -159,19 +159,19 @@
                }];
 }
 
-- (void)onBannerImpression:(FLTBannerAd *_Nonnull)ad {
+- (void)onBannerImpression:(nonnull id<FLTAd>)ad {
   [self sendAdEvent:@"onBannerImpression" ad:ad];
 }
 
-- (void)onBannerWillDismissScreen:(FLTBannerAd *)ad {
+- (void)onBannerWillDismissScreen:(nonnull id<FLTAd>)ad {
   [self sendAdEvent:@"onBannerWillDismissScreen" ad:ad];
 }
 
-- (void)onBannerDidDismissScreen:(FLTBannerAd *)ad {
+- (void)onBannerDidDismissScreen:(nonnull id<FLTAd>)ad {
   [self sendAdEvent:@"onBannerDidDismissScreen" ad:ad];
 }
 
-- (void)onBannerWillPresentScreen:(FLTBannerAd *_Nonnull)ad {
+- (void)onBannerWillPresentScreen:(nonnull id<FLTAd>)ad {
   [self sendAdEvent:@"onBannerWillPresentScreen" ad:ad];
 }
 

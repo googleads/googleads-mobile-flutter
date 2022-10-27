@@ -39,10 +39,10 @@
 - (void)onAppEvent:(id<FLTAd> _Nonnull)ad
               name:(NSString *_Nullable)name
               data:(NSString *_Nullable)data;
-- (void)onNativeAdImpression:(FLTNativeAd *_Nonnull)ad;
-- (void)onNativeAdWillPresentScreen:(FLTNativeAd *_Nonnull)ad;
-- (void)onNativeAdDidDismissScreen:(FLTNativeAd *_Nonnull)ad;
-- (void)onNativeAdWillDismissScreen:(FLTNativeAd *_Nonnull)ad;
+- (void)onNativeAdImpression:(nonnull id<FLTAd>)ad;
+- (void)onNativeAdWillPresentScreen:(nonnull id<FLTAd>)ad;
+- (void)onNativeAdDidDismissScreen:(nonnull id<FLTAd>)ad;
+- (void)onNativeAdWillDismissScreen:(nonnull id<FLTAd>)ad;
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward;
 - (void)onRewardedInterstitialAdUserEarnedReward:
@@ -50,10 +50,10 @@
                                           reward:
                                               (FLTRewardItem *_Nonnull)reward;
 - (void)onPaidEvent:(id<FLTAd> _Nonnull)ad value:(FLTAdValue *_Nonnull)value;
-- (void)onBannerImpression:(FLTBannerAd *_Nonnull)ad;
-- (void)onBannerWillDismissScreen:(FLTBannerAd *_Nonnull)ad;
-- (void)onBannerDidDismissScreen:(FLTBannerAd *_Nonnull)ad;
-- (void)onBannerWillPresentScreen:(FLTBannerAd *_Nonnull)ad;
+- (void)onBannerImpression:(nonnull id<FLTAd>)ad;
+- (void)onBannerWillDismissScreen:(nonnull id<FLTAd>)ad;
+- (void)onBannerDidDismissScreen:(nonnull id<FLTAd>)ad;
+- (void)onBannerWillPresentScreen:(nonnull id<FLTAd>)ad;
 
 - (void)adWillPresentFullScreenContent:(id<FLTAd> _Nonnull)ad;
 - (void)adDidDismissFullScreenContent:(id<FLTAd> _Nonnull)ad;
