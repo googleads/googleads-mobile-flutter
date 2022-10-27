@@ -517,6 +517,17 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
           }
         }
 
+        final FlutterNativeParameters nativeParameters =
+            call.<FlutterNativeParameters>argument("native");
+        if (nativeParameters != null) {
+          if (nativeAdFactories.get(nativeParameters.factoryId) == null) {
+            final String message =
+                String.format("Can't find NativeAdFactory with id: %s", nativeParameters.factoryId);
+            result.error("AdLoaderAdError", message, null);
+            return;
+          }
+        }
+
         final FlutterAdLoaderAd adLoaderAd =
             new FlutterAdLoaderAd.Builder()
                 .setManager(instanceManager)
@@ -531,6 +542,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 .setBanner(call.<FlutterBannerParameters>argument("banner"))
                 .setCustom(customParameters)
                 .withAvailableCustomFactories(customAdFactories)
+                .setNative(nativeParameters)
+                .withAvailableNativeFactories(nativeAdFactories)
                 .build();
         instanceManager.trackAd(adLoaderAd, call.<Integer>argument("adId"));
         adLoaderAd.load();

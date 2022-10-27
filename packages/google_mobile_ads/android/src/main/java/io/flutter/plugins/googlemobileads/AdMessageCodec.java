@@ -72,6 +72,7 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_AD_MANAGER_AD_VIEW_OPTIONS = (byte) 155;
   private static final byte VALUE_BANNER_PARAMETERS = (byte) 156;
   private static final byte VALUE_CUSTOM_PARAMETERS = (byte) 157;
+  private static final byte VALUE_NATIVE_PARAMETERS = (byte) 158;
 
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
@@ -276,6 +277,12 @@ class AdMessageCodec extends StandardMessageCodec {
       FlutterCustomParameters customParameters = (FlutterCustomParameters) value;
       writeValue(stream, customParameters.formatIds);
       writeValue(stream, customParameters.viewOptions);
+    } else if (value instanceof FlutterNativeParameters) {
+      stream.write(VALUE_NATIVE_PARAMETERS);
+      FlutterNativeParameters nativeParameters = (FlutterNativeParameters) value;
+      writeValue(stream, nativeParameters.factoryId);
+      writeValue(stream, nativeParameters.nativeAdOptions);
+      writeValue(stream, nativeParameters.viewOptions);
     } else {
       super.writeValue(stream, value);
     }
@@ -471,6 +478,11 @@ class AdMessageCodec extends StandardMessageCodec {
       case VALUE_CUSTOM_PARAMETERS:
         return new FlutterCustomParameters(
             (List<String>) readValueOfType(buffer.get(), buffer),
+            (Map<String, Object>) readValueOfType(buffer.get(), buffer));
+      case VALUE_NATIVE_PARAMETERS:
+        return new FlutterNativeParameters(
+            (String) readValueOfType(buffer.get(), buffer),
+            (FlutterNativeAdOptions) readValueOfType(buffer.get(), buffer),
             (Map<String, Object>) readValueOfType(buffer.get(), buffer));
       default:
         return super.readValueOfType(type, buffer);

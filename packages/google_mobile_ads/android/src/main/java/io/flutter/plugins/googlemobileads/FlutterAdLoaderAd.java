@@ -24,10 +24,14 @@ import com.google.android.gms.ads.BaseAdView;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.formats.AdManagerAdViewOptions;
 import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
+import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd.OnCustomFormatAdLoadedListener;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.CustomAdFactory;
+import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Map;
 
 /**
@@ -35,7 +39,9 @@ import java.util.Map;
  * instances served for a single {@link AdRequest} or {@link AdManagerAdRequest}
  */
 class FlutterAdLoaderAd extends FlutterAd
-    implements OnAdManagerAdViewLoadedListener, OnCustomFormatAdLoadedListener {
+    implements OnAdManagerAdViewLoadedListener,
+        OnCustomFormatAdLoadedListener,
+        OnNativeAdLoadedListener {
   private static final String TAG = "FlutterAdLoaderAd";
 
   @NonNull private final AdInstanceManager manager;
@@ -48,6 +54,7 @@ class FlutterAdLoaderAd extends FlutterAd
   @Nullable private View view;
   @Nullable protected BannerParameters bannerParameters;
   @Nullable protected CustomParameters customParameters;
+  @Nullable protected NativeParameters nativeParameters;
 
   static class Builder {
     @Nullable private AdInstanceManager manager;
@@ -59,6 +66,8 @@ class FlutterAdLoaderAd extends FlutterAd
     @Nullable private FlutterBannerParameters bannerParameters;
     @Nullable private FlutterCustomParameters customParameters;
     @Nullable private Map<String, CustomAdFactory> customFactories;
+    @Nullable private FlutterNativeParameters nativeParameters;
+    @Nullable private Map<String, NativeAdFactory> nativeFactories;
 
     public Builder setId(int id) {
       this.id = id;
@@ -106,6 +115,17 @@ class FlutterAdLoaderAd extends FlutterAd
       return this;
     }
 
+    public Builder setNative(@Nullable FlutterNativeParameters nativeParameters) {
+      this.nativeParameters = nativeParameters;
+      return this;
+    }
+
+    public Builder withAvailableNativeFactories(
+        @NonNull Map<String, NativeAdFactory> nativeFactories) {
+      this.nativeFactories = nativeFactories;
+      return this;
+    }
+
     FlutterAdLoaderAd build() {
       if (manager == null) {
         throw new IllegalStateException("manager must be provided");
@@ -139,6 +159,12 @@ class FlutterAdLoaderAd extends FlutterAd
                 new FlutterCustomFormatAdLoadedListener(adLoaderAd), customFactories);
       }
 
+      if (nativeParameters != null) {
+        adLoaderAd.nativeParameters =
+            nativeParameters.asNativeParameters(
+                new FlutterNativeAdLoadedListener(adLoaderAd), nativeFactories);
+      }
+
       return adLoaderAd;
     }
   }
@@ -147,6 +173,7 @@ class FlutterAdLoaderAd extends FlutterAd
     UNKNOWN,
     BANNER,
     CUSTOM,
+    NATIVE,
   }
 
   static class BannerParameters {
@@ -175,6 +202,24 @@ class FlutterAdLoaderAd extends FlutterAd
         @Nullable Map<String, Object> viewOptions) {
       this.listener = listener;
       this.factories = factories;
+      this.viewOptions = viewOptions;
+    }
+  }
+
+  static class NativeParameters {
+    @NonNull final OnNativeAdLoadedListener listener;
+    @NonNull final NativeAdFactory factory;
+    @Nullable final NativeAdOptions nativeAdOptions;
+    @Nullable final Map<String, Object> viewOptions;
+
+    NativeParameters(
+        @NonNull OnNativeAdLoadedListener listener,
+        @NonNull NativeAdFactory factory,
+        @Nullable NativeAdOptions nativeAdOptions,
+        @Nullable Map<String, Object> viewOptions) {
+      this.listener = listener;
+      this.factory = factory;
+      this.nativeAdOptions = nativeAdOptions;
       this.viewOptions = viewOptions;
     }
   }
@@ -220,7 +265,12 @@ class FlutterAdLoaderAd extends FlutterAd
     // As of 20.0.0 of GMA, mockito is unable to mock AdLoader.
     if (request != null) {
       adLoader.loadAdLoaderAd(
-          adUnitId, adListener, request.asAdRequest(adUnitId), bannerParameters, customParameters);
+          adUnitId,
+          adListener,
+          request.asAdRequest(adUnitId),
+          bannerParameters,
+          customParameters,
+          nativeParameters);
       return;
     }
 
@@ -230,7 +280,8 @@ class FlutterAdLoaderAd extends FlutterAd
           adListener,
           adManagerRequest.asAdManagerAdRequest(adUnitId),
           bannerParameters,
-          customParameters);
+          customParameters,
+          nativeParameters);
       return;
     }
 
@@ -279,6 +330,14 @@ class FlutterAdLoaderAd extends FlutterAd
         customParameters.factories.get(formatId).createCustomAd(ad, customParameters.viewOptions);
     type = AdLoaderAdType.CUSTOM;
     manager.onAdLoaded(adId, null);
+  }
+
+  @Override
+  public void onNativeAdLoaded(@NonNull NativeAd ad) {
+    view = nativeParameters.factory.createNativeAd(ad, nativeParameters.viewOptions);
+    type = AdLoaderAdType.NATIVE;
+    ad.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
+    manager.onAdLoaded(adId, ad.getResponseInfo());
   }
 
   @Override

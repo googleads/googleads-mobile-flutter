@@ -69,6 +69,7 @@ void main() {
           'adManagerRequest': null,
           'banner': null,
           'custom': null,
+          'native': null,
         })
       ]);
 
@@ -93,6 +94,7 @@ void main() {
           'adManagerRequest': request,
           'banner': null,
           'custom': null,
+          'native': null,
         })
       ]);
 
@@ -119,6 +121,7 @@ void main() {
           'adManagerRequest': null,
           'banner': banner,
           'custom': null,
+          'native': null,
         })
       ]);
 
@@ -145,6 +148,34 @@ void main() {
           'adManagerRequest': null,
           'banner': null,
           'custom': custom,
+          'native': null,
+        })
+      ]);
+
+      expect(instanceManager.adFor(0), isNotNull);
+    });
+
+    test('load with $NativeParameters', () async {
+      final NativeParameters native = NativeParameters(
+        factoryId: 'test-factory-id',
+      );
+      final AdLoaderAd adLoaderAd = AdLoaderAd(
+        adUnitId: 'test-ad-unit',
+        listener: AdLoaderAdListener(),
+        request: AdRequest(),
+        native: native,
+      );
+
+      await adLoaderAd.load();
+      expect(log, <Matcher>[
+        isMethodCall('loadAdLoaderAd', arguments: <String, dynamic>{
+          'adId': 0,
+          'adUnitId': 'test-ad-unit',
+          'request': adLoaderAd.request,
+          'adManagerRequest': null,
+          'banner': null,
+          'custom': null,
+          'native': native,
         })
       ]);
 

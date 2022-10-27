@@ -20,10 +20,10 @@ class FlutterCustomParameters {
 
   FlutterAdLoaderAd.CustomParameters asCustomParameters(
       @NonNull OnCustomFormatAdLoadedListener listener,
-      @NonNull Map<String, CustomAdFactory> availableFactories) {
+      @NonNull Map<String, CustomAdFactory> registeredFactories) {
     Map<String, CustomAdFactory> factories = new HashMap<>();
     for (String formatId : formatIds) {
-      factories.put(formatId, availableFactories.get(formatId));
+      factories.put(formatId, registeredFactories.get(formatId));
     }
     return new FlutterAdLoaderAd.CustomParameters(listener, factories, viewOptions);
   }

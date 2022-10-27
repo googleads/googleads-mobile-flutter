@@ -665,5 +665,38 @@ void main() {
         });
       }
     });
+
+    test('encode/decode minimal $NativeParameters', () {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        debugDefaultTargetPlatformOverride = platform;
+        ByteData byteData = codec.encodeMessage(NativeParameters(
+          factoryId: 'test-factory-id',
+        ))!;
+
+        NativeParameters result = codec.decodeMessage(byteData);
+        expect(result.factoryId, 'test-factory-id');
+        expect(result.nativeAdOptions, null);
+        expect(result.viewOptions, null);
+      }
+    });
+
+    test('encode/decode $NativeParameters', () {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        debugDefaultTargetPlatformOverride = platform;
+        ByteData byteData = codec.encodeMessage(NativeParameters(
+            factoryId: 'test-factory-id',
+            nativeAdOptions: NativeAdOptions(),
+            viewOptions: <String, Object>{
+              'key': 'value',
+            }))!;
+
+        NativeParameters result = codec.decodeMessage(byteData);
+        expect(result.factoryId, 'test-factory-id');
+        expect(result.nativeAdOptions, NativeAdOptions());
+        expect(result.viewOptions, <String, Object>{
+          'key': 'value',
+        });
+      }
+    });
   });
 }

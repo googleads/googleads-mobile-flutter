@@ -1220,6 +1220,19 @@
 }
 @end
 
+@implementation FLTNativeParameters
+- (nonnull instancetype)
+    initWithFactoryId:(nonnull NSString *)factoryId
+      nativeAdOptions:(nullable FLTNativeAdOptions *)nativeAdOptions
+          viewOptions:(nullable NSDictionary<NSString *, id> *)viewOptions {
+  self = [super init];
+  _factoryId = factoryId;
+  _nativeAdOptions = nativeAdOptions;
+  _viewOptions = viewOptions;
+  return self;
+}
+@end
+
 #pragma mark - FLTAdLoaderAd
 
 @implementation FLTAdLoaderAd {
@@ -1229,6 +1242,7 @@
   UIView *_view;
   FLTBannerParameters *_banner;
   FLTCustomParameters *_custom;
+  FLTNativeParameters *_native;
 }
 
 - (nonnull instancetype)
@@ -1237,7 +1251,8 @@
     rootViewController:(nonnull UIViewController *)rootViewController
                   adId:(nonnull NSNumber *)adId
                 banner:(nullable FLTBannerParameters *)bannerParameters
-                custom:(nullable FLTCustomParameters *)customParameters {
+                custom:(nullable FLTCustomParameters *)customParameters
+                native:(nullable FLTNativeParameters *)nativeParameters {
   self = [super init];
   if (self) {
     self.adId = adId;
@@ -1268,6 +1283,17 @@
       _custom = customParameters;
 
       [adTypes addObject:GADAdLoaderAdTypeCustomNative];
+    }
+
+    if (![FLTAdUtil isNull:nativeParameters]) {
+      _native = nativeParameters;
+
+      [adTypes addObject:GADAdLoaderAdTypeNative];
+
+      if (![FLTAdUtil isNull:_native.nativeAdOptions]) {
+        [options
+            addObjectsFromArray:_native.nativeAdOptions.asGADAdLoaderOptions];
+      }
     }
 
     _adLoader = [[GADAdLoader alloc] initWithAdUnitID:_adUnitId
@@ -1421,6 +1447,54 @@
 
 - (void)customNativeAdDidDismissScreen:(nonnull GADCustomNativeAd *)nativeAd {
   [manager onCustomNativeAdDidDismissScreen:self];
+}
+
+#pragma mark - GADNativeAdLoaderDelegate
+
+- (void)adLoader:(nonnull GADAdLoader *)adLoader
+    didReceiveNativeAd:(nonnull GADNativeAd *)nativeAd {
+  // Use Nil instead of Null to fix crash with Swift integrations.
+  NSDictionary<NSString *, id> *customOptions =
+      [[NSNull null] isEqual:_native.viewOptions] ? nil : _native.viewOptions;
+  _adLoaderAdType = FLTAdLoaderAdTypeNative;
+  _view = [_native.factory createNativeAd:nativeAd customOptions:customOptions];
+  nativeAd.delegate = self;
+
+  __weak FLTAdLoaderAd *weakSelf = self;
+  nativeAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+    if (weakSelf.manager == nil) {
+      return;
+    }
+    [weakSelf.manager
+        onPaidEvent:weakSelf
+              value:[[FLTAdValue alloc] initWithValue:value.value
+                                            precision:(NSInteger)value.precision
+                                         currencyCode:value.currencyCode]];
+  };
+
+  [manager onAdLoaded:self responseInfo:nativeAd.responseInfo];
+}
+
+#pragma mark - GADNativeAdDelegate
+
+- (void)nativeAdDidRecordImpression:(nonnull GADNativeAd *)nativeAd {
+  [manager onNativeAdImpression:self];
+}
+
+- (void)nativeAdDidRecordClick:(nonnull GADNativeAd *)nativeAd {
+  [manager adDidRecordClick:self];
+}
+
+- (void)nativeAdWillPresentScreen:(nonnull GADNativeAd *)nativeAd {
+  [manager onNativeAdWillPresentScreen:self];
+}
+
+- (void)nativeAdWillDismissScreen:(nonnull GADNativeAd *)nativeAd {
+  [manager onNativeAdWillDismissScreen:self];
+}
+
+- (void)nativeAdDidDismissScreen:(nonnull GADNativeAd *)nativeAd {
+  [manager onNativeAdDidDismissScreen:self];
 }
 
 #pragma mark - FlutterPlatformView

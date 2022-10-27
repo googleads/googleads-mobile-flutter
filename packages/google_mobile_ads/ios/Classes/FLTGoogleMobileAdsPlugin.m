@@ -497,6 +497,22 @@
       }
     }
 
+    FLTNativeParameters *native = call.arguments[@"native"];
+    if ([FLTAdUtil isNotNull:native]) {
+      id<FLTNativeAdFactory> factory = _nativeAdFactories[native.factoryId];
+      if (!factory) {
+        NSString *message = [NSString
+            stringWithFormat:@"Can't find NativeAdFactory with id: %@",
+                             native.factoryId];
+        result([FlutterError errorWithCode:@"AdLoaderAdError"
+                                   message:message
+                                   details:nil]);
+        return;
+      }
+
+      native.factory = factory;
+    }
+
     FLTAdRequest *request;
     if ([FLTAdUtil isNotNull:call.arguments[@"request"]]) {
       request = call.arguments[@"request"];
@@ -510,7 +526,8 @@
                              rootViewController:rootController
                                            adId:call.arguments[@"adId"]
                                          banner:call.arguments[@"banner"]
-                                         custom:custom];
+                                         custom:custom
+                                         native:native];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadInterstitialAd"]) {

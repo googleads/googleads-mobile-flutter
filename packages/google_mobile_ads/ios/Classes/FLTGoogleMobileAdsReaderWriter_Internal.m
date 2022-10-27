@@ -51,6 +51,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldAdManagerAdViewOptions = 155,
   FLTAdmobBannerParameters = 156,
   FLTAdmobCustomParameters = 157,
+  FLTAdmobNativeParameters = 158,
 };
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
@@ -358,6 +359,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
         initWithFormatIds:[self readValueOfType:[self readByte]]
               viewOptions:[self readValueOfType:[self readByte]]];
   }
+  case FLTAdmobNativeParameters: {
+    return [[FLTNativeParameters alloc]
+        initWithFactoryId:[self readValueOfType:[self readByte]]
+          nativeAdOptions:[self readValueOfType:[self readByte]]
+              viewOptions:[self readValueOfType:[self readByte]]];
+  }
   }
   return [super readValueOfType:type];
 }
@@ -555,6 +562,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     FLTCustomParameters *customParameters = value;
     [self writeValue:customParameters.formatIds];
     [self writeValue:customParameters.viewOptions];
+  } else if ([value isKindOfClass:[FLTNativeParameters class]]) {
+    [self writeByte:FLTAdmobNativeParameters];
+    FLTNativeParameters *nativeParameters = value;
+    [self writeValue:nativeParameters.factoryId];
+    [self writeValue:nativeParameters.nativeAdOptions];
+    [self writeValue:nativeParameters.viewOptions];
   } else {
     [super writeValue:value];
   }

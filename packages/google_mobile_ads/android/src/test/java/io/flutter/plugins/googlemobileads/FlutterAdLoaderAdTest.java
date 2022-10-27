@@ -30,18 +30,22 @@ import android.app.Activity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
+import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.CustomAdFactory;
+import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
@@ -88,13 +92,13 @@ public class FlutterAdLoaderAdTest {
             })
         .when(mockLoader)
         .loadAdManagerAdLoaderAd(
-            eq("testId"), any(AdListener.class), eq(mockRequest), isNull(), isNull());
+            eq("testId"), any(AdListener.class), eq(mockRequest), isNull(), isNull(), isNull());
 
     adLoaderAd.load();
 
     verify(mockLoader)
         .loadAdManagerAdLoaderAd(
-            eq("testId"), any(AdListener.class), eq(mockRequest), isNull(), isNull());
+            eq("testId"), any(AdListener.class), eq(mockRequest), isNull(), isNull(), isNull());
 
     verify(testManager).onAdClicked(eq(1));
     verify(testManager).onAdClosed(eq(1));
@@ -132,12 +136,14 @@ public class FlutterAdLoaderAdTest {
               }
             })
         .when(mockLoader)
-        .loadAdLoaderAd(eq("testId"), any(AdListener.class), eq(mockRequest), isNull(), isNull());
+        .loadAdLoaderAd(
+            eq("testId"), any(AdListener.class), eq(mockRequest), isNull(), isNull(), isNull());
 
     adLoaderAd.load();
 
     verify(mockLoader)
-        .loadAdLoaderAd(eq("testId"), any(AdListener.class), eq(mockRequest), isNull(), isNull());
+        .loadAdLoaderAd(
+            eq("testId"), any(AdListener.class), eq(mockRequest), isNull(), isNull(), isNull());
 
     verify(testManager).onAdClicked(eq(1));
     verify(testManager).onAdClosed(eq(1));
@@ -189,7 +195,12 @@ public class FlutterAdLoaderAdTest {
             })
         .when(mockLoader)
         .loadAdManagerAdLoaderAd(
-            eq("testId"), any(AdListener.class), eq(mockRequest), eq(bannerParameters), isNull());
+            eq("testId"),
+            any(AdListener.class),
+            eq(mockRequest),
+            eq(bannerParameters),
+            isNull(),
+            isNull());
 
     adLoaderAd.load();
 
@@ -203,7 +214,12 @@ public class FlutterAdLoaderAdTest {
 
     verify(mockLoader)
         .loadAdManagerAdLoaderAd(
-            eq("testId"), any(AdListener.class), eq(mockRequest), eq(bannerParameters), isNull());
+            eq("testId"),
+            any(AdListener.class),
+            eq(mockRequest),
+            eq(bannerParameters),
+            isNull(),
+            isNull());
 
     verify(testManager).onAdClicked(eq(1));
     verify(testManager).onAdClosed(eq(1));
@@ -256,7 +272,12 @@ public class FlutterAdLoaderAdTest {
             })
         .when(mockLoader)
         .loadAdManagerAdLoaderAd(
-            eq("testId"), any(AdListener.class), eq(mockRequest), isNull(), eq(customParameters));
+            eq("testId"),
+            any(AdListener.class),
+            eq(mockRequest),
+            isNull(),
+            eq(customParameters),
+            isNull());
 
     adLoaderAd.load();
 
@@ -266,7 +287,12 @@ public class FlutterAdLoaderAdTest {
 
     verify(mockLoader)
         .loadAdManagerAdLoaderAd(
-            eq("testId"), any(AdListener.class), eq(mockRequest), isNull(), eq(customParameters));
+            eq("testId"),
+            any(AdListener.class),
+            eq(mockRequest),
+            isNull(),
+            eq(customParameters),
+            isNull());
 
     verify(testManager).onAdClicked(eq(1));
     verify(testManager).onAdClosed(eq(1));
@@ -275,6 +301,100 @@ public class FlutterAdLoaderAdTest {
     verify(testManager).onAdImpression(eq(1));
     verify(testManager).onAdOpened(eq(1));
     verify(testManager).onAdLoaded(eq(1), isNull());
+  }
+
+  @Test
+  public void loadAdLoaderAdNativeWithAdManagerAdRequest() {
+    final FlutterAdManagerAdRequest mockFlutterRequest = mock(FlutterAdManagerAdRequest.class);
+    final AdManagerAdRequest mockRequest = mock(AdManagerAdRequest.class);
+    when(mockFlutterRequest.asAdManagerAdRequest(anyString())).thenReturn(mockRequest);
+    FlutterAdLoader mockLoader = mock(FlutterAdLoader.class);
+    final FlutterAdLoaderAd adLoaderAd =
+        new FlutterAdLoaderAd(1, testManager, "testId", mockFlutterRequest, mockLoader);
+    final FlutterNativeAdLoadedListener listener = new FlutterNativeAdLoadedListener(adLoaderAd);
+    final NativeAdFactory mockNativeAdFactory = mock(NativeAdFactory.class);
+    final FlutterAdLoaderAd.NativeParameters nativeParameters =
+        new FlutterAdLoaderAd.NativeParameters(listener, mockNativeAdFactory, null, null);
+    adLoaderAd.nativeParameters = nativeParameters;
+
+    final LoadAdError mockLoadAdError = mock(LoadAdError.class);
+    when(mockLoadAdError.getCode()).thenReturn(1);
+    when(mockLoadAdError.getDomain()).thenReturn("2");
+    when(mockLoadAdError.getMessage()).thenReturn("3");
+
+    final ResponseInfo mockResponseInfo = mock(ResponseInfo.class);
+    final NativeAd mockNativeAd = mock(NativeAd.class);
+    when(mockNativeAd.getResponseInfo()).thenReturn(mockResponseInfo);
+
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) {
+                AdListener listener = invocation.getArgument(1);
+                listener.onAdClicked();
+                listener.onAdClosed();
+                listener.onAdFailedToLoad(mockLoadAdError);
+                listener.onAdImpression();
+                listener.onAdOpened();
+
+                FlutterAdLoaderAd.NativeParameters nativeParameters = invocation.getArgument(5);
+                nativeParameters.listener.onNativeAdLoaded(mockNativeAd);
+                return null;
+              }
+            })
+        .when(mockLoader)
+        .loadAdManagerAdLoaderAd(
+            eq("testId"),
+            any(AdListener.class),
+            eq(mockRequest),
+            isNull(),
+            isNull(),
+            eq(nativeParameters));
+
+    final AdValue mockAdValue = mock(AdValue.class);
+    when(mockAdValue.getCurrencyCode()).thenReturn("Dollars");
+    when(mockAdValue.getPrecisionType()).thenReturn(1);
+    when(mockAdValue.getValueMicros()).thenReturn(1000L);
+
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) {
+                FlutterPaidEventListener listener = invocation.getArgument(0);
+                listener.onPaidEvent(mockAdValue);
+                return null;
+              }
+            })
+        .when(mockNativeAd)
+        .setOnPaidEventListener(any(FlutterPaidEventListener.class));
+
+    adLoaderAd.load();
+
+    assertEquals(adLoaderAd.getAdLoaderAdType(), FlutterAdLoaderAd.AdLoaderAdType.NATIVE);
+
+    verify(mockLoader)
+        .loadAdManagerAdLoaderAd(
+            eq("testId"),
+            any(AdListener.class),
+            eq(mockRequest),
+            isNull(),
+            isNull(),
+            eq(nativeParameters));
+
+    verify(testManager).onAdClicked(eq(1));
+    verify(testManager).onAdClosed(eq(1));
+    FlutterLoadAdError expectedError = new FlutterLoadAdError(mockLoadAdError);
+    verify(testManager).onAdFailedToLoad(eq(1), eq(expectedError));
+    verify(testManager).onAdImpression(eq(1));
+    verify(testManager).onAdOpened(eq(1));
+    verify(testManager).onAdLoaded(eq(1), eq(mockResponseInfo));
+
+    final ArgumentCaptor<FlutterAdValue> adValueCaptor =
+        ArgumentCaptor.forClass(FlutterAdValue.class);
+    verify(testManager).onPaidEvent(eq(adLoaderAd), adValueCaptor.capture());
+    assertEquals(adValueCaptor.getValue().currencyCode, "Dollars");
+    assertEquals(adValueCaptor.getValue().precisionType, 1);
+    assertEquals(adValueCaptor.getValue().valueMicros, 1000L);
   }
 
   @Test(expected = IllegalStateException.class)

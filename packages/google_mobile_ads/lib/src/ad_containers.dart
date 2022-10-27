@@ -1091,6 +1091,9 @@ enum AdLoaderAdType {
 
   /// Custom ad type
   custom,
+
+  /// Native ad type
+  native,
 }
 
 /// An AdLoaderAd.
@@ -1128,6 +1131,7 @@ class AdLoaderAd extends AdWithView {
     required AdRequest request,
     this.banner,
     this.custom,
+    this.native,
   }) : super(adUnitId: adUnitId, listener: listener) {
     if (request is AdManagerAdRequest) {
       adManagerRequest = request;
@@ -1151,6 +1155,9 @@ class AdLoaderAd extends AdWithView {
 
   /// Optional parameters used to configure served "custom" ads
   final CustomParameters? custom;
+
+  /// Optional parameters used to configure served "native" ads
+  final NativeParameters? native;
 
   @override
   Future<void> load() => instanceManager.loadAdLoaderAd(this);
@@ -1638,6 +1645,37 @@ class CustomParameters {
   bool operator ==(other) {
     return other is CustomParameters &&
         listEquals<String>(formatIds, other.formatIds) &&
+        mapEquals<String, Object>(viewOptions, other.viewOptions);
+  }
+}
+
+/// Central configuration item for native view requests served by an
+/// [AdLoaderAd].
+class NativeParameters {
+  /// An identifier for the factory that creates the Platform view.
+  final String factoryId;
+
+  /// Options to configure the native ad request.
+  final NativeAdOptions? nativeAdOptions;
+
+  /// Optional options used to create the Platform view.
+  ///
+  /// These options are passed to the platform's `NativeAdFactory`.
+  final Map<String, Object>? viewOptions;
+
+  /// Construct a [NativeParameters] instance, used by an [AdLoaderAd] to
+  /// configure native views.
+  NativeParameters({
+    required this.factoryId,
+    this.nativeAdOptions,
+    this.viewOptions,
+  });
+
+  @override
+  bool operator ==(other) {
+    return other is NativeParameters &&
+        factoryId == other.factoryId &&
+        nativeAdOptions == other.nativeAdOptions &&
         mapEquals<String, Object>(viewOptions, other.viewOptions);
   }
 }
