@@ -180,4 +180,11 @@ class FlutterAdLoaderAdLoadedListener implements NativeAdLoaderCallback {
       callbackWeakReference.get().onCustomNativeAdLoaded(customNativeAd);
     }
   }
+
+  @Override
+  public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+    if (callbackWeakReference.get() != null) {
+      callbackWeakReference.get().onNativeAdLoaded(nativeAd);
+    }
+  }
 }

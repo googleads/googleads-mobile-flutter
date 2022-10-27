@@ -597,6 +597,29 @@ public class AdMessageCodecTest {
     assertEquals(result.viewOptions.size(), 1);
     assertEquals(result.viewOptions.get("key"), "value");
   }
+
+  @Test
+  public void encodeNativeParameters() {
+    final ByteBuffer data =
+        codec.encodeMessage(
+            new FlutterNativeParameters(
+                "factory-id",
+                new FlutterNativeAdOptions(1, 1, null, true, true, true),
+                Collections.singletonMap("key", "value")));
+
+    final FlutterNativeParameters result =
+        (FlutterNativeParameters) codec.decodeMessage((ByteBuffer) data.position(0));
+
+    assertEquals(result.factoryId, "factory-id");
+    assertEquals(result.nativeAdOptions.adChoicesPlacement, Integer.valueOf(1));
+    assertEquals(result.nativeAdOptions.mediaAspectRatio, Integer.valueOf(1));
+    assertNull(result.nativeAdOptions.videoOptions);
+    assertTrue(result.nativeAdOptions.requestCustomMuteThisAd);
+    assertTrue(result.nativeAdOptions.shouldRequestMultipleImages);
+    assertTrue(result.nativeAdOptions.shouldReturnUrlsForImageAssets);
+    assertEquals(result.viewOptions.size(), 1);
+    assertEquals(result.viewOptions.get("key"), "value");
+  }
 }
 
 class DummyMediationExtras extends FlutterMediationExtras {
