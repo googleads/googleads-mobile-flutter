@@ -148,10 +148,10 @@ abstract class FlutterAd {
     @NonNull private final String description;
     @NonNull private final Map<String, String> adUnitMapping;
     @Nullable private FlutterAdError error;
-    @Nullable private String adSourceName;
-    @Nullable private String adSourceId;
-    @Nullable private String adSourceInstanceName;
-    @Nullable private String adSourceInstanceId;
+    @NonNull private final String adSourceName;
+    @NonNull private final String adSourceId;
+    @NonNull private final String adSourceInstanceName;
+    @NonNull private final String adSourceInstanceId;
 
     FlutterAdapterResponseInfo(@NonNull AdapterResponseInfo responseInfo) {
       this.adapterClassName = responseInfo.getAdapterClassName();
@@ -180,10 +180,10 @@ abstract class FlutterAd {
         @NonNull String description,
         @NonNull Map<String, String> adUnitMapping,
         @Nullable FlutterAdError error,
-        @Nullable String adSourceName,
-        @Nullable String adSourceId,
-        @Nullable String adSourceInstanceName,
-        @Nullable String adSourceInstanceId) {
+        @NonNull String adSourceName,
+        @NonNull String adSourceId,
+        @NonNull String adSourceInstanceName,
+        @NonNull String adSourceInstanceId) {
       this.adapterClassName = adapterClassName;
       this.latencyMillis = latencyMillis;
       this.description = description;
@@ -219,22 +219,22 @@ abstract class FlutterAd {
       return error;
     }
 
-    @Nullable
+    @NonNull
     public String getAdSourceName() {
       return adSourceName;
     }
 
-    @Nullable
+    @NonNull
     public String getAdSourceId() {
       return adSourceId;
     }
 
-    @Nullable
+    @NonNull
     public String getAdSourceInstanceName() {
       return adSourceInstanceName;
     }
 
-    @Nullable
+    @NonNull
     public String getAdSourceInstanceId() {
       return adSourceInstanceId;
     }
