@@ -4,6 +4,7 @@
 * Adds the field `responseExtras` to `ResponseInfo`. See `ResponseInfo` docs:
   * https://developers.google.com/admob/flutter/response-info
   * https://developers.google.com/ad-manager/mobile-ads-sdk/flutter/response-info
+* Fixes a crash introduced in 2.1.0, [issue #675](https://github.com/googleads/googleads-mobile-flutter/issues/675)
 
 ## 2.1.0
 * Updates GMA dependencies to 21.2.0 (Android) and 9.10.0 (iOS):
