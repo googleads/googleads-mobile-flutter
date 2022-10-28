@@ -22,7 +22,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
-  runApp(const MaterialApp(home: AdaptiveBannerExample(),));
+  runApp(const MaterialApp(
+    home: AdaptiveBannerExample(),
+  ));
 }
 
 /// A simple app that loads an adaptive banner ad.
@@ -71,8 +73,7 @@ class AdaptiveBannerExampleState extends State<AdaptiveBannerExample> {
                   ),
                 )
             ],
-          )
-      ),
+          )),
     );
   }
 
@@ -81,8 +82,7 @@ class AdaptiveBannerExampleState extends State<AdaptiveBannerExample> {
   /// Dimensions of the ad are determined by the width of the screen.
   void _loadAd() async {
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
-    final size = await AdSize.
-    getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
         MediaQuery.of(context).size.width.truncate());
 
     if (size == null) {
