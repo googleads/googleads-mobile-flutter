@@ -18,7 +18,7 @@ on:
   pull_request:
     paths:
       - "packages/google_mobile_ads/**"
-      - "samples/adaptive_banner_example/**"
+      - "samples/admob/adaptive_banner_example/**"
       - ".github/workflows/adaptive_banner_example.yaml"
   push:
     branches:
@@ -73,7 +73,7 @@ jobs:
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Flutter Analyze"
         run: |
-          cd samples/adaptive_banner_example/
+          cd samples/admob/adaptive_banner_example/
           flutter analyze
       - name: "Flutter Format"
         run: |
