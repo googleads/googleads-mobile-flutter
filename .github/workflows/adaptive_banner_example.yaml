@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-name: app_open_example
+name: adaptive_banner_example
 
 on:
   pull_request:
