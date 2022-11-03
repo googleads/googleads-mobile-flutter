@@ -266,6 +266,11 @@ class FlutterAdRequest {
     return adMobExtras;
   }
 
+  @NonNull
+  protected String getRequestAgent() {
+    return requestAgent;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

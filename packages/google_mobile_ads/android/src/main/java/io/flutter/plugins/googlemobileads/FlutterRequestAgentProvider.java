@@ -10,9 +10,9 @@ import androidx.annotation.Nullable;
 /** Class that helps detect whether the news or game template is being used. */
 class FlutterRequestAgentProvider {
 
-  private static final String GAME_VERSION_KEY =
+  static final String GAME_VERSION_KEY =
       "io.flutter.plugins.googlemobileads.FLUTTER_GAME_TEMPLATE_VERSION";
-  private static final String TEMPLATE_VERSION_KEY =
+  static final String NEWS_VERSION_KEY =
       "io.flutter.plugins.googlemobileads.FLUTTER_NEWS_TEMPLATE_VERSION";
 
   private final Context context;
@@ -34,7 +34,7 @@ class FlutterRequestAgentProvider {
       Bundle metaData = info.metaData;
       if (metaData != null) {
         gameTemplateVersion = info.metaData.getString(GAME_VERSION_KEY);
-        newsTemplateVersion = info.metaData.getString(TEMPLATE_VERSION_KEY);
+        newsTemplateVersion = info.metaData.getString(NEWS_VERSION_KEY);
       }
     } catch (NameNotFoundException | ClassCastException e) {
       // Do nothing
