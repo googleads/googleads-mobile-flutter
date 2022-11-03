@@ -20,4 +20,6 @@
 
 + (BOOL)isNotNull:(id)object;
 
+@property(readonly, class) NSString *requestAgent;
+
 @end

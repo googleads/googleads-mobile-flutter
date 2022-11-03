@@ -58,16 +58,22 @@ class AdMessageCodec extends StandardMessageCodec {
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
   @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+  @NonNull private final FlutterRequestAgentProvider requestAgentProvider;
 
-  AdMessageCodec(@NonNull Context context) {
+  AdMessageCodec(@NonNull Context context, @NonNull FlutterRequestAgentProvider requestAgentProvider) {
     this.context = context;
     this.adSizeFactory = new FlutterAdSize.AdSizeFactory();
+    this.requestAgentProvider = requestAgentProvider;
   }
 
   @VisibleForTesting
-  AdMessageCodec(@NonNull Context context, @NonNull FlutterAdSize.AdSizeFactory adSizeFactory) {
+  AdMessageCodec(
+      @NonNull Context context,
+      @NonNull FlutterAdSize.AdSizeFactory adSizeFactory,
+      @NonNull FlutterRequestAgentProvider requestAgentProvider) {
     this.context = context;
     this.adSizeFactory = adSizeFactory;
+    this.requestAgentProvider = requestAgentProvider;
   }
 
   void setContext(@NonNull Context context) {
@@ -235,6 +241,7 @@ class AdMessageCodec extends StandardMessageCodec {
             .setMediationNetworkExtrasIdentifier((String) readValueOfType(buffer.get(), buffer))
             .setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider)
             .setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer))
+            .setRequestAgent(requestAgentProvider.getRequestAgent())
             .build();
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
@@ -283,6 +290,7 @@ class AdMessageCodec extends StandardMessageCodec {
         builder.setMediationNetworkExtrasIdentifier((String) readValueOfType(buffer.get(), buffer));
         builder.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
         builder.setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer));
+        builder.setRequestAgent(requestAgentProvider.getRequestAgent());
         return builder.build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);

@@ -49,11 +49,13 @@ import org.robolectric.RobolectricTestRunner;
 public class AdMessageCodecTest {
   AdMessageCodec codec;
   AdSizeFactory mockAdSizeFactory;
+  FlutterRequestAgentProvider mockFlutterRequestAgentProvider;
 
   @Before
   public void setup() {
     mockAdSizeFactory = mock(AdSizeFactory.class);
-    codec = new AdMessageCodec(mock(Context.class), mockAdSizeFactory);
+    mockFlutterRequestAgentProvider = mock(FlutterRequestAgentProvider.class);
+    codec = new AdMessageCodec(mock(Context.class), mockAdSizeFactory, mockFlutterRequestAgentProvider);
   }
 
   @Test

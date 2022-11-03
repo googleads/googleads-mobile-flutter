@@ -82,6 +82,8 @@ public class GoogleMobileAdsTest {
   private Context mockContext;
   private FlutterPluginBinding mockFlutterPluginBinding;
   private static BinaryMessenger mockMessenger;
+  private static FlutterRequestAgentProvider mockFlutterRequestAgentProvider =
+      mock(FlutterRequestAgentProvider.class);
 
   private static MethodCall getLastMethodCall() {
     Robolectric.flushForegroundThreadScheduler();
@@ -92,7 +94,7 @@ public class GoogleMobileAdsTest {
             byteBufferCaptor.capture(),
             (BinaryMessenger.BinaryReply) isNull());
 
-    return new StandardMethodCodec(new AdMessageCodec(null))
+    return new StandardMethodCodec(new AdMessageCodec(null, mockFlutterRequestAgentProvider))
         .decodeMethodCall((ByteBuffer) byteBufferCaptor.getValue().position(0));
   }
 
@@ -111,11 +113,12 @@ public class GoogleMobileAdsTest {
             })
         .when(mockActivity)
         .runOnUiThread(ArgumentMatchers.any(Runnable.class));
+    mockFlutterRequestAgentProvider = mock(FlutterRequestAgentProvider.class);
     MethodChannel methodChannel =
         new MethodChannel(
             mockMessenger,
             "plugins.flutter.io/google_mobile_ads",
-            new StandardMethodCodec(new AdMessageCodec(mockActivity)));
+            new StandardMethodCodec(new AdMessageCodec(mockActivity, mockFlutterRequestAgentProvider)));
     testManager = new AdInstanceManager(methodChannel);
     testManager.setActivity(mockActivity);
     mockContext = mock(Context.class);
@@ -555,6 +558,7 @@ public class GoogleMobileAdsTest {
   public void testPluginUsesActivityWhenAvailable() {
     FlutterMobileAdsWrapper flutterMobileAdsWrapper = mock(FlutterMobileAdsWrapper.class);
     BinaryMessenger mockBinaryMessenger = mock(BinaryMessenger.class);
+    doReturn(ApplicationProvider.getApplicationContext()).when(mockFlutterPluginBinding).getApplicationContext();
     doReturn(mockBinaryMessenger).when(mockFlutterPluginBinding).getBinaryMessenger();
     PlatformViewRegistry mockPlatformViewRegistry = mock(PlatformViewRegistry.class);
 
@@ -568,7 +572,7 @@ public class GoogleMobileAdsTest {
     plugin.onMethodCall(methodCall, result);
 
     // Check that we use application context if activity is not available.
-    verify(flutterMobileAdsWrapper).initialize(eq(mockContext), any());
+    verify(flutterMobileAdsWrapper).initialize(eq(ApplicationProvider.getApplicationContext()), any());
 
     // Activity should be used instead of application context
     ActivityPluginBinding activityPluginBinding = mock(ActivityPluginBinding.class);
