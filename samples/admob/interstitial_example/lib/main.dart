@@ -124,13 +124,12 @@ class InterstitialExampleState extends State<InterstitialExample> {
 
   void _starTimer() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        _counter--;
-        if (_counter == 0) {
-          _showAlert(context);
-          timer.cancel();
-        }
-      });
+      setState(() => _counter--);
+
+      if (_counter == 0) {
+        _showAlert(context);
+        timer.cancel();
+      }
     });
   }
 
