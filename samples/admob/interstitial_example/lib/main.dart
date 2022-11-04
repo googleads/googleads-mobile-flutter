@@ -113,7 +113,7 @@ class InterstitialExampleState extends State<InterstitialExample> {
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context, 'Cancel');
+                    Navigator.pop(context);
                     _interstitialAd?.show();
                   },
                   child: const Text('OK'),
