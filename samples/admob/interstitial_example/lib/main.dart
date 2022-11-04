@@ -72,10 +72,6 @@ class InterstitialExampleState extends State<InterstitialExample> {
                       Visibility(
                         visible: _counter == 0,
                         child: TextButton(
-                          style: ButtonStyle(
-                            foregroundColor:
-                                MaterialStateProperty.all<Color>(Colors.blue),
-                          ),
                           onPressed: () {
                             _startNewGame();
                           },
