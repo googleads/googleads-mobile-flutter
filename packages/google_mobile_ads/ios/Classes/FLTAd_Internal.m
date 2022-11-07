@@ -219,7 +219,7 @@
   request.keywords = _keywords;
   request.contentURL = _contentURL;
   request.neighboringContentURLStrings = _neighboringContentURLs;
-  request.requestAgent = [FLTAdUtil requestAgent];
+  request.requestAgent = _requestAgent;
   [self addNetworkExtrasToGADRequest:request adUnitId:adUnitId];
   return request;
 }
@@ -310,6 +310,8 @@
   request.contentURL = self.contentURL;
   request.neighboringContentURLStrings = self.neighboringContentURLs;
   request.publisherProvidedID = self.pubProvidedID;
+  request.requestAgent = self.requestAgent;
+
   NSMutableDictionary<NSString *, NSString *> *targetingDictionary =
       [NSMutableDictionary dictionaryWithDictionary:self.customTargeting];
   for (NSString *key in self.customTargetingLists) {
@@ -318,7 +320,6 @@
   }
   request.customTargeting = targetingDictionary;
   [self addNetworkExtrasToGADRequest:request adUnitId:adUnitId];
-  request.requestAgent = [FLTAdUtil requestAgent];
   return request;
 }
 @end

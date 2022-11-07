@@ -49,7 +49,9 @@ public class FlutterRequestAgentProviderTest {
     doReturn(mockContext).when(mockContext).getApplicationContext();
     doReturn(mockPackageManager).when(mockContext).getPackageManager();
     doReturn(PACKAGE_NAME).when(mockContext).getPackageName();
-    doReturn(mockApplicationInfo).when(mockPackageManager).getApplicationInfo(eq(PACKAGE_NAME), eq(PackageManager.GET_META_DATA));
+    doReturn(mockApplicationInfo)
+        .when(mockPackageManager)
+        .getApplicationInfo(eq(PACKAGE_NAME), eq(PackageManager.GET_META_DATA));
   }
 
   @Test
@@ -64,7 +66,12 @@ public class FlutterRequestAgentProviderTest {
     metaData.putString(FlutterRequestAgentProvider.NEWS_VERSION_KEY, "1.2.54");
     FlutterRequestAgentProvider sut = new FlutterRequestAgentProvider(mockContext);
     String requestAgent = sut.getRequestAgent();
-    assertEquals(requestAgent, Constants.REQUEST_AGENT_PREFIX_VERSIONED + "_" + Constants.REQUEST_AGENT_NEWS_TEMPLATE_PREFIX + "1.2.54");
+    assertEquals(
+        requestAgent,
+        Constants.REQUEST_AGENT_PREFIX_VERSIONED
+            + "_"
+            + Constants.REQUEST_AGENT_NEWS_TEMPLATE_PREFIX
+            + "1.2.54");
   }
 
   @Test
@@ -72,6 +79,11 @@ public class FlutterRequestAgentProviderTest {
     metaData.putString(FlutterRequestAgentProvider.GAME_VERSION_KEY, "1.2.54");
     FlutterRequestAgentProvider sut = new FlutterRequestAgentProvider(mockContext);
     String requestAgent = sut.getRequestAgent();
-    assertEquals(requestAgent, Constants.REQUEST_AGENT_PREFIX_VERSIONED + "_" + Constants.REQUEST_AGENT_GAME_TEMPLATE_PREFIX + "1.2.54");
+    assertEquals(
+        requestAgent,
+        Constants.REQUEST_AGENT_PREFIX_VERSIONED
+            + "_"
+            + Constants.REQUEST_AGENT_GAME_TEMPLATE_PREFIX
+            + "1.2.54");
   }
 }

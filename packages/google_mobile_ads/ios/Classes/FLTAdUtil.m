@@ -28,10 +28,6 @@ static NSString *_requestAgent;
 }
 
 + (NSString *)requestAgent {
-  if (_requestAgent) {
-    return _requestAgent;
-  }
-
   NSString *newsTemplateString = @"";
   id newsTemplateVersion = [NSBundle.mainBundle
       objectForInfoDictionaryKey:@"FLTNewsTemplateVersion"];
@@ -47,10 +43,8 @@ static NSString *_requestAgent;
     gameTemplateString =
         [NSString stringWithFormat:@"_Game-%@", gameTemplateVersion];
   }
-  _requestAgent =
-      [NSString stringWithFormat:@"%@%@%@", FLT_REQUEST_AGENT_VERSIONED,
-                                 newsTemplateString, gameTemplateString];
-  return _requestAgent;
+  return [NSString stringWithFormat:@"%@%@%@", FLT_REQUEST_AGENT_VERSIONED,
+                                    newsTemplateString, gameTemplateString];
 }
 
 @end

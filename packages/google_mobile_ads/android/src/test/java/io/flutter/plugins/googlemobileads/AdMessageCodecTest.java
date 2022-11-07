@@ -55,7 +55,8 @@ public class AdMessageCodecTest {
   public void setup() {
     mockAdSizeFactory = mock(AdSizeFactory.class);
     mockFlutterRequestAgentProvider = mock(FlutterRequestAgentProvider.class);
-    codec = new AdMessageCodec(mock(Context.class), mockAdSizeFactory, mockFlutterRequestAgentProvider);
+    codec =
+        new AdMessageCodec(mock(Context.class), mockAdSizeFactory, mockFlutterRequestAgentProvider);
   }
 
   @Test
@@ -285,9 +286,7 @@ public class AdMessageCodecTest {
 
   @Test
   public void encodeFlutterAdManagerAdRequest() {
-    doReturn("mock-request-agent")
-        .when(mockFlutterRequestAgentProvider)
-        .getRequestAgent();
+    doReturn("mock-request-agent").when(mockFlutterRequestAgentProvider).getRequestAgent();
     FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
     builder.setKeywords(Arrays.asList("1", "2", "3"));
     builder.setContentUrl("contentUrl");

@@ -60,7 +60,8 @@ class AdMessageCodec extends StandardMessageCodec {
   @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
   @NonNull private final FlutterRequestAgentProvider requestAgentProvider;
 
-  AdMessageCodec(@NonNull Context context, @NonNull FlutterRequestAgentProvider requestAgentProvider) {
+  AdMessageCodec(
+      @NonNull Context context, @NonNull FlutterRequestAgentProvider requestAgentProvider) {
     this.context = context;
     this.adSizeFactory = new FlutterAdSize.AdSizeFactory();
     this.requestAgentProvider = requestAgentProvider;

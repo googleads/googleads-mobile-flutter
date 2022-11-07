@@ -87,6 +87,7 @@
 @property id<
     FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
 @property NSDictionary<NSString *, NSString *> *_Nullable adMobExtras;
+@property NSString *_Nonnull requestAgent;
 
 - (GADRequest *_Nonnull)asGADRequest:(NSString *_Nonnull)adUnitId;
 @end
