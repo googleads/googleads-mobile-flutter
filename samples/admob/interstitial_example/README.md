@@ -38,7 +38,7 @@ InterstitialAd.load(
 The sample shows how to handle interstitial ad events.
 
 ```
-ad.fullScreenContentCallback = FullScreenContentCallback(
+_interstitialAd?.fullScreenContentCallback = FullScreenContentCallback(
     // Called when the ad showed the full screen content.
     onAdShowedFullScreenContent: (ad) {},
     // Called when an impression occurs on the ad.
