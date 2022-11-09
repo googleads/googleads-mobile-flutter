@@ -111,7 +111,10 @@ class InterstitialExampleState extends State<InterstitialExample> {
             _interstitialAd = ad;
           },
           // Called when an ad request failed.
-          onAdFailedToLoad: (LoadAdError error) {},
+          onAdFailedToLoad: (LoadAdError error) {
+            // ignore: avoid_print
+            print('InterstitialAd failed to load: $error');
+          },
         ));
   }
 
