@@ -32,8 +32,6 @@ fi
 
 if [ "$ACTION" == "ios" ]
 then
-  flutter pub get;
-  pod repo update;
   melos exec -c 1 --scope="$GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE" -- \
     flutter build ios --no-codesign --simulator --debug --target="$TARGET_FILE" --dart-define=CI=true
   exit
