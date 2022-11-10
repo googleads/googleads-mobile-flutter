@@ -28,7 +28,6 @@
 		9E7A912F2825E14C005FD19A /* FLTUserMessagingPlatformManagerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E7A912D2825E14C005FD19A /* FLTUserMessagingPlatformManagerTest.m */; };
 		9E7B9D8F273206F800C6A6AB /* FLTAppStateNotifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E7B9D8E273206F800C6A6AB /* FLTAppStateNotifier.m */; };
 		9EA7213725BB6517008D57E3 /* GoogleMobileAds.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */; };
-		9EA7213825BB6530008D57E3 /* GoogleMobileAds.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */; };
 		9EA7474E2637CD6800E0B0E4 /* FLTBannerAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA7474C2637CD6800E0B0E4 /* FLTBannerAdTest.m */; };
 		9EA7474F2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA7474D2637CD6800E0B0E4 /* FLTGAMBannerAdTest.m */; };
 		9EA747532637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA747512637EC7000E0B0E4 /* FLTGamInterstitialAdTest.m */; };
@@ -164,7 +163,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EA7213825BB6530008D57E3 /* GoogleMobileAds.xcframework in Frameworks */,
 				BEF5C9D9BC96688454A0E3B0 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -792,6 +790,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -818,6 +817,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
