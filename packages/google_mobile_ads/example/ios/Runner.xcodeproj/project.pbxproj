@@ -54,7 +54,7 @@
 		9EF4E70C26392B230007E4FE /* FLTMobileAds_Internal.h in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E6FF26392B230007E4FE /* FLTMobileAds_Internal.h */; };
 		9EF4E7102639410D0007E4FE /* FLTRewardedAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E70F2639410D0007E4FE /* FLTRewardedAdTest.m */; };
 		9EF4E7142639D4B30007E4FE /* FLTNativeAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF4E7132639D4B30007E4FE /* FLTNativeAdTest.m */; };
-		FBE669D215209F1F44CEEB21 /* libPods-Runner.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F369F228D3A43519CEE308 /* libPods-Runner.a */; };
+		BEF5C9D9BC96688454A0E3B0 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F14CED182CC13194D568B4C4 /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,7 +88,6 @@
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		7AFFD8ED1D35381100E5BB4D /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7AFFD8EE1D35381100E5BB4D /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		83F369F228D3A43519CEE308 /* libPods-Runner.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Runner.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FB13CD2248F07B80011A72F /* google_mobile_ads_exampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = google_mobile_ads_exampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FB13CD6248F07B80011A72F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8FB13CDC248F07D90011A72F /* FLTGoogleMobileAdsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsTest.m; path = ../../../ios/Tests/FLTGoogleMobileAdsTest.m; sourceTree = "<group>"; };
@@ -146,6 +145,7 @@
 		B4B811D89E676EBD37E2E206 /* libPods-google_mobile_ads_exampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-google_mobile_ads_exampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0B22AB9B287C9F711EAAF48 /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-google_mobile_ads_exampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-google_mobile_ads_exampleTests/Pods-google_mobile_ads_exampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CE82265EF05E2A9632B25E60 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+		F14CED182CC13194D568B4C4 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F74051031B69F8124E38352E /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -165,7 +165,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EA7213825BB6530008D57E3 /* GoogleMobileAds.xcframework in Frameworks */,
-				FBE669D215209F1F44CEEB21 /* libPods-Runner.a in Frameworks */,
+				BEF5C9D9BC96688454A0E3B0 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -188,8 +188,8 @@
 			children = (
 				9EB9FE57280F853D00DDBB4F /* UserMessagingPlatform.xcframework */,
 				9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */,
-				83F369F228D3A43519CEE308 /* libPods-Runner.a */,
 				B4B811D89E676EBD37E2E206 /* libPods-google_mobile_ads_exampleTests.a */,
+				F14CED182CC13194D568B4C4 /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -350,6 +350,7 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
+				9B1D271C636A5312CBEA6ED3 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -489,6 +490,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
+		};
+		9B1D271C636A5312CBEA6ED3 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
