@@ -222,7 +222,6 @@ class FlutterAdRequest {
     if (httpTimeoutMillis != null) {
       builder.setHttpTimeoutMillis(httpTimeoutMillis);
     }
-    android.util.Log.w("JJL", "requestAgent: " + requestAgent);
     builder.setRequestAgent(requestAgent);
     return builder;
   }
