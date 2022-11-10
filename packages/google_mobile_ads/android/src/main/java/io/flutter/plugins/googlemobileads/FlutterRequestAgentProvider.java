@@ -47,11 +47,13 @@ class FlutterRequestAgentProvider {
     if (newsTemplateVersion != null) {
       sb.append("_");
       sb.append(Constants.REQUEST_AGENT_NEWS_TEMPLATE_PREFIX);
+      sb.append("-");
       sb.append(newsTemplateVersion);
     }
     if (gameTemplateVersion != null) {
       sb.append("_");
       sb.append(Constants.REQUEST_AGENT_GAME_TEMPLATE_PREFIX);
+      sb.append("-");
       sb.append(gameTemplateVersion);
     }
     return sb.toString();

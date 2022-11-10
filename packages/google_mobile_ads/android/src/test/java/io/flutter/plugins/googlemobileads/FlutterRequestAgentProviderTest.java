@@ -71,7 +71,7 @@ public class FlutterRequestAgentProviderTest {
         Constants.REQUEST_AGENT_PREFIX_VERSIONED
             + "_"
             + Constants.REQUEST_AGENT_NEWS_TEMPLATE_PREFIX
-            + "1.2.54");
+            + "-1.2.54");
   }
 
   @Test
@@ -84,6 +84,23 @@ public class FlutterRequestAgentProviderTest {
         Constants.REQUEST_AGENT_PREFIX_VERSIONED
             + "_"
             + Constants.REQUEST_AGENT_GAME_TEMPLATE_PREFIX
-            + "1.2.54");
+            + "-1.2.54");
+  }
+
+  @Test
+  public void testGetRequestAgent_gameAndNewsTemplateMetadata() {
+    metaData.putString(FlutterRequestAgentProvider.NEWS_VERSION_KEY, "1.2.54");
+    metaData.putString(FlutterRequestAgentProvider.GAME_VERSION_KEY, "asdfg");
+    FlutterRequestAgentProvider sut = new FlutterRequestAgentProvider(mockContext);
+    String requestAgent = sut.getRequestAgent();
+    assertEquals(
+        requestAgent,
+        Constants.REQUEST_AGENT_PREFIX_VERSIONED
+            + "_"
+            + Constants.REQUEST_AGENT_NEWS_TEMPLATE_PREFIX
+            + "-1.2.54"
+            + "_"
+            + Constants.REQUEST_AGENT_GAME_TEMPLATE_PREFIX
+            + "-asdfg");
   }
 }
