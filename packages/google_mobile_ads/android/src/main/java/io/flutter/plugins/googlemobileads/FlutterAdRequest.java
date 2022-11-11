@@ -15,6 +15,7 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.os.Bundle;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
@@ -34,6 +35,7 @@ class FlutterAdRequest {
   @Nullable private final String mediationExtrasIdentifier;
   @Nullable private final MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
   @Nullable private final Map<String, String> adMobExtras;
+  @NonNull private final String requestAgent;
 
   protected static class Builder {
     @Nullable private List<String> keywords;
@@ -44,6 +46,12 @@ class FlutterAdRequest {
     @Nullable private String mediationExtrasIdentifier;
     @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
     @Nullable private Map<String, String> adMobExtras;
+    @NonNull private String requestAgent;
+
+    Builder setRequestAgent(String requestAgent) {
+      this.requestAgent = requestAgent;
+      return this;
+    }
 
     Builder setKeywords(@Nullable List<String> keywords) {
       this.keywords = keywords;
@@ -126,6 +134,11 @@ class FlutterAdRequest {
       return adMobExtras;
     }
 
+    @NonNull
+    protected String getRequestAgent() {
+      return requestAgent;
+    }
+
     FlutterAdRequest build() {
       return new FlutterAdRequest(
           keywords,
@@ -135,7 +148,8 @@ class FlutterAdRequest {
           httpTimeoutMillis,
           mediationExtrasIdentifier,
           mediationNetworkExtrasProvider,
-          adMobExtras);
+          adMobExtras,
+          requestAgent);
     }
   }
 
@@ -147,7 +161,8 @@ class FlutterAdRequest {
       @Nullable Integer httpTimeoutMillis,
       @Nullable String mediationExtrasIdentifier,
       @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider,
-      @Nullable Map<String, String> adMobExtras) {
+      @Nullable Map<String, String> adMobExtras,
+      String requestAgent) {
     this.keywords = keywords;
     this.contentUrl = contentUrl;
     this.nonPersonalizedAds = nonPersonalizedAds;
@@ -156,6 +171,7 @@ class FlutterAdRequest {
     this.mediationExtrasIdentifier = mediationExtrasIdentifier;
     this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
     this.adMobExtras = adMobExtras;
+    this.requestAgent = requestAgent;
   }
 
   /** Adds network extras to the ad request builder, if any. */
@@ -206,7 +222,7 @@ class FlutterAdRequest {
     if (httpTimeoutMillis != null) {
       builder.setHttpTimeoutMillis(httpTimeoutMillis);
     }
-    builder.setRequestAgent(Constants.REQUEST_AGENT_PREFIX_VERSIONED);
+    builder.setRequestAgent(requestAgent);
     return builder;
   }
 
@@ -247,6 +263,11 @@ class FlutterAdRequest {
   @Nullable
   protected Map<String, String> getAdMobExtras() {
     return adMobExtras;
+  }
+
+  @NonNull
+  protected String getRequestAgent() {
+    return requestAgent;
   }
 
   @Override

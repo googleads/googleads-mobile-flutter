@@ -16,6 +16,7 @@
 #import <XCTest/XCTest.h>
 
 #import "../Classes/FLTAdInstanceManager_Internal.h"
+#import "../Classes/FLTAdUtil.h"
 #import "../Classes/FLTAd_Internal.h"
 #import "../Classes/FLTGoogleMobileAdsCollection_Internal.h"
 #import "../Classes/FLTGoogleMobileAdsPlugin.h"
@@ -35,6 +36,9 @@
 }
 
 - (void)setUp {
+  id fltAdUtilMock = OCMClassMock([FLTAdUtil class]);
+  OCMStub(ClassMethod([fltAdUtilMock requestAgent]))
+      .andReturn(@"request-agent");
   _readerWriter = [[FLTGoogleMobileAdsReaderWriter alloc]
       initWithFactory:[[FLTTestAdSizeFactory alloc] init]];
   _messageCodec =
@@ -267,6 +271,7 @@
   XCTAssertEqualObjects(decodedRequest.mediationExtrasIdentifier,
                         @"identifier");
   XCTAssertEqualObjects(decodedRequest.adMobExtras, @{@"key" : @"value"});
+  XCTAssertEqualObjects(decodedRequest.requestAgent, @"request-agent");
 }
 
 - (void)testEncodeDecodeGAMAdRequest {
@@ -296,6 +301,7 @@
   XCTAssertEqualObjects(decodedRequest.mediationExtrasIdentifier,
                         @"identifier");
   XCTAssertEqualObjects(decodedRequest.adMobExtras, @{@"key" : @"value"});
+  XCTAssertEqualObjects(decodedRequest.requestAgent, @"request-agent");
 }
 
 - (void)testEncodeDecodeRewardItem {
