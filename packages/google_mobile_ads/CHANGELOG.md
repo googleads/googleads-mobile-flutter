@@ -1,3 +1,9 @@
+## 2.3.0
+* Updates GMA iOS dependency to 9.13
+* Updates GMA Android dependency to 21.3.0
+* Updates request agent string based on metadata in AndroidManifest.xml or Info.plist
+* Updates gradle tools version to 7.3.1
+
 ## 2.2.0
 * Updates GMA iOS dependency to 9.11.0. This fixes dependency issues in apps that
   also depend on the latest version of Firebase: https://github.com/googleads/googleads-mobile-flutter/issues/673
@@ -14,7 +20,7 @@
   * adSourceInstanceId
   * adSourceInstanceName
   * adSourceName
-* Fixes [close button issue on iOS](https://github.com/googleads/googleads-mobile-flutter/issues/191)
+* Fixes [close button issue on iOS](https://github.com/googleads/googleads-mobile-flutter/issuesjjliu/191)
 ## 2.0.1
 * Bug fix for [issue 580](https://github.com/googleads/googleads-mobile-flutter/issues/580).
   Adds a workaround on Android to wait for the ad widget to become visible
