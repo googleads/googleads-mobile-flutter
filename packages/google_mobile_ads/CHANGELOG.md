@@ -20,7 +20,7 @@
   * adSourceInstanceId
   * adSourceInstanceName
   * adSourceName
-* Fixes [close button issue on iOS](https://github.com/googleads/googleads-mobile-flutter/issuesjjliu/191)
+* Fixes [close button issue on iOS](https://github.com/googleads/googleads-mobile-flutter/issues/191)
 ## 2.0.1
 * Bug fix for [issue 580](https://github.com/googleads/googleads-mobile-flutter/issues/580).
   Adds a workaround on Android to wait for the ad widget to become visible
