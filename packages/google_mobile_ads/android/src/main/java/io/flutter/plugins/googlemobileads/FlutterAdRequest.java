@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.mediation.MediationExtrasReceiver;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,47 +49,56 @@ class FlutterAdRequest {
     @Nullable private Map<String, String> adMobExtras;
     @NonNull private String requestAgent;
 
+    @CanIgnoreReturnValue
     Builder setRequestAgent(String requestAgent) {
       this.requestAgent = requestAgent;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setKeywords(@Nullable List<String> keywords) {
       this.keywords = keywords;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setContentUrl(@Nullable String contentUrl) {
       this.contentUrl = contentUrl;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setNonPersonalizedAds(@Nullable Boolean nonPersonalizedAds) {
       this.nonPersonalizedAds = nonPersonalizedAds;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setNeighboringContentUrls(@Nullable List<String> neighboringContentUrls) {
       this.neighboringContentUrls = neighboringContentUrls;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setHttpTimeoutMillis(@Nullable Integer httpTimeoutMillis) {
       this.httpTimeoutMillis = httpTimeoutMillis;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setMediationNetworkExtrasIdentifier(@Nullable String mediationExtrasIdentifier) {
       this.mediationExtrasIdentifier = mediationExtrasIdentifier;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setMediationNetworkExtrasProvider(
         @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
       this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setAdMobExtras(@Nullable Map<String, String> adMobExtras) {
       this.adMobExtras = adMobExtras;
       return this;

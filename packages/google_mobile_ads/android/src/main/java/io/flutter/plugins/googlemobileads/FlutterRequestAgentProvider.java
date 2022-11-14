@@ -15,12 +15,10 @@ class FlutterRequestAgentProvider {
   static final String NEWS_VERSION_KEY =
       "io.flutter.plugins.googlemobileads.FLUTTER_NEWS_TEMPLATE_VERSION";
 
-  private final Context context;
   @Nullable private String newsTemplateVersion;
   @Nullable private String gameTemplateVersion;
 
   FlutterRequestAgentProvider(Context context) {
-    this.context = context;
     processGameAndNewsTemplateVersions(context);
   }
 
