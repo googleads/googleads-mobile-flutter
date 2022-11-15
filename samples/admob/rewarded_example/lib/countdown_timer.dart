@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:rewarded_example/main.dart';
 
 enum CountdownState {
   notStarted,

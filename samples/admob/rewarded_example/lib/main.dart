@@ -1,4 +1,4 @@
-import 'countdownTimer.dart';
+import 'countdown_timer.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -22,6 +22,7 @@ class RewardedExample extends StatefulWidget {
 class RewardedExampleState extends State<RewardedExample> {
   final CountdownTimer _countdownTimer = CountdownTimer();
   var _showWatchVideoButton = false;
+  var _coins = 0;
   RewardedAd? _rewardedAd;
 
   final String _adUnitId = Platform.isAndroid
@@ -31,7 +32,12 @@ class RewardedExampleState extends State<RewardedExample> {
   @override
   void initState() {
     _countdownTimer.addListener(() => setState(() {
-          _showWatchVideoButton = _countdownTimer.isComplete();
+          if (_countdownTimer.isComplete()) {
+            _showWatchVideoButton = true;
+            _coins += 1;
+          } else {
+            _showWatchVideoButton = false;
+          }
         }));
     _startNewGame();
 
@@ -88,6 +94,10 @@ class RewardedExampleState extends State<RewardedExample> {
                               _rewardedAd?.show(onUserEarnedReward:
                                   (AdWithoutView ad, RewardItem rewardItem) {
                                 // Reward the user for watching an ad.
+                                // ignore: avoid_print
+                                print('Reward amount: ${rewardItem.amount}');
+                                setState(
+                                    () => _coins += rewardItem.amount.toInt());
                               });
                             },
                             child: const Text(
@@ -95,6 +105,12 @@ class RewardedExampleState extends State<RewardedExample> {
                           ))
                     ],
                   )),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Text('Coins: $_coins')),
+              ),
             ],
           )),
     );
