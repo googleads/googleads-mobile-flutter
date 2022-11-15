@@ -91,9 +91,9 @@ class RewardedExampleState extends State<RewardedExample> {
                           child: TextButton(
                             onPressed: () {
                               setState(() => _showWatchVideoButton = false);
+
                               _rewardedAd?.show(onUserEarnedReward:
                                   (AdWithoutView ad, RewardItem rewardItem) {
-                                // Reward the user for watching an ad.
                                 // ignore: avoid_print
                                 print('Reward amount: ${rewardItem.amount}');
                                 setState(
@@ -123,6 +123,21 @@ class RewardedExampleState extends State<RewardedExample> {
         request: const AdRequest(),
         rewardedAdLoadCallback:
             RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+              // Called when the ad showed the full screen content.
+              onAdShowedFullScreenContent: (ad) {},
+              // Called when an impression occurs on the ad.
+              onAdImpression: (ad) {},
+              // Called when the ad failed to show full screen content.
+              onAdFailedToShowFullScreenContent: (ad, err) {},
+              // Called when the ad dismissed full screen content.
+              onAdDismissedFullScreenContent: (ad) {
+                ad.dispose();
+              },
+              // Called when a click is recorded for an ad.
+              onAdClicked: (ad) {});
+
+          // Keep a reference to the ad so you can show it later.
           _rewardedAd = ad;
         }, onAdFailedToLoad: (LoadAdError error) {
           // ignore: avoid_print
