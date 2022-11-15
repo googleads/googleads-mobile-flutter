@@ -2,7 +2,6 @@
 * Updates GMA iOS dependency to 9.13
 * Updates GMA Android dependency to 21.3.0
 * Updates request agent string based on metadata in AndroidManifest.xml or Info.plist
-* Updates gradle tools version to 7.3.1
 
 ## 2.2.0
 * Updates GMA iOS dependency to 9.11.0. This fixes dependency issues in apps that
