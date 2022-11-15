@@ -69,13 +69,16 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 }
 @end
 
-@implementation FLTGoogleMobileAdsReader
+@implementation FLTGoogleMobileAdsReader {
+  NSString *_requestAgent;
+}
 - (instancetype _Nonnull)initWithFactory:
                              (FLTAdSizeFactory *_Nonnull)adSizeFactory
                                     data:(NSData *_Nonnull)data {
   self = [super initWithData:data];
   if (self) {
     _adSizeFactory = adSizeFactory;
+    _requestAgent = [FLTAdUtil requestAgent];
   }
   return self;
 }
@@ -101,6 +104,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
     request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
     request.adMobExtras = [self readValueOfType:[self readByte]];
+    request.requestAgent = _requestAgent;
     return request;
   }
   case FLTAdMobFieldRewardItem: {
@@ -172,7 +176,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   }
   case FLTAdMobFieldAdManagerAdRequest: {
     FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
-
     request.keywords = [self readValueOfType:[self readByte]];
     request.contentURL = [self readValueOfType:[self readByte]];
     request.customTargeting = [self readValueOfType:[self readByte]];
@@ -184,6 +187,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
     request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
     request.adMobExtras = [self readValueOfType:[self readByte]];
+    request.requestAgent = _requestAgent;
     return request;
   }
   case FLTAdMobFieldAdapterInitializationState: {

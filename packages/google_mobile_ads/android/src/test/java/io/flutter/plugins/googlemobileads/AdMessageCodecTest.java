@@ -49,11 +49,14 @@ import org.robolectric.RobolectricTestRunner;
 public class AdMessageCodecTest {
   AdMessageCodec codec;
   AdSizeFactory mockAdSizeFactory;
+  FlutterRequestAgentProvider mockFlutterRequestAgentProvider;
 
   @Before
   public void setup() {
     mockAdSizeFactory = mock(AdSizeFactory.class);
-    codec = new AdMessageCodec(mock(Context.class), mockAdSizeFactory);
+    mockFlutterRequestAgentProvider = mock(FlutterRequestAgentProvider.class);
+    codec =
+        new AdMessageCodec(mock(Context.class), mockAdSizeFactory, mockFlutterRequestAgentProvider);
   }
 
   @Test
@@ -283,6 +286,7 @@ public class AdMessageCodecTest {
 
   @Test
   public void encodeFlutterAdManagerAdRequest() {
+    doReturn("mock-request-agent").when(mockFlutterRequestAgentProvider).getRequestAgent();
     FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
     builder.setKeywords(Arrays.asList("1", "2", "3"));
     builder.setContentUrl("contentUrl");
@@ -297,8 +301,10 @@ public class AdMessageCodecTest {
     FlutterAdManagerAdRequest flutterAdManagerAdRequest = builder.build();
 
     final ByteBuffer message = codec.encodeMessage(flutterAdManagerAdRequest);
-
-    assertEquals(codec.decodeMessage((ByteBuffer) message.position(0)), flutterAdManagerAdRequest);
+    FlutterAdManagerAdRequest decodedAdRequest =
+        (FlutterAdManagerAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(decodedAdRequest, flutterAdManagerAdRequest);
+    assertEquals(decodedAdRequest.getRequestAgent(), "mock-request-agent");
   }
 
   @Test
