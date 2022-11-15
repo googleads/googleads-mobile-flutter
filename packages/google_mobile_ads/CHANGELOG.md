@@ -1,3 +1,8 @@
+## 2.3.0
+* Updates GMA iOS dependency to 9.13
+* Updates GMA Android dependency to 21.3.0
+* Updates request agent string based on metadata in AndroidManifest.xml or Info.plist
+
 ## 2.2.0
 * Updates GMA iOS dependency to 9.11.0. This fixes dependency issues in apps that
   also depend on the latest version of Firebase: https://github.com/googleads/googleads-mobile-flutter/issues/673
