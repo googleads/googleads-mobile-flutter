@@ -58,16 +58,23 @@ class AdMessageCodec extends StandardMessageCodec {
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
   @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+  @NonNull private final FlutterRequestAgentProvider requestAgentProvider;
 
-  AdMessageCodec(@NonNull Context context) {
+  AdMessageCodec(
+      @NonNull Context context, @NonNull FlutterRequestAgentProvider requestAgentProvider) {
     this.context = context;
     this.adSizeFactory = new FlutterAdSize.AdSizeFactory();
+    this.requestAgentProvider = requestAgentProvider;
   }
 
   @VisibleForTesting
-  AdMessageCodec(@NonNull Context context, @NonNull FlutterAdSize.AdSizeFactory adSizeFactory) {
+  AdMessageCodec(
+      @NonNull Context context,
+      @NonNull FlutterAdSize.AdSizeFactory adSizeFactory,
+      @NonNull FlutterRequestAgentProvider requestAgentProvider) {
     this.context = context;
     this.adSizeFactory = adSizeFactory;
+    this.requestAgentProvider = requestAgentProvider;
   }
 
   void setContext(@NonNull Context context) {
@@ -119,12 +126,18 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, responseInfo.getDescription());
       writeValue(stream, responseInfo.getAdUnitMapping());
       writeValue(stream, responseInfo.getError());
+      writeValue(stream, responseInfo.getAdSourceName());
+      writeValue(stream, responseInfo.getAdSourceId());
+      writeValue(stream, responseInfo.getAdSourceInstanceName());
+      writeValue(stream, responseInfo.getAdSourceInstanceId());
     } else if (value instanceof FlutterResponseInfo) {
       stream.write(VALUE_RESPONSE_INFO);
       final FlutterResponseInfo responseInfo = (FlutterResponseInfo) value;
       writeValue(stream, responseInfo.getResponseId());
       writeValue(stream, responseInfo.getMediationAdapterClassName());
       writeValue(stream, responseInfo.getAdapterResponses());
+      writeValue(stream, responseInfo.getLoadedAdapterResponseInfo());
+      writeValue(stream, responseInfo.getResponseExtras());
     } else if (value instanceof FlutterAd.FlutterLoadAdError) {
       stream.write(VALUE_LOAD_AD_ERROR);
       final FlutterAd.FlutterLoadAdError error = (FlutterAd.FlutterLoadAdError) value;
@@ -229,6 +242,7 @@ class AdMessageCodec extends StandardMessageCodec {
             .setMediationNetworkExtrasIdentifier((String) readValueOfType(buffer.get(), buffer))
             .setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider)
             .setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer))
+            .setRequestAgent(requestAgentProvider.getRequestAgent())
             .build();
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
@@ -240,12 +254,18 @@ class AdMessageCodec extends StandardMessageCodec {
             (long) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
             (Map<String, String>) readValueOfType(buffer.get(), buffer),
-            (FlutterAdError) readValueOfType(buffer.get(), buffer));
+            (FlutterAdError) readValueOfType(buffer.get(), buffer),
+            (String) readValueOfType(buffer.get(), buffer),
+            (String) readValueOfType(buffer.get(), buffer),
+            (String) readValueOfType(buffer.get(), buffer),
+            (String) readValueOfType(buffer.get(), buffer));
       case VALUE_RESPONSE_INFO:
         return new FlutterResponseInfo(
             (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
-            (List<FlutterAdapterResponseInfo>) readValueOfType(buffer.get(), buffer));
+            (List<FlutterAdapterResponseInfo>) readValueOfType(buffer.get(), buffer),
+            (FlutterAdapterResponseInfo) readValueOfType(buffer.get(), buffer),
+            (Map<String, String>) readValueOfType(buffer.get(), buffer));
       case VALUE_LOAD_AD_ERROR:
         return new FlutterAd.FlutterLoadAdError(
             (Integer) readValueOfType(buffer.get(), buffer),
@@ -271,6 +291,7 @@ class AdMessageCodec extends StandardMessageCodec {
         builder.setMediationNetworkExtrasIdentifier((String) readValueOfType(buffer.get(), buffer));
         builder.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
         builder.setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer));
+        builder.setRequestAgent(requestAgentProvider.getRequestAgent());
         return builder.build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);

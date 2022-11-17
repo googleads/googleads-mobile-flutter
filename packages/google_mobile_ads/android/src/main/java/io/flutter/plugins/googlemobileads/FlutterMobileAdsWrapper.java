@@ -49,7 +49,7 @@ public class FlutterMobileAdsWrapper {
 
   /** Wrapper for getVersionString. */
   public String getVersionString() {
-    return MobileAds.getVersionString();
+    return MobileAds.getVersion().toString();
   }
 
   /** Wrapper for getRequestConfiguration. */

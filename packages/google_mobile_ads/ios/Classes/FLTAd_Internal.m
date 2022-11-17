@@ -14,7 +14,6 @@
 
 #import "FLTAd_Internal.h"
 #import "FLTAdUtil.h"
-#import "FLTConstants.h"
 
 @implementation FLTAdSize
 - (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width
@@ -220,7 +219,7 @@
   request.keywords = _keywords;
   request.contentURL = _contentURL;
   request.neighboringContentURLStrings = _neighboringContentURLs;
-  request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
+  request.requestAgent = _requestAgent;
   [self addNetworkExtrasToGADRequest:request adUnitId:adUnitId];
   return request;
 }
@@ -243,6 +242,10 @@
                                initWithResponseInfo:adNetworkInfo]];
     }
     _adNetworkInfoArray = infoArray;
+    _loadedAdNetworkResponseInfo = [[FLTGADAdNetworkResponseInfo alloc]
+        initWithResponseInfo:responseInfo.loadedAdNetworkResponseInfo];
+    _extrasDictionary =
+        responseInfo.extrasDictionary ? responseInfo.extrasDictionary : @{};
   }
   return self;
 }
@@ -269,6 +272,11 @@
       }
     }
     _error = responseInfo.error;
+
+    _adSourceName = responseInfo.adSourceName;
+    _adSourceInstanceName = responseInfo.adSourceInstanceName;
+    _adSourceInstanceID = responseInfo.adSourceInstanceID;
+    _adSourceID = responseInfo.adSourceID;
   }
   return self;
 }
@@ -302,6 +310,8 @@
   request.contentURL = self.contentURL;
   request.neighboringContentURLStrings = self.neighboringContentURLs;
   request.publisherProvidedID = self.pubProvidedID;
+  request.requestAgent = self.requestAgent;
+
   NSMutableDictionary<NSString *, NSString *> *targetingDictionary =
       [NSMutableDictionary dictionaryWithDictionary:self.customTargeting];
   for (NSString *key in self.customTargetingLists) {
@@ -310,7 +320,6 @@
   }
   request.customTargeting = targetingDictionary;
   [self addNetworkExtrasToGADRequest:request adUnitId:adUnitId];
-  request.requestAgent = FLT_REQUEST_AGENT_VERSIONED;
   return request;
 }
 @end
@@ -584,7 +593,9 @@
 
 #pragma mark - FLTFullScreenAd
 
-@implementation FLTFullScreenAd
+@implementation FLTFullScreenAd {
+  BOOL _statusBarVisibilityBeforeAdShow;
+}
 
 @synthesize manager;
 
@@ -609,6 +620,14 @@
 
 - (void)adWillPresentFullScreenContent:
     (nonnull id<GADFullScreenPresentingAd>)ad {
+  // Manually hide the status bar. This is a fix for
+  // https://github.com/googleads/googleads-mobile-flutter/issues/191
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  _statusBarVisibilityBeforeAdShow =
+      UIApplication.sharedApplication.statusBarHidden;
+  [UIApplication.sharedApplication setStatusBarHidden:YES];
+#pragma clang diagnostic pop
   [manager adWillPresentFullScreenContent:self];
 }
 
@@ -619,6 +638,11 @@
 
 - (void)adWillDismissFullScreenContent:
     (nonnull id<GADFullScreenPresentingAd>)ad {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  [UIApplication.sharedApplication
+      setStatusBarHidden:_statusBarVisibilityBeforeAdShow];
+#pragma clang diagnostic pop
   [manager adWillDismissFullScreenContent:self];
 }
 

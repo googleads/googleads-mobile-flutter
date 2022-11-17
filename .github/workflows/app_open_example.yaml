@@ -18,7 +18,7 @@ on:
   pull_request:
     paths:
       - "packages/google_mobile_ads/**"
-      - "packages/app_open_example/**"
+      - "samples/app_open_example/**"
       - ".github/workflows/app_open_example.yaml"
   push:
     branches:
@@ -33,7 +33,7 @@ jobs:
     if: github.event_name == 'pull_request'
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -47,7 +47,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -64,7 +64,7 @@ jobs:
     if: github.event_name == 'pull_request'
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -73,7 +73,7 @@ jobs:
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Flutter Analyze"
         run: |
-          cd packages/app_open_example/
+          cd samples/app_open_example/
           flutter analyze
       - name: "Flutter Format"
         run: |
