@@ -73,7 +73,7 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
 
 @implementation FLTUserMessagingPlatformWriter
 
-- (void)writeValue:(id _Nonnull)value {
+- (void)writeValue:(id)value {
   if ([value isKindOfClass:[UMPConsentForm class]]) {
     UMPConsentForm *form = (UMPConsentForm *)value;
     NSNumber *hash = [[NSNumber alloc] initWithInteger:form.hash];

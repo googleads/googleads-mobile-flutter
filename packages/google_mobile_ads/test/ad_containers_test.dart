@@ -706,17 +706,23 @@ void main() {
       // Simulate onAdFailedToLoad.
       AdError adError = AdError(1, 'domain', 'error-message');
       AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
-          adapterClassName: 'adapter-name',
-          latencyMillis: 500,
-          description: 'message',
-          adUnitMapping: {'key': 'value'},
-          adError: adError);
+        adapterClassName: 'adapter-name',
+        latencyMillis: 500,
+        description: 'message',
+        adUnitMapping: {'key': 'value'},
+        adError: adError,
+        adSourceName: 'adSourceName',
+        adSourceId: 'adSourceId',
+        adSourceInstanceName: 'adSourceInstanceName',
+        adSourceInstanceId: 'adSourceInstanceId',
+      );
 
       List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
       ResponseInfo responseInfo = ResponseInfo(
         responseId: 'id',
         mediationAdapterClassName: 'className',
         adapterResponses: adapterResponses,
+        responseExtras: {'key1': 'value1'},
       );
 
       final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
@@ -745,6 +751,7 @@ void main() {
       expect(result.responseInfo!.responseId, responseInfo.responseId);
       expect(result.responseInfo!.mediationAdapterClassName,
           responseInfo.mediationAdapterClassName);
+      expect(result.responseInfo!.responseExtras, responseInfo.responseExtras);
       List<AdapterResponseInfo> responses =
           result.responseInfo!.adapterResponses!;
       expect(responses.first.adapterClassName, 'adapter-name');
@@ -781,17 +788,23 @@ void main() {
       // Simulate onAdFailedToLoad.
       AdError adError = AdError(1, 'domain', 'error-message');
       AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
-          adapterClassName: 'adapter-name',
-          latencyMillis: 500,
-          description: 'message',
-          adUnitMapping: {'key': 'value'},
-          adError: adError);
+        adapterClassName: 'adapter-name',
+        latencyMillis: 500,
+        description: 'message',
+        adUnitMapping: {'key': 'value'},
+        adError: adError,
+        adSourceName: 'adSourceName',
+        adSourceId: 'adSourceId',
+        adSourceInstanceName: 'adSourceInstanceName',
+        adSourceInstanceId: 'adSourceInstanceId',
+      );
 
       List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
       ResponseInfo responseInfo = ResponseInfo(
         responseId: 'id',
         mediationAdapterClassName: 'className',
         adapterResponses: adapterResponses,
+        responseExtras: {},
       );
 
       final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
@@ -820,6 +833,7 @@ void main() {
       expect(result.responseInfo!.responseId, responseInfo.responseId);
       expect(result.responseInfo!.mediationAdapterClassName,
           responseInfo.mediationAdapterClassName);
+      expect(result.responseInfo!.responseExtras, responseInfo.responseExtras);
       List<AdapterResponseInfo> responses =
           result.responseInfo!.adapterResponses!;
       expect(responses.first.adapterClassName, 'adapter-name');
@@ -856,17 +870,23 @@ void main() {
       // Simulate onAdFailedToLoad.
       AdError adError = AdError(1, 'domain', 'error-message');
       AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
-          adapterClassName: 'adapter-name',
-          latencyMillis: 500,
-          description: 'message',
-          adUnitMapping: {'key': 'value'},
-          adError: adError);
+        adapterClassName: 'adapter-name',
+        latencyMillis: 500,
+        description: 'message',
+        adUnitMapping: {'key': 'value'},
+        adError: adError,
+        adSourceName: 'adSourceName',
+        adSourceId: 'adSourceId',
+        adSourceInstanceName: 'adSourceInstanceName',
+        adSourceInstanceId: 'adSourceInstanceId',
+      );
 
       List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
       ResponseInfo responseInfo = ResponseInfo(
         responseId: 'id',
         mediationAdapterClassName: 'className',
         adapterResponses: adapterResponses,
+        responseExtras: {'key1': 1234},
       );
 
       final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
@@ -895,6 +915,7 @@ void main() {
       expect(result.responseInfo!.responseId, responseInfo.responseId);
       expect(result.responseInfo!.mediationAdapterClassName,
           responseInfo.mediationAdapterClassName);
+      expect(result.responseInfo!.responseExtras, responseInfo.responseExtras);
       List<AdapterResponseInfo> responses =
           result.responseInfo!.adapterResponses!;
       expect(responses.first.adapterClassName, 'adapter-name');
@@ -932,6 +953,93 @@ void main() {
       );
 
       expect(adEventCompleter.future, completion(native));
+    });
+
+    test('AdapterResponseInfo encoding', () async {
+      var testAdapterResponseInfo = (adId) async {
+        final Completer<Ad> loadCompleter = Completer<Ad>();
+
+        AdRequest request = AdRequest();
+        await RewardedAd.load(
+            adUnitId: 'test-ad-unit',
+            request: request,
+            rewardedAdLoadCallback: RewardedAdLoadCallback(
+                onAdLoaded: (ad) {
+                  loadCompleter.complete(ad);
+                },
+                onAdFailedToLoad: (error) => null));
+
+        AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
+          adapterClassName: 'adapter-name',
+          latencyMillis: 500,
+          description: 'message',
+          adUnitMapping: {'key': 'value'},
+          adSourceName: 'adSourceName',
+          adSourceId: 'adSourceId',
+          adSourceInstanceName: 'adSourceInstanceName',
+          adSourceInstanceId: 'adSourceInstanceId',
+        );
+        final loadedAdapterResponseInfo = AdapterResponseInfo(
+          adapterClassName: 'adapter-name',
+          latencyMillis: 500,
+          description: 'message',
+          adUnitMapping: {'key': 'value'},
+          adSourceName: 'adSourceName',
+          adSourceId: 'adSourceId',
+          adSourceInstanceName: 'adSourceInstanceName',
+          adSourceInstanceId: 'adSourceInstanceId',
+        );
+
+        final responseInfo = ResponseInfo(
+          mediationAdapterClassName: 'adapter',
+          adapterResponses: [adapterResponseInfo],
+          responseId: 'id',
+          loadedAdapterResponseInfo: loadedAdapterResponseInfo,
+          responseExtras: {},
+        );
+        final methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+          'adId': adId,
+          'eventName': 'onAdLoaded',
+          'responseInfo': responseInfo,
+        });
+
+        ByteData data =
+            instanceManager.channel.codec.encodeMethodCall(methodCall);
+
+        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (ByteData? data) {},
+        );
+        final ad = await loadCompleter.future;
+
+        expect(ad.responseInfo!.mediationAdapterClassName!, 'adapter');
+        expect(ad.responseInfo!.responseId!, 'id');
+        expect(ad.responseInfo!.responseExtras, responseInfo.responseExtras);
+        final adapterResponse = ad.responseInfo!.adapterResponses!.first;
+        expect(adapterResponse.adapterClassName, 'adapter-name');
+        expect(adapterResponse.latencyMillis, 500);
+        expect(adapterResponse.description, 'message');
+        expect(adapterResponse.adUnitMapping, {'key': 'value'});
+        expect(adapterResponse.adSourceName, 'adSourceName');
+        expect(adapterResponse.adSourceId, 'adSourceId');
+        expect(adapterResponse.adSourceInstanceName, 'adSourceInstanceName');
+        expect(adapterResponse.adSourceInstanceId, 'adSourceInstanceId');
+        final loadedResponse = ad.responseInfo!.loadedAdapterResponseInfo!;
+        expect(loadedResponse.adapterClassName, 'adapter-name');
+        expect(loadedResponse.latencyMillis, 500);
+        expect(loadedResponse.description, 'message');
+        expect(loadedResponse.adUnitMapping, {'key': 'value'});
+        expect(loadedResponse.adSourceName, 'adSourceName');
+        expect(loadedResponse.adSourceId, 'adSourceId');
+        expect(loadedResponse.adSourceInstanceName, 'adSourceInstanceName');
+        expect(loadedResponse.adSourceInstanceId, 'adSourceInstanceId');
+      };
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      await testAdapterResponseInfo(0);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      await testAdapterResponseInfo(1);
     });
 
     test('onRewardedAdUserEarnedReward', () async {
@@ -1147,9 +1255,11 @@ void main() {
 
     test('encode/decode $LoadAdError', () async {
       final ResponseInfo responseInfo = ResponseInfo(
-          responseId: 'id',
-          mediationAdapterClassName: 'class',
-          adapterResponses: null);
+        responseId: 'id',
+        mediationAdapterClassName: 'class',
+        adapterResponses: null,
+        responseExtras: {},
+      );
       final ByteData byteData = codec.encodeMessage(
         LoadAdError(1, 'domain', 'message', responseInfo),
       )!;
@@ -1158,6 +1268,7 @@ void main() {
       expect(error.domain, 'domain');
       expect(error.message, 'message');
       expect(error.responseInfo?.responseId, responseInfo.responseId);
+      expect(error.responseInfo?.responseExtras, responseInfo.responseExtras);
       expect(error.responseInfo?.mediationAdapterClassName,
           responseInfo.mediationAdapterClassName);
       expect(error.responseInfo?.adapterResponses, null);

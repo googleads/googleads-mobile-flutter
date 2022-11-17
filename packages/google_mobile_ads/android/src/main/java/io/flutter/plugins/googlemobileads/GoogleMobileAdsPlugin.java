@@ -234,7 +234,10 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
     pluginBinding = binding;
-    adMessageCodec = new AdMessageCodec(binding.getApplicationContext());
+    adMessageCodec =
+        new AdMessageCodec(
+            binding.getApplicationContext(),
+            new FlutterRequestAgentProvider(binding.getApplicationContext()));
     if (mediationNetworkExtrasProvider != null) {
       adMessageCodec.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
     }

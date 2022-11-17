@@ -14,8 +14,10 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,22 +38,26 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
     @Nullable private Map<String, List<String>> customTargetingLists;
     @Nullable private String publisherProvidedId;
 
+    @CanIgnoreReturnValue
     public Builder setCustomTargeting(@Nullable Map<String, String> customTargeting) {
       this.customTargeting = customTargeting;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder setCustomTargetingLists(
         @Nullable Map<String, List<String>> customTargetingLists) {
       this.customTargetingLists = customTargetingLists;
       return this;
     }
 
+    @CanIgnoreReturnValue
     public Builder setPublisherProvidedId(@Nullable String publisherProvidedId) {
       this.publisherProvidedId = publisherProvidedId;
       return this;
     }
 
+    @Override
     FlutterAdManagerAdRequest build() {
       return new FlutterAdManagerAdRequest(
           getKeywords(),
@@ -64,7 +70,8 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
           publisherProvidedId,
           getMediationExtrasIdentifier(),
           getMediationNetworkExtrasProvider(),
-          getAdMobExtras());
+          getAdMobExtras(),
+          getRequestAgent());
     }
   }
 
@@ -79,7 +86,8 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
       @Nullable String publisherProvidedId,
       @Nullable String mediationExtrasIdentifier,
       @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider,
-      @Nullable Map<String, String> adMobExtras) {
+      @Nullable Map<String, String> adMobExtras,
+      @NonNull String requestAgent) {
     super(
         keywords,
         contentUrl,
@@ -88,7 +96,8 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
         httpTimeoutMillis,
         mediationExtrasIdentifier,
         mediationNetworkExtrasProvider,
-        adMobExtras);
+        adMobExtras,
+        requestAgent);
     this.customTargeting = customTargeting;
     this.customTargetingLists = customTargetingLists;
     this.publisherProvidedId = publisherProvidedId;

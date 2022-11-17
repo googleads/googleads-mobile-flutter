@@ -87,6 +87,7 @@
 @property id<
     FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
 @property NSDictionary<NSString *, NSString *> *_Nullable adMobExtras;
+@property NSString *_Nonnull requestAgent;
 
 - (GADRequest *_Nonnull)asGADRequest:(NSString *_Nonnull)adUnitId;
 @end
@@ -101,6 +102,10 @@
 @property NSString *_Nullable dictionaryDescription;
 @property NSDictionary<NSString *, NSString *> *_Nullable adUnitMapping;
 @property NSError *_Nullable error;
+@property NSString *_Nullable adSourceInstanceID;
+@property NSString *_Nullable adSourceID;
+@property NSString *_Nullable adSourceName;
+@property NSString *_Nullable adSourceInstanceName;
 
 - (instancetype _Nonnull)initWithResponseInfo:
     (GADAdNetworkResponseInfo *_Nonnull)responseInfo;
@@ -113,6 +118,8 @@
 @property NSString *_Nullable responseIdentifier;
 @property NSString *_Nullable adNetworkClassName;
 @property NSArray<FLTGADAdNetworkResponseInfo *> *_Nullable adNetworkInfoArray;
+@property FLTGADAdNetworkResponseInfo *_Nullable loadedAdNetworkResponseInfo;
+@property NSDictionary<NSString *, id> *_Nullable extrasDictionary;
 
 - (instancetype _Nonnull)initWithResponseInfo:
     (GADResponseInfo *_Nonnull)responseInfo;

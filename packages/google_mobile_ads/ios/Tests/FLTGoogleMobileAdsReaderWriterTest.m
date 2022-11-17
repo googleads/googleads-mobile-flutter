@@ -16,6 +16,7 @@
 #import <XCTest/XCTest.h>
 
 #import "../Classes/FLTAdInstanceManager_Internal.h"
+#import "../Classes/FLTAdUtil.h"
 #import "../Classes/FLTAd_Internal.h"
 #import "../Classes/FLTGoogleMobileAdsCollection_Internal.h"
 #import "../Classes/FLTGoogleMobileAdsPlugin.h"
@@ -35,6 +36,9 @@
 }
 
 - (void)setUp {
+  id fltAdUtilMock = OCMClassMock([FLTAdUtil class]);
+  OCMStub(ClassMethod([fltAdUtilMock requestAgent]))
+      .andReturn(@"request-agent");
   _readerWriter = [[FLTGoogleMobileAdsReaderWriter alloc]
       initWithFactory:[[FLTTestAdSizeFactory alloc] init]];
   _messageCodec =
@@ -267,6 +271,7 @@
   XCTAssertEqualObjects(decodedRequest.mediationExtrasIdentifier,
                         @"identifier");
   XCTAssertEqualObjects(decodedRequest.adMobExtras, @{@"key" : @"value"});
+  XCTAssertEqualObjects(decodedRequest.requestAgent, @"request-agent");
 }
 
 - (void)testEncodeDecodeGAMAdRequest {
@@ -296,6 +301,7 @@
   XCTAssertEqualObjects(decodedRequest.mediationExtrasIdentifier,
                         @"identifier");
   XCTAssertEqualObjects(decodedRequest.adMobExtras, @{@"key" : @"value"});
+  XCTAssertEqualObjects(decodedRequest.requestAgent, @"request-agent");
 }
 
 - (void)testEncodeDecodeRewardItem {
@@ -447,14 +453,36 @@
   OCMStub([mockGADResponseInfo adUnitMapping]).andReturn(adUnitMappingsDict);
   OCMStub([mockGADResponseInfo error]).andReturn(error);
 
+  GADAdNetworkResponseInfo *mockLoadedGADResponseInfo =
+      OCMClassMock([GADAdNetworkResponseInfo class]);
+  OCMStub([mockLoadedGADResponseInfo adNetworkClassName])
+      .andReturn(@"loaded-adapter");
+  OCMStub([mockLoadedGADResponseInfo latency]).andReturn(123.1234);
+  OCMStub([mockLoadedGADResponseInfo dictionaryRepresentation])
+      .andReturn(descriptionsDict);
+  OCMStub([mockLoadedGADResponseInfo adUnitMapping])
+      .andReturn(adUnitMappingsDict);
+  OCMStub([mockLoadedGADResponseInfo error]).andReturn(error);
+  OCMStub([mockLoadedGADResponseInfo adSourceName]).andReturn(@"adSourceName");
+  OCMStub([mockLoadedGADResponseInfo adSourceID]).andReturn(@"adSourceID");
+  OCMStub([mockLoadedGADResponseInfo adSourceInstanceName])
+      .andReturn(@"adSourceInstanceName");
+  OCMStub([mockLoadedGADResponseInfo adSourceInstanceID])
+      .andReturn(@"adSourceInstanceID");
+
   FLTGADAdNetworkResponseInfo *adNetworkResponseInfo =
       [[FLTGADAdNetworkResponseInfo alloc]
           initWithResponseInfo:mockGADResponseInfo];
+  FLTGADAdNetworkResponseInfo *loadedNetworkResponseInfo =
+      [[FLTGADAdNetworkResponseInfo alloc]
+          initWithResponseInfo:mockLoadedGADResponseInfo];
 
   FLTGADResponseInfo *responseInfo = [[FLTGADResponseInfo alloc] init];
   responseInfo.adNetworkClassName = @"class-name";
   responseInfo.responseIdentifier = @"identifier";
   responseInfo.adNetworkInfoArray = @[ adNetworkResponseInfo ];
+  responseInfo.loadedAdNetworkResponseInfo = loadedNetworkResponseInfo;
+  responseInfo.extrasDictionary = @{@"key" : @"value"};
 
   NSData *encodedMessage = [_messageCodec encode:responseInfo];
   FLTGADResponseInfo *decodedResponseInfo =
@@ -462,6 +490,8 @@
 
   XCTAssertEqualObjects(decodedResponseInfo.adNetworkClassName, @"class-name");
   XCTAssertEqualObjects(decodedResponseInfo.responseIdentifier, @"identifier");
+  XCTAssertEqualObjects(decodedResponseInfo.extrasDictionary,
+                        @{@"key" : @"value"});
   XCTAssertEqual(decodedResponseInfo.adNetworkInfoArray.count, 1);
 
   FLTGADAdNetworkResponseInfo *decodedInfo =
@@ -475,6 +505,24 @@
   XCTAssertEqual(decodedInfo.error.code, 1);
   XCTAssertEqualObjects(decodedInfo.error.domain, @"domain");
   XCTAssertEqualObjects(decodedInfo.error.localizedDescription, @"error");
+
+  FLTGADAdNetworkResponseInfo *decodedLoadedInfo =
+      decodedResponseInfo.loadedAdNetworkResponseInfo;
+  XCTAssertEqualObjects(decodedLoadedInfo.adNetworkClassName,
+                        @"loaded-adapter");
+  XCTAssertEqualObjects(decodedLoadedInfo.latency, @(123123));
+  XCTAssertEqualObjects(decodedLoadedInfo.dictionaryDescription,
+                        @"{\n    descriptions = dict;\n}");
+  XCTAssertEqualObjects(decodedLoadedInfo.adUnitMapping, adUnitMappingsDict);
+  XCTAssertEqual(decodedLoadedInfo.error.code, 1);
+  XCTAssertEqualObjects(decodedLoadedInfo.error.domain, @"domain");
+  XCTAssertEqualObjects(decodedLoadedInfo.error.localizedDescription, @"error");
+  XCTAssertEqualObjects(decodedLoadedInfo.adSourceName, @"adSourceName");
+  XCTAssertEqualObjects(decodedLoadedInfo.adSourceID, @"adSourceID");
+  XCTAssertEqualObjects(decodedLoadedInfo.adSourceInstanceName,
+                        @"adSourceInstanceName");
+  XCTAssertEqualObjects(decodedLoadedInfo.adSourceInstanceID,
+                        @"adSourceInstanceID");
 }
 
 - (void)testEncodeDecodeFLTGADLoadErrorWithEmptyValues {

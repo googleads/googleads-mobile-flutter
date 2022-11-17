@@ -65,7 +65,11 @@ class ResponseInfo {
   /// Constructs a [ResponseInfo] with the [responseId] and [mediationAdapterClassName].
   @protected
   const ResponseInfo(
-      {this.responseId, this.mediationAdapterClassName, this.adapterResponses});
+      {this.responseId,
+      this.mediationAdapterClassName,
+      this.adapterResponses,
+      this.loadedAdapterResponseInfo,
+      required this.responseExtras});
 
   /// An identifier for the loaded ad.
   final String? responseId;
@@ -79,11 +83,21 @@ class ResponseInfo {
   /// Can be used to debug the mediation waterfall execution.
   final List<AdapterResponseInfo>? adapterResponses;
 
+  /// The [AdapterResponseInfo] of the adapter that was used to load the ad.
+  ///
+  /// This is null if the ad failed to load.
+  final AdapterResponseInfo? loadedAdapterResponseInfo;
+
+  /// Map of extra information about the ad response.
+  final Map<String, dynamic> responseExtras;
+
   @override
   String toString() {
     return '$runtimeType(responseId: $responseId, '
         'mediationAdapterClassName: $mediationAdapterClassName, '
-        'adapterResponses: $adapterResponses)';
+        'adapterResponses: $adapterResponses, '
+        'loadedAdapterResponseInfo: $loadedAdapterResponseInfo), '
+        'responseExtras: $responseExtras';
   }
 }
 
@@ -96,6 +110,10 @@ class AdapterResponseInfo {
     required this.latencyMillis,
     required this.description,
     required this.adUnitMapping,
+    required this.adSourceName,
+    required this.adSourceId,
+    required this.adSourceInstanceName,
+    required this.adSourceInstanceId,
     this.adError,
   });
 
@@ -116,13 +134,36 @@ class AdapterResponseInfo {
   /// The error that occurred while rendering the ad.
   final AdError? adError;
 
+  /// The ad source name associated with this adapter response.
+  ///
+  /// This is an empty string "" if the ad server did not populate this field.
+  final String adSourceName;
+
+  /// The ad source ID associated with this adapter response.
+  ///
+  /// This is an empty string "" if the ad server did not populate this field.
+  final String adSourceId;
+
+  /// The ad source instance name associated with this adapter response.
+  ///
+  /// This is an empty string "" if the ad server did not populate this field.
+  final String adSourceInstanceName;
+
+  /// The ad source instance id associated with this adapter response.
+  ///
+  /// This is an empty string "" if the ad server did not populate this field.
+  final String adSourceInstanceId;
   @override
   String toString() {
     return '$runtimeType(adapterClassName: $adapterClassName, '
-        'latencyMillis: $latencyMillis), '
+        'latencyMillis: $latencyMillis, '
         'description: $description, '
         'adUnitMapping: $adUnitMapping, '
-        'adError: $adError)';
+        'adError: $adError, '
+        'adSourceName: $adSourceName, '
+        'adSourceId: $adSourceId, '
+        'adSourceInstanceName: $adSourceInstanceName, '
+        'adSourceInstanceId: $adSourceInstanceId)';
   }
 }
 

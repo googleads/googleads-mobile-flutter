@@ -48,7 +48,7 @@ jobs:
           ./gradlew test
 
   iOS:
-    runs-on: macos-12
+    runs-on: macos-latest
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v1
@@ -59,15 +59,12 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
-          flutter config
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
       - name: "Unit Tests"
         run: |
           cd packages/google_mobile_ads/ios
           pod lib lint --allow-warnings
-        env:
-          DEVELOPER_DIR: /Applications/Xcode_13.4.1.app/Contents/Developer
   
   flutter:
     runs-on: ubuntu-latest

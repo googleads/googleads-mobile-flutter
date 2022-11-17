@@ -69,13 +69,16 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
 }
 @end
 
-@implementation FLTGoogleMobileAdsReader
+@implementation FLTGoogleMobileAdsReader {
+  NSString *_requestAgent;
+}
 - (instancetype _Nonnull)initWithFactory:
                              (FLTAdSizeFactory *_Nonnull)adSizeFactory
                                     data:(NSData *_Nonnull)data {
   self = [super initWithData:data];
   if (self) {
     _adSizeFactory = adSizeFactory;
+    _requestAgent = [FLTAdUtil requestAgent];
   }
   return self;
 }
@@ -101,6 +104,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
     request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
     request.adMobExtras = [self readValueOfType:[self readByte]];
+    request.requestAgent = _requestAgent;
     return request;
   }
   case FLTAdMobFieldRewardItem: {
@@ -113,10 +117,16 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     NSString *adNetworkClassName = [self readValueOfType:[self readByte]];
     NSArray<FLTGADAdNetworkResponseInfo *> *adNetworkInfoArray =
         [self readValueOfType:[self readByte]];
+    FLTGADAdNetworkResponseInfo *loadedResponseInfo =
+        [self readValueOfType:[self readByte]];
+    NSDictionary<NSString *, id> *extrasDictionary =
+        [self readValueOfType:[self readByte]];
     FLTGADResponseInfo *gadResponseInfo = [[FLTGADResponseInfo alloc] init];
     gadResponseInfo.adNetworkClassName = adNetworkClassName;
     gadResponseInfo.responseIdentifier = responseIdentifier;
     gadResponseInfo.adNetworkInfoArray = adNetworkInfoArray;
+    gadResponseInfo.loadedAdNetworkResponseInfo = loadedResponseInfo;
+    gadResponseInfo.extrasDictionary = extrasDictionary;
     return gadResponseInfo;
   }
   case FLTAdmobFieldGADAdNetworkResponseInfo: {
@@ -126,6 +136,10 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     NSDictionary<NSString *, NSString *> *adUnitMapping =
         [self readValueOfType:[self readByte]];
     NSError *error = [self readValueOfType:[self readByte]];
+    NSString *adSourceName = [self readValueOfType:[self readByte]];
+    NSString *adSourceID = [self readValueOfType:[self readByte]];
+    NSString *adSourceInstanceName = [self readValueOfType:[self readByte]];
+    NSString *adSourceInstanceID = [self readValueOfType:[self readByte]];
     FLTGADAdNetworkResponseInfo *adNetworkResponseInfo =
         [[FLTGADAdNetworkResponseInfo alloc] init];
     adNetworkResponseInfo.adNetworkClassName = adNetworkClassName;
@@ -133,6 +147,11 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     adNetworkResponseInfo.dictionaryDescription = dictionaryDescription;
     adNetworkResponseInfo.adUnitMapping = adUnitMapping;
     adNetworkResponseInfo.error = error;
+    adNetworkResponseInfo.adSourceName = adSourceName;
+    adNetworkResponseInfo.adSourceID = adSourceID;
+    adNetworkResponseInfo.adSourceInstanceName = adSourceInstanceName;
+    adNetworkResponseInfo.adSourceInstanceID = adSourceInstanceID;
+
     return adNetworkResponseInfo;
   }
   case FLTAdMobFieldLoadError: {
@@ -157,7 +176,6 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   }
   case FLTAdMobFieldAdManagerAdRequest: {
     FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
-
     request.keywords = [self readValueOfType:[self readByte]];
     request.contentURL = [self readValueOfType:[self readByte]];
     request.customTargeting = [self readValueOfType:[self readByte]];
@@ -169,6 +187,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     request.mediationExtrasIdentifier = [self readValueOfType:[self readByte]];
     request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
     request.adMobExtras = [self readValueOfType:[self readByte]];
+    request.requestAgent = _requestAgent;
     return request;
   }
   case FLTAdMobFieldAdapterInitializationState: {
@@ -277,7 +296,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   }
 }
 
-- (void)writeValue:(id _Nonnull)value {
+- (void)writeValue:(id)value {
   if ([value isKindOfClass:[FLTAdSize class]]) {
     [self writeAdSize:value];
   } else if ([value isKindOfClass:[FLTGAMAdRequest class]]) {
@@ -308,10 +327,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:item.type];
   } else if ([value isKindOfClass:[FLTGADResponseInfo class]]) {
     [self writeByte:FLTAdmobFieldGadResponseInfo];
-    GADResponseInfo *responseInfo = value;
+    FLTGADResponseInfo *responseInfo = value;
     [self writeValue:responseInfo.responseIdentifier];
     [self writeValue:responseInfo.adNetworkClassName];
     [self writeValue:responseInfo.adNetworkInfoArray];
+    [self writeValue:responseInfo.loadedAdNetworkResponseInfo];
+    [self writeValue:responseInfo.extrasDictionary];
   } else if ([value isKindOfClass:[FLTGADAdNetworkResponseInfo class]]) {
     [self writeByte:FLTAdmobFieldGADAdNetworkResponseInfo];
     FLTGADAdNetworkResponseInfo *networkResponseInfo = value;
@@ -320,6 +341,10 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:networkResponseInfo.dictionaryDescription];
     [self writeValue:networkResponseInfo.adUnitMapping];
     [self writeValue:networkResponseInfo.error];
+    [self writeValue:networkResponseInfo.adSourceName];
+    [self writeValue:networkResponseInfo.adSourceID];
+    [self writeValue:networkResponseInfo.adSourceInstanceName];
+    [self writeValue:networkResponseInfo.adSourceInstanceID];
   } else if ([value isKindOfClass:[FLTLoadAdError class]]) {
     [self writeByte:FLTAdMobFieldLoadError];
     FLTLoadAdError *error = value;

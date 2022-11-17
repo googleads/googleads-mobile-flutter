@@ -71,18 +71,11 @@
       });
   // Stub setting of FullScreenContentDelegate to invoke delegate callbacks.
   NSError *error = OCMClassMock([NSError class]);
+  __block id<GADFullScreenContentDelegate> fullScreenContentDelegate;
   OCMStub([rewardedClassMock setFullScreenContentDelegate:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
-        id<GADFullScreenContentDelegate> delegate;
-        [invocation getArgument:&delegate atIndex:2];
-        XCTAssertEqual(delegate, ad);
-        [delegate adDidRecordImpression:rewardedClassMock];
-        [delegate adDidRecordClick:rewardedClassMock];
-        [delegate adDidDismissFullScreenContent:rewardedClassMock];
-        [delegate adWillPresentFullScreenContent:rewardedClassMock];
-        [delegate adWillDismissFullScreenContent:rewardedClassMock];
-        [delegate ad:rewardedClassMock
-            didFailToPresentFullScreenContentWithError:error];
+        [invocation getArgument:&fullScreenContentDelegate atIndex:2];
+        XCTAssertEqual(fullScreenContentDelegate, ad);
       });
   GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
   OCMStub([rewardedClassMock responseInfo]).andReturn(responseInfo);
@@ -110,6 +103,12 @@
         handler(adValue);
         return YES;
       }]]);
+
+  // Setup mock for UIApplication.sharedInstance
+  id uiApplicationClassMock = OCMClassMock([UIApplication class]);
+  OCMStub(ClassMethod([uiApplicationClassMock sharedApplication]))
+      .andReturn(uiApplicationClassMock);
+
   // Call load and check expected interactions with mocks.
   [ad load];
 
@@ -154,12 +153,31 @@
       presentFromRootViewController:[OCMArg isEqual:mockRootViewController]
            userDidEarnRewardHandler:[OCMArg any]]);
 
-  // Verify full screen callbacks.
+  [fullScreenContentDelegate adWillPresentFullScreenContent:rewardedClassMock];
   OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);
-  OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
-  OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
+  // Verify that we hide status bar
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  OCMVerify([uiApplicationClassMock setStatusBarHidden:YES]);
+#pragma clang diagnostic pop
+
+  [fullScreenContentDelegate adDidRecordImpression:rewardedClassMock];
   OCMVerify([mockManager adDidRecordImpression:[OCMArg isEqual:ad]]);
+
+  [fullScreenContentDelegate adDidRecordClick:rewardedClassMock];
   OCMVerify([mockManager adDidRecordClick:[OCMArg isEqual:ad]]);
+
+  [fullScreenContentDelegate adDidDismissFullScreenContent:rewardedClassMock];
+  OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
+
+  [fullScreenContentDelegate adWillDismissFullScreenContent:rewardedClassMock];
+  OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  OCMVerify([uiApplicationClassMock setStatusBarHidden:NO]);
+#pragma clang diagnostic pop
+
+  [ad ad:rewardedClassMock didFailToPresentFullScreenContentWithError:error];
   OCMVerify([mockManager
       didFailToPresentFullScreenContentWithError:[OCMArg isEqual:ad]
                                            error:[OCMArg isEqual:error]]);

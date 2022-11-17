@@ -142,17 +142,23 @@ void main() {
         await banner.load();
         AdError adError = AdError(1, 'domain', 'error-message');
         AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
-            adapterClassName: 'adapter-name',
-            latencyMillis: 500,
-            description: 'message',
-            adUnitMapping: {'key': 'value'},
-            adError: adError);
+          adapterClassName: 'adapter-name',
+          latencyMillis: 500,
+          description: 'message',
+          adUnitMapping: {'key': 'value'},
+          adError: adError,
+          adSourceName: 'adSourceName',
+          adSourceId: 'adSourceId',
+          adSourceInstanceName: 'adSourceInstanceName',
+          adSourceInstanceId: 'adSourceInstanceId',
+        );
 
         List<AdapterResponseInfo> adapterResponses = [adapterResponseInfo];
         ResponseInfo responseInfo = ResponseInfo(
           responseId: 'id',
           mediationAdapterClassName: 'className',
           adapterResponses: adapterResponses,
+          responseExtras: {'key': 'value'},
         );
 
         final MethodCall methodCall =
@@ -179,6 +185,8 @@ void main() {
         expect(results[1].responseInfo.responseId, responseInfo.responseId);
         expect(results[1].responseInfo.mediationAdapterClassName,
             responseInfo.mediationAdapterClassName);
+        expect(results[1].responseInfo.responseExtras,
+            responseInfo.responseExtras);
         List<AdapterResponseInfo> responses =
             results[1].responseInfo.adapterResponses;
         expect(responses.first.adapterClassName, 'adapter-name');
