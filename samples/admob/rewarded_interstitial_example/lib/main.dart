@@ -1,9 +1,8 @@
-import 'package:rewarded_interstitial_example/ad_dialog.dart';
-
 import 'countdown_timer.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:rewarded_interstitial_example/ad_dialog.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
