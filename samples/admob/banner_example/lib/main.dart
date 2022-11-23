@@ -61,7 +61,7 @@ class BannerExampleState extends State<BannerExample> {
 
   /// Loads and shows a banner ad.
   ///
-  /// Dimensions of the ad are determined by the width of the screen.
+  /// Dimensions of the ad are determined by the AdSize class.
   void _loadAd() async {
     BannerAd(
       adUnitId: _adUnitId,
