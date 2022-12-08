@@ -28,9 +28,8 @@ class BannerExampleState extends State<BannerExample> {
 
   @override
   void initState() {
-    _loadAd();
-
     super.initState();
+    _loadAd();
   }
 
   @override
