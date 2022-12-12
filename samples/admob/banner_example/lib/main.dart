@@ -20,16 +20,37 @@ class BannerExample extends StatefulWidget {
 }
 
 class BannerExampleState extends State<BannerExample> {
-  BannerAd? _bannerAd;
-
   final String _adUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/6300978111'
       : 'ca-app-pub-3940256099942544/2934735716';
 
+  late final BannerAd _bannerAd = BannerAd(
+    adUnitId: _adUnitId,
+    size: AdSize.banner,
+    request: const AdRequest(),
+    listener: _listener,
+  );
+
+  final BannerAdListener _listener = BannerAdListener(
+    // Called when an ad is successfully received.
+    onAdLoaded: (Ad ad) {},
+    // Called when an ad request failed.
+    onAdFailedToLoad: (Ad ad, LoadAdError error) {
+      // Dispose the ad here to free resources.
+      ad.dispose();
+    },
+    // Called when an ad opens an overlay that covers the screen.
+    onAdOpened: (Ad ad) {},
+    // Called when an ad removes an overlay that covers the screen.
+    onAdClosed: (Ad ad) {},
+    // Called when an impression occurs on the ad.
+    onAdImpression: (Ad ad) {},
+  ); // BannerAdListener
+
   @override
   void initState() {
     super.initState();
-    _loadAd();
+    _bannerAd.load();
   }
 
   @override
@@ -42,54 +63,24 @@ class BannerExampleState extends State<BannerExample> {
           ),
           body: Stack(
             children: [
-              if (_bannerAd != null)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SafeArea(
-                    child: SizedBox(
-                      width: _bannerAd!.size.width.toDouble(),
-                      height: _bannerAd!.size.height.toDouble(),
-                      child: AdWidget(ad: _bannerAd!),
-                    ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SafeArea(
+                  child: SizedBox(
+                    width: _bannerAd.size.width.toDouble(),
+                    height: _bannerAd.size.height.toDouble(),
+                    child: AdWidget(ad: _bannerAd),
                   ),
-                )
+                ),
+              )
             ],
           )),
     );
   }
 
-  /// Loads and shows a banner ad.
-  ///
-  /// Dimensions of the ad are determined by the AdSize class.
-  void _loadAd() async {
-    BannerAd(
-      adUnitId: _adUnitId,
-      request: const AdRequest(),
-      size: AdSize.banner,
-      listener: BannerAdListener(
-        // Called when an ad is successfully received.
-        onAdLoaded: (ad) {
-          setState(() {
-            _bannerAd = ad as BannerAd;
-          });
-        },
-        // Called when an ad request failed.
-        onAdFailedToLoad: (ad, err) {
-          ad.dispose();
-        },
-        // Called when an ad opens an overlay that covers the screen.
-        onAdOpened: (Ad ad) {},
-        // Called when an ad removes an overlay that covers the screen.
-        onAdClosed: (Ad ad) {},
-        // Called when an impression occurs on the ad.
-        onAdImpression: (Ad ad) {},
-      ),
-    ).load();
-  }
-
   @override
   void dispose() {
-    _bannerAd?.dispose();
+    _bannerAd.dispose();
     super.dispose();
   }
 }
