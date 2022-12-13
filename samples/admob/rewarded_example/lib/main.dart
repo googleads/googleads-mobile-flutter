@@ -31,8 +31,10 @@ class RewardedExampleState extends State<RewardedExample> {
 
   @override
   void initState() {
+    super.initState();
+
     _countdownTimer.addListener(() => setState(() {
-          if (_countdownTimer.isComplete()) {
+          if (_countdownTimer.isComplete) {
             _showWatchVideoButton = true;
             _coins += 1;
           } else {
@@ -40,8 +42,6 @@ class RewardedExampleState extends State<RewardedExample> {
           }
         }));
     _startNewGame();
-
-    super.initState();
   }
 
   void _startNewGame() {
@@ -74,11 +74,11 @@ class RewardedExampleState extends State<RewardedExample> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(_countdownTimer.isComplete()
+                      Text(_countdownTimer.isComplete
                           ? 'Game over!'
                           : '${_countdownTimer.timeLeft} seconds left!'),
                       Visibility(
-                        visible: _countdownTimer.isComplete(),
+                        visible: _countdownTimer.isComplete,
                         child: TextButton(
                           onPressed: () {
                             _startNewGame();
@@ -121,8 +121,7 @@ class RewardedExampleState extends State<RewardedExample> {
     RewardedAd.load(
         adUnitId: _adUnitId,
         request: const AdRequest(),
-        rewardedAdLoadCallback:
-            RewardedAdLoadCallback(onAdLoaded: (RewardedAd ad) {
+        rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (ad) {
           ad.fullScreenContentCallback = FullScreenContentCallback(
               // Called when the ad showed the full screen content.
               onAdShowedFullScreenContent: (ad) {},
@@ -148,7 +147,7 @@ class RewardedExampleState extends State<RewardedExample> {
   @override
   void dispose() {
     _rewardedAd?.dispose();
-    _countdownTimer.removeListener(() {});
+    _countdownTimer.dispose();
     super.dispose();
   }
 }

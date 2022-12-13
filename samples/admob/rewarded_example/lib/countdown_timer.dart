@@ -13,9 +13,7 @@ class CountdownTimer extends ChangeNotifier {
   late var timeLeft = _countdownTime;
   var _countdownState = CountdownState.notStarted;
 
-  bool isComplete() {
-    return _countdownState == CountdownState.ended;
-  }
+  bool get isComplete => _countdownState == CountdownState.ended;
 
   void start() {
     timeLeft = _countdownTime;
