@@ -20,7 +20,7 @@ class AdDialogState extends State<AdDialog> {
   @override
   void initState() {
     _countdownTimer.addListener(() => setState(() {
-          if (_countdownTimer.isComplete()) {
+          if (_countdownTimer.isComplete) {
             Navigator.pop(context);
             widget.showAd();
           }
@@ -51,7 +51,7 @@ class AdDialogState extends State<AdDialog> {
 
   @override
   void dispose() {
-    _countdownTimer.removeListener(() {});
+    _countdownTimer.dispose();
     super.dispose();
   }
 }

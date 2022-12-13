@@ -33,8 +33,10 @@ class RewardedInterstitialExampleState
 
   @override
   void initState() {
+    super.initState();
+
     _countdownTimer.addListener(() => setState(() {
-          if (_countdownTimer.isComplete()) {
+          if (_countdownTimer.isComplete) {
             showDialog(
                 context: context,
                 builder: (context) => AdDialog(showAd: () {
@@ -44,8 +46,6 @@ class RewardedInterstitialExampleState
           }
         }));
     _startNewGame();
-
-    super.initState();
   }
 
   void _startNewGame() {
@@ -87,11 +87,11 @@ class RewardedInterstitialExampleState
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(_countdownTimer.isComplete()
+                      Text(_countdownTimer.isComplete
                           ? 'Game over!'
                           : '${_countdownTimer.timeLeft} seconds left!'),
                       Visibility(
-                        visible: _countdownTimer.isComplete(),
+                        visible: _countdownTimer.isComplete,
                         child: TextButton(
                           onPressed: () {
                             _startNewGame();
@@ -117,8 +117,8 @@ class RewardedInterstitialExampleState
     RewardedInterstitialAd.load(
         adUnitId: _adUnitId,
         request: const AdRequest(),
-        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-            onAdLoaded: (RewardedInterstitialAd ad) {
+        rewardedInterstitialAdLoadCallback:
+            RewardedInterstitialAdLoadCallback(onAdLoaded: (ad) {
           ad.fullScreenContentCallback = FullScreenContentCallback(
               // Called when the ad showed the full screen content.
               onAdShowedFullScreenContent: (ad) {},
@@ -144,7 +144,7 @@ class RewardedInterstitialExampleState
   @override
   void dispose() {
     _rewardedInterstitialAd?.dispose();
-    _countdownTimer.removeListener(() {});
+    _countdownTimer.dispose();
     super.dispose();
   }
 }
