@@ -66,10 +66,10 @@ class _NativeTemplateExampleExampleState extends State<NativeTemplateExample> {
     // Create the ad objects and load ads.
     _nativeAd = NativeAd(
       adUnitId:
-        // '/6499/example/native',
-      Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/2247696110'
-          : 'ca-app-pub-3940256099942544/3986624511',
+          // '/6499/example/native',
+          Platform.isAndroid
+              ? 'ca-app-pub-3940256099942544/2247696110'
+              : 'ca-app-pub-3940256099942544/3986624511',
       request: AdRequest(),
       listener: NativeAdListener(
         onAdLoaded: (Ad ad) {

@@ -1027,9 +1027,9 @@ class NativeAd extends AdWithView {
     this.customOptions,
     this.nativeTemplateStyle,
   })  : request = null,
-      assert(adManagerRequest != null),
-      assert(nativeTemplateStyle != null || factoryId != null),
-      super(adUnitId: adUnitId, listener: listener);
+        assert(adManagerRequest != null),
+        assert(nativeTemplateStyle != null || factoryId != null),
+        super(adUnitId: adUnitId, listener: listener);
 
   /// An identifier for the factory that creates the Platform view.
   final String? factoryId;
