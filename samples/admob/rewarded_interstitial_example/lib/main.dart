@@ -125,7 +125,9 @@ class RewardedInterstitialExampleState
               // Called when an impression occurs on the ad.
               onAdImpression: (ad) {},
               // Called when the ad failed to show full screen content.
-              onAdFailedToShowFullScreenContent: (ad, err) {},
+              onAdFailedToShowFullScreenContent: (ad, err) {
+                ad.dispose();
+              },
               // Called when the ad dismissed full screen content.
               onAdDismissedFullScreenContent: (ad) {
                 ad.dispose();
