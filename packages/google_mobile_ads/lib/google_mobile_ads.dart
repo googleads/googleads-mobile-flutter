@@ -21,3 +21,7 @@ export 'src/ump/consent_request_parameters.dart';
 export 'src/ump/consent_information.dart';
 export 'src/ump/consent_form.dart';
 export 'src/ump/form_error.dart';
+export 'src/nativetemplates/native_template_font_style.dart';
+export 'src/nativetemplates/native_template_style.dart';
+export 'src/nativetemplates/native_template_text_style.dart';
+export 'src/nativetemplates/template_type.dart';
