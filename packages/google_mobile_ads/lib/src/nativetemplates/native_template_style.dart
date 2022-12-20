@@ -45,4 +45,27 @@ class NativeTemplateStyle {
 
   /// The corner radius for the icon view and call to action (iOS only).
   double? cornerRadius;
+
+  @override
+  bool operator ==(Object other) {
+    return other is NativeTemplateStyle &&
+        templateType == other.templateType &&
+        callToActionTextStyle == other.callToActionTextStyle &&
+        primaryTextStyle == other.primaryTextStyle &&
+        secondaryTextStyle == other.secondaryTextStyle &&
+        tertiaryTextStyle == other.tertiaryTextStyle &&
+        mainBackgroundColor == other.mainBackgroundColor &&
+        cornerRadius == other.cornerRadius;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        templateType,
+        callToActionTextStyle,
+        primaryTextStyle,
+        secondaryTextStyle,
+        tertiaryTextStyle,
+        mainBackgroundColor,
+        cornerRadius
+      ]);
 }

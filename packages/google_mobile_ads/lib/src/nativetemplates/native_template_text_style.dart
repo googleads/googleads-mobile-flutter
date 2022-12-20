@@ -22,4 +22,16 @@ class NativeTemplateTextStyle {
 
   /// Size of the text
   double? size;
+
+  @override
+  bool operator ==(Object other) {
+    return other is NativeTemplateTextStyle &&
+        textColor == other.textColor &&
+        backgroundColor == other.backgroundColor &&
+        style == other.style &&
+        size == other.size;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([textColor, backgroundColor, style, size]);
 }

@@ -1146,6 +1146,36 @@ class AdMessageCodec extends StandardMessageCodec {
           testDeviceIds:
               readValueOfType(buffer.getUint8(), buffer).cast<String>(),
         );
+      case _valueNativeTemplateStyle:
+        return NativeTemplateStyle(
+          templateType: readValueOfType(buffer.getUint8(), buffer),
+          mainBackgroundColor: readValueOfType(buffer.getUint8(), buffer),
+          callToActionTextStyle: readValueOfType(buffer.getUint8(), buffer),
+          primaryTextStyle: readValueOfType(buffer.getUint8(), buffer),
+          secondaryTextStyle: readValueOfType(buffer.getUint8(), buffer),
+          tertiaryTextStyle: readValueOfType(buffer.getUint8(), buffer),
+          cornerRadius: defaultTargetPlatform == TargetPlatform.iOS
+              ? readValueOfType(buffer.getUint8(), buffer)
+              : null,
+        );
+      case _valueNativeTemplateType:
+        return TemplateType.values[readValueOfType(buffer.getUint8(), buffer)];
+      case _valueNativeTemplateTextStyle:
+        return NativeTemplateTextStyle(
+          textColor: readValueOfType(buffer.getUint8(), buffer),
+          backgroundColor: readValueOfType(buffer.getUint8(), buffer),
+          style: readValueOfType(buffer.getUint8(), buffer),
+          size: readValueOfType(buffer.getUint8(), buffer),
+        );
+      case _valueColor:
+        return Color.fromARGB(
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer));
+      case _valueNativeTemplateFontStyle:
+        return NativeTemplateFontStyle
+            .values[readValueOfType(buffer.getUint8(), buffer)];
       default:
         return super.readValueOfType(type, buffer);
     }
