@@ -22,6 +22,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'anchored_adaptive_example.dart';
 import 'fluid_example.dart';
 import 'inline_adaptive_example.dart';
+import 'native_template_example.dart';
 import 'reusable_inline_example.dart';
 
 void main() {
@@ -46,6 +47,14 @@ class _MyAppState extends State<MyApp> {
     contentUrl: 'http://foo.com/bar.html',
     nonPersonalizedAds: true,
   );
+
+  static const interstitialButtonText = 'InterstitialAd';
+  static const rewardedButtonText = 'RewardedAd';
+  static const rewardedInterstitialButtonText = 'RewardedInterstitialAd';
+  static const fluidButtonText = 'Fluid';
+  static const inlineAdaptiveButtonText = 'Inline adaptive';
+  static const anchoredAdaptiveButtonText = 'Anchored adaptive';
+  static const nativeTemplateButtonText = 'Native template';
 
   InterstitialAd? _interstitialAd;
   int _numInterstitialLoadAttempts = 0;
@@ -234,33 +243,40 @@ class _MyAppState extends State<MyApp> {
               PopupMenuButton<String>(
                 onSelected: (String result) {
                   switch (result) {
-                    case 'InterstitialAd':
+                    case interstitialButtonText:
                       _showInterstitialAd();
                       break;
-                    case 'RewardedAd':
+                    case rewardedButtonText:
                       _showRewardedAd();
                       break;
-                    case 'RewardedInterstitialAd':
+                    case rewardedInterstitialButtonText:
                       _showRewardedInterstitialAd();
                       break;
-                    case 'Fluid':
+                    case fluidButtonText:
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => FluidExample()),
                       );
                       break;
-                    case 'Inline adaptive':
+                    case inlineAdaptiveButtonText:
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => InlineAdaptiveExample()),
                       );
                       break;
-                    case 'Anchored adaptive':
+                    case anchoredAdaptiveButtonText:
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => AnchoredAdaptiveExample()),
+                      );
+                      break;
+                    case nativeTemplateButtonText:
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NativeTemplateExample()),
                       );
                       break;
                     default:
@@ -269,28 +285,32 @@ class _MyAppState extends State<MyApp> {
                 },
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
-                    value: 'InterstitialAd',
-                    child: Text('InterstitialAd'),
+                    value: interstitialButtonText,
+                    child: Text(interstitialButtonText),
                   ),
                   PopupMenuItem<String>(
-                    value: 'RewardedAd',
-                    child: Text('RewardedAd'),
+                    value: rewardedButtonText,
+                    child: Text(rewardedButtonText),
                   ),
                   PopupMenuItem<String>(
-                    value: 'RewardedInterstitialAd',
-                    child: Text('RewardedInterstitialAd'),
+                    value: rewardedInterstitialButtonText,
+                    child: Text(rewardedInterstitialButtonText),
                   ),
                   PopupMenuItem<String>(
-                    value: 'Fluid',
-                    child: Text('Fluid'),
+                    value: fluidButtonText,
+                    child: Text(fluidButtonText),
                   ),
                   PopupMenuItem<String>(
-                    value: 'Inline adaptive',
-                    child: Text('Inline adaptive'),
+                    value: inlineAdaptiveButtonText,
+                    child: Text(inlineAdaptiveButtonText),
                   ),
                   PopupMenuItem<String>(
-                    value: 'Anchored adaptive',
-                    child: Text('Anchored adaptive'),
+                    value: anchoredAdaptiveButtonText,
+                    child: Text(anchoredAdaptiveButtonText),
+                  ),
+                  PopupMenuItem<String>(
+                    value: nativeTemplateButtonText,
+                    child: Text(nativeTemplateButtonText),
                   ),
                 ],
               ),
