@@ -339,7 +339,7 @@ public class GoogleMobileAdsTest {
   @Test
   public void flutterAdListener_onNativeAdClicked() {
     final FlutterNativeAd nativeAd =
-        new FlutterNativeAd.Builder()
+        new FlutterNativeAd.Builder(ApplicationProvider.getApplicationContext())
             .setManager(testManager)
             .setAdUnitId("testId")
             .setRequest(request)
@@ -368,7 +368,7 @@ public class GoogleMobileAdsTest {
   @Test
   public void flutterAdListener_onNativeAdImpression() {
     final FlutterNativeAd nativeAd =
-        new FlutterNativeAd.Builder()
+        new FlutterNativeAd.Builder(ApplicationProvider.getApplicationContext())
             .setManager(testManager)
             .setAdUnitId("testId")
             .setRequest(request)
