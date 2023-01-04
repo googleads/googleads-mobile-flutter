@@ -200,7 +200,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, options.requestCustomMuteThisAd);
       writeValue(stream, options.shouldRequestMultipleImages);
       writeValue(stream, options.shouldReturnUrlsForImageAssets);
-
     } else if (value instanceof RequestConfiguration) {
       stream.write(VALUE_REQUEST_CONFIGURATION_PARAMS);
       RequestConfiguration params = (RequestConfiguration) value;

@@ -5,5 +5,4 @@
     android:layout_height="350dp"
     android:id="@+id/template_medium"
     app:gnt_template_type="@layout/gnt_medium_template_view">
-
 </com.google.android.ads.nativetemplates.TemplateView>

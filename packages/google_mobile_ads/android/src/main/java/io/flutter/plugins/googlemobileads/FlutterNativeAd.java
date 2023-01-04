@@ -132,7 +132,7 @@ class FlutterNativeAd extends FlutterAd {
       } else if (adUnitId == null) {
         throw new IllegalStateException("AdUnitId cannot be null.");
       } else if (adFactory == null && nativeTemplateStyle == null) {
-        throw new IllegalStateException("NativeAdFactory and nativeTemplateSTyle cannot be null.");
+        throw new IllegalStateException("NativeAdFactory and nativeTemplateStyle cannot be null.");
       } else if (request == null && adManagerRequest == null) {
         throw new IllegalStateException("adRequest or addManagerRequest must be non-null.");
       }
