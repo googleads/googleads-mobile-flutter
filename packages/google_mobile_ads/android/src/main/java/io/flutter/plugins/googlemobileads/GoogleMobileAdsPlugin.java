@@ -38,6 +38,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterOverlayAd;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
 import io.flutter.plugins.googlemobileads.usermessagingplatform.UserMessagingPlatformManager;
 import java.util.HashMap;
 import java.util.List;
@@ -393,14 +394,16 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
       case "loadNativeAd":
         final String factoryId = call.argument("factoryId");
         final NativeAdFactory factory = nativeAdFactories.get(factoryId);
-        if (factory == null) {
-          final String message = String.format("Can't find NativeAdFactory with id: %s", factoryId);
+        final FlutterNativeTemplateStyle templateStyle = call.argument("nativeTemplateStyle");
+        if (factory == null && templateStyle == null) {
+          final String message =
+              String.format("No NativeAdFactory with id: %s or nativeTemplateStyle", factoryId);
           result.error("NativeAdError", message, null);
           break;
         }
 
         final FlutterNativeAd nativeAd =
-            new FlutterNativeAd.Builder()
+            new FlutterNativeAd.Builder(context)
                 .setManager(instanceManager)
                 .setAdUnitId(call.<String>argument("adUnitId"))
                 .setAdFactory(factory)
@@ -410,6 +413,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 .setId(call.<Integer>argument("adId"))
                 .setNativeAdOptions(call.<FlutterNativeAdOptions>argument("nativeAdOptions"))
                 .setFlutterAdLoader(new FlutterAdLoader(context))
+                .setNativeTemplateStyle(call.argument("nativeTemplateStyle"))
                 .build();
         instanceManager.trackAd(nativeAd, call.<Integer>argument("adId"));
         nativeAd.load();

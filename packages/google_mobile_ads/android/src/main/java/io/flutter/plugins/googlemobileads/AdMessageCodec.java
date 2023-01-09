@@ -16,6 +16,8 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -25,6 +27,10 @@ import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.InlineAdaptiveBannerAdSize;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateFontStyle;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateTextStyle;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateType;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -54,6 +60,11 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_VIDEO_OPTIONS = (byte) 145;
   private static final byte VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE = (byte) 146;
   private static final byte VALUE_REQUEST_CONFIGURATION_PARAMS = (byte) 148;
+  private static final byte VALUE_NATIVE_TEMPLATE_STYLE = (byte) 149;
+  private static final byte VALUE_NATIVE_TEMPLATE_TEXT_STYLE = (byte) 150;
+  private static final byte VALUE_NATIVE_TEMPLATE_FONT_STYLE = (byte) 151;
+  private static final byte VALUE_NATIVE_TEMPLATE_TYPE = (byte) 152;
+  private static final byte VALUE_COLOR = (byte) 153;
 
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
@@ -336,6 +347,32 @@ class AdMessageCodec extends StandardMessageCodec {
         rcb.setTagForUnderAgeOfConsent((Integer) readValueOfType(buffer.get(), buffer));
         rcb.setTestDeviceIds((List<String>) readValueOfType(buffer.get(), buffer));
         return rcb.build();
+      case VALUE_NATIVE_TEMPLATE_STYLE:
+        return new FlutterNativeTemplateStyle(
+            (FlutterNativeTemplateType) readValueOfType(buffer.get(), buffer),
+            (ColorDrawable) readValueOfType(buffer.get(), buffer),
+            (FlutterNativeTemplateTextStyle) readValueOfType(buffer.get(), buffer),
+            (FlutterNativeTemplateTextStyle) readValueOfType(buffer.get(), buffer),
+            (FlutterNativeTemplateTextStyle) readValueOfType(buffer.get(), buffer),
+            (FlutterNativeTemplateTextStyle) readValueOfType(buffer.get(), buffer));
+      case VALUE_NATIVE_TEMPLATE_TEXT_STYLE:
+        return new FlutterNativeTemplateTextStyle(
+            (ColorDrawable) readValueOfType(buffer.get(), buffer),
+            (ColorDrawable) readValueOfType(buffer.get(), buffer),
+            (FlutterNativeTemplateFontStyle) readValueOfType(buffer.get(), buffer),
+            ((Double) readValueOfType(buffer.get(), buffer)).floatValue());
+      case VALUE_NATIVE_TEMPLATE_FONT_STYLE:
+        return FlutterNativeTemplateFontStyle.fromIntValue(
+            (Integer) readValueOfType(buffer.get(), buffer));
+      case VALUE_NATIVE_TEMPLATE_TYPE:
+        return FlutterNativeTemplateType.fromIntValue(
+            (Integer) readValueOfType(buffer.get(), buffer));
+      case VALUE_COLOR:
+        final Integer alpha = (Integer) readValueOfType(buffer.get(), buffer);
+        final Integer red = (Integer) readValueOfType(buffer.get(), buffer);
+        final Integer green = (Integer) readValueOfType(buffer.get(), buffer);
+        final Integer blue = (Integer) readValueOfType(buffer.get(), buffer);
+        return new ColorDrawable(Color.argb(alpha, red, green, blue));
       default:
         return super.readValueOfType(type, buffer);
     }
