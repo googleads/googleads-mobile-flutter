@@ -39,7 +39,7 @@ android {
       testImplementation 'org.mockito:mockito-inline:3.9.0'
       testImplementation 'org.robolectric:robolectric:4.4'
       testImplementation 'androidx.test:core:1.3.0'
-      implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+      implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     }
   testOptions {
