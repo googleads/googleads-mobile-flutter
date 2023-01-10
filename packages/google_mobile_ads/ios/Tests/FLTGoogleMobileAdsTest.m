@@ -116,7 +116,8 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
            customOptions:nil
       rootViewController:OCMClassMock([UIViewController class])
                     adId:@1
-         nativeAdOptions:nil];
+         nativeAdOptions:nil
+         nativeTemplateStyle:nil];
   [_manager loadAd:ad];
 
   GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
@@ -142,7 +143,8 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
            customOptions:nil
       rootViewController:OCMClassMock([UIViewController class])
                     adId:@1
-         nativeAdOptions:nil];
+         nativeAdOptions:nil
+     nativeTemplateStyle:nil];
   [_manager loadAd:ad];
 
   NSDictionary *userInfo = @{NSLocalizedDescriptionKey : @"message"};
@@ -191,7 +193,8 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
            customOptions:nil
       rootViewController:OCMClassMock([UIViewController class])
                     adId:@1
-         nativeAdOptions:nil];
+         nativeAdOptions:nil
+     nativeTemplateStyle:nil];
   [_manager loadAd:ad];
 
   [_manager onAppEvent:ad name:@"color" data:@"red"];
@@ -216,7 +219,8 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
            customOptions:nil
       rootViewController:OCMClassMock([UIViewController class])
                     adId:@1
-         nativeAdOptions:nil];
+         nativeAdOptions:nil
+     nativeTemplateStyle:nil];
   [_manager loadAd:ad];
 
   [_manager adDidRecordClick:ad];
@@ -307,7 +311,8 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
            customOptions:nil
       rootViewController:OCMClassMock([UIViewController class])
                     adId:@1
-         nativeAdOptions:nil];
+         nativeAdOptions:nil
+     nativeTemplateStyle:nil];
   [_manager loadAd:ad];
 
   NSDecimalNumber *valueDecimal = [[NSDecimalNumber alloc] initWithInt:1];

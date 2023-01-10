@@ -60,7 +60,8 @@
                                             customOptions:customOptions
                                        rootViewController:mockViewController
                                                      adId:@1
-                                          nativeAdOptions:mockNativeAdOptions];
+                                          nativeAdOptions:mockNativeAdOptions
+                                      nativeTemplateStyle:nil];
   ad.manager = mockManager;
 
   XCTAssertEqual(ad.adLoader.adUnitID, @"testAdUnitId");

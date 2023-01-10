@@ -14,6 +14,7 @@
 
 #import "FLTAd_Internal.h"
 #import "FLTAdUtil.h"
+#import "FLTNativeTemplateStyle.h"
 
 @implementation FLTAdSize
 - (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width
@@ -1092,19 +1093,21 @@
   FLTAdRequest *_adRequest;
   NSObject<FLTNativeAdFactory> *_nativeAdFactory;
   NSDictionary<NSString *, id> *_customOptions;
-  GADNativeAdView *_view;
+  UIView *_view;
   GADAdLoader *_adLoader;
   FLTNativeAdOptions *_nativeAdOptions;
+  FLTNativeTemplateStyle *_nativeTemplateStyle;
 }
 
 - (instancetype _Nonnull)
-      initWithAdUnitId:(NSString *_Nonnull)adUnitId
-               request:(FLTAdRequest *_Nonnull)request
-       nativeAdFactory:(NSObject<FLTNativeAdFactory> *_Nonnull)nativeAdFactory
-         customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions
-    rootViewController:(UIViewController *_Nonnull)rootViewController
-                  adId:(NSNumber *_Nonnull)adId
-       nativeAdOptions:(FLTNativeAdOptions *_Nullable)nativeAdOptions {
+       initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                request:(FLTAdRequest *_Nonnull)request
+        nativeAdFactory:(NSObject<FLTNativeAdFactory> *_Nonnull)nativeAdFactory
+          customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions
+     rootViewController:(UIViewController *_Nonnull)rootViewController
+                   adId:(NSNumber *_Nonnull)adId
+        nativeAdOptions:(FLTNativeAdOptions *_Nullable)nativeAdOptions
+    nativeTemplateStyle:(FLTNativeTemplateStyle *_Nullable)nativeTemplateStyle {
   self = [super init];
   if (self) {
     self.adId = adId;
@@ -1123,6 +1126,7 @@
                                       adTypes:@[ GADAdLoaderAdTypeNative ]
                                       options:adLoaderOptions];
     _nativeAdOptions = nativeAdOptions;
+    _nativeTemplateStyle = nativeTemplateStyle;
     self.adLoader.delegate = self;
   }
   return self;
@@ -1151,8 +1155,13 @@
   // Use Nil instead of Null to fix crash with Swift integrations.
   NSDictionary<NSString *, id> *customOptions =
       [[NSNull null] isEqual:_customOptions] ? nil : _customOptions;
-  _view = [_nativeAdFactory createNativeAd:nativeAd
-                             customOptions:customOptions];
+  if ([FLTAdUtil isNotNull:_nativeAdFactory]) {
+    _view = [_nativeAdFactory createNativeAd:nativeAd
+                               customOptions:customOptions];
+  } else if ([FLTAdUtil isNotNull:_nativeTemplateStyle]) {
+    _view = [_nativeTemplateStyle getDisplayedView:nativeAd];
+  }
+
   nativeAd.delegate = self;
 
   __weak FLTNativeAd *weakSelf = self;
