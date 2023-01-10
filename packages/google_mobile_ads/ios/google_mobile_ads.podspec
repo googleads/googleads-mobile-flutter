@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'google_mobile_ads'
-  s.version          = '0.0.1'
+  s.version          = '1.0.0'
   s.summary          = 'Google Mobile Ads plugin for Flutter.'
   s.description      = <<-DESC
 Google Mobile Ads plugin for Flutter.
@@ -19,6 +19,9 @@ Google Mobile Ads plugin for Flutter.
   s.ios.deployment_target = '10.0'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS' => 'armv7 arm64 x86_64' }
   s.static_framework = true
+  s.resource_bundles = {
+   'google_mobile_ads' => ['Classes/**/*.xib']
+  }
 
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'Tests/**/*'
