@@ -1155,11 +1155,11 @@
   // Use Nil instead of Null to fix crash with Swift integrations.
   NSDictionary<NSString *, id> *customOptions =
       [[NSNull null] isEqual:_customOptions] ? nil : _customOptions;
-  if ([FLTAdUtil isNotNull:_nativeAdFactory]) {
+  if ([FLTAdUtil isNotNull:_nativeTemplateStyle]) {
+    _view = [_nativeTemplateStyle getDisplayedView:nativeAd];
+  } else if ([FLTAdUtil isNotNull:_nativeAdFactory]) {
     _view = [_nativeAdFactory createNativeAd:nativeAd
                                customOptions:customOptions];
-  } else if ([FLTAdUtil isNotNull:_nativeTemplateStyle]) {
-    _view = [_nativeTemplateStyle getDisplayedView:nativeAd];
   }
 
   nativeAd.delegate = self;
