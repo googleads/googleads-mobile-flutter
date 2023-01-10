@@ -46,12 +46,13 @@
 - (FLTNativeTemplateViewWrapper *_Nonnull)getDisplayedView:
     (GADNativeAd *_Nonnull)gadNativeAd {
   // Bundle file name is declared in podspec
-  id bundleURL = [NSBundle.mainBundle URLForResource:@"google_mobile_ads" withExtension:@"bundle"];
+  id bundleURL = [NSBundle.mainBundle URLForResource:@"google_mobile_ads"
+                                       withExtension:@"bundle"];
   NSBundle *bundle = [NSBundle bundleWithURL:bundleURL];
-  GADTTemplateView *templateView =
-      [bundle loadNibNamed:_templateType.xibName
-                                    owner:nil
-                                  options:nil].firstObject;
+  GADTTemplateView *templateView = [bundle loadNibNamed:_templateType.xibName
+                                                  owner:nil
+                                                options:nil]
+                                       .firstObject;
   NSMutableDictionary *styles = [[NSMutableDictionary alloc] init];
   if ([FLTAdUtil isNotNull:_mainBackgroundColor]) {
     styles[GADTNativeTemplateStyleKeyMainBackgroundColor] =
