@@ -16,8 +16,8 @@
 #include <UserMessagingPlatform/UserMessagingPlatform.h>
 #import <XCTest/XCTest.h>
 
-#import "../../Classes/UserMessagingPlatform/FLTUserMessagingPlatformManager.h"
-#import "../../Classes/UserMessagingPlatform/FLTUserMessagingPlatformReaderWriter.h"
+#import "FLTUserMessagingPlatformManager.h"
+#import "FLTUserMessagingPlatformReaderWriter.h"
 
 @interface FLTUserMessagingPlatformManagerTest : XCTestCase
 @end
