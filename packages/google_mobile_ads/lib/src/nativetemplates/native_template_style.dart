@@ -54,7 +54,7 @@ class NativeTemplateStyle {
         primaryTextStyle == other.primaryTextStyle &&
         secondaryTextStyle == other.secondaryTextStyle &&
         tertiaryTextStyle == other.tertiaryTextStyle &&
-        mainBackgroundColor == other.mainBackgroundColor &&
+        mainBackgroundColor?.value == other.mainBackgroundColor?.value &&
         cornerRadius == other.cornerRadius;
   }
 
