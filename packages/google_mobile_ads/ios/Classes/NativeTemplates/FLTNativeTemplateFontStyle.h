@@ -25,7 +25,7 @@ typedef NS_ENUM(NSInteger, FLTNativeTemplateFontStyle) {
 };
 
 /**
- * Handles mapping argb to UIColor.
+ * Handles mapping int values to FLTNativeTemplateFontStyle.
  */
 @interface FLTNativeTemplateFontStyleWrapper : NSObject
 

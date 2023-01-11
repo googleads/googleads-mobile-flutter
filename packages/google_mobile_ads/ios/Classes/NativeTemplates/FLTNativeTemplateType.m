@@ -32,9 +32,10 @@
     return @"GADTSmallTemplateView";
   case 1:
     return @"GADTMediumTemplateView";
+  default:
+    NSLog(@"Unknown template type value: %d", _intValue);
+    return @"GADTMediumTemplateView";
   }
-  NSLog(@"Unknown template type value: %d", _intValue);
-  return @"GADTMediumTemplateView";
 }
 
 @end

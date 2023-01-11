@@ -1157,7 +1157,8 @@
       [[NSNull null] isEqual:_customOptions] ? nil : _customOptions;
   if ([FLTAdUtil isNotNull:_nativeTemplateStyle]) {
     _view = [_nativeTemplateStyle getDisplayedView:nativeAd];
-  } else if ([FLTAdUtil isNotNull:_nativeAdFactory]) {
+  }
+  else if ([FLTAdUtil isNotNull:_nativeAdFactory]) {
     _view = [_nativeAdFactory createNativeAd:nativeAd
                                customOptions:customOptions];
   }

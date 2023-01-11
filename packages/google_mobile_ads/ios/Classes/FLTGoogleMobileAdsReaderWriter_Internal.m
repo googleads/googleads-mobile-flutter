@@ -45,7 +45,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobNativeTemplateTextStyle = 150,
   FLTAdmobNativeTemplateFontStyle = 151,
   FLTAdmobNativeTemplateType = 152,
-  FLTAdmobColor = 153,
+  FLTAdmobNativeTemplateColor = 153,
 
 };
 
@@ -291,7 +291,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     NSNumber *cornerRadius = [self readValueOfType:[self readByte]];
     return
         [[FLTNativeTemplateStyle alloc] initWithTemplateType:templateType
-                                         mainbackgroundColor:mainBackgroundColor
+                                         mainBackgroundColor:mainBackgroundColor
                                            callToActionStyle:callToActionStyle
                                             primaryTextStyle:primaryTextStyle
                                           secondaryTextStyle:secondaryTextStyle
@@ -319,7 +319,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     NSNumber *templateIndex = [self readValueOfType:[self readByte]];
     return [[FLTNativeTemplateType alloc] initWithInt:templateIndex.intValue];
   }
-  case FLTAdmobColor: {
+  case FLTAdmobNativeTemplateColor: {
     NSNumber *alpha = [self readValueOfType:[self readByte]];
     NSNumber *red = [self readValueOfType:[self readByte]];
     NSNumber *blue = [self readValueOfType:[self readByte]];

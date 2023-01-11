@@ -27,8 +27,19 @@
 }
 
 - (FLTNativeTemplateFontStyle)fontStyle {
-  return FLTNativeTemplateFontNormal;
-  // TODO
+  switch (_intValue) {
+    case 0:
+      return FLTNativeTemplateFontNormal;
+    case 1:
+      return FLTNativeTemplateFontBold;
+    case 2:
+      return FLTNativeTemplateFontItalic;
+    case 3:
+      return FLTNativeTemplateFontMonospace;
+    default:
+      NSLog(@"Unknown FLTNativeTemplateFontStyle value: %d", _intValue);
+      return FLTNativeTemplateFontNormal;
+  }
 }
 
 @end

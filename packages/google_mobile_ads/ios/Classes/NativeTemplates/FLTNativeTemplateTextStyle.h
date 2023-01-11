@@ -16,7 +16,7 @@
 #import "FLTNativeTemplateFontStyle.h"
 
 /**
- *
+ * Contains style options that can be applied to text in a native template.
  */
 @interface FLTNativeTemplateTextStyle : NSObject
 

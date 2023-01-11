@@ -31,7 +31,7 @@
 
 - (instancetype _Nonnull)
     initWithTemplateType:(FLTNativeTemplateType *_Nullable)templateType
-     mainbackgroundColor:(FLTNativeTemplateColor *_Nullable)mainbackgroundColor
+     mainBackgroundColor:(FLTNativeTemplateColor *_Nullable)mainBackgroundColor
        callToActionStyle:
            (FLTNativeTemplateTextStyle *_Nullable)callToActionStyle
         primaryTextStyle:(FLTNativeTemplateTextStyle *_Nullable)primaryTextStyle
