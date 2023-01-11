@@ -14,6 +14,11 @@
 
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
 #import "FLTAdUtil.h"
+#import "NativeTemplates/FLTNativeTemplateColor.h"
+#import "NativeTemplates/FLTNativeTemplateFontStyle.h"
+#import "NativeTemplates/FLTNativeTemplateStyle.h"
+#import "NativeTemplates/FLTNativeTemplateTextStyle.h"
+#import "NativeTemplates/FLTNativeTemplateType.h"
 
 // The type values below must be consistent for each platform.
 typedef NS_ENUM(NSInteger, FLTAdMobField) {
@@ -36,6 +41,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldVideoOptions = 145,
   FLTAdmobFieldInlineAdaptiveAdSize = 146,
   FLTAdmobRequestConfigurationParams = 148,
+  FLTAdmobNativeTemplateStyle = 149,
+  FLTAdmobNativeTemplateTextStyle = 150,
+  FLTAdmobNativeTemplateFontStyle = 151,
+  FLTAdmobNativeTemplateType = 152,
+  FLTAdmobNativeTemplateColor = 153,
+
 };
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
@@ -263,6 +274,60 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                   width:[self readValueOfType:[self readByte]]
               maxHeight:[self readValueOfType:[self readByte]]
             orientation:[self readValueOfType:[self readByte]]];
+  }
+  case FLTAdmobNativeTemplateStyle: {
+    FLTNativeTemplateType *templateType =
+        [self readValueOfType:[self readByte]];
+    FLTNativeTemplateColor *mainBackgroundColor =
+        [self readValueOfType:[self readByte]];
+    FLTNativeTemplateTextStyle *callToActionStyle =
+        [self readValueOfType:[self readByte]];
+    FLTNativeTemplateTextStyle *primaryTextStyle =
+        [self readValueOfType:[self readByte]];
+    FLTNativeTemplateTextStyle *secondaryTextStyle =
+        [self readValueOfType:[self readByte]];
+    FLTNativeTemplateTextStyle *tertiaryTextStyle =
+        [self readValueOfType:[self readByte]];
+    NSNumber *cornerRadius = [self readValueOfType:[self readByte]];
+    return
+        [[FLTNativeTemplateStyle alloc] initWithTemplateType:templateType
+                                         mainBackgroundColor:mainBackgroundColor
+                                           callToActionStyle:callToActionStyle
+                                            primaryTextStyle:primaryTextStyle
+                                          secondaryTextStyle:secondaryTextStyle
+                                           tertiaryTextStyle:tertiaryTextStyle
+                                                cornerRadius:cornerRadius];
+  }
+  case FLTAdmobNativeTemplateTextStyle: {
+    FLTNativeTemplateColor *textColor = [self readValueOfType:[self readByte]];
+    FLTNativeTemplateColor *backgroundColor =
+        [self readValueOfType:[self readByte]];
+    FLTNativeTemplateFontStyleWrapper *fontStyle =
+        [self readValueOfType:[self readByte]];
+    NSNumber *size = [self readValueOfType:[self readByte]];
+    return [[FLTNativeTemplateTextStyle alloc] initWithTextColor:textColor
+                                                 backgroundColor:backgroundColor
+                                                       fontStyle:fontStyle
+                                                            size:size];
+  }
+  case FLTAdmobNativeTemplateFontStyle: {
+    NSNumber *fontStyleIndex = [self readValueOfType:[self readByte]];
+    return [[FLTNativeTemplateFontStyleWrapper alloc]
+        initWithInt:fontStyleIndex.intValue];
+  }
+  case FLTAdmobNativeTemplateType: {
+    NSNumber *templateIndex = [self readValueOfType:[self readByte]];
+    return [[FLTNativeTemplateType alloc] initWithInt:templateIndex.intValue];
+  }
+  case FLTAdmobNativeTemplateColor: {
+    NSNumber *alpha = [self readValueOfType:[self readByte]];
+    NSNumber *red = [self readValueOfType:[self readByte]];
+    NSNumber *blue = [self readValueOfType:[self readByte]];
+    NSNumber *green = [self readValueOfType:[self readByte]];
+    return [[FLTNativeTemplateColor alloc] initWithAlpha:alpha
+                                                     red:red
+                                                   green:green
+                                                    blue:blue];
   }
   }
   return [super readValueOfType:type];

@@ -15,12 +15,12 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "../Classes/FLTAdInstanceManager_Internal.h"
-#import "../Classes/FLTAd_Internal.h"
-#import "../Classes/FLTGoogleMobileAdsCollection_Internal.h"
-#import "../Classes/FLTGoogleMobileAdsPlugin.h"
-#import "../Classes/FLTGoogleMobileAdsReaderWriter_Internal.h"
-#import "../Classes/FLTMobileAds_Internal.h"
+#import "FLTAdInstanceManager_Internal.h"
+#import "FLTAd_Internal.h"
+#import "FLTGoogleMobileAdsCollection_Internal.h"
+#import "FLTGoogleMobileAdsPlugin.h"
+#import "FLTGoogleMobileAdsReaderWriter_Internal.h"
+#import "FLTMobileAds_Internal.h"
 
 @interface FLTGoogleMobileAdsTest : XCTestCase
 @end
@@ -110,13 +110,14 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 
 - (void)testAdInstanceManagerOnAdLoaded {
   FLTNativeAd *ad = [[FLTNativeAd alloc]
-        initWithAdUnitId:@"testAdUnitId"
-                 request:[[FLTAdRequest alloc] init]
-         nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-           customOptions:nil
-      rootViewController:OCMClassMock([UIViewController class])
-                    adId:@1
-         nativeAdOptions:nil];
+         initWithAdUnitId:@"testAdUnitId"
+                  request:[[FLTAdRequest alloc] init]
+          nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+            customOptions:nil
+       rootViewController:OCMClassMock([UIViewController class])
+                     adId:@1
+          nativeAdOptions:nil
+      nativeTemplateStyle:nil];
   [_manager loadAd:ad];
 
   GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
@@ -136,13 +137,14 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 
 - (void)testAdInstanceManagerOnAdFailedToLoad {
   FLTNativeAd *ad = [[FLTNativeAd alloc]
-        initWithAdUnitId:@"testAdUnitId"
-                 request:[[FLTAdRequest alloc] init]
-         nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-           customOptions:nil
-      rootViewController:OCMClassMock([UIViewController class])
-                    adId:@1
-         nativeAdOptions:nil];
+         initWithAdUnitId:@"testAdUnitId"
+                  request:[[FLTAdRequest alloc] init]
+          nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+            customOptions:nil
+       rootViewController:OCMClassMock([UIViewController class])
+                     adId:@1
+          nativeAdOptions:nil
+      nativeTemplateStyle:nil];
   [_manager loadAd:ad];
 
   NSDictionary *userInfo = @{NSLocalizedDescriptionKey : @"message"};
@@ -185,13 +187,14 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 
 - (void)testAdInstanceManagerOnAppEvent {
   FLTNativeAd *ad = [[FLTNativeAd alloc]
-        initWithAdUnitId:@"testAdUnitId"
-                 request:[[FLTAdRequest alloc] init]
-         nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-           customOptions:nil
-      rootViewController:OCMClassMock([UIViewController class])
-                    adId:@1
-         nativeAdOptions:nil];
+         initWithAdUnitId:@"testAdUnitId"
+                  request:[[FLTAdRequest alloc] init]
+          nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+            customOptions:nil
+       rootViewController:OCMClassMock([UIViewController class])
+                     adId:@1
+          nativeAdOptions:nil
+      nativeTemplateStyle:nil];
   [_manager loadAd:ad];
 
   [_manager onAppEvent:ad name:@"color" data:@"red"];
@@ -210,13 +213,14 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 
 - (void)testAdInstanceManagerOnNativeAdEvents {
   FLTNativeAd *ad = [[FLTNativeAd alloc]
-        initWithAdUnitId:@"testAdUnitId"
-                 request:[[FLTAdRequest alloc] init]
-         nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-           customOptions:nil
-      rootViewController:OCMClassMock([UIViewController class])
-                    adId:@1
-         nativeAdOptions:nil];
+         initWithAdUnitId:@"testAdUnitId"
+                  request:[[FLTAdRequest alloc] init]
+          nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+            customOptions:nil
+       rootViewController:OCMClassMock([UIViewController class])
+                     adId:@1
+          nativeAdOptions:nil
+      nativeTemplateStyle:nil];
   [_manager loadAd:ad];
 
   [_manager adDidRecordClick:ad];
@@ -301,13 +305,14 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 
 - (void)testAdInstanceManagerOnPaidEvent {
   FLTNativeAd *ad = [[FLTNativeAd alloc]
-        initWithAdUnitId:@"testAdUnitId"
-                 request:[[FLTAdRequest alloc] init]
-         nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
-           customOptions:nil
-      rootViewController:OCMClassMock([UIViewController class])
-                    adId:@1
-         nativeAdOptions:nil];
+         initWithAdUnitId:@"testAdUnitId"
+                  request:[[FLTAdRequest alloc] init]
+          nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+            customOptions:nil
+       rootViewController:OCMClassMock([UIViewController class])
+                     adId:@1
+          nativeAdOptions:nil
+      nativeTemplateStyle:nil];
   [_manager loadAd:ad];
 
   NSDecimalNumber *valueDecimal = [[NSDecimalNumber alloc] initWithInt:1];

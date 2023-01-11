@@ -15,8 +15,8 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "../Classes/FLTAd_Internal.h"
-#import "../Classes/FLTMediationNetworkExtrasProvider.h"
+#import "FLTAd_Internal.h"
+#import "FLTMediationNetworkExtrasProvider.h"
 
 @interface FLTAdRequestTest : XCTestCase
 @end

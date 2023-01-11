@@ -15,8 +15,8 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "../Classes/FLTAdInstanceManager_Internal.h"
-#import "../Classes/FLTAd_Internal.h"
+#import "FLTAdInstanceManager_Internal.h"
+#import "FLTAd_Internal.h"
 
 @interface FLTInterstitialAdTest : XCTestCase
 @end

@@ -15,8 +15,8 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "../Classes/FLTAdInstanceManager_Internal.h"
-#import "../Classes/FLTAd_Internal.h"
+#import "FLTAdInstanceManager_Internal.h"
+#import "FLTAd_Internal.h"
 
 @interface FLTNativeAdTest : XCTestCase
 @end
@@ -60,7 +60,8 @@
                                             customOptions:customOptions
                                        rootViewController:mockViewController
                                                      adId:@1
-                                          nativeAdOptions:mockNativeAdOptions];
+                                          nativeAdOptions:mockNativeAdOptions
+                                      nativeTemplateStyle:nil];
   ad.manager = mockManager;
 
   XCTAssertEqual(ad.adLoader.adUnitID, @"testAdUnitId");

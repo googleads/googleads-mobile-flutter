@@ -15,8 +15,8 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "../Classes/FLTAdUtil.h"
-#import "../Classes/FLTConstants.h"
+#import "FLTAdUtil.h"
+#import "FLTConstants.h"
 
 @interface FLTAdUtilTest : XCTestCase
 @end
