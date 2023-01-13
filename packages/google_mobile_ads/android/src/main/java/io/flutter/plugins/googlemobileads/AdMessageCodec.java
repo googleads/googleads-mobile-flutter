@@ -215,6 +215,13 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, options.startMuted);
     } else if (value instanceof FlutterNativeTemplateStyle) {
       stream.write(VALUE_NATIVE_TEMPLATE_STYLE);
+      FlutterNativeTemplateStyle nativeTemplateStyle = (FlutterNativeTemplateStyle) value;
+      writeValue(stream, nativeTemplateStyle.getTemplateType());
+      writeValue(stream, nativeTemplateStyle.getMainBackgroundColor());
+      writeValue(stream, nativeTemplateStyle.getCallToActionStyle());
+      writeValue(stream, nativeTemplateStyle.getPrimaryTextStyle());
+      writeValue(stream, nativeTemplateStyle.getSecondaryTextStyle());
+      writeValue(stream, nativeTemplateStyle.getTertiaryTextStyle());
     } else if (value instanceof FlutterNativeTemplateFontStyle) {
       stream.write(VALUE_NATIVE_TEMPLATE_FONT_STYLE);
       writeValue(stream, ((FlutterNativeTemplateFontStyle) value).ordinal());

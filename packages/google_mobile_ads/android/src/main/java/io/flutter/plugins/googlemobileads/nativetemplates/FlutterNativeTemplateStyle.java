@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.ads.nativetemplates.NativeTemplateStyle;
 import com.google.android.ads.nativetemplates.TemplateView;
+import java.util.Objects;
 
 public final class FlutterNativeTemplateStyle {
 
@@ -103,5 +104,53 @@ public final class FlutterNativeTemplateStyle {
         (TemplateView) layoutInflater.inflate(templateType.resourceId(), null);
     templateView.setStyles(asNativeTemplateStyle());
     return templateView;
+  }
+
+  @NonNull
+  public FlutterNativeTemplateType getTemplateType() {
+    return templateType;
+  }
+
+  @Nullable
+  public ColorDrawable getMainBackgroundColor() {
+    return mainBackgroundColor;
+  }
+
+  @Nullable
+  public FlutterNativeTemplateTextStyle getCallToActionStyle() {
+    return callToActionStyle;
+  }
+
+  @Nullable
+  public FlutterNativeTemplateTextStyle getPrimaryTextStyle() {
+    return primaryTextStyle;
+  }
+
+  @Nullable
+  public FlutterNativeTemplateTextStyle getSecondaryTextStyle() {
+    return secondaryTextStyle;
+  }
+
+  @Nullable
+  public FlutterNativeTemplateTextStyle getTertiaryTextStyle() {
+    return tertiaryTextStyle;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    } else if (!(o instanceof FlutterNativeTemplateStyle)) {
+      return false;
+    }
+
+    FlutterNativeTemplateStyle other = (FlutterNativeTemplateStyle) o;
+    return templateType == other.templateType
+        && (mainBackgroundColor == null && other.mainBackgroundColor == null
+            || mainBackgroundColor.getColor() == other.mainBackgroundColor.getColor())
+        && Objects.equals(callToActionStyle, other.callToActionStyle)
+        && Objects.equals(primaryTextStyle, other.primaryTextStyle)
+        && Objects.equals(secondaryTextStyle, other.secondaryTextStyle)
+        && Objects.equals(tertiaryTextStyle, other.tertiaryTextStyle);
   }
 }

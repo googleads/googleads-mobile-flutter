@@ -2,6 +2,7 @@ package io.flutter.plugins.googlemobileads.nativetemplates;
 
 import android.graphics.drawable.ColorDrawable;
 import androidx.annotation.Nullable;
+import java.util.Objects;
 
 public class FlutterNativeTemplateTextStyle {
 
@@ -39,5 +40,22 @@ public class FlutterNativeTemplateTextStyle {
   @Nullable
   public Float getSize() {
     return size == null ? null : size.floatValue();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    } else if (!(o instanceof FlutterNativeTemplateTextStyle)) {
+      return false;
+    }
+
+    FlutterNativeTemplateTextStyle other = (FlutterNativeTemplateTextStyle) o;
+    return (textColor == null && other.textColor == null
+            || textColor.getColor() == other.textColor.getColor())
+        && (backgroundColor == null && other.backgroundColor == null
+            || backgroundColor.getColor() == other.backgroundColor.getColor())
+        && Objects.equals(size, other.size)
+        && Objects.equals(fontStyle, other.fontStyle);
   }
 }

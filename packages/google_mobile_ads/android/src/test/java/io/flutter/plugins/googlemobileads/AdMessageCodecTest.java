@@ -36,6 +36,7 @@ import io.flutter.plugins.googlemobileads.FlutterAdSize.AdSizeFactory;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.AnchoredAdaptiveBannerAdSize;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.InlineAdaptiveBannerAdSize;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateFontStyle;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateTextStyle;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateType;
 import java.nio.ByteBuffer;
@@ -280,10 +281,7 @@ public class AdMessageCodecTest {
     ByteBuffer data = codec.encodeMessage(style);
     FlutterNativeTemplateTextStyle result =
         (FlutterNativeTemplateTextStyle) codec.decodeMessage((ByteBuffer) data.position(0));
-    assertEquals(result.getSize(), style.getSize());
-    assertEquals(result.getTextColor().getColor(), style.getTextColor().getColor());
-    assertEquals(result.getBackgroundColor().getColor(), style.getBackgroundColor().getColor());
-    assertEquals(result.getFontStyle(), style.getFontStyle());
+    assertEquals(result, style);
   }
 
   @Test
@@ -293,10 +291,53 @@ public class AdMessageCodecTest {
     ByteBuffer data = codec.encodeMessage(style);
     FlutterNativeTemplateTextStyle result =
         (FlutterNativeTemplateTextStyle) codec.decodeMessage((ByteBuffer) data.position(0));
-    assertNull(result.getSize());
-    assertNull(result.getTextColor());
-    assertNull(result.getBackgroundColor());
-    assertNull(result.getFontStyle());
+    assertEquals(style, result);
+  }
+
+  @Test
+  public void nativeTemplateStyle_nullProperties() {
+    FlutterNativeTemplateStyle style =
+        new FlutterNativeTemplateStyle(
+            FlutterNativeTemplateType.MEDIUM, null, null, null, null, null);
+
+    ByteBuffer data = codec.encodeMessage(style);
+    FlutterNativeTemplateStyle result =
+        (FlutterNativeTemplateStyle) codec.decodeMessage((ByteBuffer) data.position(0));
+
+    assertEquals(result, style);
+  }
+
+  @Test
+  public void nativeTemplateStyle_definedProperties() {
+    FlutterNativeTemplateTextStyle ctaStyle =
+        new FlutterNativeTemplateTextStyle(null, null, null, null);
+    FlutterNativeTemplateTextStyle primaryStyle =
+        new FlutterNativeTemplateTextStyle(
+            new ColorDrawable(Color.YELLOW),
+            new ColorDrawable(Color.RED),
+            FlutterNativeTemplateFontStyle.ITALIC,
+            24.);
+    FlutterNativeTemplateTextStyle secondaryStyle =
+        new FlutterNativeTemplateTextStyle(
+            new ColorDrawable(Color.BLUE), new ColorDrawable(Color.GREEN), null, 24.);
+    FlutterNativeTemplateTextStyle tertiaryStyle =
+        new FlutterNativeTemplateTextStyle(
+            new ColorDrawable(Color.YELLOW), null, FlutterNativeTemplateFontStyle.ITALIC, null);
+
+    FlutterNativeTemplateStyle style =
+        new FlutterNativeTemplateStyle(
+            FlutterNativeTemplateType.MEDIUM,
+            new ColorDrawable(Color.BLACK),
+            ctaStyle,
+            primaryStyle,
+            secondaryStyle,
+            tertiaryStyle);
+
+    ByteBuffer data = codec.encodeMessage(style);
+    FlutterNativeTemplateStyle result =
+        (FlutterNativeTemplateStyle) codec.decodeMessage((ByteBuffer) data.position(0));
+
+    assertEquals(result, style);
   }
 
   @Test
