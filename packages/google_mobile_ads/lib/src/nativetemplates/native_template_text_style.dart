@@ -26,8 +26,8 @@ class NativeTemplateTextStyle {
   @override
   bool operator ==(Object other) {
     return other is NativeTemplateTextStyle &&
-        textColor == other.textColor &&
-        backgroundColor == other.backgroundColor &&
+        textColor?.value == other.textColor?.value &&
+        backgroundColor?.value == other.backgroundColor?.value &&
         style == other.style &&
         size == other.size;
   }
