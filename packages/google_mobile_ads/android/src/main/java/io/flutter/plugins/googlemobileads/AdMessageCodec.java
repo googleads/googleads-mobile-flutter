@@ -213,6 +213,28 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, options.clickToExpandRequested);
       writeValue(stream, options.customControlsRequested);
       writeValue(stream, options.startMuted);
+    } else if (value instanceof FlutterNativeTemplateStyle) {
+      stream.write(VALUE_NATIVE_TEMPLATE_STYLE);
+    } else if (value instanceof FlutterNativeTemplateFontStyle) {
+      stream.write(VALUE_NATIVE_TEMPLATE_FONT_STYLE);
+      writeValue(stream, ((FlutterNativeTemplateFontStyle) value).ordinal());
+    } else if (value instanceof FlutterNativeTemplateType) {
+      stream.write(VALUE_NATIVE_TEMPLATE_TYPE);
+      writeValue(stream, ((FlutterNativeTemplateType) value).ordinal());
+    } else if (value instanceof FlutterNativeTemplateTextStyle) {
+      stream.write(VALUE_NATIVE_TEMPLATE_TEXT_STYLE);
+      FlutterNativeTemplateTextStyle textStyle = (FlutterNativeTemplateTextStyle) value;
+      writeValue(stream, textStyle.getTextColor());
+      writeValue(stream, textStyle.getBackgroundColor());
+      writeValue(stream, textStyle.getFontStyle());
+      writeValue(stream, textStyle.getSize());
+    } else if (value instanceof ColorDrawable) {
+      stream.write(VALUE_COLOR);
+      int colorValue = ((ColorDrawable) value).getColor();
+      writeValue(stream, Color.alpha(colorValue));
+      writeValue(stream, Color.red(colorValue));
+      writeValue(stream, Color.green(colorValue));
+      writeValue(stream, Color.blue(colorValue));
     } else {
       super.writeValue(stream, value);
     }
@@ -360,7 +382,7 @@ class AdMessageCodec extends StandardMessageCodec {
             (ColorDrawable) readValueOfType(buffer.get(), buffer),
             (ColorDrawable) readValueOfType(buffer.get(), buffer),
             (FlutterNativeTemplateFontStyle) readValueOfType(buffer.get(), buffer),
-            ((Double) readValueOfType(buffer.get(), buffer)).floatValue());
+            ((Double) readValueOfType(buffer.get(), buffer)));
       case VALUE_NATIVE_TEMPLATE_FONT_STYLE:
         return FlutterNativeTemplateFontStyle.fromIntValue(
             (Integer) readValueOfType(buffer.get(), buffer));

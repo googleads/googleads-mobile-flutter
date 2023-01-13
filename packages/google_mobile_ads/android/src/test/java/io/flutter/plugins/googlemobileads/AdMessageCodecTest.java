@@ -26,6 +26,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.RequestConfiguration;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
@@ -33,6 +35,9 @@ import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.AdSizeFactory;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.AnchoredAdaptiveBannerAdSize;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.InlineAdaptiveBannerAdSize;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateFontStyle;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateTextStyle;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateType;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -233,6 +238,65 @@ public class AdMessageCodecTest {
     assertFalse(result.requestCustomMuteThisAd);
     assertTrue(result.shouldRequestMultipleImages);
     assertFalse(result.shouldReturnUrlsForImageAssets);
+  }
+
+  @Test
+  public void color() {
+    ColorDrawable colorDrawable = new ColorDrawable(Color.argb(3, 2, 3, 4));
+    ByteBuffer data = codec.encodeMessage(colorDrawable);
+    ColorDrawable result = (ColorDrawable) codec.decodeMessage((ByteBuffer) data.position(0));
+    assertEquals(result.getColor(), colorDrawable.getColor());
+    assertEquals(result.getAlpha(), colorDrawable.getAlpha());
+  }
+
+  @Test
+  public void nativeTemplateType() {
+    for (FlutterNativeTemplateType type : FlutterNativeTemplateType.values()) {
+      ByteBuffer data = codec.encodeMessage(type);
+      FlutterNativeTemplateType result =
+          (FlutterNativeTemplateType) codec.decodeMessage((ByteBuffer) data.position(0));
+      assertEquals(result, type);
+    }
+  }
+
+  @Test
+  public void nativeTemplateFontStyle() {
+    for (FlutterNativeTemplateFontStyle style : FlutterNativeTemplateFontStyle.values()) {
+      ByteBuffer data = codec.encodeMessage(style);
+      FlutterNativeTemplateFontStyle result =
+          (FlutterNativeTemplateFontStyle) codec.decodeMessage((ByteBuffer) data.position(0));
+      assertEquals(result, style);
+    }
+  }
+
+  @Test
+  public void nativeTemplateTextStyle() {
+    FlutterNativeTemplateTextStyle style =
+        new FlutterNativeTemplateTextStyle(
+            new ColorDrawable(Color.RED),
+            new ColorDrawable(Color.BLUE),
+            FlutterNativeTemplateFontStyle.BOLD,
+            12.);
+    ByteBuffer data = codec.encodeMessage(style);
+    FlutterNativeTemplateTextStyle result =
+        (FlutterNativeTemplateTextStyle) codec.decodeMessage((ByteBuffer) data.position(0));
+    assertEquals(result.getSize(), style.getSize());
+    assertEquals(result.getTextColor().getColor(), style.getTextColor().getColor());
+    assertEquals(result.getBackgroundColor().getColor(), style.getBackgroundColor().getColor());
+    assertEquals(result.getFontStyle(), style.getFontStyle());
+  }
+
+  @Test
+  public void nativeTemplateTextStyle_nullProperties() {
+    FlutterNativeTemplateTextStyle style =
+        new FlutterNativeTemplateTextStyle(null, null, null, null);
+    ByteBuffer data = codec.encodeMessage(style);
+    FlutterNativeTemplateTextStyle result =
+        (FlutterNativeTemplateTextStyle) codec.decodeMessage((ByteBuffer) data.position(0));
+    assertNull(result.getSize());
+    assertNull(result.getTextColor());
+    assertNull(result.getBackgroundColor());
+    assertNull(result.getFontStyle());
   }
 
   @Test

@@ -37,7 +37,7 @@ class FlutterNativeAd extends FlutterAd {
 
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
-  @NonNull private final NativeAdFactory adFactory;
+  @Nullable private final NativeAdFactory adFactory;
   @NonNull private final FlutterAdLoader flutterAdLoader;
   @Nullable private FlutterAdRequest request;
   @Nullable private FlutterAdManagerAdRequest adManagerRequest;
