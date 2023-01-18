@@ -33,7 +33,7 @@
 }
 
 - (UIFont *_Nullable)uiFont {
-  if ([FLTAdUtil isNull:_size] && [FLTAdUtil isNull:_fontStyle]) {
+  if ([FLTAdUtil isNull:_fontStyle] && [FLTAdUtil isNull:_size]) {
     return nil;
   }
 
@@ -58,6 +58,7 @@
                                                 weight:UIFontWeightRegular];
       }
     default:
+      NSLog(@"Unknown fontStyle case: %d", _fontStyle.fontStyle);
       return [UIFont systemFontOfSize:size];
     }
   }

@@ -31,4 +31,6 @@ typedef NS_ENUM(NSInteger, FLTNativeTemplateFontStyle) {
 
 - (instancetype _Nonnull)initWithInt:(int)intValue;
 - (FLTNativeTemplateFontStyle)fontStyle;
+
+@property(readonly) int intValue;
 @end

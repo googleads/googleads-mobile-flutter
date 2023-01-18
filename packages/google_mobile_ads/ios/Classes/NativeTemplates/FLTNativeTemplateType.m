@@ -26,7 +26,7 @@
   return self;
 }
 
-- (NSString *)xibName {
+- (NSString *_Nonnull)xibName {
   switch (_intValue) {
   case 0:
     return @"GADTSmallTemplateView";
@@ -36,6 +36,16 @@
     NSLog(@"Unknown template type value: %d", _intValue);
     return @"GADTMediumTemplateView";
   }
+}
+
+- (GADTTemplateView *_Nonnull)templateView {
+  // Bundle file name is declared in podspec
+  id bundleURL = [NSBundle.mainBundle URLForResource:@"google_mobile_ads"
+                                       withExtension:@"bundle"];
+  NSBundle *bundle = [NSBundle bundleWithURL:bundleURL];
+  GADTTemplateView *templateView =
+      [bundle loadNibNamed:self.xibName owner:nil options:nil].firstObject;
+  return templateView;
 }
 
 @end

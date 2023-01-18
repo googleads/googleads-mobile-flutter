@@ -41,11 +41,11 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldVideoOptions = 145,
   FLTAdmobFieldInlineAdaptiveAdSize = 146,
   FLTAdmobRequestConfigurationParams = 148,
-  FLTAdmobNativeTemplateStyle = 149,
-  FLTAdmobNativeTemplateTextStyle = 150,
-  FLTAdmobNativeTemplateFontStyle = 151,
-  FLTAdmobNativeTemplateType = 152,
-  FLTAdmobNativeTemplateColor = 153,
+  FLTAdmobFieldNativeTemplateStyle = 149,
+  FLTAdmobFieldNativeTemplateTextStyle = 150,
+  FLTAdmobFieldNativeTemplateFontStyle = 151,
+  FLTAdmobFieldNativeTemplateType = 152,
+  FLTAdmobFieldNativeTemplateColor = 153,
 
 };
 
@@ -275,7 +275,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
               maxHeight:[self readValueOfType:[self readByte]]
             orientation:[self readValueOfType:[self readByte]]];
   }
-  case FLTAdmobNativeTemplateStyle: {
+  case FLTAdmobFieldNativeTemplateStyle: {
     FLTNativeTemplateType *templateType =
         [self readValueOfType:[self readByte]];
     FLTNativeTemplateColor *mainBackgroundColor =
@@ -298,7 +298,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                                            tertiaryTextStyle:tertiaryTextStyle
                                                 cornerRadius:cornerRadius];
   }
-  case FLTAdmobNativeTemplateTextStyle: {
+  case FLTAdmobFieldNativeTemplateTextStyle: {
     FLTNativeTemplateColor *textColor = [self readValueOfType:[self readByte]];
     FLTNativeTemplateColor *backgroundColor =
         [self readValueOfType:[self readByte]];
@@ -310,20 +310,20 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                                                        fontStyle:fontStyle
                                                             size:size];
   }
-  case FLTAdmobNativeTemplateFontStyle: {
+  case FLTAdmobFieldNativeTemplateFontStyle: {
     NSNumber *fontStyleIndex = [self readValueOfType:[self readByte]];
     return [[FLTNativeTemplateFontStyleWrapper alloc]
         initWithInt:fontStyleIndex.intValue];
   }
-  case FLTAdmobNativeTemplateType: {
+  case FLTAdmobFieldNativeTemplateType: {
     NSNumber *templateIndex = [self readValueOfType:[self readByte]];
     return [[FLTNativeTemplateType alloc] initWithInt:templateIndex.intValue];
   }
-  case FLTAdmobNativeTemplateColor: {
+  case FLTAdmobFieldNativeTemplateColor: {
     NSNumber *alpha = [self readValueOfType:[self readByte]];
     NSNumber *red = [self readValueOfType:[self readByte]];
-    NSNumber *blue = [self readValueOfType:[self readByte]];
     NSNumber *green = [self readValueOfType:[self readByte]];
+    NSNumber *blue = [self readValueOfType:[self readByte]];
     return [[FLTNativeTemplateColor alloc] initWithAlpha:alpha
                                                      red:red
                                                    green:green
@@ -476,6 +476,38 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [super writeValue:NSNull.null];
     [super writeValue:NSNull.null];
     [self writeValue:params.testDeviceIdentifiers];
+  } else if ([value isKindOfClass:[FLTNativeTemplateType class]]) {
+    [self writeByte:FLTAdmobFieldNativeTemplateType];
+    FLTNativeTemplateType *templateType = value;
+    [self writeValue:@(templateType.intValue)];
+  } else if ([value isKindOfClass:[FLTNativeTemplateFontStyleWrapper class]]) {
+    [self writeByte:FLTAdmobFieldNativeTemplateFontStyle];
+    FLTNativeTemplateFontStyleWrapper *fontStyle = value;
+    [self writeValue:@(fontStyle.intValue)];
+  } else if ([value isKindOfClass:[FLTNativeTemplateColor class]]) {
+    [self writeByte:FLTAdmobFieldNativeTemplateColor];
+    FLTNativeTemplateColor *templateColor = value;
+    [self writeValue:templateColor.alpha];
+    [self writeValue:templateColor.red];
+    [self writeValue:templateColor.green];
+    [self writeValue:templateColor.blue];
+  } else if ([value isKindOfClass:[FLTNativeTemplateTextStyle class]]) {
+    [self writeByte:FLTAdmobFieldNativeTemplateTextStyle];
+    FLTNativeTemplateTextStyle *textStyle = value;
+    [self writeValue:textStyle.textColor];
+    [self writeValue:textStyle.backgroundColor];
+    [self writeValue:textStyle.fontStyle];
+    [self writeValue:textStyle.size];
+  } else if ([value isKindOfClass:[FLTNativeTemplateStyle class]]) {
+    [self writeByte:FLTAdmobFieldNativeTemplateStyle];
+    FLTNativeTemplateStyle *templateStyle = value;
+    [self writeValue:templateStyle.templateType];
+    [self writeValue:templateStyle.mainBackgroundColor];
+    [self writeValue:templateStyle.callToActionStyle];
+    [self writeValue:templateStyle.primaryTextStyle];
+    [self writeValue:templateStyle.secondaryTextStyle];
+    [self writeValue:templateStyle.tertiaryTextStyle];
+    [self writeValue:templateStyle.cornerRadius];
   } else {
     [super writeValue:value];
   }

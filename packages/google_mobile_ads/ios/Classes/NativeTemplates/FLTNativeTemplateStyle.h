@@ -20,7 +20,10 @@
 #import <GoogleMobileAds/GADNativeAd.h>
 #import <UIKit/UIKit.h>
 
-/** Wraps a GADTTemplateView for being displayed as a platform view. */
+/**
+ * Wraps a GADTTemplateView for being displayed as a platform view.
+ * Exists to override layoutSubviews, so we can attach layout contraints.
+ */
 @interface FLTNativeTemplateViewWrapper : UIView
 
 /** The GADTTemplateView that is being wrapped.  */
@@ -30,7 +33,7 @@
 @interface FLTNativeTemplateStyle : NSObject
 
 - (instancetype _Nonnull)
-    initWithTemplateType:(FLTNativeTemplateType *_Nullable)templateType
+    initWithTemplateType:(FLTNativeTemplateType *_Nonnull)templateType
      mainBackgroundColor:(FLTNativeTemplateColor *_Nullable)mainBackgroundColor
        callToActionStyle:
            (FLTNativeTemplateTextStyle *_Nullable)callToActionStyle
@@ -40,7 +43,7 @@
        tertiaryTextStyle:
            (FLTNativeTemplateTextStyle *_Nullable)tertiaryTextStyle
             cornerRadius:(NSNumber *_Nullable)cornerRadius;
-@property(readonly) FLTNativeTemplateType *_Nullable templateType;
+@property(readonly) FLTNativeTemplateType *_Nonnull templateType;
 @property(readonly) FLTNativeTemplateColor *_Nullable mainBackgroundColor;
 @property(readonly) FLTNativeTemplateTextStyle *_Nullable callToActionStyle;
 @property(readonly) FLTNativeTemplateTextStyle *_Nullable primaryTextStyle;
