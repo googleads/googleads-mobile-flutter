@@ -12,20 +12,20 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-name: rewarded_interstitital_example
+name: rewarded_interstitial_example
 
 on:
   pull_request:
     paths:
       - "packages/google_mobile_ads/**"
-      - "samples/admob/rewarded_interstitital_example/**"
-      - ".github/workflows/rewarded_interstitital_example.yaml"
+      - "samples/admob/rewarded_interstitial_example/**"
+      - ".github/workflows/rewarded_interstitial_example.yaml"
   push:
     branches:
       - "**"
 
 env:
-  GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "*rewarded_interstitital_example*"
+  GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "*rewarded_interstitial_example*"
 
 jobs:
   android:
@@ -73,7 +73,7 @@ jobs:
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Flutter Analyze"
         run: |
-          cd samples/admob/rewarded_interstitital_example/
+          cd samples/admob/rewarded_interstitial_example/
           flutter analyze
       - name: "Flutter Format"
         run: |
