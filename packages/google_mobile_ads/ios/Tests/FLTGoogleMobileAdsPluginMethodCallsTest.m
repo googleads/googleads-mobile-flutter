@@ -15,10 +15,10 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "../Classes/FLTAdInstanceManager_Internal.h"
-#import "../Classes/FLTGoogleMobileAdsPlugin.h"
-#import "../Classes/FLTGoogleMobileAdsReaderWriter_Internal.h"
-#import "../Classes/FLTMobileAds_Internal.h"
+#import "FLTAdInstanceManager_Internal.h"
+#import "FLTGoogleMobileAdsPlugin.h"
+#import "FLTGoogleMobileAdsReaderWriter_Internal.h"
+#import "FLTMobileAds_Internal.h"
 
 @interface FLTGoogleMobileAdsPluginMethodCallsTest : XCTestCase
 @end

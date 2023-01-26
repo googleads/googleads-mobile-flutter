@@ -25,7 +25,11 @@ import 'package:google_mobile_ads/src/mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/src/nativetemplates/template_type.dart';
 
+import 'nativetemplates/native_template_font_style.dart';
+import 'nativetemplates/native_template_style.dart';
+import 'nativetemplates/native_template_text_style.dart';
 import 'request_configuration.dart';
 import 'ad_containers.dart';
 
@@ -514,6 +518,7 @@ class AdInstanceManager {
         'factoryId': ad.factoryId,
         'nativeAdOptions': ad.nativeAdOptions,
         'customOptions': ad.customOptions,
+        'nativeTemplateStyle': ad.nativeTemplateStyle,
       },
     );
   }
@@ -821,6 +826,11 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueVideoOptions = 145;
   static const int _valueInlineAdaptiveBannerAdSize = 146;
   static const int _valueRequestConfigurationParams = 148;
+  static const int _valueNativeTemplateStyle = 149;
+  static const int _valueNativeTemplateTextStyle = 150;
+  static const int _valueNativeTemplateFontStyle = 151;
+  static const int _valueNativeTemplateType = 152;
+  static const int _valueColor = 153;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -918,6 +928,35 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.tagForChildDirectedTreatment);
       writeValue(buffer, value.tagForUnderAgeOfConsent);
       writeValue(buffer, value.testDeviceIds);
+    } else if (value is NativeTemplateStyle) {
+      buffer.putUint8(_valueNativeTemplateStyle);
+      writeValue(buffer, value.templateType);
+      writeValue(buffer, value.mainBackgroundColor);
+      writeValue(buffer, value.callToActionTextStyle);
+      writeValue(buffer, value.primaryTextStyle);
+      writeValue(buffer, value.secondaryTextStyle);
+      writeValue(buffer, value.tertiaryTextStyle);
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        writeValue(buffer, value.cornerRadius);
+      }
+    } else if (value is TemplateType) {
+      buffer.putUint8(_valueNativeTemplateType);
+      writeValue(buffer, value.index);
+    } else if (value is NativeTemplateTextStyle) {
+      buffer.putUint8(_valueNativeTemplateTextStyle);
+      writeValue(buffer, value.textColor);
+      writeValue(buffer, value.backgroundColor);
+      writeValue(buffer, value.style);
+      writeValue(buffer, value.size);
+    } else if (value is Color) {
+      buffer.putUint8(_valueColor);
+      writeValue(buffer, value.alpha);
+      writeValue(buffer, value.red);
+      writeValue(buffer, value.green);
+      writeValue(buffer, value.blue);
+    } else if (value is NativeTemplateFontStyle) {
+      buffer.putUint8(_valueNativeTemplateFontStyle);
+      writeValue(buffer, value.index);
     } else {
       super.writeValue(buffer, value);
     }
@@ -1107,6 +1146,36 @@ class AdMessageCodec extends StandardMessageCodec {
           testDeviceIds:
               readValueOfType(buffer.getUint8(), buffer).cast<String>(),
         );
+      case _valueNativeTemplateStyle:
+        return NativeTemplateStyle(
+          templateType: readValueOfType(buffer.getUint8(), buffer),
+          mainBackgroundColor: readValueOfType(buffer.getUint8(), buffer),
+          callToActionTextStyle: readValueOfType(buffer.getUint8(), buffer),
+          primaryTextStyle: readValueOfType(buffer.getUint8(), buffer),
+          secondaryTextStyle: readValueOfType(buffer.getUint8(), buffer),
+          tertiaryTextStyle: readValueOfType(buffer.getUint8(), buffer),
+          cornerRadius: defaultTargetPlatform == TargetPlatform.iOS
+              ? readValueOfType(buffer.getUint8(), buffer)
+              : null,
+        );
+      case _valueNativeTemplateType:
+        return TemplateType.values[readValueOfType(buffer.getUint8(), buffer)];
+      case _valueNativeTemplateTextStyle:
+        return NativeTemplateTextStyle(
+          textColor: readValueOfType(buffer.getUint8(), buffer),
+          backgroundColor: readValueOfType(buffer.getUint8(), buffer),
+          style: readValueOfType(buffer.getUint8(), buffer),
+          size: readValueOfType(buffer.getUint8(), buffer),
+        );
+      case _valueColor:
+        return Color.fromARGB(
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer));
+      case _valueNativeTemplateFontStyle:
+        return NativeTemplateFontStyle
+            .values[readValueOfType(buffer.getUint8(), buffer)];
       default:
         return super.readValueOfType(type, buffer);
     }

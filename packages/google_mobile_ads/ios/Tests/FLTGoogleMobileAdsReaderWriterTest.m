@@ -15,13 +15,18 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "../Classes/FLTAdInstanceManager_Internal.h"
-#import "../Classes/FLTAdUtil.h"
-#import "../Classes/FLTAd_Internal.h"
-#import "../Classes/FLTGoogleMobileAdsCollection_Internal.h"
-#import "../Classes/FLTGoogleMobileAdsPlugin.h"
-#import "../Classes/FLTGoogleMobileAdsReaderWriter_Internal.h"
-#import "../Classes/FLTMobileAds_Internal.h"
+#import "FLTAdInstanceManager_Internal.h"
+#import "FLTAdUtil.h"
+#import "FLTAd_Internal.h"
+#import "FLTGoogleMobileAdsCollection_Internal.h"
+#import "FLTGoogleMobileAdsPlugin.h"
+#import "FLTGoogleMobileAdsReaderWriter_Internal.h"
+#import "FLTMobileAds_Internal.h"
+#import "FLTNativeTemplateColor.h"
+#import "FLTNativeTemplateFontStyle.h"
+#import "FLTNativeTemplateStyle.h"
+#import "FLTNativeTemplateTextStyle.h"
+#import "FLTNativeTemplateType.h"
 
 @interface FLTGoogleMobileAdsReaderWriterTest : XCTestCase
 @end
@@ -573,6 +578,172 @@
   XCTAssertNil(decodedStatus.adapterStatuses.allValues[0].state);
   XCTAssertNil(decodedStatus.adapterStatuses.allValues[0].statusDescription);
   XCTAssertNil(decodedStatus.adapterStatuses.allValues[0].latency);
+}
+
+- (void)testEncodeDecodeNativeTemplateType {
+  FLTNativeTemplateType *templateType =
+      [[FLTNativeTemplateType alloc] initWithInt:1];
+  NSData *encodedMessage = [_messageCodec encode:templateType];
+
+  FLTNativeTemplateType *decodedTemplateType =
+      [_messageCodec decode:encodedMessage];
+  [self assertEqualTemplateTypes:templateType second:decodedTemplateType];
+}
+
+- (void)testEncodeDecodeNativeTemplateFontStyle {
+  FLTNativeTemplateFontStyleWrapper *fontStyle =
+      [[FLTNativeTemplateFontStyleWrapper alloc] initWithInt:2];
+  NSData *encodedMessage = [_messageCodec encode:fontStyle];
+
+  FLTNativeTemplateFontStyleWrapper *decoded =
+      [_messageCodec decode:encodedMessage];
+  [self assertEqualTemplateFontStyles:fontStyle second:decoded];
+}
+
+- (void)testEncodeDecodeNativeTemplateColor {
+  FLTNativeTemplateColor *color =
+      [[FLTNativeTemplateColor alloc] initWithAlpha:@2.0f
+                                                red:@3.0f
+                                              green:@4.0f
+                                               blue:@5.0f];
+  NSData *encodedMessage = [_messageCodec encode:color];
+
+  FLTNativeTemplateColor *decoded = [_messageCodec decode:encodedMessage];
+  [self assertEqualTemplateColors:color second:decoded];
+}
+
+- (void)testEncodeDecodeNativeTemplateTextStyle {
+  FLTNativeTemplateColor *textColor =
+      [[FLTNativeTemplateColor alloc] initWithAlpha:@2.0f
+                                                red:@3.0f
+                                              green:@4.0f
+                                               blue:@5.0f];
+  FLTNativeTemplateColor *backgroundColor =
+      [[FLTNativeTemplateColor alloc] initWithAlpha:@6.0f
+                                                red:@7.0f
+                                              green:@8.0f
+                                               blue:@9.0f];
+  FLTNativeTemplateFontStyleWrapper *fontStyle =
+      [[FLTNativeTemplateFontStyleWrapper alloc] initWithInt:1];
+
+  FLTNativeTemplateTextStyle *textStyle =
+      [[FLTNativeTemplateTextStyle alloc] initWithTextColor:textColor
+                                            backgroundColor:backgroundColor
+                                                  fontStyle:fontStyle
+                                                       size:@15.0f];
+  NSData *encodedMessage = [_messageCodec encode:textStyle];
+
+  FLTNativeTemplateTextStyle *decoded = [_messageCodec decode:encodedMessage];
+  [self assertEqualTextStyles:textStyle second:decoded];
+}
+
+- (void)testEncodeDecodeNativeTemplateStyle {
+  FLTNativeTemplateType *templateType =
+      [[FLTNativeTemplateType alloc] initWithInt:0];
+  FLTNativeTemplateColor *mainBackgroundColor =
+      [[FLTNativeTemplateColor alloc] initWithAlpha:@2.0f
+                                                red:@3.0f
+                                              green:@4.0f
+                                               blue:@5.0f];
+
+  FLTNativeTemplateColor *ctaTextColor =
+      [[FLTNativeTemplateColor alloc] initWithAlpha:@2.0f
+                                                red:@3.0f
+                                              green:@4.0f
+                                               blue:@5.0f];
+  FLTNativeTemplateColor *ctaBackgroundColor =
+      [[FLTNativeTemplateColor alloc] initWithAlpha:@6.0f
+                                                red:@7.0f
+                                              green:@8.0f
+                                               blue:@9.0f];
+  FLTNativeTemplateFontStyleWrapper *ctaFontStyle =
+      [[FLTNativeTemplateFontStyleWrapper alloc] initWithInt:1];
+
+  FLTNativeTemplateTextStyle *ctaTextStyle =
+      [[FLTNativeTemplateTextStyle alloc] initWithTextColor:ctaTextColor
+                                            backgroundColor:ctaBackgroundColor
+                                                  fontStyle:ctaFontStyle
+                                                       size:@15.0f];
+  FLTNativeTemplateTextStyle *primaryTextStyle =
+      [[FLTNativeTemplateTextStyle alloc] initWithTextColor:nil
+                                            backgroundColor:nil
+                                                  fontStyle:nil
+                                                       size:nil];
+
+  FLTNativeTemplateTextStyle *secondaryTextStyle =
+      [[FLTNativeTemplateTextStyle alloc] initWithTextColor:nil
+                                            backgroundColor:nil
+                                                  fontStyle:nil
+                                                       size:@30.0f];
+
+  FLTNativeTemplateColor *tertiaryTextColor =
+      [[FLTNativeTemplateColor alloc] initWithAlpha:@12.0f
+                                                red:@13.0f
+                                              green:@14.0f
+                                               blue:@15.0f];
+  FLTNativeTemplateTextStyle *tertiaryTextStyle =
+      [[FLTNativeTemplateTextStyle alloc] initWithTextColor:tertiaryTextColor
+                                            backgroundColor:nil
+                                                  fontStyle:nil
+                                                       size:@45.0f];
+
+  FLTNativeTemplateStyle *style =
+      [[FLTNativeTemplateStyle alloc] initWithTemplateType:templateType
+                                       mainBackgroundColor:mainBackgroundColor
+                                         callToActionStyle:ctaTextStyle
+                                          primaryTextStyle:primaryTextStyle
+                                        secondaryTextStyle:secondaryTextStyle
+                                         tertiaryTextStyle:tertiaryTextStyle
+                                              cornerRadius:@20.0f];
+
+  NSData *encodedMessage = [_messageCodec encode:style];
+  FLTNativeTemplateStyle *decoded = [_messageCodec decode:encodedMessage];
+
+  [self assertEqualTemplateTypes:style.templateType
+                          second:decoded.templateType];
+  [self assertEqualTemplateColors:style.mainBackgroundColor
+                           second:decoded.mainBackgroundColor];
+  [self assertEqualTextStyles:style.callToActionStyle
+                       second:decoded.callToActionStyle];
+  [self assertEqualTextStyles:style.primaryTextStyle
+                       second:decoded.primaryTextStyle];
+  [self assertEqualTextStyles:style.secondaryTextStyle
+                       second:decoded.secondaryTextStyle];
+  [self assertEqualTextStyles:style.tertiaryTextStyle
+                       second:decoded.tertiaryTextStyle];
+  XCTAssertEqual(style.cornerRadius.floatValue,
+                 decoded.cornerRadius.floatValue);
+}
+
+#pragma mark - Helper methods to compare native templates types
+
+- (void)assertEqualTextStyles:(FLTNativeTemplateTextStyle *)first
+                       second:(FLTNativeTemplateTextStyle *)second {
+  [self assertEqualTemplateColors:first.textColor second:second.textColor];
+  [self assertEqualTemplateColors:first.backgroundColor
+                           second:second.backgroundColor];
+
+  XCTAssertEqual(first.fontStyle.intValue, second.fontStyle.intValue);
+  XCTAssertEqual(first.size.floatValue, second.size.floatValue);
+}
+
+- (void)assertEqualTemplateFontStyles:(FLTNativeTemplateFontStyleWrapper *)first
+                               second:
+                                   (FLTNativeTemplateFontStyleWrapper *)second {
+  XCTAssertEqual(first.intValue, second.intValue);
+}
+
+- (void)assertEqualTemplateColors:(FLTNativeTemplateColor *)first
+                           second:(FLTNativeTemplateColor *)second {
+  XCTAssertEqual(first.alpha.floatValue, second.alpha.floatValue);
+  XCTAssertEqual(first.red.floatValue, second.red.floatValue);
+  XCTAssertEqual(first.blue.floatValue, second.blue.floatValue);
+  XCTAssertEqual(first.green.floatValue, second.green.floatValue);
+}
+
+- (void)assertEqualTemplateTypes:(FLTNativeTemplateType *)first
+                          second:(FLTNativeTemplateType *)second {
+  XCTAssertEqual(first.intValue, second.intValue);
 }
 
 @end

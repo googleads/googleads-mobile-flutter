@@ -249,6 +249,7 @@ void main() {
           'factoryId': '0',
           'nativeAdOptions': nativeAdOptions,
           'customOptions': options,
+          'nativeTemplateStyle': null,
         })
       ]);
 
@@ -257,13 +258,14 @@ void main() {
 
     test('load native with $AdManagerAdRequest', () async {
       final Map<String, Object> options = <String, Object>{'a': 1, 'b': 2};
-
       final NativeAd native = NativeAd.fromAdManagerRequest(
         adUnitId: 'test-id',
         factoryId: '0',
         customOptions: options,
         listener: NativeAdListener(),
         adManagerRequest: AdManagerAdRequest(),
+        nativeTemplateStyle:
+            NativeTemplateStyle(templateType: TemplateType.medium),
       );
 
       await native.load();
@@ -276,6 +278,7 @@ void main() {
           'factoryId': '0',
           'nativeAdOptions': null,
           'customOptions': options,
+          'nativeTemplateStyle': native.nativeTemplateStyle,
         })
       ]);
 

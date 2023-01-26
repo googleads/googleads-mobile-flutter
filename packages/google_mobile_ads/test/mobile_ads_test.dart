@@ -14,12 +14,12 @@
 
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_mobile_ads/src/ad_inspector_containers.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -431,6 +431,100 @@ void main() {
         isMethodCall('MobileAds#getRequestConfiguration', arguments: null),
         isMethodCall('MobileAds#getRequestConfiguration', arguments: null)
       ]);
+    });
+
+    test('encode/decode native template font style', () {
+      NativeTemplateFontStyle.values.forEach((fontStyle) {
+        final byteData = codec.encodeMessage(fontStyle)!;
+        final result = codec.decodeMessage(byteData);
+        expect(result, fontStyle);
+      });
+    });
+
+    test('encode/decode native template type', () {
+      TemplateType.values.forEach((templateType) {
+        final byteData = codec.encodeMessage(templateType)!;
+        final result = codec.decodeMessage(byteData);
+        expect(result, templateType);
+      });
+    });
+
+    test('encode/decode empty native text style', () {
+      final textStyle = NativeTemplateTextStyle();
+      final byteData = codec.encodeMessage(textStyle);
+      final result = codec.decodeMessage(byteData);
+      expect(result, textStyle);
+    });
+
+    test('encode/decode non-empty native text style', () {
+      final textStyle = NativeTemplateTextStyle(
+        textColor: Colors.red,
+        backgroundColor: Colors.blue.withAlpha(50),
+        style: NativeTemplateFontStyle.normal,
+        size: 20,
+      );
+      final byteData = codec.encodeMessage(textStyle);
+      final result = codec.decodeMessage(byteData);
+      expect(result, textStyle);
+    });
+
+    test('encode/decode empty native template style', () {
+      final templateStyle =
+          NativeTemplateStyle(templateType: TemplateType.medium);
+      final byteData = codec.encodeMessage(templateStyle);
+      final result = codec.decodeMessage(byteData);
+      expect(result, templateStyle);
+    });
+
+    test('encode/decode non-empty native template style, ios', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      final templateStyle = NativeTemplateStyle(
+          templateType: TemplateType.medium,
+          callToActionTextStyle: NativeTemplateTextStyle(),
+          primaryTextStyle: NativeTemplateTextStyle(
+            textColor: Colors.blue,
+          ),
+          secondaryTextStyle: NativeTemplateTextStyle(
+            backgroundColor: Colors.green,
+            style: NativeTemplateFontStyle.italic,
+          ),
+          tertiaryTextStyle: NativeTemplateTextStyle(
+            size: 15,
+          ),
+          mainBackgroundColor: Colors.cyan,
+          cornerRadius: 12);
+      final byteData = codec.encodeMessage(templateStyle);
+      final result = codec.decodeMessage(byteData);
+      expect(result, templateStyle);
+    });
+
+    test('encode/decode non-empty native template style, android', () {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final templateStyle = NativeTemplateStyle(
+          templateType: TemplateType.medium,
+          callToActionTextStyle: NativeTemplateTextStyle(),
+          primaryTextStyle: NativeTemplateTextStyle(
+            textColor: Colors.blue,
+          ),
+          secondaryTextStyle: NativeTemplateTextStyle(
+            backgroundColor: Colors.green,
+            style: NativeTemplateFontStyle.italic,
+          ),
+          tertiaryTextStyle: NativeTemplateTextStyle(
+            size: 15,
+          ),
+          mainBackgroundColor: Color.fromARGB(1, 2, 3, 4),
+          cornerRadius: 12);
+      final byteData = codec.encodeMessage(templateStyle);
+      final NativeTemplateStyle result = codec.decodeMessage(byteData);
+      // cornerRadius is dropped on android
+      expect(result.cornerRadius, null);
+      expect(result.templateType, templateStyle.templateType);
+      expect(result.callToActionTextStyle, templateStyle.callToActionTextStyle);
+      expect(result.primaryTextStyle, templateStyle.primaryTextStyle);
+      expect(result.secondaryTextStyle, templateStyle.secondaryTextStyle);
+      expect(result.tertiaryTextStyle, templateStyle.tertiaryTextStyle);
+      expect(result.mainBackgroundColor, templateStyle.mainBackgroundColor);
     });
   });
 }
