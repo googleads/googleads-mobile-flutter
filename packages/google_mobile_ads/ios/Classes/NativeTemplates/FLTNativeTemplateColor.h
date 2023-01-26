@@ -26,4 +26,9 @@
                                   blue:(NSNumber *_Nonnull)blue;
 - (UIColor *_Nonnull)uiColor;
 
+@property(readonly) NSNumber *_Nonnull alpha;
+@property(readonly) NSNumber *_Nonnull red;
+@property(readonly) NSNumber *_Nonnull green;
+@property(readonly) NSNumber *_Nonnull blue;
+
 @end

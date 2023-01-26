@@ -17,6 +17,7 @@
 
 #import "FLTAdInstanceManager_Internal.h"
 #import "FLTAd_Internal.h"
+#import "FLTNativeTemplateStyle.h"
 
 @interface FLTNativeAdTest : XCTestCase
 @end
@@ -150,6 +151,47 @@
               XCTAssertEqualObjects(adValue.currencyCode, @"currencyCode");
               return TRUE;
             }]]);
+}
+
+// Check that native templates are used when template style is provided.
+- (void)testLoadNativeAdNativeTemplateStyle {
+  FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
+  id mockNativeAdFactory = OCMProtocolMock(@protocol(FLTNativeAdFactory));
+  FLTNativeAdOptions *mockNativeAdOptions =
+      OCMClassMock([FLTNativeAdOptions class]);
+  GADAdLoaderOptions *mockGADAdLoaderOptions =
+      OCMClassMock([GADAdLoaderOptions class]);
+  OCMStub([mockNativeAdOptions asGADAdLoaderOptions])
+      .andReturn(mockGADAdLoaderOptions);
+  UIViewController *mockViewController = OCMClassMock([UIViewController class]);
+  FLTNativeTemplateStyle *templateStyle =
+      OCMClassMock([FLTNativeTemplateStyle class]);
+  UIView *mockTemplateView = OCMClassMock([UIView class]);
+  OCMStub([templateStyle getDisplayedView:[OCMArg any]])
+      .andReturn(mockTemplateView);
+
+  FLTNativeAd *ad = [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
+                                                  request:request
+                                          nativeAdFactory:mockNativeAdFactory
+                                            customOptions:nil
+                                       rootViewController:mockViewController
+                                                     adId:@1
+                                          nativeAdOptions:mockNativeAdOptions
+                                      nativeTemplateStyle:templateStyle];
+  ad.manager = mockManager;
+
+  FLTNativeAd *mockNativeAd = OCMPartialMock(ad);
+  GADAdLoader *mockLoader = OCMPartialMock([ad adLoader]);
+  OCMStub([mockNativeAd adLoader]).andReturn(mockLoader);
+  [mockNativeAd load];
+
+  GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
+  GADNativeAd *mockGADNativeAd = OCMClassMock([GADNativeAd class]);
+  OCMStub([mockGADNativeAd responseInfo]).andReturn(mockResponseInfo);
+  [ad adLoader:mockLoader didReceiveNativeAd:mockGADNativeAd];
+
+  OCMVerify([templateStyle getDisplayedView:[OCMArg isEqual:mockGADNativeAd]]);
+  XCTAssertEqual(ad.view, mockTemplateView);
 }
 
 @end

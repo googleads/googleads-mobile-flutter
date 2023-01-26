@@ -20,7 +20,7 @@
 @implementation FLTNativeTemplateStyle
 
 - (instancetype _Nonnull)
-    initWithTemplateType:(FLTNativeTemplateType *_Nullable)templateType
+    initWithTemplateType:(FLTNativeTemplateType *_Nonnull)templateType
      mainBackgroundColor:(FLTNativeTemplateColor *_Nullable)mainBackgroundColor
        callToActionStyle:
            (FLTNativeTemplateTextStyle *_Nullable)callToActionStyle
@@ -45,14 +45,7 @@
 
 - (FLTNativeTemplateViewWrapper *_Nonnull)getDisplayedView:
     (GADNativeAd *_Nonnull)gadNativeAd {
-  // Bundle file name is declared in podspec
-  id bundleURL = [NSBundle.mainBundle URLForResource:@"google_mobile_ads"
-                                       withExtension:@"bundle"];
-  NSBundle *bundle = [NSBundle bundleWithURL:bundleURL];
-  GADTTemplateView *templateView = [bundle loadNibNamed:_templateType.xibName
-                                                  owner:nil
-                                                options:nil]
-                                       .firstObject;
+  GADTTemplateView *templateView = _templateType.templateView;
   NSMutableDictionary *styles = [[NSMutableDictionary alloc] init];
   if ([FLTAdUtil isNotNull:_mainBackgroundColor]) {
     styles[GADTNativeTemplateStyleKeyMainBackgroundColor] =
@@ -102,7 +95,6 @@
           _secondaryTextStyle.textColor.uiColor;
     }
   }
-
   if ([FLTAdUtil isNotNull:_tertiaryTextStyle]) {
     if ([FLTAdUtil isNotNull:_tertiaryTextStyle.backgroundColor]) {
       styles[GADTNativeTemplateStyleKeyTertiaryBackgroundColor] =

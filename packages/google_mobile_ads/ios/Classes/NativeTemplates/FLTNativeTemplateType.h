@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import "GADTTemplateView.h"
 #import <Foundation/Foundation.h>
 
 /** Maps int values to template layout types. */
@@ -19,4 +20,8 @@
 
 - (instancetype _Nonnull)initWithInt:(int)intValue;
 - (NSString *_Nonnull)xibName;
+- (GADTTemplateView *_Nonnull)templateView;
+
+@property(readonly) int intValue;
+
 @end
