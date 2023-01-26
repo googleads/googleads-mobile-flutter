@@ -1,4 +1,4 @@
-#  Copyright 2021 Google LLC
+#  Copyright 2022 Google LLC
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -12,20 +12,20 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-name: app_open_example
+name: rewarded_example
 
 on:
   pull_request:
     paths:
       - "packages/google_mobile_ads/**"
-      - "samples/app_open_example/**"
-      - ".github/workflows/app_open_example.yaml"
+      - "samples/admob/rewarded_example/**"
+      - ".github/workflows/rewarded_example.yaml"
   push:
     branches:
       - "**"
 
 env:
-  GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "*app_open_example*"
+  GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "*rewarded_example*"
 
 jobs:
   android:
@@ -33,7 +33,7 @@ jobs:
     if: github.event_name == 'pull_request'
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -42,12 +42,12 @@ jobs:
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
-  
+
   iOS:
     runs-on: macos-latest
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -58,13 +58,13 @@ jobs:
           flutter config
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
-  
+
   flutter:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -73,7 +73,7 @@ jobs:
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Flutter Analyze"
         run: |
-          cd samples/app_open_example/
+          cd samples/admob/rewarded_example/
           flutter analyze
       - name: "Flutter Format"
         run: |
