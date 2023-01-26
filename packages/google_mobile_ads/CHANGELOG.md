@@ -1,9 +1,15 @@
+## 2.4.0
+* Adds support for native templates, which are predefined layouts for native ads.
+  * `NativeAd` has a new optional parameter, `nativeTemplateStyle` of type `NativeTemplateStyle`.
+    If provided, the plugin will inflate and style a platform native ad view for you, instead of
+    requiring you to write and register a NativeAdFactory (android) or FLTNativeAdFactory (iOS).
+
 ## 2.3.0
 * Updates GMA iOS dependency to 9.13
 * Updates GMA Android dependency to 21.3.0
 * Updates request agent string based on metadata in AndroidManifest.xml or Info.plist
 
-## 2.2.0
+## 2.2.0 
 * Updates GMA iOS dependency to 9.11.0. This fixes dependency issues in apps that
   also depend on the latest version of Firebase: https://github.com/googleads/googleads-mobile-flutter/issues/673
 * Adds the field `responseExtras` to `ResponseInfo`. See `ResponseInfo` docs:
