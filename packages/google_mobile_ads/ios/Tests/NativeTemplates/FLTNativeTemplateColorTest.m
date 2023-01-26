@@ -27,10 +27,10 @@
                 red:@10.0f
               green:[[NSNumber alloc] initWithFloat:15.0f]
                blue:[[NSNumber alloc] initWithFloat:20.0f]];
+  CGFloat alpha;
   CGFloat red;
   CGFloat green;
   CGFloat blue;
-  CGFloat alpha;
   [color.uiColor getRed:&red green:&green blue:&blue alpha:&alpha];
   XCTAssertEqualWithAccuracy(alpha, 5.0f / 255.0f, FLT_EPSILON);
   XCTAssertEqualWithAccuracy(red, 10.0f / 255.0f, FLT_EPSILON);
