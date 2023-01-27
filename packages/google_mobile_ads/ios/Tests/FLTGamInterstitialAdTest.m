@@ -49,16 +49,13 @@
               loadWithAdManagerAdUnitID:[OCMArg any]
                                 request:[OCMArg any]
                       completionHandler:[OCMArg any]]))
-      .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(GAMInterstitialAd *ad, NSError *error);
-        [invocation getArgument:&completionHandler atIndex:4];
+      .andDo(^void(Class localSelf, NSString *unitID, GAMRequest *request,
+                   GADInterstitialAdLoadCompletionHandler completionHandler) {
         completionHandler(interstitialClassMock, nil);
       });
   NSError *error = OCMClassMock([NSError class]);
   OCMStub([interstitialClassMock setFullScreenContentDelegate:[OCMArg any]])
-      .andDo(^(NSInvocation *invocation) {
-        id<GADFullScreenContentDelegate> delegate;
-        [invocation getArgument:&delegate atIndex:2];
+      .andDo(^void(GAMInterstitialAd *localSelf, id<GADFullScreenContentDelegate> delegate) {
         XCTAssertEqual(delegate, ad);
         [delegate adDidRecordImpression:interstitialClassMock];
         [delegate adDidRecordClick:interstitialClassMock];
@@ -70,9 +67,7 @@
       });
 
   OCMStub([interstitialClassMock setAppEventDelegate:[OCMArg any]])
-      .andDo(^(NSInvocation *invocation) {
-        id<GADAppEventDelegate> delegate;
-        [invocation getArgument:&delegate atIndex:2];
+      .andDo(^void(GAMInterstitialAd *localSelf, id<GADAppEventDelegate> delegate) {
         XCTAssertEqual(delegate, ad);
         [delegate interstitialAd:interstitialClassMock
               didReceiveAppEvent:@"event"
@@ -160,9 +155,8 @@
               loadWithAdManagerAdUnitID:[OCMArg any]
                                 request:[OCMArg any]
                       completionHandler:[OCMArg any]]))
-      .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(GAMInterstitialAd *ad, NSError *error);
-        [invocation getArgument:&completionHandler atIndex:4];
+      .andDo(^void(Class localSelf, NSString *unitID, GAMRequest *request,
+                   GADInterstitialAdLoadCompletionHandler completionHandler) {
         completionHandler(nil, error);
       });
 

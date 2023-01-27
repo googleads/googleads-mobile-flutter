@@ -120,10 +120,8 @@
       OCMClassMock([GADInitializationStatus class]);
   OCMStub([mockInitStatus adapterStatusesByClassName]).andReturn(@{});
   OCMStub([gadMobileAdsClassMock startWithCompletionHandler:[OCMArg any]])
-      .andDo(^(NSInvocation *invocation) {
+      .andDo(^void(GADMobileAds *localSelf, GADInitializationCompletionHandler completionHandler) {
         // Invoke the init handler twice.
-        GADInitializationCompletionHandler completionHandler;
-        [invocation getArgument:&completionHandler atIndex:2];
         completionHandler(mockInitStatus);
         completionHandler(mockInitStatus);
       });
@@ -381,9 +379,8 @@
   OCMStub([gadMobileAdsClassMock
               presentAdInspectorFromViewController:[OCMArg any]
                                  completionHandler:[OCMArg any]])
-      .andDo(^(NSInvocation *invocation) {
-        GADAdInspectorCompletionHandler completionHandler;
-        [invocation getArgument:&completionHandler atIndex:3];
+      .andDo(^void(GADMobileAds *localSelf, UIViewController *viewController,
+                   GADAdInspectorCompletionHandler completionHandler) {
         completionHandler(nil);
       });
 
@@ -419,9 +416,8 @@
   OCMStub([gadMobileAdsClassMock
               presentAdInspectorFromViewController:[OCMArg any]
                                  completionHandler:[OCMArg any]])
-      .andDo(^(NSInvocation *invocation) {
-        GADAdInspectorCompletionHandler completionHandler;
-        [invocation getArgument:&completionHandler atIndex:3];
+      .andDo(^void(GADMobileAds *localSelf, UIViewController *viewController,
+                   GADAdInspectorCompletionHandler completionHandler) {
         completionHandler(error);
       });
 

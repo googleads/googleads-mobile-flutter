@@ -48,16 +48,13 @@
   OCMStub(ClassMethod([interstitialClassMock loadWithAdUnitID:[OCMArg any]
                                                       request:[OCMArg any]
                                             completionHandler:[OCMArg any]]))
-      .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(GADInterstitialAd *ad, NSError *error);
-        [invocation getArgument:&completionHandler atIndex:4];
+      .andDo(^void(Class localSelf, NSString *unitID, GADRequest *request,
+                   GADInterstitialAdLoadCompletionHandler completionHandler) {
         completionHandler(interstitialClassMock, nil);
       });
   NSError *error = OCMClassMock([NSError class]);
   OCMStub([interstitialClassMock setFullScreenContentDelegate:[OCMArg any]])
-      .andDo(^(NSInvocation *invocation) {
-        id<GADFullScreenContentDelegate> delegate;
-        [invocation getArgument:&delegate atIndex:2];
+      .andDo(^void(GADInterstitialAd *localSelf, id<GADFullScreenContentDelegate> delegate) {
         XCTAssertEqual(delegate, ad);
         [delegate adDidRecordImpression:interstitialClassMock];
         [delegate adDidRecordClick:interstitialClassMock];
@@ -143,9 +140,8 @@
   OCMStub(ClassMethod([interstitialClassMock loadWithAdUnitID:[OCMArg any]
                                                       request:[OCMArg any]
                                             completionHandler:[OCMArg any]]))
-      .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(GADInterstitialAd *ad, NSError *error);
-        [invocation getArgument:&completionHandler atIndex:4];
+      .andDo(^void(Class localSelf, NSString *unitID, GADRequest *request,
+                   GADInterstitialAdLoadCompletionHandler completionHandler) {
         completionHandler(nil, error);
       });
 

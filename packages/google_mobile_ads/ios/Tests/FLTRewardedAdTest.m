@@ -64,17 +64,16 @@
   OCMStub(ClassMethod([rewardedClassMock loadWithAdUnitID:[OCMArg any]
                                                   request:[OCMArg any]
                                         completionHandler:[OCMArg any]]))
-      .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(GADRewardedAd *ad, NSError *error);
-        [invocation getArgument:&completionHandler atIndex:4];
+      .andDo(^void(Class localSelf, NSString *unitID, GADRequest *request,
+                   GADAppOpenAdLoadCompletionHandler completionHandler) {
         completionHandler(rewardedClassMock, nil);
       });
   // Stub setting of FullScreenContentDelegate to invoke delegate callbacks.
   NSError *error = OCMClassMock([NSError class]);
   __block id<GADFullScreenContentDelegate> fullScreenContentDelegate;
   OCMStub([rewardedClassMock setFullScreenContentDelegate:[OCMArg any]])
-      .andDo(^(NSInvocation *invocation) {
-        [invocation getArgument:&fullScreenContentDelegate atIndex:2];
+      .andDo(^void(GADRewardedAd *localSelf, id<GADFullScreenContentDelegate> delegate) {
+        fullScreenContentDelegate = delegate;
         XCTAssertEqual(fullScreenContentDelegate, ad);
       });
   GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
@@ -86,9 +85,8 @@
   OCMStub([rewardedClassMock adReward]).andReturn(mockReward);
   OCMStub([rewardedClassMock presentFromRootViewController:[OCMArg any]
                                   userDidEarnRewardHandler:[OCMArg any]])
-      .andDo(^(NSInvocation *invocation) {
-        GADUserDidEarnRewardHandler rewardHandler;
-        [invocation getArgument:&rewardHandler atIndex:3];
+      .andDo(^(GADRewardedAd *localSelf, UIViewController *viewController,
+               GADUserDidEarnRewardHandler rewardHandler) {
         rewardHandler();
       });
 
@@ -225,9 +223,8 @@
   OCMStub(ClassMethod([rewardedClassMock loadWithAdUnitID:[OCMArg any]
                                                   request:[OCMArg any]
                                         completionHandler:[OCMArg any]]))
-      .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(GADRewardedAd *ad, NSError *error);
-        [invocation getArgument:&completionHandler atIndex:4];
+      .andDo(^void(Class localSelf, NSString *unitID, GADRequest *request,
+                   GADAppOpenAdLoadCompletionHandler completionHandler) {
         completionHandler(nil, error);
       });
 

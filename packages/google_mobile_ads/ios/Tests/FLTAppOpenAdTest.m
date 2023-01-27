@@ -73,17 +73,15 @@
                         request:[OCMArg any]
                     orientation:UIInterfaceOrientationPortrait
               completionHandler:[OCMArg any]]))
-      .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(GADAppOpenAd *ad, NSError *error);
-        [invocation getArgument:&completionHandler atIndex:5];
+      .andDo(^void(Class localSelf, NSString *unitID, GADRequest *request,
+                   UIInterfaceOrientation orientation,
+                   GADAppOpenAdLoadCompletionHandler completionHandler) {
         completionHandler(appOpenClassMock, nil);
       });
   // Stub setting of FullScreenContentDelegate to invoke delegate callbacks.
   NSError *error = OCMClassMock([NSError class]);
   OCMStub([appOpenClassMock setFullScreenContentDelegate:[OCMArg any]])
-      .andDo(^(NSInvocation *invocation) {
-        id<GADFullScreenContentDelegate> delegate;
-        [invocation getArgument:&delegate atIndex:2];
+      .andDo(^void(GADAppOpenAd *localSelf, FLTAppOpenAd *delegate) {
         XCTAssertEqual(delegate, ad);
         [delegate adDidRecordImpression:appOpenClassMock];
         [delegate adDidRecordClick:appOpenClassMock];
@@ -183,9 +181,9 @@
                         request:[OCMArg any]
                     orientation:UIInterfaceOrientationLandscapeLeft
               completionHandler:[OCMArg any]]))
-      .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(GADAppOpenAd *ad, NSError *error);
-        [invocation getArgument:&completionHandler atIndex:5];
+      .andDo(^void(Class localSelf, NSString *unitID, GADRequest *request,
+                   UIInterfaceOrientation orientation,
+                   GADAppOpenAdLoadCompletionHandler completionHandler) {
         completionHandler(nil, error);
       });
 
