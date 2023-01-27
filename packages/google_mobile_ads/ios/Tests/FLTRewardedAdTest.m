@@ -72,7 +72,8 @@
   NSError *error = OCMClassMock([NSError class]);
   __block id<GADFullScreenContentDelegate> fullScreenContentDelegate;
   OCMStub([rewardedClassMock setFullScreenContentDelegate:[OCMArg any]])
-      .andDo(^void(GADRewardedAd *localSelf, id<GADFullScreenContentDelegate> delegate) {
+      .andDo(^void(GADRewardedAd *localSelf,
+                   id<GADFullScreenContentDelegate> delegate) {
         fullScreenContentDelegate = delegate;
         XCTAssertEqual(fullScreenContentDelegate, ad);
       });

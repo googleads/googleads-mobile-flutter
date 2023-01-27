@@ -55,7 +55,8 @@
       });
   NSError *error = OCMClassMock([NSError class]);
   OCMStub([interstitialClassMock setFullScreenContentDelegate:[OCMArg any]])
-      .andDo(^void(GAMInterstitialAd *localSelf, id<GADFullScreenContentDelegate> delegate) {
+      .andDo(^void(GAMInterstitialAd *localSelf,
+                   id<GADFullScreenContentDelegate> delegate) {
         XCTAssertEqual(delegate, ad);
         [delegate adDidRecordImpression:interstitialClassMock];
         [delegate adDidRecordClick:interstitialClassMock];
@@ -67,7 +68,8 @@
       });
 
   OCMStub([interstitialClassMock setAppEventDelegate:[OCMArg any]])
-      .andDo(^void(GAMInterstitialAd *localSelf, id<GADAppEventDelegate> delegate) {
+      .andDo(^void(GAMInterstitialAd *localSelf,
+                   id<GADAppEventDelegate> delegate) {
         XCTAssertEqual(delegate, ad);
         [delegate interstitialAd:interstitialClassMock
               didReceiveAppEvent:@"event"

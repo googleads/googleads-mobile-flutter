@@ -120,7 +120,8 @@
       OCMClassMock([GADInitializationStatus class]);
   OCMStub([mockInitStatus adapterStatusesByClassName]).andReturn(@{});
   OCMStub([gadMobileAdsClassMock startWithCompletionHandler:[OCMArg any]])
-      .andDo(^void(GADMobileAds *localSelf, GADInitializationCompletionHandler completionHandler) {
+      .andDo(^void(GADMobileAds *localSelf,
+                   GADInitializationCompletionHandler completionHandler) {
         // Invoke the init handler twice.
         completionHandler(mockInitStatus);
         completionHandler(mockInitStatus);

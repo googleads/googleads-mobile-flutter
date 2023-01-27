@@ -74,7 +74,8 @@
   NSError *error = OCMClassMock([NSError class]);
   OCMStub(
       [rewardedInterstitialClassMock setFullScreenContentDelegate:[OCMArg any]])
-      .andDo(^void(GADRewardedInterstitialAd *localSelf, FLTRewardedInterstitialAd *delegate) {
+      .andDo(^void(GADRewardedInterstitialAd *localSelf,
+                   FLTRewardedInterstitialAd *delegate) {
         XCTAssertEqual(delegate, ad);
         [delegate adDidRecordImpression:rewardedInterstitialClassMock];
         [delegate adDidRecordClick:rewardedInterstitialClassMock];
@@ -94,7 +95,8 @@
   OCMStub([rewardedInterstitialClassMock
               presentFromRootViewController:[OCMArg any]
                    userDidEarnRewardHandler:[OCMArg any]])
-      .andDo(^(GADRewardedInterstitialAd *localSelf, UIViewController *viewController,
+      .andDo(^(GADRewardedInterstitialAd *localSelf,
+               UIViewController *viewController,
                GADUserDidEarnRewardHandler rewardHandler) {
         rewardHandler();
       });
