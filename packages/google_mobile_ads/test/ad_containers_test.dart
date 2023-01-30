@@ -324,7 +324,9 @@ void main() {
       debugDefaultTargetPlatformOverride = null;
     });
 
-    testWidgets('Build ad widget Android', (WidgetTester tester) async {
+    testWidgets('Build ad widget Android, visibility detector workaround on',
+            (WidgetTester tester) async {
+      AdWidget.optOutOfVisibilityDetectorWorkaround = false;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       // Create a loaded ad
       final ad = NativeAd(
@@ -374,6 +376,55 @@ void main() {
       // PlatformViewLink should now be present instead of VisibilityDetector
       final detectors = tester.widgetList(find.byType(VisibilityDetector));
       expect(detectors.isEmpty, true);
+      final platformViewLink = tester.widget(find.byType(PlatformViewLink));
+      expect(platformViewLink, isNotNull);
+
+      // Reset platform override
+      await ad.dispose();
+      debugDefaultTargetPlatformOverride = null;
+    });
+
+    testWidgets('Build ad widget Android, visibility detector opted out',
+      (WidgetTester tester) async {
+      AdWidget.optOutOfVisibilityDetectorWorkaround = true;
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      // Create a loaded ad
+      final ad = NativeAd(
+        adUnitId: 'test-ad-unit',
+        factoryId: '0',
+        listener: NativeAdListener(),
+        request: AdRequest(),
+      );
+      await ad.load();
+
+      // Render ad in a scrolling view
+      VisibilityDetectorController.instance.updateInterval = Duration.zero;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: SingleChildScrollView(
+              child: Column(
+                key: UniqueKey(),
+                children: [
+                  SizedBox.fromSize(size: Size(200, 1000)),
+                  Container(
+                    height: 200,
+                    width: 200,
+                    child: AdWidget(ad: ad),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // VisibilityRender should not be in the UI
+      final visibilityDetectors =
+      tester.widgetList(find.byType(VisibilityDetector));
+      expect(visibilityDetectors.isEmpty, true);
+
       final platformViewLink = tester.widget(find.byType(PlatformViewLink));
       expect(platformViewLink, isNotNull);
 
