@@ -325,7 +325,7 @@ void main() {
     });
 
     testWidgets('Build ad widget Android, visibility detector workaround on',
-            (WidgetTester tester) async {
+        (WidgetTester tester) async {
       AdWidget.optOutOfVisibilityDetectorWorkaround = false;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       // Create a loaded ad
@@ -385,7 +385,7 @@ void main() {
     });
 
     testWidgets('Build ad widget Android, visibility detector opted out',
-      (WidgetTester tester) async {
+        (WidgetTester tester) async {
       AdWidget.optOutOfVisibilityDetectorWorkaround = true;
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       // Create a loaded ad
@@ -422,7 +422,7 @@ void main() {
 
       // VisibilityRender should not be in the UI
       final visibilityDetectors =
-      tester.widgetList(find.byType(VisibilityDetector));
+          tester.widgetList(find.byType(VisibilityDetector));
       expect(visibilityDetectors.isEmpty, true);
 
       final platformViewLink = tester.widget(find.byType(PlatformViewLink));
