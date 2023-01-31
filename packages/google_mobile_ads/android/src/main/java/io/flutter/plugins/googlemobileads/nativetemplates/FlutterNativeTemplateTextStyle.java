@@ -18,7 +18,7 @@ import android.graphics.drawable.ColorDrawable;
 import androidx.annotation.Nullable;
 import java.util.Objects;
 
-public class FlutterNativeTemplateTextStyle {
+public final class FlutterNativeTemplateTextStyle {
 
   @Nullable private final ColorDrawable textColor;
   @Nullable private final ColorDrawable backgroundColor;
