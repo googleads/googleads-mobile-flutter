@@ -3,6 +3,9 @@
   * `NativeAd` has a new optional parameter, `nativeTemplateStyle` of type `NativeTemplateStyle`.
     If provided, the plugin will inflate and style a platform native ad view for you, instead of
     requiring you to write and register a NativeAdFactory (android) or FLTNativeAdFactory (iOS).
+* Adds a new flag, AdWidget.optOutOfVisibilityDetectorWorkaround. Setting this to true
+  lets you opt out of the fix added for https://github.com/googleads/googleads-mobile-flutter/issues/580,
+  which was resolved in Flutter 3.7.0.
 
 ## 2.3.0
 * Updates GMA iOS dependency to 9.13
