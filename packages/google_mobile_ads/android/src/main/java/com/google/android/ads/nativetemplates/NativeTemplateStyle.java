@@ -155,7 +155,7 @@ public class NativeTemplateStyle {
   }
 
   /** A class that provides helper methods to build a style object. */
-  public static class Builder {
+  public static final class Builder {
 
     private NativeTemplateStyle styles;
 
