@@ -72,4 +72,11 @@ public class FlutterNativeTemplateTextStyle {
         && Objects.equals(size, other.size)
         && Objects.equals(fontStyle, other.fontStyle);
   }
+
+  @Override
+  public int hashCode() {
+    Integer textColorValue = textColor == null ? null : textColor.getColor();
+    Integer backgroundColorValue = backgroundColor == null ? null : backgroundColor.getColor();
+    return Objects.hash(textColorValue, backgroundColorValue, size, fontStyle);
+  }
 }

@@ -167,4 +167,14 @@ public final class FlutterNativeTemplateStyle {
         && Objects.equals(secondaryTextStyle, other.secondaryTextStyle)
         && Objects.equals(tertiaryTextStyle, other.tertiaryTextStyle);
   }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        mainBackgroundColor == null ? null : mainBackgroundColor.getColor(),
+        callToActionStyle,
+        primaryTextStyle,
+        secondaryTextStyle,
+        tertiaryTextStyle);
+  }
 }

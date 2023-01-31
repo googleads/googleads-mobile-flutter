@@ -58,7 +58,7 @@
                                                 weight:UIFontWeightRegular];
       }
     default:
-      NSLog(@"Unknown fontStyle case: %d", _fontStyle.fontStyle);
+      NSLog(@"Unknown fontStyle case: %ld", _fontStyle.fontStyle);
       return [UIFont systemFontOfSize:size];
     }
   }
