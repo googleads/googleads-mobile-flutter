@@ -20,7 +20,7 @@ import androidx.annotation.Nullable;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 /** A class containing the optional styling options for the Native Template. */
-public class NativeTemplateStyle {
+public final class NativeTemplateStyle {
 
   // Call to action typeface.
   private Typeface callToActionTextTypeface;
