@@ -122,7 +122,8 @@
   OCMStub([gadMobileAdsClassMock startWithCompletionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
         // Invoke the init handler twice.
-        __unsafe_unretained GADInitializationCompletionHandler completionHandler;
+        __unsafe_unretained GADInitializationCompletionHandler
+            completionHandler;
         [invocation getArgument:&completionHandler atIndex:2];
         completionHandler(mockInitStatus);
         completionHandler(mockInitStatus);
