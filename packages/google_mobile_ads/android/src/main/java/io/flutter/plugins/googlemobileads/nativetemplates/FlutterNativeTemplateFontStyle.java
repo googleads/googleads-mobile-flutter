@@ -41,8 +41,7 @@ public enum FlutterNativeTemplateFontStyle {
         return Typeface.defaultFromStyle(Typeface.ITALIC);
       case MONOSPACE:
         return Typeface.MONOSPACE;
-      default:
-        return Typeface.DEFAULT;
     }
+    return Typeface.DEFAULT;
   }
 }

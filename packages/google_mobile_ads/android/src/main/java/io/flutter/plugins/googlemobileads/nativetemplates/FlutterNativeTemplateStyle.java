@@ -160,7 +160,7 @@ public final class FlutterNativeTemplateStyle {
 
     FlutterNativeTemplateStyle other = (FlutterNativeTemplateStyle) o;
     return templateType == other.templateType
-        && (mainBackgroundColor == null && other.mainBackgroundColor == null
+        && ((mainBackgroundColor == null && other.mainBackgroundColor == null)
             || mainBackgroundColor.getColor() == other.mainBackgroundColor.getColor())
         && Objects.equals(callToActionStyle, other.callToActionStyle)
         && Objects.equals(primaryTextStyle, other.primaryTextStyle)

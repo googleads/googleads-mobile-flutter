@@ -65,9 +65,9 @@ public final class FlutterNativeTemplateTextStyle {
     }
 
     FlutterNativeTemplateTextStyle other = (FlutterNativeTemplateTextStyle) o;
-    return (textColor == null && other.textColor == null
+    return ((textColor == null && other.textColor == null)
             || textColor.getColor() == other.textColor.getColor())
-        && (backgroundColor == null && other.backgroundColor == null
+        && ((backgroundColor == null && other.backgroundColor == null)
             || backgroundColor.getColor() == other.backgroundColor.getColor())
         && Objects.equals(size, other.size)
         && Objects.equals(fontStyle, other.fontStyle);
