@@ -18,16 +18,10 @@ import android.graphics.Typeface;
 import android.util.Log;
 
 public enum FlutterNativeTemplateFontStyle {
-  NORMAL(Typeface.DEFAULT),
-  BOLD(Typeface.DEFAULT_BOLD),
-  ITALIC(Typeface.defaultFromStyle(Typeface.ITALIC)),
-  MONOSPACE(Typeface.MONOSPACE);
-
-  private final Typeface typeface;
-
-  FlutterNativeTemplateFontStyle(Typeface typeface) {
-    this.typeface = typeface;
-  }
+  NORMAL,
+  BOLD,
+  ITALIC,
+  MONOSPACE;
 
   public static FlutterNativeTemplateFontStyle fromIntValue(int value) {
     if (value >= 0 && value < FlutterNativeTemplateFontStyle.values().length) {
@@ -38,6 +32,16 @@ public enum FlutterNativeTemplateFontStyle {
   }
 
   Typeface getTypeface() {
-    return typeface;
+    switch (this) {
+      case NORMAL:
+        return Typeface.DEFAULT;
+      case BOLD:
+        return Typeface.DEFAULT_BOLD;
+      case ITALIC:
+        return Typeface.defaultFromStyle(Typeface.ITALIC);
+      case MONOSPACE:
+        return Typeface.MONOSPACE;
+    }
+    return Typeface.DEFAULT;
   }
 }

@@ -18,7 +18,7 @@ import android.graphics.drawable.ColorDrawable;
 import androidx.annotation.Nullable;
 import java.util.Objects;
 
-public class FlutterNativeTemplateTextStyle {
+public final class FlutterNativeTemplateTextStyle {
 
   @Nullable private final ColorDrawable textColor;
   @Nullable private final ColorDrawable backgroundColor;
@@ -65,11 +65,18 @@ public class FlutterNativeTemplateTextStyle {
     }
 
     FlutterNativeTemplateTextStyle other = (FlutterNativeTemplateTextStyle) o;
-    return (textColor == null && other.textColor == null
+    return ((textColor == null && other.textColor == null)
             || textColor.getColor() == other.textColor.getColor())
-        && (backgroundColor == null && other.backgroundColor == null
+        && ((backgroundColor == null && other.backgroundColor == null)
             || backgroundColor.getColor() == other.backgroundColor.getColor())
         && Objects.equals(size, other.size)
         && Objects.equals(fontStyle, other.fontStyle);
+  }
+
+  @Override
+  public int hashCode() {
+    Integer textColorValue = textColor == null ? null : textColor.getColor();
+    Integer backgroundColorValue = backgroundColor == null ? null : backgroundColor.getColor();
+    return Objects.hash(textColorValue, backgroundColorValue, size, fontStyle);
   }
 }

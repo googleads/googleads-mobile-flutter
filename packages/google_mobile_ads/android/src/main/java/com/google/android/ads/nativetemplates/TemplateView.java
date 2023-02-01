@@ -33,8 +33,8 @@ import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import io.flutter.plugins.googlemobileads.R;
 
-/** Base class for a template view. * */
-public class TemplateView extends FrameLayout {
+/** Base class for a template view. */
+public final class TemplateView extends FrameLayout {
 
   private int templateType;
   private NativeTemplateStyle styles;

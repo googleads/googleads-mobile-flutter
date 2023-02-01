@@ -122,7 +122,8 @@
   OCMStub([gadMobileAdsClassMock startWithCompletionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
         // Invoke the init handler twice.
-        GADInitializationCompletionHandler completionHandler;
+        __unsafe_unretained GADInitializationCompletionHandler
+            completionHandler;
         [invocation getArgument:&completionHandler atIndex:2];
         completionHandler(mockInitStatus);
         completionHandler(mockInitStatus);
@@ -382,7 +383,7 @@
               presentAdInspectorFromViewController:[OCMArg any]
                                  completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
-        GADAdInspectorCompletionHandler completionHandler;
+        __unsafe_unretained GADAdInspectorCompletionHandler completionHandler;
         [invocation getArgument:&completionHandler atIndex:3];
         completionHandler(nil);
       });
@@ -420,7 +421,7 @@
               presentAdInspectorFromViewController:[OCMArg any]
                                  completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
-        GADAdInspectorCompletionHandler completionHandler;
+        __unsafe_unretained GADAdInspectorCompletionHandler completionHandler;
         [invocation getArgument:&completionHandler atIndex:3];
         completionHandler(error);
       });
