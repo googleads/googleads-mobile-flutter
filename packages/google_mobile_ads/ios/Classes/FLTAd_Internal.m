@@ -355,7 +355,7 @@
     _bannerView = [[GADBannerView alloc] initWithAdSize:size.size];
     _bannerView.adUnitID = adUnitId;
     self.adId = adId;
-    self.bannerView.rootViewController = rootViewController;
+    self.bannerView.rootViewController = self;
     __weak FLTBannerAd *weakSelf = self;
     self.bannerView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
       if (weakSelf.manager == nil) {
