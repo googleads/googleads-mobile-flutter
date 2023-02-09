@@ -46,6 +46,8 @@
 - (FLTNativeTemplateViewWrapper *_Nonnull)getDisplayedView:
     (GADNativeAd *_Nonnull)gadNativeAd {
   GADTTemplateView *templateView = _templateType.templateView;
+  templateView.nativeAd = gadNativeAd;
+  
   NSMutableDictionary *styles = [[NSMutableDictionary alloc] init];
   if ([FLTAdUtil isNotNull:_mainBackgroundColor]) {
     styles[GADTNativeTemplateStyleKeyMainBackgroundColor] =
@@ -110,7 +112,6 @@
     }
   }
   templateView.styles = styles;
-  templateView.nativeAd = gadNativeAd;
 
   FLTNativeTemplateViewWrapper *wrapper =
       [[FLTNativeTemplateViewWrapper alloc] initWithFrame:CGRectZero];
