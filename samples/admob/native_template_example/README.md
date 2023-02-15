@@ -1,16 +1,95 @@
-# native_example
+# native_template_example
 
-A new Flutter project.
+An example project that demonstrates loading and showing native ads using native tempalates.
 
-## Getting Started
+## Always test with test ads
 
-This project is a starting point for a Flutter application.
+When building and testing your apps, make sure you use test ads rather than
+live, production ads. Failure to do so can lead to suspension of your account.
 
-A few resources to get you started if this is your first Flutter project:
+## Implementation
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+The main steps to integrate rewarded ads are:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Load an ad
+2. Handle ad events
+3. Present an into screen
+
+
+### Load an ad
+The sample shows how to load a native ad.
+
+```
+_nativeAd = NativeAd(
+        adUnitId: _adUnitId,
+        listener: NativeAdListener(
+          onAdLoaded: (ad) {
+            print('$NativeAd loaded.');
+          },
+          onAdFailedToLoad: (ad, error) {
+            print('$NativeAd failedToLoad: $error');
+          },
+        ),
+        request: const AdRequest(),
+        nativeTemplateStyle: NativeTemplateStyle(
+            templateType: TemplateType.medium,
+            mainBackgroundColor: const Color(0xfffffbed),
+            callToActionTextStyle: NativeTemplateTextStyle(
+                textColor: Colors.white,
+                style: NativeTemplateFontStyle.monospace,
+                size: 16.0),
+            primaryTextStyle: NativeTemplateTextStyle(
+                textColor: Colors.black,
+                style: NativeTemplateFontStyle.bold,
+                size: 16.0),
+            secondaryTextStyle: NativeTemplateTextStyle(
+                textColor: Colors.black,
+                style: NativeTemplateFontStyle.italic,
+                size: 16.0),
+            tertiaryTextStyle: NativeTemplateTextStyle(
+                textColor: Colors.black,
+                style: NativeTemplateFontStyle.normal,
+                size: 16.0)))
+      ..load();
+ ```
+
+### Handle ad events
+The sample shows how to handle native ad events using the NativeAdListener.
+
+```
+_nativeAd = NativeAd(
+        adUnitId: _adUnitId,
+        listener: NativeAdListener(
+          onAdLoaded: (ad) {
+            print('$NativeAd loaded.');
+          },
+          onAdFailedToLoad: (ad, error) {
+            print('$NativeAd failedToLoad: $error');
+          },
+          // Called when a click is recorded for a NativeAd.
+          onAdClicked: (ad) {},
+          // Called when an impression occurs on the ad.
+          onAdImpression: (ad) {},
+          // Called when an ad removes an overlay that covers the screen.
+          onAdClosed: (ad) {},
+          // Called when an ad opens an overlay that covers the screen.
+          onAdOpened: (ad) {},
+          // For iOS only. Called before dismissing a full screen view
+          onAdWillDismissScreen: (ad) {},
+          // Called when an ad receives revenue value.
+          onPaidEvent: (ad, valueMicros, precision, currencyCode) {},**
+        ),
+ ...
+```
+
+### Display a native ad
+The sample shows how to display a native ad.
+
+```
+if (_nativeAdIsLoaded && _nativeAd != null)
+                        SizedBox(
+                            height: MediaQuery.of(context).size.width *
+                                _adAspectRatioMedium,
+                            width: MediaQuery.of(context).size.width,
+                            child: AdWidget(ad: _nativeAd!)),
+```
