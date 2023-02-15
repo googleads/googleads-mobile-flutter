@@ -23,7 +23,7 @@ class NativeExampleState extends State<NativeExample> {
   NativeAd? _nativeAd;
   bool _nativeAdIsLoaded = false;
   String? _versionString;
-  final double _adAspectRatioSmall = (91 / 355);
+  // final double _adAspectRatioSmall = (91 / 355);
   final double _adAspectRatioMedium = (370 / 355);
 
   final String _adUnitId = Platform.isAndroid
