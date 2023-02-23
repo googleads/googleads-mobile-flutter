@@ -48,8 +48,11 @@ class _NativeTemplateExampleExampleState extends State<NativeTemplateExample> {
             },
             itemBuilder: (BuildContext context, int index) {
               if (index == 5 && _nativeAd != null && _nativeAdIsLoaded) {
-                return Container(
-                    width: 250, height: 600, child: AdWidget(ad: _nativeAd!));
+                return Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      width: 400, height: 400, child: AdWidget(ad: _nativeAd!)),
+                );
               }
               return Text(
                 Constants.placeholderText,
@@ -65,11 +68,7 @@ class _NativeTemplateExampleExampleState extends State<NativeTemplateExample> {
     super.didChangeDependencies();
     // Create the ad objects and load ads.
     _nativeAd = NativeAd(
-      adUnitId:
-          // '/6499/example/native',
-          Platform.isAndroid
-              ? 'ca-app-pub-3940256099942544/2247696110'
-              : 'ca-app-pub-3940256099942544/3986624511',
+      adUnitId: '/6499/example/native',
       request: AdRequest(),
       listener: NativeAdListener(
         onAdLoaded: (Ad ad) {
@@ -87,30 +86,13 @@ class _NativeTemplateExampleExampleState extends State<NativeTemplateExample> {
       ),
       nativeTemplateStyle: NativeTemplateStyle(
         templateType: TemplateType.medium,
-        mainBackgroundColor: Colors.purple,
+        mainBackgroundColor: Colors.white12,
         callToActionTextStyle: NativeTemplateTextStyle(
-          textColor: Colors.cyan,
-          backgroundColor: Colors.red,
-          style: NativeTemplateFontStyle.monospace,
           size: 16.0,
         ),
         primaryTextStyle: NativeTemplateTextStyle(
-          textColor: Colors.red,
-          backgroundColor: Colors.cyan,
-          style: NativeTemplateFontStyle.italic,
-          size: 16.0,
-        ),
-        secondaryTextStyle: NativeTemplateTextStyle(
-          textColor: Colors.green,
-          backgroundColor: Colors.black,
-          style: NativeTemplateFontStyle.bold,
-          size: 16.0,
-        ),
-        tertiaryTextStyle: NativeTemplateTextStyle(
-          textColor: Colors.brown,
-          backgroundColor: Colors.amber,
-          style: NativeTemplateFontStyle.normal,
-          size: 16.0,
+          textColor: Colors.black38,
+          backgroundColor: Colors.white70,
         ),
       ),
     )..load();

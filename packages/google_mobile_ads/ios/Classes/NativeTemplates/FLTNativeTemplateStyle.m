@@ -127,8 +127,28 @@
   [super layoutSubviews];
   if (_templateView) {
     [self addSubview:_templateView];
-    [_templateView addVerticalCenterConstraintToSuperview];
-    [_templateView addHorizontalConstraintsToSuperviewWidth];
+    // Constrain the top of the templateView to the top of this view. This top aligns the template view
+    if (_templateView.superview) {
+      [_templateView.superview
+          addConstraint:[NSLayoutConstraint
+                            constraintWithItem:_templateView.superview
+                                     attribute:NSLayoutAttributeTop
+                                     relatedBy:NSLayoutRelationEqual
+                                        toItem:_templateView
+                                     attribute:NSLayoutAttributeTop
+                                    multiplier:1
+                                      constant:0]];
+      [_templateView.superview
+          addConstraint:[NSLayoutConstraint
+                            constraintWithItem:_templateView.superview
+                                     attribute:NSLayoutAttributeBottom
+                                     relatedBy:NSLayoutRelationGreaterThanOrEqual
+                                        toItem:_templateView
+                                     attribute:NSLayoutAttributeBottom
+                                    multiplier:1
+                                      constant:0]];
+    }
+        [_templateView addHorizontalConstraintsToSuperviewWidth];
   }
 }
 
