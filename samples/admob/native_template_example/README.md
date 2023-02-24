@@ -1,6 +1,6 @@
 # native_template_example
 
-An example project that demonstrates loading and showing native ads using native tempalates.
+An example project that demonstrates loading and showing native ads using native templates.
 
 ## Always test with test ads
 
@@ -13,18 +13,23 @@ The main steps to integrate rewarded ads are:
 
 1. Load an ad
 2. Handle ad events
-3. Present an into screen
+3. Display a native ad
 
 
 ### Load an ad
 The sample shows how to load a native ad.
 
 ```
+bool _nativeAdIsLoaded = false;
+
 _nativeAd = NativeAd(
         adUnitId: _adUnitId,
         listener: NativeAdListener(
           onAdLoaded: (ad) {
             print('$NativeAd loaded.');
+            setState(() {
+              _nativeAdIsLoaded = true;
+            });
           },
           onAdFailedToLoad: (ad, error) {
             print('$NativeAd failedToLoad: $error');
