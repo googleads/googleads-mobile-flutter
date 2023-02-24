@@ -22,7 +22,7 @@
 
 /**
  * Wraps a GADTTemplateView for being displayed as a platform view.
- * Exists to override layoutSubviews, so we can attach layout contraints.
+ * Exists to override layoutSubviews, so we can attach layout constraints.
  */
 @interface FLTNativeTemplateViewWrapper : UIView
 

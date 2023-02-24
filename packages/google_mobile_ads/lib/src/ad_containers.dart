@@ -618,6 +618,16 @@ abstract class AdWithoutView extends Ad {
 /// Must call `load()` first before showing the widget. Otherwise, a
 /// [PlatformException] will be thrown.
 class AdWidget extends StatefulWidget {
+  /// Opt out of the visibility detector workaround.
+  ///
+  /// As a workaround for
+  /// https://github.com/googleads/googleads-mobile-flutter/issues/580,
+  /// we wait for the widget to get displayed once before attaching
+  /// the platform view.
+  ///
+  /// Set this flag to true if you are building with Flutter 3.7.0 or higher.
+  static bool optOutOfVisibilityDetectorWorkaround = false;
+
   /// Default constructor for [AdWidget].
   ///
   /// [ad] must be loaded before this is added to the widget tree.
@@ -684,8 +694,8 @@ class _AdWidgetState extends State<AdWidget> {
       // https://github.com/googleads/googleads-mobile-flutter/issues/580,
       // where impressions are erroneously fired due to how platform views are
       // rendered.
-      // TODO (jjliu15): Remove this after the flutter issue is resolved.
-      if (_firstVisibleOccurred) {
+      if (_firstVisibleOccurred ||
+          AdWidget.optOutOfVisibilityDetectorWorkaround) {
         return PlatformViewLink(
           viewType: '${instanceManager.channel.name}/ad_widget',
           surfaceFactory:
