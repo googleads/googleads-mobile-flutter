@@ -39,7 +39,6 @@ dependencies:
     git:
       url: git@github.com:googleads/googleads-mobile-flutter.git
       path: packages/google_mobile_ads
-      ref: native_templates
 
 dev_dependencies:
   flutter_test:
