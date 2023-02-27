@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_mobile_ads:
     git:
-      url: git@github.com:googleads/googleads-mobile-flutter.git
+      url: https://github.com/googleads/googleads-mobile-flutter.git
       path: packages/google_mobile_ads
 
 dev_dependencies:
