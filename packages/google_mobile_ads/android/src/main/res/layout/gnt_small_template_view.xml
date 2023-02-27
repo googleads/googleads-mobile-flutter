@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
   <com.google.android.gms.ads.nativead.NativeAdView
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       android:layout_width="match_parent"
       android:layout_centerInParent="true"
       android:id="@+id/native_ad_view"
       >
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_centerInParent="true"
         android:background="@drawable/gnt_outline_shape"
@@ -69,7 +69,7 @@
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toTopOf="parent"
-              android:background="@color/gnt_test_background_color"
+              android:background="@android:color/transparent"
               >
 
             <TextView
@@ -121,7 +121,7 @@
             </TextView>
             <RatingBar
                 android:id="@+id/rating_bar"
-                android:background="@color/gnt_white"
+                android:background="@android:color/transparent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/gnt_text_size_small"

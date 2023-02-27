@@ -46,6 +46,8 @@
 - (FLTNativeTemplateViewWrapper *_Nonnull)getDisplayedView:
     (GADNativeAd *_Nonnull)gadNativeAd {
   GADTTemplateView *templateView = _templateType.templateView;
+  templateView.nativeAd = gadNativeAd;
+
   NSMutableDictionary *styles = [[NSMutableDictionary alloc] init];
   if ([FLTAdUtil isNotNull:_mainBackgroundColor]) {
     styles[GADTNativeTemplateStyleKeyMainBackgroundColor] =
@@ -110,7 +112,6 @@
     }
   }
   templateView.styles = styles;
-  templateView.nativeAd = gadNativeAd;
 
   FLTNativeTemplateViewWrapper *wrapper =
       [[FLTNativeTemplateViewWrapper alloc] initWithFrame:CGRectZero];
@@ -126,7 +127,29 @@
   [super layoutSubviews];
   if (_templateView) {
     [self addSubview:_templateView];
-    [_templateView addVerticalCenterConstraintToSuperview];
+    // Constrain the top of the templateView to the top of this view. This top
+    // aligns the template view
+    if (_templateView.superview) {
+      [_templateView.superview
+          addConstraint:[NSLayoutConstraint
+                            constraintWithItem:_templateView.superview
+                                     attribute:NSLayoutAttributeTop
+                                     relatedBy:NSLayoutRelationEqual
+                                        toItem:_templateView
+                                     attribute:NSLayoutAttributeTop
+                                    multiplier:1
+                                      constant:0]];
+      [_templateView.superview
+          addConstraint:
+              [NSLayoutConstraint
+                  constraintWithItem:_templateView.superview
+                           attribute:NSLayoutAttributeBottom
+                           relatedBy:NSLayoutRelationGreaterThanOrEqual
+                              toItem:_templateView
+                           attribute:NSLayoutAttributeBottom
+                          multiplier:1
+                            constant:0]];
+    }
     [_templateView addHorizontalConstraintsToSuperviewWidth];
   }
 }
