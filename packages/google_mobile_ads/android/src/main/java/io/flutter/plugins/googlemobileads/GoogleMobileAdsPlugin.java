@@ -16,6 +16,7 @@ package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
 import android.util.Log;
+import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -40,6 +41,7 @@ import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterOverlayAd;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
 import io.flutter.plugins.googlemobileads.usermessagingplatform.UserMessagingPlatformManager;
+import io.flutter.plugins.webviewflutter.WebViewFlutterAndroidExternalApi;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -376,6 +378,14 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
           builder.setTestDeviceIds(testDeviceIds);
         }
         MobileAds.setRequestConfiguration(builder.build());
+        result.success(null);
+        break;
+      case "MobileAds#registerWebView":
+        Integer webViewId = call.<Integer>argument("webViewId");
+        FlutterPluginBinding binding = pluginBinding;
+        WebView webView =
+            WebViewFlutterAndroidExternalApi.getWebView(binding.getFlutterEngine(), webViewId);
+        MobileAds.registerWebView(webView);
         result.success(null);
         break;
       case "loadBannerAd":

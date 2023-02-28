@@ -1,3 +1,8 @@
+## 2.5.0
+* Adds support for `MobileAds.registerWebView()`. This API supports in-app ad monetization for
+  `WebView`s. You can read more in the [android](https://developers.google.com/admob/android/webview)
+  or [iOS](https://developers.google.com/admob/ios/webview) documentation.
+
 ## 2.4.0
 * Adds support for native templates, which are predefined layouts for native ads.
   * `NativeAd` has a new optional parameter, `nativeTemplateStyle` of type `NativeTemplateStyle`.

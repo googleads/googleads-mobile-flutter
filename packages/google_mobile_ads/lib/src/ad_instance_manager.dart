@@ -26,6 +26,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/src/nativetemplates/template_type.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 import 'nativetemplates/native_template_font_style.dart';
 import 'nativetemplates/native_template_style.dart';
@@ -786,6 +789,27 @@ class AdInstanceManager {
       'MobileAds#openDebugMenu',
       <dynamic, dynamic>{
         'adUnitId': adUnitId,
+      },
+    );
+  }
+
+  /// Register the `WebViewController` with the GMASDK,
+  Future<void> registerWebView(WebViewController controller) {
+    late final int webViewIdentifier;
+    if (WebViewPlatform.instance is AndroidWebViewPlatform) {
+      webViewIdentifier =
+          (controller.platform as AndroidWebViewController).webViewIdentifier;
+    } else if (WebViewPlatform.instance is WebKitWebViewPlatform) {
+      webViewIdentifier =
+          (controller.platform as WebKitWebViewController).webViewIdentifier;
+    } else {
+      throw UnsupportedError('This method only supports Android and iOS.');
+    }
+
+    return channel.invokeMethod<void>(
+      'MobileAds#registerWebView',
+      <dynamic, dynamic>{
+        'webViewId': webViewIdentifier,
       },
     );
   }

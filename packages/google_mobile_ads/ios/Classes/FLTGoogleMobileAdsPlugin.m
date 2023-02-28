@@ -17,6 +17,7 @@
 #import "FLTAppStateNotifier.h"
 #import "FLTNSString.h"
 #import "UserMessagingPlatform/FLTUserMessagingPlatformManager.h"
+@import webview_flutter_wkwebview;
 
 @interface FLTGoogleMobileAdsPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
@@ -61,6 +62,7 @@
   FLTGoogleMobileAdsReaderWriter *_readerWriter;
   FLTAppStateNotifier *_appStateNotifier;
   FLTUserMessagingPlatformManager *_userMessagingPlatformManager;
+  __weak FlutterAppDelegate *_appDelegate;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -87,11 +89,18 @@
   [registrar
       registerViewFactory:viewFactory
                    withId:@"plugins.flutter.io/google_mobile_ads/ad_widget"];
+  [registrar addApplicationDelegate:instance];
 }
 
 - (instancetype)init {
   self = [super init];
   return self;
+}
+
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  _appDelegate = (FlutterAppDelegate *)application.delegate;
+  return YES;
 }
 
 - (instancetype)initWithBinaryMessenger:
@@ -278,6 +287,17 @@
   } else if ([call.method
                  isEqualToString:@"MobileAds#getRequestConfiguration"]) {
     result(GADMobileAds.sharedInstance.requestConfiguration);
+  } else if ([call.method isEqualToString:@"MobileAds#registerWebView"]) {
+    if (!_appDelegate) {
+      NSLog(@"App delegate is null in MobileAds#registerWebView, skipping");
+    } else {
+      NSNumber *webViewId = call.arguments[@"webViewId"];
+      WKWebView *webView = (WKWebView *)[FWFWebViewFlutterWKWebViewExternalAPI
+          webViewForIdentifier:webViewId.longValue
+            withPluginRegistry:_appDelegate];
+      [GADMobileAds.sharedInstance registerWebView:webView];
+    }
+    result(nil);
   } else if ([call.method
                  isEqualToString:@"MobileAds#updateRequestConfiguration"]) {
     NSString *maxAdContentRating = call.arguments[@"maxAdContentRating"];
