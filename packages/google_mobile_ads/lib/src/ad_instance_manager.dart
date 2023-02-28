@@ -26,6 +26,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/src/nativetemplates/template_type.dart';
+import 'package:google_mobile_ads/src/webview_controller_util.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
@@ -44,7 +45,8 @@ AdInstanceManager instanceManager = AdInstanceManager(
 /// Maintains access to loaded [Ad] instances and handles sending/receiving
 /// messages to platform code.
 class AdInstanceManager {
-  AdInstanceManager(String channelName)
+  AdInstanceManager(String channelName,
+      {this.webViewControllerUtil = const WebViewControllerUtil()})
       : channel = MethodChannel(
           channelName,
           StandardMethodCodec(AdMessageCodec()),
@@ -69,6 +71,7 @@ class AdInstanceManager {
 
   /// Invokes load and dispose calls.
   final MethodChannel channel;
+  final WebViewControllerUtil webViewControllerUtil;
 
   void _onAdEvent(Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -795,23 +798,23 @@ class AdInstanceManager {
 
   /// Register the `WebViewController` with the GMASDK,
   Future<void> registerWebView(WebViewController controller) {
-    late final int webViewIdentifier;
-    if (WebViewPlatform.instance is AndroidWebViewPlatform) {
-      webViewIdentifier =
-          (controller.platform as AndroidWebViewController).webViewIdentifier;
-    } else if (WebViewPlatform.instance is WebKitWebViewPlatform) {
-      webViewIdentifier =
-          (controller.platform as WebKitWebViewController).webViewIdentifier;
-    } else {
-      throw UnsupportedError('This method only supports Android and iOS.');
-    }
-
     return channel.invokeMethod<void>(
       'MobileAds#registerWebView',
       <dynamic, dynamic>{
-        'webViewId': webViewIdentifier,
+        'webViewId': webViewControllerUtil.webViewIdentifier(controller),
       },
     );
+  }
+
+  int getWebViewId(WebViewController controller) {
+    if (WebViewPlatform.instance is AndroidWebViewPlatform) {
+      return (controller.platform as AndroidWebViewController)
+          .webViewIdentifier;
+    } else if (WebViewPlatform.instance is WebKitWebViewPlatform) {
+      return (controller.platform as WebKitWebViewController).webViewIdentifier;
+    } else {
+      throw UnsupportedError('This method only supports Android and iOS.');
+    }
   }
 
   /// Send a platform message to open the ad inspector.
