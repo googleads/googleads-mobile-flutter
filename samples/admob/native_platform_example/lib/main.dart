@@ -87,6 +87,12 @@ class NativeExampleState extends State<NativeExample> {
             print('$NativeAd failedToLoad: $error');
             ad.dispose();
           },
+          onAdClicked: (ad) {},
+          onAdImpression: (ad) {},
+          onAdClosed: (ad) {},
+          onAdOpened: (ad) {},
+          onAdWillDismissScreen: (ad) {},
+          onPaidEvent: (ad, valueMicros, precision, currencyCode) {},
         ),
         request: const AdRequest(),
     )..load();
