@@ -51,9 +51,8 @@ class NativeAdFactoryExample: NativeAdFactory {
     adView.starRatingView = adView.findViewById(R.id.ad_stars)
     adView.storeView = adView.findViewById(R.id.ad_store)
     adView.advertiserView = adView.findViewById(R.id.ad_advertiser)
-
-
-
+    
+    // The headline and mediaContent are guaranteed to be in every NativeAd.
     (adView.headlineView as TextView).text = nativeAd?.headline
     adView.mediaView?.mediaContent = nativeAd?.mediaContent
 
