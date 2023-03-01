@@ -15,6 +15,7 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.webkit.WebView;
 import androidx.annotation.NonNull;
@@ -320,6 +321,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     }
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
     if (instanceManager == null || pluginBinding == null) {
@@ -382,10 +384,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         break;
       case "MobileAds#registerWebView":
         Integer webViewId = call.<Integer>argument("webViewId");
-        FlutterPluginBinding binding = pluginBinding;
-        WebView webView =
-            WebViewFlutterAndroidExternalApi.getWebView(binding.getFlutterEngine(), webViewId);
-        MobileAds.registerWebView(webView);
+        flutterMobileAds.registerWebView(webViewId, pluginBinding.getFlutterEngine());
         result.success(null);
         break;
       case "loadBannerAd":
