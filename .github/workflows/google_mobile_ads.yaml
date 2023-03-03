@@ -19,6 +19,8 @@ on:
     paths:
       - "packages/google_mobile_ads/**"
       - ".github/workflows/google_mobile_ads.yaml"
+      - "packages/google_mobile_ads/ios/**"
+      - "packages/google_mobile_ads/android/**"
   push:
     branches:
       - master
