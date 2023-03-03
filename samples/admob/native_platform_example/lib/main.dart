@@ -73,7 +73,7 @@ class NativeExampleState extends State<NativeExample> {
 
     _nativeAd = NativeAd(
         adUnitId: _adUnitId,
-        factoryId: "adFactoryExample",
+        factoryId: 'adFactoryExample',
         listener: NativeAdListener(
           onAdLoaded: (ad) {
             // ignore: avoid_print
