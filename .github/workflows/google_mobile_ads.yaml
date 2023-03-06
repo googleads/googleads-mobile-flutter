@@ -19,6 +19,8 @@ on:
     paths:
       - "packages/google_mobile_ads/**"
       - ".github/workflows/google_mobile_ads.yaml"
+      - "packages/google_mobile_ads/ios/**"
+      - "packages/google_mobile_ads/android/**"
   push:
     branches:
       - master
@@ -63,9 +65,9 @@ jobs:
         run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
       - name: "Unit Tests"
         run: |
-          cd packages/google_mobile_ads/ios
-          pod lib lint --allow-warnings
-  
+          cd packages/google_mobile_ads/example/ios
+          xcodebuild -configuration Debug VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.2' test  
+ 
   flutter:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
