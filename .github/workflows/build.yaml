@@ -21,8 +21,8 @@ jobs:
         - "banner_example"
         - "interstitial_example"
         - "native_platform_example"
-        - "native_templates/example"
-        - "rewarded_example*"
+        - "native_templates_example"
+        - "rewarded_example"
         - "rewarded_interstitial_example"   
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
@@ -62,8 +62,8 @@ jobs:
         - "banner_example"
         - "interstitial_example"
         - "native_platform_example"
-        - "native_templates/example"
-        - "rewarded_example*"
+        - "native_templates_example"
+        - "rewarded_example"
         - "rewarded_interstitial_example"
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
@@ -92,8 +92,8 @@ jobs:
         - "banner_example"
         - "interstitial_example"
         - "native_platform_example"
-        - "native_templates/example"
-        - "rewarded_example*"
+        - "native_templates_example"
+        - "rewarded_example"
         - "rewarded_interstitial_example"
         
     steps:
