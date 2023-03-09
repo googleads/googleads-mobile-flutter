@@ -13,6 +13,7 @@ env:
   GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "{{ matrix.REGEX }}"
 
 jobs:
+# Step 2: Build the samples
   build:
     name: Build
     runs-on: macOS-latest
