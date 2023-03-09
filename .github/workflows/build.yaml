@@ -1,0 +1,53 @@
+name: Build Status
+
+# Step 1: Build on pull-requests or pushes to main
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  build:
+    name: Build
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        regex:
+        - "*adaptive_banner_example*"
+        - "*banner_example*"
+        - "*interstitial_example*"
+        - "*native_platform_example*"
+        - "*native_templates/example*"
+        - "*rewarded_example*"
+        - "*rewarded_interstitial_example*"
+        
+env:
+  GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "{{ matrix.REGEX }}"
+
+    steps:
+      - name: Clone Repo
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh dev
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh
+      - name: "Build Android Example"
+        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
+      - name: "Build iOS Example"
+        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
+      - name: "Flutter Analyze"
+        run: |
+          cd {{ matrix.REGEX }}
+          flutter analyze
+      - name: "Flutter Format"
+        run: |
+          flutter pub global activate flutter_plugin_tools
+          flutter pub global run flutter_plugin_tools format
+          ./.github/workflows/scripts/validate-formatting.sh
+  
