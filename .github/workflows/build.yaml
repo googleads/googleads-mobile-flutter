@@ -8,11 +8,60 @@ on:
   pull_request:
     branches:
     - main
+ 
+jobs:
+# Step 2: Build Android
+  build:
+    name: Build Android
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        regex:
+        - "adaptive_banner_example"
+        - "banner_example"
+        - "interstitial_example"
+        - "native_platform_example"
+        - "native_templates/example"
+        - "rewarded_example*"
+        - "rewarded_interstitial_example"
+        
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+        with:
+          fetch-depth: 0
+ 
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh dev
+        
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh
+        env:
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
+        
+      - name: "Build Android Example"
+        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
+        env:
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
+                  
+      - name: "Flutter Analyze"
+        run: |
+          cd samples/admob/$GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
+          flutter analyze
+        env:
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
+          
+      - name: "Flutter Format"
+        run: |
+          flutter pub global activate flutter_plugin_tools
+          flutter pub global run flutter_plugin_tools format
+          ./.github/workflows/scripts/validate-formatting.sh
+        
 
 jobs:
-# Step 2: Build the samples
+# Step 2: Build iOS
   build:
-    name: Build
+    name: Build iOS
     runs-on: macOS-latest
     strategy:
       fail-fast: false
@@ -28,34 +77,51 @@ jobs:
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
-          fetch-depth: 0
-          
+          fetch-depth: 0  
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh dev
-        
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
         env:
           GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
-        
-      - name: "Build Android Example"
-        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
-        env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
-        
-        
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
         env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}   
+          
+jobs:
+# Step 3: Build Flutter
+  build:
+    name: Build Flutter
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        regex:
+        - "adaptive_banner_example"
+        - "banner_example"
+        - "interstitial_example"
+        - "native_platform_example"
+        - "native_templates/example"
+        - "rewarded_example*"
+        - "rewarded_interstitial_example"
         
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh dev
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh
+        env:
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}        
       - name: "Flutter Analyze"
         run: |
           cd samples/admob/$GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
           flutter analyze
         env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
-          
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }} 
       - name: "Flutter Format"
         run: |
           flutter pub global activate flutter_plugin_tools
