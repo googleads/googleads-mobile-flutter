@@ -10,7 +10,7 @@ on:
     - main
     
 env:
-  GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "{{ matrix.REGEX }}"
+  GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
 
 jobs:
 # Step 2: Build the samples
