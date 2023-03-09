@@ -48,8 +48,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="@dimen/gnt_no_size"
             android:layout_height="@dimen/gnt_no_size"
-            android:layout_marginTop="@dimen/gnt_default_margin"
-            android:layout_marginBottom="@dimen/gnt_default_margin"
+            android:layout_marginTop="@dimen/gnt_no_margin"
+            android:layout_marginBottom="@dimen/gnt_no_margin"
             android:layout_marginStart="@dimen/gnt_default_margin"
             android:layout_marginEnd="@dimen/gnt_default_margin"
             android:orientation="vertical"
@@ -171,6 +171,8 @@
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toBottomOf="@id/row_two"
+              android:gravity="center"
+              app:layout_constraintHeight_percent="0.35"
               />
 
 
