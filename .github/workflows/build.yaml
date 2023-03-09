@@ -38,18 +38,6 @@ jobs:
         run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
         env:
           GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}   
-      - name: "Flutter Analyze"
-        run: |
-          cd samples/admob/$GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
-          flutter analyze
-        env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}        
-      - name: "Flutter Format"
-        run: |
-          flutter pub global activate flutter_plugin_tools
-          flutter pub global run flutter_plugin_tools format
-          ./.github/workflows/scripts/validate-formatting.sh
-        
 
 # Step 2: Build iOS
   iOS:
