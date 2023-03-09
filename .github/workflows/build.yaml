@@ -18,13 +18,13 @@ jobs:
       fail-fast: false
       matrix:
         regex:
-        - "*adaptive_banner_example*"
-        - "*banner_example*"
-        - "*interstitial_example*"
-        - "*native_platform_example*"
-        - "*native_templates/example*"
-        - "*rewarded_example*"
-        - "*rewarded_interstitial_example*"
+        - "adaptive_banner_example"
+        - "banner_example"
+        - "interstitial_example"
+        - "native_platform_example"
+        - "native_templates/example"
+        - "rewarded_example*"
+        - "rewarded_interstitial_example"
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
@@ -51,7 +51,7 @@ jobs:
         
       - name: "Flutter Analyze"
         run: |
-          cd $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
+          cd samples/admob/$GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
           flutter analyze
         env:
           GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
