@@ -21,7 +21,7 @@ jobs:
         - "banner_example"
         - "interstitial_example"
         - "native_platform_example"
-        - "native_templates_example"
+        - "native_template_example"
         - "rewarded_example"
         - "rewarded_interstitial_example"   
     steps:
@@ -62,7 +62,7 @@ jobs:
         - "banner_example"
         - "interstitial_example"
         - "native_platform_example"
-        - "native_templates_example"
+        - "native_template_example"
         - "rewarded_example"
         - "rewarded_interstitial_example"
     steps:
@@ -92,7 +92,7 @@ jobs:
         - "banner_example"
         - "interstitial_example"
         - "native_platform_example"
-        - "native_templates_example"
+        - "native_template_example"
         - "rewarded_example"
         - "rewarded_interstitial_example"
         
