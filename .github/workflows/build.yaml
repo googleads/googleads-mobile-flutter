@@ -8,9 +8,6 @@ on:
   pull_request:
     branches:
     - main
-    
-env:
-  GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
 
 jobs:
 # Step 2: Build the samples
@@ -38,17 +35,26 @@ jobs:
         
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
+        env:
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
         
       - name: "Build Android Example"
         run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
+        env:
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
+        
         
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
+        env:
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
         
       - name: "Flutter Analyze"
         run: |
           cd $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
           flutter analyze
+        env:
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
           
       - name: "Flutter Format"
         run: |
