@@ -46,11 +46,14 @@ class _NativeTemplateExampleExampleState extends State<NativeTemplateExample> {
             },
             itemBuilder: (BuildContext context, int index) {
               if (index == 5 && _nativeAd != null && _nativeAdIsLoaded) {
-                return Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                      width: 400, height: 400, child: AdWidget(ad: _nativeAd!)),
-                );
+                return Align(alignment: Alignment.center, child:
+                ConstrainedBox(  constraints: const BoxConstraints(
+                  minWidth: 300,
+                  minHeight: 350,
+                  maxHeight: 400,
+                  maxWidth: 450,
+                ),
+                child: AdWidget(ad: _nativeAd!),));
               }
               return Text(
                 Constants.placeholderText,
