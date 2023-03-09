@@ -27,7 +27,6 @@ jobs:
         - "*native_templates/example*"
         - "*rewarded_example*"
         - "*rewarded_interstitial_example*"
-
     steps:
       - name: Clone Repo
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
