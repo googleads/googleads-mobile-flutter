@@ -17,13 +17,7 @@ jobs:
       fail-fast: false
       matrix:
         regex:
-        - "adaptive_banner_example"
-        - "banner_example"
-        - "interstitial_example"
-        - "native_platform_example"
-        - "native_template_example"
-        - "rewarded_example"
-        - "rewarded_interstitial_example"   
+        - "samples/admob"   
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
@@ -46,13 +40,7 @@ jobs:
       fail-fast: false
       matrix:
         regex:
-        - "adaptive_banner_example"
-        - "banner_example"
-        - "interstitial_example"
-        - "native_platform_example"
-        - "native_template_example"
-        - "rewarded_example"
-        - "rewarded_interstitial_example"
+        - "samples/admob"
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
@@ -76,13 +64,7 @@ jobs:
       fail-fast: false
       matrix:
         regex:
-        - "adaptive_banner_example"
-        - "banner_example"
-        - "interstitial_example"
-        - "native_platform_example"
-        - "native_template_example"
-        - "rewarded_example"
-        - "rewarded_interstitial_example"
+        - "samples/admob"
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
