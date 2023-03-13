@@ -77,7 +77,7 @@ jobs:
           GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}        
       - name: "Flutter Analyze"
         run: |
-          cd samples/admob/$GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
+          cd $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
           flutter analyze
         env:
           GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }} 
