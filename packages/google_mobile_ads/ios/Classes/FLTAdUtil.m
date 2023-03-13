@@ -14,6 +14,8 @@
 
 #import "FLTAdUtil.h"
 #import "FLTConstants.h"
+@import webview_flutter_wkwebview;
+//#import "FWFWebViewFlutterWKWebViewExternalAPI.h";
 
 @implementation FLTAdUtil
 
@@ -45,6 +47,13 @@ static NSString *_requestAgent;
   }
   return [NSString stringWithFormat:@"%@%@%@", FLT_REQUEST_AGENT_VERSIONED,
                                     newsTemplateString, gameTemplateString];
+}
+
++ (WKWebView *)getWebView:(NSNumber *)webViewId
+  flutterPluginRegistry:(id<FlutterPluginRegistry>) flutterPluginRegistry {
+  return (WKWebView *)[FWFWebViewFlutterWKWebViewExternalAPI
+      webViewForIdentifier:webViewId.longValue
+        withPluginRegistry:flutterPluginRegistry];
 }
 
 @end
