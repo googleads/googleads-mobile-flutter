@@ -64,7 +64,7 @@ jobs:
         env:
           GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
       - name: "Build iOS Example"
-        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
+        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
         env:
           GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}   
           
