@@ -43,7 +43,7 @@ jobs:
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
+        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart packages/google_mobile_ads/example
       - name: "Unit Tests"
         run: |
           cd packages/google_mobile_ads/example/android
@@ -62,7 +62,7 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
       - name: "Build iOS Example"
-        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
+        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart packages/google_mobile_ads/example
       - name: "Unit Tests"
         run: |
           cd packages/google_mobile_ads/example/ios
