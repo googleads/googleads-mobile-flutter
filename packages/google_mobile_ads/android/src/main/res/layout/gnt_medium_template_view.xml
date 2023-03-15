@@ -34,7 +34,7 @@
 
       <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_height="60dp"
-          android:layout_marginTop="@dimen/gnt_default_margin"
+          android:layout_marginTop="@dimen/gnt_small_margin"
           android:layout_width="match_parent"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
@@ -202,7 +202,7 @@
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@id/middle"
           android:paddingStart="@dimen/gnt_default_margin"
-          android:layout_marginBottom="@dimen/gnt_default_margin"
+          android:layout_marginBottom="@dimen/gnt_small_margin"
           />
       <androidx.appcompat.widget.AppCompatButton
           android:id="@+id/cta"
@@ -218,7 +218,8 @@
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@id/body"
-          />
+          app:layout_constraintHeight_min="35dp"
+      />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
   </com.google.android.gms.ads.nativead.NativeAdView>

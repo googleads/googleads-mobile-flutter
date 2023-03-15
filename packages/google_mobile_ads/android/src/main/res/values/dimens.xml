@@ -5,6 +5,7 @@
   <item name="gnt_media_view_weight" format="float" type="dimen">1.0</item>
   <item name="gnt_medium_template_top_weight" format="float" type="dimen">0.2</item>
   <dimen name="gnt_default_margin">10dp</dimen>
+  <dimen name="gnt_small_margin">5dp</dimen>
   <dimen name="gnt_text_size_small">12sp</dimen>
   <dimen name="gnt_text_size_large">15sp</dimen>
   <dimen name="gnt_ad_indicator_width">25dp</dimen>
