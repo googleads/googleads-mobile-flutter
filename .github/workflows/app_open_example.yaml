@@ -41,7 +41,7 @@ jobs:
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
+        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart samples/app_open_example
   
   iOS:
     runs-on: macos-latest
@@ -57,7 +57,7 @@ jobs:
           ./.github/workflows/scripts/install-tools.sh
           flutter config
       - name: "Build iOS Example"
-        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
+        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart samples/app_open_example
   
   flutter:
     runs-on: ubuntu-latest
