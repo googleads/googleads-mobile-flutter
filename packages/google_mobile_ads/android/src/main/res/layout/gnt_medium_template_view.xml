@@ -24,7 +24,7 @@
           android:id="@+id/media_view"
           android:layout_margin="@dimen/gnt_no_size"
           android:layout_width="match_parent"
-          android:layout_height="200dp"
+          android:layout_height="190dp"
           android:layout_marginTop="@dimen/gnt_no_margin"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
