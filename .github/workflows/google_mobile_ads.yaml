@@ -28,7 +28,7 @@ on:
 env:
   GOOGLEMOBILEADS_PLUGIN_SCOPE: "*google_mobile_ads*"
   GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "*google_mobile_ads_example*"
-
+  DEVELOPER_DIR: /Applications/Xcode_14.1.app/Contents/Developer
 jobs:
   android:
     runs-on: macos-latest
