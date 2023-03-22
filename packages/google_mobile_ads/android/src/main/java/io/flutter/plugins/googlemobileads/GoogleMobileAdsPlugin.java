@@ -15,9 +15,7 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
-import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -42,7 +40,6 @@ import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterOverlayAd;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
 import io.flutter.plugins.googlemobileads.usermessagingplatform.UserMessagingPlatformManager;
-import io.flutter.plugins.webviewflutter.WebViewFlutterAndroidExternalApi;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

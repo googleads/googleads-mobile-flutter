@@ -560,9 +560,10 @@ public class GoogleMobileAdsTest {
     AdInstanceManager testManagerSpy = spy(testManager);
     FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
     GoogleMobileAdsPlugin plugin =
-            new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
 
-    MethodCall methodCall = new MethodCall("MobileAds#registerWebView", Collections.singletonMap("webViewId", 1));
+    MethodCall methodCall =
+        new MethodCall("MobileAds#registerWebView", Collections.singletonMap("webViewId", 1));
     Result result = mock(Result.class);
     plugin.onMethodCall(methodCall, result);
 

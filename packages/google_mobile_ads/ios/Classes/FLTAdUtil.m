@@ -49,7 +49,7 @@ static NSString *_requestAgent;
 }
 
 + (WKWebView *)getWebView:(NSNumber *)webViewId
-  flutterPluginRegistry:(id<FlutterPluginRegistry>) flutterPluginRegistry {
+    flutterPluginRegistry:(id<FlutterPluginRegistry>)flutterPluginRegistry {
   return (WKWebView *)[FWFWebViewFlutterWKWebViewExternalAPI
       webViewForIdentifier:webViewId.longValue
         withPluginRegistry:flutterPluginRegistry];

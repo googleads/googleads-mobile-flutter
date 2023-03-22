@@ -292,7 +292,8 @@
       NSLog(@"App delegate is null in MobileAds#registerWebView, skipping");
     } else {
       NSNumber *webViewId = call.arguments[@"webViewId"];
-      WKWebView *webView = [FLTAdUtil getWebView:webViewId flutterPluginRegistry:_appDelegate];
+      WKWebView *webView = [FLTAdUtil getWebView:webViewId
+                           flutterPluginRegistry:_appDelegate];
       [GADMobileAds.sharedInstance registerWebView:webView];
     }
     result(nil);

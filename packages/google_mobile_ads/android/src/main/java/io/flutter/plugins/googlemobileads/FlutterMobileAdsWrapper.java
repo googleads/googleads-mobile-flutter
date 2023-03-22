@@ -18,13 +18,11 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.webkit.WebView;
-
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.OnAdInspectorClosedListener;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
-
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugins.webviewflutter.WebViewFlutterAndroidExternalApi;
 
@@ -78,11 +76,10 @@ public class FlutterMobileAdsWrapper {
 
   /** Register the webView for monetization. */
   public void registerWebView(int webViewId, FlutterEngine flutterEngine) {
-    WebView webView =
-            WebViewFlutterAndroidExternalApi.getWebView(flutterEngine, webViewId);
+    WebView webView = WebViewFlutterAndroidExternalApi.getWebView(flutterEngine, webViewId);
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
       Log.w(TAG, "MobileAds.registerWebView does not support API levels less than 21");
-    } else if (webView == null){
+    } else if (webView == null) {
       Log.w(TAG, "MobileAds.registerWebView unable to find webView with id: " + webViewId);
     } else {
       MobileAds.registerWebView(webView);

@@ -22,8 +22,9 @@
 
 + (BOOL)isNotNull:(id)object;
 
-+ (WKWebView * _Nullable)getWebView:(NSNumber *_Nonnull)webViewId
-              flutterPluginRegistry:(id<FlutterPluginRegistry>_Nonnull) flutterPluginRegistry;
++ (WKWebView *_Nullable)getWebView:(NSNumber *_Nonnull)webViewId
+             flutterPluginRegistry:
+                 (id<FlutterPluginRegistry> _Nonnull)flutterPluginRegistry;
 
 @property(readonly, class) NSString *requestAgent;
 
