@@ -81,6 +81,7 @@ public class FlutterMobileAdsWrapper {
     WebView webView =
             WebViewFlutterAndroidExternalApi.getWebView(flutterEngine, webViewId);
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+      Log.w(TAG, "MobileAds.registerWebView does not support API levels less than 21");
     } else if (webView == null){
       Log.w(TAG, "MobileAds.registerWebView unable to find webView with id: " + webViewId);
     } else {

@@ -15,7 +15,6 @@
 #import "FLTAdUtil.h"
 #import "FLTConstants.h"
 @import webview_flutter_wkwebview;
-//#import "FWFWebViewFlutterWKWebViewExternalAPI.h";
 
 @implementation FLTAdUtil
 

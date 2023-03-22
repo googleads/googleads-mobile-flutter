@@ -796,7 +796,7 @@ class AdInstanceManager {
     );
   }
 
-  /// Register the `WebViewController` with the GMASDK,
+  /// Register the `WebViewController` with the GMASDK.
   Future<void> registerWebView(WebViewController controller) {
     return channel.invokeMethod<void>(
       'MobileAds#registerWebView',

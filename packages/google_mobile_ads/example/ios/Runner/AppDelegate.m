@@ -15,7 +15,6 @@
 #include "AppDelegate.h"
 #import "FLTGoogleMobileAdsPlugin.h"
 #include "GeneratedPluginRegistrant.h"
-@import webview_flutter_wkwebview;
 
 @interface NativeAdFactoryExample : NSObject <FLTNativeAdFactory>
 @end
