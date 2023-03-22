@@ -191,6 +191,10 @@
                               XCTAssertEqual(reward.type, @"type");
                               return true;
                             }]]);
+  
+  // Explicitly stop mocking. There is an issue when running tests on Github actions where the
+  // mock does not get deallocated properly, so without this other test cases will fail.
+  [rewardedClassMock stopMocking];
 }
 
 - (void)testFailedToLoadGADRequest {
