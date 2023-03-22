@@ -88,13 +88,13 @@ jobs:
         if: failure()
         run: |
           pwd
-          ls .
-          ls TestResults
+          ls packages/google_mobile_ads/example/ios/
+          ls packages/google_mobile_ads/example/ios/TestResults
       - uses: actions/upload-artifact@v3
         if: failure()
         with: 
           name: iOSTestResults
-          path: TestResults.xcresult  
+          path: packages/google_mobile_ads/example/ios/TestResults.xcresult  
   flutter:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
