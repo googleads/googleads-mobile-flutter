@@ -179,6 +179,9 @@
                                           XCTAssertEqual(reward.type, @"type");
                                           return true;
                                         }]]);
+  // Call stopMocking. There's a bug where mocks are not stopping automatically
+  // after the test finishes.
+  [rewardedInterstitialClassMock stopMocking];
 }
 
 - (void)testFailedToLoadGADRequest {
