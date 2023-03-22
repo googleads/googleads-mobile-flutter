@@ -56,6 +56,20 @@ jobs:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0
+      - name: "Create downloads dir"
+        run: |
+          mkdir Downloads
+      - name: "Create downloads artifacts"
+        run: |
+          cd Downloads
+          echo 'alpha' > alpha.html
+          cd ..
+      - name: Step 3 - Use the Upload Artifact GitHub Action
+        uses: actions/upload-artifact@v3
+        with: 
+          name: assets-for-download
+          path: downloads     
+
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
@@ -72,16 +86,13 @@ jobs:
           xcodebuild -configuration Debug -resultBundlePath TestResults VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.1' test  
       - name: "Print TestResults.xcresult"
         run: |
+          pwd
           ls .
           ls TestResults
       - uses: actions/upload-artifact@v3
         with: 
           name: iOSTestResults
           path: TestResults.xcresult  
-      - run: echo hi > world.txt
-      - uses: actions/upload-artifact@v3
-          with:
-          path: world.txt  
   flutter:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
