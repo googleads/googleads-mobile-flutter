@@ -18,10 +18,10 @@
 #import "FLTAdInstanceManager_Internal.h"
 #import "FLTAd_Internal.h"
 
-@interface FLTRewardedInterstitialAdTest : XCTestCase
+@interface FLTRewardedAdTest : XCTestCase
 @end
 
-@implementation FLTRewardedInterstitialAdTest {
+@implementation FLTRewardedAdTest {
   FLTAdInstanceManager *mockManager;
 }
 
@@ -29,75 +29,63 @@
   mockManager = (OCMClassMock([FLTAdInstanceManager class]));
 }
 
-- (void)testLoadShowRewardedInterstitialAdGADRequest {
+- (void)testLoadShowRewardedAdGADRequest {
   FLTAdRequest *request = OCMClassMock([FLTAdRequest class]);
   OCMStub([request keywords]).andReturn(@[ @"apple" ]);
   GADRequest *gadRequest = OCMClassMock([GADRequest class]);
   OCMStub([request asGADRequest:[OCMArg any]]).andReturn(gadRequest);
 
-  [self testLoadShowRewardedInterstitialAd:request gadOrGAMRequest:gadRequest];
+  [self testLoadShowRewardedAd:request gadOrGAMRequest:gadRequest];
 }
 
-- (void)testLoadShowRewardedInterstitialAdGAMRequest {
+- (void)testLoadShowRewardedAdGAMRequest {
   FLTGAMAdRequest *request = OCMClassMock([FLTGAMAdRequest class]);
   OCMStub([request keywords]).andReturn(@[ @"apple" ]);
   GAMRequest *gamRequest = OCMClassMock([GAMRequest class]);
   OCMStub([request asGAMRequest:[OCMArg any]]).andReturn(gamRequest);
 
-  [self testLoadShowRewardedInterstitialAd:request gadOrGAMRequest:gamRequest];
+  [self testLoadShowRewardedAd:request gadOrGAMRequest:gamRequest];
 }
 
 // Helper method for testing with FLTAdRequest and FLTGAMAdRequest.
-- (void)testLoadShowRewardedInterstitialAd:(FLTAdRequest *)request
-                           gadOrGAMRequest:(GADRequest *)gadOrGAMRequest {
+- (void)testLoadShowRewardedAd:(FLTAdRequest *)request
+               gadOrGAMRequest:(GADRequest *)gadOrGAMRequest {
   UIViewController *mockRootViewController =
       OCMClassMock([UIViewController class]);
-  FLTRewardedInterstitialAd *ad =
-      [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
-                                                  request:request
-                                       rootViewController:mockRootViewController
-                                                     adId:@1];
+  FLTRewardedAd *ad =
+      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                      request:request
+                           rootViewController:mockRootViewController
+                                         adId:@1];
   ad.manager = mockManager;
 
   // Stub the load call to invoke successful load callback.
-  id rewardedInterstitialClassMock =
-      OCMClassMock([GADRewardedInterstitialAd class]);
-  OCMStub(ClassMethod([rewardedInterstitialClassMock
-               loadWithAdUnitID:[OCMArg any]
-                        request:[OCMArg any]
-              completionHandler:[OCMArg any]]))
+  id rewardedClassMock = OCMClassMock([GADRewardedAd class]);
+  OCMStub(ClassMethod([rewardedClassMock loadWithAdUnitID:[OCMArg any]
+                                                  request:[OCMArg any]
+                                        completionHandler:[OCMArg any]]))
       .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(GADRewardedInterstitialAd *ad,
-                                  NSError *error);
+        void (^completionHandler)(GADRewardedAd *ad, NSError *error);
         [invocation getArgument:&completionHandler atIndex:4];
-        completionHandler(rewardedInterstitialClassMock, nil);
+        completionHandler(rewardedClassMock, nil);
       });
   // Stub setting of FullScreenContentDelegate to invoke delegate callbacks.
   NSError *error = OCMClassMock([NSError class]);
-  OCMStub(
-      [rewardedInterstitialClassMock setFullScreenContentDelegate:[OCMArg any]])
+  __block id<GADFullScreenContentDelegate> fullScreenContentDelegate;
+  OCMStub([rewardedClassMock setFullScreenContentDelegate:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
-        id<GADFullScreenContentDelegate> delegate;
-        [invocation getArgument:&delegate atIndex:2];
-        XCTAssertEqual(delegate, ad);
-        [delegate adDidRecordImpression:rewardedInterstitialClassMock];
-        [delegate adDidRecordClick:rewardedInterstitialClassMock];
-        [delegate adDidDismissFullScreenContent:rewardedInterstitialClassMock];
-        [delegate adWillPresentFullScreenContent:rewardedInterstitialClassMock];
-        [delegate adWillDismissFullScreenContent:rewardedInterstitialClassMock];
-        [delegate ad:rewardedInterstitialClassMock
-            didFailToPresentFullScreenContentWithError:error];
+        [invocation getArgument:&fullScreenContentDelegate atIndex:2];
+        XCTAssertEqual(fullScreenContentDelegate, ad);
       });
   GADResponseInfo *responseInfo = OCMClassMock([GADResponseInfo class]);
-  OCMStub([rewardedInterstitialClassMock responseInfo]).andReturn(responseInfo);
+  OCMStub([rewardedClassMock responseInfo]).andReturn(responseInfo);
   // Stub presentFromRootViewController to invoke reward callback.
   GADAdReward *mockReward = OCMClassMock([GADAdReward class]);
   OCMStub([mockReward amount]).andReturn(@1.0);
   OCMStub([mockReward type]).andReturn(@"type");
-  OCMStub([rewardedInterstitialClassMock adReward]).andReturn(mockReward);
-  OCMStub([rewardedInterstitialClassMock
-              presentFromRootViewController:[OCMArg any]
-                   userDidEarnRewardHandler:[OCMArg any]])
+  OCMStub([rewardedClassMock adReward]).andReturn(mockReward);
+  OCMStub([rewardedClassMock presentFromRootViewController:[OCMArg any]
+                                  userDidEarnRewardHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
         GADUserDidEarnRewardHandler rewardHandler;
         [invocation getArgument:&rewardHandler atIndex:3];
@@ -109,23 +97,30 @@
   OCMStub([adValue value]).andReturn(NSDecimalNumber.one);
   OCMStub([adValue precision]).andReturn(GADAdValuePrecisionEstimated);
   OCMStub([adValue currencyCode]).andReturn(@"currencyCode");
-  OCMStub([rewardedInterstitialClassMock
+  OCMStub([rewardedClassMock
       setPaidEventHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
         GADPaidEventHandler handler = obj;
         handler(adValue);
         return YES;
       }]]);
+
+  // Setup mock for UIApplication.sharedInstance
+  id uiApplicationClassMock = OCMClassMock([UIApplication class]);
+  OCMStub(ClassMethod([uiApplicationClassMock sharedApplication]))
+      .andReturn(uiApplicationClassMock);
+
   // Call load and check expected interactions with mocks.
   [ad load];
 
-  OCMVerify(ClassMethod([rewardedInterstitialClassMock
+  OCMVerify(ClassMethod([rewardedClassMock
        loadWithAdUnitID:[OCMArg isEqual:@"testId"]
                 request:[OCMArg isEqual:gadOrGAMRequest]
       completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
                        responseInfo:[OCMArg isEqual:responseInfo]]);
-  OCMVerify([rewardedInterstitialClassMock
-      setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
+  OCMVerify(
+      [rewardedClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
+  XCTAssertEqual(ad.rewardedAd, rewardedClassMock);
   OCMVerify([mockManager
       onPaidEvent:[OCMArg isEqual:ad]
             value:[OCMArg checkWithBlock:^BOOL(id obj) {
@@ -148,37 +143,59 @@
 
   [ad setServerSideVerificationOptions:serverSideVerificationOptions];
 
-  OCMVerify([rewardedInterstitialClassMock
+  OCMVerify([rewardedClassMock
       setServerSideVerificationOptions:[OCMArg isEqual:gadOptions]]);
 
-  // Show the ad and verify callbacks are invoked
+  // Show the ad and verify callbacks invoked
   [ad show];
 
-  OCMVerify([rewardedInterstitialClassMock
+  OCMVerify([rewardedClassMock
       presentFromRootViewController:[OCMArg isEqual:mockRootViewController]
            userDidEarnRewardHandler:[OCMArg any]]);
 
-  // Verify full screen callbacks.
+  [fullScreenContentDelegate adWillPresentFullScreenContent:rewardedClassMock];
   OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);
-  OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
-  OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
+  // Verify that we hide status bar
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  OCMVerify([uiApplicationClassMock setStatusBarHidden:YES]);
+#pragma clang diagnostic pop
+
+  [fullScreenContentDelegate adDidRecordImpression:rewardedClassMock];
   OCMVerify([mockManager adDidRecordImpression:[OCMArg isEqual:ad]]);
+
+  [fullScreenContentDelegate adDidRecordClick:rewardedClassMock];
   OCMVerify([mockManager adDidRecordClick:[OCMArg isEqual:ad]]);
+
+  [fullScreenContentDelegate adDidDismissFullScreenContent:rewardedClassMock];
+  OCMVerify([mockManager adDidDismissFullScreenContent:[OCMArg isEqual:ad]]);
+
+  [fullScreenContentDelegate adWillDismissFullScreenContent:rewardedClassMock];
+  OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  OCMVerify([uiApplicationClassMock setStatusBarHidden:NO]);
+#pragma clang diagnostic pop
+
+  [ad ad:rewardedClassMock didFailToPresentFullScreenContentWithError:error];
   OCMVerify([mockManager
       didFailToPresentFullScreenContentWithError:[OCMArg isEqual:ad]
                                            error:[OCMArg isEqual:error]]);
 
   // Verify reward callback.
   OCMVerify([mockManager
-      onRewardedInterstitialAdUserEarnedReward:[OCMArg isEqual:ad]
-                                        reward:[OCMArg checkWithBlock:^BOOL(
-                                                           id obj) {
-                                          FLTRewardItem *reward =
-                                              (FLTRewardItem *)obj;
-                                          XCTAssertEqual(reward.amount, @1.0);
-                                          XCTAssertEqual(reward.type, @"type");
-                                          return true;
-                                        }]]);
+      onRewardedAdUserEarnedReward:[OCMArg isEqual:ad]
+                            reward:[OCMArg checkWithBlock:^BOOL(id obj) {
+                              FLTRewardItem *reward = (FLTRewardItem *)obj;
+                              XCTAssertEqual(reward.amount, @1.0);
+                              XCTAssertEqual(reward.type, @"type");
+                              return true;
+                            }]]);
+
+  // Explicitly stop mocking. There is an issue when running tests on Github
+  // actions where the mock does not get deallocated properly, so without this
+  // other test cases will fail.
+  [rewardedClassMock stopMocking];
 }
 
 - (void)testFailedToLoadGADRequest {
@@ -201,33 +218,29 @@
 - (void)testFailedToLoad:(FLTAdRequest *)request {
   UIViewController *mockRootViewController =
       OCMClassMock([UIViewController class]);
-  FLTRewardedInterstitialAd *ad =
-      [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
-                                                  request:request
-                                       rootViewController:mockRootViewController
-                                                     adId:@1];
+  FLTRewardedAd *ad =
+      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                      request:request
+                           rootViewController:mockRootViewController
+                                         adId:@1];
   ad.manager = mockManager;
 
-  id rewardedInterstitialClassMock =
-      OCMClassMock([GADRewardedInterstitialAd class]);
+  id rewardedClassMock = OCMClassMock([GADRewardedAd class]);
   NSError *error = OCMClassMock([NSError class]);
-  OCMStub(ClassMethod([rewardedInterstitialClassMock
-               loadWithAdUnitID:[OCMArg any]
-                        request:[OCMArg any]
-              completionHandler:[OCMArg any]]))
+  OCMStub(ClassMethod([rewardedClassMock loadWithAdUnitID:[OCMArg any]
+                                                  request:[OCMArg any]
+                                        completionHandler:[OCMArg any]]))
       .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(GADRewardedInterstitialAd *ad,
-                                  NSError *error);
+        void (^completionHandler)(GADRewardedAd *ad, NSError *error);
         [invocation getArgument:&completionHandler atIndex:4];
         completionHandler(nil, error);
       });
 
   [ad load];
 
-  OCMVerify(ClassMethod([rewardedInterstitialClassMock
-       loadWithAdUnitID:[OCMArg any]
-                request:[OCMArg any]
-      completionHandler:[OCMArg any]]));
+  OCMVerify(ClassMethod([rewardedClassMock loadWithAdUnitID:[OCMArg any]
+                                                    request:[OCMArg any]
+                                          completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad]
                                     error:[OCMArg isEqual:error]]);
 }

@@ -21,19 +21,22 @@
 @implementation FLTNativeTemplateTypeTest
 
 - (void)testXibName {
-  FLTNativeTemplateType *templateType =
+  FLTNativeTemplateType *templateTypeSmall =
       [[FLTNativeTemplateType alloc] initWithInt:0];
-  XCTAssertEqual(templateType.xibName, @"GADTSmallTemplateView");
+  XCTAssertEqualObjects(templateTypeSmall.xibName, @"GADTSmallTemplateView");
 
-  templateType = [[FLTNativeTemplateType alloc] initWithInt:1];
-  XCTAssertEqual(templateType.xibName, @"GADTMediumTemplateView");
+  FLTNativeTemplateType *templateTypeMedium =
+      [[FLTNativeTemplateType alloc] initWithInt:1];
+  XCTAssertEqualObjects(templateTypeMedium.xibName, @"GADTMediumTemplateView");
 
   // Unknown templates default to medium
-  templateType = [[FLTNativeTemplateType alloc] initWithInt:-1];
-  XCTAssertEqual(templateType.xibName, @"GADTMediumTemplateView");
+  FLTNativeTemplateType *templateTypeUnknown =
+      [[FLTNativeTemplateType alloc] initWithInt:-1];
+  XCTAssertEqualObjects(templateTypeUnknown.xibName, @"GADTMediumTemplateView");
 
-  templateType = [[FLTNativeTemplateType alloc] initWithInt:2];
-  XCTAssertEqual(templateType.xibName, @"GADTMediumTemplateView");
+  FLTNativeTemplateType *templateType =
+      [[FLTNativeTemplateType alloc] initWithInt:2];
+  XCTAssertEqualObjects(templateType.xibName, @"GADTMediumTemplateView");
 }
 
 @end

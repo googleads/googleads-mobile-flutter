@@ -195,20 +195,20 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
                      adId:@1
           nativeAdOptions:nil
       nativeTemplateStyle:nil];
+  FlutterMethodChannel *mockMethodChannel =
+      OCMClassMock([FlutterMethodChannel class]);
+  [_manager setValue:mockMethodChannel forKey:@"_channel"];
   [_manager loadAd:ad];
 
   [_manager onAppEvent:ad name:@"color" data:@"red"];
 
-  NSData *data = [_methodCodec
-      encodeMethodCall:[FlutterMethodCall
-                           methodCallWithMethodName:@"onAdEvent"
-                                          arguments:@{
-                                            @"adId" : @1,
-                                            @"eventName" : @"onAppEvent",
-                                            @"name" : @"color",
-                                            @"data" : @"red"
-                                          }]];
-  OCMVerify([_mockMessenger sendOnChannel:channel message:data]);
+  NSDictionary *arguments = @{
+    @"adId" : @1,
+    @"eventName" : @"onAppEvent",
+    @"name" : @"color",
+    @"data" : @"red"
+  };
+  OCMVerify([mockMethodChannel invokeMethod:@"onAdEvent" arguments:arguments]);
 }
 
 - (void)testAdInstanceManagerOnNativeAdEvents {
