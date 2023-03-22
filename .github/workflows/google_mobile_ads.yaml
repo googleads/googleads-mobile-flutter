@@ -58,10 +58,10 @@ jobs:
           fetch-depth: 0
       - name: "Create downloads dir"
         run: |
-          mkdir Downloads
+          mkdir downloads
       - name: "Create downloads artifacts"
         run: |
-          cd Downloads
+          cd downloads
           echo 'alpha' > alpha.html
           cd ..
       - name: Step 3 - Use the Upload Artifact GitHub Action
@@ -85,11 +85,13 @@ jobs:
           pod install
           xcodebuild -configuration Debug -resultBundlePath TestResults VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.1' test  
       - name: "Print TestResults.xcresult"
+        if: failure()
         run: |
           pwd
           ls .
           ls TestResults
       - uses: actions/upload-artifact@v3
+        if: failure()
         with: 
           name: iOSTestResults
           path: TestResults.xcresult  
