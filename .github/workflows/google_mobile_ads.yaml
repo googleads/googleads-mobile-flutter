@@ -69,8 +69,19 @@ jobs:
           flutter clean
           flutter pub get
           pod install
-          xcodebuild -configuration Debug VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.1' test  
- 
+          xcodebuild -configuration Debug -resultBundlePath TestResults VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.1' test  
+      - name: "Print TestResults.xcresult"
+        run: |
+          ls .
+          ls TestResults
+      - uses: actions/upload-artifact@v3
+        with: 
+          name: iOSTestResults
+          path: TestResults.xcresult  
+      - run: echo hi > world.txt
+      - uses: actions/upload-artifact@v3
+        with:
+        path: world.txt  
   flutter:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
