@@ -14,11 +14,8 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'constants.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 /// Opens a WebView and tries to register it via `MobileAds.registerWebView()`.
