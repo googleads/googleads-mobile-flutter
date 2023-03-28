@@ -4,15 +4,18 @@ name: Build Status
 on:
   push:
     branches:
-    - main
+      - "packages/google_mobile_ads/**"
+      - "{{ matrix.regex }}/**"
+      - ".github/workflows/build.yaml"
   pull_request:
     branches:
-    - main
+    - "**"
  
 jobs:
 # Step 2: Build Android
   android:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     strategy:
       fail-fast: false
       matrix:
@@ -42,6 +45,7 @@ jobs:
 # Step 2: Build iOS
   iOS:
     runs-on: macOS-latest
+    if: github.event_name == 'pull_request'
     strategy:
       fail-fast: false
       matrix:
@@ -72,6 +76,7 @@ jobs:
   flutter:
     name: Build Flutter
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     strategy:
       fail-fast: false
       matrix:
