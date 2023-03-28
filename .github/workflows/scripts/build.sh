@@ -32,6 +32,7 @@ build_example () {
   TARGET_FILE=${2:-$DEFAULT_TARGET}
   EXAMPLE_APP_DIRECTORY=$3
 
+  pwd
   cd "$EXAMPLE_APP_DIRECTORY"
 
   if [ "$ACTION" == "android" ]
