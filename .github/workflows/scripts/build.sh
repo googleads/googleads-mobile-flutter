@@ -51,8 +51,10 @@ do
     example_name=$(echo "${example_app_path}" | xargs -I{} basename {});
     echo "::set-output name=building_app::Pod install for App (${example_name})";
     pushd "${example_app_path}";
-    install_flutter dev;
-    install_tools;
+    install_flutter dev &;
+    wait $!
+    install_tools &;
+    wait $!
     build_example "${ACTION}" ./lib/main.dart;
     popd;
   fi
