@@ -21,9 +21,42 @@ do
     example_name=$(echo "${example_app_path}" | xargs -I{} basename {});
     echo "::set-output name=building_app::Pod install for App (${example_name})";
     pushd "${example_app_path}";
-    bash install-flutter.sh dev
-    bash install-tools.sh
-    bash build-example.sh "${ACTION}" "${example_app_path}"
+    install_flutter dev;
+    install_tools;
+    build_example "${ACTION}" ./lib/main.dart "${example_app_path}";
     popd;
   fi
 done
+
+install_flutter () {
+  BRANCH=$1
+
+  git clone https://github.com/flutter/flutter.git --depth 1 -b $BRANCH _flutter
+  echo "$GITHUB_WORKSPACE/_flutter/bin" >> $GITHUB_PATH
+}
+
+install_tools () {
+  echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
+  echo "$GITHUB_WORKSPACE/_flutter/.pub-cache/bin" >> $GITHUB_PATH
+  echo "$GITHUB_WORKSPACE/_flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+}
+
+build_example () {
+  DEFAULT_TARGET="lib/main.dart"
+
+  ACTION=$1
+  TARGET_FILE=${2:-$DEFAULT_TARGET}
+  EXAMPLE_APP_DIRECTORY=$3
+
+  cd "$EXAMPLE_APP_DIRECTORY"
+
+  if [ "$ACTION" == "android" ]
+  then
+    flutter build apk --debug --target="$TARGET_FILE" --dart-define=CI=true
+  fi
+
+  if [ "$ACTION" == "ios" ]
+  then
+    flutter build ios --no-codesign --simulator --debug --target="$TARGET_FILE" --dart-define=CI=true
+  fi
+}
