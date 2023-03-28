@@ -30,10 +30,6 @@ build_example () {
 
   ACTION=$1
   TARGET_FILE=${2:-$DEFAULT_TARGET}
-  EXAMPLE_APP_DIRECTORY=$3
-
-  echo "$PWD"
-  cd "$EXAMPLE_APP_DIRECTORY"
 
   if [ "$ACTION" == "android" ]
   then
@@ -57,7 +53,7 @@ do
     pushd "${example_app_path}";
     install_flutter dev;
     install_tools;
-    build_example "${ACTION}" ./lib/main.dart "${example_app_path}";
+    build_example "${ACTION}" ./lib/main.dart;
     popd;
   fi
 done
