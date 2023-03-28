@@ -12,22 +12,6 @@ while read -r line; do
   EXAMPLE_APPS_PATHS_ARRAY+=("${app_path#./}");
 done < <(find . -name pubspec.yaml -type f -d | grep -E "${REGEX}")
 
-for example_app_path in "${EXAMPLE_APPS_PATHS_ARRAY[@]}"
-do
-  CHANGES="$(git --no-pager diff --name-only "${COMMIT_RANGE}")";
-  echo "Project dir: ${example_app_path}";
-  if [[ -n "$(grep -E "(${example_app_path}|\.github\/workflows)" <<< "${CHANGES}")" ]]; then
-    echo "Building for ${example_app_path}";
-    example_name=$(echo "${example_app_path}" | xargs -I{} basename {});
-    echo "::set-output name=building_app::Pod install for App (${example_name})";
-    pushd "${example_app_path}";
-    install_flutter dev;
-    install_tools;
-    build_example "${ACTION}" ./lib/main.dart "${example_app_path}";
-    popd;
-  fi
-done
-
 install_flutter () {
   BRANCH=$1
 
@@ -60,3 +44,19 @@ build_example () {
     flutter build ios --no-codesign --simulator --debug --target="$TARGET_FILE" --dart-define=CI=true
   fi
 }
+
+for example_app_path in "${EXAMPLE_APPS_PATHS_ARRAY[@]}"
+do
+  CHANGES="$(git --no-pager diff --name-only "${COMMIT_RANGE}")";
+  echo "Project dir: ${example_app_path}";
+  if [[ -n "$(grep -E "(${example_app_path}|\.github\/workflows)" <<< "${CHANGES}")" ]]; then
+    echo "Building for ${example_app_path}";
+    example_name=$(echo "${example_app_path}" | xargs -I{} basename {});
+    echo "::set-output name=building_app::Pod install for App (${example_name})";
+    pushd "${example_app_path}";
+    install_flutter dev;
+    install_tools;
+    build_example "${ACTION}" ./lib/main.dart "${example_app_path}";
+    popd;
+  fi
+done
