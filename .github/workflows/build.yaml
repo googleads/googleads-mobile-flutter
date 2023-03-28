@@ -17,27 +17,26 @@ jobs:
       fail-fast: false
       matrix:
         regex:
-        - "samples/admob/adaptive_banner_example"
-        - "samples/admob/banner_example"
-        - "samples/admob/interstitial_example"
-        - "samples/admob/native_platform_example"
-        - "samples/admob/native_template_example"
-        - "samples/admob/rewarded_example"
-        - "samples/admob/rewarded_interstitial_example"   
+        - "samples/admob"
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev     
-      - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+          
+      - name: Set commit range (push to the main branch, e.g. merge)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: echo "COMMIT_RANGE="${{ github.event.before }}.."" >> $GITHUB_ENV
+
+      - name: Set commit range (pull request)
+        if: github.event_name == 'pull_request'
+        run: echo "COMMIT_RANGE="HEAD~.."" >> $GITHUB_ENV
+
+      - name: Build
+        run: .github/workflows/scripts/build.sh android
+        shell: bash
         env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}     
-      - name: "Build Android Example"
-        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
-        env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}   
+          COMMIT_RANGE: ${{ env.COMMIT_RANGE }}
+          REGEX: ${{ matrix.regex }}
 
 # Step 2: Build iOS
   iOS:
@@ -46,27 +45,26 @@ jobs:
       fail-fast: false
       matrix:
         regex:
-        - "samples/admob/adaptive_banner_example"
-        - "samples/admob/banner_example"
-        - "samples/admob/interstitial_example"
-        - "samples/admob/native_platform_example"
-        - "samples/admob/native_template_example"
-        - "samples/admob/rewarded_example"
-        - "samples/admob/rewarded_interstitial_example" 
+        - "samples/admob"
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0  
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev
-      - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+      
+      - name: Set commit range (push to the main branch, e.g. merge)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: echo "COMMIT_RANGE="${{ github.event.before }}.."" >> $GITHUB_ENV
+
+      - name: Set commit range (pull request)
+        if: github.event_name == 'pull_request'
+        run: echo "COMMIT_RANGE="HEAD~.."" >> $GITHUB_ENV
+
+      - name: Build
+        run: .github/workflows/scripts/build.sh ios
+        shell: bash
         env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
-      - name: "Build iOS Example"
-        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
-        env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}   
+          COMMIT_RANGE: ${{ env.COMMIT_RANGE }}
+          REGEX: ${{ matrix.regex }} 
           
 # Step 3: Build Flutter
   flutter:
@@ -76,31 +74,23 @@ jobs:
       fail-fast: false
       matrix:
         regex:
-        - "samples/admob/adaptive_banner_example"
-        - "samples/admob/banner_example"
-        - "samples/admob/interstitial_example"
-        - "samples/admob/native_platform_example"
-        - "samples/admob/native_template_example"
-        - "samples/admob/rewarded_example"
-        - "samples/admob/rewarded_interstitial_example" 
+        - "samples/admob"
     steps:
       - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0
-      - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev
-      - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+      
+      - name: Set commit range (push to the main branch, e.g. merge)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: echo "COMMIT_RANGE="${{ github.event.before }}.."" >> $GITHUB_ENV
+
+      - name: Set commit range (pull request)
+        if: github.event_name == 'pull_request'
+        run: echo "COMMIT_RANGE="HEAD~.."" >> $GITHUB_ENV
+
+      - name: Build
+        run: .github/workflows/scripts/build.sh android
+        shell: bash
         env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}        
-      - name: "Flutter Analyze"
-        run: |
-          cd $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
-          flutter analyze
-        env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }} 
-      - name: "Flutter Format"
-        run: |
-          flutter pub global activate flutter_plugin_tools
-          flutter pub global run flutter_plugin_tools format
-          ./.github/workflows/scripts/validate-formatting.sh
+          COMMIT_RANGE: ${{ env.COMMIT_RANGE }}
+          REGEX: ${{ matrix.regex }}
