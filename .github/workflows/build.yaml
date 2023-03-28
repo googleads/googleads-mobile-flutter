@@ -89,7 +89,7 @@ jobs:
         run: echo "COMMIT_RANGE="HEAD~.."" >> $GITHUB_ENV
 
       - name: Build
-        run: .github/workflows/scripts/build.sh android
+        run: .github/workflows/scripts/build.sh flutter
         shell: bash
         env:
           COMMIT_RANGE: ${{ env.COMMIT_RANGE }}
