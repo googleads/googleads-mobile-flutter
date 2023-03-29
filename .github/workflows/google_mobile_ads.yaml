@@ -46,7 +46,7 @@ jobs:
       - name: "Unit Tests"
         run: |
           cd packages/google_mobile_ads/example/android
-          ./gradlew test
+          ./gradlew :google_mobile_ads:testDebugUnitTest
 
   iOS:
     runs-on: macos-latest
