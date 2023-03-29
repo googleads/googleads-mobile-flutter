@@ -46,6 +46,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_plugin_tools: ^0.8.5
+  webview_flutter_platform_interface: ^2.1.0
 
 
 environment:
