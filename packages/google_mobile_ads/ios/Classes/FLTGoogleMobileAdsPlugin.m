@@ -194,7 +194,24 @@
 }
 
 - (UIViewController *)rootController {
-  return UIApplication.sharedApplication.delegate.window.rootViewController;
+  UIViewController *root =
+      UIApplication.sharedApplication.delegate.window.rootViewController;
+  if ([FLTAdUtil isNull:root]) {
+    // UIApplication.sharedApplication.delegate.window is not guaranteed to be
+    // set. Use the keyWindow in this case.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    root = UIApplication.sharedApplication.keyWindow.rootViewController;
+#pragma clang diagnostic pop
+  }
+
+  // Get the presented view controller. This fixes an issue in the add to app
+  // case: https://github.com/googleads/googleads-mobile-flutter/issues/700
+  UIViewController *presentedViewController = root;
+  while (presentedViewController.presentedViewController) {
+    presentedViewController = presentedViewController.presentedViewController;
+  }
+  return presentedViewController;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call
