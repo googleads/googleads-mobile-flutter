@@ -434,14 +434,13 @@ class AdInstanceManager {
     ))!;
   }
 
-  Future<AdSize> getAdSize(Ad ad) async {
-    return (await instanceManager.channel.invokeMethod<AdSize>(
-      'getAdSize',
-      <dynamic, dynamic>{
-        'adId': adIdFor(ad),
-      },
-    ))!;
-  }
+  Future<AdSize?> getAdSize(Ad ad) =>
+      instanceManager.channel.invokeMethod<AdSize>(
+        'getAdSize',
+        <dynamic, dynamic>{
+          'adId': adIdFor(ad),
+        },
+      );
 
   /// Returns null if an invalid [adId] was passed in.
   Ad? adFor(int adId) => _loadedAds[adId];
