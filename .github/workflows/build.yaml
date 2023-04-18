@@ -21,8 +21,10 @@ jobs:
       matrix:
         regex:
         - "samples/admob/adaptive_banner_example"
+        - "samples/admob/app_open_example"
         - "samples/admob/banner_example"
         - "samples/admob/interstitial_example"
+        - "samples/admob/mediation_example"
         - "samples/admob/native_platform_example"
         - "samples/admob/native_template_example"
         - "samples/admob/rewarded_example"
@@ -51,8 +53,10 @@ jobs:
       matrix:
         regex:
         - "samples/admob/adaptive_banner_example"
+        - "samples/admob/app_open_example"
         - "samples/admob/banner_example"
         - "samples/admob/interstitial_example"
+        - "samples/admob/mediation_example"
         - "samples/admob/native_platform_example"
         - "samples/admob/native_template_example"
         - "samples/admob/rewarded_example"
@@ -82,8 +86,10 @@ jobs:
       matrix:
         regex:
         - "samples/admob/adaptive_banner_example"
+        - "samples/admob/app_open_example"
         - "samples/admob/banner_example"
         - "samples/admob/interstitial_example"
+        - "samples/admob/mediation_example"
         - "samples/admob/native_platform_example"
         - "samples/admob/native_template_example"
         - "samples/admob/rewarded_example"
