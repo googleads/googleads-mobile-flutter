@@ -18,6 +18,7 @@ import 'ad_inspector_containers.dart';
 import 'ad_instance_manager.dart';
 import 'request_configuration.dart';
 import 'package:flutter/foundation.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 /// The initialization state of the mediation adapter.
 enum AdapterInitializationState {
@@ -129,6 +130,13 @@ class MobileAds {
   /// invoked.
   Future<void> openDebugMenu(String adUnitId) {
     return instanceManager.openDebugMenu(adUnitId);
+  }
+
+  /// Registers a `WebViewController` with the Google Mobile Ads SDK.
+  ///
+  /// This improves in-app ad monetization of ads within this WebView.
+  Future<void> registerWebView(WebViewController webViewController) {
+    return instanceManager.registerWebView(webViewController);
   }
 
   /// Open the ad inspector.

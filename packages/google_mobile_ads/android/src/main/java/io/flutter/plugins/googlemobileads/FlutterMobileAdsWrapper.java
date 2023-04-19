@@ -15,14 +15,21 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
+import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.OnAdInspectorClosedListener;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.plugins.webviewflutter.WebViewFlutterAndroidExternalApi;
 
 /** A wrapper around static methods in {@link com.google.android.gms.ads.MobileAds}. */
 public class FlutterMobileAdsWrapper {
+
+  private static final String TAG = "FlutterMobileAdsWrapper";
 
   public FlutterMobileAdsWrapper() {}
 
@@ -65,5 +72,17 @@ public class FlutterMobileAdsWrapper {
   /** Open the ad inspector. */
   public void openAdInspector(Context context, OnAdInspectorClosedListener listener) {
     MobileAds.openAdInspector(context, listener);
+  }
+
+  /** Register the webView for monetization. */
+  public void registerWebView(int webViewId, FlutterEngine flutterEngine) {
+    WebView webView = WebViewFlutterAndroidExternalApi.getWebView(flutterEngine, webViewId);
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+      Log.w(TAG, "MobileAds.registerWebView does not support API levels less than 21");
+    } else if (webView == null) {
+      Log.w(TAG, "MobileAds.registerWebView unable to find webView with id: " + webViewId);
+    } else {
+      MobileAds.registerWebView(webView);
+    }
   }
 }

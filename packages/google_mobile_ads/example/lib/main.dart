@@ -24,6 +24,7 @@ import 'fluid_example.dart';
 import 'inline_adaptive_example.dart';
 import 'native_template_example.dart';
 import 'reusable_inline_example.dart';
+import 'webview_example.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +56,7 @@ class _MyAppState extends State<MyApp> {
   static const inlineAdaptiveButtonText = 'Inline adaptive';
   static const anchoredAdaptiveButtonText = 'Anchored adaptive';
   static const nativeTemplateButtonText = 'Native template';
+  static const webviewExampleButtonText = 'Register WebView';
 
   InterstitialAd? _interstitialAd;
   int _numInterstitialLoadAttempts = 0;
@@ -279,6 +281,13 @@ class _MyAppState extends State<MyApp> {
                             builder: (context) => NativeTemplateExample()),
                       );
                       break;
+                    case webviewExampleButtonText:
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WebViewExample()),
+                      );
+                      break;
                     default:
                       throw AssertionError('unexpected button: $result');
                   }
@@ -311,6 +320,10 @@ class _MyAppState extends State<MyApp> {
                   PopupMenuItem<String>(
                     value: nativeTemplateButtonText,
                     child: Text(nativeTemplateButtonText),
+                  ),
+                  PopupMenuItem<String>(
+                    value: webviewExampleButtonText,
+                    child: Text(webviewExampleButtonText),
                   ),
                 ],
               ),

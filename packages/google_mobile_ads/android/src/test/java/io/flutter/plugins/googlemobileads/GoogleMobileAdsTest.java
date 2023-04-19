@@ -556,6 +556,21 @@ public class GoogleMobileAdsTest {
   }
 
   @Test
+  public void registerWebView() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
+
+    MethodCall methodCall =
+        new MethodCall("MobileAds#registerWebView", Collections.singletonMap("webViewId", 1));
+    Result result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(null);
+  }
+
+  @Test
   public void testPluginUsesActivityWhenAvailable() {
     FlutterMobileAdsWrapper flutterMobileAdsWrapper = mock(FlutterMobileAdsWrapper.class);
     BinaryMessenger mockBinaryMessenger = mock(BinaryMessenger.class);

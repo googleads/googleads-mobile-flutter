@@ -12,13 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import <Flutter/Flutter.h>
 #import <Foundation/Foundation.h>
+#import <WebKit/WebKit.h>
 
 @interface FLTAdUtil : NSObject
 
 + (BOOL)isNull:(id)object;
 
 + (BOOL)isNotNull:(id)object;
+
++ (WKWebView *_Nullable)getWebView:(NSNumber *_Nonnull)webViewId
+             flutterPluginRegistry:
+                 (id<FlutterPluginRegistry> _Nonnull)flutterPluginRegistry;
 
 @property(readonly, class) NSString *requestAgent;
 
