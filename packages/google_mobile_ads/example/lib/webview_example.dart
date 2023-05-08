@@ -17,6 +17,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 /// Opens a WebView and tries to register it via `MobileAds.registerWebView()`.
 class WebViewExample extends StatefulWidget {
@@ -38,27 +39,35 @@ class _WebViewExampleState extends State<WebViewExample> {
   @override
   void initState() {
     super.initState();
+    createWebView();
+  }
 
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
-          onPageStarted: (String url) {},
-          onPageFinished: (String url) {},
-          onWebResourceError: (WebResourceError error) {},
-          onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith('https://www.youtube.com/')) {
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
-        ),
-      )
-      ..loadRequest(Uri.parse('https://webview-api-for-ads-test.glitch.me/'));
-    MobileAds.instance.registerWebView(controller);
+  void createWebView() async {
+    controller = WebViewController();
+    await controller.setJavaScriptMode(JavaScriptMode.unrestricted);
+    await controller.setBackgroundColor(const Color(0x00000000));
+    await controller.setNavigationDelegate(
+      NavigationDelegate(
+        onProgress: (int progress) {},
+        onPageStarted: (String url) {},
+        onPageFinished: (String url) {},
+        onWebResourceError: (WebResourceError error) {},
+        onNavigationRequest: (NavigationRequest request) {
+          if (request.url.startsWith('https://www.youtube.com/')) {
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
+      ),
+    );
+    if (controller.platform is AndroidWebViewController) {
+      AndroidWebViewCookieManager cookieManager = AndroidWebViewCookieManager(
+          PlatformWebViewCookieManagerCreationParams());
+      await cookieManager.setAcceptThirdPartyCookies(
+          controller.platform as AndroidWebViewController, true);
+    }
+    await MobileAds.instance.registerWebView(controller);
+    await controller
+        .loadRequest(Uri.parse('https://webview-api-for-ads-test.glitch.me/'));
   }
 }
