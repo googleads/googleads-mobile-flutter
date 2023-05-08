@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
-import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 
 /// Opens a WebView and tries to register it via `MobileAds.registerWebView()`.
 class WebViewExample extends StatefulWidget {
