@@ -16,6 +16,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FLTAdInstanceManager_Internal.h"
+#import "FLTAdUtil.h"
 #import "FLTGoogleMobileAdsPlugin.h"
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
 #import "FLTMobileAds_Internal.h"
@@ -171,6 +172,34 @@
   XCTAssertNil(returnedResult);
   OCMVerify([gadRequestConfigurationMock
       setSameAppKeyEnabled:[OCMArg isEqual:@(YES)]]);
+}
+
+- (void)testRegisterWebView {
+  id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
+  OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
+      .andReturn((GADMobileAds *)gadMobileAdsClassMock);
+
+  WKWebView *mockWebView = OCMClassMock([WKWebView class]);
+  id fltAdUtilMock = OCMClassMock([FLTAdUtil class]);
+  OCMStub(ClassMethod([fltAdUtilMock getWebView:[OCMArg any]
+                          flutterPluginRegistry:[OCMArg any]]))
+      .andReturn(mockWebView);
+
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#registerWebView"
+                                        arguments:@{@"webViewId" : @(1)}];
+
+  __block bool resultInvoked = false;
+  __block id _Nullable returnedResult;
+  FlutterResult result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertNil(returnedResult);
 }
 
 - (void)testSetSameAppKeyEnabledNo {

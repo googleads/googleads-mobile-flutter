@@ -321,6 +321,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     }
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
     if (instanceManager == null || pluginBinding == null) {
@@ -394,6 +395,11 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
           builder.setTestDeviceIds(testDeviceIds);
         }
         MobileAds.setRequestConfiguration(builder.build());
+        result.success(null);
+        break;
+      case "MobileAds#registerWebView":
+        Integer webViewId = call.<Integer>argument("webViewId");
+        flutterMobileAds.registerWebView(webViewId, pluginBinding.getFlutterEngine());
         result.success(null);
         break;
       case "loadBannerAd":

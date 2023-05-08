@@ -22,7 +22,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     defaultConfig {
         minSdkVersion 19
@@ -31,7 +31,7 @@ android {
         disable 'InvalidPackage'
     }
     dependencies {
-      api 'com.google.android.gms:play-services-ads:21.3.0'
+      api 'com.google.android.gms:play-services-ads:22.0.0'
       implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
       implementation 'androidx.lifecycle:lifecycle-process:2.2.0'
       implementation 'com.google.errorprone:error_prone_annotations:2.16'
