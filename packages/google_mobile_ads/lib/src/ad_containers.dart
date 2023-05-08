@@ -24,6 +24,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 import 'ad_instance_manager.dart';
 import 'ad_listeners.dart';
+import 'nativetemplates/native_template_style.dart';
 
 /// Error information about why an ad operation failed.
 class AdError {
@@ -617,6 +618,16 @@ abstract class AdWithoutView extends Ad {
 /// Must call `load()` first before showing the widget. Otherwise, a
 /// [PlatformException] will be thrown.
 class AdWidget extends StatefulWidget {
+  /// Opt out of the visibility detector workaround.
+  ///
+  /// As a workaround for
+  /// https://github.com/googleads/googleads-mobile-flutter/issues/580,
+  /// we wait for the widget to get displayed once before attaching
+  /// the platform view.
+  ///
+  /// Set this flag to true if you are building with Flutter 3.7.0 or higher.
+  static bool optOutOfVisibilityDetectorWorkaround = false;
+
   /// Default constructor for [AdWidget].
   ///
   /// [ad] must be loaded before this is added to the widget tree.
@@ -683,8 +694,8 @@ class _AdWidgetState extends State<AdWidget> {
       // https://github.com/googleads/googleads-mobile-flutter/issues/580,
       // where impressions are erroneously fired due to how platform views are
       // rendered.
-      // TODO (jjliu15): Remove this after the flutter issue is resolved.
-      if (_firstVisibleOccurred) {
+      if (_firstVisibleOccurred ||
+          AdWidget.optOutOfVisibilityDetectorWorkaround) {
         return PlatformViewLink(
           viewType: '${instanceManager.channel.name}/ad_widget',
           surfaceFactory:
@@ -994,40 +1005,44 @@ class AdManagerBannerAd extends AdWithView {
 class NativeAd extends AdWithView {
   /// Creates a [NativeAd].
   ///
-  /// A valid [adUnitId], nonnull [listener], nonnull [request], and nonnull
-  /// [factoryId] is required.
+  /// A valid [adUnitId], nonnull [listener], nonnull [request], and either
+  /// [factoryId] or [nativeTemplateStyle] is required.
   /// Use [nativeAdOptions] to customize the native ad request.
   /// Use [customOptions] to pass data to your native ad factory.
   NativeAd({
     required String adUnitId,
-    required this.factoryId,
+    this.factoryId,
     required this.listener,
     required this.request,
     this.nativeAdOptions,
     this.customOptions,
+    this.nativeTemplateStyle,
   })  : adManagerRequest = null,
         assert(request != null),
+        assert(nativeTemplateStyle != null || factoryId != null),
         super(adUnitId: adUnitId, listener: listener);
 
   /// Creates a [NativeAd] with Ad Manager.
   ///
   /// A valid [adUnitId], nonnull [listener], nonnull [adManagerRequest], and
-  /// nonnull [factoryId] is required.
+  /// either [factoryId] or [nativeTemplateStyle] is required.
   /// Use [nativeAdOptions] to customize the native ad request.
   /// Use [customOptions] to pass data to your native ad factory.
   NativeAd.fromAdManagerRequest({
     required String adUnitId,
-    required this.factoryId,
+    this.factoryId,
     required this.listener,
     required this.adManagerRequest,
     this.nativeAdOptions,
     this.customOptions,
+    this.nativeTemplateStyle,
   })  : request = null,
         assert(adManagerRequest != null),
+        assert(nativeTemplateStyle != null || factoryId != null),
         super(adUnitId: adUnitId, listener: listener);
 
   /// An identifier for the factory that creates the Platform view.
-  final String factoryId;
+  final String? factoryId;
 
   /// A listener for receiving events in the ad lifecycle.
   @override
@@ -1046,6 +1061,13 @@ class NativeAd extends AdWithView {
 
   /// Options to configure the native ad request.
   final NativeAdOptions? nativeAdOptions;
+
+  /// Optional [NativeTemplateStyle] for this ad.
+  ///
+  /// If this is non-null, the plugin will render a native ad template
+  /// with corresponding style. Otherwise any registered NativeAdFactory will be
+  /// used to render the native ad.
+  final NativeTemplateStyle? nativeTemplateStyle;
 
   @override
   Future<void> load() async {

@@ -33,7 +33,7 @@ jobs:
     if: github.event_name == 'pull_request'
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -41,13 +41,13 @@ jobs:
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
+        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart samples/admob/adaptive_banner_example
   
   iOS:
     runs-on: macos-latest
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -57,14 +57,14 @@ jobs:
           ./.github/workflows/scripts/install-tools.sh
           flutter config
       - name: "Build iOS Example"
-        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
+        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart samples/admob/adaptive_banner_example
   
   flutter:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0
       - name: "Install Flutter"

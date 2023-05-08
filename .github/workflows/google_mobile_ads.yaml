@@ -19,6 +19,8 @@ on:
     paths:
       - "packages/google_mobile_ads/**"
       - ".github/workflows/google_mobile_ads.yaml"
+      - "packages/google_mobile_ads/ios/**"
+      - "packages/google_mobile_ads/android/**"
   push:
     branches:
       - master
@@ -26,14 +28,13 @@ on:
 env:
   GOOGLEMOBILEADS_PLUGIN_SCOPE: "*google_mobile_ads*"
   GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "*google_mobile_ads_example*"
-
 jobs:
   android:
     runs-on: macos-latest
     if: github.event_name == 'pull_request'
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -41,7 +42,7 @@ jobs:
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
+        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart packages/google_mobile_ads/example
       - name: "Unit Tests"
         run: |
           cd packages/google_mobile_ads/example/android
@@ -51,7 +52,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -60,18 +61,25 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
       - name: "Build iOS Example"
-        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart
+        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart packages/google_mobile_ads/example
       - name: "Unit Tests"
         run: |
-          cd packages/google_mobile_ads/ios
-          pod lib lint --allow-warnings
-  
+          cd packages/google_mobile_ads/example/ios
+          flutter clean
+          flutter pub get
+          pod install
+          xcodebuild -configuration Debug -resultBundlePath TestResults VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.2' test  
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with: 
+          name: iOSTestResults
+          path: packages/google_mobile_ads/example/ios/TestResults.xcresult  
   flutter:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           fetch-depth: 0
       - name: "Install Flutter"
