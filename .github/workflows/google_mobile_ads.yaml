@@ -40,7 +40,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin' 
-          java-version: '11'
+          java-version: '17'
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
