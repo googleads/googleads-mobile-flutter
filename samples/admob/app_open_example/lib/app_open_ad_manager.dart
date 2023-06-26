@@ -94,7 +94,6 @@ class AppOpenAdManager {
         _isShowingAd = false;
         ad.dispose();
         _appOpenAd = null;
-        loadAd();
       },
     );
     _appOpenAd!.show();
