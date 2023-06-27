@@ -617,7 +617,6 @@ abstract class AdWithoutView extends Ad {
 /// Must call `load()` first before showing the widget. Otherwise, a
 /// [PlatformException] will be thrown.
 class AdWidget extends StatefulWidget {
-
   /// Default constructor for [AdWidget].
   ///
   /// [ad] must be loaded before this is added to the widget tree.
@@ -684,8 +683,7 @@ class _AdWidgetState extends State<AdWidget> {
             (BuildContext context, PlatformViewController controller) {
           return AndroidViewSurface(
             controller: controller as AndroidViewController,
-            gestureRecognizers: const <
-                Factory<OneSequenceGestureRecognizer>>{},
+            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
             hitTestBehavior: PlatformViewHitTestBehavior.opaque,
           );
         },
