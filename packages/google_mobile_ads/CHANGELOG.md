@@ -7,6 +7,7 @@
   [webview_flutter_android](https://pub.dev/packages/webview_flutter_android)
 * Updates Android GMA dependency to 22.0.0 and iOS dependency to 10.4.0
 * Fixes https://github.com/googleads/googleads-mobile-flutter/issues/700
+* Updates minimum supported Xcode version to 14.1.
 
 ## 2.4.0
 * Adds support for native templates, which are predefined layouts for native ads.
