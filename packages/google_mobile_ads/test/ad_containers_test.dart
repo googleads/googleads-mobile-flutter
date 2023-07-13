@@ -22,6 +22,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+Future<void> handlePlatformMessage(ByteData? data) async {
+  await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .handlePlatformMessage(
+          'plugins.flutter.io/google_mobile_ads', data, (data) {});
+}
+
 // ignore_for_file: deprecated_member_use_from_same_package
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -34,8 +40,9 @@ void main() {
       log.clear();
       instanceManager =
           AdInstanceManager('plugins.flutter.io/google_mobile_ads');
-      instanceManager.channel
-          .setMockMethodCallHandler((MethodCall methodCall) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(instanceManager.channel,
+              (MethodCall methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
           case 'MobileAds#updateRequestConfiguration':
@@ -788,11 +795,7 @@ void main() {
       final ByteData data =
           instanceManager.channel.codec.encodeMethodCall(methodCall);
 
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        data,
-        (ByteData? data) {},
-      );
+      await handlePlatformMessage(data);
 
       // The ad reference should be freed when load failure occurs.
       expect(instanceManager.adFor(0), isNull);
@@ -869,13 +872,7 @@ void main() {
 
       final ByteData data =
           instanceManager.channel.codec.encodeMethodCall(methodCall);
-
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        data,
-        (ByteData? data) {},
-      );
-
+      await handlePlatformMessage(data);
       // The ad reference should be freed when load failure occurs.
       expect(instanceManager.adFor(0), isNull);
 
@@ -952,11 +949,7 @@ void main() {
       final ByteData data =
           instanceManager.channel.codec.encodeMethodCall(methodCall);
 
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        data,
-        (ByteData? data) {},
-      );
+      await handlePlatformMessage(data);
 
       // The ad reference should be freed when load failure occurs.
       expect(instanceManager.adFor(0), isNull);
@@ -1000,11 +993,7 @@ void main() {
       final ByteData data =
           instanceManager.channel.codec.encodeMethodCall(methodCall);
 
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        data,
-        (ByteData? data) {},
-      );
+      await handlePlatformMessage(data);
 
       expect(adEventCompleter.future, completion(native));
     });
@@ -1060,11 +1049,7 @@ void main() {
         ByteData data =
             instanceManager.channel.codec.encodeMethodCall(methodCall);
 
-        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-          'plugins.flutter.io/google_mobile_ads',
-          data,
-          (ByteData? data) {},
-        );
+        await handlePlatformMessage(data);
         final ad = await loadCompleter.future;
 
         expect(ad.responseInfo!.mediationAdapterClassName!, 'adapter');
@@ -1126,11 +1111,7 @@ void main() {
       final ByteData data =
           instanceManager.channel.codec.encodeMethodCall(methodCall);
 
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        data,
-        (ByteData? data) {},
-      );
+      await handlePlatformMessage(data);
 
       final List<dynamic> result = await resultCompleter.future;
       expect(result[0], rewarded!);
@@ -1166,11 +1147,7 @@ void main() {
       ByteData data =
           instanceManager.channel.codec.encodeMethodCall(methodCall);
 
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        data,
-        (ByteData? data) {},
-      );
+      await handlePlatformMessage(data);
 
       List<dynamic> result = await resultCompleter.future;
       expect(result[0], banner);
@@ -1188,11 +1165,8 @@ void main() {
         'currencyCode': 'USD',
       });
       data = instanceManager.channel.codec.encodeMethodCall(methodCall);
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        instanceManager.channel.codec.encodeMethodCall(methodCall),
-        (ByteData? data) {},
-      );
+      await handlePlatformMessage(
+          instanceManager.channel.codec.encodeMethodCall(methodCall));
       result = await resultCompleter.future;
       expect(result[2], PrecisionType.unknown);
 
@@ -1207,11 +1181,8 @@ void main() {
         'currencyCode': 'USD',
       });
       data = instanceManager.channel.codec.encodeMethodCall(methodCall);
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        instanceManager.channel.codec.encodeMethodCall(methodCall),
-        (ByteData? data) {},
-      );
+      await handlePlatformMessage(
+          instanceManager.channel.codec.encodeMethodCall(methodCall));
       result = await resultCompleter.future;
       expect(result[1], 12345);
       expect(result[2], PrecisionType.estimated);
@@ -1226,11 +1197,8 @@ void main() {
         'currencyCode': 'USD',
       });
       data = instanceManager.channel.codec.encodeMethodCall(methodCall);
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        instanceManager.channel.codec.encodeMethodCall(methodCall),
-        (ByteData? data) {},
-      );
+      await handlePlatformMessage(data);
+
       result = await resultCompleter.future;
       expect(result[2], PrecisionType.publisherProvided);
 
@@ -1244,11 +1212,8 @@ void main() {
         'currencyCode': 'USD',
       });
       data = instanceManager.channel.codec.encodeMethodCall(methodCall);
-      await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-        'plugins.flutter.io/google_mobile_ads',
-        instanceManager.channel.codec.encodeMethodCall(methodCall),
-        (ByteData? data) {},
-      );
+      await handlePlatformMessage(data);
+
       result = await resultCompleter.future;
       expect(result[2], PrecisionType.precise);
     });
@@ -1532,12 +1497,7 @@ void main() {
 
         final ByteData data =
             instanceManager.channel.codec.encodeMethodCall(methodCall);
-
-        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-          'plugins.flutter.io/google_mobile_ads',
-          data,
-          (ByteData? data) {},
-        );
+        await handlePlatformMessage(data);
 
         expect(adClickCompleter.future, completion(native));
       };
@@ -1574,24 +1534,15 @@ void main() {
 
         ByteData data =
             instanceManager.channel.codec.encodeMethodCall(methodCall);
-
-        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-          'plugins.flutter.io/google_mobile_ads',
-          data,
-          (ByteData? data) {},
-        );
+        await handlePlatformMessage(data);
 
         // Handle adDidRecordClick method call
         methodCall = MethodCall('onAdEvent',
             <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
 
         data = instanceManager.channel.codec.encodeMethodCall(methodCall);
+        await handlePlatformMessage(data);
 
-        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-          'plugins.flutter.io/google_mobile_ads',
-          data,
-          (ByteData? data) {},
-        );
         expect(adClickCompleter.future, completion(rewarded!));
       };
 
@@ -1628,24 +1579,15 @@ void main() {
 
         ByteData data =
             instanceManager.channel.codec.encodeMethodCall(methodCall);
-
-        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-          'plugins.flutter.io/google_mobile_ads',
-          data,
-          (ByteData? data) {},
-        );
+        await handlePlatformMessage(data);
 
         // Handle adDidRecordClick method call
         methodCall = MethodCall('onAdEvent',
             <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
 
         data = instanceManager.channel.codec.encodeMethodCall(methodCall);
+        await handlePlatformMessage(data);
 
-        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-          'plugins.flutter.io/google_mobile_ads',
-          data,
-          (ByteData? data) {},
-        );
         expect(adClickCompleter.future, completion(interstitialAd!));
       };
 
@@ -1682,24 +1624,15 @@ void main() {
 
         ByteData data =
             instanceManager.channel.codec.encodeMethodCall(methodCall);
-
-        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-          'plugins.flutter.io/google_mobile_ads',
-          data,
-          (ByteData? data) {},
-        );
+        await handlePlatformMessage(data);
 
         // Handle adDidRecordClick method call
         methodCall = MethodCall('onAdEvent',
             <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
 
         data = instanceManager.channel.codec.encodeMethodCall(methodCall);
+        await handlePlatformMessage(data);
 
-        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-          'plugins.flutter.io/google_mobile_ads',
-          data,
-          (ByteData? data) {},
-        );
         expect(adClickCompleter.future, completion(interstitialAd!));
       };
 

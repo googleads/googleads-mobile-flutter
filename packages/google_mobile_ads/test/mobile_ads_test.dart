@@ -43,10 +43,12 @@ void main() {
       instanceManager =
           AdInstanceManager('plugins.flutter.io/google_mobile_ads');
       log.clear();
-      MethodChannel(
-        'plugins.flutter.io/google_mobile_ads',
-        StandardMethodCodec(AdMessageCodec()),
-      ).setMockMethodCallHandler((MethodCall methodCall) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+              MethodChannel(
+                'plugins.flutter.io/google_mobile_ads',
+                StandardMethodCodec(AdMessageCodec()),
+              ), (MethodCall methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
           case 'MobileAds#initialize':
@@ -203,10 +205,12 @@ void main() {
     });
 
     test('$MobileAds.openAdInspector success', () async {
-      MethodChannel(
-        'plugins.flutter.io/google_mobile_ads',
-        StandardMethodCodec(AdMessageCodec()),
-      ).setMockMethodCallHandler((MethodCall methodCall) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+              MethodChannel(
+                'plugins.flutter.io/google_mobile_ads',
+                StandardMethodCodec(AdMessageCodec()),
+              ), (MethodCall methodCall) async {
         return null;
       });
 
@@ -220,10 +224,12 @@ void main() {
     });
 
     test('$MobileAds.openAdInspector error', () async {
-      MethodChannel(
-        'plugins.flutter.io/google_mobile_ads',
-        StandardMethodCodec(AdMessageCodec()),
-      ).setMockMethodCallHandler((MethodCall methodCall) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+              MethodChannel(
+                'plugins.flutter.io/google_mobile_ads',
+                StandardMethodCodec(AdMessageCodec()),
+              ), (MethodCall methodCall) async {
         throw PlatformException(
             code: '1', details: 'details', message: 'message');
       });
