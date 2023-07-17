@@ -32,8 +32,10 @@ void main() {
       log.clear();
       instanceManager =
           AdInstanceManager('plugins.flutter.io/google_mobile_ads');
-      instanceManager.channel
-          .setMockMethodCallHandler((MethodCall methodCall) async {
+
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(instanceManager.channel,
+              (MethodCall methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
           case 'loadAdManagerBannerAd':
@@ -171,12 +173,9 @@ void main() {
 
         final ByteData data =
             instanceManager.channel.codec.encodeMethodCall(methodCall);
-
-        await instanceManager.channel.binaryMessenger.handlePlatformMessage(
-          'plugins.flutter.io/google_mobile_ads',
-          data,
-          (ByteData? data) {},
-        );
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(
+                'plugins.flutter.io/google_mobile_ads', data, (data) {});
 
         final List<dynamic> results = await resultsCompleter.future;
         expect(results[0], banner);

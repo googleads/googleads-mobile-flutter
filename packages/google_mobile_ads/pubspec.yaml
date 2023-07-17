@@ -38,7 +38,7 @@ dependencies:
 
 dev_dependencies:
   pedantic: ^1.11.0
-  e2e: ^0.7.0
+#  e2e: ^0.7.0
   flutter_driver:
     sdk: flutter
   mockito: ^5.0.0-0
@@ -50,5 +50,5 @@ dev_dependencies:
 
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.14.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.5"
