@@ -1316,9 +1316,9 @@ extension AdChoicesPlacementExtension on AdChoicesPlacement {
   /// Gets the int mapping to pass to platform channel.
   int get intValue {
     switch (this) {
-      case AdChoicesPlacement.topRightCorner:
-        return 0;
       case AdChoicesPlacement.topLeftCorner:
+        return 0;
+      case AdChoicesPlacement.topRightCorner:
         return 1;
       case AdChoicesPlacement.bottomRightCorner:
         return 2;
@@ -1331,9 +1331,9 @@ extension AdChoicesPlacementExtension on AdChoicesPlacement {
   static AdChoicesPlacement? fromInt(int? intValue) {
     switch (intValue) {
       case 0:
-        return AdChoicesPlacement.topRightCorner;
-      case 1:
         return AdChoicesPlacement.topLeftCorner;
+      case 1:
+        return AdChoicesPlacement.topRightCorner;
       case 2:
         return AdChoicesPlacement.bottomRightCorner;
       case 3:
