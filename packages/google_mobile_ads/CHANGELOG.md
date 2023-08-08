@@ -1,3 +1,7 @@
+## 3.1.0
+* Updates GMA iOS dependency to 10.9
+* Adds explicit UMP SDK 2.1.0 dependency for Android.
+
 ## 3.0.0
 * Adds support for `MobileAds.registerWebView()`. This API supports in-app ad monetization for
   `WebView`s. You can read more in the [android](https://developers.google.com/admob/android/webview)
