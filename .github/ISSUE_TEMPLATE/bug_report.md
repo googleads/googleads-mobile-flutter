@@ -1,13 +1,7 @@
 ---
-name: I have a problem with my Flutter application using `google_mobile_ads`.
-about: You are writing an application with `google_mobile_ads`, but the application is crashing
-  or throws an exception, a widget is buggy, or something looks wrong.
-title: ''
-labels: ''
-assignees: ''
-
+name:  Bug report
+about: Found a bug in the Google Mobile Ads Flutter plugin? Is the Google Mobile Ads Flutter plugin crashing your app? File it here.
 ---
-
 <!-- Thank you for using Google Mobile Ads for Flutter!
 
      If you have found a bug or if our documentation doesn't have an answer
@@ -15,9 +9,30 @@ assignees: ''
      the Flutter's team guide to filing a bug first: https://flutter.dev/docs/resources/bug-reports
 -->
 
+### Step 0: Are you in the right place?
+
+  * For general technical questions, or help with project-specific issues like setting up ads in
+   your app, reach out to our support team on the
+   [Developer Forum](https://groups.google.com/forum/#!categories/google-admob-ads-sdk).
+  * For assistance with your AdMob account, reach out to
+   [AdMob Support](https://support.google.com/admob/?hl=en#topic=7383088).
+  * For feedback on [our documentation](https://developers.google.com/admob/flutter/quick-start),
+   send your feedback by pressing the **Send Feedback** button at the top right of the
+   documentation page you are on.
+  * For issues related to __the code in this repository__, continue filing this GitHub issue.
+
+  * Once you've read this section and determined that your issue is appropriate for
+    this repository, **please delete this section**.
+
+---
+
+### [REQUIRED] Step 1: Describe your environment
+
 ## Plugin Version
 
 <!-- Please tell us the version of the plugin used in your app. -->
+
+### [REQUIRED] Step 2: Describe the problem
 
 ## Steps to Reproduce
 
