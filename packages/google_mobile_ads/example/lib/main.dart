@@ -14,12 +14,17 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import 'anchored_adaptive_example.dart';
-import 'inline_adaptive_example.dart';
 import 'fluid_example.dart';
+import 'inline_adaptive_example.dart';
+import 'native_template_example.dart';
 import 'reusable_inline_example.dart';
+import 'webview_example.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,6 +49,15 @@ class _MyAppState extends State<MyApp> {
     nonPersonalizedAds: true,
   );
 
+  static const interstitialButtonText = 'InterstitialAd';
+  static const rewardedButtonText = 'RewardedAd';
+  static const rewardedInterstitialButtonText = 'RewardedInterstitialAd';
+  static const fluidButtonText = 'Fluid';
+  static const inlineAdaptiveButtonText = 'Inline adaptive';
+  static const anchoredAdaptiveButtonText = 'Anchored adaptive';
+  static const nativeTemplateButtonText = 'Native template';
+  static const webviewExampleButtonText = 'Register WebView';
+
   InterstitialAd? _interstitialAd;
   int _numInterstitialLoadAttempts = 0;
 
@@ -63,7 +77,9 @@ class _MyAppState extends State<MyApp> {
 
   void _createInterstitialAd() {
     InterstitialAd.load(
-        adUnitId: InterstitialAd.testAdUnitId,
+        adUnitId: Platform.isAndroid
+            ? 'ca-app-pub-3940256099942544/1033173712'
+            : 'ca-app-pub-3940256099942544/4411468910',
         request: request,
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
@@ -108,7 +124,9 @@ class _MyAppState extends State<MyApp> {
 
   void _createRewardedAd() {
     RewardedAd.load(
-        adUnitId: RewardedAd.testAdUnitId,
+        adUnitId: Platform.isAndroid
+            ? 'ca-app-pub-3940256099942544/5224354917'
+            : 'ca-app-pub-3940256099942544/1712485313',
         request: request,
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (RewardedAd ad) {
@@ -157,7 +175,9 @@ class _MyAppState extends State<MyApp> {
 
   void _createRewardedInterstitialAd() {
     RewardedInterstitialAd.load(
-        adUnitId: RewardedInterstitialAd.testAdUnitId,
+        adUnitId: Platform.isAndroid
+            ? 'ca-app-pub-3940256099942544/5354046379'
+            : 'ca-app-pub-3940256099942544/6978759866',
         request: request,
         rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
           onAdLoaded: (RewardedInterstitialAd ad) {
@@ -225,33 +245,47 @@ class _MyAppState extends State<MyApp> {
               PopupMenuButton<String>(
                 onSelected: (String result) {
                   switch (result) {
-                    case 'InterstitialAd':
+                    case interstitialButtonText:
                       _showInterstitialAd();
                       break;
-                    case 'RewardedAd':
+                    case rewardedButtonText:
                       _showRewardedAd();
                       break;
-                    case 'RewardedInterstitialAd':
+                    case rewardedInterstitialButtonText:
                       _showRewardedInterstitialAd();
                       break;
-                    case 'Fluid':
+                    case fluidButtonText:
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => FluidExample()),
                       );
                       break;
-                    case 'Inline adaptive':
+                    case inlineAdaptiveButtonText:
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => InlineAdaptiveExample()),
                       );
                       break;
-                    case 'Anchored adaptive':
+                    case anchoredAdaptiveButtonText:
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => AnchoredAdaptiveExample()),
+                      );
+                      break;
+                    case nativeTemplateButtonText:
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NativeTemplateExample()),
+                      );
+                      break;
+                    case webviewExampleButtonText:
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WebViewExample()),
                       );
                       break;
                     default:
@@ -260,28 +294,36 @@ class _MyAppState extends State<MyApp> {
                 },
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   PopupMenuItem<String>(
-                    value: 'InterstitialAd',
-                    child: Text('InterstitialAd'),
+                    value: interstitialButtonText,
+                    child: Text(interstitialButtonText),
                   ),
                   PopupMenuItem<String>(
-                    value: 'RewardedAd',
-                    child: Text('RewardedAd'),
+                    value: rewardedButtonText,
+                    child: Text(rewardedButtonText),
                   ),
                   PopupMenuItem<String>(
-                    value: 'RewardedInterstitialAd',
-                    child: Text('RewardedInterstitialAd'),
+                    value: rewardedInterstitialButtonText,
+                    child: Text(rewardedInterstitialButtonText),
                   ),
                   PopupMenuItem<String>(
-                    value: 'Fluid',
-                    child: Text('Fluid'),
+                    value: fluidButtonText,
+                    child: Text(fluidButtonText),
                   ),
                   PopupMenuItem<String>(
-                    value: 'Inline adaptive',
-                    child: Text('Inline adaptive'),
+                    value: inlineAdaptiveButtonText,
+                    child: Text(inlineAdaptiveButtonText),
                   ),
                   PopupMenuItem<String>(
-                    value: 'Anchored adaptive',
-                    child: Text('Anchored adaptive'),
+                    value: anchoredAdaptiveButtonText,
+                    child: Text(anchoredAdaptiveButtonText),
+                  ),
+                  PopupMenuItem<String>(
+                    value: nativeTemplateButtonText,
+                    child: Text(nativeTemplateButtonText),
+                  ),
+                  PopupMenuItem<String>(
+                    value: webviewExampleButtonText,
+                    child: Text(webviewExampleButtonText),
                   ),
                 ],
               ),

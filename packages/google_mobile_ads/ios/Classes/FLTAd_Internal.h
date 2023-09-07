@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <GoogleMobileAds/GoogleMobileAds.h>
 #import "FLTAdInstanceManager_Internal.h"
 #import "FLTGoogleMobileAdsPlugin.h"
 #import "FLTMediationNetworkExtrasProvider.h"
 #import "FLTMobileAds_Internal.h"
+#import "FLTNativeTemplateStyle.h"
+#import "GADTTemplateView.h"
+#import <GoogleMobileAds/GoogleMobileAds.h>
+#import <UIKit/UIKit.h>
 
 @class FLTAdInstanceManager;
 @protocol FLTNativeAdFactory;
@@ -25,22 +28,32 @@
 @property(readonly) GADAdSize size;
 @property(readonly) NSNumber *_Nonnull width;
 @property(readonly) NSNumber *_Nonnull height;
-- (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width height:(NSNumber *_Nonnull)height;
+- (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width
+                                height:(NSNumber *_Nonnull)height;
 - (instancetype _Nonnull)initWithAdSize:(GADAdSize)size;
 @end
 
 /**
- * Wrapper around top level methods for `GADAdSize` for the Google Mobile Ads Plugin.
+ * Wrapper around top level methods for `GADAdSize` for the Google Mobile Ads
+ * Plugin.
  */
 @interface FLTAdSizeFactory : NSObject
-- (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
-- (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
-- (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
-- (GADAdSize)currentOrientationInlineAdaptiveBannerSizeWithWidth:(NSNumber *_Nonnull)width;
-- (GADAdSize)portraitOrientationInlineAdaptiveBannerSizeWithWidth:(NSNumber *_Nonnull)width;
-- (GADAdSize)landscapeInlineAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width;
-- (GADAdSize)inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:(NSNumber *_Nonnull)width
-                                                   maxHeight:(NSNumber *_Nonnull)maxHeight;
+- (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width;
+- (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width;
+- (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width;
+- (GADAdSize)currentOrientationInlineAdaptiveBannerSizeWithWidth:
+    (NSNumber *_Nonnull)width;
+- (GADAdSize)portraitOrientationInlineAdaptiveBannerSizeWithWidth:
+    (NSNumber *_Nonnull)width;
+- (GADAdSize)landscapeInlineAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width;
+- (GADAdSize)
+    inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:(NSNumber *_Nonnull)width
+                                          maxHeight:
+                                              (NSNumber *_Nonnull)maxHeight;
 
 @end
 
@@ -65,17 +78,6 @@
 - (instancetype _Nonnull)initWithOrientation:(NSString *_Nonnull)orientation;
 @end
 
-@interface FLTLocationParams : NSObject
-
-@property NSNumber *_Nullable accuracy;
-@property NSNumber *_Nullable longitude;
-@property NSNumber *_Nullable latitude;
-
-- (instancetype _Nonnull)initWithAccuracy:(NSNumber *_Nonnull)accuracy
-                                longitude:(NSNumber *_Nonnull)longitude
-                                 latitude:(NSNumber *_Nonnull)latitude;
-@end
-
 @interface FLTFluidSize : FLTAdSize
 @end
 
@@ -84,10 +86,11 @@
 @property NSString *_Nullable contentURL;
 @property BOOL nonPersonalizedAds;
 @property NSArray<NSString *> *_Nullable neighboringContentURLs;
-@property FLTLocationParams *_Nullable location;
 @property NSString *_Nullable mediationExtrasIdentifier;
-@property id<FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
+@property id<
+    FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
 @property NSDictionary<NSString *, NSString *> *_Nullable adMobExtras;
+@property NSString *_Nonnull requestAgent;
 
 - (GADRequest *_Nonnull)asGADRequest:(NSString *_Nonnull)adUnitId;
 @end
@@ -100,10 +103,15 @@
 @property NSString *_Nullable adNetworkClassName;
 @property NSNumber *_Nullable latency;
 @property NSString *_Nullable dictionaryDescription;
-@property NSString *_Nullable credentialsDescription;
+@property NSDictionary<NSString *, NSString *> *_Nullable adUnitMapping;
 @property NSError *_Nullable error;
+@property NSString *_Nullable adSourceInstanceID;
+@property NSString *_Nullable adSourceID;
+@property NSString *_Nullable adSourceName;
+@property NSString *_Nullable adSourceInstanceName;
 
-- (instancetype _Nonnull)initWithResponseInfo:(GADAdNetworkResponseInfo *_Nonnull)responseInfo;
+- (instancetype _Nonnull)initWithResponseInfo:
+    (GADAdNetworkResponseInfo *_Nonnull)responseInfo;
 @end
 
 /**
@@ -113,8 +121,11 @@
 @property NSString *_Nullable responseIdentifier;
 @property NSString *_Nullable adNetworkClassName;
 @property NSArray<FLTGADAdNetworkResponseInfo *> *_Nullable adNetworkInfoArray;
+@property FLTGADAdNetworkResponseInfo *_Nullable loadedAdNetworkResponseInfo;
+@property NSDictionary<NSString *, id> *_Nullable extrasDictionary;
 
-- (instancetype _Nonnull)initWithResponseInfo:(GADResponseInfo *_Nonnull)responseInfo;
+- (instancetype _Nonnull)initWithResponseInfo:
+    (GADResponseInfo *_Nonnull)responseInfo;
 @end
 
 /**
@@ -135,7 +146,8 @@
  */
 @interface FLTGAMAdRequest : FLTAdRequest
 @property NSDictionary<NSString *, NSString *> *_Nullable customTargeting;
-@property NSDictionary<NSString *, NSArray<NSString *> *> *_Nullable customTargetingLists;
+@property NSDictionary<NSString *, NSArray<NSString *> *>
+    *_Nullable customTargetingLists;
 @property NSString *_Nullable pubProvidedID;
 
 - (GAMRequest *_Nonnull)asGAMRequest:(NSString *_Nonnull)adUnitId;
@@ -155,11 +167,13 @@
 @property(readonly) NSNumber *_Nonnull adId;
 @end
 
-@interface FLTBannerAd : FLTBaseAd <FLTAd, FlutterPlatformView, GADBannerViewDelegate>
+@interface FLTBannerAd
+    : FLTBaseAd <FLTAd, FlutterPlatformView, GADBannerViewDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                      size:(FLTAdSize *_Nonnull)size
                                   request:(FLTAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                       rootViewController:
+                           (UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
 - (FLTAdSize *_Nullable)getAdSize;
 - (GADBannerView *_Nonnull)bannerView;
@@ -172,7 +186,8 @@
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                     sizes:(NSArray<FLTAdSize *> *_Nonnull)sizes
                                   request:(FLTGAMAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                       rootViewController:
+                           (UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
 
 @end
@@ -183,14 +198,20 @@
 @interface FLTFluidGAMBannerAd : FLTGAMBannerAd <GADAdSizeDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTGAMAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                       rootViewController:
+                           (UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
 @end
 
-@interface FLTInterstitialAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTFullScreenAd
+    : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@end
+
+@interface FLTInterstitialAd : FLTFullScreenAd
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                       rootViewController:
+                           (UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
 - (GADInterstitialAd *_Nullable)interstitial;
 - (NSString *_Nonnull)adUnitId;
@@ -201,35 +222,38 @@
 @interface FLTGAMInterstitialAd : FLTInterstitialAd <GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTGAMAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                       rootViewController:
+                           (UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
 @end
 
-@interface FLTRewardedAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTRewardedAd : FLTFullScreenAd
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController
-            serverSideVerificationOptions:
-                (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions
+                       rootViewController:
+                           (UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
 - (GADRewardedAd *_Nullable)rewardedAd;
+- (void)setServerSideVerificationOptions:
+    (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
 @end
 
-@interface FLTRewardedInterstitialAd
-    : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTRewardedInterstitialAd : FLTFullScreenAd
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController
-            serverSideVerificationOptions:
-                (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions
+                       rootViewController:
+                           (UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId;
 - (GADRewardedInterstitialAd *_Nullable)rewardedInterstitialAd;
+- (void)setServerSideVerificationOptions:
+    (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
 @end
 
-@interface FLTAppOpenAd : FLTBaseAd <FLTAd, FLTAdWithoutView, GADFullScreenContentDelegate>
+@interface FLTAppOpenAd : FLTFullScreenAd
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                       rootViewController:(UIViewController *_Nonnull)rootViewController
+                       rootViewController:
+                           (UIViewController *_Nonnull)rootViewController
                               orientation:(NSNumber *_Nonnull)orientation
                                      adId:(NSNumber *_Nonnull)adId;
 - (GADAppOpenAd *_Nullable)appOpenAd;
@@ -239,9 +263,10 @@
 @property(readonly) NSNumber *_Nullable clickToExpandRequested;
 @property(readonly) NSNumber *_Nullable customControlsRequested;
 @property(readonly) NSNumber *_Nullable startMuted;
-- (instancetype _Nonnull)initWithClickToExpandRequested:(NSNumber *_Nullable)clickToExpandRequested
-                                customControlsRequested:(NSNumber *_Nullable)customControlsRequested
-                                             startMuted:(NSNumber *_Nullable)startMuted;
+- (instancetype _Nonnull)
+    initWithClickToExpandRequested:(NSNumber *_Nullable)clickToExpandRequested
+           customControlsRequested:(NSNumber *_Nullable)customControlsRequested
+                        startMuted:(NSNumber *_Nullable)startMuted;
 - (GADVideoOptions *_Nonnull)asGADVideoOptions;
 
 @end
@@ -254,33 +279,39 @@
 @property(readonly) NSNumber *_Nullable shouldRequestMultipleImages;
 @property(readonly) NSNumber *_Nullable shouldReturnUrlsForImageAssets;
 
-- (instancetype _Nonnull)initWithAdChoicesPlacement:(NSNumber *_Nullable)adChoicesPlacement
-                                   mediaAspectRatio:(NSNumber *_Nullable)mediaAspectRatio
-                                       videoOptions:(FLTVideoOptions *_Nullable)videoOptions
-                            requestCustomMuteThisAd:(NSNumber *_Nullable)requestCustomMuteThisAd
-                        shouldRequestMultipleImages:(NSNumber *_Nullable)shouldRequestMultipleImages
-                     shouldReturnUrlsForImageAssets:
-                         (NSNumber *_Nullable)shouldReturnUrlsForImageAssets;
+- (instancetype _Nonnull)
+        initWithAdChoicesPlacement:(NSNumber *_Nullable)adChoicesPlacement
+                  mediaAspectRatio:(NSNumber *_Nullable)mediaAspectRatio
+                      videoOptions:(FLTVideoOptions *_Nullable)videoOptions
+           requestCustomMuteThisAd:(NSNumber *_Nullable)requestCustomMuteThisAd
+       shouldRequestMultipleImages:
+           (NSNumber *_Nullable)shouldRequestMultipleImages
+    shouldReturnUrlsForImageAssets:
+        (NSNumber *_Nullable)shouldReturnUrlsForImageAssets;
 
 - (NSArray<GADAdLoaderOptions *> *_Nonnull)asGADAdLoaderOptions;
 @end
 
 @interface FLTNativeAd
-    : FLTBaseAd <FLTAd, FlutterPlatformView, GADNativeAdDelegate, GADNativeAdLoaderDelegate>
-- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                                  request:(FLTAdRequest *_Nonnull)request
-                          nativeAdFactory:(NSObject<FLTNativeAdFactory> *_Nonnull)nativeAdFactory
-                            customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions
-                       rootViewController:(UIViewController *_Nonnull)rootViewController
-                                     adId:(NSNumber *_Nonnull)adId
-                          nativeAdOptions:(FLTNativeAdOptions *_Nullable)nativeAdOptions;
+    : FLTBaseAd <FLTAd, FlutterPlatformView, GADNativeAdDelegate,
+                 GADNativeAdLoaderDelegate>
+- (instancetype _Nonnull)
+       initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                request:(FLTAdRequest *_Nonnull)request
+        nativeAdFactory:(NSObject<FLTNativeAdFactory> *_Nonnull)nativeAdFactory
+          customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions
+     rootViewController:(UIViewController *_Nonnull)rootViewController
+                   adId:(NSNumber *_Nonnull)adId
+        nativeAdOptions:(FLTNativeAdOptions *_Nullable)nativeAdOptions
+    nativeTemplateStyle:(FLTNativeTemplateStyle *_Nullable)nativeTemplateStyle;
 - (GADAdLoader *_Nonnull)adLoader;
 @end
 
 @interface FLTRewardItem : NSObject
 @property(readonly) NSNumber *_Nonnull amount;
 @property(readonly) NSString *_Nonnull type;
-- (instancetype _Nonnull)initWithAmount:(NSNumber *_Nonnull)amount type:(NSString *_Nonnull)type;
+- (instancetype _Nonnull)initWithAmount:(NSNumber *_Nonnull)amount
+                                   type:(NSString *_Nonnull)type;
 @end
 
 @interface FLTAdValue : NSObject

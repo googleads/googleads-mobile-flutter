@@ -13,8 +13,12 @@
 // limitations under the License.
 
 #import "FLTAdUtil.h"
+#import "FLTConstants.h"
+@import webview_flutter_wkwebview;
 
 @implementation FLTAdUtil
+
+static NSString *_requestAgent;
 
 + (BOOL)isNull:(id)object {
   return object == nil || [[NSNull null] isEqual:object];
@@ -22,6 +26,33 @@
 
 + (BOOL)isNotNull:(id)object {
   return ![FLTAdUtil isNull:object];
+}
+
++ (NSString *)requestAgent {
+  NSString *newsTemplateString = @"";
+  id newsTemplateVersion = [NSBundle.mainBundle
+      objectForInfoDictionaryKey:@"FLTNewsTemplateVersion"];
+  if ([newsTemplateVersion isKindOfClass:[NSString class]]) {
+    newsTemplateString =
+        [NSString stringWithFormat:@"_News-%@", newsTemplateVersion];
+  }
+
+  NSString *gameTemplateString = @"";
+  id gameTemplateVersion = [NSBundle.mainBundle
+      objectForInfoDictionaryKey:@"FLTGameTemplateVersion"];
+  if ([gameTemplateVersion isKindOfClass:[NSString class]]) {
+    gameTemplateString =
+        [NSString stringWithFormat:@"_Game-%@", gameTemplateVersion];
+  }
+  return [NSString stringWithFormat:@"%@%@%@", FLT_REQUEST_AGENT_VERSIONED,
+                                    newsTemplateString, gameTemplateString];
+}
+
++ (WKWebView *)getWebView:(NSNumber *)webViewId
+    flutterPluginRegistry:(id<FlutterPluginRegistry>)flutterPluginRegistry {
+  return (WKWebView *)[FWFWebViewFlutterWKWebViewExternalAPI
+      webViewForIdentifier:webViewId.longValue
+        withPluginRegistry:flutterPluginRegistry];
 }
 
 @end

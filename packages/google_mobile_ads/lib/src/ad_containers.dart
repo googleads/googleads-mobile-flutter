@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import 'dart:async';
-import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:flutter/foundation.dart';
@@ -21,9 +20,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import 'ad_instance_manager.dart';
 import 'ad_listeners.dart';
+import 'nativetemplates/native_template_style.dart';
 
 /// Error information about why an ad operation failed.
 class AdError {
@@ -65,7 +66,11 @@ class ResponseInfo {
   /// Constructs a [ResponseInfo] with the [responseId] and [mediationAdapterClassName].
   @protected
   const ResponseInfo(
-      {this.responseId, this.mediationAdapterClassName, this.adapterResponses});
+      {this.responseId,
+      this.mediationAdapterClassName,
+      this.adapterResponses,
+      this.loadedAdapterResponseInfo,
+      required this.responseExtras});
 
   /// An identifier for the loaded ad.
   final String? responseId;
@@ -79,11 +84,21 @@ class ResponseInfo {
   /// Can be used to debug the mediation waterfall execution.
   final List<AdapterResponseInfo>? adapterResponses;
 
+  /// The [AdapterResponseInfo] of the adapter that was used to load the ad.
+  ///
+  /// This is null if the ad failed to load.
+  final AdapterResponseInfo? loadedAdapterResponseInfo;
+
+  /// Map of extra information about the ad response.
+  final Map<String, dynamic> responseExtras;
+
   @override
   String toString() {
     return '$runtimeType(responseId: $responseId, '
         'mediationAdapterClassName: $mediationAdapterClassName, '
-        'adapterResponses: $adapterResponses)';
+        'adapterResponses: $adapterResponses, '
+        'loadedAdapterResponseInfo: $loadedAdapterResponseInfo), '
+        'responseExtras: $responseExtras';
   }
 }
 
@@ -95,7 +110,11 @@ class AdapterResponseInfo {
     required this.adapterClassName,
     required this.latencyMillis,
     required this.description,
-    required this.credentials,
+    required this.adUnitMapping,
+    required this.adSourceName,
+    required this.adSourceId,
+    required this.adSourceInstanceName,
+    required this.adSourceInstanceId,
     this.adError,
   });
 
@@ -110,19 +129,42 @@ class AdapterResponseInfo {
   /// A log friendly string version of this object.
   final String description;
 
-  /// A string description of adapter credentials specified in the AdMob or Ad Manager UI.
-  final String credentials;
+  /// Network configuration set on the AdMob UI.
+  final Map<String, String> adUnitMapping;
 
   /// The error that occurred while rendering the ad.
   final AdError? adError;
 
+  /// The ad source name associated with this adapter response.
+  ///
+  /// This is an empty string "" if the ad server did not populate this field.
+  final String adSourceName;
+
+  /// The ad source ID associated with this adapter response.
+  ///
+  /// This is an empty string "" if the ad server did not populate this field.
+  final String adSourceId;
+
+  /// The ad source instance name associated with this adapter response.
+  ///
+  /// This is an empty string "" if the ad server did not populate this field.
+  final String adSourceInstanceName;
+
+  /// The ad source instance id associated with this adapter response.
+  ///
+  /// This is an empty string "" if the ad server did not populate this field.
+  final String adSourceInstanceId;
   @override
   String toString() {
     return '$runtimeType(adapterClassName: $adapterClassName, '
-        'latencyMillis: $latencyMillis), '
+        'latencyMillis: $latencyMillis, '
         'description: $description, '
-        'credentials: $credentials, '
-        'adError: $adError)';
+        'adUnitMapping: $adUnitMapping, '
+        'adError: $adError, '
+        'adSourceName: $adSourceName, '
+        'adSourceId: $adSourceId, '
+        'adSourceInstanceName: $adSourceInstanceName, '
+        'adSourceInstanceId: $adSourceInstanceId)';
   }
 }
 
@@ -143,40 +185,6 @@ class LoadAdError extends AdError {
   }
 }
 
-/// Location parameters that can be configured in an ad request.
-class LocationParams {
-  /// Location parameters that can be configured in an ad request.
-  const LocationParams({
-    required this.accuracy,
-    required this.longitude,
-    required this.latitude,
-    this.time,
-  });
-
-  /// The accuracy in meters.
-  final double accuracy;
-
-  /// The longitude in degrees.
-  final double longitude;
-
-  /// The latitude in degrees.
-  final double latitude;
-
-  /// The UTC time, in milliseconds since epoch (January 1, 1970).
-  ///
-  /// This is required on Android, and ignored on iOS.
-  final int? time;
-
-  @override
-  bool operator ==(Object other) {
-    return other is LocationParams &&
-        accuracy == other.accuracy &&
-        longitude == other.longitude &&
-        latitude == other.latitude &&
-        time == other.time;
-  }
-}
-
 /// Targeting info per the AdMob API.
 ///
 /// This class's properties mirror the native AdRequest API. See for example:
@@ -189,7 +197,6 @@ class AdRequest {
     this.neighboringContentUrls,
     this.nonPersonalizedAds,
     this.httpTimeoutMillis,
-    this.location,
     this.mediationExtrasIdentifier,
     this.extras,
   });
@@ -216,11 +223,6 @@ class AdRequest {
   /// This is only supported in Android. This value is ignored on iOS.
   final int? httpTimeoutMillis;
 
-  /// Location data.
-  ///
-  /// Used for mediation targeting purposes.
-  final LocationParams? location;
-
   /// String identifier used in providing mediation extras.
   ///
   /// Only relevant if you use mediation and need to provide network extras
@@ -240,7 +242,6 @@ class AdRequest {
         nonPersonalizedAds == other.nonPersonalizedAds &&
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
         httpTimeoutMillis == other.httpTimeoutMillis &&
-        location == other.location &&
         mediationExtrasIdentifier == other.mediationExtrasIdentifier &&
         mapEquals<String, String>(extras, other.extras);
   }
@@ -258,7 +259,6 @@ class AdManagerAdRequest extends AdRequest {
     bool? nonPersonalizedAds,
     int? httpTimeoutMillis,
     this.publisherProvidedId,
-    LocationParams? location,
     String? mediationExtrasIdentifier,
     Map<String, String>? extras,
   }) : super(
@@ -267,7 +267,6 @@ class AdManagerAdRequest extends AdRequest {
           neighboringContentUrls: neighboringContentUrls,
           nonPersonalizedAds: nonPersonalizedAds,
           httpTimeoutMillis: httpTimeoutMillis,
-          location: location,
           mediationExtrasIdentifier: mediationExtrasIdentifier,
           extras: extras,
         );
@@ -619,6 +618,16 @@ abstract class AdWithoutView extends Ad {
 /// Must call `load()` first before showing the widget. Otherwise, a
 /// [PlatformException] will be thrown.
 class AdWidget extends StatefulWidget {
+  /// Opt out of the visibility detector workaround.
+  ///
+  /// As a workaround for
+  /// https://github.com/googleads/googleads-mobile-flutter/issues/580,
+  /// we wait for the widget to get displayed once before attaching
+  /// the platform view.
+  ///
+  /// Set this flag to true if you are building with Flutter 3.7.0 or higher.
+  static bool optOutOfVisibilityDetectorWorkaround = false;
+
   /// Default constructor for [AdWidget].
   ///
   /// [ad] must be loaded before this is added to the widget tree.
@@ -634,6 +643,7 @@ class AdWidget extends StatefulWidget {
 class _AdWidgetState extends State<AdWidget> {
   bool _adIdAlreadyMounted = false;
   bool _adLoadNotCalled = false;
+  bool _firstVisibleOccurred = false;
 
   @override
   void initState() {
@@ -679,28 +689,51 @@ class _AdWidgetState extends State<AdWidget> {
       ]);
     }
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return PlatformViewLink(
-        viewType: '${instanceManager.channel.name}/ad_widget',
-        surfaceFactory:
-            (BuildContext context, PlatformViewController controller) {
-          return AndroidViewSurface(
-            controller: controller as AndroidViewController,
-            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
-            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-          );
-        },
-        onCreatePlatformView: (PlatformViewCreationParams params) {
-          return PlatformViewsService.initSurfaceAndroidView(
-            id: params.id,
-            viewType: '${instanceManager.channel.name}/ad_widget',
-            layoutDirection: TextDirection.ltr,
-            creationParams: instanceManager.adIdFor(widget.ad),
-            creationParamsCodec: StandardMessageCodec(),
-          )
-            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
-            ..create();
-        },
-      );
+      // Do not attach the platform view widget until it will actually become
+      // visible. This is a workaround for
+      // https://github.com/googleads/googleads-mobile-flutter/issues/580,
+      // where impressions are erroneously fired due to how platform views are
+      // rendered.
+      if (_firstVisibleOccurred ||
+          AdWidget.optOutOfVisibilityDetectorWorkaround) {
+        return PlatformViewLink(
+          viewType: '${instanceManager.channel.name}/ad_widget',
+          surfaceFactory:
+              (BuildContext context, PlatformViewController controller) {
+            return AndroidViewSurface(
+              controller: controller as AndroidViewController,
+              gestureRecognizers: const <Factory<
+                  OneSequenceGestureRecognizer>>{},
+              hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+            );
+          },
+          onCreatePlatformView: (PlatformViewCreationParams params) {
+            return PlatformViewsService.initSurfaceAndroidView(
+              id: params.id,
+              viewType: '${instanceManager.channel.name}/ad_widget',
+              layoutDirection: TextDirection.ltr,
+              creationParams: instanceManager.adIdFor(widget.ad),
+              creationParamsCodec: StandardMessageCodec(),
+            )
+              ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+              ..create();
+          },
+        );
+      } else {
+        final adId = instanceManager.adIdFor(widget.ad);
+        return VisibilityDetector(
+          key: Key('android-platform-view-$adId'),
+          onVisibilityChanged: (visibilityInfo) {
+            if (!_firstVisibleOccurred &&
+                visibilityInfo.visibleFraction > 0.01) {
+              setState(() {
+                _firstVisibleOccurred = true;
+              });
+            }
+          },
+          child: Container(),
+        );
+      }
     }
 
     return UiKitView(
@@ -820,8 +853,8 @@ class _FluidAdWidgetState extends State<FluidAdWidget> {
     }
 
     return Container(
-      height: max(0, height),
-      width: widget.width,
+      height: max(1, height),
+      width: widget.width == null ? 1 : max(1, widget.width!),
       child: platformView,
     );
   }
@@ -856,17 +889,6 @@ class BannerAd extends AdWithView {
   /// A listener for receiving events in the ad lifecycle.
   @override
   final BannerAdListener listener;
-
-  /// {@template google_mobile_ads.testAdUnitId}
-  /// A platform-specific AdMob test ad unit ID.
-  ///
-  /// This ad unit has been specially configured to always return test ads, and
-  /// developers are encouraged to use it while building and testing their apps.
-  /// {@endtemplate}
-  /// {@macro google_mobile_ads.testAdUnitId}
-  static final String testAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/6300978111'
-      : 'ca-app-pub-3940256099942544/2934735716';
 
   @override
   Future<void> load() async {
@@ -983,40 +1005,44 @@ class AdManagerBannerAd extends AdWithView {
 class NativeAd extends AdWithView {
   /// Creates a [NativeAd].
   ///
-  /// A valid [adUnitId], nonnull [listener], nonnull [request], and nonnull
-  /// [factoryId] is required.
+  /// A valid [adUnitId], nonnull [listener], nonnull [request], and either
+  /// [factoryId] or [nativeTemplateStyle] is required.
   /// Use [nativeAdOptions] to customize the native ad request.
   /// Use [customOptions] to pass data to your native ad factory.
   NativeAd({
     required String adUnitId,
-    required this.factoryId,
+    this.factoryId,
     required this.listener,
     required this.request,
     this.nativeAdOptions,
     this.customOptions,
+    this.nativeTemplateStyle,
   })  : adManagerRequest = null,
         assert(request != null),
+        assert(nativeTemplateStyle != null || factoryId != null),
         super(adUnitId: adUnitId, listener: listener);
 
   /// Creates a [NativeAd] with Ad Manager.
   ///
   /// A valid [adUnitId], nonnull [listener], nonnull [adManagerRequest], and
-  /// nonnull [factoryId] is required.
+  /// either [factoryId] or [nativeTemplateStyle] is required.
   /// Use [nativeAdOptions] to customize the native ad request.
   /// Use [customOptions] to pass data to your native ad factory.
   NativeAd.fromAdManagerRequest({
     required String adUnitId,
-    required this.factoryId,
+    this.factoryId,
     required this.listener,
     required this.adManagerRequest,
     this.nativeAdOptions,
     this.customOptions,
+    this.nativeTemplateStyle,
   })  : request = null,
         assert(adManagerRequest != null),
+        assert(nativeTemplateStyle != null || factoryId != null),
         super(adUnitId: adUnitId, listener: listener);
 
   /// An identifier for the factory that creates the Platform view.
-  final String factoryId;
+  final String? factoryId;
 
   /// A listener for receiving events in the ad lifecycle.
   @override
@@ -1036,12 +1062,12 @@ class NativeAd extends AdWithView {
   /// Options to configure the native ad request.
   final NativeAdOptions? nativeAdOptions;
 
-  /// Check [test ads](https://developers.google.com/admob/android/test-ads) for
-  /// demo ad units that point to specific test creatives for each format.
-  @Deprecated('Use test ads from the developer page while creating the ad.')
-  static final String testAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/2247696110'
-      : 'ca-app-pub-3940256099942544/3986624511';
+  /// Optional [NativeTemplateStyle] for this ad.
+  ///
+  /// If this is non-null, the plugin will render a native ad template
+  /// with corresponding style. Otherwise any registered NativeAdFactory will be
+  /// used to render the native ad.
+  final NativeTemplateStyle? nativeTemplateStyle;
 
   @override
   Future<void> load() async {
@@ -1069,11 +1095,6 @@ class InterstitialAd extends AdWithoutView {
 
   /// Callbacks to be invoked when ads show and dismiss full screen content.
   FullScreenContentCallback<InterstitialAd>? fullScreenContentCallback;
-
-  /// {@macro google_mobile_ads.testAdUnitId}
-  static final String testAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/1033173712'
-      : 'ca-app-pub-3940256099942544/4411468910';
 
   /// Loads an [InterstitialAd] with the given [adUnitId] and [request].
   static Future<void> load({
@@ -1154,7 +1175,6 @@ class RewardedAd extends AdWithoutView {
     required String adUnitId,
     required this.rewardedAdLoadCallback,
     required this.request,
-    this.serverSideVerificationOptions,
   })  : adManagerRequest = null,
         super(adUnitId: adUnitId);
 
@@ -1165,7 +1185,6 @@ class RewardedAd extends AdWithoutView {
     required String adUnitId,
     required this.rewardedAdLoadCallback,
     required this.adManagerRequest,
-    this.serverSideVerificationOptions,
   })  : request = null,
         super(adUnitId: adUnitId);
 
@@ -1178,20 +1197,6 @@ class RewardedAd extends AdWithoutView {
   /// Callbacks for events that occur when attempting to load an ad.
   final RewardedAdLoadCallback rewardedAdLoadCallback;
 
-  /// {@template google_mobile_ads.testAdUnitId}
-  /// A platform-specific AdMob test ad unit ID.
-  ///
-  /// This ad unit has been specially configured to always return test ads, and
-  /// developers are encouraged to use it while building and testing their apps.
-  /// {@endtemplate}
-  /// {@macro google_mobile_ads.testAdUnitId}
-  static final String testAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/5224354917'
-      : 'ca-app-pub-3940256099942544/1712485313';
-
-  /// Optional [ServerSideVerificationOptions].
-  ServerSideVerificationOptions? serverSideVerificationOptions;
-
   /// Callbacks to be invoked when ads show and dismiss full screen content.
   FullScreenContentCallback<RewardedAd>? fullScreenContentCallback;
 
@@ -1203,13 +1208,11 @@ class RewardedAd extends AdWithoutView {
     required String adUnitId,
     required AdRequest request,
     required RewardedAdLoadCallback rewardedAdLoadCallback,
-    ServerSideVerificationOptions? serverSideVerificationOptions,
   }) async {
     RewardedAd rewardedAd = RewardedAd._(
         adUnitId: adUnitId,
         request: request,
-        rewardedAdLoadCallback: rewardedAdLoadCallback,
-        serverSideVerificationOptions: serverSideVerificationOptions);
+        rewardedAdLoadCallback: rewardedAdLoadCallback);
 
     await instanceManager.loadRewardedAd(rewardedAd);
   }
@@ -1219,13 +1222,11 @@ class RewardedAd extends AdWithoutView {
     required String adUnitId,
     required AdManagerAdRequest adManagerRequest,
     required RewardedAdLoadCallback rewardedAdLoadCallback,
-    ServerSideVerificationOptions? serverSideVerificationOptions,
   }) async {
     RewardedAd rewardedAd = RewardedAd._fromAdManagerRequest(
         adUnitId: adUnitId,
         adManagerRequest: adManagerRequest,
-        rewardedAdLoadCallback: rewardedAdLoadCallback,
-        serverSideVerificationOptions: serverSideVerificationOptions);
+        rewardedAdLoadCallback: rewardedAdLoadCallback);
 
     await instanceManager.loadRewardedAd(rewardedAd);
   }
@@ -1238,6 +1239,11 @@ class RewardedAd extends AdWithoutView {
   Future<void> show({required OnUserEarnedRewardCallback onUserEarnedReward}) {
     onUserEarnedRewardCallback = onUserEarnedReward;
     return instanceManager.showAdWithoutView(this);
+  }
+
+  /// Set [ServerSideVerificationOptions] for the ad.
+  Future<void> setServerSideOptions(ServerSideVerificationOptions options) {
+    return instanceManager.setServerSideVerificationOptions(options, this);
   }
 }
 
@@ -1258,7 +1264,6 @@ class RewardedInterstitialAd extends AdWithoutView {
     required String adUnitId,
     required this.rewardedInterstitialAdLoadCallback,
     required this.request,
-    this.serverSideVerificationOptions,
   })  : adManagerRequest = null,
         super(adUnitId: adUnitId);
 
@@ -1269,7 +1274,6 @@ class RewardedInterstitialAd extends AdWithoutView {
     required String adUnitId,
     required this.rewardedInterstitialAdLoadCallback,
     required this.adManagerRequest,
-    this.serverSideVerificationOptions,
   })  : request = null,
         super(adUnitId: adUnitId);
 
@@ -1281,20 +1285,6 @@ class RewardedInterstitialAd extends AdWithoutView {
 
   /// Callbacks for events that occur when attempting to load an ad.
   final RewardedInterstitialAdLoadCallback rewardedInterstitialAdLoadCallback;
-
-  /// {@template google_mobile_ads.testAdUnitId}
-  /// A platform-specific AdMob test ad unit ID.
-  ///
-  /// This ad unit has been specially configured to always return test ads, and
-  /// developers are encouraged to use it while building and testing their apps.
-  /// {@endtemplate}
-  /// {@macro google_mobile_ads.testAdUnitId}
-  static final String testAdUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/5354046379'
-      : 'ca-app-pub-3940256099942544/6978759866';
-
-  /// Optional [ServerSideVerificationOptions].
-  ServerSideVerificationOptions? serverSideVerificationOptions;
 
   /// Callbacks to be invoked when ads show and dismiss full screen content.
   FullScreenContentCallback<RewardedInterstitialAd>? fullScreenContentCallback;
@@ -1308,13 +1298,11 @@ class RewardedInterstitialAd extends AdWithoutView {
     required AdRequest request,
     required RewardedInterstitialAdLoadCallback
         rewardedInterstitialAdLoadCallback,
-    ServerSideVerificationOptions? serverSideVerificationOptions,
   }) async {
     RewardedInterstitialAd rewardedInterstitialAd = RewardedInterstitialAd._(
         adUnitId: adUnitId,
         request: request,
-        rewardedInterstitialAdLoadCallback: rewardedInterstitialAdLoadCallback,
-        serverSideVerificationOptions: serverSideVerificationOptions);
+        rewardedInterstitialAdLoadCallback: rewardedInterstitialAdLoadCallback);
 
     await instanceManager.loadRewardedInterstitialAd(rewardedInterstitialAd);
   }
@@ -1325,15 +1313,13 @@ class RewardedInterstitialAd extends AdWithoutView {
     required AdManagerAdRequest adManagerRequest,
     required RewardedInterstitialAdLoadCallback
         rewardedInterstitialAdLoadCallback,
-    ServerSideVerificationOptions? serverSideVerificationOptions,
   }) async {
     RewardedInterstitialAd rewardedInterstitialAd =
         RewardedInterstitialAd._fromAdManagerRequest(
             adUnitId: adUnitId,
             adManagerRequest: adManagerRequest,
             rewardedInterstitialAdLoadCallback:
-                rewardedInterstitialAdLoadCallback,
-            serverSideVerificationOptions: serverSideVerificationOptions);
+                rewardedInterstitialAdLoadCallback);
 
     await instanceManager.loadRewardedInterstitialAd(rewardedInterstitialAd);
   }
@@ -1346,6 +1332,11 @@ class RewardedInterstitialAd extends AdWithoutView {
   Future<void> show({required OnUserEarnedRewardCallback onUserEarnedReward}) {
     onUserEarnedRewardCallback = onUserEarnedReward;
     return instanceManager.showAdWithoutView(this);
+  }
+
+  /// Set [ServerSideVerificationOptions] for the ad.
+  Future<void> setServerSideOptions(ServerSideVerificationOptions options) {
+    return instanceManager.setServerSideVerificationOptions(options, this);
   }
 }
 

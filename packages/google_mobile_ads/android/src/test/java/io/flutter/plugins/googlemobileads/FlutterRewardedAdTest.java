@@ -28,7 +28,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.app.Activity;
-import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdValue;
@@ -49,8 +48,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatcher;
-import org.mockito.ArgumentMatchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
@@ -74,28 +71,27 @@ public class FlutterRewardedAdTest {
     mockFlutterAdLoader = mock(FlutterAdLoader.class);
   }
 
-  private void setupAdmobMocks(@Nullable FlutterServerSideVerificationOptions options) {
+  private void setupAdmobMocks() {
     FlutterAdRequest mockFlutterAdRequest = mock(FlutterAdRequest.class);
     mockAdRequest = mock(AdRequest.class);
     when(mockFlutterAdRequest.asAdRequest(anyString())).thenReturn(mockAdRequest);
     flutterRewardedAd =
-        new FlutterRewardedAd(
-            1, mockManager, "testId", mockFlutterAdRequest, options, mockFlutterAdLoader);
+        new FlutterRewardedAd(1, mockManager, "testId", mockFlutterAdRequest, mockFlutterAdLoader);
   }
 
-  private void setupAdManagerMocks(@Nullable FlutterServerSideVerificationOptions options) {
+  private void setupAdManagerMocks() {
     FlutterAdManagerAdRequest mockAdManagerFlutterRequest = mock(FlutterAdManagerAdRequest.class);
     mockAdManagerAdRequest = mock(AdManagerAdRequest.class);
     when(mockAdManagerFlutterRequest.asAdManagerAdRequest(anyString()))
         .thenReturn(mockAdManagerAdRequest);
     flutterRewardedAd =
         new FlutterRewardedAd(
-            1, mockManager, "testId", mockAdManagerFlutterRequest, options, mockFlutterAdLoader);
+            1, mockManager, "testId", mockAdManagerFlutterRequest, mockFlutterAdLoader);
   }
 
   @Test
   public void loadAdManagerRewardedAd_failedToLoad() {
-    setupAdManagerMocks(null);
+    setupAdManagerMocks();
     final LoadAdError loadAdError = mock(LoadAdError.class);
     doReturn(1).when(loadAdError).getCode();
     doReturn("2").when(loadAdError).getDomain();
@@ -127,9 +123,7 @@ public class FlutterRewardedAdTest {
 
   @Test
   public void loadAdManagerRewardedAd_showSuccessWithReward() {
-    final FlutterServerSideVerificationOptions options =
-        new FlutterServerSideVerificationOptions("userId", "customData");
-    setupAdManagerMocks(options);
+    setupAdManagerMocks();
 
     final RewardedAd mockAd = mock(RewardedAd.class);
     doAnswer(
@@ -186,6 +180,7 @@ public class FlutterRewardedAdTest {
                 FullScreenContentCallback callback = invocation.getArgument(0);
                 callback.onAdShowedFullScreenContent();
                 callback.onAdImpression();
+                callback.onAdClicked();
                 callback.onAdDismissedFullScreenContent();
                 return null;
               }
@@ -224,19 +219,9 @@ public class FlutterRewardedAdTest {
     verify(mockAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
     verify(mockAd).show(eq(mockManager.getActivity()), any(OnUserEarnedRewardListener.class));
     verify(mockAd).setOnAdMetadataChangedListener(any(OnAdMetadataChangedListener.class));
-    ArgumentMatcher<ServerSideVerificationOptions> serverSideVerificationOptionsArgumentMatcher =
-        new ArgumentMatcher<ServerSideVerificationOptions>() {
-          @Override
-          public boolean matches(ServerSideVerificationOptions argument) {
-            return argument.getCustomData().equals(options.getCustomData())
-                && argument.getUserId().equals(options.getUserId());
-          }
-        };
-    verify(mockAd)
-        .setServerSideVerificationOptions(
-            ArgumentMatchers.argThat(serverSideVerificationOptionsArgumentMatcher));
     verify(mockManager).onAdShowedFullScreenContent(eq(1));
     verify(mockManager).onAdImpression(eq(1));
+    verify(mockManager).onAdClicked(eq(1));
     verify(mockManager).onAdDismissedFullScreenContent(eq(1));
     verify(mockManager).onRewardedAdUserEarnedReward(1, new FlutterRewardItem(5, "$$"));
     verify(mockManager).onAdMetadataChanged(eq(1));
@@ -246,9 +231,7 @@ public class FlutterRewardedAdTest {
 
   @Test
   public void loadRewardedAdWithAdManagerRequest_nullServerSideOptions() {
-    final FlutterServerSideVerificationOptions options =
-        new FlutterServerSideVerificationOptions(null, null);
-    setupAdManagerMocks(options);
+    setupAdManagerMocks();
 
     final FlutterRewardedAd mockFlutterAd = spy(flutterRewardedAd);
     final RewardedAd mockAd = mock(RewardedAd.class);
@@ -293,22 +276,11 @@ public class FlutterRewardedAdTest {
     verify(mockAd).setFullScreenContentCallback(any(FullScreenContentCallback.class));
     verify(mockAd).show(eq(mockManager.getActivity()), any(OnUserEarnedRewardListener.class));
     verify(mockAd).setOnAdMetadataChangedListener(any(OnAdMetadataChangedListener.class));
-    ArgumentMatcher<ServerSideVerificationOptions> serverSideVerificationOptionsArgumentMatcher =
-        new ArgumentMatcher<ServerSideVerificationOptions>() {
-          @Override
-          public boolean matches(ServerSideVerificationOptions argument) {
-            return argument.getCustomData().isEmpty() && argument.getUserId().isEmpty();
-          }
-        };
-    verify(mockAd)
-        .setServerSideVerificationOptions(
-            ArgumentMatchers.argThat(serverSideVerificationOptionsArgumentMatcher));
   }
 
   @Test
   public void loadRewardedAdFailToShow() {
-    setupAdmobMocks(null);
-
+    setupAdmobMocks();
     final RewardedAd mockRewardedAd = mock(RewardedAd.class);
     doAnswer(
             new Answer() {
@@ -350,7 +322,7 @@ public class FlutterRewardedAdTest {
 
   @Test
   public void loadRewardedAd_setImmersiveMode() {
-    setupAdmobMocks(null);
+    setupAdmobMocks();
 
     final RewardedAd mockRewardedAd = mock(RewardedAd.class);
     doAnswer(
@@ -369,5 +341,33 @@ public class FlutterRewardedAdTest {
     flutterRewardedAd.load();
     flutterRewardedAd.setImmersiveMode(true);
     verify(mockRewardedAd).setImmersiveMode(true);
+  }
+
+  @Test
+  public void setServerSideVerificationOptions() {
+    setupAdManagerMocks();
+    final RewardedAd mockAd = mock(RewardedAd.class);
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) throws Throwable {
+                RewardedAdLoadCallback adLoadCallback = invocation.getArgument(2);
+                // Pass back null for ad
+                adLoadCallback.onAdLoaded(mockAd);
+                return null;
+              }
+            })
+        .when(mockFlutterAdLoader)
+        .loadAdManagerRewarded(
+            anyString(), any(AdManagerAdRequest.class), any(RewardedAdLoadCallback.class));
+
+    flutterRewardedAd.load();
+
+    FlutterServerSideVerificationOptions fltSsv = mock(FlutterServerSideVerificationOptions.class);
+    ServerSideVerificationOptions ssv = mock(ServerSideVerificationOptions.class);
+    doReturn(ssv).when(fltSsv).asServerSideVerificationOptions();
+
+    flutterRewardedAd.setServerSideVerificationOptions(fltSsv);
+    verify(mockAd).setServerSideVerificationOptions(eq(ssv));
   }
 }

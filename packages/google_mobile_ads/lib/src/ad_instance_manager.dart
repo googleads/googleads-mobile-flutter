@@ -19,12 +19,21 @@
 import 'dart:async';
 import 'dart:collection';
 
+import 'package:google_mobile_ads/src/ad_inspector_containers.dart';
 import 'package:google_mobile_ads/src/ad_listeners.dart';
 import 'package:google_mobile_ads/src/mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/src/nativetemplates/template_type.dart';
+import 'package:google_mobile_ads/src/webview_controller_util.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
+import 'nativetemplates/native_template_font_style.dart';
+import 'nativetemplates/native_template_style.dart';
+import 'nativetemplates/native_template_text_style.dart';
 import 'request_configuration.dart';
 import 'ad_containers.dart';
 
@@ -36,7 +45,8 @@ AdInstanceManager instanceManager = AdInstanceManager(
 /// Maintains access to loaded [Ad] instances and handles sending/receiving
 /// messages to platform code.
 class AdInstanceManager {
-  AdInstanceManager(String channelName)
+  AdInstanceManager(String channelName,
+      {this.webViewControllerUtil = const WebViewControllerUtil()})
       : channel = MethodChannel(
           channelName,
           StandardMethodCodec(AdMessageCodec()),
@@ -61,6 +71,7 @@ class AdInstanceManager {
 
   /// Invokes load and dispose calls.
   final MethodChannel channel;
+  final WebViewControllerUtil webViewControllerUtil;
 
   void _onAdEvent(Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -81,8 +92,8 @@ class AdInstanceManager {
       case 'onAppEvent':
         _invokeOnAppEvent(ad, eventName, arguments);
         break;
-      case 'onNativeAdClicked':
-        (ad as NativeAd?)?.listener.onNativeAdClicked?.call(ad as NativeAd);
+      case 'adDidRecordClick':
+        _invokeOnAdClicked(ad, eventName);
         break;
       case 'onNativeAdWillPresentScreen': // Fall through
       case 'onBannerWillPresentScreen':
@@ -109,7 +120,7 @@ class AdInstanceManager {
       case 'onNativeAdImpression': // Fall through
         _invokeOnAdImpression(ad, eventName);
         break;
-      case 'onAdDidPresentFullScreenContent':
+      case 'adWillPresentFullScreenContent':
         _invokeOnAdShowedFullScreenContent(ad, eventName);
         break;
       case 'adDidDismissFullScreenContent':
@@ -158,9 +169,6 @@ class AdInstanceManager {
       case 'onAdFailedToLoad':
         _invokeOnAdFailedToLoad(ad, eventName, arguments);
         break;
-      case 'onNativeAdClicked':
-        (ad as NativeAd?)?.listener.onNativeAdClicked?.call(ad as NativeAd);
-        break;
       case 'onAdOpened':
         _invokeOnAdOpened(ad, eventName);
         break;
@@ -191,6 +199,9 @@ class AdInstanceManager {
         break;
       case 'onFluidAdHeightChanged':
         _invokeFluidAdHeightChanged(ad, arguments);
+        break;
+      case 'onAdClicked':
+        _invokeOnAdClicked(ad, eventName);
         break;
       default:
         debugPrint('invalid ad event name: $eventName');
@@ -360,6 +371,26 @@ class AdInstanceManager {
     }
   }
 
+  void _invokeOnAdClicked(Ad ad, String eventName) {
+    if (ad is NativeAd) {
+      ad.listener.onAdClicked?.call(ad);
+    } else if (ad is AdWithView) {
+      ad.listener.onAdClicked?.call(ad);
+    } else if (ad is RewardedAd) {
+      ad.fullScreenContentCallback?.onAdClicked?.call(ad);
+    } else if (ad is InterstitialAd) {
+      ad.fullScreenContentCallback?.onAdClicked?.call(ad);
+    } else if (ad is RewardedInterstitialAd) {
+      ad.fullScreenContentCallback?.onAdClicked?.call(ad);
+    } else if (ad is AdManagerInterstitialAd) {
+      ad.fullScreenContentCallback?.onAdClicked?.call(ad);
+    } else if (ad is AppOpenAd) {
+      ad.fullScreenContentCallback?.onAdClicked?.call(ad);
+    } else {
+      debugPrint('invalid ad: $ad, for event name: $eventName');
+    }
+  }
+
   void _invokePaidEvent(
       Ad ad, String eventName, Map<dynamic, dynamic> arguments) {
     assert(arguments['valueMicros'] != null && arguments['valueMicros'] is num);
@@ -409,14 +440,13 @@ class AdInstanceManager {
     ))!;
   }
 
-  Future<AdSize> getAdSize(Ad ad) async {
-    return (await instanceManager.channel.invokeMethod<AdSize>(
-      'getAdSize',
-      <dynamic, dynamic>{
-        'adId': adIdFor(ad),
-      },
-    ))!;
-  }
+  Future<AdSize?> getAdSize(Ad ad) =>
+      instanceManager.channel.invokeMethod<AdSize>(
+        'getAdSize',
+        <dynamic, dynamic>{
+          'adId': adIdFor(ad),
+        },
+      );
 
   /// Returns null if an invalid [adId] was passed in.
   Ad? adFor(int adId) => _loadedAds[adId];
@@ -493,6 +523,7 @@ class AdInstanceManager {
         'factoryId': ad.factoryId,
         'nativeAdOptions': ad.nativeAdOptions,
         'customOptions': ad.customOptions,
+        'nativeTemplateStyle': ad.nativeTemplateStyle,
       },
     );
   }
@@ -514,7 +545,6 @@ class AdInstanceManager {
         'adUnitId': ad.adUnitId,
         'request': ad.request,
         'adManagerRequest': ad.adManagerRequest,
-        'serverSideVerificationOptions': ad.serverSideVerificationOptions,
       },
     );
   }
@@ -536,7 +566,6 @@ class AdInstanceManager {
         'adUnitId': ad.adUnitId,
         'request': ad.request,
         'adManagerRequest': ad.adManagerRequest,
-        'serverSideVerificationOptions': ad.serverSideVerificationOptions,
       },
     );
   }
@@ -739,6 +768,66 @@ class AdInstanceManager {
     return (await instanceManager.channel
         .invokeMethod<String>('MobileAds#getVersionString'))!;
   }
+
+  /// Set server side verification options on the ad.
+  Future<void> setServerSideVerificationOptions(
+    ServerSideVerificationOptions options,
+    Ad ad,
+  ) {
+    return channel.invokeMethod<void>(
+      'setServerSideVerificationOptions',
+      <dynamic, dynamic>{
+        'adId': adIdFor(ad),
+        'serverSideVerificationOptions': options,
+      },
+    );
+  }
+
+  /// Opens the debug menu.
+  ///
+  /// Returns a Future that completes when the platform side api has been
+  /// invoked.
+  Future<void> openDebugMenu(String adUnitId) async {
+    return channel.invokeMethod<void>(
+      'MobileAds#openDebugMenu',
+      <dynamic, dynamic>{
+        'adUnitId': adUnitId,
+      },
+    );
+  }
+
+  /// Register the `WebViewController` with the GMASDK.
+  Future<void> registerWebView(WebViewController controller) {
+    return channel.invokeMethod<void>(
+      'MobileAds#registerWebView',
+      <dynamic, dynamic>{
+        'webViewId': webViewControllerUtil.webViewIdentifier(controller),
+      },
+    );
+  }
+
+  int getWebViewId(WebViewController controller) {
+    if (WebViewPlatform.instance is AndroidWebViewPlatform) {
+      return (controller.platform as AndroidWebViewController)
+          .webViewIdentifier;
+    } else if (WebViewPlatform.instance is WebKitWebViewPlatform) {
+      return (controller.platform as WebKitWebViewController).webViewIdentifier;
+    } else {
+      throw UnsupportedError('This method only supports Android and iOS.');
+    }
+  }
+
+  /// Send a platform message to open the ad inspector.
+  void openAdInspector(OnAdInspectorClosedListener listener) async {
+    try {
+      await channel.invokeMethod<void>('MobileAds#openAdInspector');
+      listener(null);
+    } on PlatformException catch (e) {
+      var error =
+          AdInspectorError(code: e.code, domain: e.details, message: e.message);
+      listener(error);
+    }
+  }
 }
 
 @visibleForTesting
@@ -762,8 +851,12 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueNativeAdOptions = 144;
   static const int _valueVideoOptions = 145;
   static const int _valueInlineAdaptiveBannerAdSize = 146;
-  static const int _valueLocationParams = 147;
   static const int _valueRequestConfigurationParams = 148;
+  static const int _valueNativeTemplateStyle = 149;
+  static const int _valueNativeTemplateTextStyle = 150;
+  static const int _valueNativeTemplateFontStyle = 151;
+  static const int _valueNativeTemplateType = 152;
+  static const int _valueColor = 153;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -781,7 +874,6 @@ class AdMessageCodec extends StandardMessageCodec {
         writeValue(buffer, value.httpTimeoutMillis);
       }
       writeValue(buffer, value.publisherProvidedId);
-      writeValue(buffer, value.location);
       writeValue(buffer, value.mediationExtrasIdentifier);
       writeValue(buffer, value.extras);
     } else if (value is AdRequest) {
@@ -793,7 +885,6 @@ class AdMessageCodec extends StandardMessageCodec {
       if (defaultTargetPlatform == TargetPlatform.android) {
         writeValue(buffer, value.httpTimeoutMillis);
       }
-      writeValue(buffer, value.location);
       writeValue(buffer, value.mediationExtrasIdentifier);
       writeValue(buffer, value.extras);
     } else if (value is RewardItem) {
@@ -805,13 +896,19 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.responseId);
       writeValue(buffer, value.mediationAdapterClassName);
       writeValue(buffer, value.adapterResponses);
+      writeValue(buffer, value.loadedAdapterResponseInfo);
+      writeValue(buffer, value.responseExtras);
     } else if (value is AdapterResponseInfo) {
       buffer.putUint8(_valueAdapterResponseInfo);
       writeValue(buffer, value.adapterClassName);
       writeValue(buffer, value.latencyMillis);
       writeValue(buffer, value.description);
-      writeValue(buffer, value.credentials);
+      writeValue(buffer, value.adUnitMapping);
       writeValue(buffer, value.adError);
+      writeValue(buffer, value.adSourceName);
+      writeValue(buffer, value.adSourceId);
+      writeValue(buffer, value.adSourceInstanceName);
+      writeValue(buffer, value.adSourceInstanceId);
     } else if (value is LoadAdError) {
       buffer.putUint8(_valueLoadAdError);
       writeValue(buffer, value.code);
@@ -857,14 +954,35 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.tagForChildDirectedTreatment);
       writeValue(buffer, value.tagForUnderAgeOfConsent);
       writeValue(buffer, value.testDeviceIds);
-    } else if (value is LocationParams) {
-      buffer.putUint8(_valueLocationParams);
-      writeValue(buffer, value.accuracy);
-      writeValue(buffer, value.longitude);
-      writeValue(buffer, value.latitude);
-      if (defaultTargetPlatform == TargetPlatform.android) {
-        writeValue(buffer, value.time);
+    } else if (value is NativeTemplateStyle) {
+      buffer.putUint8(_valueNativeTemplateStyle);
+      writeValue(buffer, value.templateType);
+      writeValue(buffer, value.mainBackgroundColor);
+      writeValue(buffer, value.callToActionTextStyle);
+      writeValue(buffer, value.primaryTextStyle);
+      writeValue(buffer, value.secondaryTextStyle);
+      writeValue(buffer, value.tertiaryTextStyle);
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        writeValue(buffer, value.cornerRadius);
       }
+    } else if (value is TemplateType) {
+      buffer.putUint8(_valueNativeTemplateType);
+      writeValue(buffer, value.index);
+    } else if (value is NativeTemplateTextStyle) {
+      buffer.putUint8(_valueNativeTemplateTextStyle);
+      writeValue(buffer, value.textColor);
+      writeValue(buffer, value.backgroundColor);
+      writeValue(buffer, value.style);
+      writeValue(buffer, value.size);
+    } else if (value is Color) {
+      buffer.putUint8(_valueColor);
+      writeValue(buffer, value.alpha);
+      writeValue(buffer, value.red);
+      writeValue(buffer, value.green);
+      writeValue(buffer, value.blue);
+    } else if (value is NativeTemplateFontStyle) {
+      buffer.putUint8(_valueNativeTemplateFontStyle);
+      writeValue(buffer, value.index);
     } else {
       super.writeValue(buffer, value);
     }
@@ -933,7 +1051,6 @@ class AdMessageCodec extends StandardMessageCodec {
           httpTimeoutMillis: (defaultTargetPlatform == TargetPlatform.android)
               ? readValueOfType(buffer.getUint8(), buffer)
               : null,
-          location: readValueOfType(buffer.getUint8(), buffer),
           mediationExtrasIdentifier: readValueOfType(buffer.getUint8(), buffer),
           extras: readValueOfType(buffer.getUint8(), buffer)
               ?.cast<String, String>(),
@@ -949,14 +1066,22 @@ class AdMessageCodec extends StandardMessageCodec {
           mediationAdapterClassName: readValueOfType(buffer.getUint8(), buffer),
           adapterResponses: readValueOfType(buffer.getUint8(), buffer)
               ?.cast<AdapterResponseInfo>(),
+          loadedAdapterResponseInfo: readValueOfType(buffer.getUint8(), buffer),
+          responseExtras: _deepCastStringKeyDynamicValueMap(
+              readValueOfType(buffer.getUint8(), buffer)),
         );
       case _valueAdapterResponseInfo:
         return AdapterResponseInfo(
-            adapterClassName: readValueOfType(buffer.getUint8(), buffer),
+            adapterClassName: _safeReadString(buffer),
             latencyMillis: readValueOfType(buffer.getUint8(), buffer),
-            description: readValueOfType(buffer.getUint8(), buffer),
-            credentials: readValueOfType(buffer.getUint8(), buffer),
-            adError: readValueOfType(buffer.getUint8(), buffer));
+            description: _safeReadString(buffer),
+            adUnitMapping:
+                _deepCastStringMap(readValueOfType(buffer.getUint8(), buffer)),
+            adError: readValueOfType(buffer.getUint8(), buffer),
+            adSourceName: _safeReadString(buffer),
+            adSourceId: _safeReadString(buffer),
+            adSourceInstanceName: _safeReadString(buffer),
+            adSourceInstanceId: _safeReadString(buffer));
       case _valueLoadAdError:
         return LoadAdError(
           readValueOfType(buffer.getUint8(), buffer),
@@ -985,7 +1110,6 @@ class AdMessageCodec extends StandardMessageCodec {
               ? readValueOfType(buffer.getUint8(), buffer)
               : null,
           publisherProvidedId: readValueOfType(buffer.getUint8(), buffer),
-          location: readValueOfType(buffer.getUint8(), buffer),
           mediationExtrasIdentifier: readValueOfType(buffer.getUint8(), buffer),
           extras: readValueOfType(buffer.getUint8(), buffer)
               ?.cast<String, String>(),
@@ -1048,15 +1172,36 @@ class AdMessageCodec extends StandardMessageCodec {
           testDeviceIds:
               readValueOfType(buffer.getUint8(), buffer).cast<String>(),
         );
-      case _valueLocationParams:
-        return LocationParams(
-          accuracy: readValueOfType(buffer.getUint8(), buffer),
-          longitude: readValueOfType(buffer.getUint8(), buffer),
-          latitude: readValueOfType(buffer.getUint8(), buffer),
-          time: (defaultTargetPlatform == TargetPlatform.android)
+      case _valueNativeTemplateStyle:
+        return NativeTemplateStyle(
+          templateType: readValueOfType(buffer.getUint8(), buffer),
+          mainBackgroundColor: readValueOfType(buffer.getUint8(), buffer),
+          callToActionTextStyle: readValueOfType(buffer.getUint8(), buffer),
+          primaryTextStyle: readValueOfType(buffer.getUint8(), buffer),
+          secondaryTextStyle: readValueOfType(buffer.getUint8(), buffer),
+          tertiaryTextStyle: readValueOfType(buffer.getUint8(), buffer),
+          cornerRadius: defaultTargetPlatform == TargetPlatform.iOS
               ? readValueOfType(buffer.getUint8(), buffer)
               : null,
         );
+      case _valueNativeTemplateType:
+        return TemplateType.values[readValueOfType(buffer.getUint8(), buffer)];
+      case _valueNativeTemplateTextStyle:
+        return NativeTemplateTextStyle(
+          textColor: readValueOfType(buffer.getUint8(), buffer),
+          backgroundColor: readValueOfType(buffer.getUint8(), buffer),
+          style: readValueOfType(buffer.getUint8(), buffer),
+          size: readValueOfType(buffer.getUint8(), buffer),
+        );
+      case _valueColor:
+        return Color.fromARGB(
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer));
+      case _valueNativeTemplateFontStyle:
+        return NativeTemplateFontStyle
+            .values[readValueOfType(buffer.getUint8(), buffer)];
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -1070,6 +1215,34 @@ class AdMessageCodec extends StandardMessageCodec {
         value?.cast<T>(),
       ),
     );
+  }
+
+  Map<String, String> _deepCastStringMap(Map<dynamic, dynamic>? map) {
+    if (map == null) return {};
+    return map.map<String, String>(
+      (dynamic key, dynamic value) => MapEntry<String, String>(
+        key,
+        value,
+      ),
+    );
+  }
+
+  Map<String, dynamic> _deepCastStringKeyDynamicValueMap(
+      Map<dynamic, dynamic>? map) {
+    if (map == null) return {};
+    return map.map<String, dynamic>(
+      (dynamic key, dynamic value) => MapEntry<String, dynamic>(
+        key,
+        value,
+      ),
+    );
+  }
+
+  /// Reads the next value as a non-nullable string.
+  ///
+  /// Returns '' if the next value is null.
+  String _safeReadString(ReadBuffer buffer) {
+    return readValueOfType(buffer.getUint8(), buffer) ?? '';
   }
 
   void writeAdSize(WriteBuffer buffer, AdSize value) {

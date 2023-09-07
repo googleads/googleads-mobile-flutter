@@ -26,7 +26,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import android.content.Context;
-import android.location.Location;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.RequestConfiguration;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
@@ -34,6 +35,10 @@ import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.AdSizeFactory;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.AnchoredAdaptiveBannerAdSize;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.InlineAdaptiveBannerAdSize;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateFontStyle;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateTextStyle;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateType;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,11 +55,14 @@ import org.robolectric.RobolectricTestRunner;
 public class AdMessageCodecTest {
   AdMessageCodec codec;
   AdSizeFactory mockAdSizeFactory;
+  FlutterRequestAgentProvider mockFlutterRequestAgentProvider;
 
   @Before
   public void setup() {
     mockAdSizeFactory = mock(AdSizeFactory.class);
-    codec = new AdMessageCodec(mock(Context.class), mockAdSizeFactory);
+    mockFlutterRequestAgentProvider = mock(FlutterRequestAgentProvider.class);
+    codec =
+        new AdMessageCodec(mock(Context.class), mockAdSizeFactory, mockFlutterRequestAgentProvider);
   }
 
   @Test
@@ -234,6 +242,105 @@ public class AdMessageCodecTest {
   }
 
   @Test
+  public void color() {
+    ColorDrawable colorDrawable = new ColorDrawable(Color.argb(3, 2, 3, 4));
+    ByteBuffer data = codec.encodeMessage(colorDrawable);
+    ColorDrawable result = (ColorDrawable) codec.decodeMessage((ByteBuffer) data.position(0));
+    assertEquals(result.getColor(), colorDrawable.getColor());
+    assertEquals(result.getAlpha(), colorDrawable.getAlpha());
+  }
+
+  @Test
+  public void nativeTemplateType() {
+    for (FlutterNativeTemplateType type : FlutterNativeTemplateType.values()) {
+      ByteBuffer data = codec.encodeMessage(type);
+      FlutterNativeTemplateType result =
+          (FlutterNativeTemplateType) codec.decodeMessage((ByteBuffer) data.position(0));
+      assertEquals(result, type);
+    }
+  }
+
+  @Test
+  public void nativeTemplateFontStyle() {
+    for (FlutterNativeTemplateFontStyle style : FlutterNativeTemplateFontStyle.values()) {
+      ByteBuffer data = codec.encodeMessage(style);
+      FlutterNativeTemplateFontStyle result =
+          (FlutterNativeTemplateFontStyle) codec.decodeMessage((ByteBuffer) data.position(0));
+      assertEquals(result, style);
+    }
+  }
+
+  @Test
+  public void nativeTemplateTextStyle() {
+    FlutterNativeTemplateTextStyle style =
+        new FlutterNativeTemplateTextStyle(
+            new ColorDrawable(Color.RED),
+            new ColorDrawable(Color.BLUE),
+            FlutterNativeTemplateFontStyle.BOLD,
+            12.);
+    ByteBuffer data = codec.encodeMessage(style);
+    FlutterNativeTemplateTextStyle result =
+        (FlutterNativeTemplateTextStyle) codec.decodeMessage((ByteBuffer) data.position(0));
+    assertEquals(result, style);
+  }
+
+  @Test
+  public void nativeTemplateTextStyle_nullProperties() {
+    FlutterNativeTemplateTextStyle style =
+        new FlutterNativeTemplateTextStyle(null, null, null, null);
+    ByteBuffer data = codec.encodeMessage(style);
+    FlutterNativeTemplateTextStyle result =
+        (FlutterNativeTemplateTextStyle) codec.decodeMessage((ByteBuffer) data.position(0));
+    assertEquals(style, result);
+  }
+
+  @Test
+  public void nativeTemplateStyle_nullProperties() {
+    FlutterNativeTemplateStyle style =
+        new FlutterNativeTemplateStyle(
+            FlutterNativeTemplateType.MEDIUM, null, null, null, null, null);
+
+    ByteBuffer data = codec.encodeMessage(style);
+    FlutterNativeTemplateStyle result =
+        (FlutterNativeTemplateStyle) codec.decodeMessage((ByteBuffer) data.position(0));
+
+    assertEquals(result, style);
+  }
+
+  @Test
+  public void nativeTemplateStyle_definedProperties() {
+    FlutterNativeTemplateTextStyle ctaStyle =
+        new FlutterNativeTemplateTextStyle(null, null, null, null);
+    FlutterNativeTemplateTextStyle primaryStyle =
+        new FlutterNativeTemplateTextStyle(
+            new ColorDrawable(Color.YELLOW),
+            new ColorDrawable(Color.RED),
+            FlutterNativeTemplateFontStyle.ITALIC,
+            24.);
+    FlutterNativeTemplateTextStyle secondaryStyle =
+        new FlutterNativeTemplateTextStyle(
+            new ColorDrawable(Color.BLUE), new ColorDrawable(Color.GREEN), null, 24.);
+    FlutterNativeTemplateTextStyle tertiaryStyle =
+        new FlutterNativeTemplateTextStyle(
+            new ColorDrawable(Color.YELLOW), null, FlutterNativeTemplateFontStyle.ITALIC, null);
+
+    FlutterNativeTemplateStyle style =
+        new FlutterNativeTemplateStyle(
+            FlutterNativeTemplateType.MEDIUM,
+            new ColorDrawable(Color.BLACK),
+            ctaStyle,
+            primaryStyle,
+            secondaryStyle,
+            tertiaryStyle);
+
+    ByteBuffer data = codec.encodeMessage(style);
+    FlutterNativeTemplateStyle result =
+        (FlutterNativeTemplateStyle) codec.decodeMessage((ByteBuffer) data.position(0));
+
+    assertEquals(result, style);
+  }
+
+  @Test
   public void videoOptionsNull() {
     final ByteBuffer data = codec.encodeMessage(new FlutterVideoOptions(null, null, null));
 
@@ -263,34 +370,7 @@ public class AdMessageCodecTest {
   }
 
   @Test
-  public void testEncodeLocationWithoutTime() {
-    Location location = new Location("");
-    location.setAccuracy(12345f);
-    location.setLongitude(1.0);
-    location.setLatitude(5.0);
-
-    FlutterAdRequest request = new FlutterAdRequest.Builder().setLocation(location).build();
-    ByteBuffer message = codec.encodeMessage(request);
-    FlutterAdRequest decodedRequest =
-        (FlutterAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
-    assertEquals(request, decodedRequest);
-
-    FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
-    builder.setLocation(location);
-    FlutterAdManagerAdRequest gamRequest = builder.build();
-    message = codec.encodeMessage(gamRequest);
-    final FlutterAdManagerAdRequest decodedGAMRequest =
-        (FlutterAdManagerAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
-    assertEquals(decodedGAMRequest, gamRequest);
-  }
-
-  @Test
   public void encodeFlutterAdRequest() {
-    Location location = new Location("");
-    location.setAccuracy(12345f);
-    location.setLongitude(1.0);
-    location.setLatitude(5.0);
-    location.setTime(54321);
     Map<String, String> extras = Collections.singletonMap("key", "value");
     FlutterAdRequest adRequest =
         new FlutterAdRequest.Builder()
@@ -299,7 +379,6 @@ public class AdMessageCodecTest {
             .setNonPersonalizedAds(false)
             .setNeighboringContentUrls(Arrays.asList("example.com", "test.com"))
             .setHttpTimeoutMillis(1000)
-            .setLocation(location)
             .setMediationNetworkExtrasIdentifier("identifier")
             .setAdMobExtras(extras)
             .build();
@@ -312,11 +391,7 @@ public class AdMessageCodecTest {
 
   @Test
   public void encodeFlutterAdManagerAdRequest() {
-    Location location = new Location("");
-    location.setAccuracy(12345f);
-    location.setLongitude(1.0);
-    location.setLatitude(5.0);
-    location.setTime(54321);
+    doReturn("mock-request-agent").when(mockFlutterRequestAgentProvider).getRequestAgent();
     FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
     builder.setKeywords(Arrays.asList("1", "2", "3"));
     builder.setContentUrl("contentUrl");
@@ -325,15 +400,16 @@ public class AdMessageCodecTest {
         Collections.singletonMap("cherry", Collections.singletonList("pie")));
     builder.setNonPersonalizedAds(true);
     builder.setPublisherProvidedId("pub-provided-id");
-    builder.setLocation(location);
     builder.setMediationNetworkExtrasIdentifier("identifier");
     builder.setAdMobExtras(Collections.singletonMap("key", "value"));
 
     FlutterAdManagerAdRequest flutterAdManagerAdRequest = builder.build();
 
     final ByteBuffer message = codec.encodeMessage(flutterAdManagerAdRequest);
-
-    assertEquals(codec.decodeMessage((ByteBuffer) message.position(0)), flutterAdManagerAdRequest);
+    FlutterAdManagerAdRequest decodedAdRequest =
+        (FlutterAdManagerAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(decodedAdRequest, flutterAdManagerAdRequest);
+    assertEquals(decodedAdRequest.getRequestAgent(), "mock-request-agent");
   }
 
   @Test
@@ -354,12 +430,39 @@ public class AdMessageCodecTest {
   }
 
   @Test
-  public void encodeFlutterLoadAdError() {
+  public void encodeFlutterResponseInfo() {
     List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
+    Map<String, String> adUnitMapping = Collections.singletonMap("key", "value");
     adapterResponseInfos.add(
-        new FlutterAdapterResponseInfo("adapter-class", 9999, "description", "credentials", null));
+        new FlutterAdapterResponseInfo(
+            "adapter-class",
+            9999,
+            "description",
+            adUnitMapping,
+            null,
+            "adSourceName",
+            "adSourceId",
+            "adSourceInstanceName",
+            "adSourceInstanceId"));
+    FlutterAdapterResponseInfo loadedAdapterResponseInfo =
+        new FlutterAdapterResponseInfo(
+            "loaded-adapter-class",
+            1234,
+            "description",
+            adUnitMapping,
+            null,
+            "adSourceName",
+            "adSourceId",
+            "adSourceInstanceName",
+            "adSourceInstanceId");
+    Map<String, String> responseExtras = Collections.singletonMap("key", "value");
     FlutterResponseInfo info =
-        new FlutterResponseInfo("responseId", "className", adapterResponseInfos);
+        new FlutterResponseInfo(
+            "responseId",
+            "className",
+            adapterResponseInfos,
+            loadedAdapterResponseInfo,
+            responseExtras);
     final ByteBuffer message =
         codec.encodeMessage(new FlutterBannerAd.FlutterLoadAdError(1, "domain", "message", info));
 

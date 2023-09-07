@@ -17,7 +17,11 @@ package io.flutter.plugins.googlemobileads;
 /** Constants used in the plugin. */
 public class Constants {
   /** Version request agent. Should be bumped alongside plugin versions. */
-  public static final String REQUEST_AGENT_PREFIX_VERSIONED = "Flutter-GMA-1.0.1";
+  public static final String REQUEST_AGENT_PREFIX_VERSIONED = "Flutter-GMA-3.0.0";
+  /** Prefix for news template */
+  public static final String REQUEST_AGENT_NEWS_TEMPLATE_PREFIX = "News";
+
+  public static final String REQUEST_AGENT_GAME_TEMPLATE_PREFIX = "Game";
 
   static final String ERROR_CODE_UNEXPECTED_AD_TYPE = "unexpected_ad_type";
 }

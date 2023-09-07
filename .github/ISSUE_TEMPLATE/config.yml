@@ -1,11 +1,11 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
-  - name: I want help writing my application
-    url: https://stackoverflow.com/tags/flutter
-    about: Ask your questions about how to achieve a particular effect in Flutter or get help with using a particular API.
-  - name: I have a problem with the Google Mobile Ads SDK.
-    url: https://support.google.com/admob/gethelp
-    about: I need help with an issue with Google Mobile Ads that doesn't relate specifically to this plugin or Flutter.
-  - name: I have a problem with the Google AdManager.
-    url: https://support.google.com/admanager/answer/3059042#contact=1
-    about: I need help with an issue with Google AdManager that doesn't relate specifically to this plugin or Flutter.
+  - name: Google Mobile Ads Flutter Plugin Support
+    url: https://groups.google.com/forum/#!categories/google-admob-ads-sdk
+    about: Please file non-Flutter plugin issues like account- or project-specific issues at the official Google Mobile Ads SDK developer support channel
+  - name: AdMob Support
+    url: https://support.google.com/admob/?hl=en#topic=7383088
+    about: For assistance with your AdMob account setup and ads serving.
+  - name: Google Mobile Ads Flutter Documentation
+    url: https://developers.google.com/admob/flutter/quick-start
+    about: The place to get started with Google Mobile Ads Flutter plugin.

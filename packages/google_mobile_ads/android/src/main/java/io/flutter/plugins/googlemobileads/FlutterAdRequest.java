@@ -14,12 +14,13 @@
 
 package io.flutter.plugins.googlemobileads;
 
-import android.location.Location;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.mediation.MediationExtrasReceiver;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,10 +33,10 @@ class FlutterAdRequest {
   @Nullable private final Boolean nonPersonalizedAds;
   @Nullable private final List<String> neighboringContentUrls;
   @Nullable private final Integer httpTimeoutMillis;
-  @Nullable private final Location location;
   @Nullable private final String mediationExtrasIdentifier;
   @Nullable private final MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
   @Nullable private final Map<String, String> adMobExtras;
+  @NonNull private final String requestAgent;
 
   protected static class Builder {
     @Nullable private List<String> keywords;
@@ -43,52 +44,61 @@ class FlutterAdRequest {
     @Nullable private Boolean nonPersonalizedAds;
     @Nullable private List<String> neighboringContentUrls;
     @Nullable private Integer httpTimeoutMillis;
-    @Nullable private Location location;
     @Nullable private String mediationExtrasIdentifier;
     @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
     @Nullable private Map<String, String> adMobExtras;
+    @NonNull private String requestAgent;
 
+    @CanIgnoreReturnValue
+    Builder setRequestAgent(String requestAgent) {
+      this.requestAgent = requestAgent;
+      return this;
+    }
+
+    @CanIgnoreReturnValue
     Builder setKeywords(@Nullable List<String> keywords) {
       this.keywords = keywords;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setContentUrl(@Nullable String contentUrl) {
       this.contentUrl = contentUrl;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setNonPersonalizedAds(@Nullable Boolean nonPersonalizedAds) {
       this.nonPersonalizedAds = nonPersonalizedAds;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setNeighboringContentUrls(@Nullable List<String> neighboringContentUrls) {
       this.neighboringContentUrls = neighboringContentUrls;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setHttpTimeoutMillis(@Nullable Integer httpTimeoutMillis) {
       this.httpTimeoutMillis = httpTimeoutMillis;
       return this;
     }
 
-    Builder setLocation(@Nullable Location location) {
-      this.location = location;
-      return this;
-    }
-
+    @CanIgnoreReturnValue
     Builder setMediationNetworkExtrasIdentifier(@Nullable String mediationExtrasIdentifier) {
       this.mediationExtrasIdentifier = mediationExtrasIdentifier;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setMediationNetworkExtrasProvider(
         @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
       this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
       return this;
     }
 
+    @CanIgnoreReturnValue
     Builder setAdMobExtras(@Nullable Map<String, String> adMobExtras) {
       this.adMobExtras = adMobExtras;
       return this;
@@ -120,11 +130,6 @@ class FlutterAdRequest {
     }
 
     @Nullable
-    protected Location getLocation() {
-      return location;
-    }
-
-    @Nullable
     protected String getMediationExtrasIdentifier() {
       return mediationExtrasIdentifier;
     }
@@ -139,6 +144,11 @@ class FlutterAdRequest {
       return adMobExtras;
     }
 
+    @NonNull
+    protected String getRequestAgent() {
+      return requestAgent;
+    }
+
     FlutterAdRequest build() {
       return new FlutterAdRequest(
           keywords,
@@ -146,10 +156,10 @@ class FlutterAdRequest {
           nonPersonalizedAds,
           neighboringContentUrls,
           httpTimeoutMillis,
-          location,
           mediationExtrasIdentifier,
           mediationNetworkExtrasProvider,
-          adMobExtras);
+          adMobExtras,
+          requestAgent);
     }
   }
 
@@ -159,19 +169,19 @@ class FlutterAdRequest {
       @Nullable Boolean nonPersonalizedAds,
       @Nullable List<String> neighboringContentUrls,
       @Nullable Integer httpTimeoutMillis,
-      @Nullable Location location,
       @Nullable String mediationExtrasIdentifier,
       @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider,
-      @Nullable Map<String, String> adMobExtras) {
+      @Nullable Map<String, String> adMobExtras,
+      String requestAgent) {
     this.keywords = keywords;
     this.contentUrl = contentUrl;
     this.nonPersonalizedAds = nonPersonalizedAds;
     this.neighboringContentUrls = neighboringContentUrls;
     this.httpTimeoutMillis = httpTimeoutMillis;
-    this.location = location;
     this.mediationExtrasIdentifier = mediationExtrasIdentifier;
     this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
     this.adMobExtras = adMobExtras;
+    this.requestAgent = requestAgent;
   }
 
   /** Adds network extras to the ad request builder, if any. */
@@ -222,10 +232,7 @@ class FlutterAdRequest {
     if (httpTimeoutMillis != null) {
       builder.setHttpTimeoutMillis(httpTimeoutMillis);
     }
-    if (location != null) {
-      builder.setLocation(location);
-    }
-    builder.setRequestAgent(Constants.REQUEST_AGENT_PREFIX_VERSIONED);
+    builder.setRequestAgent(requestAgent);
     return builder;
   }
 
@@ -259,11 +266,6 @@ class FlutterAdRequest {
   }
 
   @Nullable
-  protected Location getLocation() {
-    return location;
-  }
-
-  @Nullable
   protected String getMediationExtrasIdentifier() {
     return mediationExtrasIdentifier;
   }
@@ -271,6 +273,11 @@ class FlutterAdRequest {
   @Nullable
   protected Map<String, String> getAdMobExtras() {
     return adMobExtras;
+  }
+
+  @NonNull
+  protected String getRequestAgent() {
+    return requestAgent;
   }
 
   @Override
@@ -287,13 +294,6 @@ class FlutterAdRequest {
         && Objects.equals(nonPersonalizedAds, request.nonPersonalizedAds)
         && Objects.equals(neighboringContentUrls, request.neighboringContentUrls)
         && Objects.equals(httpTimeoutMillis, request.httpTimeoutMillis)
-        && (location == null) == (request.location == null)
-        && (location == null
-            // We only care about these properties which are guaranteed by the Location API.
-            || (location.getAccuracy() == request.location.getAccuracy()
-                && location.getLongitude() == request.location.getLongitude()
-                && location.getLatitude() == request.location.getLatitude()
-                && location.getTime() == request.location.getTime()))
         && Objects.equals(mediationExtrasIdentifier, request.mediationExtrasIdentifier)
         && Objects.equals(mediationNetworkExtrasProvider, request.mediationNetworkExtrasProvider)
         && Objects.equals(adMobExtras, request.adMobExtras);
@@ -307,7 +307,6 @@ class FlutterAdRequest {
         nonPersonalizedAds,
         neighboringContentUrls,
         httpTimeoutMillis,
-        location,
         mediationExtrasIdentifier,
         mediationNetworkExtrasProvider);
   }

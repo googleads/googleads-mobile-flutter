@@ -15,10 +15,14 @@
 #import "FLTGoogleMobileAdsPlugin.h"
 #import "FLTAdUtil.h"
 #import "FLTAppStateNotifier.h"
+#import "FLTNSString.h"
+#import "UserMessagingPlatform/FLTUserMessagingPlatformManager.h"
+@import webview_flutter_wkwebview;
 
 @interface FLTGoogleMobileAdsPlugin ()
 @property(nonatomic, retain) FlutterMethodChannel *channel;
-@property NSMutableDictionary<NSString *, id<FLTNativeAdFactory>> *nativeAdFactories;
+@property NSMutableDictionary<NSString *, id<FLTNativeAdFactory>>
+    *nativeAdFactories;
 @end
 
 /// Initialization handler for GMASDK. Invokes result at most once.
@@ -57,29 +61,35 @@
   id<FLTMediationNetworkExtrasProvider> _mediationNetworkExtrasProvider;
   FLTGoogleMobileAdsReaderWriter *_readerWriter;
   FLTAppStateNotifier *_appStateNotifier;
+  FLTUserMessagingPlatformManager *_userMessagingPlatformManager;
+  __weak FlutterAppDelegate *_appDelegate;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FLTGoogleMobileAdsPlugin *instance =
-      [[FLTGoogleMobileAdsPlugin alloc] initWithBinaryMessenger:registrar.messenger];
+  FLTGoogleMobileAdsPlugin *instance = [[FLTGoogleMobileAdsPlugin alloc]
+      initWithBinaryMessenger:registrar.messenger];
   [registrar publish:instance];
 
-  FLTGoogleMobileAdsReaderWriter *readerWriter = [[FLTGoogleMobileAdsReaderWriter alloc] init];
+  FLTGoogleMobileAdsReaderWriter *readerWriter =
+      [[FLTGoogleMobileAdsReaderWriter alloc] init];
   instance->_readerWriter = readerWriter;
 
   NSObject<FlutterMethodCodec> *codec =
       [FlutterStandardMethodCodec codecWithReaderWriter:readerWriter];
 
-  FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/google_mobile_ads"
-                                  binaryMessenger:[registrar messenger]
-                                            codec:codec];
+  FlutterMethodChannel *channel = [FlutterMethodChannel
+      methodChannelWithName:@"plugins.flutter.io/google_mobile_ads"
+            binaryMessenger:[registrar messenger]
+                      codec:codec];
   [registrar addMethodCallDelegate:instance channel:channel];
 
   FLTNewGoogleMobileAdsViewFactory *viewFactory =
-      [[FLTNewGoogleMobileAdsViewFactory alloc] initWithManager:instance->_manager];
-  [registrar registerViewFactory:viewFactory
-                          withId:@"plugins.flutter.io/google_mobile_ads/ad_widget"];
+      [[FLTNewGoogleMobileAdsViewFactory alloc]
+          initWithManager:instance->_manager];
+  [registrar
+      registerViewFactory:viewFactory
+                   withId:@"plugins.flutter.io/google_mobile_ads/ad_widget"];
+  [registrar addApplicationDelegate:instance];
 }
 
 - (instancetype)init {
@@ -87,42 +97,62 @@
   return self;
 }
 
-- (instancetype)initWithBinaryMessenger:(id<FlutterBinaryMessenger>)binaryMessenger {
+- (BOOL)application:(UIApplication *)application
+    didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  _appDelegate = (FlutterAppDelegate *)application.delegate;
+  return YES;
+}
+
+- (instancetype)initWithBinaryMessenger:
+    (id<FlutterBinaryMessenger>)binaryMessenger {
   self = [self init];
   if (self) {
     _nativeAdFactories = [NSMutableDictionary dictionary];
-    _manager = [[FLTAdInstanceManager alloc] initWithBinaryMessenger:binaryMessenger];
-    _appStateNotifier = [[FLTAppStateNotifier alloc] initWithBinaryMessenger:binaryMessenger];
+    _manager =
+        [[FLTAdInstanceManager alloc] initWithBinaryMessenger:binaryMessenger];
+    _appStateNotifier =
+        [[FLTAppStateNotifier alloc] initWithBinaryMessenger:binaryMessenger];
+    _userMessagingPlatformManager = [[FLTUserMessagingPlatformManager alloc]
+        initWithBinaryMessenger:binaryMessenger];
   }
 
   return self;
 }
 
 + (BOOL)registerMediationNetworkExtrasProvider:
-            (id<FLTMediationNetworkExtrasProvider> _Nonnull)mediationNetworkExtrasProvider
-                                      registry:(id<FlutterPluginRegistry> _Nonnull)registry {
-  NSString *pluginClassName = NSStringFromClass([FLTGoogleMobileAdsPlugin class]);
-  FLTGoogleMobileAdsPlugin *adMobPlugin =
-      (FLTGoogleMobileAdsPlugin *)[registry valuePublishedByPlugin:pluginClassName];
+            (id<FLTMediationNetworkExtrasProvider> _Nonnull)
+                mediationNetworkExtrasProvider
+                                      registry:
+                                          (id<FlutterPluginRegistry> _Nonnull)
+                                              registry {
+  NSString *pluginClassName =
+      NSStringFromClass([FLTGoogleMobileAdsPlugin class]);
+  FLTGoogleMobileAdsPlugin *adMobPlugin = (FLTGoogleMobileAdsPlugin *)[registry
+      valuePublishedByPlugin:pluginClassName];
   if (!adMobPlugin) {
-    NSLog(@"Could not find a %@ instance registering mediation extras provider. The plugin may "
+    NSLog(@"Could not find a %@ instance registering mediation extras "
+          @"provider. The plugin may "
           @"have not been registered.",
           pluginClassName);
     return NO;
   }
 
   adMobPlugin->_mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
-  adMobPlugin->_readerWriter.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
+  adMobPlugin->_readerWriter.mediationNetworkExtrasProvider =
+      mediationNetworkExtrasProvider;
 
   return YES;
 }
 
-+ (void)unregisterMediationNetworkExtrasProvider:(id<FlutterPluginRegistry> _Nonnull)registry {
-  NSString *pluginClassName = NSStringFromClass([FLTGoogleMobileAdsPlugin class]);
-  FLTGoogleMobileAdsPlugin *adMobPlugin =
-      (FLTGoogleMobileAdsPlugin *)[registry valuePublishedByPlugin:pluginClassName];
++ (void)unregisterMediationNetworkExtrasProvider:
+    (id<FlutterPluginRegistry> _Nonnull)registry {
+  NSString *pluginClassName =
+      NSStringFromClass([FLTGoogleMobileAdsPlugin class]);
+  FLTGoogleMobileAdsPlugin *adMobPlugin = (FLTGoogleMobileAdsPlugin *)[registry
+      valuePublishedByPlugin:pluginClassName];
   if (!adMobPlugin) {
-    NSLog(@"Could not find a %@ instance deregistering mediation extras provider. The plugin may "
+    NSLog(@"Could not find a %@ instance deregistering mediation extras "
+          @"provider. The plugin may "
           @"have not been registered.",
           pluginClassName);
     return;
@@ -135,18 +165,23 @@
 + (BOOL)registerNativeAdFactory:(id<FlutterPluginRegistry>)registry
                       factoryId:(NSString *)factoryId
                 nativeAdFactory:(id<FLTNativeAdFactory>)nativeAdFactory {
-  NSString *pluginClassName = NSStringFromClass([FLTGoogleMobileAdsPlugin class]);
-  FLTGoogleMobileAdsPlugin *adMobPlugin =
-      (FLTGoogleMobileAdsPlugin *)[registry valuePublishedByPlugin:pluginClassName];
+  NSString *pluginClassName =
+      NSStringFromClass([FLTGoogleMobileAdsPlugin class]);
+  FLTGoogleMobileAdsPlugin *adMobPlugin = (FLTGoogleMobileAdsPlugin *)[registry
+      valuePublishedByPlugin:pluginClassName];
   if (!adMobPlugin) {
-    NSString *reason = [NSString
-        stringWithFormat:@"Could not find a %@ instance. The plugin may have not been registered.",
-                         pluginClassName];
-    [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
+    NSString *reason =
+        [NSString stringWithFormat:@"Could not find a %@ instance. The plugin "
+                                   @"may have not been registered.",
+                                   pluginClassName];
+    [NSException exceptionWithName:NSInvalidArgumentException
+                            reason:reason
+                          userInfo:nil];
   }
 
   if (adMobPlugin.nativeAdFactories[factoryId]) {
-    NSLog(@"A NativeAdFactory with the following factoryId already exists: %@", factoryId);
+    NSLog(@"A NativeAdFactory with the following factoryId already exists: %@",
+          factoryId);
     return NO;
   }
 
@@ -154,22 +189,47 @@
   return YES;
 }
 
-+ (id<FLTNativeAdFactory>)unregisterNativeAdFactory:(id<FlutterPluginRegistry>)registry
++ (id<FLTNativeAdFactory>)unregisterNativeAdFactory:
+                              (id<FlutterPluginRegistry>)registry
                                           factoryId:(NSString *)factoryId {
   FLTGoogleMobileAdsPlugin *adMobPlugin = (FLTGoogleMobileAdsPlugin *)[registry
-      valuePublishedByPlugin:NSStringFromClass([FLTGoogleMobileAdsPlugin class])];
+      valuePublishedByPlugin:NSStringFromClass(
+                                 [FLTGoogleMobileAdsPlugin class])];
 
   id<FLTNativeAdFactory> factory = adMobPlugin.nativeAdFactories[factoryId];
-  if (factory) [adMobPlugin.nativeAdFactories removeObjectForKey:factoryId];
+  if (factory)
+    [adMobPlugin.nativeAdFactories removeObjectForKey:factoryId];
   return factory;
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
-  UIViewController *rootController =
+- (UIViewController *)rootController {
+  UIViewController *root =
       UIApplication.sharedApplication.delegate.window.rootViewController;
+  if ([FLTAdUtil isNull:root]) {
+    // UIApplication.sharedApplication.delegate.window is not guaranteed to be
+    // set. Use the keyWindow in this case.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    root = UIApplication.sharedApplication.keyWindow.rootViewController;
+#pragma clang diagnostic pop
+  }
+
+  // Get the presented view controller. This fixes an issue in the add to app
+  // case: https://github.com/googleads/googleads-mobile-flutter/issues/700
+  UIViewController *presentedViewController = root;
+  while (presentedViewController.presentedViewController) {
+    presentedViewController = presentedViewController.presentedViewController;
+  }
+  return presentedViewController;
+}
+
+- (void)handleMethodCall:(FlutterMethodCall *)call
+                  result:(FlutterResult)result {
+  UIViewController *rootController = self.rootController;
 
   if ([call.method isEqualToString:@"MobileAds#initialize"]) {
-    FLTInitializationHandler *handler = [[FLTInitializationHandler alloc] initWithResult:result];
+    FLTInitializationHandler *handler =
+        [[FLTInitializationHandler alloc] initWithResult:result];
     [[GADMobileAds sharedInstance]
         startWithCompletionHandler:^(GADInitializationStatus *_Nonnull status) {
           [handler handleInitializationComplete:status];
@@ -178,30 +238,72 @@
     [_manager disposeAllAds];
     result(nil);
   } else if ([call.method isEqualToString:@"MobileAds#setSameAppKeyEnabled"]) {
-    GADRequestConfiguration *requestConfig = GADMobileAds.sharedInstance.requestConfiguration;
+    GADRequestConfiguration *requestConfig =
+        GADMobileAds.sharedInstance.requestConfiguration;
     NSNumber *isEnabled = call.arguments[@"isEnabled"];
     [requestConfig setSameAppKeyEnabled:isEnabled.boolValue];
     result(nil);
   } else if ([call.method isEqualToString:@"MobileAds#setAppMuted"]) {
-    GADMobileAds.sharedInstance.applicationMuted = [call.arguments[@"muted"] boolValue];
+    GADMobileAds.sharedInstance.applicationMuted =
+        [call.arguments[@"muted"] boolValue];
     result(nil);
   } else if ([call.method isEqualToString:@"MobileAds#setAppVolume"]) {
-    GADMobileAds.sharedInstance.applicationVolume = [call.arguments[@"volume"] floatValue];
+    GADMobileAds.sharedInstance.applicationVolume =
+        [call.arguments[@"volume"] floatValue];
     result(nil);
-  } else if ([call.method isEqualToString:@"MobileAds#disableSDKCrashReporting"]) {
+  } else if ([call.method
+                 isEqualToString:@"MobileAds#disableSDKCrashReporting"]) {
     [GADMobileAds.sharedInstance disableSDKCrashReporting];
     result(nil);
-  } else if ([call.method isEqualToString:@"MobileAds#disableMediationInitialization"]) {
+  } else if ([call.method
+                 isEqualToString:@"MobileAds#disableMediationInitialization"]) {
     [GADMobileAds.sharedInstance disableMediationInitialization];
     result(nil);
+  } else if ([call.method isEqualToString:@"MobileAds#openDebugMenu"]) {
+    NSString *adUnitId = call.arguments[@"adUnitId"];
+    GADDebugOptionsViewController *debugOptionsViewController =
+        [GADDebugOptionsViewController
+            debugOptionsViewControllerWithAdUnitID:adUnitId];
+    [rootController presentViewController:debugOptionsViewController
+                                 animated:YES
+                               completion:nil];
+    result(nil);
+  } else if ([call.method isEqualToString:@"MobileAds#openAdInspector"]) {
+    [GADMobileAds.sharedInstance
+        presentAdInspectorFromViewController:rootController
+                           completionHandler:^(NSError *error) {
+                             if (error) {
+                               result([FlutterError
+                                   errorWithCode:[[NSString alloc]
+                                                     initWithInt:error.code]
+                                         message:error.localizedDescription
+                                         details:error.domain]);
+                             } else {
+                               result(nil);
+                             }
+                           }];
   } else if ([call.method isEqualToString:@"MobileAds#getVersionString"]) {
     result([GADMobileAds.sharedInstance sdkVersion]);
-  } else if ([call.method isEqualToString:@"MobileAds#getRequestConfiguration"]) {
+  } else if ([call.method
+                 isEqualToString:@"MobileAds#getRequestConfiguration"]) {
     result(GADMobileAds.sharedInstance.requestConfiguration);
-  } else if ([call.method isEqualToString:@"MobileAds#updateRequestConfiguration"]) {
+  } else if ([call.method isEqualToString:@"MobileAds#registerWebView"]) {
+    if (!_appDelegate) {
+      NSLog(@"App delegate is null in MobileAds#registerWebView, skipping");
+    } else {
+      NSNumber *webViewId = call.arguments[@"webViewId"];
+      WKWebView *webView = [FLTAdUtil getWebView:webViewId
+                           flutterPluginRegistry:_appDelegate];
+      [GADMobileAds.sharedInstance registerWebView:webView];
+    }
+    result(nil);
+  } else if ([call.method
+                 isEqualToString:@"MobileAds#updateRequestConfiguration"]) {
     NSString *maxAdContentRating = call.arguments[@"maxAdContentRating"];
-    NSNumber *tagForChildDirectedTreatment = call.arguments[@"tagForChildDirectedTreatment"];
-    NSNumber *tagForUnderAgeOfConsent = call.arguments[@"tagForUnderAgeOfConsent"];
+    NSNumber *tagForChildDirectedTreatment =
+        call.arguments[@"tagForChildDirectedTreatment"];
+    NSNumber *tagForUnderAgeOfConsent =
+        call.arguments[@"tagForUnderAgeOfConsent"];
     NSArray<NSString *> *testDeviceIds = call.arguments[@"testDeviceIds"];
 
     if (maxAdContentRating != NULL && maxAdContentRating != (id)[NSNull null]) {
@@ -219,62 +321,76 @@
             GADMaxAdContentRatingMatureAudience;
       }
     }
-    if (tagForChildDirectedTreatment != NULL && tagForChildDirectedTreatment != (id)[NSNull null]) {
+    if (tagForChildDirectedTreatment != NULL &&
+        tagForChildDirectedTreatment != (id)[NSNull null]) {
       switch ([tagForChildDirectedTreatment intValue]) {
-        case 0:
-          [GADMobileAds.sharedInstance.requestConfiguration tagForChildDirectedTreatment:NO];
-          break;
-        case 1:
-          [GADMobileAds.sharedInstance.requestConfiguration tagForChildDirectedTreatment:YES];
-          break;
+      case 0:
+        [GADMobileAds.sharedInstance.requestConfiguration
+            tagForChildDirectedTreatment:NO];
+        break;
+      case 1:
+        [GADMobileAds.sharedInstance.requestConfiguration
+            tagForChildDirectedTreatment:YES];
+        break;
       }
     }
-    if (tagForUnderAgeOfConsent != NULL && tagForUnderAgeOfConsent != (id)[NSNull null]) {
+    if (tagForUnderAgeOfConsent != NULL &&
+        tagForUnderAgeOfConsent != (id)[NSNull null]) {
       switch ([tagForUnderAgeOfConsent intValue]) {
-        case 0:
-          [GADMobileAds.sharedInstance.requestConfiguration tagForUnderAgeOfConsent:NO];
-          break;
-        case 1:
-          [GADMobileAds.sharedInstance.requestConfiguration tagForUnderAgeOfConsent:YES];
-          break;
+      case 0:
+        [GADMobileAds.sharedInstance.requestConfiguration
+            tagForUnderAgeOfConsent:NO];
+        break;
+      case 1:
+        [GADMobileAds.sharedInstance.requestConfiguration
+            tagForUnderAgeOfConsent:YES];
+        break;
       }
     }
     if (testDeviceIds != NULL && testDeviceIds != (id)[NSNull null]) {
-      GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers = testDeviceIds;
+      GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers =
+          testDeviceIds;
     }
     result(nil);
   } else if ([call.method isEqualToString:@"loadBannerAd"]) {
-    FLTBannerAd *ad = [[FLTBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                       size:call.arguments[@"size"]
-                                                    request:call.arguments[@"request"]
-                                         rootViewController:rootController
-                                                       adId:call.arguments[@"adId"]];
+    FLTBannerAd *ad =
+        [[FLTBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                         size:call.arguments[@"size"]
+                                      request:call.arguments[@"request"]
+                           rootViewController:rootController
+                                         adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAdManagerBannerAd"]) {
-    FLTGAMBannerAd *ad = [[FLTGAMBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                            sizes:call.arguments[@"sizes"]
-                                                          request:call.arguments[@"request"]
-                                               rootViewController:rootController
-                                                             adId:call.arguments[@"adId"]];
+    FLTGAMBannerAd *ad =
+        [[FLTGAMBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                           sizes:call.arguments[@"sizes"]
+                                         request:call.arguments[@"request"]
+                              rootViewController:rootController
+                                            adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadFluidAd"]) {
-    FLTFluidGAMBannerAd *ad =
-        [[FLTFluidGAMBannerAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                              request:call.arguments[@"request"]
-                                   rootViewController:rootController
-                                                 adId:call.arguments[@"adId"]];
+    FLTFluidGAMBannerAd *ad = [[FLTFluidGAMBannerAd alloc]
+          initWithAdUnitId:call.arguments[@"adUnitId"]
+                   request:call.arguments[@"request"]
+        rootViewController:rootController
+                      adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadNativeAd"]) {
     NSString *factoryId = call.arguments[@"factoryId"];
     id<FLTNativeAdFactory> factory = _nativeAdFactories[factoryId];
-
-    if (!factory) {
+    FLTNativeTemplateStyle *templateStyle =
+        call.arguments[@"nativeTemplateStyle"];
+    if ([FLTAdUtil isNull:factory] && [FLTAdUtil isNull:templateStyle]) {
       NSString *message =
-          [NSString stringWithFormat:@"Can't find NativeAdFactory with id: %@", factoryId];
-      result([FlutterError errorWithCode:@"NativeAdError" message:message details:nil]);
+          [NSString stringWithFormat:@"Can't find NativeAdFactory with id: %@ "
+                                     @"and nativeTemplateStyle is null",
+                                     factoryId];
+      result([FlutterError errorWithCode:@"NativeAdError"
+                                 message:message
+                                 details:nil]);
       return;
     }
 
@@ -285,28 +401,31 @@
       request = call.arguments[@"adManagerRequest"];
     }
 
-    FLTNativeAd *ad = [[FLTNativeAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                    request:request
-                                            nativeAdFactory:(id)factory
-                                              customOptions:call.arguments[@"customOptions"]
-                                         rootViewController:rootController
-                                                       adId:call.arguments[@"adId"]
-                                            nativeAdOptions:call.arguments[@"nativeAdOptions"]];
+    FLTNativeAd *ad = [[FLTNativeAd alloc]
+           initWithAdUnitId:call.arguments[@"adUnitId"]
+                    request:request
+            nativeAdFactory:(id)factory
+              customOptions:call.arguments[@"customOptions"]
+         rootViewController:rootController
+                       adId:call.arguments[@"adId"]
+            nativeAdOptions:call.arguments[@"nativeAdOptions"]
+        nativeTemplateStyle:call.arguments[@"nativeTemplateStyle"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadInterstitialAd"]) {
-    FLTInterstitialAd *ad = [[FLTInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                                request:call.arguments[@"request"]
-                                                     rootViewController:rootController
-                                                                   adId:call.arguments[@"adId"]];
+    FLTInterstitialAd *ad =
+        [[FLTInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                            request:call.arguments[@"request"]
+                                 rootViewController:rootController
+                                               adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAdManagerInterstitialAd"]) {
-    FLTGAMInterstitialAd *ad =
-        [[FLTGAMInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                               request:call.arguments[@"request"]
-                                    rootViewController:rootController
-                                                  adId:call.arguments[@"adId"]];
+    FLTGAMInterstitialAd *ad = [[FLTGAMInterstitialAd alloc]
+          initWithAdUnitId:call.arguments[@"adUnitId"]
+                   request:call.arguments[@"request"]
+        rootViewController:rootController
+                      adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedAd"]) {
@@ -316,9 +435,10 @@
     } else if ([FLTAdUtil isNotNull:call.arguments[@"adManagerRequest"]]) {
       request = call.arguments[@"adManagerRequest"];
     } else {
-      result([FlutterError errorWithCode:@"InvalidRequest"
-                                 message:@"A null or invalid ad request was provided."
-                                 details:nil]);
+      result([FlutterError
+          errorWithCode:@"InvalidRequest"
+                message:@"A null or invalid ad request was provided."
+                details:nil]);
       return;
     }
 
@@ -326,7 +446,6 @@
         [[FLTRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                         request:request
                              rootViewController:rootController
-                  serverSideVerificationOptions:call.arguments[@"serverSideVerificationOptions"]
                                            adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
@@ -337,18 +456,18 @@
     } else if ([FLTAdUtil isNotNull:call.arguments[@"adManagerRequest"]]) {
       request = call.arguments[@"adManagerRequest"];
     } else {
-      result([FlutterError errorWithCode:@"InvalidRequest"
-                                 message:@"A null or invalid ad request was provided."
-                                 details:nil]);
+      result([FlutterError
+          errorWithCode:@"InvalidRequest"
+                message:@"A null or invalid ad request was provided."
+                details:nil]);
       return;
     }
 
     FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc]
-                     initWithAdUnitId:call.arguments[@"adUnitId"]
-                              request:request
-                   rootViewController:rootController
-        serverSideVerificationOptions:call.arguments[@"serverSideVerificationOptions"]
-                                 adId:call.arguments[@"adId"]];
+          initWithAdUnitId:call.arguments[@"adUnitId"]
+                   request:request
+        rootViewController:rootController
+                      adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
@@ -358,16 +477,18 @@
     } else if ([FLTAdUtil isNotNull:call.arguments[@"adManagerRequest"]]) {
       request = call.arguments[@"adManagerRequest"];
     } else {
-      result([FlutterError errorWithCode:@"InvalidRequest"
-                                 message:@"A null or invalid ad request was provided."
-                                 details:nil]);
+      result([FlutterError
+          errorWithCode:@"InvalidRequest"
+                message:@"A null or invalid ad request was provided."
+                details:nil]);
       return;
     }
-    FLTAppOpenAd *ad = [[FLTAppOpenAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
-                                                      request:request
-                                           rootViewController:rootController
-                                                  orientation:call.arguments[@"orientation"]
-                                                         adId:call.arguments[@"adId"]];
+    FLTAppOpenAd *ad =
+        [[FLTAppOpenAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
+                                       request:request
+                            rootViewController:rootController
+                                   orientation:call.arguments[@"orientation"]
+                                          adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"disposeAd"]) {
@@ -376,11 +497,12 @@
   } else if ([call.method isEqualToString:@"showAdWithoutView"]) {
     [_manager showAdWithID:call.arguments[@"adId"]];
     result(nil);
-  } else if ([call.method isEqualToString:@"AdSize#getAnchoredAdaptiveBannerAdSize"]) {
-    FLTAnchoredAdaptiveBannerSize *size =
-        [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:[[FLTAdSizeFactory alloc] init]
-                                                   orientation:call.arguments[@"orientation"]
-                                                         width:call.arguments[@"width"]];
+  } else if ([call.method
+                 isEqualToString:@"AdSize#getAnchoredAdaptiveBannerAdSize"]) {
+    FLTAnchoredAdaptiveBannerSize *size = [[FLTAnchoredAdaptiveBannerSize alloc]
+        initWithFactory:[[FLTAdSizeFactory alloc] init]
+            orientation:call.arguments[@"orientation"]
+                  width:call.arguments[@"width"]];
     if (IsGADAdSizeValid(size.size)) {
       result(size.height);
     } else {
@@ -398,6 +520,24 @@
     } else {
       result(FlutterMethodNotImplemented);
     }
+  } else if ([call.method
+                 isEqualToString:@"setServerSideVerificationOptions"]) {
+    id<FLTAd> ad = [_manager adFor:call.arguments[@"adId"]];
+    FLTServerSideVerificationOptions *options =
+        call.arguments[@"serverSideVerificationOptions"];
+    if ([ad isKindOfClass:[FLTRewardedAd class]]) {
+      FLTRewardedAd *rewardedAd = (FLTRewardedAd *)ad;
+      [rewardedAd setServerSideVerificationOptions:options];
+    } else if ([ad isKindOfClass:[FLTRewardedInterstitialAd class]]) {
+      FLTRewardedInterstitialAd *rewardedInterstitialAd =
+          (FLTRewardedInterstitialAd *)ad;
+      [rewardedInterstitialAd setServerSideVerificationOptions:options];
+    } else {
+      NSLog(@"Error - setServerSideVerificationOptions called on missing or "
+            @"invalid ad id: %@",
+            call.arguments[@"adId"]);
+    }
+    result(nil);
   } else {
     result(FlutterMethodNotImplemented);
   }

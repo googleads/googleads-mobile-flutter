@@ -16,7 +16,8 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
-import android.location.Location;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -26,6 +27,10 @@ import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.InlineAdaptiveBannerAdSize;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateFontStyle;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateTextStyle;
+import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateType;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -54,22 +59,33 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_NATIVE_AD_OPTIONS = (byte) 144;
   private static final byte VALUE_VIDEO_OPTIONS = (byte) 145;
   private static final byte VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE = (byte) 146;
-  private static final byte VALUE_LOCATION_PARAMS = (byte) 147;
   private static final byte VALUE_REQUEST_CONFIGURATION_PARAMS = (byte) 148;
+  private static final byte VALUE_NATIVE_TEMPLATE_STYLE = (byte) 149;
+  private static final byte VALUE_NATIVE_TEMPLATE_TEXT_STYLE = (byte) 150;
+  private static final byte VALUE_NATIVE_TEMPLATE_FONT_STYLE = (byte) 151;
+  private static final byte VALUE_NATIVE_TEMPLATE_TYPE = (byte) 152;
+  private static final byte VALUE_COLOR = (byte) 153;
 
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
   @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+  @NonNull private final FlutterRequestAgentProvider requestAgentProvider;
 
-  AdMessageCodec(@NonNull Context context) {
+  AdMessageCodec(
+      @NonNull Context context, @NonNull FlutterRequestAgentProvider requestAgentProvider) {
     this.context = context;
     this.adSizeFactory = new FlutterAdSize.AdSizeFactory();
+    this.requestAgentProvider = requestAgentProvider;
   }
 
   @VisibleForTesting
-  AdMessageCodec(@NonNull Context context, @NonNull FlutterAdSize.AdSizeFactory adSizeFactory) {
+  AdMessageCodec(
+      @NonNull Context context,
+      @NonNull FlutterAdSize.AdSizeFactory adSizeFactory,
+      @NonNull FlutterRequestAgentProvider requestAgentProvider) {
     this.context = context;
     this.adSizeFactory = adSizeFactory;
+    this.requestAgentProvider = requestAgentProvider;
   }
 
   void setContext(@NonNull Context context) {
@@ -96,7 +112,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getNeighboringContentUrls());
       writeValue(stream, request.getHttpTimeoutMillis());
       writeValue(stream, request.getPublisherProvidedId());
-      writeValue(stream, request.getLocation());
       writeValue(stream, request.getMediationExtrasIdentifier());
       writeValue(stream, request.getAdMobExtras());
     } else if (value instanceof FlutterAdRequest) {
@@ -107,7 +122,6 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getNonPersonalizedAds());
       writeValue(stream, request.getNeighboringContentUrls());
       writeValue(stream, request.getHttpTimeoutMillis());
-      writeValue(stream, request.getLocation());
       writeValue(stream, request.getMediationExtrasIdentifier());
       writeValue(stream, request.getAdMobExtras());
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
@@ -121,14 +135,20 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, responseInfo.getAdapterClassName());
       writeValue(stream, responseInfo.getLatencyMillis());
       writeValue(stream, responseInfo.getDescription());
-      writeValue(stream, responseInfo.getCredentials());
+      writeValue(stream, responseInfo.getAdUnitMapping());
       writeValue(stream, responseInfo.getError());
+      writeValue(stream, responseInfo.getAdSourceName());
+      writeValue(stream, responseInfo.getAdSourceId());
+      writeValue(stream, responseInfo.getAdSourceInstanceName());
+      writeValue(stream, responseInfo.getAdSourceInstanceId());
     } else if (value instanceof FlutterResponseInfo) {
       stream.write(VALUE_RESPONSE_INFO);
       final FlutterResponseInfo responseInfo = (FlutterResponseInfo) value;
       writeValue(stream, responseInfo.getResponseId());
       writeValue(stream, responseInfo.getMediationAdapterClassName());
       writeValue(stream, responseInfo.getAdapterResponses());
+      writeValue(stream, responseInfo.getLoadedAdapterResponseInfo());
+      writeValue(stream, responseInfo.getResponseExtras());
     } else if (value instanceof FlutterAd.FlutterLoadAdError) {
       stream.write(VALUE_LOAD_AD_ERROR);
       final FlutterAd.FlutterLoadAdError error = (FlutterAd.FlutterLoadAdError) value;
@@ -193,13 +213,35 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, options.clickToExpandRequested);
       writeValue(stream, options.customControlsRequested);
       writeValue(stream, options.startMuted);
-    } else if (value instanceof Location) {
-      stream.write(VALUE_LOCATION_PARAMS);
-      Location location = (Location) value;
-      writeValue(stream, location.getAccuracy());
-      writeValue(stream, location.getLongitude());
-      writeValue(stream, location.getLatitude());
-      writeValue(stream, location.getTime());
+    } else if (value instanceof FlutterNativeTemplateStyle) {
+      stream.write(VALUE_NATIVE_TEMPLATE_STYLE);
+      FlutterNativeTemplateStyle nativeTemplateStyle = (FlutterNativeTemplateStyle) value;
+      writeValue(stream, nativeTemplateStyle.getTemplateType());
+      writeValue(stream, nativeTemplateStyle.getMainBackgroundColor());
+      writeValue(stream, nativeTemplateStyle.getCallToActionStyle());
+      writeValue(stream, nativeTemplateStyle.getPrimaryTextStyle());
+      writeValue(stream, nativeTemplateStyle.getSecondaryTextStyle());
+      writeValue(stream, nativeTemplateStyle.getTertiaryTextStyle());
+    } else if (value instanceof FlutterNativeTemplateFontStyle) {
+      stream.write(VALUE_NATIVE_TEMPLATE_FONT_STYLE);
+      writeValue(stream, ((FlutterNativeTemplateFontStyle) value).ordinal());
+    } else if (value instanceof FlutterNativeTemplateType) {
+      stream.write(VALUE_NATIVE_TEMPLATE_TYPE);
+      writeValue(stream, ((FlutterNativeTemplateType) value).ordinal());
+    } else if (value instanceof FlutterNativeTemplateTextStyle) {
+      stream.write(VALUE_NATIVE_TEMPLATE_TEXT_STYLE);
+      FlutterNativeTemplateTextStyle textStyle = (FlutterNativeTemplateTextStyle) value;
+      writeValue(stream, textStyle.getTextColor());
+      writeValue(stream, textStyle.getBackgroundColor());
+      writeValue(stream, textStyle.getFontStyle());
+      writeValue(stream, textStyle.getSize());
+    } else if (value instanceof ColorDrawable) {
+      stream.write(VALUE_COLOR);
+      int colorValue = ((ColorDrawable) value).getColor();
+      writeValue(stream, Color.alpha(colorValue));
+      writeValue(stream, Color.red(colorValue));
+      writeValue(stream, Color.green(colorValue));
+      writeValue(stream, Color.blue(colorValue));
     } else {
       super.writeValue(stream, value);
     }
@@ -237,10 +279,10 @@ class AdMessageCodec extends StandardMessageCodec {
             .setNonPersonalizedAds(booleanValueOf(readValueOfType(buffer.get(), buffer)))
             .setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer))
             .setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer))
-            .setLocation((Location) readValueOfType(buffer.get(), buffer))
             .setMediationNetworkExtrasIdentifier((String) readValueOfType(buffer.get(), buffer))
             .setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider)
             .setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer))
+            .setRequestAgent(requestAgentProvider.getRequestAgent())
             .build();
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
@@ -251,13 +293,19 @@ class AdMessageCodec extends StandardMessageCodec {
             (String) readValueOfType(buffer.get(), buffer),
             (long) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
+            (Map<String, String>) readValueOfType(buffer.get(), buffer),
+            (FlutterAdError) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
-            (FlutterAdError) readValueOfType(buffer.get(), buffer));
+            (String) readValueOfType(buffer.get(), buffer),
+            (String) readValueOfType(buffer.get(), buffer),
+            (String) readValueOfType(buffer.get(), buffer));
       case VALUE_RESPONSE_INFO:
         return new FlutterResponseInfo(
             (String) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
-            (List<FlutterAdapterResponseInfo>) readValueOfType(buffer.get(), buffer));
+            (List<FlutterAdapterResponseInfo>) readValueOfType(buffer.get(), buffer),
+            (FlutterAdapterResponseInfo) readValueOfType(buffer.get(), buffer),
+            (Map<String, String>) readValueOfType(buffer.get(), buffer));
       case VALUE_LOAD_AD_ERROR:
         return new FlutterAd.FlutterLoadAdError(
             (Integer) readValueOfType(buffer.get(), buffer),
@@ -280,10 +328,10 @@ class AdMessageCodec extends StandardMessageCodec {
         builder.setNeighboringContentUrls((List<String>) readValueOfType(buffer.get(), buffer));
         builder.setHttpTimeoutMillis((Integer) readValueOfType(buffer.get(), buffer));
         builder.setPublisherProvidedId((String) readValueOfType(buffer.get(), buffer));
-        builder.setLocation((Location) readValueOfType(buffer.get(), buffer));
         builder.setMediationNetworkExtrasIdentifier((String) readValueOfType(buffer.get(), buffer));
         builder.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
         builder.setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer));
+        builder.setRequestAgent(requestAgentProvider.getRequestAgent());
         return builder.build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);
@@ -328,17 +376,32 @@ class AdMessageCodec extends StandardMessageCodec {
         rcb.setTagForUnderAgeOfConsent((Integer) readValueOfType(buffer.get(), buffer));
         rcb.setTestDeviceIds((List<String>) readValueOfType(buffer.get(), buffer));
         return rcb.build();
-      case VALUE_LOCATION_PARAMS:
-        Location location = new Location("");
-        // This is necessary because StandardMessageCodec converts floats to double.
-        location.setAccuracy(((Double) readValueOfType(buffer.get(), buffer)).floatValue());
-        location.setLongitude((double) readValueOfType(buffer.get(), buffer));
-        location.setLatitude((double) readValueOfType(buffer.get(), buffer));
-        Long time = (Long) readValueOfType(buffer.get(), buffer);
-        if (time != null) {
-          location.setTime(time);
-        }
-        return location;
+      case VALUE_NATIVE_TEMPLATE_STYLE:
+        return new FlutterNativeTemplateStyle(
+            (FlutterNativeTemplateType) readValueOfType(buffer.get(), buffer),
+            (ColorDrawable) readValueOfType(buffer.get(), buffer),
+            (FlutterNativeTemplateTextStyle) readValueOfType(buffer.get(), buffer),
+            (FlutterNativeTemplateTextStyle) readValueOfType(buffer.get(), buffer),
+            (FlutterNativeTemplateTextStyle) readValueOfType(buffer.get(), buffer),
+            (FlutterNativeTemplateTextStyle) readValueOfType(buffer.get(), buffer));
+      case VALUE_NATIVE_TEMPLATE_TEXT_STYLE:
+        return new FlutterNativeTemplateTextStyle(
+            (ColorDrawable) readValueOfType(buffer.get(), buffer),
+            (ColorDrawable) readValueOfType(buffer.get(), buffer),
+            (FlutterNativeTemplateFontStyle) readValueOfType(buffer.get(), buffer),
+            ((Double) readValueOfType(buffer.get(), buffer)));
+      case VALUE_NATIVE_TEMPLATE_FONT_STYLE:
+        return FlutterNativeTemplateFontStyle.fromIntValue(
+            (Integer) readValueOfType(buffer.get(), buffer));
+      case VALUE_NATIVE_TEMPLATE_TYPE:
+        return FlutterNativeTemplateType.fromIntValue(
+            (Integer) readValueOfType(buffer.get(), buffer));
+      case VALUE_COLOR:
+        final Integer alpha = (Integer) readValueOfType(buffer.get(), buffer);
+        final Integer red = (Integer) readValueOfType(buffer.get(), buffer);
+        final Integer green = (Integer) readValueOfType(buffer.get(), buffer);
+        final Integer blue = (Integer) readValueOfType(buffer.get(), buffer);
+        return new ColorDrawable(Color.argb(alpha, red, green, blue));
       default:
         return super.readValueOfType(type, buffer);
     }
