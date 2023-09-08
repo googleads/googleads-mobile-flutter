@@ -35,7 +35,7 @@ void main() {
 
 // You can also test with your own ad unit IDs by registering your device as a
 // test device. Check the logs for your device's ID value.
-const String testDevice = 'YOUR_DEVICE_ID';
+const String testDevice = 'fc59484f6caf269793796170574d6c61';
 const int maxFailedLoadAttempts = 3;
 
 class MyApp extends StatefulWidget {
