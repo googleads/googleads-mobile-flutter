@@ -23,6 +23,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 33
+    namespace 'io.flutter.plugins.googlemobileads'
 
     defaultConfig {
         minSdkVersion 19
