@@ -18,6 +18,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'dart:developer';
 
 import 'anchored_adaptive_example.dart';
 import 'fluid_example.dart';
@@ -57,6 +58,7 @@ class _MyAppState extends State<MyApp> {
   static const anchoredAdaptiveButtonText = 'Anchored adaptive';
   static const nativeTemplateButtonText = 'Native template';
   static const webviewExampleButtonText = 'Register WebView';
+  static const adInspectorButtonText = 'Ad Inspector';
 
   InterstitialAd? _interstitialAd;
   int _numInterstitialLoadAttempts = 0;
@@ -70,6 +72,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    MobileAds.instance.updateRequestConfiguration(
+        RequestConfiguration(testDeviceIds: [testDevice]));
     _createInterstitialAd();
     _createRewardedAd();
     _createRewardedInterstitialAd();
@@ -288,6 +292,13 @@ class _MyAppState extends State<MyApp> {
                             builder: (context) => WebViewExample()),
                       );
                       break;
+                    case adInspectorButtonText:
+                      MobileAds.instance.openAdInspector((error) => log(
+                          'Ad Inspector ' +
+                              (error == null
+                                  ? 'opened.'
+                                  : 'error: ' + (error.message ?? ''))));
+                      break;
                     default:
                       throw AssertionError('unexpected button: $result');
                   }
@@ -324,6 +335,10 @@ class _MyAppState extends State<MyApp> {
                   PopupMenuItem<String>(
                     value: webviewExampleButtonText,
                     child: Text(webviewExampleButtonText),
+                  ),
+                  PopupMenuItem<String>(
+                    value: adInspectorButtonText,
+                    child: Text(adInspectorButtonText),
                   ),
                 ],
               ),

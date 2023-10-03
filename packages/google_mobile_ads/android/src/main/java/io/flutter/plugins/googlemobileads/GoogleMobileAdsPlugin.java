@@ -40,6 +40,7 @@ import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterOverlayAd;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
 import io.flutter.plugins.googlemobileads.usermessagingplatform.UserMessagingPlatformManager;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -669,6 +670,13 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
       // is invoked more than once. See b/193418432.
       if (isInitializationCompleted) {
         return;
+      }
+      try {
+        Class<?> clazz = Class.forName("com.google.android.gms.ads.MobileAds");
+        Method method = clazz.getDeclaredMethod("setPlugin", String.class);
+        method.setAccessible(true);
+        method.invoke(null, Constants.REQUEST_AGENT_PREFIX_VERSIONED);
+      } catch (Exception ignored) {
       }
       result.success(new FlutterInitializationStatus(initializationStatus));
       isInitializationCompleted = true;
