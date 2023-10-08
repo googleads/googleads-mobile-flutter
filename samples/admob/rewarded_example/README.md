@@ -23,7 +23,7 @@ The sample shows how to load a rewarded ad.
 RewardedAd.load(
   adUnitId: _adUnitId,
   request: const AdRequest(),
-  adLoadCallback: RewardedAdLoadCallback(
+  rewardedAdLoadCallback: RewardedAdLoadCallback(
     onAdLoaded: (RewardedAd ad) {
       // Keep a reference to the ad so you can show it later.
       _rewardedAd = ad;
