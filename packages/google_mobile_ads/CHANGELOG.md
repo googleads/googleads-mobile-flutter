@@ -1,6 +1,7 @@
 ## 3.1.0
-* Updates GMA iOS dependency to 10.9
+* Updates GMA iOS dependency to 10.9.0
 * Adds explicit UMP SDK 2.1.0 dependency for Android.
+* Fixes https://github.com/googleads/googleads-mobile-flutter/issues/735
 
 ## 3.0.0
 * Adds support for `MobileAds.registerWebView()`. This API supports in-app ad monetization for
