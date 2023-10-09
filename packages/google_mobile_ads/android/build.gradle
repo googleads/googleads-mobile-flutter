@@ -30,6 +30,7 @@ android {
 
     defaultConfig {
         minSdkVersion 19
+        multiDexEnabled true
     }
     lintOptions {
         disable 'InvalidPackage'
