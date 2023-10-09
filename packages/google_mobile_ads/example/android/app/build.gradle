@@ -27,6 +27,8 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 android {
     compileSdkVersion 33
 
+    namespace 'io.flutter.plugins.googlemobileadsexample'
+
     lintOptions {
         disable 'InvalidPackage'
     }
