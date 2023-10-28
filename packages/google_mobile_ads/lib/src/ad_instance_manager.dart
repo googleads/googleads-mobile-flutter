@@ -18,24 +18,25 @@
 
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 
-import 'package:google_mobile_ads/src/ad_inspector_containers.dart';
-import 'package:google_mobile_ads/src/ad_listeners.dart';
-import 'package:google_mobile_ads/src/mobile_ads.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/src/ad_inspector_containers.dart';
+import 'package:google_mobile_ads/src/ad_listeners.dart';
+import 'package:google_mobile_ads/src/mobile_ads.dart';
 import 'package:google_mobile_ads/src/nativetemplates/template_type.dart';
 import 'package:google_mobile_ads/src/webview_controller_util.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
+import 'ad_containers.dart';
 import 'nativetemplates/native_template_font_style.dart';
 import 'nativetemplates/native_template_style.dart';
 import 'nativetemplates/native_template_text_style.dart';
 import 'request_configuration.dart';
-import 'ad_containers.dart';
 
 /// Loads and disposes [BannerAds] and [InterstitialAds].
 AdInstanceManager instanceManager = AdInstanceManager(
@@ -1316,10 +1317,10 @@ extension AdChoicesPlacementExtension on AdChoicesPlacement {
   /// Gets the int mapping to pass to platform channel.
   int get intValue {
     switch (this) {
-      case AdChoicesPlacement.topLeftCorner:
-        return 0;
       case AdChoicesPlacement.topRightCorner:
-        return 1;
+        return Platform.isAndroid ? 1 : 0;
+      case AdChoicesPlacement.topLeftCorner:
+        return Platform.isAndroid ? 0 : 1;
       case AdChoicesPlacement.bottomRightCorner:
         return 2;
       case AdChoicesPlacement.bottomLeftCorner:
@@ -1331,9 +1332,13 @@ extension AdChoicesPlacementExtension on AdChoicesPlacement {
   static AdChoicesPlacement? fromInt(int? intValue) {
     switch (intValue) {
       case 0:
-        return AdChoicesPlacement.topLeftCorner;
+        return Platform.isAndroid
+            ? AdChoicesPlacement.topLeftCorner
+            : AdChoicesPlacement.topRightCorner;
       case 1:
-        return AdChoicesPlacement.topRightCorner;
+        return Platform.isAndroid
+            ? AdChoicesPlacement.topRightCorner
+            : AdChoicesPlacement.topLeftCorner;
       case 2:
         return AdChoicesPlacement.bottomRightCorner;
       case 3:
