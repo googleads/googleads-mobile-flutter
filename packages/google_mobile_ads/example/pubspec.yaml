@@ -20,6 +20,8 @@ dependencies:
     sdk: flutter
   google_mobile_ads:
     path: ../
+  webview_flutter_android: ^3.7.0
+  webview_flutter: ^4.0.5
 
 dev_dependencies:
   pedantic: ^1.11.0

@@ -15,6 +15,7 @@
 #import "FLTGoogleMobileAdsPlugin.h"
 #import "FLTAdUtil.h"
 #import "FLTAppStateNotifier.h"
+#import "FLTConstants.h"
 #import "FLTNSString.h"
 #import "UserMessagingPlatform/FLTUserMessagingPlatformManager.h"
 @import webview_flutter_wkwebview;
@@ -29,6 +30,10 @@
 @interface FLTInitializationHandler : NSObject
 - (instancetype)initWithResult:(FlutterResult)result;
 - (void)handleInitializationComplete:(GADInitializationStatus *_Nonnull)status;
+@end
+
+@interface GADMobileAds (Plugin)
+- (void)setPlugin:(nullable NSString *)plugin;
 @end
 
 @implementation FLTInitializationHandler {
@@ -51,6 +56,10 @@
   }
   _result([[FLTInitializationStatus alloc] initWithStatus:status]);
   _isInitializationCompleted = true;
+  GADMobileAds *mobileAds = GADMobileAds.sharedInstance;
+  if ([mobileAds respondsToSelector:@selector(setPlugin:)]) {
+    [mobileAds setPlugin:FLT_REQUEST_AGENT_VERSIONED];
+  }
 }
 
 @end

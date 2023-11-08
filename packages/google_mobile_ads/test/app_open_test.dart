@@ -32,8 +32,9 @@ void main() {
       log.clear();
       instanceManager =
           AdInstanceManager('plugins.flutter.io/google_mobile_ads');
-      instanceManager.channel
-          .setMockMethodCallHandler((MethodCall methodCall) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(instanceManager.channel,
+              (MethodCall methodCall) async {
         log.add(methodCall);
         switch (methodCall.method) {
           case 'loadAppOpenAd':

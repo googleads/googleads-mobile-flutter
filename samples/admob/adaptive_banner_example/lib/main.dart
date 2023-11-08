@@ -83,7 +83,7 @@ class AdaptiveBannerExampleState extends State<AdaptiveBannerExample> {
   void _loadAd() async {
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
     final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-        MediaQuery.of(context).size.width.truncate());
+        MediaQuery.sizeOf(context).width.truncate());
 
     if (size == null) {
       // Unable to get width of anchored banner.

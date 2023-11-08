@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
@@ -37,11 +35,8 @@ class TestUtil {
     final MethodCall methodCall = MethodCall('onAdEvent', args);
     final ByteData data =
         instanceManager.channel.codec.encodeMethodCall(methodCall);
-
-    return instanceManager.channel.binaryMessenger.handlePlatformMessage(
-      'plugins.flutter.io/google_mobile_ads',
-      data,
-      (ByteData? data) {},
-    );
+    await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .handlePlatformMessage(
+            'plugins.flutter.io/google_mobile_ads', data, (data) {});
   }
 }
