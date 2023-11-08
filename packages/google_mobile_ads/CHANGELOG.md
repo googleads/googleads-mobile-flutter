@@ -1,3 +1,8 @@
+## 4.0.0
+* The minimum supported Flutter version is now 3.7.0.
+* Removes `visibility_detector` as a dependency, and the workaround added in
+  https://github.com/googleads/googleads-mobile-flutter/pull/610.
+
 ## 3.1.0
 * Updates GMA iOS dependency to 10.9.0
 * Adds explicit UMP SDK 2.1.0 dependency for Android.

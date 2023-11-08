@@ -20,7 +20,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 import 'ad_instance_manager.dart';
 import 'ad_listeners.dart';
@@ -618,16 +617,6 @@ abstract class AdWithoutView extends Ad {
 /// Must call `load()` first before showing the widget. Otherwise, a
 /// [PlatformException] will be thrown.
 class AdWidget extends StatefulWidget {
-  /// Opt out of the visibility detector workaround.
-  ///
-  /// As a workaround for
-  /// https://github.com/googleads/googleads-mobile-flutter/issues/580,
-  /// we wait for the widget to get displayed once before attaching
-  /// the platform view.
-  ///
-  /// Set this flag to true if you are building with Flutter 3.7.0 or higher.
-  static bool optOutOfVisibilityDetectorWorkaround = false;
-
   /// Default constructor for [AdWidget].
   ///
   /// [ad] must be loaded before this is added to the widget tree.
@@ -643,7 +632,6 @@ class AdWidget extends StatefulWidget {
 class _AdWidgetState extends State<AdWidget> {
   bool _adIdAlreadyMounted = false;
   bool _adLoadNotCalled = false;
-  bool _firstVisibleOccurred = false;
 
   @override
   void initState() {
@@ -689,51 +677,28 @@ class _AdWidgetState extends State<AdWidget> {
       ]);
     }
     if (defaultTargetPlatform == TargetPlatform.android) {
-      // Do not attach the platform view widget until it will actually become
-      // visible. This is a workaround for
-      // https://github.com/googleads/googleads-mobile-flutter/issues/580,
-      // where impressions are erroneously fired due to how platform views are
-      // rendered.
-      if (_firstVisibleOccurred ||
-          AdWidget.optOutOfVisibilityDetectorWorkaround) {
-        return PlatformViewLink(
-          viewType: '${instanceManager.channel.name}/ad_widget',
-          surfaceFactory:
-              (BuildContext context, PlatformViewController controller) {
-            return AndroidViewSurface(
-              controller: controller as AndroidViewController,
-              gestureRecognizers: const <Factory<
-                  OneSequenceGestureRecognizer>>{},
-              hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-            );
-          },
-          onCreatePlatformView: (PlatformViewCreationParams params) {
-            return PlatformViewsService.initSurfaceAndroidView(
-              id: params.id,
-              viewType: '${instanceManager.channel.name}/ad_widget',
-              layoutDirection: TextDirection.ltr,
-              creationParams: instanceManager.adIdFor(widget.ad),
-              creationParamsCodec: StandardMessageCodec(),
-            )
-              ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
-              ..create();
-          },
-        );
-      } else {
-        final adId = instanceManager.adIdFor(widget.ad);
-        return VisibilityDetector(
-          key: Key('android-platform-view-$adId'),
-          onVisibilityChanged: (visibilityInfo) {
-            if (!_firstVisibleOccurred &&
-                visibilityInfo.visibleFraction > 0.01) {
-              setState(() {
-                _firstVisibleOccurred = true;
-              });
-            }
-          },
-          child: Container(),
-        );
-      }
+      return PlatformViewLink(
+        viewType: '${instanceManager.channel.name}/ad_widget',
+        surfaceFactory:
+            (BuildContext context, PlatformViewController controller) {
+          return AndroidViewSurface(
+            controller: controller as AndroidViewController,
+            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+          );
+        },
+        onCreatePlatformView: (PlatformViewCreationParams params) {
+          return PlatformViewsService.initSurfaceAndroidView(
+            id: params.id,
+            viewType: '${instanceManager.channel.name}/ad_widget',
+            layoutDirection: TextDirection.ltr,
+            creationParams: instanceManager.adIdFor(widget.ad),
+            creationParamsCodec: StandardMessageCodec(),
+          )
+            ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
+            ..create();
+        },
+      );
     }
 
     return UiKitView(
