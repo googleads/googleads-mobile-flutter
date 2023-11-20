@@ -29,8 +29,8 @@ class AppOpenAdManager {
   bool _isShowingAd = false;
 
   String adUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/3419835294'
-      : 'ca-app-pub-3940256099942544/5662855259';
+      ? 'ca-app-pub-3940256099942544/9257395921'
+      : 'ca-app-pub-3940256099942544/5575463023';
 
   /// Load an [AppOpenAd].
   void loadAd() {
