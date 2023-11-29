@@ -418,7 +418,7 @@ class AdSize {
     final num? height = await instanceManager.channel.invokeMethod<num?>(
       'AdSize#getAnchoredAdaptiveBannerAdSize',
       <String, Object?>{
-        'orientation': describeEnum(orientation),
+        'orientation': orientation.name,
         'width': width,
       },
     );

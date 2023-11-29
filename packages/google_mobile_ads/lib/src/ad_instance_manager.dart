@@ -923,7 +923,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.message);
     } else if (value is AdapterInitializationState) {
       buffer.putUint8(_valueInitializationState);
-      writeValue(buffer, describeEnum(value));
+      writeValue(buffer, value.name);
     } else if (value is AdapterStatus) {
       buffer.putUint8(_valueAdapterStatus);
       writeValue(buffer, value.state);
@@ -1016,7 +1016,7 @@ class AdMessageCodec extends StandardMessageCodec {
         if (orientationStr != null) {
           orientation = Orientation.values.firstWhere(
             (Orientation orientation) =>
-                describeEnum(orientation) == orientationStr,
+                orientation.name == orientationStr,
           );
         }
         return AnchoredAdaptiveBannerAdSize(
@@ -1030,7 +1030,7 @@ class AdMessageCodec extends StandardMessageCodec {
         return SmartBannerAdSize(
           Orientation.values.firstWhere(
             (Orientation orientation) =>
-                describeEnum(orientation) == orientationStr,
+                orientation.name == orientationStr,
           ),
         );
       case _valueAdSize:
@@ -1256,14 +1256,14 @@ class AdMessageCodec extends StandardMessageCodec {
       buffer.putUint8(_valueAnchoredAdaptiveBannerAdSize);
       var orientationValue;
       if (value.orientation != null) {
-        orientationValue = describeEnum(value.orientation as Orientation);
+        orientationValue = (value.orientation as Orientation).name;
       }
       writeValue(buffer, orientationValue);
       writeValue(buffer, value.width);
     } else if (value is SmartBannerAdSize) {
       buffer.putUint8(_valueSmartBannerAdSize);
       if (defaultTargetPlatform == TargetPlatform.iOS) {
-        writeValue(buffer, describeEnum(value.orientation));
+        writeValue(buffer, value.orientation.name);
       }
     } else if (value is FluidAdSize) {
       buffer.putUint8(_valueFluidAdSize);
