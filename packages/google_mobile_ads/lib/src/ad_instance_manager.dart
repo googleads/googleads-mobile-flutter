@@ -1015,8 +1015,7 @@ class AdMessageCodec extends StandardMessageCodec {
         Orientation? orientation;
         if (orientationStr != null) {
           orientation = Orientation.values.firstWhere(
-            (Orientation orientation) =>
-                orientation.name == orientationStr,
+            (Orientation orientation) => orientation.name == orientationStr,
           );
         }
         return AnchoredAdaptiveBannerAdSize(
@@ -1029,8 +1028,7 @@ class AdMessageCodec extends StandardMessageCodec {
             readValueOfType(buffer.getUint8(), buffer);
         return SmartBannerAdSize(
           Orientation.values.firstWhere(
-            (Orientation orientation) =>
-                orientation.name == orientationStr,
+            (Orientation orientation) => orientation.name == orientationStr,
           ),
         );
       case _valueAdSize:
