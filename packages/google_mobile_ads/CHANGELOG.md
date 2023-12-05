@@ -5,6 +5,8 @@
 * Adds null checks for Ad Ids for Android in
   https://github.com/googleads/googleads-mobile-flutter/pull/967
 * Updated Android dependencies in https://github.com/googleads/googleads-mobile-flutter/pull/843
+* Updates GMA iOS dependency to 10.11.0
+* Updates GMA Android dependency to 22.5.0
 
 ## 3.1.0
 * Updates GMA iOS dependency to 10.9.0
