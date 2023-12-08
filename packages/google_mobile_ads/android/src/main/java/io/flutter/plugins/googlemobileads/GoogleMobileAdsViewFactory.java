@@ -56,6 +56,9 @@ final class GoogleMobileAdsViewFactory extends PlatformViewFactory {
 
   @Override
   public PlatformView create(Context context, int viewId, Object args) {
+    if (args == null) {
+      return getErrorView(context, 0);
+    }
     final Integer adId = (Integer) args;
     FlutterAd ad = manager.adForId(adId);
     if (ad == null || ad.getPlatformView() == null) {
