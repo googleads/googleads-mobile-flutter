@@ -14,6 +14,7 @@
 
 // ignore_for_file: public_member_api_docs
 import 'package:app_open_example/app_open_ad_manager.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 /// Listens for app foreground events and shows app open ads.
@@ -29,7 +30,7 @@ class AppLifecycleReactor {
   }
 
   void _onAppStateChanged(AppState appState) {
-    print('New AppState state: $appState');
+    debugPrint('New AppState state: $appState');
     if (appState == AppState.foreground) {
       appOpenAdManager.showAdIfAvailable();
     }
