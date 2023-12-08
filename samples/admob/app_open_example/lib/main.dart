@@ -20,6 +20,8 @@ import 'app_lifecycle_reactor.dart';
 import 'app_open_ad_manager.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   runApp(const MainApp());
 }
 
