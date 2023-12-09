@@ -74,7 +74,7 @@ public class AppOpenAdManager {
           _appOpenAd = ad;
         },
         onAdFailedToLoad: (error) {
-          print('AppOpenAd failed to load: $error');
+          debugPrint('AppOpenAd failed to load: $error');
           // Handle the error.
         },
       ),
@@ -94,28 +94,28 @@ public class AppOpenAdManager {
 
   public void showAdIfAvailable() {
     if (!isAdAvailable) {
-      print('Tried to show ad before available.');
+      debugPrint('Tried to show ad before available.');
       loadAd();
       return;
     }
     if (_isShowingAd) {
-      print('Tried to show ad while already showing an ad.');
+      debugPrint('Tried to show ad while already showing an ad.');
       return;
     }
     // Set the fullScreenContentCallback and show the ad.
     _appOpenAd!.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (ad) {
         _isShowingAd = true;
-        print('$ad onAdShowedFullScreenContent');
+        debugPrint('$ad onAdShowedFullScreenContent');
       },
       onAdFailedToShowFullScreenContent: (ad, error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
+        debugPrint('$ad onAdFailedToShowFullScreenContent: $error');
         _isShowingAd = false;
         ad.dispose();
         _appOpenAd = null;
       },
       onAdDismissedFullScreenContent: (ad) {
-        print('$ad onAdDismissedFullScreenContent');
+        debugPrint('$ad onAdDismissedFullScreenContent');
         _isShowingAd = false;
         ad.dispose();
         _appOpenAd = null;
@@ -246,12 +246,12 @@ class AppOpenAdManager {
       request: AdRequest(),
       adLoadCallback: AppOpenAdLoadCallback(
         onAdLoaded: (ad) {
-          print('$ad loaded');
+          debugPrint('$ad loaded');
           {{'<strong>'}}_appOpenLoadTime = DateTime.now();{{'</strong>'}}
           _appOpenAd = ad;
         },
         onAdFailedToLoad: (error) {
-          print('AppOpenAd failed to load: $error');
+          debugPrint('AppOpenAd failed to load: $error');
         },
       ),
     );
@@ -263,16 +263,16 @@ class AppOpenAdManager {
   /// new ad.
   void showAdIfAvailable() {
     if (!isAdAvailable) {
-      print('Tried to show ad before available.');
+      debugPrint('Tried to show ad before available.');
       loadAd();
       return;
     }
     if (_isShowingAd) {
-      print('Tried to show ad while already showing an ad.');
+      debugPrint('Tried to show ad while already showing an ad.');
       return;
     }
     {{'<strong>'}}if (DateTime.now().subtract(maxCacheDuration).isAfter(_appOpenLoadTime!)) {
-      print('Maximum cache duration exceeded. Loading another ad.');
+      debugPrint('Maximum cache duration exceeded. Loading another ad.');
       _appOpenAd!.dispose();
       _appOpenAd = null;
       loadAd();
