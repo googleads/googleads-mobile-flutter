@@ -260,10 +260,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   case FLTAdmobRequestConfigurationParams: {
     GADRequestConfiguration *requestConfig = [GADRequestConfiguration alloc];
     requestConfig.maxAdContentRating = [self readValueOfType:[self readByte]];
-    [requestConfig
-        tagForChildDirectedTreatment:[self readValueOfType:[self readByte]]];
-    [requestConfig
-        tagForUnderAgeOfConsent:[self readValueOfType:[self readByte]]];
+    requestConfig.tagForChildDirectedTreatment = [self readValueOfType:[self readByte]];
+    requestConfig.tagForUnderAgeOfConsent = [self readValueOfType:[self readByte]];
     requestConfig.testDeviceIdentifiers =
         [self readValueOfType:[self readByte]];
     return requestConfig;
