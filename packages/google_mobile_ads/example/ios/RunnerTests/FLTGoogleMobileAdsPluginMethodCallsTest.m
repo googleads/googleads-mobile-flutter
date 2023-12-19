@@ -226,8 +226,7 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
-  OCMVerify(
-      [gadRequestConfigurationMock setPublisherFirstPartyIDEnabled:NO]);
+  OCMVerify([gadRequestConfigurationMock setPublisherFirstPartyIDEnabled:NO]);
 
   FlutterMethodCall *methodCallWithBool = [FlutterMethodCall
       methodCallWithMethodName:@"MobileAds#setSameAppKeyEnabled"
@@ -245,8 +244,7 @@
 
   XCTAssertTrue(resultInvokedWithBool);
   XCTAssertNil(returnedResultWithBool);
-  OCMVerify(
-      [gadRequestConfigurationMock setPublisherFirstPartyIDEnabled:NO]);
+  OCMVerify([gadRequestConfigurationMock setPublisherFirstPartyIDEnabled:NO]);
 }
 
 - (void)testSetAppMuted {
@@ -363,8 +361,9 @@
   [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
   XCTAssertTrue(resultInvoked);
-  XCTAssertEqual(returnedResult,
-    GADGetStringFromVersionNumber(GADMobileAds.sharedInstance.versionNumber));
+  XCTAssertEqual(
+      returnedResult,
+      GADGetStringFromVersionNumber(GADMobileAds.sharedInstance.versionNumber));
 }
 
 - (void)testOpenDebugMenu {

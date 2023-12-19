@@ -64,9 +64,9 @@
       [GADRequestConfiguration alloc];
   requestConfiguration.maxAdContentRating = GADMaxAdContentRatingMatureAudience;
   GADMobileAds.sharedInstance.requestConfiguration
-    .tagForChildDirectedTreatment = @YES;
-  GADMobileAds.sharedInstance.requestConfiguration
-    .tagForUnderAgeOfConsent = @NO;
+      .tagForChildDirectedTreatment = @YES;
+  GADMobileAds.sharedInstance.requestConfiguration.tagForUnderAgeOfConsent =
+      @NO;
   NSArray<NSString *> *testDeviceIds =
       [[NSArray alloc] initWithObjects:@"test-device-id", nil];
   requestConfiguration.testDeviceIdentifiers = testDeviceIds;
@@ -385,7 +385,7 @@
   NSString *className = @"test-class-name";
   OCMStub([mockResponseInfo responseIdentifier]).andReturn(identifier);
   OCMStub(mockResponseInfo.loadedAdNetworkResponseInfo.adNetworkClassName)
-    .andReturn(className);
+      .andReturn(className);
   NSDictionary *userInfo = @{
     NSLocalizedDescriptionKey : @"message",
     GADErrorUserInfoKeyResponseInfo : mockResponseInfo
@@ -416,7 +416,7 @@
   NSString *className = @"test-class-name";
   OCMStub([mockResponseInfo responseIdentifier]).andReturn(identifier);
   OCMStub(mockResponseInfo.loadedAdNetworkResponseInfo.adNetworkClassName)
-    .andReturn(className);
+      .andReturn(className);
   OCMStub([mockResponseInfo adNetworkInfoArray]).andReturn(@[
     mockNetworkResponse
   ]);
