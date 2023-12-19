@@ -26,6 +26,6 @@
              flutterPluginRegistry:
                  (id<FlutterPluginRegistry> _Nonnull)flutterPluginRegistry;
 
-@property(readonly, class) NSString * _Nonnull requestAgent;
+@property(readonly, class) NSString *_Nonnull requestAgent;
 
 @end

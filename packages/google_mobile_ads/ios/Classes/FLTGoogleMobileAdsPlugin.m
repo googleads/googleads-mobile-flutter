@@ -292,7 +292,8 @@
                              }
                            }];
   } else if ([call.method isEqualToString:@"MobileAds#getVersionString"]) {
-    result(GADGetStringFromVersionNumber(GADMobileAds.sharedInstance.versionNumber));
+    result(GADGetStringFromVersionNumber(
+        GADMobileAds.sharedInstance.versionNumber));
   } else if ([call.method
                  isEqualToString:@"MobileAds#getRequestConfiguration"]) {
     result(GADMobileAds.sharedInstance.requestConfiguration);
@@ -334,10 +335,12 @@
         tagForChildDirectedTreatment != (id)[NSNull null]) {
       switch ([tagForChildDirectedTreatment intValue]) {
       case 0:
-        GADMobileAds.sharedInstance.requestConfiguration.tagForChildDirectedTreatment = @NO;
+        GADMobileAds.sharedInstance.requestConfiguration
+            .tagForChildDirectedTreatment = @NO;
         break;
       case 1:
-        GADMobileAds.sharedInstance.requestConfiguration.tagForChildDirectedTreatment = @YES;
+        GADMobileAds.sharedInstance.requestConfiguration
+            .tagForChildDirectedTreatment = @YES;
         break;
       }
     }
@@ -345,10 +348,12 @@
         tagForUnderAgeOfConsent != (id)[NSNull null]) {
       switch ([tagForUnderAgeOfConsent intValue]) {
       case 0:
-        GADMobileAds.sharedInstance.requestConfiguration.tagForUnderAgeOfConsent = @NO;
+        GADMobileAds.sharedInstance.requestConfiguration
+            .tagForUnderAgeOfConsent = @NO;
         break;
       case 1:
-        GADMobileAds.sharedInstance.requestConfiguration.tagForUnderAgeOfConsent = @YES;
+        GADMobileAds.sharedInstance.requestConfiguration
+            .tagForUnderAgeOfConsent = @YES;
         break;
       }
     }
