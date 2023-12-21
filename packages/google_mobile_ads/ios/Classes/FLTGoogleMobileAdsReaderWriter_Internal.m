@@ -260,8 +260,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   case FLTAdmobRequestConfigurationParams: {
     GADMobileAds.sharedInstance.requestConfiguration.maxAdContentRating =
         [self readValueOfType:[self readByte]];
-    GADMobileAds.sharedInstance.requestConfiguration.tagForChildDirectedTreatment =
-        [self readValueOfType:[self readByte]];
+    GADMobileAds.sharedInstance.requestConfiguration
+        .tagForChildDirectedTreatment = [self readValueOfType:[self readByte]];
     GADMobileAds.sharedInstance.requestConfiguration.tagForUnderAgeOfConsent =
         [self readValueOfType:[self readByte]];
     GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers =
