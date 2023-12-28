@@ -44,14 +44,6 @@ class AdaptiveBannerExampleState extends State<AdaptiveBannerExample> {
       ? 'ca-app-pub-3940256099942544/6300978111'
       : 'ca-app-pub-3940256099942544/2934735716';
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //
-  //   _isLoaded = false;
-  //   _loadAd();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
