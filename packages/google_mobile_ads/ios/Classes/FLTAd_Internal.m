@@ -234,7 +234,8 @@
   self = [super init];
   if (self) {
     _responseIdentifier = responseInfo.responseIdentifier;
-    _adNetworkClassName = responseInfo.adNetworkClassName;
+    _adNetworkClassName =
+        responseInfo.loadedAdNetworkResponseInfo.adNetworkClassName;
     NSMutableArray<FLTGADAdNetworkResponseInfo *> *infoArray =
         [[NSMutableArray alloc] init];
     for (GADAdNetworkResponseInfo *adNetworkInfo in responseInfo

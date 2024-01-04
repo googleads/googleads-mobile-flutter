@@ -258,15 +258,15 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                             startMuted:[self readValueOfType:[self readByte]]];
   }
   case FLTAdmobRequestConfigurationParams: {
-    GADRequestConfiguration *requestConfig = [GADRequestConfiguration alloc];
-    requestConfig.maxAdContentRating = [self readValueOfType:[self readByte]];
-    [requestConfig
-        tagForChildDirectedTreatment:[self readValueOfType:[self readByte]]];
-    [requestConfig
-        tagForUnderAgeOfConsent:[self readValueOfType:[self readByte]]];
-    requestConfig.testDeviceIdentifiers =
+    GADMobileAds.sharedInstance.requestConfiguration.maxAdContentRating =
         [self readValueOfType:[self readByte]];
-    return requestConfig;
+    GADMobileAds.sharedInstance.requestConfiguration
+        .tagForChildDirectedTreatment = [self readValueOfType:[self readByte]];
+    GADMobileAds.sharedInstance.requestConfiguration.tagForUnderAgeOfConsent =
+        [self readValueOfType:[self readByte]];
+    GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers =
+        [self readValueOfType:[self readByte]];
+    return GADMobileAds.sharedInstance.requestConfiguration;
   }
   case FLTAdmobFieldInlineAdaptiveAdSize: {
     return [[FLTInlineAdaptiveBannerSize alloc]
@@ -470,11 +470,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeByte:FLTAdmobRequestConfigurationParams];
     GADRequestConfiguration *params = value;
     [self writeValue:params.maxAdContentRating];
-    // using null temporarily for tagForUnderAgeOfConsent and
-    // tagForChildDirectedTreatment as there are no getters for them in
-    // GADRequestConfiguration.
-    [super writeValue:NSNull.null];
-    [super writeValue:NSNull.null];
+    [self writeValue:params.tagForChildDirectedTreatment];
+    [self writeValue:params.tagForUnderAgeOfConsent];
     [self writeValue:params.testDeviceIdentifiers];
   } else if ([value isKindOfClass:[FLTNativeTemplateType class]]) {
     [self writeByte:FLTAdmobFieldNativeTemplateType];

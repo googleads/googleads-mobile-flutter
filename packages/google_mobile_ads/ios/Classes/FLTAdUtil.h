@@ -18,14 +18,14 @@
 
 @interface FLTAdUtil : NSObject
 
-+ (BOOL)isNull:(id)object;
++ (BOOL)isNull:(_Nullable id)object;
 
-+ (BOOL)isNotNull:(id)object;
++ (BOOL)isNotNull:(_Nullable id)object;
 
 + (WKWebView *_Nullable)getWebView:(NSNumber *_Nonnull)webViewId
              flutterPluginRegistry:
                  (id<FlutterPluginRegistry> _Nonnull)flutterPluginRegistry;
 
-@property(readonly, class) NSString *requestAgent;
+@property(readonly, class) NSString *_Nonnull requestAgent;
 
 @end
