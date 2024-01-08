@@ -14,6 +14,8 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'constants.dart';
@@ -55,7 +57,9 @@ class _InlineAdaptiveExampleState extends State<InlineAdaptiveExample> {
         _adWidth.truncate());
 
     _inlineAdaptiveAd = AdManagerBannerAd(
-      adUnitId: 'ca-app-pub-3940256099942544/9214589741',
+      adUnitId: Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/9214589741'
+          : 'ca-app-pub-3940256099942544/2435281174',
       sizes: [size],
       request: AdManagerAdRequest(),
       listener: AdManagerBannerAdListener(
