@@ -55,7 +55,7 @@ class _InlineAdaptiveExampleState extends State<InlineAdaptiveExample> {
         _adWidth.truncate());
 
     _inlineAdaptiveAd = AdManagerBannerAd(
-      adUnitId: 'ca-app-pub-3940256099942544/9214589741',
+      adUnitId: '/6499/example/banner',
       sizes: [size],
       request: AdManagerAdRequest(),
       listener: AdManagerBannerAdListener(
