@@ -25,6 +25,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/src/ad_inspector_containers.dart';
 import 'package:google_mobile_ads/src/ad_listeners.dart';
+import 'package:google_mobile_ads/src/mediation_extras.dart';
 import 'package:google_mobile_ads/src/mobile_ads.dart';
 import 'package:google_mobile_ads/src/nativetemplates/template_type.dart';
 import 'package:google_mobile_ads/src/webview_controller_util.dart';
@@ -858,6 +859,7 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueNativeTemplateFontStyle = 151;
   static const int _valueNativeTemplateType = 152;
   static const int _valueColor = 153;
+  static const int _valueMediationExtras = 154;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -877,6 +879,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.publisherProvidedId);
       writeValue(buffer, value.mediationExtrasIdentifier);
       writeValue(buffer, value.extras);
+      writeValue(buffer, value.mediationExtras);
     } else if (value is AdRequest) {
       buffer.putUint8(_valueAdRequest);
       writeValue(buffer, value.keywords);
@@ -888,7 +891,16 @@ class AdMessageCodec extends StandardMessageCodec {
       }
       writeValue(buffer, value.mediationExtrasIdentifier);
       writeValue(buffer, value.extras);
-    } else if (value is RewardItem) {
+      writeValue(buffer, value.mediationExtras);
+    } else if (value is MediationExtras) {
+      buffer.putUint8(_valueMediationExtras);
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        writeValue(buffer, value.getAndroidClassName());
+      } else {
+        writeValue(buffer, value.getIOSClassName());
+      }
+      writeValue(buffer, value.getExtras());
+    }  else if (value is RewardItem) {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
       writeValue(buffer, value.type);

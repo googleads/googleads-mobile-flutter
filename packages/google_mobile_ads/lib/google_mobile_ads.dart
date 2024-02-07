@@ -15,6 +15,7 @@
 export 'src/ad_containers.dart';
 export 'src/ad_listeners.dart';
 export 'src/app_background_event_notifier.dart';
+export 'src/mediation_extras.dart';
 export 'src/mobile_ads.dart';
 export 'src/request_configuration.dart';
 export 'src/ump/consent_request_parameters.dart';

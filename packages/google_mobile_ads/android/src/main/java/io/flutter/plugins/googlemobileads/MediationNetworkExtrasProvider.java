@@ -28,6 +28,7 @@ import java.util.Map;
  * MediationNetworkExtrasProvider)}, the plugin will use it to pass extras when constructing ad
  * requests.
  */
+@Deprecated
 public interface MediationNetworkExtrasProvider {
 
   /**

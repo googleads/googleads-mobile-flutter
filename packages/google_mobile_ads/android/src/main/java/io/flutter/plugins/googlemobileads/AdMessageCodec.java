@@ -18,6 +18,7 @@ package io.flutter.plugins.googlemobileads;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -35,11 +36,13 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Encodes and decodes values by reading from a ByteBuffer and writing to a ByteArrayOutputStream.
  */
 class AdMessageCodec extends StandardMessageCodec {
+
   // The type values below must be consistent for each platform.
   private static final byte VALUE_AD_SIZE = (byte) 128;
   private static final byte VALUE_AD_REQUEST = (byte) 129;
@@ -65,11 +68,16 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_NATIVE_TEMPLATE_FONT_STYLE = (byte) 151;
   private static final byte VALUE_NATIVE_TEMPLATE_TYPE = (byte) 152;
   private static final byte VALUE_COLOR = (byte) 153;
+  private static final byte VALUE_MEDIATION_EXTRAS = (byte) 154;
 
-  @NonNull Context context;
-  @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
-  @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
-  @NonNull private final FlutterRequestAgentProvider requestAgentProvider;
+  @NonNull
+  Context context;
+  @NonNull
+  final FlutterAdSize.AdSizeFactory adSizeFactory;
+  @Nullable
+  private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+  @NonNull
+  private final FlutterRequestAgentProvider requestAgentProvider;
 
   AdMessageCodec(
       @NonNull Context context, @NonNull FlutterRequestAgentProvider requestAgentProvider) {
@@ -251,14 +259,13 @@ class AdMessageCodec extends StandardMessageCodec {
   @Override
   protected Object readValueOfType(byte type, ByteBuffer buffer) {
     switch (type) {
-      case VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE:
-        {
-          final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
-          final Integer height = (Integer) readValueOfType(buffer.get(), buffer);
-          final Integer orientation = (Integer) readValueOfType(buffer.get(), buffer);
-          return new FlutterAdSize.InlineAdaptiveBannerAdSize(
-              adSizeFactory, context, width, orientation, height);
-        }
+      case VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE: {
+        final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
+        final Integer height = (Integer) readValueOfType(buffer.get(), buffer);
+        final Integer orientation = (Integer) readValueOfType(buffer.get(), buffer);
+        return new FlutterAdSize.InlineAdaptiveBannerAdSize(
+            adSizeFactory, context, width, orientation, height);
+      }
       case VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE:
         final String orientation = (String) readValueOfType(buffer.get(), buffer);
         final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
@@ -283,7 +290,24 @@ class AdMessageCodec extends StandardMessageCodec {
             .setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider)
             .setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer))
             .setRequestAgent(requestAgentProvider.getRequestAgent())
-            .build();
+            .setMediationExtras((List<FlutterMediationExtras>) readValueOfType(buffer.get(), buffer))
+        .build();
+      case VALUE_MEDIATION_EXTRAS:
+        String className = (String) readValueOfType(buffer.get(), buffer);
+        Map<String, String> extras = (Map<String, String>) readValueOfType(buffer.get(), buffer);
+        try {
+          assert className != null;
+          Class<?> cls = Class.forName(className);
+          FlutterMediationExtras flutterExtras = (FlutterMediationExtras) cls.newInstance();
+          flutterExtras.setMediationExtras(extras);
+          return flutterExtras;
+        } catch (ClassNotFoundException e) {
+          Log.e("FlutterMediationExtras", "Class not found: " + className);
+        } catch (IllegalAccessException e) {
+          Log.e("FlutterMediationExtras", "Illegal Access to " + className);
+        } catch (InstantiationException e) {
+          Log.e("FlutterMediationExtras", "Unable to instantiate class " + className);
+        }
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
             (Integer) readValueOfType(buffer.get(), buffer),
@@ -332,6 +356,7 @@ class AdMessageCodec extends StandardMessageCodec {
         builder.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
         builder.setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer));
         builder.setRequestAgent(requestAgentProvider.getRequestAgent());
+        builder.setMediationExtras((List<FlutterMediationExtras>) readValueOfType(buffer.get(), buffer));
         return builder.build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);

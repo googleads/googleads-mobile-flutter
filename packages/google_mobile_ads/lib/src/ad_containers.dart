@@ -23,6 +23,7 @@ import 'package:flutter/widgets.dart';
 
 import 'ad_instance_manager.dart';
 import 'ad_listeners.dart';
+import 'mediation_extras.dart';
 import 'nativetemplates/native_template_style.dart';
 
 /// Error information about why an ad operation failed.
@@ -196,8 +197,10 @@ class AdRequest {
     this.neighboringContentUrls,
     this.nonPersonalizedAds,
     this.httpTimeoutMillis,
+    @Deprecated('Prefer using mediationExtras')
     this.mediationExtrasIdentifier,
     this.extras,
+    this.mediationExtras
   });
 
   /// Words or phrases describing the current user activity.
@@ -233,6 +236,9 @@ class AdRequest {
   /// Extras to pass to the AdMob adapter.
   final Map<String, String>? extras;
 
+  /// New Mediation Extras.
+  final List<MediationExtras>? mediationExtras;
+
   @override
   bool operator ==(Object other) {
     return other is AdRequest &&
@@ -242,7 +248,8 @@ class AdRequest {
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
         httpTimeoutMillis == other.httpTimeoutMillis &&
         mediationExtrasIdentifier == other.mediationExtrasIdentifier &&
-        mapEquals<String, String>(extras, other.extras);
+        mapEquals<String, String>(extras, other.extras) &&
+        mediationExtras == other.mediationExtras;
   }
 }
 
@@ -260,6 +267,7 @@ class AdManagerAdRequest extends AdRequest {
     this.publisherProvidedId,
     String? mediationExtrasIdentifier,
     Map<String, String>? extras,
+    List<MediationExtras>? mediationExtras,
   }) : super(
           keywords: keywords,
           contentUrl: contentUrl,
@@ -268,6 +276,7 @@ class AdManagerAdRequest extends AdRequest {
           httpTimeoutMillis: httpTimeoutMillis,
           mediationExtrasIdentifier: mediationExtrasIdentifier,
           extras: extras,
+          mediationExtras: mediationExtras,
         );
 
   /// Key-value pairs used for custom targeting.

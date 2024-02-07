@@ -145,6 +145,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    * @return whether {@code mediationNetworkExtrasProvider} was registered to a {@code
    *     GoogleMobileAdsPlugin} associated with {@code engine}
    */
+  @Deprecated
   public static boolean registerMediationNetworkExtrasProvider(
       FlutterEngine engine, MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
     final GoogleMobileAdsPlugin gmaPlugin =
@@ -165,6 +166,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    *
    * @param engine The {@link FlutterEngine} which should have an attached instance of this plugin
    */
+  @Deprecated
   public static void unregisterMediationNetworkExtrasProvider(FlutterEngine engine) {
     final GoogleMobileAdsPlugin gmaPlugin =
         (GoogleMobileAdsPlugin) engine.getPlugins().get(GoogleMobileAdsPlugin.class);

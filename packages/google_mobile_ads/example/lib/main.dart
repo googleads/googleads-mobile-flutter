@@ -129,7 +129,9 @@ class _MyAppState extends State<MyApp> {
   void _createRewardedAd() {
     RewardedAd.load(
         adUnitId: Platform.isAndroid
-            ? 'ca-app-pub-3940256099942544/5224354917'
+            ? 'ca-app-pub-3212738706492790/9398343210'  // Android AppLovin Waterfall
+            //? 'ca-app-pub-7319269804560504/6563754562'  // Android AppLovin Bidding
+            //? 'ca-app-pub-3212738706492790/7097550101'  // Android Unity Waterfall
             : 'ca-app-pub-3940256099942544/1712485313',
         request: request,
         rewardedAdLoadCallback: RewardedAdLoadCallback(
