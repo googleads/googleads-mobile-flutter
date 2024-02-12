@@ -14,6 +14,7 @@
 
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
 #import "FLTAdUtil.h"
+#import "FLTMediationExtras.h"
 #import "NativeTemplates/FLTNativeTemplateColor.h"
 #import "NativeTemplates/FLTNativeTemplateFontStyle.h"
 #import "NativeTemplates/FLTNativeTemplateStyle.h"
@@ -46,6 +47,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldNativeTemplateFontStyle = 151,
   FLTAdmobFieldNativeTemplateType = 152,
   FLTAdmobFieldNativeTemplateColor = 153,
+  FLTAdmobFieldMediationExtras = 154
 
 };
 
@@ -104,6 +106,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   case FLTAdMobFieldFluidAdSize:
     return [[FLTFluidSize alloc] init];
   case FLTAdMobFieldAdRequest: {
+    NSLog(@"AppLovin AdRequest");
     FLTAdRequest *request = [[FLTAdRequest alloc] init];
 
     request.keywords = [self readValueOfType:[self readByte]];
@@ -116,7 +119,16 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
     request.adMobExtras = [self readValueOfType:[self readByte]];
     request.requestAgent = _requestAgent;
+    request.mediationExtras = [self readValueOfType:[self readByte]];
     return request;
+  }
+  case FLTAdmobFieldMediationExtras: {
+    NSLog(@"AppLovin FlutterMediationExtras");
+    id<FlutterMediationExtras> flutterMediationExtras = [[NSClassFromString([self readValueOfType:[self readByte]]) alloc] init];
+    NSMutableDictionary *flutterExtras = [self readValueOfType:[self readByte]];
+    flutterMediationExtras.extras = flutterExtras;
+    NSLog(@"AppLovin FlutterMediationExtras '%@'", flutterExtras.allValues);
+    return flutterMediationExtras;
   }
   case FLTAdMobFieldRewardItem: {
     return [[FLTRewardItem alloc]
@@ -199,6 +211,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
     request.adMobExtras = [self readValueOfType:[self readByte]];
     request.requestAgent = _requestAgent;
+    [self readValueOfType:[self readByte]];
     return request;
   }
   case FLTAdMobFieldAdapterInitializationState: {

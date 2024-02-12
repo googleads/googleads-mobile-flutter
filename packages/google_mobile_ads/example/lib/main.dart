@@ -82,8 +82,15 @@ class _MyAppState extends State<MyApp> {
   void _createInterstitialAd() {
     InterstitialAd.load(
         adUnitId: Platform.isAndroid
+<<<<<<< HEAD
             ? 'ca-app-pub-3940256099942544/1033173712'
             : 'ca-app-pub-3940256099942544/4411468910',
+=======
+            ? 'ca-app-pub-3212738706492790/4132755853'  // Android AppLovin Waterfall
+            //? 'ca-app-pub-7319269804560504/1064015875'  // Android AppLovin Bidding
+            //? 'ca-app-pub-3212738706492790/2245868040'  // Android Unity Waterfall
+            : 'ca-app-pub-3212738706492790/4067795537', // iOS AppLovin Waterfall
+>>>>>>> 92f8f22e (FlutterMediationExtras on iOS)
         request: request,
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
@@ -132,7 +139,7 @@ class _MyAppState extends State<MyApp> {
             ? 'ca-app-pub-3212738706492790/9398343210'  // Android AppLovin Waterfall
             //? 'ca-app-pub-7319269804560504/6563754562'  // Android AppLovin Bidding
             //? 'ca-app-pub-3212738706492790/7097550101'  // Android Unity Waterfall
-            : 'ca-app-pub-3940256099942544/1712485313',
+            : 'ca-app-pub-3212738706492790/9403882696',
         request: request,
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (RewardedAd ad) {

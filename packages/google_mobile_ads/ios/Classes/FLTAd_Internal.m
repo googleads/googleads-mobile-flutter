@@ -171,9 +171,22 @@
 
 - (void)addNetworkExtrasToGADRequest:(GADRequest *)request
                             adUnitId:(NSString *_Nonnull)adUnitId {
-  NSArray<id<GADAdNetworkExtras>> *extras = [_mediationNetworkExtrasProvider
-             getMediationExtras:adUnitId
-      mediationExtrasIdentifier:_mediationExtrasIdentifier];
+  NSLog(@"Hello, yes. AppLovin Trying to addNetworkExtras");
+  NSArray<id<GADAdNetworkExtras>> *extras;
+
+  if (_mediationExtras != NULL) {
+    NSLog(@"Hello, yes. AppLovin New Mediation Extras");
+    NSMutableArray<id<GADAdNetworkExtras>> *flutterExtras = [NSMutableArray array];
+    for(id<FlutterMediationExtras> extra in _mediationExtras) {
+      [flutterExtras addObject:[extra getMediationExtras]];
+    }
+    extras = [NSArray arrayWithArray:flutterExtras];
+    NSLog(@"Hello, yes. AppLovin Got extras %@", extras.description);
+  } else {
+    extras = [_mediationNetworkExtrasProvider
+              getMediationExtras:adUnitId
+              mediationExtrasIdentifier:_mediationExtrasIdentifier];
+  }
   BOOL addedNpaToGADExtras = false;
 
   if ([FLTAdUtil isNotNull:extras]) {
@@ -185,9 +198,11 @@
             initWithDictionary:gadExtras.additionalParameters];
         newParams[@"npa"] = @"1";
         gadExtras.additionalParameters = newParams;
+        NSLog(@"Hello, yes. AppLovin gadExtras %@", gadExtras.description);
         [request registerAdNetworkExtras:gadExtras];
         addedNpaToGADExtras = true;
       } else {
+        NSLog(@"Hello, yes. AppLovin normal extras %@", extra.description);
         [request registerAdNetworkExtras:extra];
       }
     }

@@ -294,7 +294,7 @@ class AdMessageCodec extends StandardMessageCodec {
         .build();
       case VALUE_MEDIATION_EXTRAS:
         String className = (String) readValueOfType(buffer.get(), buffer);
-        Map<String, String> extras = (Map<String, String>) readValueOfType(buffer.get(), buffer);
+        Map<String, Object> extras = (Map<String, Object>) readValueOfType(buffer.get(), buffer);
         try {
           assert className != null;
           Class<?> cls = Class.forName(className);
@@ -308,6 +308,7 @@ class AdMessageCodec extends StandardMessageCodec {
         } catch (InstantiationException e) {
           Log.e("FlutterMediationExtras", "Unable to instantiate class " + className);
         }
+        return null;
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
             (Integer) readValueOfType(buffer.get(), buffer),

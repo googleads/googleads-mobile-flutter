@@ -9,6 +9,6 @@ public interface FlutterMediationExtras {
 
   Pair<Class<? extends MediationExtrasReceiver>, Bundle> getMediationExtras();
 
-  void setMediationExtras(Map<String, String> extras);
+  void setMediationExtras(Map<String, Object> extras);
 
 }

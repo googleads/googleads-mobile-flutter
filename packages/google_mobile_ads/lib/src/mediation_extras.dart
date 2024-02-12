@@ -4,5 +4,5 @@ abstract class MediationExtras {
 
   String getIOSClassName();
 
-  Map<String, String> getExtras();
+  Map<String, dynamic> getExtras();
 }

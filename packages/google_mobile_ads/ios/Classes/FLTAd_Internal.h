@@ -14,6 +14,7 @@
 
 #import "FLTAdInstanceManager_Internal.h"
 #import "FLTGoogleMobileAdsPlugin.h"
+#import "FLTMediationExtras.h"
 #import "FLTMediationNetworkExtrasProvider.h"
 #import "FLTMobileAds_Internal.h"
 #import "FLTNativeTemplateStyle.h"
@@ -91,6 +92,7 @@
     FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
 @property NSDictionary<NSString *, NSString *> *_Nullable adMobExtras;
 @property NSString *_Nonnull requestAgent;
+@property NSArray<FlutterMediationExtras> *_Nullable mediationExtras;
 
 - (GADRequest *_Nonnull)asGADRequest:(NSString *_Nonnull)adUnitId;
 @end
