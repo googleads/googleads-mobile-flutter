@@ -154,6 +154,7 @@ class AdapterResponseInfo {
   ///
   /// This is an empty string "" if the ad server did not populate this field.
   final String adSourceInstanceId;
+
   @override
   String toString() {
     return '$runtimeType(adapterClassName: $adapterClassName, '
@@ -191,17 +192,16 @@ class LoadAdError extends AdError {
 /// [AdRequest.Builder for Android](https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest.Builder).
 class AdRequest {
   /// Default constructor for [AdRequest].
-  const AdRequest({
-    this.keywords,
-    this.contentUrl,
-    this.neighboringContentUrls,
-    this.nonPersonalizedAds,
-    this.httpTimeoutMillis,
-    @Deprecated('Prefer using mediationExtras')
-    this.mediationExtrasIdentifier,
-    this.extras,
-    this.mediationExtras
-  });
+  const AdRequest(
+      {this.keywords,
+      this.contentUrl,
+      this.neighboringContentUrls,
+      this.nonPersonalizedAds,
+      this.httpTimeoutMillis,
+      @Deprecated('Use [mediationExtras] instead.')
+      this.mediationExtrasIdentifier,
+      this.extras,
+      this.mediationExtras});
 
   /// Words or phrases describing the current user activity.
   final List<String>? keywords;
@@ -231,12 +231,14 @@ class AdRequest {
   /// to the ad request. This identifier will get passed to your platform-side
   /// mediation extras factory class, allowing for additional customization
   /// of network extras.
+  @deprecated
   final String? mediationExtrasIdentifier;
 
   /// Extras to pass to the AdMob adapter.
   final Map<String, String>? extras;
 
-  /// New Mediation Extras.
+  /// Extras to pass to the Mediations Adapter linked to the instance of the
+  /// [MediationExtras].
   final List<MediationExtras>? mediationExtras;
 
   @override

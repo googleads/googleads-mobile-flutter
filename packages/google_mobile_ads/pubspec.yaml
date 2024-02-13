@@ -45,8 +45,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   webview_flutter_platform_interface: ^2.1.0
-  pigeon: ^16.0.5
-
 
 environment:
   sdk: ">=2.15.0 <4.0.0"

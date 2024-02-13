@@ -144,6 +144,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    *     used to provide network extras when ad requests are created
    * @return whether {@code mediationNetworkExtrasProvider} was registered to a {@code
    *     GoogleMobileAdsPlugin} associated with {@code engine}
+   * @deprecated Use {@link FlutterMediationExtras} instead.
    */
   @Deprecated
   public static boolean registerMediationNetworkExtrasProvider(
@@ -165,6 +166,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
    * with the plugin using {@code unregisterMediationNetworkExtrasProvider}.
    *
    * @param engine The {@link FlutterEngine} which should have an attached instance of this plugin
+   * @deprecated Use {@link FlutterMediationExtras} instead.
    */
   @Deprecated
   public static void unregisterMediationNetworkExtrasProvider(FlutterEngine engine) {

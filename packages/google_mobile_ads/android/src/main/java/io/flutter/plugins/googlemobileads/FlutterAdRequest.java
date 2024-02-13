@@ -22,7 +22,6 @@ import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.mediation.MediationExtrasReceiver;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import io.flutter.Log;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,7 +209,6 @@ class FlutterAdRequest {
     if (mediationExtras != null) {
       for (FlutterMediationExtras flutterExtras : mediationExtras) {
         Pair<Class<? extends MediationExtrasReceiver>, Bundle> pair = flutterExtras.getMediationExtras();
-        Log.d("AppLovinExtras", "Adding to Mediation Extras " + pair.first + ", " + pair.second);
         networkExtras.put(pair.first, pair.second);
       }
     } else if (mediationNetworkExtrasProvider != null) {
@@ -237,7 +235,6 @@ class FlutterAdRequest {
     }
 
     for (Entry<Class<? extends MediationExtrasReceiver>, Bundle> entry : networkExtras.entrySet()) {
-      Log.d("AppLovinExtras", "Adding to network Extras");
       builder.addNetworkExtrasBundle(entry.getKey(), entry.getValue());
     }
   }
@@ -252,9 +249,7 @@ class FlutterAdRequest {
     if (contentUrl != null) {
       builder.setContentUrl(contentUrl);
     }
-
     addNetworkExtras(builder, adUnitId);
-
     if (neighboringContentUrls != null) {
       builder.setNeighboringContentUrls(neighboringContentUrls);
     }

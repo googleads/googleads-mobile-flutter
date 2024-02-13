@@ -27,6 +27,8 @@ import java.util.Map;
  * GoogleMobileAdsPlugin#registerMediationNetworkExtrasProvider(FlutterEngine,
  * MediationNetworkExtrasProvider)}, the plugin will use it to pass extras when constructing ad
  * requests.
+ *
+ * @deprecated User {@link FlutterMediationExtras} instead.
  */
 @Deprecated
 public interface MediationNetworkExtrasProvider {
