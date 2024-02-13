@@ -46,6 +46,7 @@ dev_dependencies:
     sdk: flutter
   webview_flutter_platform_interface: ^2.1.0
 
+
 environment:
   sdk: ">=2.15.0 <4.0.0"
   flutter: ">=3.7.0"
