@@ -900,7 +900,7 @@ class AdMessageCodec extends StandardMessageCodec {
         writeValue(buffer, value.getIOSClassName());
       }
       writeValue(buffer, value.getExtras());
-    }  else if (value is RewardItem) {
+    } else if (value is RewardItem) {
       buffer.putUint8(_valueRewardItem);
       writeValue(buffer, value.amount);
       writeValue(buffer, value.type);

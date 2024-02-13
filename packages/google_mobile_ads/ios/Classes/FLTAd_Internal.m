@@ -174,15 +174,16 @@
   NSArray<id<GADAdNetworkExtras>> *extras;
 
   if (_mediationExtras != NULL) {
-    NSMutableArray<id<GADAdNetworkExtras>> *flutterExtras = [NSMutableArray array];
-    for(id<FlutterMediationExtras> extra in _mediationExtras) {
+    NSMutableArray<id<GADAdNetworkExtras>> *flutterExtras =
+        [NSMutableArray array];
+    for (id<FlutterMediationExtras> extra in _mediationExtras) {
       [flutterExtras addObject:[extra getMediationExtras]];
     }
     extras = [NSArray arrayWithArray:flutterExtras];
   } else {
     extras = [_mediationNetworkExtrasProvider
-              getMediationExtras:adUnitId
-              mediationExtrasIdentifier:_mediationExtrasIdentifier];
+               getMediationExtras:adUnitId
+        mediationExtrasIdentifier:_mediationExtrasIdentifier];
   }
   BOOL addedNpaToGADExtras = false;
 

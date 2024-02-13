@@ -208,7 +208,8 @@ class FlutterAdRequest {
     Map<Class<? extends MediationExtrasReceiver>, Bundle> networkExtras = new HashMap<>();
     if (mediationExtras != null) {
       for (FlutterMediationExtras flutterExtras : mediationExtras) {
-        Pair<Class<? extends MediationExtrasReceiver>, Bundle> pair = flutterExtras.getMediationExtras();
+        Pair<Class<? extends MediationExtrasReceiver>, Bundle> pair =
+            flutterExtras.getMediationExtras();
         networkExtras.put(pair.first, pair.second);
       }
     } else if (mediationNetworkExtrasProvider != null) {

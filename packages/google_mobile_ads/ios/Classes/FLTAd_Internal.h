@@ -87,9 +87,11 @@
 @property NSString *_Nullable contentURL;
 @property BOOL nonPersonalizedAds;
 @property NSArray<NSString *> *_Nullable neighboringContentURLs;
-@property NSString *_Nullable mediationExtrasIdentifier DEPRECATED_MSG_ATTRIBUTE("Use mediationExtras instead.");
+@property NSString *_Nullable mediationExtrasIdentifier
+    DEPRECATED_MSG_ATTRIBUTE("Use mediationExtras instead.");
 @property id<
-    FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider DEPRECATED_MSG_ATTRIBUTE("Use mediationExtras instead.");
+    FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider
+    DEPRECATED_MSG_ATTRIBUTE("Use mediationExtras instead.");
 @property NSDictionary<NSString *, NSString *> *_Nullable adMobExtras;
 @property NSString *_Nonnull requestAgent;
 @property NSArray<FlutterMediationExtras> *_Nullable mediationExtras;

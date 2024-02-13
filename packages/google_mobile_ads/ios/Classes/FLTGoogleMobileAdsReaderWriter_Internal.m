@@ -122,7 +122,9 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     return request;
   }
   case FLTAdmobFieldMediationExtras: {
-    id<FlutterMediationExtras> flutterMediationExtras = [[NSClassFromString([self readValueOfType:[self readByte]]) alloc] init];
+    id<FlutterMediationExtras> flutterMediationExtras =
+        [[NSClassFromString([self readValueOfType:[self readByte]]) alloc]
+            init];
     NSMutableDictionary *flutterExtras = [self readValueOfType:[self readByte]];
     flutterMediationExtras.extras = flutterExtras;
     return flutterMediationExtras;

@@ -16,7 +16,6 @@ import 'package:google_mobile_ads/src/ad_containers.dart';
 
 /// Contains information for a particular ad network set by developer.
 abstract class MediationExtras {
-
   /// Fully-qualified name of an Android FlutterMediationExtras class.
   ///
   /// The name of the class must implement the FlutterMediationExtras interface.

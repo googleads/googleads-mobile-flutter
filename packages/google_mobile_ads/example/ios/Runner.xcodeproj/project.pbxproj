@@ -10,7 +10,7 @@
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		3D7E269FA8038A55BBCBF250 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2AB4EE7241D0927BB957D65 /* Pods_Runner.framework */; };
-    588A95C9AF0A9F291BFBAA5B /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86606948223BE74D544C6A9E /* Pods_RunnerTests.framework */; };
+		588A95C9AF0A9F291BFBAA5B /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86606948223BE74D544C6A9E /* Pods_RunnerTests.framework */; };
 		8FC897F52411A9F100415930 /* NativeAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8FC897F42411A9F100415930 /* NativeAdView.xib */; };
 		978B8F6F1D3862AE00F588F7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AFFD8EE1D35381100E5BB4D /* AppDelegate.m */; };
 		97C146F31CF9000F007C117D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 97C146F21CF9000F007C117D /* main.m */; };

@@ -36,7 +36,6 @@ import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Encodes and decodes values by reading from a ByteBuffer and writing to a ByteArrayOutputStream.
@@ -70,14 +69,10 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_COLOR = (byte) 153;
   private static final byte VALUE_MEDIATION_EXTRAS = (byte) 154;
 
-  @NonNull
-  Context context;
-  @NonNull
-  final FlutterAdSize.AdSizeFactory adSizeFactory;
-  @Nullable
-  private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
-  @NonNull
-  private final FlutterRequestAgentProvider requestAgentProvider;
+  @NonNull Context context;
+  @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
+  @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+  @NonNull private final FlutterRequestAgentProvider requestAgentProvider;
 
   AdMessageCodec(
       @NonNull Context context, @NonNull FlutterRequestAgentProvider requestAgentProvider) {
@@ -259,13 +254,14 @@ class AdMessageCodec extends StandardMessageCodec {
   @Override
   protected Object readValueOfType(byte type, ByteBuffer buffer) {
     switch (type) {
-      case VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE: {
-        final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
-        final Integer height = (Integer) readValueOfType(buffer.get(), buffer);
-        final Integer orientation = (Integer) readValueOfType(buffer.get(), buffer);
-        return new FlutterAdSize.InlineAdaptiveBannerAdSize(
-            adSizeFactory, context, width, orientation, height);
-      }
+      case VALUE_INLINE_ADAPTIVE_BANNER_AD_SIZE:
+        {
+          final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
+          final Integer height = (Integer) readValueOfType(buffer.get(), buffer);
+          final Integer orientation = (Integer) readValueOfType(buffer.get(), buffer);
+          return new FlutterAdSize.InlineAdaptiveBannerAdSize(
+              adSizeFactory, context, width, orientation, height);
+        }
       case VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE:
         final String orientation = (String) readValueOfType(buffer.get(), buffer);
         final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
@@ -290,8 +286,9 @@ class AdMessageCodec extends StandardMessageCodec {
             .setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider)
             .setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer))
             .setRequestAgent(requestAgentProvider.getRequestAgent())
-            .setMediationExtras((List<FlutterMediationExtras>) readValueOfType(buffer.get(), buffer))
-        .build();
+            .setMediationExtras(
+                (List<FlutterMediationExtras>) readValueOfType(buffer.get(), buffer))
+            .build();
       case VALUE_MEDIATION_EXTRAS:
         String className = (String) readValueOfType(buffer.get(), buffer);
         Map<String, Object> extras = (Map<String, Object>) readValueOfType(buffer.get(), buffer);
@@ -357,7 +354,8 @@ class AdMessageCodec extends StandardMessageCodec {
         builder.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
         builder.setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer));
         builder.setRequestAgent(requestAgentProvider.getRequestAgent());
-        builder.setMediationExtras((List<FlutterMediationExtras>) readValueOfType(buffer.get(), buffer));
+        builder.setMediationExtras(
+            (List<FlutterMediationExtras>) readValueOfType(buffer.get(), buffer));
         return builder.build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);
