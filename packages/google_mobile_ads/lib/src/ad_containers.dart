@@ -198,7 +198,6 @@ class AdRequest {
       this.neighboringContentUrls,
       this.nonPersonalizedAds,
       this.httpTimeoutMillis,
-      @Deprecated('Use [mediationExtras] instead.')
       this.mediationExtrasIdentifier,
       this.extras,
       this.mediationExtras});
@@ -231,7 +230,6 @@ class AdRequest {
   /// to the ad request. This identifier will get passed to your platform-side
   /// mediation extras factory class, allowing for additional customization
   /// of network extras.
-  @deprecated
   final String? mediationExtrasIdentifier;
 
   /// Extras to pass to the AdMob adapter.
