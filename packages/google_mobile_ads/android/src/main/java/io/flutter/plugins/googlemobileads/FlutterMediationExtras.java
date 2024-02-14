@@ -23,5 +23,4 @@ public interface FlutterMediationExtras {
   Pair<Class<? extends MediationExtrasReceiver>, Bundle> getMediationExtras();
 
   void setMediationExtras(Map<String, Object> extras);
-
 }

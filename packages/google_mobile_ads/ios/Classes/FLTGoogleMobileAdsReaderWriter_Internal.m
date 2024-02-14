@@ -388,6 +388,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.pubProvidedID];
     [self writeValue:request.mediationExtrasIdentifier];
     [self writeValue:request.adMobExtras];
+    [self writeValue:request.mediationExtras];
   } else if ([value isKindOfClass:[FLTAdRequest class]]) {
     [self writeByte:FLTAdMobFieldAdRequest];
     FLTAdRequest *request = value;
