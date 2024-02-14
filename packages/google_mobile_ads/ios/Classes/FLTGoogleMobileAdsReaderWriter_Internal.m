@@ -397,6 +397,9 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.neighboringContentURLs];
     [self writeValue:request.mediationExtrasIdentifier];
     [self writeValue:request.adMobExtras];
+    [self writeValue:request.mediationExtras];
+  } else if ([value conformsToProtocol:@protocol(FlutterMediationExtras)) {
+    // Left empty since there's no need to write it back to the dart layer
   } else if ([value isKindOfClass:[FLTRewardItem class]]) {
     [self writeByte:FLTAdMobFieldRewardItem];
     FLTRewardItem *item = value;

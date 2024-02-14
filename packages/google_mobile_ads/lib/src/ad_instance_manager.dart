@@ -1065,7 +1065,13 @@ class AdMessageCodec extends StandardMessageCodec {
           mediationExtrasIdentifier: readValueOfType(buffer.getUint8(), buffer),
           extras: readValueOfType(buffer.getUint8(), buffer)
               ?.cast<String, String>(),
+          mediationExtras: readValueOfType(buffer.getUint8(), buffer)
+              ?.cast<List<MediationExtras>>(),
         );
+      case _valueMediationExtras:
+        // Returns null since there's no need to cast into MediationExtras
+        // instance
+        return null;
       case _valueRewardItem:
         return RewardItem(
           readValueOfType(buffer.getUint8(), buffer),
@@ -1124,6 +1130,8 @@ class AdMessageCodec extends StandardMessageCodec {
           mediationExtrasIdentifier: readValueOfType(buffer.getUint8(), buffer),
           extras: readValueOfType(buffer.getUint8(), buffer)
               ?.cast<String, String>(),
+          mediationExtras: readValueOfType(buffer.getUint8(), buffer)
+              ?.cast<List<MediationExtras>>(),
         );
       case _valueInitializationState:
         switch (readValueOfType(buffer.getUint8(), buffer)) {

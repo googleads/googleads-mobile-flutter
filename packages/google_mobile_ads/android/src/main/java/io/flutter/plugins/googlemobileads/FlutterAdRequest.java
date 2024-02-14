@@ -38,7 +38,6 @@ class FlutterAdRequest {
   @Nullable private final MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
   @Nullable private final Map<String, String> adMobExtras;
   @NonNull private final String requestAgent;
-
   @Nullable private final List<FlutterMediationExtras> mediationExtras;
 
   protected static class Builder {
@@ -305,6 +304,11 @@ class FlutterAdRequest {
     return requestAgent;
   }
 
+  @Nullable
+  protected List<FlutterMediationExtras> getMediationExtras() {
+    return mediationExtras;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -321,7 +325,8 @@ class FlutterAdRequest {
         && Objects.equals(httpTimeoutMillis, request.httpTimeoutMillis)
         && Objects.equals(mediationExtrasIdentifier, request.mediationExtrasIdentifier)
         && Objects.equals(mediationNetworkExtrasProvider, request.mediationNetworkExtrasProvider)
-        && Objects.equals(adMobExtras, request.adMobExtras);
+        && Objects.equals(adMobExtras, request.adMobExtras)
+        && Objects.equals(mediationExtras, request.mediationExtras);
   }
 
   @Override
@@ -333,6 +338,7 @@ class FlutterAdRequest {
         neighboringContentUrls,
         httpTimeoutMillis,
         mediationExtrasIdentifier,
-        mediationNetworkExtrasProvider);
+        mediationNetworkExtrasProvider,
+        mediationExtras);
   }
 }

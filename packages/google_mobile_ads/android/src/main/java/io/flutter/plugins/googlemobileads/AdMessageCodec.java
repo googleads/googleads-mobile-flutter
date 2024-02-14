@@ -117,6 +117,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getPublisherProvidedId());
       writeValue(stream, request.getMediationExtrasIdentifier());
       writeValue(stream, request.getAdMobExtras());
+      writeValue(stream, request.getMediationExtras());
     } else if (value instanceof FlutterAdRequest) {
       stream.write(VALUE_AD_REQUEST);
       final FlutterAdRequest request = (FlutterAdRequest) value;
@@ -127,6 +128,9 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getHttpTimeoutMillis());
       writeValue(stream, request.getMediationExtrasIdentifier());
       writeValue(stream, request.getAdMobExtras());
+      writeValue(stream, request.getMediationExtras());
+    } else if (value instanceof FlutterMediationExtras) {
+      // Left empty since there's no need to write it back to the dart layer
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
       stream.write(VALUE_REWARD_ITEM);
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;
