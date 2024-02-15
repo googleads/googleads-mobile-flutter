@@ -325,8 +325,7 @@ class FlutterAdRequest {
         && Objects.equals(httpTimeoutMillis, request.httpTimeoutMillis)
         && Objects.equals(mediationExtrasIdentifier, request.mediationExtrasIdentifier)
         && Objects.equals(mediationNetworkExtrasProvider, request.mediationNetworkExtrasProvider)
-        && Objects.equals(adMobExtras, request.adMobExtras)
-        && Objects.equals(mediationExtras, request.mediationExtras);
+        && Objects.equals(adMobExtras, request.adMobExtras);
   }
 
   @Override

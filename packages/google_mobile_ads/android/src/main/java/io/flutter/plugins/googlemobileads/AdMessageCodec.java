@@ -130,7 +130,11 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getAdMobExtras());
       writeValue(stream, request.getMediationExtras());
     } else if (value instanceof FlutterMediationExtras) {
-      // Left empty since there's no need to write it back to the dart layer
+      stream.write(VALUE_MEDIATION_EXTRAS);
+      final FlutterMediationExtras mediationExtras = (FlutterMediationExtras) value;
+      String className = mediationExtras.getClass().getCanonicalName();
+      writeValue(stream, className);
+      writeValue(stream, mediationExtras.extras);
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
       stream.write(VALUE_REWARD_ITEM);
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;

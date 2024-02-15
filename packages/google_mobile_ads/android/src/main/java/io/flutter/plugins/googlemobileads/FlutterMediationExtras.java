@@ -28,7 +28,8 @@ import java.util.Map;
  * the proper pair of Class and Bundle values returned by {@link
  * FlutterMediationExtras#getMediationExtras()}
  */
-public interface FlutterMediationExtras {
+public abstract class FlutterMediationExtras {
+  Map<String, Object> extras;
   /**
    * Called when the {@link FlutterAdRequest} is parsed into an {@link
    * com.google.android.gms.ads.AdRequest}.
@@ -36,12 +37,14 @@ public interface FlutterMediationExtras {
    * @return The parsed values to be sent to the {@link
    *     com.google.android.gms.ads.AdRequest.Builder#addNetworkExtrasBundle}
    */
-  Pair<Class<? extends MediationExtrasReceiver>, Bundle> getMediationExtras();
+  abstract Pair<Class<? extends MediationExtrasReceiver>, Bundle> getMediationExtras();
 
   /**
    * Pair of key-values to be stored and later be parsed into a {@link Bundle}.
    *
    * @param extras Received from the dart layer through the MediationExtras class.
    */
-  void setMediationExtras(Map<String, Object> extras);
+  void setMediationExtras(Map<String, Object> extras) {
+    this.extras = extras;
+  }
 }

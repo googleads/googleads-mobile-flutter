@@ -1069,9 +1069,9 @@ class AdMessageCodec extends StandardMessageCodec {
               ?.cast<List<MediationExtras>>(),
         );
       case _valueMediationExtras:
-        // Returns null since there's no need to cast into MediationExtras
-        // instance
-        return null;
+        return _MediationExtras(
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer));
       case _valueRewardItem:
         return RewardItem(
           readValueOfType(buffer.getUint8(), buffer),
@@ -1290,6 +1290,36 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.width);
       writeValue(buffer, value.height);
     }
+  }
+}
+
+class _MediationExtras implements MediationExtras {
+  _MediationExtras(
+    String className,
+    Map<String, dynamic> extras,
+  ) {
+    _androidClassName = className;
+    _iOSClassName = className;
+    _extras = extras;
+  }
+
+  late final String _androidClassName;
+  late final String _iOSClassName;
+  late final Map<String, dynamic> _extras;
+
+  @override
+  String getAndroidClassName() {
+    return _androidClassName;
+  }
+
+  @override
+  Map<String, dynamic> getExtras() {
+    return _extras;
+  }
+
+  @override
+  String getIOSClassName() {
+    return _iOSClassName;
   }
 }
 
