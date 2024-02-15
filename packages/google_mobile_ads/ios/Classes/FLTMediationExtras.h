@@ -15,10 +15,21 @@
 #import <Foundation/Foundation.h>
 #import <GoogleMobileAds/GADAdNetworkExtras.h>
 
+/**
+ * Mediation adapters will provide a class that conforms to this protocol to be
+ * added to the `FLTAdRequest`.
+ */
 @protocol FlutterMediationExtras
 
+// Pair of key-values to be stored received from the dart layer.
 @property NSMutableDictionary *_Nullable extras;
 
+/**
+ * Parses the values in @c extras to the required protocol to append Mediation
+ * extras to the `FLTAdRequest`.
+ *
+ * @return the parsed extra values to an object that conforms to protocol.
+ */
 - (id<GADAdNetworkExtras> _Nonnull)getMediationExtras;
 
 @end

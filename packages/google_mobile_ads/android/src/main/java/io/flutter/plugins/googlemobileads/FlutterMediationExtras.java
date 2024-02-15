@@ -19,8 +19,30 @@ import android.util.Pair;
 import com.google.android.gms.ads.mediation.MediationExtrasReceiver;
 import java.util.Map;
 
+/**
+ * Mediation Adapters that require extra parameters provide implementations of this interface to
+ * further be sent to the {@link com.google.android.gms.ads.AdRequest}
+ *
+ * Implementation will receive the Map of Extras via the
+ * {@link FlutterMediationExtras#setMediationExtras} which the implementation must store and later
+ * parse to the proper pair of Class and Bundle values returned by
+ * {@link FlutterMediationExtras#getMediationExtras()}
+ */
 public interface FlutterMediationExtras {
+
+  /**
+   * Called when the {@link FlutterAdRequest} is parsed into an
+   * {@link com.google.android.gms.ads.AdRequest}.
+   *
+   * @return The parsed values to be sent to the
+   *     {@link com.google.android.gms.ads.AdRequest.Builder#addNetworkExtrasBundle}
+   */
   Pair<Class<? extends MediationExtrasReceiver>, Bundle> getMediationExtras();
 
+  /**
+   * Pair of key-values to be stored and later be parsed into a {@link Bundle}.
+   *
+   * @param extras Received from the dart layer through the MediationExtras class.
+   */
   void setMediationExtras(Map<String, Object> extras);
 }

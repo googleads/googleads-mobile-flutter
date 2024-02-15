@@ -198,7 +198,7 @@ class AdRequest {
       this.neighboringContentUrls,
       this.nonPersonalizedAds,
       this.httpTimeoutMillis,
-      this.mediationExtrasIdentifier,
+      @deprecated this.mediationExtrasIdentifier,
       this.extras,
       this.mediationExtras});
 
@@ -235,8 +235,7 @@ class AdRequest {
   /// Extras to pass to the AdMob adapter.
   final Map<String, String>? extras;
 
-  /// Extras to pass to the Mediations Adapter linked to the instance of the
-  /// [MediationExtras].
+  /// Extra parameters to pass to specific ad adapters.
   final List<MediationExtras>? mediationExtras;
 
   @override
@@ -274,6 +273,7 @@ class AdManagerAdRequest extends AdRequest {
           neighboringContentUrls: neighboringContentUrls,
           nonPersonalizedAds: nonPersonalizedAds,
           httpTimeoutMillis: httpTimeoutMillis,
+          //ignore: deprecated_member_use_from_same_package
           mediationExtrasIdentifier: mediationExtrasIdentifier,
           extras: extras,
           mediationExtras: mediationExtras,
