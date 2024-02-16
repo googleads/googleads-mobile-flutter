@@ -67,14 +67,14 @@
                 mediationNetworkExtrasProvider
                                       registry:
                                           (id<FlutterPluginRegistry> _Nonnull)
-                                              registry;
+                                              registry __deprecated;
 
 /*
  * Unregisters any FLTMediationNetworkExtrasProvider that was associated with
  * the FLTGoogleMobileAdsPlugin in registry.
  */
 + (void)unregisterMediationNetworkExtrasProvider:
-    (id<FlutterPluginRegistry> _Nonnull)registry;
+    (id<FlutterPluginRegistry> _Nonnull)registry __deprecated;
 
 /**
  * Adds a `FLTNativeAdFactory` used to create a `GADNativeAdView`s from a Native

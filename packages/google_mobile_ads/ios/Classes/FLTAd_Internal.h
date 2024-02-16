@@ -94,7 +94,7 @@
     DEPRECATED_MSG_ATTRIBUTE("Use mediationExtras instead.");
 @property NSDictionary<NSString *, NSString *> *_Nullable adMobExtras;
 @property NSString *_Nonnull requestAgent;
-@property NSArray<FlutterMediationExtras> *_Nullable mediationExtras;
+@property NSArray<id<FlutterMediationExtras>> *_Nullable mediationExtras;
 
 - (GADRequest *_Nonnull)asGADRequest:(NSString *_Nonnull)adUnitId;
 @end
