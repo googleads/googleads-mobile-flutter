@@ -539,7 +539,7 @@ public class AdMessageCodecTest {
   }
 }
 
-class DummyMediationExtras extends FlutterMediationExtras{
+class DummyMediationExtras extends FlutterMediationExtras {
   @Override
   Pair<Class<? extends MediationExtrasReceiver>, Bundle> getMediationExtras() {
     return null;
