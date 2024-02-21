@@ -11,7 +11,7 @@ Mediation Adapter for Unity Ads to use with Google Mobile Ads.
                        DESC
   s.homepage         = 'https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/google_mobile_ads/mediation'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Google LLC' }
+  s.author           = { 'Google LLC' => 'mediation-support@google.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'

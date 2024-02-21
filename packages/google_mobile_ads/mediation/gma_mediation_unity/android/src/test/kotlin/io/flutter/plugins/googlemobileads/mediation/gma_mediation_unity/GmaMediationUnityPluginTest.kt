@@ -1,9 +1,11 @@
 package io.flutter.plugins.googlemobileads.mediation.gma_mediation_unity
 
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
+import com.unity3d.ads.metadata.MetaData
 import kotlin.test.Test
-import org.mockito.Mockito
+import org.mockito.Mockito.mockStatic
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 
 /*
  * This demonstrates a simple unit test of the Kotlin portion of this plugin's implementation.
@@ -14,14 +16,30 @@ import org.mockito.Mockito
  */
 
 internal class GmaMediationUnityPluginTest {
+  private val mockMetaData = mock<MetaData>
   @Test
-  fun onMethodCall_getPlatformVersion_returnsExpectedValue() {
-    val plugin = GmaMediationUnityPlugin()
+  fun setGDPRConsent_setsGDPRAndCommitsIt() {
+    mockStatic(MetaData::class.java).use {
+      whenever(createMetaData(any())) doReturn mockMetaData
+      val plugin = GmaMediationUnityPlugin()
 
-    val call = MethodCall("getPlatformVersion", null)
-    val mockResult: MethodChannel.Result = Mockito.mock(MethodChannel.Result::class.java)
-    plugin.onMethodCall(call, mockResult)
+      plugin.setGDPRConsent(true)
 
-    Mockito.verify(mockResult).success("Android " + android.os.Build.VERSION.RELEASE)
+      verify(mockMetaData).set(eq("gdpr.consent"), eq(true))
+      verify(mockMetaData).commit()
+    }
+  }
+
+  @Test
+  fun setCCPAConsent_setsCCPAAndCommitsIt() {
+    mockStatic(MetaData::class.java).use {
+      whenever(createMetaData(any())) doReturn mockMetaData
+      val plugin = GmaMediationUnityPlugin()
+
+      plugin.setCCPAConsent(true)
+
+      verify(mockMetaData).set(eq("privacy.consent"), eq(true))
+      verify(mockMetaData).commit()
+    }
   }
 }

@@ -4,7 +4,7 @@ version: 1.0.0
 repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/google_mobile_ads/mediation
 
 environment:
-  sdk: '>=3.2.6 <4.0.0'
+  sdk: '>=3.2.5 <4.0.0'
   flutter: '>=3.3.0'
 
 dependencies:
