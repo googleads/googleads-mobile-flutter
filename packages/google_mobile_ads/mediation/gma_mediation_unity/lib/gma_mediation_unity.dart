@@ -15,11 +15,11 @@
 import 'unity_privacy_api.g.dart';
 
 class GmaMediationUnity {
-  static void setGDPRConsent(bool gdprConsent) {
+  static Future<void> setGDPRConsent(bool gdprConsent) async {
     UnityPrivacyApi().setGDPRConsent(gdprConsent);
   }
 
-  static void setCCPAConsent(bool ccpaConsent) {
+  static Future<void> setCCPAConsent(bool ccpaConsent) async {
     UnityPrivacyApi().setCCPAConsent(ccpaConsent);
   }
 }

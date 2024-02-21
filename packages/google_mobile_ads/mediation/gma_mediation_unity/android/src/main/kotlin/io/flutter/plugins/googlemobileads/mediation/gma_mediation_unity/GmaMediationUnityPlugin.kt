@@ -42,14 +42,18 @@ class GmaMediationUnityPlugin: FlutterPlugin, ActivityAware, UnityPrivacyApi {
   override fun onDetachedFromActivityForConfigChanges() {}
 
   override fun setGDPRConsent(gdprConsent: Boolean) {
-    val gdprMetaData = MetaData(context)
+    val gdprMetaData = createMetaData(context)
     gdprMetaData.set("gdpr.consent", gdprConsent)
     gdprMetaData.commit()
   }
 
   override fun setCCPAConsent(ccpaConsent: Boolean) {
-    val ccpaMetaData = MetaData(context)
+    val ccpaMetaData = createMetaData(context)
     ccpaMetaData.set("privacy.consent", ccpaConsent)
     ccpaMetaData.commit()
   }
+}
+
+object UnityApiWrapper {
+  fun createMetaData(context: Context) = MetaData(context)
 }
