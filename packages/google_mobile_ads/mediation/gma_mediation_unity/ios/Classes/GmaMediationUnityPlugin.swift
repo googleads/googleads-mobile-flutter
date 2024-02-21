@@ -17,19 +17,45 @@ import UIKit
 import UnityAds
 
 public class GmaMediationUnityPlugin: NSObject, FlutterPlugin, UnityPrivacyApi {
+  let uadsMedatada: UnityMetaDataProtocol
+
+  init (unityMetaData: UnityMetaDataProtocol) {
+    self.uadsMedatada = unityMetaData
+  }
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let messenger : FlutterBinaryMessenger = registrar.messenger()
-    let api : UnityPrivacyApi & NSObjectProtocol = GmaMediationUnityPlugin.init()
+    let api : UnityPrivacyApi & NSObjectProtocol = GmaMediationUnityPlugin.init(unityMetaData: UnityMetaDataImpl())
     UnityPrivacyApiSetup.setUp(binaryMessenger: messenger, api: api)
   }
   func setGDPRConsent(gdprConsent: Bool) {
-    let gdprMetaData = UADSMetaData()
-    gdprMetaData.set("gdpr.consent", value: gdprConsent)
-    gdprMetaData.commit()
+    //let gdprMetaData = UADSMetaData()
+    uadsMedatada.set(key: "gdpr.consent", value: gdprConsent)
+    uadsMedatada.commit()
+    print("GDPR Test")
   }
   func setCCPAConsent(ccpaConsent: Bool) {
-    let ccpaMetaData = UADSMetaData()
-    ccpaMetaData.set("privacy.consent", value: ccpaConsent)
-    ccpaMetaData.commit()
+    //let ccpaMetaData = UADSMetaData()
+    uadsMedatada.set(key: "privacy.consent", value: ccpaConsent)
+    uadsMedatada.commit()
+  }
+}
+
+protocol UnityMetaDataProtocol {
+  func set(key: String, value: Any)
+
+  func commit()
+}
+
+class UnityMetaDataImpl : UnityMetaDataProtocol {
+  let instance: UADSMetaData
+  init() {
+    self.instance = UADSMetaData()
+  }
+  func set(key: String, value: Any) {
+    instance.set(key, value: value)
+  }
+  func commit() {
+    instance.commit()
   }
 }
