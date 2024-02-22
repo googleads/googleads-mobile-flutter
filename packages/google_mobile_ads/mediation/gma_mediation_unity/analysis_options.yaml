@@ -1,4 +1,4 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-  exclude: [./**.g.**]
+  exclude: [**/**.g.dart]

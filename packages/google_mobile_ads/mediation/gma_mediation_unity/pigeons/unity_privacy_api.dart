@@ -26,7 +26,6 @@ import 'package:pigeon/pigeon.dart';
   swiftOptions: SwiftOptions(),
   dartPackageName: 'gma_mediation_unity',
 ))
-
 @HostApi()
 abstract class UnityPrivacyApi {
   void setGDPRConsent(bool gdprConsent);
