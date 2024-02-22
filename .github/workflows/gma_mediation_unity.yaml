@@ -62,8 +62,6 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
-      - name: "Build iOS Example"
-        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart packages/google_mobile_ads/mediation/gma_mediation_unity/example
       - name: "Unit Tests"
         run: |
           cd packages/google_mobile_ads/mediation/gma_mediation_unity/example/ios
