@@ -25,9 +25,6 @@ on:
     branches:
       - master
 
-env:
-  GOOGLEMOBILEADS_PLUGIN_SCOPE: "*gma_mediation_unity*"
-  GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: "*gma_mediation_unity_example*"
 jobs:
   android:
     runs-on: macos-latest
@@ -59,6 +56,7 @@ jobs:
       - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
         with:
           fetch-depth: 0
+          xcode-version: latest-stable
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
