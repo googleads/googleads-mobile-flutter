@@ -52,7 +52,6 @@ android {
 
     dependencies {
         implementation 'com.unity3d.ads:unity-ads:4.9.2'
-        implementation 'androidx.annotation:annotation:1.5.0'
         implementation 'com.google.ads.mediation:unity:4.9.2.0'
         testImplementation 'junit:junit:4.13.2'
         testImplementation 'androidx.test:core:1.5.0'
