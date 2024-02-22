@@ -54,6 +54,7 @@ interface UnityPrivacyApi {
     }
     /** Sets up an instance of `UnityPrivacyApi` to handle messages through the `binaryMessenger`. */
     @Suppress("UNCHECKED_CAST")
+    @JvmStatic
     fun setUp(binaryMessenger: BinaryMessenger, api: UnityPrivacyApi?) {
       run {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.gma_mediation_unity.UnityPrivacyApi.setGDPRConsent", codec)
