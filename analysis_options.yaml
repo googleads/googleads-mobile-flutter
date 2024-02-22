@@ -15,6 +15,7 @@
 include: package:pedantic/analysis_options.1.11.0.yaml
 
 analyzer:
+  exclude: [packages/google_mobile_ads/mediation/**]
   errors:
     omit_local_variable_types: ignore
 
