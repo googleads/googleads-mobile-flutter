@@ -57,6 +57,7 @@ jobs:
         with:
           fetch-depth: 0
           xcode-version: ^14.3.0
+          swift-version: "5.9.2"
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
@@ -70,7 +71,7 @@ jobs:
           flutter precache --ios
           pod install
           xcodebuild -configuration Debug -resultBundlePath TestResults VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.2' test  
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with: 
           name: iOSTestResults
