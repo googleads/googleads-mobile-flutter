@@ -23,11 +23,14 @@ class UnityPrivacyApi {
       : __pigeon_binaryMessenger = binaryMessenger;
   final BinaryMessenger? __pigeon_binaryMessenger;
 
-  static const MessageCodec<Object?> pigeonChannelCodec = StandardMessageCodec();
+  static const MessageCodec<Object?> pigeonChannelCodec =
+      StandardMessageCodec();
 
   Future<void> setGDPRConsent(bool gdprConsent) async {
-    const String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_unity.UnityPrivacyApi.setGDPRConsent';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    const String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_unity.UnityPrivacyApi.setGDPRConsent';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
@@ -48,8 +51,10 @@ class UnityPrivacyApi {
   }
 
   Future<void> setCCPAConsent(bool ccpaConsent) async {
-    const String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_unity.UnityPrivacyApi.setCCPAConsent';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    const String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_unity.UnityPrivacyApi.setCCPAConsent';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
