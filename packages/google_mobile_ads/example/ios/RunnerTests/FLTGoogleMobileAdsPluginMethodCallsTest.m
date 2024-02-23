@@ -551,6 +551,89 @@
                      .size.height);
 }
 
+- (void)testGetAdLoaderAdType_adLoaderAd {
+  // Method calls to load an ad loader ad.
+  FlutterMethodCall *loadAdMethodCall = [FlutterMethodCall
+      methodCallWithMethodName:@"loadAdLoaderAd"
+                     arguments:@{
+                       @"adId" : @(1),
+                       @"adUnitId" : @"ad-unit-id",
+                       @"request" : [[FLTAdRequest alloc] init],
+                     }];
+
+  __block bool loadAdResultInvoked = false;
+  __block id _Nullable returnedLoadAdResult;
+  FlutterResult loadAdResult = ^(id _Nullable result) {
+    loadAdResultInvoked = true;
+    returnedLoadAdResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:loadAdMethodCall
+                                       result:loadAdResult];
+
+  XCTAssertTrue(loadAdResultInvoked);
+  XCTAssertNil(returnedLoadAdResult);
+
+  // Method call to get the format id.
+  __block bool getAdLoaderAdTypeResultInvoked = false;
+  __block FLTAdLoaderAdType returnedGetAdLoaderAdTypeResult;
+  FlutterResult getAdLoaderAdTypeResult = ^(id _Nullable result) {
+    getAdLoaderAdTypeResultInvoked = true;
+    returnedGetAdLoaderAdTypeResult = result;
+  };
+
+  FlutterMethodCall *getAdLoaderAdTypeMethodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"getAdLoaderAdType"
+                                        arguments:@{@"adId" : @(1)}];
+  [_fltGoogleMobileAdsPlugin handleMethodCall:getAdLoaderAdTypeMethodCall
+                                       result:getAdLoaderAdTypeResult];
+
+  XCTAssertTrue(getAdLoaderAdTypeResultInvoked);
+  XCTAssertEqual(returnedGetAdLoaderAdTypeResult,
+                 [[NSNumber alloc] initWithInteger:FLTAdLoaderAdTypeUnknown]);
+}
+
+- (void)testGetAdSize_adLoaderAd {
+  // Method calls to load an ad loader ad.
+  FlutterMethodCall *loadAdMethodCall = [FlutterMethodCall
+      methodCallWithMethodName:@"loadAdLoaderAd"
+                     arguments:@{
+                       @"adId" : @(1),
+                       @"adUnitId" : @"ad-unit-id",
+                       @"request" : [[FLTAdRequest alloc] init],
+                     }];
+
+  __block bool loadAdResultInvoked = false;
+  __block id _Nullable returnedLoadAdResult;
+  FlutterResult loadAdResult = ^(id _Nullable result) {
+    loadAdResultInvoked = true;
+    returnedLoadAdResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:loadAdMethodCall
+                                       result:loadAdResult];
+
+  XCTAssertTrue(loadAdResultInvoked);
+  XCTAssertNil(returnedLoadAdResult);
+
+  // Method call to get the ad size.
+  __block bool getAdSizeResultInvoked = false;
+  __block FLTAdSize *_Nullable returnedGetAdSizeResult;
+  FlutterResult getAdSizeResult = ^(id _Nullable result) {
+    getAdSizeResultInvoked = true;
+    returnedGetAdSizeResult = result;
+  };
+
+  FlutterMethodCall *getAdSizeMethodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"getAdSize"
+                                        arguments:@{@"adId" : @(1)}];
+  [_fltGoogleMobileAdsPlugin handleMethodCall:getAdSizeMethodCall
+                                       result:getAdSizeResult];
+
+  XCTAssertTrue(getAdSizeResultInvoked);
+  XCTAssertNil(returnedGetAdSizeResult);
+}
+
 - (void)testGetAdSize_bannerAd {
   // Method calls to load a banner ad.
   FlutterMethodCall *loadAdMethodCall = [FlutterMethodCall
@@ -592,6 +675,47 @@
   XCTAssertTrue(getAdSizeResultInvoked);
   XCTAssertEqualObjects(returnedGetAdSizeResult.width, @1);
   XCTAssertEqualObjects(returnedGetAdSizeResult.height, @2);
+}
+
+- (void)testGetFormatId_adLoaderAd {
+  // Method calls to load an ad loader ad.
+  FlutterMethodCall *loadAdMethodCall = [FlutterMethodCall
+      methodCallWithMethodName:@"loadAdLoaderAd"
+                     arguments:@{
+                       @"adId" : @(1),
+                       @"adUnitId" : @"ad-unit-id",
+                       @"request" : [[FLTAdRequest alloc] init],
+                     }];
+
+  __block bool loadAdResultInvoked = false;
+  __block id _Nullable returnedLoadAdResult;
+  FlutterResult loadAdResult = ^(id _Nullable result) {
+    loadAdResultInvoked = true;
+    returnedLoadAdResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:loadAdMethodCall
+                                       result:loadAdResult];
+
+  XCTAssertTrue(loadAdResultInvoked);
+  XCTAssertNil(returnedLoadAdResult);
+
+  // Method call to get the format id.
+  __block bool getFormatIdResultInvoked = false;
+  __block NSString *_Nullable returnedGetFormatIdResult;
+  FlutterResult getFormatIdResult = ^(id _Nullable result) {
+    getFormatIdResultInvoked = true;
+    returnedGetFormatIdResult = result;
+  };
+
+  FlutterMethodCall *getFormatIdMethodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"getFormatId"
+                                        arguments:@{@"adId" : @(1)}];
+  [_fltGoogleMobileAdsPlugin handleMethodCall:getFormatIdMethodCall
+                                       result:getFormatIdResult];
+
+  XCTAssertTrue(getFormatIdResultInvoked);
+  XCTAssertNil(returnedGetFormatIdResult);
 }
 
 - (void)testServerSideVerificationOptions_rewardedAd {

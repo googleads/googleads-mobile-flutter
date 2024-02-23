@@ -584,5 +584,119 @@ void main() {
       expect(result.tertiaryTextStyle, templateStyle.tertiaryTextStyle);
       expect(result.mainBackgroundColor, templateStyle.mainBackgroundColor);
     });
+
+    test('encode/decode minimal $AdManagerAdViewOptions', () {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        debugDefaultTargetPlatformOverride = platform;
+        ByteData byteData = codec.encodeMessage(AdManagerAdViewOptions())!;
+
+        AdManagerAdViewOptions result = codec.decodeMessage(byteData);
+        expect(result.manualImpressionsEnabled, null);
+      }
+    });
+
+    test('encode/decode $AdManagerAdViewOptions', () {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        debugDefaultTargetPlatformOverride = platform;
+        ByteData byteData = codec.encodeMessage(AdManagerAdViewOptions(
+          manualImpressionsEnabled: true,
+        ))!;
+
+        AdManagerAdViewOptions result = codec.decodeMessage(byteData);
+        expect(result.manualImpressionsEnabled, true);
+
+        byteData = codec.encodeMessage(AdManagerAdViewOptions(
+          manualImpressionsEnabled: false,
+        ))!;
+
+        result = codec.decodeMessage(byteData);
+        expect(result.manualImpressionsEnabled, false);
+
+        byteData = codec.encodeMessage(AdManagerAdViewOptions(
+          manualImpressionsEnabled: null,
+        ))!;
+
+        result = codec.decodeMessage(byteData);
+        expect(result.manualImpressionsEnabled, null);
+      }
+    });
+
+    test('encode/decode $BannerParameters', () {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        debugDefaultTargetPlatformOverride = platform;
+        ByteData byteData = codec.encodeMessage(BannerParameters(
+          sizes: [AdSize.banner],
+          adManagerAdViewOptions:
+              AdManagerAdViewOptions(manualImpressionsEnabled: true),
+        ))!;
+
+        BannerParameters result = codec.decodeMessage(byteData);
+        expect(result.sizes, [AdSize.banner]);
+        expect(result.adManagerAdViewOptions?.manualImpressionsEnabled, true);
+      }
+    });
+
+    test('encode/decode minimal $CustomParameters', () {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        debugDefaultTargetPlatformOverride = platform;
+        ByteData byteData = codec.encodeMessage(CustomParameters(
+          formatIds: ['test-format-id'],
+        ))!;
+
+        CustomParameters result = codec.decodeMessage(byteData);
+        expect(result.formatIds, ['test-format-id']);
+        expect(result.viewOptions, null);
+      }
+    });
+
+    test('encode/decode $CustomParameters', () {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        debugDefaultTargetPlatformOverride = platform;
+        ByteData byteData = codec.encodeMessage(CustomParameters(formatIds: [
+          'test-format-id'
+        ], viewOptions: <String, Object>{
+          'key': 'value',
+        }))!;
+
+        CustomParameters result = codec.decodeMessage(byteData);
+        expect(result.formatIds, ['test-format-id']);
+        expect(result.viewOptions, <String, Object>{
+          'key': 'value',
+        });
+      }
+    });
+
+    test('encode/decode minimal $NativeParameters', () {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        debugDefaultTargetPlatformOverride = platform;
+        ByteData byteData = codec.encodeMessage(NativeParameters(
+          factoryId: 'test-factory-id',
+        ))!;
+
+        NativeParameters result = codec.decodeMessage(byteData);
+        expect(result.factoryId, 'test-factory-id');
+        expect(result.nativeAdOptions, null);
+        expect(result.viewOptions, null);
+      }
+    });
+
+    test('encode/decode $NativeParameters', () {
+      for (final platform in [TargetPlatform.android, TargetPlatform.iOS]) {
+        debugDefaultTargetPlatformOverride = platform;
+        ByteData byteData = codec.encodeMessage(NativeParameters(
+            factoryId: 'test-factory-id',
+            nativeAdOptions: NativeAdOptions(),
+            viewOptions: <String, Object>{
+              'key': 'value',
+            }))!;
+
+        NativeParameters result = codec.decodeMessage(byteData);
+        expect(result.factoryId, 'test-factory-id');
+        expect(result.nativeAdOptions, NativeAdOptions());
+        expect(result.viewOptions, <String, Object>{
+          'key': 'value',
+        });
+      }
+    });
   });
 }

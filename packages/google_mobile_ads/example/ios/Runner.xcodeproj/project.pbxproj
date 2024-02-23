@@ -39,6 +39,8 @@
 		9E61AA6029BBE8FD00801A83 /* FLTNativeTemplateStyleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E61AA5B29BBE8FD00801A83 /* FLTNativeTemplateStyleTest.m */; };
 		9E61AA6129BBE8FD00801A83 /* FLTNativeTemplateFontStyleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E61AA5C29BBE8FD00801A83 /* FLTNativeTemplateFontStyleTest.m */; };
 		9E61AA6229BBE8FD00801A83 /* FLTNativeTemplateColorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E61AA5D29BBE8FD00801A83 /* FLTNativeTemplateColorTest.m */; };
+		E276E99229DFB5870052484E /* FLTAdLoaderAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E276E99129DFB5870052484E /* FLTAdLoaderAdTest.m */; };
+		E2D4625F29DFC2560010C4D0 /* FLTAdManagerAdViewOptionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D4625E29DFC2560010C4D0 /* FLTAdManagerAdViewOptionsTest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -159,6 +161,8 @@
 		B4B811D89E676EBD37E2E206 /* libPods-google_mobile_ads_exampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-google_mobile_ads_exampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0B22AB9B287C9F711EAAF48 /* Pods-google_mobile_ads_exampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-google_mobile_ads_exampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-google_mobile_ads_exampleTests/Pods-google_mobile_ads_exampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		CE82265EF05E2A9632B25E60 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
+		E276E99129DFB5870052484E /* FLTAdLoaderAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTAdLoaderAdTest.m; sourceTree = "<group>"; };
+		E2D4625E29DFC2560010C4D0 /* FLTAdManagerAdViewOptionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTAdManagerAdViewOptionsTest.m; sourceTree = "<group>"; };
 		F74051031B69F8124E38352E /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -292,6 +296,8 @@
 			children = (
 				9E61AA5829BBE8DA00801A83 /* NativeTemplates */,
 				9E61AA5529BBE8AF00801A83 /* UserMessagingPlatform */,
+				E276E99129DFB5870052484E /* FLTAdLoaderAdTest.m */,
+				E2D4625E29DFC2560010C4D0 /* FLTAdManagerAdViewOptionsTest.m */,
 				9E61AA2729BBE66900801A83 /* FLTAdUtilTest.m */,
 				9E61AA2429BBE66900801A83 /* FLTAppOpenAdTest.m */,
 				9E61AA2229BBE66900801A83 /* FLTBannerAdTest.m */,
@@ -636,8 +642,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E61AA5729BBE8D000801A83 /* FLTUserMessagingPlatformManagerTest.m in Sources */,
+				E276E99229DFB5870052484E /* FLTAdLoaderAdTest.m in Sources */,
 				9E61AA5329BBE88000801A83 /* FLTUserMessagingPlatformReaderWriterTest.m in Sources */,
 				9E61AA3229BBE66900801A83 /* FLTAppOpenAdTest.m in Sources */,
+				E2D4625F29DFC2560010C4D0 /* FLTAdManagerAdViewOptionsTest.m in Sources */,
 				9E61AA5F29BBE8FD00801A83 /* FLTNativeTemplateTypeTest.m in Sources */,
 				9E61AA3429BBE66900801A83 /* FLTGamInterstitialAdTest.m in Sources */,
 				9E61AA6029BBE8FD00801A83 /* FLTNativeTemplateStyleTest.m in Sources */,

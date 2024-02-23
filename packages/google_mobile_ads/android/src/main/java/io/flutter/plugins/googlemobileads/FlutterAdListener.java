@@ -16,8 +16,12 @@ package io.flutter.plugins.googlemobileads;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
+import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
+import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
+import com.google.android.gms.ads.nativead.NativeCustomFormatAd.OnCustomFormatAdLoadedListener;
 import java.lang.ref.WeakReference;
 
 /** Callback type to notify when an ad successfully loads. */
@@ -94,19 +98,61 @@ class FlutterNativeAdListener extends FlutterAdListener {
   }
 }
 
+/** Listener for adloader ads. */
+class FlutterAdLoaderAdListener extends FlutterAdListener {
+
+  FlutterAdLoaderAdListener(int adId, AdInstanceManager manager) {
+    super(adId, manager);
+  }
+}
+
 /** {@link OnNativeAdLoadedListener} for native ads. */
 class FlutterNativeAdLoadedListener implements OnNativeAdLoadedListener {
 
-  private final WeakReference<FlutterNativeAd> nativeAdWeakReference;
+  private final WeakReference<OnNativeAdLoadedListener> listenerWeakReference;
 
-  FlutterNativeAdLoadedListener(FlutterNativeAd flutterNativeAd) {
-    nativeAdWeakReference = new WeakReference<>(flutterNativeAd);
+  FlutterNativeAdLoadedListener(OnNativeAdLoadedListener listener) {
+    listenerWeakReference = new WeakReference<>(listener);
   }
 
   @Override
   public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
-    if (nativeAdWeakReference.get() != null) {
-      nativeAdWeakReference.get().onNativeAdLoaded(nativeAd);
+    if (listenerWeakReference.get() != null) {
+      listenerWeakReference.get().onNativeAdLoaded(nativeAd);
+    }
+  }
+}
+
+/** {@link OnAdManagerAdViewLoadedListener} for banner ads. */
+class FlutterAdManagerAdViewLoadedListener implements OnAdManagerAdViewLoadedListener {
+
+  private final WeakReference<OnAdManagerAdViewLoadedListener> reference;
+
+  FlutterAdManagerAdViewLoadedListener(OnAdManagerAdViewLoadedListener listener) {
+    reference = new WeakReference<>(listener);
+  }
+
+  @Override
+  public void onAdManagerAdViewLoaded(AdManagerAdView adView) {
+    if (reference.get() != null) {
+      reference.get().onAdManagerAdViewLoaded(adView);
+    }
+  }
+}
+
+/** {@link OnCustomFormatAdLoadedListener} for custom ads. */
+class FlutterCustomFormatAdLoadedListener implements OnCustomFormatAdLoadedListener {
+
+  private final WeakReference<OnCustomFormatAdLoadedListener> reference;
+
+  FlutterCustomFormatAdLoadedListener(OnCustomFormatAdLoadedListener listener) {
+    reference = new WeakReference<>(listener);
+  }
+
+  @Override
+  public void onCustomFormatAdLoaded(NativeCustomFormatAd ad) {
+    if (reference.get() != null) {
+      reference.get().onCustomFormatAdLoaded(ad);
     }
   }
 }
