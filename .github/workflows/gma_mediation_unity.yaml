@@ -55,7 +55,7 @@ jobs:
     steps:
       - uses: swift-actions/setup-swift@v1
         with:
-          swift-version: "5.7.2"
+          swift-version: "4.2"
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
         with:
           fetch-depth: 0
