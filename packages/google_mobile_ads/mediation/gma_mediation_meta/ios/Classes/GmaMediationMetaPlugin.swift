@@ -15,6 +15,7 @@
 import Flutter
 import UIKit
 
+/** Required to link the iOS dependency of the Meta Audience Network Adapter. */
 public class GmaMediationMetaPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) { }
 }

@@ -16,7 +16,7 @@ package io.flutter.plugins.googlemobileads.mediation.gma_mediation_meta
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
-/** GmaMediationMetaPlugin */
+/** Required to link the Android dependency of the Meta Audience Network Adapter. */
 class GmaMediationMetaPlugin: FlutterPlugin {
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) { }
 
