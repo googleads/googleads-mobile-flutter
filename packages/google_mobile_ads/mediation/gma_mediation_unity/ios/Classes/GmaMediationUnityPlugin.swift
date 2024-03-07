@@ -29,13 +29,11 @@ public class GmaMediationUnityPlugin: NSObject, FlutterPlugin, UnityPrivacyApi {
     UnityPrivacyApiSetup.setUp(binaryMessenger: messenger, api: api)
   }
   func setGDPRConsent(gdprConsent: Bool) {
-    //let gdprMetaData = UADSMetaData()
     uadsMedatada.set(key: "gdpr.consent", value: gdprConsent)
     uadsMedatada.commit()
     print("GDPR Test")
   }
   func setCCPAConsent(ccpaConsent: Bool) {
-    //let ccpaMetaData = UADSMetaData()
     uadsMedatada.set(key: "privacy.consent", value: ccpaConsent)
     uadsMedatada.commit()
   }
