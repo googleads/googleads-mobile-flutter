@@ -230,6 +230,7 @@ class AdRequest {
   /// to the ad request. This identifier will get passed to your platform-side
   /// mediation extras factory class, allowing for additional customization
   /// of network extras.
+  @deprecated
   final String? mediationExtrasIdentifier;
 
   /// Extras to pass to the AdMob adapter.
@@ -246,6 +247,7 @@ class AdRequest {
         nonPersonalizedAds == other.nonPersonalizedAds &&
         listEquals(neighboringContentUrls, other.neighboringContentUrls) &&
         httpTimeoutMillis == other.httpTimeoutMillis &&
+        //ignore: deprecated_member_use_from_same_package
         mediationExtrasIdentifier == other.mediationExtrasIdentifier &&
         mapEquals<String, String>(extras, other.extras) &&
         mediationExtras == other.mediationExtras;

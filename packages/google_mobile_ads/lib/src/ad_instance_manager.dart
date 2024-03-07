@@ -1297,15 +1297,14 @@ class _MediationExtras implements MediationExtras {
   _MediationExtras(
     String className,
     Map<String, dynamic> extras,
-  ) {
-    _androidClassName = className;
-    _iOSClassName = className;
+  ) :
+    _androidClassName = className,
+    _iOSClassName = className,
     _extras = extras;
-  }
 
-  late final String _androidClassName;
-  late final String _iOSClassName;
-  late final Map<String, dynamic> _extras;
+  final String _androidClassName;
+  final String _iOSClassName;
+  final Map<String, dynamic> _extras;
 
   @override
   String getAndroidClassName() {
