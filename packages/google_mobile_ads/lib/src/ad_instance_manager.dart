@@ -1069,8 +1069,7 @@ class AdMessageCodec extends StandardMessageCodec {
               ?.cast<List<MediationExtras>>(),
         );
       case _valueMediationExtras:
-        return _MediationExtras(
-            readValueOfType(buffer.getUint8(), buffer),
+        return _MediationExtras(readValueOfType(buffer.getUint8(), buffer),
             readValueOfType(buffer.getUint8(), buffer));
       case _valueRewardItem:
         return RewardItem(

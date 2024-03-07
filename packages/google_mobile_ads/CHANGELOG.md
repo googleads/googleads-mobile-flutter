@@ -1,3 +1,7 @@
+## Next Version
+* Adds `MediationExtras` class to include parameters when using mediation through the implementation of `FlutterMediationExtras` in Android and `FlutterMediationExtras` in iOS
+* Deprecates `MediationNetworkExtrasProvider` and `FLTMediationNetworkExtrasProvider`.
+
 ## 4.0.0
 * The minimum supported Flutter version is now 3.7.0.
 * Removes `visibility_detector` as a dependency, and the workaround added in

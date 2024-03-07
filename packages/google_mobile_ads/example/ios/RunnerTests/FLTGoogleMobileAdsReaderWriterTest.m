@@ -21,6 +21,7 @@
 #import "FLTGoogleMobileAdsCollection_Internal.h"
 #import "FLTGoogleMobileAdsPlugin.h"
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
+#import "FLTMediationExtras.h"
 #import "FLTMobileAds_Internal.h"
 #import "FLTNativeTemplateColor.h"
 #import "FLTNativeTemplateFontStyle.h"
@@ -33,6 +34,9 @@
 
 @interface FLTTestAdSizeFactory : FLTAdSizeFactory
 @property(readonly) GADAdSize testAdSize;
+@end
+
+@interface _FlutterMediationExtras : NSObject <FlutterMediationExtras>
 @end
 
 @implementation FLTGoogleMobileAdsReaderWriterTest {
@@ -260,6 +264,9 @@
 }
 
 - (void)testEncodeDecodeAdRequest {
+  id<FlutterMediationExtras> mediationExtras =
+      [[_FlutterMediationExtras alloc] init];
+  mediationExtras.extras = @{@"test_key" : @"test_value"};
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
   request.contentURL = @"banana";
@@ -268,6 +275,9 @@
   request.neighboringContentURLs = contentURLs;
   request.mediationExtrasIdentifier = @"identifier";
   request.adMobExtras = @{@"key" : @"value"};
+  NSArray<id<FlutterMediationExtras>> *mediationExtrasArray =
+      @[ mediationExtras ];
+  request.mediationExtras = mediationExtrasArray;
   NSData *encodedMessage = [_messageCodec encode:request];
 
   FLTAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
@@ -279,9 +289,14 @@
                         @"identifier");
   XCTAssertEqualObjects(decodedRequest.adMobExtras, @{@"key" : @"value"});
   XCTAssertEqualObjects(decodedRequest.requestAgent, @"request-agent");
+  XCTAssertEqualObjects(decodedRequest.mediationExtras[0].extras,
+                        @{@"test_key" : @"test_value"});
 }
 
 - (void)testEncodeDecodeGAMAdRequest {
+  id<FlutterMediationExtras> mediationExtras =
+      [[_FlutterMediationExtras alloc] init];
+  mediationExtras.extras = @{@"test_key" : @"test_value"};
   FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
   request.contentURL = @"banana";
@@ -293,6 +308,9 @@
   request.pubProvidedID = @"pub-id";
   request.mediationExtrasIdentifier = @"identifier";
   request.adMobExtras = @{@"key" : @"value"};
+  NSArray<id<FlutterMediationExtras>> *mediationExtrasArray =
+      @[ mediationExtras ];
+  request.mediationExtras = mediationExtrasArray;
   NSData *encodedMessage = [_messageCodec encode:request];
 
   FLTGAMAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
@@ -309,6 +327,8 @@
                         @"identifier");
   XCTAssertEqualObjects(decodedRequest.adMobExtras, @{@"key" : @"value"});
   XCTAssertEqualObjects(decodedRequest.requestAgent, @"request-agent");
+  XCTAssertEqualObjects(decodedRequest.mediationExtras[0].extras,
+                        @{@"test_key" : @"test_value"});
 }
 
 - (void)testEncodeDecodeRewardItem {
@@ -779,4 +799,14 @@
     (NSNumber *)width {
   return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
 }
+@end
+
+@implementation _FlutterMediationExtras
+
+@synthesize extras;
+
+- (id<GADAdNetworkExtras> _Nonnull)getMediationExtras {
+  return OCMProtocolMock(@protocol(GADAdNetworkExtras));
+}
+
 @end

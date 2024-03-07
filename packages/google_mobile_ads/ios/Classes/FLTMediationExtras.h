@@ -22,7 +22,7 @@
 @protocol FlutterMediationExtras
 
 // Pair of key-values to be stored received from the dart layer.
-@property NSMutableDictionary *_Nullable extras;
+@property NSDictionary<NSString *, id> *_Nullable extras;
 
 /**
  * Parses the values in @c extras to the required protocol to append Mediation

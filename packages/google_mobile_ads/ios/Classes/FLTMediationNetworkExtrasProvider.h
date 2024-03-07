@@ -19,6 +19,7 @@
  * An implementation of this protocol can be passed to FLTGoogleMobileAdsPlugin
  * using registerMediationNetworkExtrasProvider
  */
+__attribute__((deprecated))
 @protocol FLTMediationNetworkExtrasProvider
 @required
 
