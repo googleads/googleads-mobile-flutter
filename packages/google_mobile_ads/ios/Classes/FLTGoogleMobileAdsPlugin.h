@@ -75,8 +75,8 @@
  * the FLTGoogleMobileAdsPlugin in registry.
  */
 + (void)unregisterMediationNetworkExtrasProvider:
-(id<FlutterPluginRegistry> _Nonnull)registry 
-__deprecated_msg("Use MediationExtras instead");
+    (id<FlutterPluginRegistry> _Nonnull)registry
+    __deprecated_msg("Use MediationExtras instead");
 
 /**
  * Adds a `FLTNativeAdFactory` used to create a `GADNativeAdView`s from a Native
