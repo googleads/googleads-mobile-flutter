@@ -15,6 +15,7 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.os.Bundle;
+import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.ads.mediation.admob.AdMobAdapter;
@@ -37,6 +38,7 @@ class FlutterAdRequest {
   @Nullable private final MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
   @Nullable private final Map<String, String> adMobExtras;
   @NonNull private final String requestAgent;
+  @Nullable private final List<FlutterMediationExtras> mediationExtras;
 
   protected static class Builder {
     @Nullable private List<String> keywords;
@@ -48,6 +50,8 @@ class FlutterAdRequest {
     @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
     @Nullable private Map<String, String> adMobExtras;
     @NonNull private String requestAgent;
+
+    @Nullable private List<FlutterMediationExtras> mediationExtras;
 
     @CanIgnoreReturnValue
     Builder setRequestAgent(String requestAgent) {
@@ -104,6 +108,12 @@ class FlutterAdRequest {
       return this;
     }
 
+    @CanIgnoreReturnValue
+    Builder setMediationExtras(@Nullable List<FlutterMediationExtras> mediationExtras) {
+      this.mediationExtras = mediationExtras;
+      return this;
+    }
+
     @Nullable
     protected List<String> getKeywords() {
       return keywords;
@@ -149,6 +159,11 @@ class FlutterAdRequest {
       return requestAgent;
     }
 
+    @Nullable
+    protected List<FlutterMediationExtras> getMediationExtras() {
+      return mediationExtras;
+    }
+
     FlutterAdRequest build() {
       return new FlutterAdRequest(
           keywords,
@@ -159,7 +174,8 @@ class FlutterAdRequest {
           mediationExtrasIdentifier,
           mediationNetworkExtrasProvider,
           adMobExtras,
-          requestAgent);
+          requestAgent,
+          mediationExtras);
     }
   }
 
@@ -172,7 +188,8 @@ class FlutterAdRequest {
       @Nullable String mediationExtrasIdentifier,
       @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider,
       @Nullable Map<String, String> adMobExtras,
-      String requestAgent) {
+      String requestAgent,
+      @Nullable List<FlutterMediationExtras> mediationExtras) {
     this.keywords = keywords;
     this.contentUrl = contentUrl;
     this.nonPersonalizedAds = nonPersonalizedAds;
@@ -182,12 +199,19 @@ class FlutterAdRequest {
     this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
     this.adMobExtras = adMobExtras;
     this.requestAgent = requestAgent;
+    this.mediationExtras = mediationExtras;
   }
 
   /** Adds network extras to the ad request builder, if any. */
   private void addNetworkExtras(AdRequest.Builder builder, String adUnitId) {
     Map<Class<? extends MediationExtrasReceiver>, Bundle> networkExtras = new HashMap<>();
-    if (mediationNetworkExtrasProvider != null) {
+    if (mediationExtras != null) {
+      for (FlutterMediationExtras flutterExtras : mediationExtras) {
+        Pair<Class<? extends MediationExtrasReceiver>, Bundle> pair =
+            flutterExtras.getMediationExtras();
+        networkExtras.put(pair.first, pair.second);
+      }
+    } else if (mediationNetworkExtrasProvider != null) {
       Map<Class<? extends MediationExtrasReceiver>, Bundle> providedExtras =
           mediationNetworkExtrasProvider.getMediationExtras(adUnitId, mediationExtrasIdentifier);
       networkExtras.putAll(providedExtras);
@@ -280,6 +304,11 @@ class FlutterAdRequest {
     return requestAgent;
   }
 
+  @Nullable
+  protected List<FlutterMediationExtras> getMediationExtras() {
+    return mediationExtras;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -308,6 +337,7 @@ class FlutterAdRequest {
         neighboringContentUrls,
         httpTimeoutMillis,
         mediationExtrasIdentifier,
-        mediationNetworkExtrasProvider);
+        mediationNetworkExtrasProvider,
+        mediationExtras);
   }
 }
