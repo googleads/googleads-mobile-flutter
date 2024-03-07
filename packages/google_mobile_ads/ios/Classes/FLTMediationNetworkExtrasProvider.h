@@ -18,7 +18,10 @@
  * Provides network specific parameters to include in ad requests.
  * An implementation of this protocol can be passed to FLTGoogleMobileAdsPlugin
  * using registerMediationNetworkExtrasProvider
+ *
+ * @deprecated Use FLTMediationExtras instead.
  */
+__attribute__((deprecated))
 @protocol FLTMediationNetworkExtrasProvider
 @required
 

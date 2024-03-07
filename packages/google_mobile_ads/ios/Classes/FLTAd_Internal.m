@@ -171,9 +171,20 @@
 
 - (void)addNetworkExtrasToGADRequest:(GADRequest *)request
                             adUnitId:(NSString *_Nonnull)adUnitId {
-  NSArray<id<GADAdNetworkExtras>> *extras = [_mediationNetworkExtrasProvider
-             getMediationExtras:adUnitId
-      mediationExtrasIdentifier:_mediationExtrasIdentifier];
+  NSArray<id<GADAdNetworkExtras>> *extras;
+
+  if (_mediationExtras != NULL) {
+    NSMutableArray<id<GADAdNetworkExtras>> *flutterExtras =
+        [NSMutableArray array];
+    for (id<FlutterMediationExtras> extra in _mediationExtras) {
+      [flutterExtras addObject:[extra getMediationExtras]];
+    }
+    extras = [NSArray arrayWithArray:flutterExtras];
+  } else {
+    extras = [_mediationNetworkExtrasProvider
+               getMediationExtras:adUnitId
+        mediationExtrasIdentifier:_mediationExtrasIdentifier];
+  }
   BOOL addedNpaToGADExtras = false;
 
   if ([FLTAdUtil isNotNull:extras]) {

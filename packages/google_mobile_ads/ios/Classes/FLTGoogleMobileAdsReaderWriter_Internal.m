@@ -14,6 +14,7 @@
 
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
 #import "FLTAdUtil.h"
+#import "FLTMediationExtras.h"
 #import "NativeTemplates/FLTNativeTemplateColor.h"
 #import "NativeTemplates/FLTNativeTemplateFontStyle.h"
 #import "NativeTemplates/FLTNativeTemplateStyle.h"
@@ -46,6 +47,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldNativeTemplateFontStyle = 151,
   FLTAdmobFieldNativeTemplateType = 152,
   FLTAdmobFieldNativeTemplateColor = 153,
+  FLTAdmobFieldMediationExtras = 154
 
 };
 
@@ -116,7 +118,16 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
     request.adMobExtras = [self readValueOfType:[self readByte]];
     request.requestAgent = _requestAgent;
+    request.mediationExtras = [self readValueOfType:[self readByte]];
     return request;
+  }
+  case FLTAdmobFieldMediationExtras: {
+    id<FlutterMediationExtras> flutterMediationExtras =
+        [[NSClassFromString([self readValueOfType:[self readByte]]) alloc]
+            init];
+    NSMutableDictionary *flutterExtras = [self readValueOfType:[self readByte]];
+    flutterMediationExtras.extras = flutterExtras;
+    return flutterMediationExtras;
   }
   case FLTAdMobFieldRewardItem: {
     return [[FLTRewardItem alloc]
@@ -199,6 +210,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
     request.adMobExtras = [self readValueOfType:[self readByte]];
     request.requestAgent = _requestAgent;
+    request.mediationExtras = [self readValueOfType:[self readByte]];
     return request;
   }
   case FLTAdMobFieldAdapterInitializationState: {
@@ -376,6 +388,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.pubProvidedID];
     [self writeValue:request.mediationExtrasIdentifier];
     [self writeValue:request.adMobExtras];
+    [self writeValue:request.mediationExtras];
   } else if ([value isKindOfClass:[FLTAdRequest class]]) {
     [self writeByte:FLTAdMobFieldAdRequest];
     FLTAdRequest *request = value;
@@ -385,6 +398,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.neighboringContentURLs];
     [self writeValue:request.mediationExtrasIdentifier];
     [self writeValue:request.adMobExtras];
+    [self writeValue:request.mediationExtras];
+  } else if ([value conformsToProtocol:@protocol(FlutterMediationExtras)]) {
+    [self writeByte:FLTAdmobFieldMediationExtras];
+    NSObject<FlutterMediationExtras> *fltExtras = value;
+    [self writeValue:NSStringFromClass([fltExtras class])];
+    [self writeValue:fltExtras.extras];
   } else if ([value isKindOfClass:[FLTRewardItem class]]) {
     [self writeByte:FLTAdMobFieldRewardItem];
     FLTRewardItem *item = value;
