@@ -1,4 +1,4 @@
-#  Copyright 2021 Google LLC
+#  Copyright 2024 Google LLC
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -12,15 +12,15 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-name: gma_mediation_unity
+name: gma_mediation_applovin
 
 on:
   pull_request:
     paths:
-      - "packages/google_mobile_ads/mediation/gma_mediation_unity/**"
-      - ".github/workflows/gma_mediation_unity.yaml"
-      - "packages/google_mobile_ads/mediation/gma_mediation_unity/ios/**"
-      - "packages/google_mobile_ads/mediation/gma_mediation_unity/android/**"
+      - "packages/google_mobile_ads/mediation/gma_mediation_applovin/**"
+      - ".github/workflows/gma_mediation_applovin.yaml"
+      - "packages/google_mobile_ads/mediation/gma_mediation_applovin/ios/**"
+      - "packages/google_mobile_ads/mediation/gma_mediation_applovin/android/**"
   push:
     branches:
       - master
@@ -43,11 +43,11 @@ jobs:
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart packages/google_mobile_ads/mediation/gma_mediation_unity/example
+        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart packages/google_mobile_ads/mediation/gma_mediation_applovin/example
       - name: "Unit Tests"
         run: |
-          cd packages/google_mobile_ads/mediation/gma_mediation_unity/example/android
-          ./gradlew :gma_mediation_unity:testDebugUnitTest
+          cd packages/google_mobile_ads/mediation/gma_mediation_applovin/example/android
+          ./gradlew :gma_mediation_applovin:testDebugUnitTest
 
   iOS:
     runs-on: macos-latest
@@ -66,7 +66,7 @@ jobs:
           ./.github/workflows/scripts/install-tools.sh
       - name: "Unit Tests"
         run: |
-          cd packages/google_mobile_ads/mediation/gma_mediation_unity/example/ios
+          cd packages/google_mobile_ads/mediation/gma_mediation_applovin/example/ios
           flutter clean
           flutter pub get
           flutter precache --ios
@@ -76,7 +76,7 @@ jobs:
         if: failure()
         with: 
           name: iOSTestResults
-          path: packages/google_mobile_ads/mediation/gma_mediation_unity/example/ios/TestResults.xcresult  
+          path: packages/google_mobile_ads/mediation/gma_mediation_applovin/example/ios/TestResults.xcresult  
   flutter:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
