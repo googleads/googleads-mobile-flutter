@@ -18,8 +18,10 @@ import 'package:pigeon/pigeon.dart';
   dartOut: 'lib/applovin_sdk_api.g.dart',
   dartOptions: DartOptions(),
   kotlinOut:
-  'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_applovin/AppLovinSDKApi.g.kt',
-  kotlinOptions: KotlinOptions(package: "io.flutter.plugins.googlemobileads.mediation.gma_mediation_applovin"),
+      'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_applovin/AppLovinSDKApi.g.kt',
+  kotlinOptions: KotlinOptions(
+      package:
+          "io.flutter.plugins.googlemobileads.mediation.gma_mediation_applovin"),
   swiftOut: 'ios/Classes/AppLovinSDKApi.g.swift',
   swiftOptions: SwiftOptions(),
   dartPackageName: 'gma_mediation_applovin',

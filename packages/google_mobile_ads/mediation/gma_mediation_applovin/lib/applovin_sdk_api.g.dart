@@ -23,17 +23,20 @@ class AppLovinSDKApi {
       : __pigeon_binaryMessenger = binaryMessenger;
   final BinaryMessenger? __pigeon_binaryMessenger;
 
-  static const MessageCodec<Object?> pigeonChannelCodec = StandardMessageCodec();
+  static const MessageCodec<Object?> pigeonChannelCodec =
+      StandardMessageCodec();
 
   Future<void> setHasUserConsent(bool hasUserConsent) async {
-    const String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_applovin.AppLovinSDKApi.setHasUserConsent';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    const String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_applovin.AppLovinSDKApi.setHasUserConsent';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
     );
-    final List<Object?>? __pigeon_replyList =
-        await __pigeon_channel.send(<Object?>[hasUserConsent]) as List<Object?>?;
+    final List<Object?>? __pigeon_replyList = await __pigeon_channel
+        .send(<Object?>[hasUserConsent]) as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -48,14 +51,16 @@ class AppLovinSDKApi {
   }
 
   Future<void> setIsAgeRestrictedUser(bool isAgeRestrictedUser) async {
-    const String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_applovin.AppLovinSDKApi.setIsAgeRestrictedUser';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    const String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_applovin.AppLovinSDKApi.setIsAgeRestrictedUser';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
     );
-    final List<Object?>? __pigeon_replyList =
-        await __pigeon_channel.send(<Object?>[isAgeRestrictedUser]) as List<Object?>?;
+    final List<Object?>? __pigeon_replyList = await __pigeon_channel
+        .send(<Object?>[isAgeRestrictedUser]) as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -70,8 +75,10 @@ class AppLovinSDKApi {
   }
 
   Future<void> setDoNotSell(bool doNotSell) async {
-    const String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_applovin.AppLovinSDKApi.setDoNotSell';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    const String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_applovin.AppLovinSDKApi.setDoNotSell';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
@@ -92,8 +99,10 @@ class AppLovinSDKApi {
   }
 
   Future<void> initializeSdk(String sdkKey) async {
-    const String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_applovin.AppLovinSDKApi.initializeSdk';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    const String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_applovin.AppLovinSDKApi.initializeSdk';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,

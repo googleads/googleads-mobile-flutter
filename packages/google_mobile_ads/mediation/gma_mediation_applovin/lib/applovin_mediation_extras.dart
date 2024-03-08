@@ -17,7 +17,7 @@ class AppLovinMediationExtras implements MediationExtras {
 
   @override
   Map<String, dynamic> getExtras() {
-    return <String, dynamic> {
+    return <String, dynamic>{
       "isMuted": isMuted,
     };
   }
