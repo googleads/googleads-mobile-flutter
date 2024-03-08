@@ -37,14 +37,14 @@ public abstract class FlutterMediationExtras {
    * @return The parsed values to be sent to the {@link
    *     com.google.android.gms.ads.AdRequest.Builder#addNetworkExtrasBundle}
    */
-  abstract Pair<Class<? extends MediationExtrasReceiver>, Bundle> getMediationExtras();
+  public abstract Pair<Class<? extends MediationExtrasReceiver>, Bundle> getMediationExtras();
 
   /**
    * Pair of key-values to be stored and later be parsed into a {@link Bundle}.
    *
    * @param extras Received from the dart layer through the MediationExtras class.
    */
-  void setMediationExtras(Map<String, Object> extras) {
+  public void setMediationExtras(Map<String, Object> extras) {
     this.extras = extras;
   }
 }
