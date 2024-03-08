@@ -5,7 +5,7 @@ description: "Demonstrates how to use the gma_mediation_applovin plugin."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: '>=3.2.6 <4.0.0'
+  sdk: '>=3.2.5 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions

@@ -25,21 +25,21 @@ public class GmaMediationApplovinPlugin: NSObject, FlutterPlugin, AppLovinSDKApi
 
   public static func register(with registrar: FlutterPluginRegistrar) {
     let messenger : FlutterBinaryMessenger = registrar.messenger()
-    let api : AppLovinSDKApi& NSObjectProtocol = GmaMediationApplovinPlugin.init()
+    let api : AppLovinSDKApi& NSObjectProtocol = GmaMediationApplovinPlugin.init(applovinSdk: ALSdkImpl())
     AppLovinSDKApiSetup.setUp(binaryMessenger: messenger, api: api)
   }
 
   func setHasUserConsent(hasUserConsent: Bool) {
-    applovinSdk.setHasUserConsent(hasUserConsent)
+    applovinSdk.setHasUserConsent(hasUserConsent: hasUserConsent)
   }
   func setIsAgeRestrictedUser(isAgeRestrictedUser: Bool) {
-    applovinSdk.setIsAgeRestrictedUser(isAgeRestrictedUser)
+    applovinSdk.setIsAgeRestrictedUser(isAgeRestrictedUser: isAgeRestrictedUser)
   }
   func setDoNotSell(doNotSell: Bool) {
-    applovinSdk.setDoNotSell(doNotSell)
+    applovinSdk.setDoNotSell(doNotSell: doNotSell)
   }
   func initializeSdk(sdkKey: String) {
-    applovinSdk.initializeSdk(sdkKey)
+    applovinSdk.initializeSdk(sdkKey: sdkKey)
   }
 }
 
