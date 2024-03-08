@@ -17,6 +17,12 @@ import Flutter
 import UIKit
 
 public class GmaMediationApplovinPlugin: NSObject, FlutterPlugin, AppLovinSDKApi {
+  let applovinSdk: ALSdkProtocol
+
+  init (applovinSdk: ALSdkProtocol) {
+    self.applovinSdk = applovinSdk
+  }
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let messenger : FlutterBinaryMessenger = registrar.messenger()
     let api : AppLovinSDKApi& NSObjectProtocol = GmaMediationApplovinPlugin.init()
@@ -24,14 +30,42 @@ public class GmaMediationApplovinPlugin: NSObject, FlutterPlugin, AppLovinSDKApi
   }
 
   func setHasUserConsent(hasUserConsent: Bool) {
+    applovinSdk.setHasUserConsent(hasUserConsent)
+  }
+  func setIsAgeRestrictedUser(isAgeRestrictedUser: Bool) {
+    applovinSdk.setIsAgeRestrictedUser(isAgeRestrictedUser)
+  }
+  func setDoNotSell(doNotSell: Bool) {
+    applovinSdk.setDoNotSell(doNotSell)
+  }
+  func initializeSdk(sdkKey: String) {
+    applovinSdk.initializeSdk(sdkKey)
+  }
+}
+
+protocol ALSdkProtocol {
+  func setHasUserConsent(hasUserConsent: Bool)
+
+  func setIsAgeRestrictedUser(isAgeRestrictedUser: Bool)
+
+  func setDoNotSell(doNotSell: Bool)
+
+  func initializeSdk(sdkKey: String)
+}
+
+class ALSdkImpl : ALSdkProtocol {
+  func setHasUserConsent(hasUserConsent: Bool) {
     ALPrivacySettings.setHasUserConsent(hasUserConsent)
   }
+
   func setIsAgeRestrictedUser(isAgeRestrictedUser: Bool) {
     ALPrivacySettings.setIsAgeRestrictedUser(isAgeRestrictedUser)
   }
+
   func setDoNotSell(doNotSell: Bool) {
     ALPrivacySettings.setDoNotSell(doNotSell)
   }
+
   func initializeSdk(sdkKey: String) {
     let sdk = ALSdk.shared(withKey: sdkKey)
     sdk?.initializeSdk()
