@@ -170,16 +170,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-<<<<<<< HEAD
-		194BB02CA5CDABA098EA0B10 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-=======
->>>>>>> 9254ef61 (Removed call to iOS AppOpen deprecated methods (#1020))
 		5B6AAA352BAC85BF7DD68C46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -232,10 +222,6 @@
 				9E61AA1729BBE51900801A83 /* RunnerTests */,
 				97C146EF1CF9000F007C117D /* Products */,
 				5B6AAA352BAC85BF7DD68C46 /* Frameworks */,
-<<<<<<< HEAD
-				194BB02CA5CDABA098EA0B10 /* Pods */,
-=======
->>>>>>> 9254ef61 (Removed call to iOS AppOpen deprecated methods (#1020))
 			);
 			sourceTree = "<group>";
 		};
