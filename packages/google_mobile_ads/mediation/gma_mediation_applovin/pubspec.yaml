@@ -11,7 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-# TODO: Remove local path when ready to publish
   google_mobile_ads:
     path: ../../
   plugin_platform_interface: ^2.0.2
