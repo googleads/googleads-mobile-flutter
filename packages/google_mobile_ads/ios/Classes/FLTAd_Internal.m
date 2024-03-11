@@ -1061,7 +1061,6 @@
 
   [GADAppOpenAd loadWithAdUnitID:_adUnitId
                          request:request
-                     orientation:orientation
                completionHandler:^(GADAppOpenAd *_Nullable appOpenAd,
                                    NSError *_Nullable error) {
                  if (error) {
