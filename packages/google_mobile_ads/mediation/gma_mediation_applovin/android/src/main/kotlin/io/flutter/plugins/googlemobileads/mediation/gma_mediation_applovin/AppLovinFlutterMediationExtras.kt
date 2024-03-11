@@ -8,10 +8,10 @@ import com.applovin.mediation.AppLovinExtras
 import com.google.android.gms.ads.mediation.MediationExtrasReceiver
 import io.flutter.plugins.googlemobileads.FlutterMediationExtras
 
-class AppLovinFlutterMediationExtras : FlutterMediationExtras {
+class AppLovinFlutterMediationExtras : FlutterMediationExtras() {
   private var flutterExtras: Map<String, Any>? = null
 
-  override fun setMediationExtras(extras: MutableMap<String, Any>?) {
+  override fun setMediationExtras(extras: MutableMap<String, Any>) {
     flutterExtras = extras
   }
 
