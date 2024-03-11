@@ -68,10 +68,9 @@
 
   // Stub the load call to invoke successful load callback.
   id appOpenClassMock = OCMClassMock([GADAppOpenAd class]);
-  OCMStub(ClassMethod([appOpenClassMock
-               loadWithAdUnitID:[OCMArg any]
-                        request:[OCMArg any]
-              completionHandler:[OCMArg any]]))
+  OCMStub(ClassMethod([appOpenClassMock loadWithAdUnitID:[OCMArg any]
+                                                 request:[OCMArg any]
+                                       completionHandler:[OCMArg any]]))
       .andDo(^(NSInvocation *invocation) {
         void (^completionHandler)(GADAppOpenAd *ad, NSError *error);
         [invocation getArgument:&completionHandler atIndex:4];
@@ -176,10 +175,9 @@
 
   id appOpenClassMock = OCMClassMock([GADAppOpenAd class]);
   NSError *error = OCMClassMock([NSError class]);
-  OCMStub(ClassMethod([appOpenClassMock
-               loadWithAdUnitID:[OCMArg any]
-                        request:[OCMArg any]
-              completionHandler:[OCMArg any]]))
+  OCMStub(ClassMethod([appOpenClassMock loadWithAdUnitID:[OCMArg any]
+                                                 request:[OCMArg any]
+                                       completionHandler:[OCMArg any]]))
       .andDo(^(NSInvocation *invocation) {
         void (^completionHandler)(GADAppOpenAd *ad, NSError *error);
         [invocation getArgument:&completionHandler atIndex:4];
@@ -188,10 +186,9 @@
 
   [ad load];
 
-  OCMVerify(ClassMethod([appOpenClassMock
-       loadWithAdUnitID:[OCMArg any]
-                request:[OCMArg any]
-      completionHandler:[OCMArg any]]));
+  OCMVerify(ClassMethod([appOpenClassMock loadWithAdUnitID:[OCMArg any]
+                                                   request:[OCMArg any]
+                                         completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad]
                                     error:[OCMArg isEqual:error]]);
 }
