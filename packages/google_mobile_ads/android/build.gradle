@@ -29,13 +29,13 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
     }
     lintOptions {
         disable 'InvalidPackage'
     }
     dependencies {
-        api 'com.google.android.gms:play-services-ads:22.5.0'
+        api 'com.google.android.gms:play-services-ads:23.0.0'
         implementation 'com.google.android.ump:user-messaging-platform:2.1.0'
         implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
         implementation 'androidx.lifecycle:lifecycle-process:2.6.2'
