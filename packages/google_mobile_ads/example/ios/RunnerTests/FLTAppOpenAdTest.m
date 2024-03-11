@@ -71,11 +71,10 @@
   OCMStub(ClassMethod([appOpenClassMock
                loadWithAdUnitID:[OCMArg any]
                         request:[OCMArg any]
-                    orientation:UIInterfaceOrientationPortrait
               completionHandler:[OCMArg any]]))
       .andDo(^(NSInvocation *invocation) {
         void (^completionHandler)(GADAppOpenAd *ad, NSError *error);
-        [invocation getArgument:&completionHandler atIndex:5];
+        [invocation getArgument:&completionHandler atIndex:4];
         completionHandler(appOpenClassMock, nil);
       });
   // Stub setting of FullScreenContentDelegate to invoke delegate callbacks.
@@ -113,7 +112,6 @@
   OCMVerify(ClassMethod([appOpenClassMock
        loadWithAdUnitID:[OCMArg isEqual:@"testId"]
                 request:[OCMArg isEqual:gadOrGAMRequest]
-            orientation:UIInterfaceOrientationPortrait
       completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
                        responseInfo:[OCMArg isEqual:responseInfo]]);
@@ -181,11 +179,10 @@
   OCMStub(ClassMethod([appOpenClassMock
                loadWithAdUnitID:[OCMArg any]
                         request:[OCMArg any]
-                    orientation:UIInterfaceOrientationLandscapeLeft
               completionHandler:[OCMArg any]]))
       .andDo(^(NSInvocation *invocation) {
         void (^completionHandler)(GADAppOpenAd *ad, NSError *error);
-        [invocation getArgument:&completionHandler atIndex:5];
+        [invocation getArgument:&completionHandler atIndex:4];
         completionHandler(nil, error);
       });
 
@@ -194,7 +191,6 @@
   OCMVerify(ClassMethod([appOpenClassMock
        loadWithAdUnitID:[OCMArg any]
                 request:[OCMArg any]
-            orientation:UIInterfaceOrientationLandscapeLeft
       completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad]
                                     error:[OCMArg isEqual:error]]);
