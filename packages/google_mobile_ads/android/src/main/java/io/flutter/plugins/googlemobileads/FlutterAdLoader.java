@@ -50,7 +50,7 @@ public class FlutterAdLoader {
       @NonNull AdRequest adRequest,
       int orientation,
       @NonNull AppOpenAdLoadCallback loadCallback) {
-    AppOpenAd.load(context, adUnitId, adRequest, orientation, loadCallback);
+    AppOpenAd.load(context, adUnitId, adRequest, loadCallback);
   }
 
   /** Load an ad manager app open ad. */
@@ -59,7 +59,7 @@ public class FlutterAdLoader {
       @NonNull AdManagerAdRequest adRequest,
       int orientation,
       @NonNull AppOpenAdLoadCallback loadCallback) {
-    AppOpenAd.load(context, adUnitId, adRequest, orientation, loadCallback);
+    AppOpenAd.load(context, adUnitId, adRequest, loadCallback);
   }
 
   /** Load an interstitial ad. */
