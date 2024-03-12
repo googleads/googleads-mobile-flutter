@@ -52,7 +52,7 @@
   GADAdLoaderOptions *mockGADAdLoaderOptions =
       OCMClassMock([GADAdLoaderOptions class]);
   OCMStub([mockNativeAdOptions asGADAdLoaderOptions])
-      .andReturn(mockGADAdLoaderOptions);
+      .andReturn([NSArray arrayWithObject:mockGADAdLoaderOptions]);
   UIViewController *mockViewController = OCMClassMock([UIViewController class]);
 
   FLTNativeAd *ad = [[FLTNativeAd alloc] initWithAdUnitId:@"testAdUnitId"
@@ -162,7 +162,7 @@
   GADAdLoaderOptions *mockGADAdLoaderOptions =
       OCMClassMock([GADAdLoaderOptions class]);
   OCMStub([mockNativeAdOptions asGADAdLoaderOptions])
-      .andReturn(mockGADAdLoaderOptions);
+      .andReturn([NSArray arrayWithObject:mockGADAdLoaderOptions]);
   UIViewController *mockViewController = OCMClassMock([UIViewController class]);
   FLTNativeTemplateStyle *templateStyle =
       OCMClassMock([FLTNativeTemplateStyle class]);
