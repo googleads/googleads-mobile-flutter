@@ -48,7 +48,6 @@ public class FlutterAdLoader {
   public void loadAppOpen(
       @NonNull String adUnitId,
       @NonNull AdRequest adRequest,
-      int orientation,
       @NonNull AppOpenAdLoadCallback loadCallback) {
     AppOpenAd.load(context, adUnitId, adRequest, loadCallback);
   }
@@ -57,7 +56,6 @@ public class FlutterAdLoader {
   public void loadAdManagerAppOpen(
       @NonNull String adUnitId,
       @NonNull AdManagerAdRequest adRequest,
-      int orientation,
       @NonNull AppOpenAdLoadCallback loadCallback) {
     AppOpenAd.load(context, adUnitId, adRequest, loadCallback);
   }

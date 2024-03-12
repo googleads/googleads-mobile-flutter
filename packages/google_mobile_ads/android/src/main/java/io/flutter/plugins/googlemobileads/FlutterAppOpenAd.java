@@ -30,7 +30,6 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
 
   @NonNull private final AdInstanceManager manager;
   @NonNull private final String adUnitId;
-  private final int orientation;
   @Nullable private final FlutterAdRequest request;
   @Nullable private final FlutterAdManagerAdRequest adManagerAdRequest;
   @Nullable private AppOpenAd ad;
@@ -38,7 +37,6 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
 
   FlutterAppOpenAd(
       int adId,
-      int orientation,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @Nullable FlutterAdRequest request,
@@ -49,7 +47,6 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
         request != null || adManagerAdRequest != null,
         "One of request and adManagerAdRequest must be non-null.");
     this.manager = manager;
-    this.orientation = orientation;
     this.adUnitId = adUnitId;
     this.request = request;
     this.adManagerAdRequest = adManagerAdRequest;
@@ -62,25 +59,13 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
       flutterAdLoader.loadAppOpen(
           adUnitId,
           request.asAdRequest(adUnitId),
-          getOrientation(),
           new DelegatingAppOpenAdLoadCallback(this));
     } else if (adManagerAdRequest != null) {
       flutterAdLoader.loadAdManagerAppOpen(
           adUnitId,
           adManagerAdRequest.asAdManagerAdRequest(adUnitId),
-          getOrientation(),
           new DelegatingAppOpenAdLoadCallback(this));
     }
-  }
-
-  private int getOrientation() {
-    if (orientation == 1) {
-      return AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT;
-    } else if (orientation == 2 || orientation == 3) {
-      return AppOpenAd.APP_OPEN_AD_ORIENTATION_LANDSCAPE;
-    }
-    Log.e(TAG, "Passed unknown app open orientation: " + orientation);
-    return AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT;
   }
 
   private void onAdLoaded(@NonNull AppOpenAd ad) {
