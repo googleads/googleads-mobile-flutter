@@ -1,6 +1,8 @@
-## Next Version
+## 5.0.0
 * Adds `MediationExtras` class to include parameters when using mediation through the implementation of `FlutterMediationExtras` in Android and `FlutterMediationExtras` in iOS
 * Deprecates `MediationNetworkExtrasProvider` and `FLTMediationNetworkExtrasProvider`.
+* Updates GMA iOS dependency to 11.1.0
+* Updates GMA Android dependency to 23.0.0
 
 ## 4.0.0
 * The minimum supported Flutter version is now 3.7.0.
