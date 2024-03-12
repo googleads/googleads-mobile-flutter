@@ -204,7 +204,8 @@ class FlutterAdRequest {
   }
 
   /** Adds network extras to the ad request builder, if any. */
-  private <T extends AbstractAdRequestBuilder<T>> void addNetworkExtras(AbstractAdRequestBuilder<T> builder, String adUnitId) {
+  private <T extends AbstractAdRequestBuilder<T>> void addNetworkExtras(
+      AbstractAdRequestBuilder<T> builder, String adUnitId) {
     Map<Class<? extends MediationExtrasReceiver>, Bundle> networkExtras = new HashMap<>();
     if (mediationExtras != null) {
       for (FlutterMediationExtras flutterExtras : mediationExtras) {
@@ -241,7 +242,9 @@ class FlutterAdRequest {
   }
 
   /** Updates the {@link AdRequest.Builder} with the properties in this {@link FlutterAdRequest}. */
-  protected <T extends AbstractAdRequestBuilder<T>> AbstractAdRequestBuilder<T> updateAdRequestBuilder(AbstractAdRequestBuilder<T> builder, String adUnitId) {
+  protected <T extends AbstractAdRequestBuilder<T>>
+      AbstractAdRequestBuilder<T> updateAdRequestBuilder(
+          AbstractAdRequestBuilder<T> builder, String adUnitId) {
     if (keywords != null) {
       for (final String keyword : keywords) {
         builder.addKeyword(keyword);
