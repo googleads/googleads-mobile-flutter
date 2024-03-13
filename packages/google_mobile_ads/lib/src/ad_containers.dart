@@ -1357,7 +1357,6 @@ class ServerSideVerificationOptions {
 
 /// A full-screen app open ad for the Google Mobile Ads Plugin.
 class AppOpenAd extends AdWithoutView {
-
   AppOpenAd._({
     required String adUnitId,
     required this.adLoadCallback,
