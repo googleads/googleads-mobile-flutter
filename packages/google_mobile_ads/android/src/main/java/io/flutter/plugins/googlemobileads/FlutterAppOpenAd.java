@@ -57,9 +57,7 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
   void load() {
     if (request != null) {
       flutterAdLoader.loadAppOpen(
-          adUnitId,
-          request.asAdRequest(adUnitId),
-          new DelegatingAppOpenAdLoadCallback(this));
+          adUnitId, request.asAdRequest(adUnitId), new DelegatingAppOpenAdLoadCallback(this));
     } else if (adManagerAdRequest != null) {
       flutterAdLoader.loadAdManagerAppOpen(
           adUnitId,
