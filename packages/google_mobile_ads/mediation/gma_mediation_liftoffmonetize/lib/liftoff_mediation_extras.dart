@@ -10,18 +10,18 @@ class LiftoffMediationExtras implements MediationExtras {
 
   @override
   String getAndroidClassName() {
-    return "io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmonetize.LiftoffFlutterMediationExtras";
+    return 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmonetize.LiftoffFlutterMediationExtras';
   }
 
   @override
   String getIOSClassName() {
-    return "LiftoffFlutterMediationExtras";
+    return 'LiftoffFlutterMediationExtras';
   }
 
   @override
   Map<String, dynamic> getExtras() {
     return <String, dynamic> {
-      "userId": userId,
+      'userId': userId,
     };
   }
 }
