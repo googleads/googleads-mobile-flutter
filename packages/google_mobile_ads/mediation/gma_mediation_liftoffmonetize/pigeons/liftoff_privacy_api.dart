@@ -18,8 +18,10 @@ import 'package:pigeon/pigeon.dart';
   dartOut: 'lib/liftoff_privacy_api.g.dart',
   dartOptions: DartOptions(),
   kotlinOut:
-  'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_liftoffmonetize/LiftoffPrivacyApi.g.kt',
-  kotlinOptions: KotlinOptions(package: 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmonetize'),
+      'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_liftoffmonetize/LiftoffPrivacyApi.g.kt',
+  kotlinOptions: KotlinOptions(
+      package:
+          'io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmonetize'),
   swiftOut: 'ios/Classes/LiftoffPrivacyApi.g.swift',
   swiftOptions: SwiftOptions(),
   dartPackageName: 'gma_mediation_liftoffmonetize',

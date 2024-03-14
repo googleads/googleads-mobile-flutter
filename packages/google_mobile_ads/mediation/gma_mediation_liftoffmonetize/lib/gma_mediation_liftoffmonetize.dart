@@ -15,7 +15,8 @@
 import 'package:gma_mediation_liftoffmonetize/liftoff_privacy_api.g.dart';
 
 class GmaMediationLiftoffmonetize {
-  static Future<void> setGDPRStatus(bool optedIn, String? consentMessageVersion) async {
+  static Future<void> setGDPRStatus(
+      bool optedIn, String? consentMessageVersion) async {
     await LiftoffPrivacyApi().setGDPRStatus(optedIn, consentMessageVersion);
   }
 

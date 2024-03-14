@@ -23,17 +23,21 @@ class LiftoffPrivacyApi {
       : __pigeon_binaryMessenger = binaryMessenger;
   final BinaryMessenger? __pigeon_binaryMessenger;
 
-  static const MessageCodec<Object?> pigeonChannelCodec = StandardMessageCodec();
+  static const MessageCodec<Object?> pigeonChannelCodec =
+      StandardMessageCodec();
 
-  Future<void> setGDPRStatus(bool optedIn, String? consentMessageVersion) async {
-    const String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_liftoffmonetize.LiftoffPrivacyApi.setGDPRStatus';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+  Future<void> setGDPRStatus(
+      bool optedIn, String? consentMessageVersion) async {
+    const String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_liftoffmonetize.LiftoffPrivacyApi.setGDPRStatus';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
     );
-    final List<Object?>? __pigeon_replyList =
-        await __pigeon_channel.send(<Object?>[optedIn, consentMessageVersion]) as List<Object?>?;
+    final List<Object?>? __pigeon_replyList = await __pigeon_channel
+        .send(<Object?>[optedIn, consentMessageVersion]) as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -48,8 +52,10 @@ class LiftoffPrivacyApi {
   }
 
   Future<void> setCCPAStatus(bool optedIn) async {
-    const String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_liftoffmonetize.LiftoffPrivacyApi.setCCPAStatus';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    const String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_liftoffmonetize.LiftoffPrivacyApi.setCCPAStatus';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
