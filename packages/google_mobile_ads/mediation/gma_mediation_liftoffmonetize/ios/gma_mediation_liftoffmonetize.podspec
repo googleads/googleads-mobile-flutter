@@ -14,8 +14,9 @@ Mediation Adapter for Liftoff Monetize to use with Google Mobile Ads.
   s.author           = { 'Google LLC' => 'mediation-support@google.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.public_header_files = 'Public/**/*.h'
   s.dependency 'Flutter'
+  s.dependency 'GoogleMobileAdsMediationVungle'
   s.platform = :ios, '11.0'
 
   # Flutter.framework does not contain a i386 slice.
