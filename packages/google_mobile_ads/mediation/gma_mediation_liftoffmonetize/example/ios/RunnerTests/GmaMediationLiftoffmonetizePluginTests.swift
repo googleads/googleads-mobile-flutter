@@ -17,12 +17,7 @@ import XCTest
 
 @testable import gma_mediation_liftoffmonetize
 
-// This demonstrates a simple unit test of the Swift portion of this plugin's implementation.
-//
-// See https://developer.apple.com/documentation/xctest for more information about using XCTest.
-
 class GmaMediationLiftoffmonetizePluginTests: XCTestCase {
-
   func testSetGDPRStatus() {
     let liftoffPrivacyFake = LiftoffPrivacyFake()
 
