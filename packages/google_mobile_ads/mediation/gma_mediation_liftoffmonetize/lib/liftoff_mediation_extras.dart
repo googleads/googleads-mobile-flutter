@@ -1,7 +1,7 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class LiftoffMediationExtras implements MediationExtras {
-  const LiftoffMediationExtras({this.userId, this.orientation, this.nativeAdPosition, this.isInterstitial});
+  LiftoffMediationExtras({this.userId, this.orientation, this.nativeAdPosition, this.isInterstitial});
 
   String? userId;
   int? orientation;

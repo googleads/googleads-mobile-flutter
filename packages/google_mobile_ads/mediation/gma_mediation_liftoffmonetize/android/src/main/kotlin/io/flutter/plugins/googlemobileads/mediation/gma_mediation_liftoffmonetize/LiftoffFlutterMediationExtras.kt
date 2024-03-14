@@ -1,14 +1,16 @@
 package io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmonetize
 
 import android.os.Bundle
+import android.util.Pair
 import androidx.core.os.bundleOf
 import com.google.ads.mediation.vungle.VungleConstants
 import com.google.android.gms.ads.mediation.MediationExtrasReceiver
 import com.vungle.ads.AdConfig
 import com.vungle.mediation.VungleAdapter
 import com.vungle.mediation.VungleInterstitialAdapter
+import io.flutter.plugins.googlemobileads.FlutterMediationExtras
 
-class LiftoffFlutterMediationExtras : FlutterMediationExtras {
+class LiftoffFlutterMediationExtras : FlutterMediationExtras() {
   private var flutterExtras: Map<String, Any>? = null
 
   override fun setMediationExtras(extras: MutableMap<String, Any>?) {
