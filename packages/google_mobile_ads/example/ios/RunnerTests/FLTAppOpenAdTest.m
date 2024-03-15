@@ -62,7 +62,6 @@
       [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
                                      request:request
                           rootViewController:mockRootViewController
-                                 orientation:@1
                                         adId:@1];
   ad.manager = mockManager;
 
@@ -169,7 +168,6 @@
       [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
                                      request:request
                           rootViewController:mockRootViewController
-                                 orientation:@2
                                         adId:@1];
   ad.manager = mockManager;
 

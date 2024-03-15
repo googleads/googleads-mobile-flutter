@@ -60,7 +60,6 @@ void main() {
               appOpenAd = ad;
             },
             onAdFailedToLoad: (error) {}),
-        orientation: AppOpenAd.orientationPortrait,
       );
 
       expect(log, <Matcher>[
@@ -69,7 +68,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'orientation': AppOpenAd.orientationPortrait
         }),
       ]);
 
@@ -158,7 +156,6 @@ void main() {
               appOpenAd = ad;
             },
             onAdFailedToLoad: (error) {}),
-        orientation: AppOpenAd.orientationLandscapeLeft,
       );
 
       expect(log, <Matcher>[
@@ -167,7 +164,6 @@ void main() {
           'adUnitId': 'test-ad-unit',
           'request': request,
           'adManagerRequest': null,
-          'orientation': AppOpenAd.orientationLandscapeLeft
         }),
       ]);
 
