@@ -18,7 +18,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -75,7 +74,7 @@ public class FlutterAppOpenAdTest {
     when(mockFlutterAdRequest.asAdRequest(anyString())).thenReturn(mockAdRequest);
     flutterAppOpenAd =
         new FlutterAppOpenAd(
-            1, 2, mockManager, "testId", mockFlutterAdRequest, null, mockFlutterAdLoader);
+            1, mockManager, "testId", mockFlutterAdRequest, null, mockFlutterAdLoader);
   }
 
   private void setupAdManagerMocks() {
@@ -85,7 +84,7 @@ public class FlutterAppOpenAdTest {
         .thenReturn(mockAdManagerAdRequest);
     flutterAppOpenAd =
         new FlutterAppOpenAd(
-            1, 2, mockManager, "testId", null, mockAdManagerFlutterRequest, mockFlutterAdLoader);
+            1, mockManager, "testId", null, mockAdManagerFlutterRequest, mockFlutterAdLoader);
   }
 
   @Test
@@ -100,7 +99,7 @@ public class FlutterAppOpenAdTest {
             new Answer() {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
-                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(2);
                 // Pass back null for ad
                 adLoadCallback.onAdFailedToLoad(loadAdError);
                 return null;
@@ -108,13 +107,13 @@ public class FlutterAppOpenAdTest {
             })
         .when(mockFlutterAdLoader)
         .loadAdManagerAppOpen(
-            anyString(), any(AdManagerAdRequest.class), anyInt(), any(AppOpenAdLoadCallback.class));
+            anyString(), any(AdManagerAdRequest.class), any(AppOpenAdLoadCallback.class));
 
     flutterAppOpenAd.load();
 
     verify(mockFlutterAdLoader)
         .loadAdManagerAppOpen(
-            eq("testId"), eq(mockAdManagerAdRequest), eq(2), any(AppOpenAdLoadCallback.class));
+            eq("testId"), eq(mockAdManagerAdRequest), any(AppOpenAdLoadCallback.class));
 
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
     verify(mockManager).onAdFailedToLoad(eq(1), eq(expectedError));
@@ -132,19 +131,19 @@ public class FlutterAppOpenAdTest {
             new Answer() {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
-                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(2);
                 // Pass back null for ad
                 adLoadCallback.onAdFailedToLoad(loadAdError);
                 return null;
               }
             })
         .when(mockFlutterAdLoader)
-        .loadAppOpen(anyString(), any(AdRequest.class), anyInt(), any(AppOpenAdLoadCallback.class));
+        .loadAppOpen(anyString(), any(AdRequest.class), any(AppOpenAdLoadCallback.class));
 
     flutterAppOpenAd.load();
 
     verify(mockFlutterAdLoader)
-        .loadAppOpen(eq("testId"), eq(mockAdRequest), eq(2), any(AppOpenAdLoadCallback.class));
+        .loadAppOpen(eq("testId"), eq(mockAdRequest), any(AppOpenAdLoadCallback.class));
 
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadAdError);
     verify(mockManager).onAdFailedToLoad(eq(1), eq(expectedError));
@@ -160,7 +159,7 @@ public class FlutterAppOpenAdTest {
             new Answer() {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
-                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(2);
                 // Pass back null for ad
                 adLoadCallback.onAdLoaded(mockAd);
                 return null;
@@ -168,7 +167,7 @@ public class FlutterAppOpenAdTest {
             })
         .when(mockFlutterAdLoader)
         .loadAdManagerAppOpen(
-            anyString(), any(AdManagerAdRequest.class), anyInt(), any(AppOpenAdLoadCallback.class));
+            anyString(), any(AdManagerAdRequest.class), any(AppOpenAdLoadCallback.class));
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAd).getResponseInfo();
 
@@ -193,7 +192,7 @@ public class FlutterAppOpenAdTest {
 
     verify(mockFlutterAdLoader)
         .loadAdManagerAppOpen(
-            eq("testId"), eq(mockAdManagerAdRequest), eq(2), any(AppOpenAdLoadCallback.class));
+            eq("testId"), eq(mockAdManagerAdRequest), any(AppOpenAdLoadCallback.class));
 
     verify(mockManager).onAdLoaded(eq(1), eq(responseInfo));
     verify(mockAd).setOnPaidEventListener(any(FlutterPaidEventListener.class));
@@ -214,14 +213,14 @@ public class FlutterAppOpenAdTest {
             new Answer() {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
-                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(2);
                 // Pass back null for ad
                 adLoadCallback.onAdLoaded(mockAd);
                 return null;
               }
             })
         .when(mockFlutterAdLoader)
-        .loadAppOpen(anyString(), any(AdRequest.class), anyInt(), any(AppOpenAdLoadCallback.class));
+        .loadAppOpen(anyString(), any(AdRequest.class), any(AppOpenAdLoadCallback.class));
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAd).getResponseInfo();
 
@@ -245,7 +244,7 @@ public class FlutterAppOpenAdTest {
     flutterAppOpenAd.load();
 
     verify(mockFlutterAdLoader)
-        .loadAppOpen(eq("testId"), eq(mockAdRequest), eq(2), any(AppOpenAdLoadCallback.class));
+        .loadAppOpen(eq("testId"), eq(mockAdRequest), any(AppOpenAdLoadCallback.class));
 
     verify(mockManager).onAdLoaded(eq(1), eq(responseInfo));
     verify(mockAd).setOnPaidEventListener(any(FlutterPaidEventListener.class));
@@ -263,7 +262,7 @@ public class FlutterAppOpenAdTest {
             new Answer() {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
-                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(2);
                 // Pass back null for ad
                 adLoadCallback.onAdLoaded(mockAd);
                 return null;
@@ -271,7 +270,7 @@ public class FlutterAppOpenAdTest {
             })
         .when(mockFlutterAdLoader)
         .loadAdManagerAppOpen(
-            anyString(), any(AdManagerAdRequest.class), anyInt(), any(AppOpenAdLoadCallback.class));
+            anyString(), any(AdManagerAdRequest.class), any(AppOpenAdLoadCallback.class));
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAd).getResponseInfo();
 
@@ -288,14 +287,14 @@ public class FlutterAppOpenAdTest {
             new Answer() {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
-                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(2);
                 // Pass back null for ad
                 adLoadCallback.onAdLoaded(mockAd);
                 return null;
               }
             })
         .when(mockFlutterAdLoader)
-        .loadAppOpen(anyString(), any(AdRequest.class), anyInt(), any(AppOpenAdLoadCallback.class));
+        .loadAppOpen(anyString(), any(AdRequest.class), any(AppOpenAdLoadCallback.class));
     final ResponseInfo responseInfo = mock(ResponseInfo.class);
     doReturn(responseInfo).when(mockAd).getResponseInfo();
 
@@ -444,14 +443,14 @@ public class FlutterAppOpenAdTest {
             new Answer() {
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
-                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(3);
+                AppOpenAdLoadCallback adLoadCallback = invocation.getArgument(2);
                 adLoadCallback.onAdLoaded(mockAd);
                 // Pass back null for ad
                 return null;
               }
             })
         .when(mockFlutterAdLoader)
-        .loadAppOpen(anyString(), any(AdRequest.class), anyInt(), any(AppOpenAdLoadCallback.class));
+        .loadAppOpen(anyString(), any(AdRequest.class), any(AppOpenAdLoadCallback.class));
     flutterAppOpenAd.load();
     flutterAppOpenAd.setImmersiveMode(false);
     verify(mockAd).setImmersiveMode(eq(false));

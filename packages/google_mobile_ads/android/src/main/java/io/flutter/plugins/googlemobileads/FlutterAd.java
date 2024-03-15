@@ -72,8 +72,8 @@ abstract class FlutterAd {
       Map<String, String> extras = new HashMap<>();
       if (responseInfo.getResponseExtras() != null) {
         for (String key : responseInfo.getResponseExtras().keySet()) {
-          Object value = responseInfo.getResponseExtras().get(key);
-          extras.put(key, value.toString());
+          String value = responseInfo.getResponseExtras().getString(key);
+          extras.put(key, value);
         }
       }
 
@@ -160,7 +160,7 @@ abstract class FlutterAd {
       if (responseInfo.getCredentials() != null) {
         this.adUnitMapping = new HashMap<>();
         for (String key : responseInfo.getCredentials().keySet()) {
-          adUnitMapping.put(key, responseInfo.getCredentials().get(key).toString());
+          adUnitMapping.put(key, responseInfo.getCredentials().getString(key));
         }
       } else {
         adUnitMapping = new HashMap<>();

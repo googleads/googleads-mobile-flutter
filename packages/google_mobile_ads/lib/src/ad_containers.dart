@@ -1357,26 +1357,10 @@ class ServerSideVerificationOptions {
 
 /// A full-screen app open ad for the Google Mobile Ads Plugin.
 class AppOpenAd extends AdWithoutView {
-  /// Portrait orientation.
-  static const int orientationPortrait = 1;
-
-  /// Landscape orientation left.
-  ///
-  /// Android does not distinguish between left/right, and will treat this
-  /// the same way as [orientationLandscapeRight].
-  static const int orientationLandscapeLeft = 2;
-
-  /// Landscape orientation right.
-  ///
-  /// Android does not distinguish between left/right, and will treat this
-  /// the same way as [orientationLandscapeLeft].
-  static const int orientationLandscapeRight = 3;
-
   AppOpenAd._({
     required String adUnitId,
     required this.adLoadCallback,
     required this.request,
-    required this.orientation,
   })  : adManagerAdRequest = null,
         super(adUnitId: adUnitId);
 
@@ -1384,7 +1368,6 @@ class AppOpenAd extends AdWithoutView {
     required String adUnitId,
     required this.adLoadCallback,
     required this.adManagerAdRequest,
-    required this.orientation,
   })  : request = null,
         super(adUnitId: adUnitId);
 
@@ -1397,12 +1380,6 @@ class AppOpenAd extends AdWithoutView {
   /// Listener for ad load events.
   final AppOpenAdLoadCallback adLoadCallback;
 
-  /// The requested orientation.
-  ///
-  /// Must be [orientationPortrait], [orientationLandscapeLeft], or
-  /// [orientationLandscapeRight].
-  final int orientation;
-
   /// Callbacks to be invoked when ads show and dismiss full screen content.
   FullScreenContentCallback<AppOpenAd>? fullScreenContentCallback;
 
@@ -1411,13 +1388,11 @@ class AppOpenAd extends AdWithoutView {
     required String adUnitId,
     required AdRequest request,
     required AppOpenAdLoadCallback adLoadCallback,
-    required int orientation,
   }) async {
     AppOpenAd ad = AppOpenAd._(
       adUnitId: adUnitId,
       adLoadCallback: adLoadCallback,
       request: request,
-      orientation: orientation,
     );
     await instanceManager.loadAppOpenAd(ad);
   }
@@ -1427,13 +1402,11 @@ class AppOpenAd extends AdWithoutView {
     required String adUnitId,
     required AdManagerAdRequest adManagerAdRequest,
     required AppOpenAdLoadCallback adLoadCallback,
-    required int orientation,
   }) async {
     AppOpenAd ad = AppOpenAd._fromAdManagerRequest(
       adUnitId: adUnitId,
       adLoadCallback: adLoadCallback,
       adManagerAdRequest: adManagerAdRequest,
-      orientation: orientation,
     );
     await instanceManager.loadAppOpenAd(ad);
   }

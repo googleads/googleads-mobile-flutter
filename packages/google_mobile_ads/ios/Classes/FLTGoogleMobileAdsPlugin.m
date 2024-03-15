@@ -497,7 +497,6 @@
         [[FLTAppOpenAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                        request:request
                             rootViewController:rootController
-                                   orientation:call.arguments[@"orientation"]
                                           adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
