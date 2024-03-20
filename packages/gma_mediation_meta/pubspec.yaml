@@ -1,7 +1,7 @@
 name: gma_mediation_meta
 description: "Mediation Adapter for Meta Audience Network to use with Google Mobile Ads."
 version: 1.0.0
-repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/google_mobile_ads/mediation
+repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/gma_mediation_meta
 
 environment:
   sdk: '>=3.2.5 <4.0.0'
