@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-include: package:lint/package.yaml # Use this for packages with public API
+include: package:lint/package.yaml
 
 analyzer:
   exclude:

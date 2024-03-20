@@ -17,10 +17,10 @@ name: gma_mediation_meta
 on:
   pull_request:
     paths:
-    - "packages/google_mobile_ads/mediation/gma_mediation_meta/**"
+    - "packages/gma_mediation_meta/**"
     - ".github/workflows/gma_mediation_meta.yaml"
-    - "packages/google_mobile_ads/mediation/gma_mediation_meta/ios/**"
-    - "packages/google_mobile_ads/mediation/gma_mediation_meta/android/**"
+    - "packages/gma_mediation_meta/ios/**"
+    - "packages/gma_mediation_meta/android/**"
   push:
     branches:
     - master
@@ -40,11 +40,11 @@ jobs:
       run: ./.github/workflows/scripts/install-tools.sh
     - name: "Flutter Analyze"
       run: |
-        cd packages/google_mobile_ads/mediation/gma_mediation_meta
+        cd packages/gma_mediation_meta
         flutter analyze
     - name: "Flutter Publish"
       run: |
-        cd packages/google_mobile_ads/mediation/gma_mediation_meta
+        cd packages/gma_mediation_meta
         flutter pub publish --dry-run
     - name: "Flutter Format"
       run: |
