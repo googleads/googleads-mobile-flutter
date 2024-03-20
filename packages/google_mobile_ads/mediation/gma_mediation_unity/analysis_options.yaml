@@ -1,4 +1,4 @@
-#  Copyright 2021 Google LLC
+#  Copyright 2024 Google LLC
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -13,12 +13,3 @@
 #  limitations under the License.
 
 include: package:pedantic/analysis_options.1.11.0.yaml
-
-analyzer:
-  exclude: [packages/google_mobile_ads/mediation/**]
-  errors:
-    omit_local_variable_types: ignore
-
-linter:
-  rules:
-    - public_member_api_docs
