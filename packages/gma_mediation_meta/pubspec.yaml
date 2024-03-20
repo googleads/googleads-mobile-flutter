@@ -16,7 +16,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  lints: ^3.0.0
+  lint: ^2.0.3
 
 flutter:
   plugin:
