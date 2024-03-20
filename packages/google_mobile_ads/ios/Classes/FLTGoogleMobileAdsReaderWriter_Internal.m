@@ -14,6 +14,7 @@
 
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
 #import "FLTAdUtil.h"
+#import "FLTMediationExtras.h"
 #import "NativeTemplates/FLTNativeTemplateColor.h"
 #import "NativeTemplates/FLTNativeTemplateFontStyle.h"
 #import "NativeTemplates/FLTNativeTemplateStyle.h"
@@ -46,6 +47,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldNativeTemplateFontStyle = 151,
   FLTAdmobFieldNativeTemplateType = 152,
   FLTAdmobFieldNativeTemplateColor = 153,
+  FLTAdmobFieldMediationExtras = 154
 
 };
 
@@ -116,7 +118,16 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
     request.adMobExtras = [self readValueOfType:[self readByte]];
     request.requestAgent = _requestAgent;
+    request.mediationExtras = [self readValueOfType:[self readByte]];
     return request;
+  }
+  case FLTAdmobFieldMediationExtras: {
+    id<FlutterMediationExtras> flutterMediationExtras =
+        [[NSClassFromString([self readValueOfType:[self readByte]]) alloc]
+            init];
+    NSMutableDictionary *flutterExtras = [self readValueOfType:[self readByte]];
+    flutterMediationExtras.extras = flutterExtras;
+    return flutterMediationExtras;
   }
   case FLTAdMobFieldRewardItem: {
     return [[FLTRewardItem alloc]
@@ -199,6 +210,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     request.mediationNetworkExtrasProvider = _mediationNetworkExtrasProvider;
     request.adMobExtras = [self readValueOfType:[self readByte]];
     request.requestAgent = _requestAgent;
+    request.mediationExtras = [self readValueOfType:[self readByte]];
     return request;
   }
   case FLTAdMobFieldAdapterInitializationState: {
@@ -258,15 +270,15 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                             startMuted:[self readValueOfType:[self readByte]]];
   }
   case FLTAdmobRequestConfigurationParams: {
-    GADRequestConfiguration *requestConfig = [GADRequestConfiguration alloc];
-    requestConfig.maxAdContentRating = [self readValueOfType:[self readByte]];
-    [requestConfig
-        tagForChildDirectedTreatment:[self readValueOfType:[self readByte]]];
-    [requestConfig
-        tagForUnderAgeOfConsent:[self readValueOfType:[self readByte]]];
-    requestConfig.testDeviceIdentifiers =
+    GADMobileAds.sharedInstance.requestConfiguration.maxAdContentRating =
         [self readValueOfType:[self readByte]];
-    return requestConfig;
+    GADMobileAds.sharedInstance.requestConfiguration
+        .tagForChildDirectedTreatment = [self readValueOfType:[self readByte]];
+    GADMobileAds.sharedInstance.requestConfiguration.tagForUnderAgeOfConsent =
+        [self readValueOfType:[self readByte]];
+    GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers =
+        [self readValueOfType:[self readByte]];
+    return GADMobileAds.sharedInstance.requestConfiguration;
   }
   case FLTAdmobFieldInlineAdaptiveAdSize: {
     return [[FLTInlineAdaptiveBannerSize alloc]
@@ -376,6 +388,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.pubProvidedID];
     [self writeValue:request.mediationExtrasIdentifier];
     [self writeValue:request.adMobExtras];
+    [self writeValue:request.mediationExtras];
   } else if ([value isKindOfClass:[FLTAdRequest class]]) {
     [self writeByte:FLTAdMobFieldAdRequest];
     FLTAdRequest *request = value;
@@ -385,6 +398,12 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:request.neighboringContentURLs];
     [self writeValue:request.mediationExtrasIdentifier];
     [self writeValue:request.adMobExtras];
+    [self writeValue:request.mediationExtras];
+  } else if ([value conformsToProtocol:@protocol(FlutterMediationExtras)]) {
+    [self writeByte:FLTAdmobFieldMediationExtras];
+    NSObject<FlutterMediationExtras> *fltExtras = value;
+    [self writeValue:NSStringFromClass([fltExtras class])];
+    [self writeValue:fltExtras.extras];
   } else if ([value isKindOfClass:[FLTRewardItem class]]) {
     [self writeByte:FLTAdMobFieldRewardItem];
     FLTRewardItem *item = value;
@@ -470,11 +489,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeByte:FLTAdmobRequestConfigurationParams];
     GADRequestConfiguration *params = value;
     [self writeValue:params.maxAdContentRating];
-    // using null temporarily for tagForUnderAgeOfConsent and
-    // tagForChildDirectedTreatment as there are no getters for them in
-    // GADRequestConfiguration.
-    [super writeValue:NSNull.null];
-    [super writeValue:NSNull.null];
+    [self writeValue:params.tagForChildDirectedTreatment];
+    [self writeValue:params.tagForUnderAgeOfConsent];
     [self writeValue:params.testDeviceIdentifiers];
   } else if ([value isKindOfClass:[FLTNativeTemplateType class]]) {
     [self writeByte:FLTAdmobFieldNativeTemplateType];

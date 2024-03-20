@@ -14,6 +14,7 @@
 
 #import "FLTAdInstanceManager_Internal.h"
 #import "FLTGoogleMobileAdsPlugin.h"
+#import "FLTMediationExtras.h"
 #import "FLTMediationNetworkExtrasProvider.h"
 #import "FLTMobileAds_Internal.h"
 #import "FLTNativeTemplateStyle.h"
@@ -86,11 +87,14 @@
 @property NSString *_Nullable contentURL;
 @property BOOL nonPersonalizedAds;
 @property NSArray<NSString *> *_Nullable neighboringContentURLs;
-@property NSString *_Nullable mediationExtrasIdentifier;
+@property NSString *_Nullable mediationExtrasIdentifier
+    DEPRECATED_MSG_ATTRIBUTE("Use mediationExtras instead.");
 @property id<
-    FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider;
+    FLTMediationNetworkExtrasProvider> _Nullable mediationNetworkExtrasProvider
+    DEPRECATED_MSG_ATTRIBUTE("Use mediationExtras instead.");
 @property NSDictionary<NSString *, NSString *> *_Nullable adMobExtras;
 @property NSString *_Nonnull requestAgent;
+@property NSArray<id<FlutterMediationExtras>> *_Nullable mediationExtras;
 
 - (GADRequest *_Nonnull)asGADRequest:(NSString *_Nonnull)adUnitId;
 @end
@@ -254,7 +258,6 @@
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:
                            (UIViewController *_Nonnull)rootViewController
-                              orientation:(NSNumber *_Nonnull)orientation
                                      adId:(NSNumber *_Nonnull)adId;
 - (GADAppOpenAd *_Nullable)appOpenAd;
 @end

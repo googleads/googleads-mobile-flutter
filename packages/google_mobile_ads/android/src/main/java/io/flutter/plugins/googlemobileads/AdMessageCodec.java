@@ -18,6 +18,7 @@ package io.flutter.plugins.googlemobileads;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -40,6 +41,7 @@ import java.util.Map;
  * Encodes and decodes values by reading from a ByteBuffer and writing to a ByteArrayOutputStream.
  */
 class AdMessageCodec extends StandardMessageCodec {
+
   // The type values below must be consistent for each platform.
   private static final byte VALUE_AD_SIZE = (byte) 128;
   private static final byte VALUE_AD_REQUEST = (byte) 129;
@@ -65,6 +67,7 @@ class AdMessageCodec extends StandardMessageCodec {
   private static final byte VALUE_NATIVE_TEMPLATE_FONT_STYLE = (byte) 151;
   private static final byte VALUE_NATIVE_TEMPLATE_TYPE = (byte) 152;
   private static final byte VALUE_COLOR = (byte) 153;
+  private static final byte VALUE_MEDIATION_EXTRAS = (byte) 154;
 
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
@@ -114,6 +117,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getPublisherProvidedId());
       writeValue(stream, request.getMediationExtrasIdentifier());
       writeValue(stream, request.getAdMobExtras());
+      writeValue(stream, request.getMediationExtras());
     } else if (value instanceof FlutterAdRequest) {
       stream.write(VALUE_AD_REQUEST);
       final FlutterAdRequest request = (FlutterAdRequest) value;
@@ -124,6 +128,13 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, request.getHttpTimeoutMillis());
       writeValue(stream, request.getMediationExtrasIdentifier());
       writeValue(stream, request.getAdMobExtras());
+      writeValue(stream, request.getMediationExtras());
+    } else if (value instanceof FlutterMediationExtras) {
+      stream.write(VALUE_MEDIATION_EXTRAS);
+      final FlutterMediationExtras mediationExtras = (FlutterMediationExtras) value;
+      String className = mediationExtras.getClass().getCanonicalName();
+      writeValue(stream, className);
+      writeValue(stream, mediationExtras.extras);
     } else if (value instanceof FlutterRewardedAd.FlutterRewardItem) {
       stream.write(VALUE_REWARD_ITEM);
       final FlutterRewardedAd.FlutterRewardItem item = (FlutterRewardedAd.FlutterRewardItem) value;
@@ -283,7 +294,26 @@ class AdMessageCodec extends StandardMessageCodec {
             .setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider)
             .setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer))
             .setRequestAgent(requestAgentProvider.getRequestAgent())
+            .setMediationExtras(
+                (List<FlutterMediationExtras>) readValueOfType(buffer.get(), buffer))
             .build();
+      case VALUE_MEDIATION_EXTRAS:
+        String className = (String) readValueOfType(buffer.get(), buffer);
+        Map<String, Object> extras = (Map<String, Object>) readValueOfType(buffer.get(), buffer);
+        try {
+          assert className != null;
+          Class<?> cls = Class.forName(className);
+          FlutterMediationExtras flutterExtras = (FlutterMediationExtras) cls.newInstance();
+          flutterExtras.setMediationExtras(extras);
+          return flutterExtras;
+        } catch (ClassNotFoundException e) {
+          Log.e("FlutterMediationExtras", "Class not found: " + className);
+        } catch (IllegalAccessException e) {
+          Log.e("FlutterMediationExtras", "Illegal Access to " + className);
+        } catch (InstantiationException e) {
+          Log.e("FlutterMediationExtras", "Unable to instantiate class " + className);
+        }
+        return null;
       case VALUE_REWARD_ITEM:
         return new FlutterRewardedAd.FlutterRewardItem(
             (Integer) readValueOfType(buffer.get(), buffer),
@@ -332,6 +362,8 @@ class AdMessageCodec extends StandardMessageCodec {
         builder.setMediationNetworkExtrasProvider(mediationNetworkExtrasProvider);
         builder.setAdMobExtras((Map<String, String>) readValueOfType(buffer.get(), buffer));
         builder.setRequestAgent(requestAgentProvider.getRequestAgent());
+        builder.setMediationExtras(
+            (List<FlutterMediationExtras>) readValueOfType(buffer.get(), buffer));
         return builder.build();
       case VALUE_INITIALIZATION_STATE:
         final String state = (String) readValueOfType(buffer.get(), buffer);

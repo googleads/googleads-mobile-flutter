@@ -21,6 +21,7 @@
 #import "FLTGoogleMobileAdsCollection_Internal.h"
 #import "FLTGoogleMobileAdsPlugin.h"
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
+#import "FLTMediationExtras.h"
 #import "FLTMobileAds_Internal.h"
 #import "FLTNativeTemplateColor.h"
 #import "FLTNativeTemplateFontStyle.h"
@@ -33,6 +34,9 @@
 
 @interface FLTTestAdSizeFactory : FLTAdSizeFactory
 @property(readonly) GADAdSize testAdSize;
+@end
+
+@interface _FlutterMediationExtras : NSObject <FlutterMediationExtras>
 @end
 
 @implementation FLTGoogleMobileAdsReaderWriterTest {
@@ -60,16 +64,18 @@
 }
 
 - (void)testEncodeDecodeRequestConfiguration {
-  GADRequestConfiguration *requestConfiguration =
-      [GADRequestConfiguration alloc];
-  requestConfiguration.maxAdContentRating = GADMaxAdContentRatingMatureAudience;
-  [GADMobileAds.sharedInstance.requestConfiguration
-      tagForChildDirectedTreatment:YES];
-  [GADMobileAds.sharedInstance.requestConfiguration tagForUnderAgeOfConsent:NO];
+  GADMobileAds.sharedInstance.requestConfiguration.maxAdContentRating =
+      GADMaxAdContentRatingMatureAudience;
+  GADMobileAds.sharedInstance.requestConfiguration
+      .tagForChildDirectedTreatment = @YES;
+  GADMobileAds.sharedInstance.requestConfiguration.tagForUnderAgeOfConsent =
+      @NO;
   NSArray<NSString *> *testDeviceIds =
       [[NSArray alloc] initWithObjects:@"test-device-id", nil];
-  requestConfiguration.testDeviceIdentifiers = testDeviceIds;
-  NSData *encodedMessage = [_messageCodec encode:requestConfiguration];
+  GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers =
+      testDeviceIds;
+  NSData *encodedMessage =
+      [_messageCodec encode:GADMobileAds.sharedInstance.requestConfiguration];
 
   GADRequestConfiguration *decodedSize = [_messageCodec decode:encodedMessage];
   XCTAssertEqualObjects(decodedSize.maxAdContentRating,
@@ -258,6 +264,9 @@
 }
 
 - (void)testEncodeDecodeAdRequest {
+  id<FlutterMediationExtras> mediationExtras =
+      [[_FlutterMediationExtras alloc] init];
+  mediationExtras.extras = @{@"test_key" : @"test_value"};
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
   request.contentURL = @"banana";
@@ -266,6 +275,9 @@
   request.neighboringContentURLs = contentURLs;
   request.mediationExtrasIdentifier = @"identifier";
   request.adMobExtras = @{@"key" : @"value"};
+  NSArray<id<FlutterMediationExtras>> *mediationExtrasArray =
+      @[ mediationExtras ];
+  request.mediationExtras = mediationExtrasArray;
   NSData *encodedMessage = [_messageCodec encode:request];
 
   FLTAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
@@ -277,9 +289,14 @@
                         @"identifier");
   XCTAssertEqualObjects(decodedRequest.adMobExtras, @{@"key" : @"value"});
   XCTAssertEqualObjects(decodedRequest.requestAgent, @"request-agent");
+  XCTAssertEqualObjects(decodedRequest.mediationExtras[0].extras,
+                        @{@"test_key" : @"test_value"});
 }
 
 - (void)testEncodeDecodeGAMAdRequest {
+  id<FlutterMediationExtras> mediationExtras =
+      [[_FlutterMediationExtras alloc] init];
+  mediationExtras.extras = @{@"test_key" : @"test_value"};
   FLTGAMAdRequest *request = [[FLTGAMAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
   request.contentURL = @"banana";
@@ -291,6 +308,9 @@
   request.pubProvidedID = @"pub-id";
   request.mediationExtrasIdentifier = @"identifier";
   request.adMobExtras = @{@"key" : @"value"};
+  NSArray<id<FlutterMediationExtras>> *mediationExtrasArray =
+      @[ mediationExtras ];
+  request.mediationExtras = mediationExtrasArray;
   NSData *encodedMessage = [_messageCodec encode:request];
 
   FLTGAMAdRequest *decodedRequest = [_messageCodec decode:encodedMessage];
@@ -307,6 +327,8 @@
                         @"identifier");
   XCTAssertEqualObjects(decodedRequest.adMobExtras, @{@"key" : @"value"});
   XCTAssertEqualObjects(decodedRequest.requestAgent, @"request-agent");
+  XCTAssertEqualObjects(decodedRequest.mediationExtras[0].extras,
+                        @{@"test_key" : @"test_value"});
 }
 
 - (void)testEncodeDecodeRewardItem {
@@ -380,10 +402,14 @@
 
 - (void)testEncodeDecodeFLTGADLoadError {
   GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
+  GADAdNetworkResponseInfo *mockAdNetworkResponseInfo =
+      OCMClassMock([GADAdNetworkResponseInfo class]);
   NSString *identifier = @"test-identifier";
   NSString *className = @"test-class-name";
   OCMStub([mockResponseInfo responseIdentifier]).andReturn(identifier);
-  OCMStub([mockResponseInfo adNetworkClassName]).andReturn(className);
+  OCMStub(mockResponseInfo.loadedAdNetworkResponseInfo)
+      .andReturn(mockAdNetworkResponseInfo);
+  OCMStub(mockAdNetworkResponseInfo.adNetworkClassName).andReturn(className);
   NSDictionary *userInfo = @{
     NSLocalizedDescriptionKey : @"message",
     GADErrorUserInfoKeyResponseInfo : mockResponseInfo
@@ -410,10 +436,14 @@
   OCMStub([mockNetworkResponse adNetworkClassName]).andReturn(@"adapter-class");
 
   GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
+  GADAdNetworkResponseInfo *mockAdNetworkResponseInfo =
+      OCMClassMock([GADAdNetworkResponseInfo class]);
   NSString *identifier = @"test-identifier";
   NSString *className = @"test-class-name";
   OCMStub([mockResponseInfo responseIdentifier]).andReturn(identifier);
-  OCMStub([mockResponseInfo adNetworkClassName]).andReturn(className);
+  OCMStub(mockResponseInfo.loadedAdNetworkResponseInfo)
+      .andReturn(mockAdNetworkResponseInfo);
+  OCMStub(mockAdNetworkResponseInfo.adNetworkClassName).andReturn(className);
   OCMStub([mockResponseInfo adNetworkInfoArray]).andReturn(@[
     mockNetworkResponse
   ]);
@@ -533,7 +563,8 @@
 - (void)testEncodeDecodeFLTGADLoadErrorWithEmptyValues {
   GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
   OCMStub([mockResponseInfo responseIdentifier]).andReturn(nil);
-  OCMStub([mockResponseInfo adNetworkClassName]).andReturn(nil);
+  OCMStub([mockResponseInfo.loadedAdNetworkResponseInfo adNetworkClassName])
+      .andReturn(nil);
   NSDictionary *userInfo = @{
     NSLocalizedDescriptionKey : @"message",
     GADErrorUserInfoKeyResponseInfo : mockResponseInfo
@@ -769,4 +800,14 @@
     (NSNumber *)width {
   return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
 }
+@end
+
+@implementation _FlutterMediationExtras
+
+@synthesize extras;
+
+- (id<GADAdNetworkExtras> _Nonnull)getMediationExtras {
+  return OCMProtocolMock(@protocol(GADAdNetworkExtras));
+}
+
 @end

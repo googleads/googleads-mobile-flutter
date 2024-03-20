@@ -28,8 +28,11 @@ import static org.mockito.Mockito.mock;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.util.Pair;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.gms.ads.mediation.MediationExtrasReceiver;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import io.flutter.plugins.googlemobileads.FlutterAdSize.AdSizeFactory;
@@ -43,6 +46,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.Before;
@@ -372,6 +376,12 @@ public class AdMessageCodecTest {
   @Test
   public void encodeFlutterAdRequest() {
     Map<String, String> extras = Collections.singletonMap("key", "value");
+    List<FlutterMediationExtras> mediationExtras = new ArrayList<>();
+    DummyMediationExtras randomExtra = new DummyMediationExtras();
+    Map<String, Object> flutterRandomExtra = new HashMap<>();
+    flutterRandomExtra.put("TEST_KEY", "TEST_VALUE");
+    randomExtra.extras = flutterRandomExtra;
+    mediationExtras.add(randomExtra);
     FlutterAdRequest adRequest =
         new FlutterAdRequest.Builder()
             .setKeywords(Arrays.asList("1", "2", "3"))
@@ -381,16 +391,25 @@ public class AdMessageCodecTest {
             .setHttpTimeoutMillis(1000)
             .setMediationNetworkExtrasIdentifier("identifier")
             .setAdMobExtras(extras)
+            .setMediationExtras(mediationExtras)
             .build();
     final ByteBuffer message = codec.encodeMessage(adRequest);
 
     final FlutterAdRequest decodedRequest =
         (FlutterAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
+    assert decodedRequest != null;
     assertEquals(adRequest, decodedRequest);
+    assertEquals(flutterRandomExtra, decodedRequest.getMediationExtras().get(0).extras);
   }
 
   @Test
   public void encodeFlutterAdManagerAdRequest() {
+    List<FlutterMediationExtras> mediationExtras = new ArrayList<>();
+    DummyMediationExtras randomExtra = new DummyMediationExtras();
+    Map<String, Object> flutterRandomExtra = new HashMap<>();
+    flutterRandomExtra.put("TEST_KEY", "TEST_VALUE");
+    randomExtra.extras = flutterRandomExtra;
+    mediationExtras.add(randomExtra);
     doReturn("mock-request-agent").when(mockFlutterRequestAgentProvider).getRequestAgent();
     FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
     builder.setKeywords(Arrays.asList("1", "2", "3"));
@@ -402,6 +421,7 @@ public class AdMessageCodecTest {
     builder.setPublisherProvidedId("pub-provided-id");
     builder.setMediationNetworkExtrasIdentifier("identifier");
     builder.setAdMobExtras(Collections.singletonMap("key", "value"));
+    builder.setMediationExtras(mediationExtras);
 
     FlutterAdManagerAdRequest flutterAdManagerAdRequest = builder.build();
 
@@ -410,6 +430,7 @@ public class AdMessageCodecTest {
         (FlutterAdManagerAdRequest) codec.decodeMessage((ByteBuffer) message.position(0));
     assertEquals(decodedAdRequest, flutterAdManagerAdRequest);
     assertEquals(decodedAdRequest.getRequestAgent(), "mock-request-agent");
+    assertEquals(flutterRandomExtra, decodedAdRequest.getMediationExtras().get(0).extras);
   }
 
   @Test
@@ -515,5 +536,12 @@ public class AdMessageCodecTest {
         result.getTagForUnderAgeOfConsent(),
         RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE);
     assertEquals(result.getTestDeviceIds(), Arrays.asList("test-device-id"));
+  }
+}
+
+class DummyMediationExtras extends FlutterMediationExtras {
+  @Override
+  public Pair<Class<? extends MediationExtrasReceiver>, Bundle> getMediationExtras() {
+    return null;
   }
 }

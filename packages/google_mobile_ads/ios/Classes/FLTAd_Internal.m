@@ -171,9 +171,20 @@
 
 - (void)addNetworkExtrasToGADRequest:(GADRequest *)request
                             adUnitId:(NSString *_Nonnull)adUnitId {
-  NSArray<id<GADAdNetworkExtras>> *extras = [_mediationNetworkExtrasProvider
-             getMediationExtras:adUnitId
-      mediationExtrasIdentifier:_mediationExtrasIdentifier];
+  NSArray<id<GADAdNetworkExtras>> *extras;
+
+  if (_mediationExtras != NULL) {
+    NSMutableArray<id<GADAdNetworkExtras>> *flutterExtras =
+        [NSMutableArray array];
+    for (id<FlutterMediationExtras> extra in _mediationExtras) {
+      [flutterExtras addObject:[extra getMediationExtras]];
+    }
+    extras = [NSArray arrayWithArray:flutterExtras];
+  } else {
+    extras = [_mediationNetworkExtrasProvider
+               getMediationExtras:adUnitId
+        mediationExtrasIdentifier:_mediationExtrasIdentifier];
+  }
   BOOL addedNpaToGADExtras = false;
 
   if ([FLTAdUtil isNotNull:extras]) {
@@ -234,7 +245,8 @@
   self = [super init];
   if (self) {
     _responseIdentifier = responseInfo.responseIdentifier;
-    _adNetworkClassName = responseInfo.adNetworkClassName;
+    _adNetworkClassName =
+        responseInfo.loadedAdNetworkResponseInfo.adNetworkClassName;
     NSMutableArray<FLTGADAdNetworkResponseInfo *> *infoArray =
         [[NSMutableArray alloc] init];
     for (GADAdNetworkResponseInfo *adNetworkInfo in responseInfo
@@ -1001,7 +1013,6 @@
   GADAppOpenAd *_appOpenAd;
   FLTAdRequest *_adRequest;
   UIViewController *_rootViewController;
-  NSNumber *_orientation;
   NSString *_adUnitId;
 }
 
@@ -1009,14 +1020,12 @@
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:
                            (UIViewController *_Nonnull)rootViewController
-                              orientation:(NSNumber *_Nonnull)orientation
                                      adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _rootViewController = rootViewController;
-    _orientation = orientation;
     _adUnitId = [adUnitId copy];
   }
   return self;
@@ -1038,18 +1047,8 @@
     return;
   }
 
-  UIInterfaceOrientation orientation = UIInterfaceOrientationUnknown;
-  if ([_orientation isEqualToNumber:@1]) {
-    orientation = UIInterfaceOrientationPortrait;
-  } else if ([_orientation isEqualToNumber:@2]) {
-    orientation = UIInterfaceOrientationLandscapeLeft;
-  } else if ([_orientation isEqualToNumber:@3]) {
-    orientation = UIInterfaceOrientationLandscapeRight;
-  }
-
   [GADAppOpenAd loadWithAdUnitID:_adUnitId
                          request:request
-                     orientation:orientation
                completionHandler:^(GADAppOpenAd *_Nullable appOpenAd,
                                    NSError *_Nullable error) {
                  if (error) {
