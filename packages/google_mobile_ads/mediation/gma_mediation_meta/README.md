@@ -7,7 +7,8 @@ Flutter plugin to be used with the Google Mobile Ads plugin. It enables
 mediation of the Meta Ad Network through the Google Mobile Ads SDK.
 
 ## Documentation
-
+For instructions on how to use with the google_mobile_ads plugin, refer to the 
+developer guide for [Meta Audience Network](https://developers.google.com/admob/flutter/mediation/meta).
 
 
 ## Downloads
