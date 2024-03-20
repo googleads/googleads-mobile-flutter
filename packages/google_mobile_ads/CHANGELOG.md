@@ -3,7 +3,7 @@
 * Deprecates `MediationNetworkExtrasProvider` and `FLTMediationNetworkExtrasProvider`.
 * Removed the `orientation` parameter for the AppOpen Ad format.
 * Bumps minimum Android SDK version to 21.
-* Updates GMA iOS dependency to 11.1.0
+* Updates GMA iOS dependency to 11.2.0
 * Updates GMA Android dependency to 23.0.0
 
 ## 4.0.0
