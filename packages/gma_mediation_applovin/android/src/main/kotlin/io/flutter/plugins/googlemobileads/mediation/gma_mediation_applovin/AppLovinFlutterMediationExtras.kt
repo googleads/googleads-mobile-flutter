@@ -20,10 +20,10 @@ class AppLovinFlutterMediationExtras : FlutterMediationExtras() {
     if (extrasMap == null) {
       return Pair<Class<out MediationExtrasReceiver>, Bundle>(MediationExtrasReceiver::class.java, bundleOf())
     }
-    val extrasBundle = bundleOf()
+    var extrasBundle = bundleOf()
     val isMutedValue = extrasMap[IS_MUTED]
     if (isMutedValue is Boolean) {
-      extrasBundle.putAll(AppLovinExtras.Builder().setMuteAudio(isMutedValue).build())
+      extrasBundle = AppLovinExtras.Builder().setMuteAudio(isMutedValue).build()
     }
     return Pair<Class<out MediationExtrasReceiver>, Bundle>(ApplovinAdapter::class.java, extrasBundle)
   }

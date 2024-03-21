@@ -6,10 +6,14 @@ This repository contains the source code for the Mediation AppLovin Flutter
 plugin to be used with the Google Mobile Ads plugin. It enables mediation of the
 AppLovin Ad Network through the Google Mobile Ads SDK.
 
+This plugin use the [Pigeon Flutter plugin](https://pub.dev/packages/pigeon) to
+generate the classes that bridge the dart layer with each platform's code.
+To add or modify the third party sdk, use the classes in the pigeons folder
+following [this guide](https://github.com/flutter/packages/blob/main/packages/pigeon/example/README.md).
+
 ## Documentation
 For instructions on how to use with the google_mobile_ads plugin, refer to the
 developer guide for [AppLovin](https://developers.google.com/admob/flutter/mediation/applovin).
-
 
 ## Downloads
 

@@ -2,7 +2,6 @@ name: gma_mediation_applovin
 description: "Mediation Adapter for AppLovin to use with Google Mobile Ads."
 version: 1.0.0
 repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/google_mobile_ads/mediation
-publish_to: none
 
 environment:
   sdk: '>=3.2.5 <4.0.0'
