@@ -7,7 +7,8 @@ plugin to be used with the Google Mobile Ads plugin. It enables mediation of the
 AppLovin Ad Network through the Google Mobile Ads SDK.
 
 ## Documentation
-
+For instructions on how to use with the google_mobile_ads plugin, refer to the
+developer guide for [AppLovin](https://developers.google.com/admob/flutter/mediation/applovin).
 
 
 ## Downloads
