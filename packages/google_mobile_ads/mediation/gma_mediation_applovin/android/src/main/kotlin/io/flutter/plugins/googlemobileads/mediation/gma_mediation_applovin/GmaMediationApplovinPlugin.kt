@@ -21,7 +21,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
-/** GmaMediationApplovinPlugin */
+/** Links the Android dependency of the AppLovin Adapter and calls the AppLovin SDK APIs.  */
 class GmaMediationApplovinPlugin: FlutterPlugin, ActivityAware, AppLovinSDKApi {
   private lateinit var context: Context
 
