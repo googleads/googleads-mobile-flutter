@@ -563,7 +563,8 @@
 - (void)testEncodeDecodeFLTGADLoadErrorWithEmptyValues {
   GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
   OCMStub([mockResponseInfo responseIdentifier]).andReturn(nil);
-  OCMStub([mockResponseInfo adNetworkClassName]).andReturn(nil);
+  OCMStub([mockResponseInfo.loadedAdNetworkResponseInfo adNetworkClassName])
+      .andReturn(nil);
   NSDictionary *userInfo = @{
     NSLocalizedDescriptionKey : @"message",
     GADErrorUserInfoKeyResponseInfo : mockResponseInfo

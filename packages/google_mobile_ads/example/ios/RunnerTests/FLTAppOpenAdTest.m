@@ -62,20 +62,17 @@
       [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
                                      request:request
                           rootViewController:mockRootViewController
-                                 orientation:@1
                                         adId:@1];
   ad.manager = mockManager;
 
   // Stub the load call to invoke successful load callback.
   id appOpenClassMock = OCMClassMock([GADAppOpenAd class]);
-  OCMStub(ClassMethod([appOpenClassMock
-               loadWithAdUnitID:[OCMArg any]
-                        request:[OCMArg any]
-                    orientation:UIInterfaceOrientationPortrait
-              completionHandler:[OCMArg any]]))
+  OCMStub(ClassMethod([appOpenClassMock loadWithAdUnitID:[OCMArg any]
+                                                 request:[OCMArg any]
+                                       completionHandler:[OCMArg any]]))
       .andDo(^(NSInvocation *invocation) {
         void (^completionHandler)(GADAppOpenAd *ad, NSError *error);
-        [invocation getArgument:&completionHandler atIndex:5];
+        [invocation getArgument:&completionHandler atIndex:4];
         completionHandler(appOpenClassMock, nil);
       });
   // Stub setting of FullScreenContentDelegate to invoke delegate callbacks.
@@ -113,7 +110,6 @@
   OCMVerify(ClassMethod([appOpenClassMock
        loadWithAdUnitID:[OCMArg isEqual:@"testId"]
                 request:[OCMArg isEqual:gadOrGAMRequest]
-            orientation:UIInterfaceOrientationPortrait
       completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
                        responseInfo:[OCMArg isEqual:responseInfo]]);
@@ -172,30 +168,25 @@
       [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
                                      request:request
                           rootViewController:mockRootViewController
-                                 orientation:@2
                                         adId:@1];
   ad.manager = mockManager;
 
   id appOpenClassMock = OCMClassMock([GADAppOpenAd class]);
   NSError *error = OCMClassMock([NSError class]);
-  OCMStub(ClassMethod([appOpenClassMock
-               loadWithAdUnitID:[OCMArg any]
-                        request:[OCMArg any]
-                    orientation:UIInterfaceOrientationLandscapeLeft
-              completionHandler:[OCMArg any]]))
+  OCMStub(ClassMethod([appOpenClassMock loadWithAdUnitID:[OCMArg any]
+                                                 request:[OCMArg any]
+                                       completionHandler:[OCMArg any]]))
       .andDo(^(NSInvocation *invocation) {
         void (^completionHandler)(GADAppOpenAd *ad, NSError *error);
-        [invocation getArgument:&completionHandler atIndex:5];
+        [invocation getArgument:&completionHandler atIndex:4];
         completionHandler(nil, error);
       });
 
   [ad load];
 
-  OCMVerify(ClassMethod([appOpenClassMock
-       loadWithAdUnitID:[OCMArg any]
-                request:[OCMArg any]
-            orientation:UIInterfaceOrientationLandscapeLeft
-      completionHandler:[OCMArg any]]));
+  OCMVerify(ClassMethod([appOpenClassMock loadWithAdUnitID:[OCMArg any]
+                                                   request:[OCMArg any]
+                                         completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad]
                                     error:[OCMArg isEqual:error]]);
 }
