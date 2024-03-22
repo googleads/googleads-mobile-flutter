@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
-import 'package:gma_mediation_liftoffmonetize/gma_mediation_liftoffmonetize.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,8 +12,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _gmaMediationLiftoffmonetizePlugin = GmaMediationLiftoffmonetize();
-
   @override
   void initState() {
     super.initState();
