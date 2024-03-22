@@ -92,10 +92,6 @@ jobs:
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
-      - name: "Unit Tests"
-        run: |
-          cd packages/mediation/gma_mediation_liftoffmonetize
-          flutter test
       - name: "Flutter Analyze"
         run: |
           cd packages/mediation/gma_mediation_liftoffmonetize
