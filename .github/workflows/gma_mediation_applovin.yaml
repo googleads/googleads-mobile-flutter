@@ -17,10 +17,10 @@ name: gma_mediation_applovin
 on:
   pull_request:
     paths:
-      - "packages/gma_mediation_applovin/**"
+      - "packages/mediation/gma_mediation_applovin/**"
       - ".github/workflows/gma_mediation_applovin.yaml"
-      - "packages/gma_mediation_applovin/ios/**"
-      - "packages/gma_mediation_applovin/android/**"
+      - "packages/mediation/gma_mediation_applovin/ios/**"
+      - "packages/mediation/gma_mediation_applovin/android/**"
   push:
     branches:
       - master
@@ -43,10 +43,10 @@ jobs:
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart packages/gma_mediation_applovin/example
+        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart packages/mediation/gma_mediation_applovin/example
       - name: "Unit Tests"
         run: |
-          cd packages/gma_mediation_applovin/example/android
+          cd packages/mediation/gma_mediation_applovin/example/android
           ./gradlew :gma_mediation_applovin:testDebugUnitTest
 
   iOS:
@@ -66,7 +66,7 @@ jobs:
           ./.github/workflows/scripts/install-tools.sh
       - name: "Unit Tests"
         run: |
-          cd packages/gma_mediation_applovin/example/ios
+          cd packages/mediation/gma_mediation_applovin/example/ios
           flutter clean
           flutter pub get
           flutter precache --ios
@@ -76,7 +76,7 @@ jobs:
         if: failure()
         with: 
           name: iOSTestResults
-          path: packages/gma_mediation_applovin/example/ios/TestResults.xcresult
+          path: packages/mediation/gma_mediation_applovin/example/ios/TestResults.xcresult
   flutter:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
@@ -91,11 +91,11 @@ jobs:
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Flutter Analyze"
         run: |
-          cd packages/gma_mediation_applovin/
+          cd packages/mediation/gma_mediation_applovin/
           flutter analyze
       - name: "Flutter Publish"
         run: |
-          cd packages/gma_mediation_applovin/
+          cd packages/mediation/gma_mediation_applovin/
           flutter pub publish --dry-run
       - name: "Flutter Format"
         run: |
