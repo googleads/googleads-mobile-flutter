@@ -18,7 +18,7 @@ class AppLovinFlutterMediationExtras : FlutterMediationExtras() {
   override fun getMediationExtras(): Pair<Class<out MediationExtrasReceiver>, Bundle> {
     val extrasMap = flutterExtras
     if (extrasMap == null) {
-      return Pair<Class<out MediationExtrasReceiver>, Bundle>(MediationExtrasReceiver::class.java, bundleOf())
+      return Pair<Class<out MediationExtrasReceiver>, Bundle>(ApplovinAdapter::class.java, bundleOf())
     }
     var extrasBundle = bundleOf()
     val isMutedValue = extrasMap[IS_MUTED]
