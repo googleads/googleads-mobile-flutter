@@ -1,8 +1,7 @@
 name: gma_mediation_liftoffmonetize
 description: "Mediation Adapter for Liftoff Monetize to use with Google Mobile Ads."
 version: 1.0.0
-repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/google_mobile_ads/mediation
-publish_to: none
+repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/mediation/gma_mediation_liftoffmonetize
 
 environment:
   sdk: '>=3.2.5 <4.0.0'
@@ -11,8 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_mobile_ads:
-    path: ../../
+  google_mobile_ads: ^5.0.0
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
