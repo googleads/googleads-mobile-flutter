@@ -19,6 +19,7 @@ import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.ads.mediation.admob.AdMobAdapter;
+import com.google.android.gms.ads.AbstractAdRequestBuilder;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.mediation.MediationExtrasReceiver;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -203,7 +204,8 @@ class FlutterAdRequest {
   }
 
   /** Adds network extras to the ad request builder, if any. */
-  private void addNetworkExtras(AdRequest.Builder builder, String adUnitId) {
+  private <T extends AbstractAdRequestBuilder<T>> void addNetworkExtras(
+      AbstractAdRequestBuilder<T> builder, String adUnitId) {
     Map<Class<? extends MediationExtrasReceiver>, Bundle> networkExtras = new HashMap<>();
     if (mediationExtras != null) {
       for (FlutterMediationExtras flutterExtras : mediationExtras) {
@@ -240,7 +242,9 @@ class FlutterAdRequest {
   }
 
   /** Updates the {@link AdRequest.Builder} with the properties in this {@link FlutterAdRequest}. */
-  protected AdRequest.Builder updateAdRequestBuilder(AdRequest.Builder builder, String adUnitId) {
+  protected <T extends AbstractAdRequestBuilder<T>>
+      AbstractAdRequestBuilder<T> updateAdRequestBuilder(
+          AbstractAdRequestBuilder<T> builder, String adUnitId) {
     if (keywords != null) {
       for (final String keyword : keywords) {
         builder.addKeyword(keyword);
@@ -261,7 +265,7 @@ class FlutterAdRequest {
   }
 
   AdRequest asAdRequest(String adUnitId) {
-    return updateAdRequestBuilder(new AdRequest.Builder(), adUnitId).build();
+    return ((AdRequest.Builder) updateAdRequestBuilder(new AdRequest.Builder(), adUnitId)).build();
   }
 
   @Nullable

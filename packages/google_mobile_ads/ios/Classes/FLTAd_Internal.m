@@ -1013,7 +1013,6 @@
   GADAppOpenAd *_appOpenAd;
   FLTAdRequest *_adRequest;
   UIViewController *_rootViewController;
-  NSNumber *_orientation;
   NSString *_adUnitId;
 }
 
@@ -1021,14 +1020,12 @@
                                   request:(FLTAdRequest *_Nonnull)request
                        rootViewController:
                            (UIViewController *_Nonnull)rootViewController
-                              orientation:(NSNumber *_Nonnull)orientation
                                      adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _rootViewController = rootViewController;
-    _orientation = orientation;
     _adUnitId = [adUnitId copy];
   }
   return self;
@@ -1048,15 +1045,6 @@
   } else {
     NSLog(@"A null or invalid ad request was provided.");
     return;
-  }
-
-  UIInterfaceOrientation orientation = UIInterfaceOrientationUnknown;
-  if ([_orientation isEqualToNumber:@1]) {
-    orientation = UIInterfaceOrientationPortrait;
-  } else if ([_orientation isEqualToNumber:@2]) {
-    orientation = UIInterfaceOrientationLandscapeLeft;
-  } else if ([_orientation isEqualToNumber:@3]) {
-    orientation = UIInterfaceOrientationLandscapeRight;
   }
 
   [GADAppOpenAd loadWithAdUnitID:_adUnitId
