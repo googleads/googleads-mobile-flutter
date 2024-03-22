@@ -21,11 +21,11 @@ import 'package:pigeon/pigeon.dart';
       'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_applovin/AppLovinSDKApi.g.kt',
   kotlinOptions: KotlinOptions(
       package:
-          "io.flutter.plugins.googlemobileads.mediation.gma_mediation_applovin"),
+          "io.flutter.plugins.googlemobileads.mediation.gma_mediation_applovin",),
   swiftOut: 'ios/Classes/AppLovinSDKApi.g.swift',
   swiftOptions: SwiftOptions(),
   dartPackageName: 'gma_mediation_applovin',
-))
+),)
 @HostApi()
 abstract class AppLovinSDKApi {
   void setHasUserConsent(bool hasUserConsent);

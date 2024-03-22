@@ -15,6 +15,8 @@
 import 'package:gma_mediation_applovin/applovin_sdk_api.g.dart';
 
 class GmaMediationApplovin {
+  GmaMediationApplovin._();
+
   static Future<void> setHasUserConsent(bool hasUserConsent) async {
     AppLovinSDKApi().setHasUserConsent(hasUserConsent);
   }
