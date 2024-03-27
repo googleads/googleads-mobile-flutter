@@ -32,7 +32,7 @@ android {
         namespace 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_pangle'
     }
 
-    compileSdk 34
+    compileSdk 33
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
