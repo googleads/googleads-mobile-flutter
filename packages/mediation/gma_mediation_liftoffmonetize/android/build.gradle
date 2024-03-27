@@ -1,0 +1,79 @@
+group 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmonetize'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.7.10'
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    if (project.android.hasProperty("namespace")) {
+        namespace 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmonetize'
+    }
+
+    compileSdkVersion 33
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+    }
+
+    defaultConfig {
+        minSdkVersion 21
+    }
+
+    dependencies {
+        implementation 'com.google.ads.mediation:vungle:7.1.0.0'
+        testImplementation 'junit:junit:4.13.2'
+        testImplementation 'androidx.test:core:1.5.0'
+        testImplementation 'androidx.test:core-ktx:1.5.0'
+        testImplementation 'androidx.test.ext:junit:1.1.5'
+        testImplementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.20'
+        testImplementation 'org.mockito:mockito-core:5.5.0'
+        testImplementation 'org.mockito.kotlin:mockito-kotlin:5.1.0'
+        testImplementation 'org.robolectric:robolectric:4.10.3'
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnit()
+
+            testLogging {
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen {false}
+                showStandardStreams = true
+            }
+        }
+        unitTests {
+            includeAndroidResources = true
+            unitTests.returnDefaultValues = true
+        }
+    }
+}
