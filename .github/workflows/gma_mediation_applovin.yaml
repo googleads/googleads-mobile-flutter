@@ -53,7 +53,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 40
     steps:
-      - uses: swift-actions/setup-swift@v1
+      - uses: swift-actions/setup-swift@v2
         with:
           swift-version: "5.7.2"
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
