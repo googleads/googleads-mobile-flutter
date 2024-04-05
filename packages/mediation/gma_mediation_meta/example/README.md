@@ -1,6 +1,7 @@
 # gma_mediation_meta_example
 
-Demonstrates how to use the gma_mediation_meta plugin.
+Learn how to integrate with your app that uses the [google_mobile_ads](https://pub.dev/packages/google_mobile_ads) plugin
+by following the [development guide](https://developers.google.com/admob/flutter/mediation/meta).
 
 ## Getting Started
 

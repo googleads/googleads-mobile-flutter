@@ -23,7 +23,7 @@ on:
     - "packages/mediation/gma_mediation_meta/android/**"
   push:
     branches:
-    - master
+    - main
 
 jobs:
   flutter:
