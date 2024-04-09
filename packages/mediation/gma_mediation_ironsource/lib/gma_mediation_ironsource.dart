@@ -12,4 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-class GmaMediationIronsource {}
+import 'package:gma_mediation_ironsource/ironsource_privacy_api.g.dart';
+
+/// This class has entrypoint to call IronSource's SDK APIs.
+class GmaMediationIronsource {
+  static Future<void> setConsent(bool gdprConsent) async {
+    await IronSourcePrivacyApi().setConsent(gdprConsent);
+  }
+
+  static Future<void> setDoNotSell(bool doNotSell) async {
+    await IronSourcePrivacyApi().setDoNotSell(doNotSell);
+  }
+}

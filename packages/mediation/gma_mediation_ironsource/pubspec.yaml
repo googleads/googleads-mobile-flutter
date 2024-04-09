@@ -18,6 +18,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.0
   pedantic: ^1.11.0
+  pigeon: ^17.0.0
 
 flutter:
   plugin:
