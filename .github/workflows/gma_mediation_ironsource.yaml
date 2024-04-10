@@ -26,6 +26,57 @@ on:
     - main
 
 jobs:
+  android:
+    runs-on: macos-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin' 
+          java-version: '17'
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh
+      - name: "Build Example"
+        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart packages/mediation/gma_mediation_ironsource/example
+      - name: "Unit Tests"
+        run: |
+          cd packages/mediation/gma_mediation_ironsource/example/android
+          ./gradlew :gma_mediation_ironsource:testDebugUnitTest
+
+  iOS:
+    runs-on: macos-latest
+    timeout-minutes: 40
+    steps:
+      - uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "5.7.2"
+      - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+      - name: "Unit Tests"
+        run: |
+          cd packages/mediation/gma_mediation_ironsource/example/ios
+          flutter clean
+          flutter pub get
+          flutter precache --ios
+          pod install
+          xcodebuild -configuration Debug -resultBundlePath TestResults VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.2' test  
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with: 
+          name: iOSTestResults
+          path: packages/mediation/gma_mediation_ironsource/example/ios/TestResults.xcresult
   flutter:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
