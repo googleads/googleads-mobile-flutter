@@ -23,7 +23,7 @@ on:
       - "packages/google_mobile_ads/android/**"
   push:
     branches:
-      - master
+      - main
 
 env:
   GOOGLEMOBILEADS_PLUGIN_SCOPE: "*google_mobile_ads*"

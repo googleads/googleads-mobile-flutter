@@ -23,7 +23,7 @@ on:
       - "packages/mediation/gma_mediation_applovin/android/**"
   push:
     branches:
-      - master
+      - main
 
 jobs:
   android:
