@@ -23,11 +23,14 @@ class IronSourcePrivacyApi {
       : __pigeon_binaryMessenger = binaryMessenger;
   final BinaryMessenger? __pigeon_binaryMessenger;
 
-  static const MessageCodec<Object?> pigeonChannelCodec = StandardMessageCodec();
+  static const MessageCodec<Object?> pigeonChannelCodec =
+      StandardMessageCodec();
 
   Future<void> setConsent(bool gdprConsent) async {
-    const String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_ironsource.IronSourcePrivacyApi.setConsent';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    const String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_ironsource.IronSourcePrivacyApi.setConsent';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
@@ -48,8 +51,10 @@ class IronSourcePrivacyApi {
   }
 
   Future<void> setDoNotSell(bool doNotSell) async {
-    const String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_ironsource.IronSourcePrivacyApi.setDoNotSell';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    const String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_ironsource.IronSourcePrivacyApi.setDoNotSell';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
