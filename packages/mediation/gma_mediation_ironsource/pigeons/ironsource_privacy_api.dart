@@ -19,7 +19,7 @@ import 'package:pigeon/pigeon.dart';
     dartOut: 'lib/ironsource_privacy_api.g.dart',
     dartOptions: DartOptions(),
     kotlinOut:
-          'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_ironsource/IronSourcePrivacyApi.g.kt',
+        'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_ironsource/IronSourcePrivacyApi.g.kt',
     kotlinOptions: KotlinOptions(
       package:
           'io.flutter.plugins.googlemobileads.mediation.gma_mediation_ironsource',
