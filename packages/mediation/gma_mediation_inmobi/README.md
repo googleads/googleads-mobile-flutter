@@ -13,7 +13,7 @@ following [this guide](https://github.com/flutter/packages/blob/main/packages/pi
 
 ## Documentation
 For instructions on how to use with the google_mobile_ads plugin, refer to the
-developer guide for [InMobi](https://developers.google.com/admob/flutter/mediation/<ad network>).
+developer guide for [InMobi](https://developers.google.com/admob/flutter/mediation/inmobi).
 
 ## Downloads
 
