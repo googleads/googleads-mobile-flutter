@@ -51,7 +51,6 @@ class DTExchangeMediationExtras implements MediationExtras {
 
 /// Available gender types to be send on the User Data. Only used by iOS adapter.
 enum DTEUserGenderType {
-
   unknown,
   male,
   female,
