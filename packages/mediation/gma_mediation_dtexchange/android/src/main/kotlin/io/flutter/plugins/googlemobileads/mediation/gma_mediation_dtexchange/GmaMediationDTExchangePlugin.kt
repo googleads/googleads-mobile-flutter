@@ -1,10 +1,27 @@
 package io.flutter.plugins.googlemobileads.mediation.gma_mediation_dtexchange
 
+import com.fyber.inneractive.sdk.external.InneractiveAdManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
-/** Class that serves as bridge to get the adapter android dependency and make it available to a Flutter app. */
-class GmaMediationDTExchangePlugin: FlutterPlugin {
-  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {}
+/** Manages DTExchangePrivacyApi and implements the needed methods. */
+class GmaMediationDTExchangePlugin: FlutterPlugin, DTExchangePrivacyApi {
+  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    DTExchangePrivacyApi.setUp(flutterPluginBinding.binaryMessenger, this)
+  }
 
-  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {}
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    DTExchangePrivacyApi.setUp(binding.binaryMessenger, null)
+  }
+
+  override fun setGDPRConsent(gdprConsent: Boolean) {
+    InneractiveAdManager.setGdprConsent(gdprConsent)
+  }
+
+  override fun setGDPRConsentString(gdprConsentString: String) {
+    InneractiveAdManager.setGdprConsentString(gdprConsentString)
+  }
+
+  override fun setUSPrivacyString(usPrivacyString: String) {
+    InneractiveAdManager.setUSPrivacyString(usPrivacyString)
+  }
 }

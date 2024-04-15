@@ -12,5 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// This empty class is needed to allow correct compatibility analysis with host platforms.
-class GmaMediationDTExchange {}
+import 'package:gma_mediation_dtexchange/dtexchange_privacy_api.g.dart';
+
+/// This class has entrypoint to call DT Exchange's SDK APIs.
+class GmaMediationDTExchange {
+  Future<void> setGDPRConsent(bool gdprConsent) async {
+    DTExchangePrivacyApi().setGDPRConsent(gdprConsent);
+  }
+
+  Future<void> setGDPRConsentString(String gdprConsentString) async {
+    DTExchangePrivacyApi().setGDPRConsentString(gdprConsentString);
+  }
+
+  Future<void> setUSPrivacyString(String usPrivacyString) async {
+    DTExchangePrivacyApi().setUSPrivacyString(usPrivacyString);
+  }
+}
