@@ -55,5 +55,6 @@ enum DTEUserGenderType {
   male,
   female,
   other;
+
   int get intValue => index;
 }
