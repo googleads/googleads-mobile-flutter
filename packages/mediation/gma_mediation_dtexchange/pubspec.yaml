@@ -10,7 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_mobile_ads: ^5.0.0
+  google_mobile_ads:
+    path: ../../google_mobile_ads
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
