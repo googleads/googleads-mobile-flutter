@@ -15,6 +15,7 @@
 package io.flutter.plugins.googlemobileads.mediation.gma_mediation_inmobi
 
 import android.os.Bundle
+import android.util.Log
 import android.util.Pair
 import androidx.core.os.bundleOf
 import com.google.ads.mediation.inmobi.InMobiAdapter
@@ -38,6 +39,7 @@ class InMobiFlutterMediationExtras : FlutterMediationExtras() {
     val extrasBundle = bundleOf()
     val ageGroupValue = extrasMap[AGE_GROUP]
     if (ageGroupValue is Int) {
+      Log.d("InMobiMediationExtras", "ageGroup: $ageGroupValue")
       when(ageGroupValue) {
         0 -> extrasBundle.putString(InMobiNetworkKeys.AGE_GROUP, InMobiNetworkValues.BELOW_18)
         1 -> extrasBundle.putString(InMobiNetworkKeys.AGE_GROUP, InMobiNetworkValues.BETWEEN_18_AND_24)
@@ -51,6 +53,7 @@ class InMobiFlutterMediationExtras : FlutterMediationExtras() {
     }
     val educationValue = extrasMap[EDUCATION]
     if (educationValue is Int) {
+      Log.d("InMobiMediationExtras", "education: $educationValue")
       when (educationValue) {
         0 -> extrasBundle.putString(InMobiNetworkKeys.EDUCATION, InMobiNetworkValues.EDUCATION_HIGHSCHOOLORLESS)
         1 -> extrasBundle.putString(InMobiNetworkKeys.EDUCATION, InMobiNetworkValues.EDUCATION_COLLEGEORGRADUATE)
@@ -59,34 +62,42 @@ class InMobiFlutterMediationExtras : FlutterMediationExtras() {
     }
     val ageValue = extrasMap[AGE]
     if (ageValue is Int) {
+      Log.d("InMobiMediationExtras", "age: $ageValue")
       extrasBundle.putString(InMobiNetworkKeys.AGE, ageValue.toString())
     }
     val postalCodeValue = extrasMap[POSTAL_CODE]
     if (postalCodeValue is String) {
+      Log.d("InMobiMediationExtras", "postalCode: $postalCodeValue")
       extrasBundle.putString(InMobiNetworkKeys.POSTAL_CODE, postalCodeValue)
     }
     val areaCodeValue = extrasMap[AREA_CODE]
     if (areaCodeValue is String) {
+      Log.d("InMobiMediationExtras", "areaCode: $areaCodeValue")
       extrasBundle.putString(InMobiNetworkKeys.AREA_CODE, areaCodeValue)
     }
     val languageValue = extrasMap[LANGUAGE]
     if (languageValue is String) {
+      Log.d("InMobiMediationExtras", "language: $languageValue")
       extrasBundle.putString(InMobiNetworkKeys.LANGUAGE, languageValue)
     }
     val cityValue = extrasMap[CITY]
     if (cityValue is String) {
+      Log.d("InMobiMediationExtras", "city: $cityValue")
       extrasBundle.putString(InMobiNetworkKeys.CITY, cityValue)
     }
     val stateValue = extrasMap[STATE]
     if (stateValue is String) {
+      Log.d("InMobiMediationExtras", "state: $stateValue")
       extrasBundle.putString(InMobiNetworkKeys.STATE, stateValue)
     }
     val countryValue = extrasMap[COUNTRY]
     if (countryValue is String) {
+      Log.d("InMobiMediationExtras", "country: $countryValue")
       extrasBundle.putString(InMobiNetworkKeys.COUNTRY, countryValue)
     }
     val logLevelValue = extrasMap[LOGLEVEL]
     if (logLevelValue is Int) {
+      Log.d("InMobiMediationExtras", "logLevel: $logLevelValue")
       when (logLevelValue) {
         0 -> extrasBundle.putString(InMobiNetworkKeys.LOGLEVEL, InMobiNetworkValues.LOGLEVEL_NONE)
         1 -> extrasBundle.putString(InMobiNetworkKeys.LOGLEVEL, InMobiNetworkValues.LOGLEVEL_DEBUG)
@@ -95,6 +106,7 @@ class InMobiFlutterMediationExtras : FlutterMediationExtras() {
     }
     val interestsValue = extrasMap[INTERESTS]
     if (interestsValue is String) {
+      Log.d("InMobiMediationExtras", "interests: $interestsValue")
       extrasBundle.putString(InMobiNetworkKeys.INTERESTS, interestsValue)
     }
     return Pair<Class<out MediationExtrasReceiver>, Bundle>(InMobiAdapter::class.java, extrasBundle)
@@ -110,7 +122,7 @@ class InMobiFlutterMediationExtras : FlutterMediationExtras() {
     private const val CITY = "city"
     private const val STATE = "state"
     private const val COUNTRY = "country"
-    private const val LOGLEVEL = "logLevel"
     private const val INTERESTS = "interests"
+    private const val LOGLEVEL = "logLevel"
   }
 }
