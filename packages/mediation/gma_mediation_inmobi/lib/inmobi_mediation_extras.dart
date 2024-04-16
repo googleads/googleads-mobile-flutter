@@ -79,7 +79,7 @@ class InMobiMediationExtras implements MediationExtras {
 
 /// Definition of the age groups.
 enum InMobiAgeGroups {
-  below18,  // index = 0
+  below18, // index = 0
   between18And24,
   between25And29,
   between30And34,
