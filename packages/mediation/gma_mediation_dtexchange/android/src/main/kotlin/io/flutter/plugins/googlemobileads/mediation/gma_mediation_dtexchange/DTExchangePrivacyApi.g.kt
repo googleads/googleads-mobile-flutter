@@ -42,10 +42,17 @@ class FlutterError (
   override val message: String? = null,
   val details: Any? = null
 ) : Throwable()
-/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+/**
+ * The generated classes set the channels to call the methods in the corresponding kotlin DTExchangePrivacyApi interface and swift DTExchangePrivacyApi protocol from the dart layer.
+ *
+ * Generated interface from Pigeon that represents a handler of messages from Flutter.
+ */
 interface DTExchangePrivacyApi {
+  /** Used to configure GDPR on the Android or iOS DTExchange SDK */
   fun setGDPRConsent(gdprConsent: Boolean)
+  /** Used to configure GDPR String on the Android or iOS DTExchange SDK */
   fun setGDPRConsentString(gdprConsentString: String)
+  /** Used to configure consent to Sell Personal Information on the Android or iOS DTExchange SDK */
   fun setUSPrivacyString(usPrivacyString: String)
 
   companion object {

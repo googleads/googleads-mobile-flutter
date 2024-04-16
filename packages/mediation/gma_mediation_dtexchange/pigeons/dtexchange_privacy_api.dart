@@ -14,23 +14,31 @@
 
 import 'package:pigeon/pigeon.dart';
 
-@ConfigurePigeon(PigeonOptions(
-  dartOut: 'lib/dtexchange_privacy_api.g.dart',
-  dartOptions: DartOptions(),
-  kotlinOut:
-  'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_dtexchange/DTExchangePrivacyApi.g.kt',
-  kotlinOptions: KotlinOptions(
+@ConfigurePigeon(
+  PigeonOptions(
+    dartOut: 'lib/dtexchange_privacy_api.g.dart',
+    dartOptions: DartOptions(),
+    kotlinOut:
+        'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_dtexchange/DTExchangePrivacyApi.g.kt',
+    kotlinOptions: KotlinOptions(
       package:
-      'io.flutter.plugins.googlemobileads.mediation.gma_mediation_dtexchange',),
-  swiftOut: 'ios/Classes/DTExchangePrivacyApi.g.swift',
-  swiftOptions: SwiftOptions(),
-  dartPackageName: 'gma_mediation_dtexchange',
-),)
+          'io.flutter.plugins.googlemobileads.mediation.gma_mediation_dtexchange',
+    ),
+    swiftOut: 'ios/Classes/DTExchangePrivacyApi.g.swift',
+    swiftOptions: SwiftOptions(),
+    dartPackageName: 'gma_mediation_dtexchange',
+  ),
+)
 @HostApi()
+
+/// The generated classes set the channels to call the methods in the corresponding kotlin DTExchangePrivacyApi interface and swift DTExchangePrivacyApi protocol from the dart layer.
 abstract class DTExchangePrivacyApi {
+  /// Used to configure GDPR on the Android or iOS DTExchange SDK
   void setGDPRConsent(bool gdprConsent);
 
+  /// Used to configure GDPR String on the Android or iOS DTExchange SDK
   void setGDPRConsentString(String gdprConsentString);
 
+  /// Used to configure consent to Sell Personal Information on the Android or iOS DTExchange SDK
   void setUSPrivacyString(String usPrivacyString);
 }

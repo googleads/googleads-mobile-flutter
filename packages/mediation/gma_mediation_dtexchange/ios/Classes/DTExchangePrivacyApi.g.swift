@@ -38,10 +38,15 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   if value is NSNull { return nil }
   return value as! T?
 }
+/// The generated classes set the channels to call the methods in the corresponding kotlin DTExchangePrivacyApi interface and swift DTExchangePrivacyApi protocol from the dart layer.
+///
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol DTExchangePrivacyApi {
+  /// Used to configure GDPR on the Android or iOS DTExchange SDK
   func setGDPRConsent(gdprConsent: Bool) throws
+  /// Used to configure GDPR String on the Android or iOS DTExchange SDK
   func setGDPRConsentString(gdprConsentString: String) throws
+  /// Used to configure consent to Sell Personal Information on the Android or iOS DTExchange SDK
   func setUSPrivacyString(usPrivacyString: String) throws
 }
 
@@ -51,6 +56,7 @@ class DTExchangePrivacyApiSetup {
   /// Sets up an instance of `DTExchangePrivacyApi` to handle messages through the `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: DTExchangePrivacyApi?, messageChannelSuffix: String = "") {
     let channelSuffix = messageChannelSuffix.count > 0 ? ".\(messageChannelSuffix)" : ""
+    /// Used to configure GDPR on the Android or iOS DTExchange SDK
     let setGDPRConsentChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setGDPRConsent\(channelSuffix)", binaryMessenger: binaryMessenger)
     if let api = api {
       setGDPRConsentChannel.setMessageHandler { message, reply in
@@ -66,6 +72,7 @@ class DTExchangePrivacyApiSetup {
     } else {
       setGDPRConsentChannel.setMessageHandler(nil)
     }
+    /// Used to configure GDPR String on the Android or iOS DTExchange SDK
     let setGDPRConsentStringChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setGDPRConsentString\(channelSuffix)", binaryMessenger: binaryMessenger)
     if let api = api {
       setGDPRConsentStringChannel.setMessageHandler { message, reply in
@@ -81,6 +88,7 @@ class DTExchangePrivacyApiSetup {
     } else {
       setGDPRConsentStringChannel.setMessageHandler(nil)
     }
+    /// Used to configure consent to Sell Personal Information on the Android or iOS DTExchange SDK
     let setUSPrivacyStringChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setUSPrivacyString\(channelSuffix)", binaryMessenger: binaryMessenger)
     if let api = api {
       setUSPrivacyStringChannel.setMessageHandler { message, reply in

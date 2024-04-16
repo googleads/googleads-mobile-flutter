@@ -15,22 +15,29 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
+/// The generated classes set the channels to call the methods in the corresponding kotlin DTExchangePrivacyApi interface and swift DTExchangePrivacyApi protocol from the dart layer.
 class DTExchangePrivacyApi {
   /// Constructor for [DTExchangePrivacyApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  DTExchangePrivacyApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  DTExchangePrivacyApi(
+      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : __pigeon_binaryMessenger = binaryMessenger,
-        __pigeon_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        __pigeon_messageChannelSuffix =
+            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? __pigeon_binaryMessenger;
 
-  static const MessageCodec<Object?> pigeonChannelCodec = StandardMessageCodec();
+  static const MessageCodec<Object?> pigeonChannelCodec =
+      StandardMessageCodec();
 
   final String __pigeon_messageChannelSuffix;
 
+  /// Used to configure GDPR on the Android or iOS DTExchange SDK
   Future<void> setGDPRConsent(bool gdprConsent) async {
-    final String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setGDPRConsent$__pigeon_messageChannelSuffix';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    final String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setGDPRConsent$__pigeon_messageChannelSuffix';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
@@ -50,15 +57,18 @@ class DTExchangePrivacyApi {
     }
   }
 
+  /// Used to configure GDPR String on the Android or iOS DTExchange SDK
   Future<void> setGDPRConsentString(String gdprConsentString) async {
-    final String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setGDPRConsentString$__pigeon_messageChannelSuffix';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    final String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setGDPRConsentString$__pigeon_messageChannelSuffix';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
     );
-    final List<Object?>? __pigeon_replyList =
-        await __pigeon_channel.send(<Object?>[gdprConsentString]) as List<Object?>?;
+    final List<Object?>? __pigeon_replyList = await __pigeon_channel
+        .send(<Object?>[gdprConsentString]) as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -72,15 +82,18 @@ class DTExchangePrivacyApi {
     }
   }
 
+  /// Used to configure consent to Sell Personal Information on the Android or iOS DTExchange SDK
   Future<void> setUSPrivacyString(String usPrivacyString) async {
-    final String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setUSPrivacyString$__pigeon_messageChannelSuffix';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    final String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setUSPrivacyString$__pigeon_messageChannelSuffix';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
     );
-    final List<Object?>? __pigeon_replyList =
-        await __pigeon_channel.send(<Object?>[usPrivacyString]) as List<Object?>?;
+    final List<Object?>? __pigeon_replyList = await __pigeon_channel
+        .send(<Object?>[usPrivacyString]) as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
