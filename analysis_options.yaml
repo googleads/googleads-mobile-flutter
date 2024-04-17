@@ -15,6 +15,11 @@
 include: package:pedantic/analysis_options.1.11.0.yaml
 
 analyzer:
+  exclude: [
+    packages/mediation/gma_mediation_applovin/**,
+    packages/mediation/gma_mediation_ironsource/**
+    packages/mediation/gma_mediation_meta/**
+  ]
   errors:
     omit_local_variable_types: ignore
 
