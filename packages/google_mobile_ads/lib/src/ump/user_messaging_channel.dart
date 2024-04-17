@@ -102,6 +102,11 @@ class UserMessagingChannel {
     return _methodChannel.invokeMethod<void>('ConsentInformation#reset');
   }
 
+  /// Returns indicating whether it is ok to request ads.
+  Future<bool> canRequestAds() async {
+    return (await _methodChannel.invokeMethod<bool>('ConsentInformation#canRequestAds'))!;
+  }
+
   /// Loads a consent form and calls the corresponding listener.
   void loadConsentForm(OnConsentFormLoadSuccessListener successListener,
       OnConsentFormLoadFailureListener failureListener) async {
@@ -111,6 +116,17 @@ class UserMessagingChannel {
       successListener(form);
     } on PlatformException catch (e) {
       failureListener(_formErrorFromPlatformException(e));
+    }
+  }
+
+  /// Loads a consent form and calls the listener afterwards.
+  Future<FormError?> loadAndShowConsentFormIfRequired() async {
+    try {
+      return (await _methodChannel.invokeListMethod<FormError?>(
+        'UserMessagingPlatform#loadAndShowConsentFormIfRequired'
+      )) as FormError?;
+    } on PlatformException catch (e) {
+      return _formErrorFromPlatformException(e);
     }
   }
 

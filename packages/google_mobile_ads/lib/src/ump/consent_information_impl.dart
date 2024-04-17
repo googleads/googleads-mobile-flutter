@@ -44,4 +44,9 @@ class ConsentInformationImpl extends ConsentInformation {
   Future<void> reset() {
     return UserMessagingChannel.instance.reset();
   }
+
+  @override
+  Future<bool> canRequestAds() {
+    return UserMessagingChannel.instance.canRequestAds();
+  }
 }

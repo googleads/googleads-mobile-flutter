@@ -46,4 +46,8 @@ abstract class ConsentForm {
     UserMessagingChannel.instance
         .loadConsentForm(successListener, failureListener);
   }
+
+  static Future<void> loadAndShowConsentFormIfRequired(OnConsentFormDismissedListener onConsentFormDismissedListener) async {
+    onConsentFormDismissedListener(await UserMessagingChannel.instance.loadAndShowConsentFormIfRequired());
+  }
 }

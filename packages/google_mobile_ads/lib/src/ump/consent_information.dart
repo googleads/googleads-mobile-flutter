@@ -61,6 +61,9 @@ abstract class ConsentInformation {
   /// the platform API has been called.
   Future<void> reset();
 
+  /// Indicates whether the app has completed the necessary steps for gathering updated user consent.
+  Future<bool> canRequestAds();
+
   /// The static [ConsentInformation] instance.
   static ConsentInformation instance = ConsentInformationImpl();
 }

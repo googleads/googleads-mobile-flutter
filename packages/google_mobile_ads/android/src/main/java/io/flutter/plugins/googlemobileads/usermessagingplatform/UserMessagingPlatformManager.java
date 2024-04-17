@@ -148,12 +148,14 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
         UserMessagingPlatform.loadAndShowConsentFormIfRequired(
             activity,
             loadAndShowError -> {
+              Log.d("UMP", "loadAndShow callback");
               if (loadAndShowError != null) {
                 // Consent gathering failed.
+                Log.d("UMP", "Consent gathering failed");
                 result.error(Integer.toString(loadAndShowError.getErrorCode()),
                     loadAndShowError.getMessage(), null);
+                return;
               }
-
               result.success(null);
             }
         );
