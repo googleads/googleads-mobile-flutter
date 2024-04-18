@@ -33,8 +33,10 @@ abstract class ConsentForm {
   void show(OnConsentFormDismissedListener onConsentFormDismissedListener);
 
   /// Presents a privacy options form.
-  static Future<void> showPrivacyOptionsForm(OnConsentFormDismissedListener onConsentFormDismissedListener) async {
-    onConsentFormDismissedListener(await UserMessagingChannel.instance.showPrivacyOptionsForm());
+  static Future<void> showPrivacyOptionsForm(
+      OnConsentFormDismissedListener onConsentFormDismissedListener) async {
+    onConsentFormDismissedListener(
+        await UserMessagingChannel.instance.showPrivacyOptionsForm());
   }
 
   /// Free platform resources associated with this object.

@@ -75,8 +75,10 @@ abstract class ConsentInformation {
 enum PrivacyOptionsRequirementStatus {
   /// Privacy options entry point is not required.
   notRequired,
+
   /// Privacy options entry point is required.
   required,
+
   /// Privacy options requirement status is unknown.
   unknown;
 }
