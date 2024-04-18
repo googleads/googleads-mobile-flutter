@@ -17,6 +17,8 @@ include: package:pedantic/analysis_options.1.11.0.yaml
 analyzer:
   exclude: [
     packages/mediation/gma_mediation_applovin/**,
+    packages/mediation/gma_mediation_dtexchange/**
+    packages/mediation/gma_mediation_inmobi/**
     packages/mediation/gma_mediation_ironsource/**
     packages/mediation/gma_mediation_meta/**
   ]
