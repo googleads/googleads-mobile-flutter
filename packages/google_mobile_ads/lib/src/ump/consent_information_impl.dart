@@ -49,4 +49,9 @@ class ConsentInformationImpl extends ConsentInformation {
   Future<bool> canRequestAds() {
     return UserMessagingChannel.instance.canRequestAds();
   }
+
+  @override
+  Future<PrivacyOptionsRequirementStatus> getPrivacyOptionsRequirementStatus() {
+    return UserMessagingChannel.instance.getPrivacyOptionsRequirementStatus();
+  }
 }

@@ -32,6 +32,11 @@ abstract class ConsentForm {
   /// Shows the consent form.
   void show(OnConsentFormDismissedListener onConsentFormDismissedListener);
 
+  /// Presents a privacy options form.
+  static Future<void> showPrivacyOptionsForm(OnConsentFormDismissedListener onConsentFormDismissedListener) async {
+    onConsentFormDismissedListener(await UserMessagingChannel.instance.showPrivacyOptionsForm());
+  }
+
   /// Free platform resources associated with this object.
   ///
   /// Returns a future that completes when the platform resources are freed.
@@ -47,7 +52,10 @@ abstract class ConsentForm {
         .loadConsentForm(successListener, failureListener);
   }
 
-  static Future<void> loadAndShowConsentFormIfRequired(OnConsentFormDismissedListener onConsentFormDismissedListener) async {
-    onConsentFormDismissedListener(await UserMessagingChannel.instance.loadAndShowConsentFormIfRequired());
+  /// Loads a consent form and immediately shows it.
+  static Future<void> loadAndShowConsentFormIfRequired(
+      OnConsentFormDismissedListener onConsentFormDismissedListener) async {
+    onConsentFormDismissedListener(
+        await UserMessagingChannel.instance.loadAndShowConsentFormIfRequired());
   }
 }

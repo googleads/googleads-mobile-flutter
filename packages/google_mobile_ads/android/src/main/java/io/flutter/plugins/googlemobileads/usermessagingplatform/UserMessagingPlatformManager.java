@@ -25,6 +25,7 @@ import com.google.android.ump.ConsentForm.OnConsentFormDismissedListener;
 import com.google.android.ump.ConsentInformation;
 import com.google.android.ump.ConsentInformation.OnConsentInfoUpdateFailureListener;
 import com.google.android.ump.ConsentInformation.OnConsentInfoUpdateSuccessListener;
+import com.google.android.ump.ConsentInformation.PrivacyOptionsRequirementStatus;
 import com.google.android.ump.ConsentRequestParameters;
 import com.google.android.ump.FormError;
 import com.google.android.ump.UserMessagingPlatform;
@@ -137,6 +138,18 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
       case "ConsentInformation#canRequestAds":
         result.success(getConsentInformation().canRequestAds());
         break;
+      case "ConsentInformation#getPrivacyOptionsRequirementStatus":
+        switch (getConsentInformation().getPrivacyOptionsRequirementStatus()) {
+          case NOT_REQUIRED:
+            result.success(0);
+            break;
+          case REQUIRED:
+            result.success(1);
+            break;
+          default:
+            result.success(2);
+        }
+        break;
       case "UserMessagingPlatform#loadAndShowConsentFormIfRequired":
         if (activity == null) {
           result.error(
@@ -148,10 +161,8 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
         UserMessagingPlatform.loadAndShowConsentFormIfRequired(
             activity,
             loadAndShowError -> {
-              Log.d("UMP", "loadAndShow callback");
               if (loadAndShowError != null) {
                 // Consent gathering failed.
-                Log.d("UMP", "Consent gathering failed");
                 result.error(Integer.toString(loadAndShowError.getErrorCode()),
                     loadAndShowError.getMessage(), null);
                 return;
@@ -177,6 +188,27 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
                     Integer.toString(formError.getErrorCode()), formError.getMessage(), null);
               }
             });
+        break;
+      case "UserMessagingPlatform#showPrivacyOptionsForm":
+        if (activity == null) {
+          result.error(
+              INTERNAL_ERROR_CODE,
+              "ConsentInformation#requestConsentInfoUpdate called before plugin has been registered to an activity.",
+              null);
+          break;
+        }
+        UserMessagingPlatform.showPrivacyOptionsForm(
+            activity,
+            loadAndShowError -> {
+              if (loadAndShowError != null) {
+                // Consent gathering failed.
+                result.error(Integer.toString(loadAndShowError.getErrorCode()),
+                    loadAndShowError.getMessage(), null);
+                return;
+              }
+              result.success(null);
+            }
+        );
         break;
       case "ConsentInformation#isConsentFormAvailable": {
         result.success(getConsentInformation().isConsentFormAvailable());

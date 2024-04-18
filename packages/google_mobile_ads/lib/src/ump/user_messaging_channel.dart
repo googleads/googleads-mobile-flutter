@@ -104,7 +104,23 @@ class UserMessagingChannel {
 
   /// Returns indicating whether it is ok to request ads.
   Future<bool> canRequestAds() async {
-    return (await _methodChannel.invokeMethod<bool>('ConsentInformation#canRequestAds'))!;
+    return (await _methodChannel
+        .invokeMethod<bool>('ConsentInformation#canRequestAds'))!;
+  }
+
+  /// Indicates the privacy options requirement status as a [PrivacyOptionsRequirementStatus].
+  Future<PrivacyOptionsRequirementStatus>
+      getPrivacyOptionsRequirementStatus() async {
+    int? privacyOptionsStatusInt = (await _methodChannel.invokeMethod<int>(
+        'ConsentInformation#getPrivacyOptionsRequirementStatus'));
+    switch (privacyOptionsStatusInt) {
+      case 0:
+        return PrivacyOptionsRequirementStatus.notRequired;
+      case 1:
+        return PrivacyOptionsRequirementStatus.required;
+      default:
+        return PrivacyOptionsRequirementStatus.unknown;
+    }
   }
 
   /// Loads a consent form and calls the corresponding listener.
@@ -122,9 +138,8 @@ class UserMessagingChannel {
   /// Loads a consent form and calls the listener afterwards.
   Future<FormError?> loadAndShowConsentFormIfRequired() async {
     try {
-      return (await _methodChannel.invokeListMethod<FormError?>(
-        'UserMessagingPlatform#loadAndShowConsentFormIfRequired'
-      )) as FormError?;
+      return await _methodChannel.invokeMethod<FormError?>(
+          'UserMessagingPlatform#loadAndShowConsentFormIfRequired');
     } on PlatformException catch (e) {
       return _formErrorFromPlatformException(e);
     }
@@ -143,6 +158,16 @@ class UserMessagingChannel {
       onConsentFormDismissedListener(null);
     } on PlatformException catch (e) {
       onConsentFormDismissedListener(_formErrorFromPlatformException(e));
+    }
+  }
+
+  /// Presents a privacy options form.
+  Future<FormError?> showPrivacyOptionsForm() async {
+    try {
+      return await _methodChannel.invokeMethod<FormError?>(
+          'UserMessagingPlatform#showPrivacyOptionsForm');
+    } on PlatformException catch (e) {
+      return _formErrorFromPlatformException(e);
     }
   }
 
