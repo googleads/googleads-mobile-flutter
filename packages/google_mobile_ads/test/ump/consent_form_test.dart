@@ -40,7 +40,7 @@ void main() {
       Completer<FormError?> formCompleter = Completer<FormError?>();
 
       await ConsentForm.showPrivacyOptionsForm(
-              (formError) => formCompleter.complete(formError));
+          (formError) => formCompleter.complete(formError));
 
       FormError? formError = await formCompleter.future;
       expect(formError, null);
@@ -48,12 +48,12 @@ void main() {
 
     test('showPrivacyOptionsForm failure', () async {
       FormError? testError = FormError(errorCode: 1, message: 'testErrorMsg');
-      when(mockChannel.showPrivacyOptionsForm()).thenAnswer(
-              (realInvocation) => Future<FormError?>.value(testError));
+      when(mockChannel.showPrivacyOptionsForm())
+          .thenAnswer((realInvocation) => Future<FormError?>.value(testError));
       Completer<FormError?> formCompleter = Completer<FormError?>();
 
       await ConsentForm.showPrivacyOptionsForm(
-              (formError) => formCompleter.complete(formError));
+          (formError) => formCompleter.complete(formError));
 
       FormError? formError = await formCompleter.future;
       expect(formError, testError);

@@ -83,15 +83,17 @@ class MockUserMessagingChannel extends _i1.Mock
           [],
         ),
         returnValueForMissingStub: _i5.Future<bool>.value(false),
-  ) as _i5.Future<bool>);
+      ) as _i5.Future<bool>);
   @override
-  _i5.Future<_i4.PrivacyOptionsRequirementStatus> getPrivacyOptionsRequirementStatus() => (super.noSuchMethod(
-    Invocation.method(
-      #getPrivacyOptionsRequirementStatus,
-        [],
-    ),
-    returnValue: _i5.Future<_i4.PrivacyOptionsRequirementStatus>.value(_i4.PrivacyOptionsRequirementStatus.unknown),
-  ) as _i5.Future<_i4.PrivacyOptionsRequirementStatus>);
+  _i5.Future<_i4.PrivacyOptionsRequirementStatus>
+      getPrivacyOptionsRequirementStatus() => (super.noSuchMethod(
+            Invocation.method(
+              #getPrivacyOptionsRequirementStatus,
+              [],
+            ),
+            returnValue: _i5.Future<_i4.PrivacyOptionsRequirementStatus>.value(
+                _i4.PrivacyOptionsRequirementStatus.unknown),
+          ) as _i5.Future<_i4.PrivacyOptionsRequirementStatus>);
   @override
   void loadConsentForm(
     _i6.OnConsentFormLoadSuccessListener? successListener,
@@ -108,13 +110,14 @@ class MockUserMessagingChannel extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
-  _i5.Future<_i7.FormError?> loadAndShowConsentFormIfRequired() => (super.noSuchMethod(
-    Invocation.method(
-      #loadAndShowConsentFormIfRequired,
-      [],
-    ),
-    returnValueForMissingStub: null,
-  ) as _i5.Future<_i7.FormError?>);
+  _i5.Future<_i7.FormError?> loadAndShowConsentFormIfRequired() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #loadAndShowConsentFormIfRequired,
+          [],
+        ),
+        returnValueForMissingStub: null,
+      ) as _i5.Future<_i7.FormError?>);
   @override
   void show(
     _i6.ConsentForm? consentForm,
@@ -132,13 +135,13 @@ class MockUserMessagingChannel extends _i1.Mock
       );
   @override
   _i5.Future<_i7.FormError?> showPrivacyOptionsForm() => (super.noSuchMethod(
-    Invocation.method(
-        #showPrivacyOptionsForm,
-        [],
-    ),
-    returnValue: _i5.Future<_i7.FormError?>.value(),
-    returnValueForMissingStub: _i5.Future<_i7.FormError?>.value(),
-  ) as _i5.Future<_i7.FormError?>);
+        Invocation.method(
+          #showPrivacyOptionsForm,
+          [],
+        ),
+        returnValue: _i5.Future<_i7.FormError?>.value(),
+        returnValueForMissingStub: _i5.Future<_i7.FormError?>.value(),
+      ) as _i5.Future<_i7.FormError?>);
   @override
   _i5.Future<void> disposeConsentForm(_i6.ConsentForm? consentForm) =>
       (super.noSuchMethod(
