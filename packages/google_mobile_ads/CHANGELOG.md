@@ -1,3 +1,6 @@
+## Next Version
+* Adds missing methods from the latest UMP SDK version.
+
 ## 5.0.0
 * Adds `MediationExtras` class to include parameters when using mediation through the implementation of `FlutterMediationExtras` in Android and `FlutterMediationExtras` in iOS.
 * Deprecates `MediationNetworkExtrasProvider` and `FLTMediationNetworkExtrasProvider`.

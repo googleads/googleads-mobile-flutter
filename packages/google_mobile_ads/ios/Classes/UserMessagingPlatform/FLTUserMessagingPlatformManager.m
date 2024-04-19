@@ -57,6 +57,10 @@
     UMPConsentStatus status =
         UMPConsentInformation.sharedInstance.consentStatus;
     result([[NSNumber alloc] initWithInteger:status]);
+  } else if ([call.method isEqualToString:@"ConsentInformation#canRequestAds"]) {
+    result(@([UMPConsentInformation.sharedInstance canRequestAds]));
+  } else if ([call.method isEqualToString:@"ConsentInformation#getPrivacyOptionsRequirementStatus"]) {
+    result(@(UMPConsentInformation.sharedInstance.privacyOptionsRequirementStatus));
   } else if ([call.method isEqualToString:
                               @"ConsentInformation#requestConsentInfoUpdate"]) {
     UMPRequestParameters *parameters = call.arguments[@"params"];
@@ -74,19 +78,46 @@
                                }
                              }];
   } else if ([call.method
-                 isEqualToString:@"UserMessagingPlatform#loadConsentForm"]) {
+                 isEqualToString:@"UserMessagingPlatform#loadAndShowConsentFormIfRequired"]) {
     [UMPConsentForm
-        loadWithCompletionHandler:^(UMPConsentForm *form, NSError *loadError) {
-          if ([FLTAdUtil isNull:loadError]) {
-            [self.readerWriter trackConsentForm:form];
-            result(form);
+        loadAndPresentIfRequiredFromViewController:self.rootController
+                                 completionHandler:^(NSError *_Nullable error) {
+          if ([FLTAdUtil isNull:error]) {
+            result(nil);
           } else {
             result([FlutterError
-                errorWithCode:[[NSString alloc] initWithInt:loadError.code]
-                      message:loadError.localizedDescription
-                      details:loadError.domain]);
+                errorWithCode:[[NSString alloc] initWithInt:error.code]
+                      message:error.localizedDescription
+                      details:error.domain]);
           }
         }];
+  } else if ([call.method
+              isEqualToString:@"UserMessagingPlatform#loadConsentForm"]) {
+    [UMPConsentForm
+     loadWithCompletionHandler:^(UMPConsentForm *form, NSError *loadError) {
+      if ([FLTAdUtil isNull:loadError]) {
+        [self.readerWriter trackConsentForm:form];
+        result(form);
+      } else {
+        result([FlutterError
+                errorWithCode:[[NSString alloc] initWithInt:loadError.code]
+                message:loadError.localizedDescription
+                details:loadError.domain]);
+      }
+    }];
+  }  else if ([call.method isEqualToString:@"UserMessagingPlatform#showPrivacyOptionsForm"]) {
+    [UMPConsentForm
+     presentPrivacyOptionsFormFromViewController:self.rootController
+                               completionHandler:^(NSError *_Nullable formError) {
+      if ([FLTAdUtil isNull:formError]) {
+        result(nil);
+      } else {
+        result([FlutterError
+            errorWithCode:[[NSString alloc] initWithInt:formError.code]
+                  message:formError.localizedDescription
+                  details:formError.domain]);
+      }
+    }];
   } else if ([call.method isEqualToString:
                               @"ConsentInformation#isConsentFormAvailable"]) {
     BOOL isAvailable = UMPConsentInformation.sharedInstance.formStatus ==
