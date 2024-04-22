@@ -116,7 +116,8 @@ class MockUserMessagingChannel extends _i1.Mock
           #loadAndShowConsentFormIfRequired,
           [],
         ),
-        returnValueForMissingStub: null,
+        returnValue: _i5.Future<_i7.FormError?>.value(),
+        returnValueForMissingStub: _i5.Future<_i7.FormError?>.value(),
       ) as _i5.Future<_i7.FormError?>);
   @override
   void show(

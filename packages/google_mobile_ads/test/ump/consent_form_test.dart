@@ -96,5 +96,28 @@ void main() {
       expect(successCompleter.isCompleted, false);
       expect(errorCompleter.isCompleted, true);
     });
+
+    test('loadAndShowConsentFormIfRequired success', () async {
+      Completer<FormError?> formCompleter = Completer<FormError?>();
+
+      await ConsentForm.loadAndShowConsentFormIfRequired(
+          (formError) => formCompleter.complete(formError));
+
+      FormError? formError = await formCompleter.future;
+      expect(formError, null);
+    });
+
+    test('loadAndShowConsentFormIfRequired failure', () async {
+      FormError? testError = FormError(errorCode: 1, message: 'testErrorMsg');
+      when(mockChannel.loadAndShowConsentFormIfRequired())
+          .thenAnswer((realInvocation) => Future<FormError?>.value(testError));
+      Completer<FormError?> formCompleter = Completer<FormError?>();
+
+      await ConsentForm.loadAndShowConsentFormIfRequired(
+          (formError) => formCompleter.complete(formError));
+
+      FormError? formError = await formCompleter.future;
+      expect(formError, testError);
+    });
   });
 }
