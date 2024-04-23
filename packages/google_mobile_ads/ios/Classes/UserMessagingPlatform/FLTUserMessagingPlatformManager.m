@@ -63,8 +63,18 @@
   } else if ([call.method
                  isEqualToString:@"ConsentInformation#"
                                  @"getPrivacyOptionsRequirementStatus"]) {
-    result(@(
-        UMPConsentInformation.sharedInstance.privacyOptionsRequirementStatus));
+    UMPPrivacyOptionsRequirementStatus status = UMPConsentInformation.sharedInstance.privacyOptionsRequirementStatus;
+    switch (status) {
+      case UMPPrivacyOptionsRequirementStatusNotRequired:
+        result([[NSNumber alloc]initWithInt:0]);
+        break;
+      case UMPPrivacyOptionsRequirementStatusRequired:
+        result([[NSNumber alloc]initWithInt:1]);
+        break;
+      default:
+        result([[NSNumber alloc]initWithInt:2]);
+        break;
+    }
   } else if ([call.method isEqualToString:
                               @"ConsentInformation#requestConsentInfoUpdate"]) {
     UMPRequestParameters *parameters = call.arguments[@"params"];
