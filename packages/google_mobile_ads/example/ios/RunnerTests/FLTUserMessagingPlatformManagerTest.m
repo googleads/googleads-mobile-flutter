@@ -107,7 +107,8 @@
 
 - (void)testGetPrivacyOptionsRequirementStatus_notRequiredReturns0 {
   FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"ConsentInformation#getPrivacyOptionsRequirementStatus"
+      methodCallWithMethodName:
+          @"ConsentInformation#getPrivacyOptionsRequirementStatus"
                      arguments:@{}];
   OCMStub([mockUmpConsentInformation privacyOptionsRequirementStatus])
       .andReturn(UMPPrivacyOptionsRequirementStatusNotRequired);
@@ -121,7 +122,8 @@
 
 - (void)testGetPrivacyOptionsRequirementStatus_requiredReturns1 {
   FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"ConsentInformation#getPrivacyOptionsRequirementStatus"
+      methodCallWithMethodName:
+          @"ConsentInformation#getPrivacyOptionsRequirementStatus"
                      arguments:@{}];
   OCMStub([mockUmpConsentInformation privacyOptionsRequirementStatus])
       .andReturn(UMPPrivacyOptionsRequirementStatusRequired);
@@ -135,7 +137,8 @@
 
 - (void)testGetPrivacyOptionsRequirementStatus_unknownReturns2 {
   FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"ConsentInformation#getPrivacyOptionsRequirementStatus"
+      methodCallWithMethodName:
+          @"ConsentInformation#getPrivacyOptionsRequirementStatus"
                      arguments:@{}];
   OCMStub([mockUmpConsentInformation privacyOptionsRequirementStatus])
       .andReturn(UMPPrivacyOptionsRequirementStatusUnknown);
@@ -205,11 +208,13 @@
 - (void)testLoadAndShowConsentFormIfRequired_success {
   UMPRequestParameters *params = OCMClassMock([UMPRequestParameters class]);
   FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"UserMessagingPlatform#loadAndShowConsentFormIfRequired"
+      methodCallWithMethodName:
+          @"UserMessagingPlatform#loadAndShowConsentFormIfRequired"
                      arguments:@{@"params" : params}];
   id mockUmpConsentForm = OCMClassMock([UMPConsentForm class]);
-  OCMStub([mockUmpConsentForm loadAndPresentIfRequiredFromViewController:[OCMArg any]
-                                                       completionHandler:[OCMArg any]])
+  OCMStub([mockUmpConsentForm 
+              loadAndPresentIfRequiredFromViewController:[OCMArg any]
+                                       completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
         void (^completionHandler)(NSError *loadError);
         [invocation getArgument:&completionHandler atIndex:3];
@@ -221,8 +226,8 @@
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
   OCMVerify([mockUmpConsentForm
-             loadAndPresentIfRequiredFromViewController:[OCMArg any]
-                                      completionHandler:[OCMArg any]]);
+      loadAndPresentIfRequiredFromViewController:[OCMArg any]
+                               completionHandler:[OCMArg any]]);
 }
 
 - (void)testLoadAndShowConsentFormIfRequired_error {
@@ -230,11 +235,13 @@
   NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
   UMPRequestParameters *params = OCMClassMock([UMPRequestParameters class]);
   FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"UserMessagingPlatform#loadAndShowConsentFormIfRequired"
+      methodCallWithMethodName:
+          @"UserMessagingPlatform#loadAndShowConsentFormIfRequired"
                      arguments:@{@"params" : params}];
   id mockUmpConsentForm = OCMClassMock([UMPConsentForm class]);
-  OCMStub([mockUmpConsentForm loadAndPresentIfRequiredFromViewController:[OCMArg any]
-                                                       completionHandler:[OCMArg any]])
+  OCMStub([mockUmpConsentForm
+              loadAndPresentIfRequiredFromViewController:[OCMArg any]
+                                       completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
         void (^completionHandler)(NSError *loadError);
         [invocation getArgument:&completionHandler atIndex:3];
@@ -249,8 +256,8 @@
   XCTAssertEqualObjects(resultError.details, @"domain");
   XCTAssertEqualObjects(resultError.message, @"description");
   OCMVerify([mockUmpConsentForm
-             loadAndPresentIfRequiredFromViewController:[OCMArg any]
-                                      completionHandler:[OCMArg any]]);
+      loadAndPresentIfRequiredFromViewController:[OCMArg any]
+                               completionHandler:[OCMArg any]]);
 }
 
 - (void)testLoadConsentForm_successAndDispose {
@@ -310,8 +317,9 @@
       methodCallWithMethodName:@"UserMessagingPlatform#showPrivacyOptionsForm"
                      arguments:@{@"params" : params}];
   id mockUmpConsentForm = OCMClassMock([UMPConsentForm class]);
-  OCMStub([mockUmpConsentForm presentPrivacyOptionsFormFromViewController:[OCMArg any]
-                                                        completionHandler:[OCMArg any]])
+  OCMStub([mockUmpConsentForm
+              presentPrivacyOptionsFormFromViewController:[OCMArg any]
+                                        completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
         void (^completionHandler)(NSError *loadError);
         [invocation getArgument:&completionHandler atIndex:3];
@@ -323,8 +331,8 @@
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
   OCMVerify([mockUmpConsentForm
-             presentPrivacyOptionsFormFromViewController:[OCMArg any]
-                                       completionHandler:[OCMArg any]]);
+      presentPrivacyOptionsFormFromViewController:[OCMArg any]
+                                completionHandler:[OCMArg any]]);
 }
 
 - (void)testShowPrivacyOptionsForm_error {
@@ -335,8 +343,9 @@
       methodCallWithMethodName:@"UserMessagingPlatform#showPrivacyOptionsForm"
                      arguments:@{@"params" : params}];
   id mockUmpConsentForm = OCMClassMock([UMPConsentForm class]);
-  OCMStub([mockUmpConsentForm presentPrivacyOptionsFormFromViewController:[OCMArg any]
-                                                        completionHandler:[OCMArg any]])
+  OCMStub([mockUmpConsentForm
+              presentPrivacyOptionsFormFromViewController:[OCMArg any]
+                                        completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
         void (^completionHandler)(NSError *loadError);
         [invocation getArgument:&completionHandler atIndex:3];
@@ -351,8 +360,8 @@
   XCTAssertEqualObjects(resultError.details, @"domain");
   XCTAssertEqualObjects(resultError.message, @"description");
   OCMVerify([mockUmpConsentForm
-             presentPrivacyOptionsFormFromViewController:[OCMArg any]
-                                       completionHandler:[OCMArg any]]);
+      presentPrivacyOptionsFormFromViewController:[OCMArg any]
+                                completionHandler:[OCMArg any]]);
 }
 
 - (void)testIsConsentFormAvailable_available {
