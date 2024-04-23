@@ -67,13 +67,13 @@
         UMPConsentInformation.sharedInstance.privacyOptionsRequirementStatus;
     switch (status) {
     case UMPPrivacyOptionsRequirementStatusNotRequired:
-      result([[NSNumber alloc]initWithInt:0]);
+      result([[NSNumber alloc] initWithInt:0]);
       break;
     case UMPPrivacyOptionsRequirementStatusRequired:
-      result([[NSNumber alloc]initWithInt:1]);
+      result([[NSNumber alloc] initWithInt:1]);
       break;
     default:
-      result([[NSNumber alloc]initWithInt:2]);
+      result([[NSNumber alloc] initWithInt:2]);
       break;
     }
   } else if ([call.method isEqualToString:

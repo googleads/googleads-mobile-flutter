@@ -212,7 +212,7 @@
           @"UserMessagingPlatform#loadAndShowConsentFormIfRequired"
                      arguments:@{@"params" : params}];
   id mockUmpConsentForm = OCMClassMock([UMPConsentForm class]);
-  OCMStub([mockUmpConsentForm 
+  OCMStub([mockUmpConsentForm
               loadAndPresentIfRequiredFromViewController:[OCMArg any]
                                        completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
