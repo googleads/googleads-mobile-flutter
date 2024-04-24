@@ -21,8 +21,9 @@ import 'package:pigeon/pigeon.dart';
     kotlinOut:
         'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_unity/UnityPrivacyApi.g.kt',
     kotlinOptions: KotlinOptions(
-        package:
-            "io.flutter.plugins.googlemobileads.mediation.gma_mediation_unity"),
+      package:
+          "io.flutter.plugins.googlemobileads.mediation.gma_mediation_unity",
+    ),
     swiftOut: 'ios/Classes/UnityPrivacyApi.g.swift',
     swiftOptions: SwiftOptions(),
     dartPackageName: 'gma_mediation_unity',
