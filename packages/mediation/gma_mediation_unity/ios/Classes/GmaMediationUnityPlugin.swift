@@ -16,6 +16,7 @@ import Flutter
 import UIKit
 import UnityAds
 
+/// Manages UnityPrivacyApi and implements the needed methods.
 public class GmaMediationUnityPlugin: NSObject, FlutterPlugin, UnityPrivacyApi {
   let uadsMedatada: UnityMetaDataProtocol
 

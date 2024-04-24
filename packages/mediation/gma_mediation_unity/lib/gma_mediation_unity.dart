@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'unity_privacy_api.g.dart';
+import 'package:gma_mediation_unity/unity_privacy_api.g.dart';
 
+/// This class has entrypoint to call DT Exchange's SDK APIs.
 class GmaMediationUnity {
-  static Future<void> setGDPRConsent(bool gdprConsent) async {
+  Future<void> setGDPRConsent(bool gdprConsent) async {
     UnityPrivacyApi().setGDPRConsent(gdprConsent);
   }
 
-  static Future<void> setCCPAConsent(bool ccpaConsent) async {
+  Future<void> setCCPAConsent(bool ccpaConsent) async {
     UnityPrivacyApi().setCCPAConsent(ccpaConsent);
   }
 }

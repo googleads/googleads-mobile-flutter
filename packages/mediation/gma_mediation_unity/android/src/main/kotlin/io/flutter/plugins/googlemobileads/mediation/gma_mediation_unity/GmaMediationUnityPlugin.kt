@@ -20,7 +20,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
-/** GmaMediationUnityPlugin */
+/** GmaMediationUnityPlugin manages UnityPrivacyApi and implements the needed methods. */
 class GmaMediationUnityPlugin: FlutterPlugin, ActivityAware, UnityPrivacyApi {
   private lateinit var context: Context
 
