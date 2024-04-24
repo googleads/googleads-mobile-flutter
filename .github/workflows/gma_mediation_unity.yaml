@@ -17,10 +17,10 @@ name: gma_mediation_unity
 on:
   pull_request:
     paths:
-      - "packages/google_mobile_ads/mediation/gma_mediation_unity/**"
+      - "packages/mediation/gma_mediation_unity/**"
       - ".github/workflows/gma_mediation_unity.yaml"
-      - "packages/google_mobile_ads/mediation/gma_mediation_unity/ios/**"
-      - "packages/google_mobile_ads/mediation/gma_mediation_unity/android/**"
+      - "packages/mediation/gma_mediation_unity/ios/**"
+      - "packages/mediation/gma_mediation_unity/android/**"
   push:
     branches:
       - master
@@ -43,10 +43,10 @@ jobs:
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart packages/google_mobile_ads/mediation/gma_mediation_unity/example
+        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart packages/mediation/gma_mediation_unity/example
       - name: "Unit Tests"
         run: |
-          cd packages/google_mobile_ads/mediation/gma_mediation_unity/example/android
+          cd packages/mediation/gma_mediation_unity/example/android
           ./gradlew :gma_mediation_unity:testDebugUnitTest
 
 # Disabling iOS tests since there is a build problem with swift, third party sdk and the latest available version of XCode.
@@ -68,7 +68,7 @@ jobs:
 #          ./.github/workflows/scripts/install-tools.sh
 #      - name: "Unit Tests"
 #        run: |
-#          cd packages/google_mobile_ads/mediation/gma_mediation_unity/example/ios
+#          cd packages/mediation/gma_mediation_unity/example/ios
 #          flutter clean
 #          flutter pub get
 #          flutter precache --ios
@@ -78,7 +78,8 @@ jobs:
 #        if: failure()
 #        with: 
 #          name: iOSTestResults
-#          path: packages/google_mobile_ads/mediation/gma_mediation_unity/example/ios/TestResults.xcresult  
+#          path: packages/mediation/gma_mediation_unity/example/ios/TestResults.xcresult  
+
   flutter:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
@@ -93,15 +94,15 @@ jobs:
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Unit Tests"
         run: |
-          cd packages/google_mobile_ads/
+          cd packages/mediation/gma_mediation_unity/
           flutter test
       - name: "Flutter Analyze"
         run: |
-          cd packages/google_mobile_ads/
+          cd packages/mediation/gma_mediation_unity/
           flutter analyze
       - name: "Flutter Publish"
         run: |
-          cd packages/google_mobile_ads/
+          cd packages/mediation/gma_mediation_unity/
           flutter pub publish --dry-run
       - name: "Flutter Format"
         run: |
