@@ -1,5 +1,6 @@
 ## Next Version
-* Adds missing methods from the latest UMP SDK version.
+* Adds support for methods from the [Android](https://developers.google.com/admob/android/privacy/release-notes) UMP SDK version 2.2.0.
+* Adds support for methods from the [iOS](https://developers.google.com/admob/ios/privacy/download#release_notes) UMP SDK version 2.3.0.
 
 ## 5.0.0
 * Adds `MediationExtras` class to include parameters when using mediation through the implementation of `FlutterMediationExtras` in Android and `FlutterMediationExtras` in iOS.
