@@ -7,9 +7,15 @@ environment:
   sdk: '>=3.1.5 <4.0.0'
 
 dependencies:
+  google_mobile_ads:
+    git:
+      url: git@github.com:googleads/googleads-mobile-flutter/
+      path: ./packages/google_mobile_ads
+      ref: umpUpdate
+
   flutter:
     sdk: flutter
-  google_mobile_ads: ^4.0.0
+
 
 dev_dependencies:
   flutter_test:
