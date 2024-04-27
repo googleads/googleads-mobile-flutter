@@ -44,7 +44,8 @@ class InterstitialExampleState extends State<InterstitialExample> {
     _consentManager.gatherConsent((consentGatheringError) {
       if (consentGatheringError != null) {
         // Consent not obtained in current session.
-        debugPrint("${consentGatheringError.errorCode}: ${consentGatheringError.message}");
+        debugPrint(
+            "${consentGatheringError.errorCode}: ${consentGatheringError.message}");
       }
 
       // Kick off the first play of the "game".
@@ -96,22 +97,27 @@ class InterstitialExampleState extends State<InterstitialExample> {
                   builder: (context, snapshot) {
                     final bool visibility = snapshot.data ?? false;
                     return Visibility(
-                      visible: visibility,
+                        visible: visibility,
                         child: PopupMenuButton<String>(
                           onSelected: (String result) {
                             if (result == privacySettingsText) {
                               _pauseGame();
-                              _consentManager.showPrivacyOptionsForm((formError) {
+                              _consentManager
+                                  .showPrivacyOptionsForm((formError) {
                                 if (formError != null) {
-                                  debugPrint("${formError.errorCode}: ${formError.message}");
+                                  debugPrint(
+                                      "${formError.errorCode}: ${formError.message}");
                                 }
                                 _resumeGame();
                               });
                             }
-                            }, itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                              const PopupMenuItem<String>(
-                                  value: privacySettingsText,
-                                  child: Text(privacySettingsText))],
+                          },
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<String>>[
+                            const PopupMenuItem<String>(
+                                value: privacySettingsText,
+                                child: Text(privacySettingsText))
+                          ],
                         ));
                   })
             ],
