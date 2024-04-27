@@ -25,7 +25,7 @@ class ConsentManager {
   void gatherConsent(OnConsentGatheringCompleteListener onConsentGatheringCompleteListener) {
     // For testing purposes, you can force a DebugGeography of Eea or NotEea.
      ConsentDebugSettings debugSettings = ConsentDebugSettings(
-         // debugGeography: DebugGeography.debugGeographyEea
+       // debugGeography: DebugGeography.debugGeographyEea
      );
     ConsentRequestParameters params = ConsentRequestParameters(
         consentDebugSettings: debugSettings);
@@ -34,9 +34,9 @@ class ConsentManager {
     ConsentInformation.instance.requestConsentInfoUpdate(
         params,
             () async {
-      ConsentForm.loadAndShowConsentFormIfRequired((formError) {
+      ConsentForm.loadAndShowConsentFormIfRequired((loadAndShowError) {
         // Consent has been gathered.
-        onConsentGatheringCompleteListener(formError);
+        onConsentGatheringCompleteListener(loadAndShowError);
       });
     }, (FormError formError) {
         onConsentGatheringCompleteListener(formError);
