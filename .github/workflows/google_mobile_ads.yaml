@@ -53,7 +53,7 @@ jobs:
           ./gradlew :google_mobile_ads:testDebugUnitTest
 
   iOS:
-    runs-on: macos-latest
+    runs-on: macos-13
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633
