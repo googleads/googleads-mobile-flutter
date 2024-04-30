@@ -72,7 +72,7 @@ jobs:
           flutter clean
           flutter pub get
           pod install
-          xcodebuild -configuration Debug -resultBundlePath TestResults VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14 Pro,OS=16.2' test  
+          xcodebuild -configuration Debug -resultBundlePath TestResults VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.5' test  
       - uses: actions/upload-artifact@v4
         if: failure()
         with: 
