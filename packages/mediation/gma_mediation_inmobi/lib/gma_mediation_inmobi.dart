@@ -12,5 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// This empty class is needed to allow correct compatibility analysis with host platforms.
-class GmaMediationInMobi {}
+import 'package:gma_mediation_inmobi/inmobi_privacy_api.g.dart';
+
+/// This class has entrypoint to call InMobi's SDK APIs.
+class GmaMediationInMobi {
+  Future<void> updateGDPRConsent(bool isGDPRApplicable, bool gdprConsent) async {
+    InMobiPrivacyApi().updateGDPRConsent(isGDPRApplicable, gdprConsent);
+  }
+}

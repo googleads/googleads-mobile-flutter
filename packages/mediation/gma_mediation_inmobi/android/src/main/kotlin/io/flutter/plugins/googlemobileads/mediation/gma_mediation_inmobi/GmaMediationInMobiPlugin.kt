@@ -14,11 +14,26 @@
 
 package io.flutter.plugins.googlemobileads.mediation.gma_mediation_inmobi
 
+import com.google.ads.mediation.inmobi.InMobiConsent
+import com.inmobi.sdk.InMobiSdk
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import org.json.JSONException
+import org.json.JSONObject
 
-/** Class that serves as bridge to get the adapter android dependency and make it available to a Flutter app. */
-class GmaMediationInMobiPlugin: FlutterPlugin {
-  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {}
+/** Manages InMobiPrivacyApi and implements the needed methods. */
+class GmaMediationInMobiPlugin : FlutterPlugin, InMobiPrivacyApi {
+  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    InMobiPrivacyApi.setUp(flutterPluginBinding.binaryMessenger, this)
+  }
 
-  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {}
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    InMobiPrivacyApi.setUp(binding.binaryMessenger, null)
+  }
+
+  override fun updateGDPRConsent(isGDPRApplicable: Boolean, gdprConsent: Boolean) {
+    val consentObject = JSONObject()
+    consentObject.put(InMobiSdk.IM_GDPR_CONSENT_AVAILABLE, gdprConsent)
+    consentObject.put("gdpr", if (isGDPRApplicable) "1" else "0")
+    InMobiConsent.updateGDPRConsent(consentObject)
+  }
 }
