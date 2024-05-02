@@ -9,6 +9,7 @@ import 'package:google_mobile_ads/src/ump/consent_form.dart' as _i6;
 import 'package:google_mobile_ads/src/ump/consent_information.dart' as _i4;
 import 'package:google_mobile_ads/src/ump/consent_request_parameters.dart'
     as _i3;
+import 'package:google_mobile_ads/src/ump/form_error.dart' as _i7;
 import 'package:google_mobile_ads/src/ump/user_messaging_channel.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
@@ -76,6 +77,24 @@ class MockUserMessagingChannel extends _i1.Mock
         returnValueForMissingStub: _i5.Future<void>.value(),
       ) as _i5.Future<void>);
   @override
+  _i5.Future<bool> canRequestAds() => (super.noSuchMethod(
+        Invocation.method(
+          #canRequestAds,
+          [],
+        ),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<_i4.PrivacyOptionsRequirementStatus>
+      getPrivacyOptionsRequirementStatus() => (super.noSuchMethod(
+            Invocation.method(
+              #getPrivacyOptionsRequirementStatus,
+              [],
+            ),
+            returnValue: _i5.Future<_i4.PrivacyOptionsRequirementStatus>.value(
+                _i4.PrivacyOptionsRequirementStatus.unknown),
+          ) as _i5.Future<_i4.PrivacyOptionsRequirementStatus>);
+  @override
   void loadConsentForm(
     _i6.OnConsentFormLoadSuccessListener? successListener,
     _i6.OnConsentFormLoadFailureListener? failureListener,
@@ -91,6 +110,16 @@ class MockUserMessagingChannel extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
+  _i5.Future<_i7.FormError?> loadAndShowConsentFormIfRequired() =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #loadAndShowConsentFormIfRequired,
+          [],
+        ),
+        returnValue: _i5.Future<_i7.FormError?>.value(),
+        returnValueForMissingStub: _i5.Future<_i7.FormError?>.value(),
+      ) as _i5.Future<_i7.FormError?>);
+  @override
   void show(
     _i6.ConsentForm? consentForm,
     _i6.OnConsentFormDismissedListener? onConsentFormDismissedListener,
@@ -105,6 +134,15 @@ class MockUserMessagingChannel extends _i1.Mock
         ),
         returnValueForMissingStub: null,
       );
+  @override
+  _i5.Future<_i7.FormError?> showPrivacyOptionsForm() => (super.noSuchMethod(
+        Invocation.method(
+          #showPrivacyOptionsForm,
+          [],
+        ),
+        returnValue: _i5.Future<_i7.FormError?>.value(),
+        returnValueForMissingStub: _i5.Future<_i7.FormError?>.value(),
+      ) as _i5.Future<_i7.FormError?>);
   @override
   _i5.Future<void> disposeConsentForm(_i6.ConsentForm? consentForm) =>
       (super.noSuchMethod(

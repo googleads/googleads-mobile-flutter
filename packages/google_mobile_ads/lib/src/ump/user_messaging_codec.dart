@@ -13,6 +13,7 @@
 // limitations under the License.
 
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/src/ump/form_error.dart';
 
 import 'consent_form_impl.dart';
 import 'consent_request_parameters.dart';
@@ -22,6 +23,7 @@ class UserMessagingCodec extends StandardMessageCodec {
   static const int _valueConsentRequestParameters = 129;
   static const int _valueConsentDebugSettings = 130;
   static const int _valueConsentForm = 131;
+  static const int _valueFormError = 132;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -36,6 +38,10 @@ class UserMessagingCodec extends StandardMessageCodec {
     } else if (value is ConsentFormImpl) {
       buffer.putUint8(_valueConsentForm);
       writeValue(buffer, value.platformHash);
+    } else if (value is FormError) {
+      buffer.putUint8(_valueFormError);
+      writeValue(buffer, value.errorCode);
+      writeValue(buffer, value.message);
     } else {
       super.writeValue(buffer, value);
     }
@@ -64,6 +70,10 @@ class UserMessagingCodec extends StandardMessageCodec {
       case _valueConsentForm:
         final int hashCode = readValueOfType(buffer.getUint8(), buffer);
         return ConsentFormImpl(hashCode);
+      case _valueFormError:
+        final int errorCode = readValueOfType(buffer.getUint8(), buffer);
+        final String errorMessage = readValueOfType(buffer.getUint8(), buffer);
+        return FormError(errorCode: errorCode, message: errorMessage);
       default:
         return super.readValueOfType(type, buffer);
     }
