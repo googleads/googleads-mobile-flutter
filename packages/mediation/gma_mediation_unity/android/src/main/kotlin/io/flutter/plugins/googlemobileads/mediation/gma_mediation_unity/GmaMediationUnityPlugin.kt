@@ -54,6 +54,7 @@ class GmaMediationUnityPlugin: FlutterPlugin, ActivityAware, UnityPrivacyApi {
   }
 }
 
+/** Wrapper singleton to enable mocking of [MetaData] class for unit testing. */
 object UnityApiWrapper {
   @JvmStatic
   fun createMetaData(context: Context) = MetaData(context)
