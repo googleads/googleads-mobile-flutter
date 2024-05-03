@@ -29,6 +29,10 @@ public class GmaMediationUnityPlugin: NSObject, FlutterPlugin, UnityPrivacyApi {
     let api : UnityPrivacyApi & NSObjectProtocol = GmaMediationUnityPlugin.init(unityMetaData: UnityMetaDataImpl())
     UnityPrivacyApiSetup.setUp(binaryMessenger: messenger, api: api)
   }
+  public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+    let messenger : FlutterBinaryMessenger = registrar.messenger()
+    UnityPrivacyApiSetup.setUp(binaryMessenger: messenger, api: nil)
+  }
   func setGDPRConsent(gdprConsent: Bool) {
     uadsMedatada.set(key: "gdpr.consent", value: gdprConsent)
     uadsMedatada.commit()
