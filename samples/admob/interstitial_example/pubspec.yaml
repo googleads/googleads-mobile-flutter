@@ -9,7 +9,7 @@ environment:
 dependencies:
   google_mobile_ads:
     git:
-      url: git@github.com:googleads/googleads-mobile-flutter/
+      url: https://github.com/googleads/googleads-mobile-flutter/
       path: ./packages/google_mobile_ads
 
   flutter:
