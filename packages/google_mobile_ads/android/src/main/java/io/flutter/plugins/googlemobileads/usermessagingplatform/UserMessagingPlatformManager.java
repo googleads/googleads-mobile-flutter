@@ -25,7 +25,6 @@ import com.google.android.ump.ConsentForm.OnConsentFormDismissedListener;
 import com.google.android.ump.ConsentInformation;
 import com.google.android.ump.ConsentInformation.OnConsentInfoUpdateFailureListener;
 import com.google.android.ump.ConsentInformation.OnConsentInfoUpdateSuccessListener;
-import com.google.android.ump.ConsentInformation.PrivacyOptionsRequirementStatus;
 import com.google.android.ump.ConsentRequestParameters;
 import com.google.android.ump.FormError;
 import com.google.android.ump.UserMessagingPlatform;
@@ -38,25 +37,19 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.StandardMethodCodec;
 
-/**
- * Manages platform code for UMP SDK.
- */
+/** Manages platform code for UMP SDK. */
 public class UserMessagingPlatformManager implements MethodCallHandler {
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/google_mobile_ads/ump";
-  /**
-   * Use 0 for error code internal to the Flutter plugin.
-   */
+  /** Use 0 for error code internal to the Flutter plugin. */
   private static final String INTERNAL_ERROR_CODE = "0";
 
   private final UserMessagingCodec userMessagingCodec;
   private final MethodChannel methodChannel;
   private final Context context;
-  @Nullable
-  private ConsentInformation consentInformation;
+  @Nullable private ConsentInformation consentInformation;
 
-  @Nullable
-  private Activity activity;
+  @Nullable private Activity activity;
 
   public UserMessagingPlatformManager(BinaryMessenger binaryMessenger, Context context) {
     userMessagingCodec = new UserMessagingCodec();
@@ -94,47 +87,50 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
     switch (call.method) {
-      case "ConsentInformation#reset": {
-        getConsentInformation().reset();
-        result.success(null);
-        break;
-      }
-      case "ConsentInformation#getConsentStatus": {
-        result.success(getConsentInformation().getConsentStatus());
-        break;
-      }
-      case "ConsentInformation#requestConsentInfoUpdate": {
-        if (activity == null) {
-          result.error(
-              INTERNAL_ERROR_CODE,
-              "ConsentInformation#requestConsentInfoUpdate called before plugin has been registered to an activity.",
-              null);
+      case "ConsentInformation#reset":
+        {
+          getConsentInformation().reset();
+          result.success(null);
           break;
         }
-        ConsentRequestParametersWrapper requestParamsWrapper = call.argument("params");
-        ConsentRequestParameters consentRequestParameters =
-            (requestParamsWrapper == null)
-                ? new ConsentRequestParameters.Builder().build()
-                : requestParamsWrapper.getAsConsentRequestParameters(activity);
-        getConsentInformation()
-            .requestConsentInfoUpdate(
-                activity,
-                consentRequestParameters,
-                new OnConsentInfoUpdateSuccessListener() {
-                  @Override
-                  public void onConsentInfoUpdateSuccess() {
-                    result.success(null);
-                  }
-                },
-                new OnConsentInfoUpdateFailureListener() {
-                  @Override
-                  public void onConsentInfoUpdateFailure(FormError error) {
-                    result.error(
-                        Integer.toString(error.getErrorCode()), error.getMessage(), null);
-                  }
-                });
-        break;
-      }
+      case "ConsentInformation#getConsentStatus":
+        {
+          result.success(getConsentInformation().getConsentStatus());
+          break;
+        }
+      case "ConsentInformation#requestConsentInfoUpdate":
+        {
+          if (activity == null) {
+            result.error(
+                INTERNAL_ERROR_CODE,
+                "ConsentInformation#requestConsentInfoUpdate called before plugin has been registered to an activity.",
+                null);
+            break;
+          }
+          ConsentRequestParametersWrapper requestParamsWrapper = call.argument("params");
+          ConsentRequestParameters consentRequestParameters =
+              (requestParamsWrapper == null)
+                  ? new ConsentRequestParameters.Builder().build()
+                  : requestParamsWrapper.getAsConsentRequestParameters(activity);
+          getConsentInformation()
+              .requestConsentInfoUpdate(
+                  activity,
+                  consentRequestParameters,
+                  new OnConsentInfoUpdateSuccessListener() {
+                    @Override
+                    public void onConsentInfoUpdateSuccess() {
+                      result.success(null);
+                    }
+                  },
+                  new OnConsentInfoUpdateFailureListener() {
+                    @Override
+                    public void onConsentInfoUpdateFailure(FormError error) {
+                      result.error(
+                          Integer.toString(error.getErrorCode()), error.getMessage(), null);
+                    }
+                  });
+          break;
+        }
       case "ConsentInformation#canRequestAds":
         result.success(getConsentInformation().canRequestAds());
         break;
@@ -163,27 +159,16 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
             loadAndShowError -> {
               if (loadAndShowError != null) {
                 // Consent gathering failed.
-                result.error(Integer.toString(loadAndShowError.getErrorCode()),
-                    loadAndShowError.getMessage(), null);
+                result.error(
+                    Integer.toString(loadAndShowError.getErrorCode()),
+                    loadAndShowError.getMessage(),
+                    null);
                 return;
               }
               result.success(null);
-            }
-        );
+            });
       case "ConsentInformation#canRequestAds":
         result.success(getConsentInformation().canRequestAds());
-        break;
-      case "ConsentInformation#getPrivacyOptionsRequirementStatus":
-        switch (getConsentInformation().getPrivacyOptionsRequirementStatus()) {
-          case NOT_REQUIRED:
-            result.success(0);
-            break;
-          case REQUIRED:
-            result.success(1);
-            break;
-          default:
-            result.success(2);
-        }
         break;
       case "UserMessagingPlatform#loadAndShowConsentFormIfRequired":
         if (activity == null) {
@@ -221,8 +206,6 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
         if (activity == null) {
           result.error(
               INTERNAL_ERROR_CODE,
-              "ConsentInformation#requestConsentInfoUpdate called before plugin has been registered to an activity.",
-              null);
               "UserMessagingPlatform#showPrivacyOptionsForm called before plugin has been registered to an activity.",
               null);
           break;
@@ -243,49 +226,53 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
             loadAndShowError -> {
               if (loadAndShowError != null) {
                 // Consent gathering failed.
-                result.error(Integer.toString(loadAndShowError.getErrorCode()),
-                    loadAndShowError.getMessage(), null);
+                result.error(
+                    Integer.toString(loadAndShowError.getErrorCode()),
+                    loadAndShowError.getMessage(),
+                    null);
                 return;
               }
               result.success(null);
-            }
-        );
+            });
         break;
-      case "ConsentInformation#isConsentFormAvailable": {
-        result.success(getConsentInformation().isConsentFormAvailable());
-        break;
-      }
-      case "ConsentForm#show": {
-        ConsentForm consentForm = call.argument("consentForm");
-        if (consentForm == null) {
-          result.error(INTERNAL_ERROR_CODE, "ConsentForm#show", null);
-        } else {
-          consentForm.show(
-              activity,
-              new OnConsentFormDismissedListener() {
-                @Override
-                public void onConsentFormDismissed(@Nullable FormError formError) {
-                  if (formError != null) {
-                    result.error(
-                        Integer.toString(formError.getErrorCode()), formError.getMessage(), null);
-                  } else {
-                    result.success(null);
+      case "ConsentInformation#isConsentFormAvailable":
+        {
+          result.success(getConsentInformation().isConsentFormAvailable());
+          break;
+        }
+      case "ConsentForm#show":
+        {
+          ConsentForm consentForm = call.argument("consentForm");
+          if (consentForm == null) {
+            result.error(INTERNAL_ERROR_CODE, "ConsentForm#show", null);
+          } else {
+            consentForm.show(
+                activity,
+                new OnConsentFormDismissedListener() {
+                  @Override
+                  public void onConsentFormDismissed(@Nullable FormError formError) {
+                    if (formError != null) {
+                      result.error(
+                          Integer.toString(formError.getErrorCode()), formError.getMessage(), null);
+                    } else {
+                      result.success(null);
+                    }
                   }
-                }
-              });
+                });
+          }
+          break;
         }
-        break;
-      }
-      case "ConsentForm#dispose": {
-        ConsentForm consentForm = call.argument("consentForm");
-        if (consentForm == null) {
-          Log.w(INTERNAL_ERROR_CODE, "Called dispose on ad that has been freed");
-        } else {
-          userMessagingCodec.disposeConsentForm(consentForm);
+      case "ConsentForm#dispose":
+        {
+          ConsentForm consentForm = call.argument("consentForm");
+          if (consentForm == null) {
+            Log.w(INTERNAL_ERROR_CODE, "Called dispose on ad that has been freed");
+          } else {
+            userMessagingCodec.disposeConsentForm(consentForm);
+          }
+          result.success(null);
+          break;
         }
-        result.success(null);
-        break;
-      }
       default:
         result.notImplemented();
     }
