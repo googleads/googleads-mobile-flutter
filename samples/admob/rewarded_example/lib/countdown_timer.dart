@@ -26,6 +26,9 @@ class CountdownTimer extends ChangeNotifier {
   }
 
   void resume() {
+    if (_countdownState != CountdownState.paused) {
+      return;
+    }
     _startTimer();
     _countdownState = CountdownState.active;
   }
