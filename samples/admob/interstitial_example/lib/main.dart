@@ -48,15 +48,15 @@ class InterstitialExampleState extends State<InterstitialExample> {
             "${consentGatheringError.errorCode}: ${consentGatheringError.message}");
       }
 
-      // Kick off the first play of the "game".
-      _startNewGame();
-
       // Attempt to initialize the Mobile Ads SDK.
       _initializeMobileAdsSDK();
     });
 
     // This sample attempts to load ads using consent obtained in the previous session.
     _initializeMobileAdsSDK();
+
+    // Kick off the first play of the "game".
+    _startNewGame();
   }
 
   void _startNewGame() {
