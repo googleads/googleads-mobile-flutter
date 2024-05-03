@@ -158,14 +158,13 @@ class InterstitialExampleState extends State<InterstitialExample> {
   }
 
   /// Loads an interstitial ad.
-  void _loadAd() {
+  void _loadAd() async {
     // Only load an ad if the Mobile Ads SDK has gathered consent aligned with
     // the app's configured messages.
-    _consentManager.canRequestAds().then((response) {
-      if (!response) {
-        return;
-      }
-    });
+    var canRequestAds = await _consentManager.canRequestAds();
+    if (!canRequestAds) {
+      return;
+    }
 
     InterstitialAd.load(
         adUnitId: _adUnitId,
@@ -232,21 +231,20 @@ class InterstitialExampleState extends State<InterstitialExample> {
 
   /// Initialize the Mobile Ads SDK if the SDK has gathered consent aligned with
   /// the app's configured messages.
-  void _initializeMobileAdsSDK() {
+  void _initializeMobileAdsSDK() async {
     if (_isMobileAdsInitializeCalled) {
       return;
     }
 
-    _consentManager.canRequestAds().then((response) {
-      if (response) {
-        _isMobileAdsInitializeCalled = true;
+    var canRequestAds = await _consentManager.canRequestAds();
+    if (canRequestAds) {
+      _isMobileAdsInitializeCalled = true;
 
-        // Initialize the Mobile Ads SDK.
-        MobileAds.instance.initialize();
-        // Load an ad.
-        _loadAd();
-      }
-    });
+      // Initialize the Mobile Ads SDK.
+      MobileAds.instance.initialize();
+      // Load an ad.
+      _loadAd();
+    }
   }
 
   @override
