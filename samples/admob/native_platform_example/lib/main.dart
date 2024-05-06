@@ -58,43 +58,17 @@ class NativeExampleState extends State<NativeExample> {
         title: 'Native Example',
         home: Scaffold(
             appBar: AppBar(
-              title: const Text('Native Example'),
-              actions: <Widget>[
-                // Regenerate the options menu to include a privacy setting.
-                FutureBuilder(
-                    future: _consentManager.isPrivacyOptionsRequired(),
-                    builder: (context, snapshot) {
-                      final bool visibility = snapshot.data ?? false;
-                      return Visibility(
-                          visible: visibility,
-                          child: PopupMenuButton<String>(
-                            onSelected: (String result) {
-                              if (result == privacySettingsText) {
-                                _consentManager
-                                    .showPrivacyOptionsForm((formError) {
-                                  if (formError != null) {
-                                    debugPrint(
-                                        "${formError.errorCode}: ${formError.message}");
-                                  }
-                                });
-                              }
-                            },
-                            itemBuilder: (BuildContext context) =>
-                                <PopupMenuEntry<String>>[
-                              const PopupMenuItem<String>(
-                                  value: privacySettingsText,
-                                  child: Text(privacySettingsText))
-                            ],
-                          ));
-                    })
-              ],
-            ),
+                title: const Text('Native Example'),
+                actions: _isMobileAdsInitializeCalled
+                    ? _privacySettingsAppBarAction()
+                    : null),
             body: Center(
               child: Column(
                 children: [
                   Stack(children: [
                     SizedBox(
-                        height: _nativeAdHeight, width: MediaQuery.of(context).size.width),
+                        height: _nativeAdHeight,
+                        width: MediaQuery.of(context).size.width),
                     if (_nativeAdIsLoaded && _nativeAd != null)
                       SizedBox(
                           height: _nativeAdHeight,
@@ -112,6 +86,37 @@ class NativeExampleState extends State<NativeExample> {
                 ],
               ),
             )));
+  }
+
+  List<Widget> _privacySettingsAppBarAction() {
+    return <Widget>[
+      // Regenerate the options menu to include a privacy setting.
+      FutureBuilder(
+          future: _consentManager.isPrivacyOptionsRequired(),
+          builder: (context, snapshot) {
+            final bool visibility = snapshot.data ?? false;
+            return Visibility(
+                visible: visibility,
+                child: PopupMenuButton<String>(
+                  onSelected: (String result) {
+                    if (result == privacySettingsText) {
+                      _consentManager.showPrivacyOptionsForm((formError) {
+                        if (formError != null) {
+                          debugPrint(
+                              "${formError.errorCode}: ${formError.message}");
+                        }
+                      });
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                        value: privacySettingsText,
+                        child: Text(privacySettingsText))
+                  ],
+                ));
+          })
+    ];
   }
 
   /// Loads a native ad.
@@ -163,7 +168,9 @@ class NativeExampleState extends State<NativeExample> {
 
     var canRequestAds = await _consentManager.canRequestAds();
     if (canRequestAds) {
-      _isMobileAdsInitializeCalled = true;
+      setState(() {
+        _isMobileAdsInitializeCalled = true;
+      });
 
       // Initialize the Mobile Ads SDK.
       MobileAds.instance.initialize();
