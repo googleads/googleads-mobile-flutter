@@ -41,7 +41,6 @@ import java.util.Map;
  * Encodes and decodes values by reading from a ByteBuffer and writing to a ByteArrayOutputStream.
  */
 class AdMessageCodec extends StandardMessageCodec {
-
   // The type values below must be consistent for each platform.
   private static final byte VALUE_AD_SIZE = (byte) 128;
   private static final byte VALUE_AD_REQUEST = (byte) 129;
@@ -72,7 +71,8 @@ class AdMessageCodec extends StandardMessageCodec {
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
   @SuppressWarnings("deprecation")
-  @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+  @Nullable
+  private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
   @NonNull private final FlutterRequestAgentProvider requestAgentProvider;
 
   AdMessageCodec(

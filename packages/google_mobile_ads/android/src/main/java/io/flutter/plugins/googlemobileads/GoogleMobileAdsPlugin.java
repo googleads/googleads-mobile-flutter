@@ -69,7 +69,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   @Nullable private UserMessagingPlatformManager userMessagingPlatformManager;
   private final Map<String, NativeAdFactory> nativeAdFactories = new HashMap<>();
   @SuppressWarnings("deprecation")
-  @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+  @Nullable
+  private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
   private final FlutterMobileAdsWrapper flutterMobileAds;
   /**
    * Public constructor for the plugin. Dependency initialization is handled in lifecycle methods
