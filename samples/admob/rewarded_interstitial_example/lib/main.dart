@@ -242,7 +242,9 @@ class RewardedInterstitialExampleState
 
     var canRequestAds = await _consentManager.canRequestAds();
     if (canRequestAds) {
-      _isMobileAdsInitializeCalled = true;
+      setState(() {
+        _isMobileAdsInitializeCalled = true;
+      });
 
       // Initialize the Mobile Ads SDK.
       MobileAds.instance.initialize();
