@@ -74,7 +74,7 @@ class AdMessageCodec extends StandardMessageCodec {
   @SuppressWarnings("deprecation")
   @Nullable
   private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
-  
+
   @NonNull private final FlutterRequestAgentProvider requestAgentProvider;
 
   AdMessageCodec(

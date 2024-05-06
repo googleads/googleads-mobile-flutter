@@ -36,9 +36,11 @@ class FlutterAdRequest {
   @Nullable private final List<String> neighboringContentUrls;
   @Nullable private final Integer httpTimeoutMillis;
   @Nullable private final String mediationExtrasIdentifier;
+
   @SuppressWarnings("deprecation")
   @Nullable
   private final MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+
   @Nullable private final Map<String, String> adMobExtras;
   @NonNull private final String requestAgent;
   @Nullable private final List<FlutterMediationExtras> mediationExtras;
@@ -50,9 +52,11 @@ class FlutterAdRequest {
     @Nullable private List<String> neighboringContentUrls;
     @Nullable private Integer httpTimeoutMillis;
     @Nullable private String mediationExtrasIdentifier;
+
     @SuppressWarnings("deprecation")
     @Nullable
     private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+
     @Nullable private Map<String, String> adMobExtras;
     @NonNull private String requestAgent;
 
