@@ -97,39 +97,10 @@ class RewardedExampleState extends State<RewardedExample> {
       title: 'Rewarded Example',
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('Rewarded Example'),
-            actions: <Widget>[
-              // Regenerate the options menu to include a privacy setting.
-              FutureBuilder(
-                  future: _consentManager.isPrivacyOptionsRequired(),
-                  builder: (context, snapshot) {
-                    final bool visibility = snapshot.data ?? false;
-                    return Visibility(
-                        visible: visibility,
-                        child: PopupMenuButton<String>(
-                          onSelected: (String result) {
-                            if (result == privacySettingsText) {
-                              _pauseGame();
-                              _consentManager
-                                  .showPrivacyOptionsForm((formError) {
-                                if (formError != null) {
-                                  debugPrint(
-                                      "${formError.errorCode}: ${formError.message}");
-                                }
-                                _resumeGame();
-                              });
-                            }
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              <PopupMenuEntry<String>>[
-                            const PopupMenuItem<String>(
-                                value: privacySettingsText,
-                                child: Text(privacySettingsText))
-                          ],
-                        ));
-                  })
-            ],
-          ),
+              title: const Text('Rewarded Example'),
+              actions: _isMobileAdsInitializeCalled
+                  ? _privacySettingsAppBarAction()
+                  : null),
           body: Stack(
             children: [
               const Align(
@@ -190,6 +161,39 @@ class RewardedExampleState extends State<RewardedExample> {
     );
   }
 
+  List<Widget> _privacySettingsAppBarAction() {
+    return <Widget>[
+      // Regenerate the options menu to include a privacy setting.
+      FutureBuilder(
+          future: _consentManager.isPrivacyOptionsRequired(),
+          builder: (context, snapshot) {
+            final bool visibility = snapshot.data ?? false;
+            return Visibility(
+                visible: visibility,
+                child: PopupMenuButton<String>(
+                  onSelected: (String result) {
+                    if (result == privacySettingsText) {
+                      _pauseGame();
+                      _consentManager.showPrivacyOptionsForm((formError) {
+                        if (formError != null) {
+                          debugPrint(
+                              "${formError.errorCode}: ${formError.message}");
+                        }
+                        _resumeGame();
+                      });
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                        value: privacySettingsText,
+                        child: Text(privacySettingsText))
+                  ],
+                ));
+          })
+    ];
+  }
+
   /// Loads a rewarded ad.
   void _loadAd() async {
     // Only load an ad if the Mobile Ads SDK has gathered consent aligned with
@@ -236,7 +240,9 @@ class RewardedExampleState extends State<RewardedExample> {
 
     var canRequestAds = await _consentManager.canRequestAds();
     if (canRequestAds) {
-      _isMobileAdsInitializeCalled = true;
+      setState(() {
+        _isMobileAdsInitializeCalled = true;
+      });
 
       // Initialize the Mobile Ads SDK.
       MobileAds.instance.initialize();
