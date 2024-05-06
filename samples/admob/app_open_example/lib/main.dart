@@ -90,8 +90,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('App Open Demo Home Page'),
-        actions:
-            _isMobileAdsInitializeCalled ? _privacySettingsAppBarAction() : [],
+        actions: _isMobileAdsInitializeCalled
+            ? _privacySettingsAppBarAction()
+            : null,
       ),
       body: Center(
         child: Column(
