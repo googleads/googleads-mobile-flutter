@@ -90,37 +90,9 @@ class InterstitialExampleState extends State<InterstitialExample> {
       home: Scaffold(
           appBar: AppBar(
             title: const Text('Interstitial Example'),
-            actions: <Widget>[
-              // Regenerate the options menu to include a privacy setting.
-              FutureBuilder(
-                  future: _consentManager.isPrivacyOptionsRequired(),
-                  builder: (context, snapshot) {
-                    final bool visibility = snapshot.data ?? false;
-                    return Visibility(
-                        visible: visibility,
-                        child: PopupMenuButton<String>(
-                          onSelected: (String result) {
-                            if (result == privacySettingsText) {
-                              _pauseGame();
-                              _consentManager
-                                  .showPrivacyOptionsForm((formError) {
-                                if (formError != null) {
-                                  debugPrint(
-                                      "${formError.errorCode}: ${formError.message}");
-                                }
-                                _resumeGame();
-                              });
-                            }
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              <PopupMenuEntry<String>>[
-                            const PopupMenuItem<String>(
-                                value: privacySettingsText,
-                                child: Text(privacySettingsText))
-                          ],
-                        ));
-                  })
-            ],
+            actions: _isMobileAdsInitializeCalled
+                ? _privacySettingsAppBarAction()
+                : null,
           ),
           body: Stack(
             children: [
@@ -155,6 +127,39 @@ class InterstitialExampleState extends State<InterstitialExample> {
             ],
           )),
     );
+  }
+
+  List<Widget> _privacySettingsAppBarAction() {
+    return <Widget>[
+      // Regenerate the options menu to include a privacy setting.
+      FutureBuilder(
+          future: _consentManager.isPrivacyOptionsRequired(),
+          builder: (context, snapshot) {
+            final bool visibility = snapshot.data ?? false;
+            return Visibility(
+                visible: visibility,
+                child: PopupMenuButton<String>(
+                  onSelected: (String result) {
+                    if (result == privacySettingsText) {
+                      _pauseGame();
+                      _consentManager.showPrivacyOptionsForm((formError) {
+                        if (formError != null) {
+                          debugPrint(
+                              "${formError.errorCode}: ${formError.message}");
+                        }
+                        _resumeGame();
+                      });
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                        value: privacySettingsText,
+                        child: Text(privacySettingsText))
+                  ],
+                ));
+          })
+    ];
   }
 
   /// Loads an interstitial ad.
