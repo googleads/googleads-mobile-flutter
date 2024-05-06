@@ -51,7 +51,6 @@ jobs:
       fail-fast: false
       matrix:
         regex:
-        - "samples/admob/adaptive_banner_example"
         - "samples/admob/app_open_example"
         - "samples/admob/banner_example"
         - "samples/admob/interstitial_example"
@@ -84,7 +83,6 @@ jobs:
       fail-fast: false
       matrix:
         regex:
-        - "samples/admob/adaptive_banner_example"
         - "samples/admob/app_open_example"
         - "samples/admob/banner_example"
         - "samples/admob/interstitial_example"
