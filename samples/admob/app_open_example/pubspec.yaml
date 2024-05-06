@@ -7,9 +7,13 @@ environment:
   sdk: '>=3.2.0 <4.0.0'
 
 dependencies:
+  google_mobile_ads:
+    git:
+      url: https://github.com/googleads/googleads-mobile-flutter/
+      path: ./packages/google_mobile_ads
+
   flutter:
     sdk: flutter
-  google_mobile_ads: ^5.0.0
 
 dev_dependencies:
   flutter_test:
