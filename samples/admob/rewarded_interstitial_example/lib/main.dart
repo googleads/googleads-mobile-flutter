@@ -46,7 +46,8 @@ class RewardedInterstitialExampleState
       if (consentGatheringError != null) {
         // Consent not obtained in current session.
         debugPrint(
-            "${consentGatheringError.errorCode}: ${consentGatheringError.message}");
+            "${consentGatheringError.errorCode}: ${consentGatheringError
+                .message}");
       }
 
       // Kick off the first play of the "game".
@@ -60,17 +61,19 @@ class RewardedInterstitialExampleState
     _initializeMobileAdsSDK();
 
     // Show an alert dialog when the timer reaches zero.
-    _countdownTimer.addListener(() => setState(() {
-      if (_countdownTimer.isComplete) {
-        showDialog(
-            context: context,
-            builder: (context) => AdDialog(showAd: () {
-              _gameOver = true;
-              _showAdCallback();
-            }));
-        _coins += 1;
-      }
-    }));
+    _countdownTimer.addListener(() =>
+        setState(() {
+          if (_countdownTimer.isComplete) {
+            showDialog(
+                context: context,
+                builder: (context) =>
+                    AdDialog(showAd: () {
+                      _gameOver = true;
+                      _showAdCallback();
+                    }));
+            _coins += 1;
+          }
+        }));
   }
 
   void _startNewGame() {
@@ -98,10 +101,10 @@ class RewardedInterstitialExampleState
   void _showAdCallback() {
     _rewardedInterstitialAd?.show(
         onUserEarnedReward: (AdWithoutView view, RewardItem rewardItem) {
-      // ignore: avoid_print
-      print('Reward amount: ${rewardItem.amount}');
-      setState(() => _coins += rewardItem.amount.toInt());
-    });
+          // ignore: avoid_print
+          print('Reward amount: ${rewardItem.amount}');
+          setState(() => _coins += rewardItem.amount.toInt());
+        });
   }
 
   @override
@@ -110,38 +113,10 @@ class RewardedInterstitialExampleState
       title: 'Rewarded Interstitial Example',
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('Rewarded Interstitial Example'),
-            actions: <Widget>[
-              // Regenerate the options menu to include a privacy setting.
-              FutureBuilder(
-                  future: _consentManager.isPrivacyOptionsRequired(),
-                  builder: (context, snapshot) {
-                    final bool visibility = snapshot.data ?? false;
-                    return Visibility(
-                        visible: visibility,
-                        child: PopupMenuButton<String>(
-                          onSelected: (String result) {
-                            if (result == privacySettingsText) {
-                              _pauseGame();
-                              _consentManager
-                                  .showPrivacyOptionsForm((formError) {
-                                if (formError != null) {
-                                  debugPrint(
-                                      "${formError.errorCode}: ${formError.message}");
-                                }
-                                _resumeGame();
-                              });
-                            }
-                          },
-                          itemBuilder: (BuildContext context) =>
-                          <PopupMenuEntry<String>>[
-                            const PopupMenuItem<String>(
-                                value: privacySettingsText,
-                                child: Text(privacySettingsText))
-                          ],
-                        ));
-                  })
-            ],
+              title: const Text('Rewarded Interstitial Example'),
+              actions: _isMobileAdsInitializeCalled
+                  ? _privacySettingsAppBarAction()
+                  : null
           ),
           body: Stack(
             children: [
@@ -152,7 +127,7 @@ class RewardedInterstitialExampleState
                     child: Text(
                       'The Impossible Game',
                       style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                   )),
               Align(
@@ -186,6 +161,40 @@ class RewardedInterstitialExampleState
     );
   }
 
+  List<Widget> _privacySettingsAppBarAction() {
+    return <Widget>[
+      // Regenerate the options menu to include a privacy setting.
+      FutureBuilder(
+          future: _consentManager.isPrivacyOptionsRequired(),
+          builder: (context, snapshot) {
+            final bool visibility = snapshot.data ?? false;
+            return Visibility(
+                visible: visibility,
+                child: PopupMenuButton<String>(
+                  onSelected: (String result) {
+                    if (result == privacySettingsText) {
+                      _pauseGame();
+                      _consentManager.showPrivacyOptionsForm((formError) {
+                        if (formError != null) {
+                          debugPrint(
+                              "${formError.errorCode}: ${formError.message}");
+                        }
+                        _resumeGame();
+                      });
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                  <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                        value: privacySettingsText,
+                        child: Text(privacySettingsText))
+                  ],
+                ));
+          })
+    ];
+  }
+
+
   /// Loads a rewarded interstitial ad.
   void _loadAd() async {
     // Only load an ad if the Mobile Ads SDK has gathered consent aligned with
@@ -199,9 +208,9 @@ class RewardedInterstitialExampleState
         adUnitId: _adUnitId,
         request: const AdRequest(),
         rewardedInterstitialAdLoadCallback:
-            RewardedInterstitialAdLoadCallback(onAdLoaded: (ad) {
+        RewardedInterstitialAdLoadCallback(onAdLoaded: (ad) {
           ad.fullScreenContentCallback = FullScreenContentCallback(
-              // Called when the ad showed the full screen content.
+            // Called when the ad showed the full screen content.
               onAdShowedFullScreenContent: (ad) {},
               // Called when an impression occurs on the ad.
               onAdImpression: (ad) {},
