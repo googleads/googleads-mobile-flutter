@@ -71,6 +71,7 @@ class AdMessageCodec extends StandardMessageCodec {
 
   @NonNull Context context;
   @NonNull final FlutterAdSize.AdSizeFactory adSizeFactory;
+  @SuppressWarnings("deprecation")
   @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
   @NonNull private final FlutterRequestAgentProvider requestAgentProvider;
 
@@ -95,6 +96,7 @@ class AdMessageCodec extends StandardMessageCodec {
     this.context = context;
   }
 
+  @SuppressWarnings("deprecation")
   void setMediationNetworkExtrasProvider(
       @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
     this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
