@@ -27,6 +27,7 @@ import 'package:pigeon/pigeon.dart';
   dartPackageName: 'gma_mediation_applovin',
 ))
 @HostApi()
+
 /// The generated classes set the channels to call the methods in the corresponding kotlin AppLovinSDKApi interface and swift AppLovinSDKApi protocol from the dart layer.
 abstract class AppLovinSDKApi {
   /// Used to configure GDPR consent on the Android or iOS AppLovin SDK
