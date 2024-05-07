@@ -16,6 +16,7 @@ import Flutter
 import UIKit
 import VungleAdsSDK
 
+/// Manages LiftoffPrivacyApi and implements the needed methods.
 public class GmaMediationLiftoffmonetizePlugin: NSObject, FlutterPlugin, LiftoffPrivacyApi {
   let liftoffPrivacy: LiftoffPrivacyProtocol
 
@@ -27,6 +28,11 @@ public class GmaMediationLiftoffmonetizePlugin: NSObject, FlutterPlugin, Liftoff
     let messenger : FlutterBinaryMessenger = registrar.messenger()
     let api : LiftoffPrivacyApi& NSObjectProtocol = GmaMediationLiftoffmonetizePlugin.init(liftoffPrivacy: LiftoffPrivacyImpl())
     LiftoffPrivacyApiSetup.setUp(binaryMessenger: messenger, api: api)
+  }
+
+  public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+    let messenger : FlutterBinaryMessenger = registrar.messenger()
+    LiftoffPrivacyApiSetup.setUp(binaryMessenger: messenger, api: nil)
   }
 
   func setGDPRStatus(optedIn: Bool, consentMessageVersion: String?) {
