@@ -42,9 +42,15 @@ class FlutterError (
   override val message: String? = null,
   val details: Any? = null
 ) : Throwable()
-/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+/**
+ * The generated classes set the channels to call the methods in the corresponding kotlin LiftoffPrivacyApi interface and swift LiftoffPrivacyApi protocol from the dart layer.
+ *
+ * Generated interface from Pigeon that represents a handler of messages from Flutter.
+ */
 interface LiftoffPrivacyApi {
+  /** Used to configure GDPR status on the Android or iOS Liftoff Monetize SDK */
   fun setGDPRStatus(optedIn: Boolean, consentMessageVersion: String?)
+  /** Used to configure CCPA consent on the Android or iOS Liftoff Monetize SDK */
   fun setCCPAStatus(optedIn: Boolean)
 
   companion object {

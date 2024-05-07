@@ -15,6 +15,7 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
+/// The generated classes set the channels to call the methods in the corresponding kotlin LiftoffPrivacyApi interface and swift LiftoffPrivacyApi protocol from the dart layer.
 class LiftoffPrivacyApi {
   /// Constructor for [LiftoffPrivacyApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
@@ -26,6 +27,7 @@ class LiftoffPrivacyApi {
   static const MessageCodec<Object?> pigeonChannelCodec =
       StandardMessageCodec();
 
+  /// Used to configure GDPR status on the Android or iOS Liftoff Monetize SDK
   Future<void> setGDPRStatus(
       bool optedIn, String? consentMessageVersion) async {
     const String __pigeon_channelName =
@@ -51,6 +53,7 @@ class LiftoffPrivacyApi {
     }
   }
 
+  /// Used to configure CCPA consent on the Android or iOS Liftoff Monetize SDK
   Future<void> setCCPAStatus(bool optedIn) async {
     const String __pigeon_channelName =
         'dev.flutter.pigeon.gma_mediation_liftoffmonetize.LiftoffPrivacyApi.setCCPAStatus';

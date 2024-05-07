@@ -27,8 +27,12 @@ import 'package:pigeon/pigeon.dart';
   dartPackageName: 'gma_mediation_liftoffmonetize',
 ))
 @HostApi()
+
+/// The generated classes set the channels to call the methods in the corresponding kotlin LiftoffPrivacyApi interface and swift LiftoffPrivacyApi protocol from the dart layer.
 abstract class LiftoffPrivacyApi {
+  /// Used to configure GDPR status on the Android or iOS Liftoff Monetize SDK
   void setGDPRStatus(bool optedIn, String? consentMessageVersion);
 
+  /// Used to configure CCPA consent on the Android or iOS Liftoff Monetize SDK
   void setCCPAStatus(bool optedIn);
 }

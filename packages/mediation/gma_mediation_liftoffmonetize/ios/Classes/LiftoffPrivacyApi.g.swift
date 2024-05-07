@@ -38,9 +38,13 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   if value is NSNull { return nil }
   return value as! T?
 }
+/// The generated classes set the channels to call the methods in the corresponding kotlin LiftoffPrivacyApi interface and swift LiftoffPrivacyApi protocol from the dart layer.
+///
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol LiftoffPrivacyApi {
+  /// Used to configure GDPR status on the Android or iOS Liftoff Monetize SDK
   func setGDPRStatus(optedIn: Bool, consentMessageVersion: String?) throws
+  /// Used to configure CCPA consent on the Android or iOS Liftoff Monetize SDK
   func setCCPAStatus(optedIn: Bool) throws
 }
 
@@ -49,6 +53,7 @@ class LiftoffPrivacyApiSetup {
   /// The codec used by LiftoffPrivacyApi.
   /// Sets up an instance of `LiftoffPrivacyApi` to handle messages through the `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: LiftoffPrivacyApi?) {
+    /// Used to configure GDPR status on the Android or iOS Liftoff Monetize SDK
     let setGDPRStatusChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.gma_mediation_liftoffmonetize.LiftoffPrivacyApi.setGDPRStatus", binaryMessenger: binaryMessenger)
     if let api = api {
       setGDPRStatusChannel.setMessageHandler { message, reply in
@@ -65,6 +70,7 @@ class LiftoffPrivacyApiSetup {
     } else {
       setGDPRStatusChannel.setMessageHandler(nil)
     }
+    /// Used to configure CCPA consent on the Android or iOS Liftoff Monetize SDK
     let setCCPAStatusChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.gma_mediation_liftoffmonetize.LiftoffPrivacyApi.setCCPAStatus", binaryMessenger: binaryMessenger)
     if let api = api {
       setCCPAStatusChannel.setMessageHandler { message, reply in
