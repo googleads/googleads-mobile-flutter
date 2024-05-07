@@ -30,6 +30,7 @@ import com.google.android.ump.ConsentInformation;
 import com.google.android.ump.ConsentInformation.ConsentStatus;
 import com.google.android.ump.ConsentInformation.OnConsentInfoUpdateFailureListener;
 import com.google.android.ump.ConsentInformation.OnConsentInfoUpdateSuccessListener;
+import com.google.android.ump.ConsentInformation.PrivacyOptionsRequirementStatus;
 import com.google.android.ump.ConsentRequestParameters;
 import com.google.android.ump.FormError;
 import com.google.android.ump.UserMessagingPlatform;
@@ -171,6 +172,59 @@ public class UserMessagingPlatformManagerTest {
   }
 
   @Test
+  public void testConsentInformation_canRequestAds() {
+    doReturn(true).when(mockConsentInformation).canRequestAds();
+    MethodCall methodCall = new MethodCall("ConsentInformation#canRequestAds", null);
+    Result result = mock(Result.class);
+
+    manager.onMethodCall(methodCall, result);
+
+    verify(result).success(eq(true));
+  }
+
+  @Test
+  public void testConsentInformation_getPrivacyOptionsRequirementStatus_notRequiredReturns0() {
+    doReturn(PrivacyOptionsRequirementStatus.NOT_REQUIRED)
+        .when(mockConsentInformation)
+        .getPrivacyOptionsRequirementStatus();
+    MethodCall methodCall =
+        new MethodCall("ConsentInformation#getPrivacyOptionsRequirementStatus", null);
+    Result result = mock(Result.class);
+
+    manager.onMethodCall(methodCall, result);
+
+    verify(result).success(eq(0));
+  }
+
+  @Test
+  public void testConsentInformation_getPrivacyOptionsRequirementStatus_requiredReturns1() {
+    doReturn(PrivacyOptionsRequirementStatus.REQUIRED)
+        .when(mockConsentInformation)
+        .getPrivacyOptionsRequirementStatus();
+    MethodCall methodCall =
+        new MethodCall("ConsentInformation#getPrivacyOptionsRequirementStatus", null);
+    Result result = mock(Result.class);
+
+    manager.onMethodCall(methodCall, result);
+
+    verify(result).success(eq(1));
+  }
+
+  @Test
+  public void testConsentInformation_getPrivacyOptionsRequirementStatus_requiredReturns2() {
+    doReturn(PrivacyOptionsRequirementStatus.UNKNOWN)
+        .when(mockConsentInformation)
+        .getPrivacyOptionsRequirementStatus();
+    MethodCall methodCall =
+        new MethodCall("ConsentInformation#getPrivacyOptionsRequirementStatus", null);
+    Result result = mock(Result.class);
+
+    manager.onMethodCall(methodCall, result);
+
+    verify(result).success(eq(2));
+  }
+
+  @Test
   public void testUserMessagingPlatform_loadConsentFormAndDispose() {
     MethodCall methodCall = new MethodCall("UserMessagingPlatform#loadConsentForm", null);
     Result result = mock(Result.class);
@@ -202,6 +256,78 @@ public class UserMessagingPlatformManagerTest {
 
     verify(userMessagingCodec).disposeConsentForm(consentForm);
     verify(result).success(null);
+  }
+
+  @Test
+  public void testUserMessagingPlatform_loadAndShowConsentFormIfRequired() {
+    manager.setActivity(activity);
+    MethodCall methodCall =
+        new MethodCall("UserMessagingPlatform#loadAndShowConsentFormIfRequired", null);
+    Result result = mock(Result.class);
+
+    manager.onMethodCall(methodCall, result);
+
+    ArgumentCaptor<OnConsentFormDismissedListener> listenerCaptor =
+        ArgumentCaptor.forClass(OnConsentFormDismissedListener.class);
+    mockedUmp.verify(
+        () ->
+            UserMessagingPlatform.loadAndShowConsentFormIfRequired(
+                eq(activity), listenerCaptor.capture()));
+    listenerCaptor.getValue().onConsentFormDismissed(null);
+    verify(result).success(isNull());
+  }
+
+  @Test
+  public void testUserMessagingPlatform_loadAndShowConsentFormIfRequired_withFormError() {
+    manager.setActivity(activity);
+    FormError mockFormError = mock(FormError.class);
+    MethodCall methodCall =
+        new MethodCall("UserMessagingPlatform#loadAndShowConsentFormIfRequired", null);
+    Result result = mock(Result.class);
+
+    manager.onMethodCall(methodCall, result);
+
+    ArgumentCaptor<OnConsentFormDismissedListener> listenerCaptor =
+        ArgumentCaptor.forClass(OnConsentFormDismissedListener.class);
+    mockedUmp.verify(
+        () ->
+            UserMessagingPlatform.loadAndShowConsentFormIfRequired(
+                eq(activity), listenerCaptor.capture()));
+    listenerCaptor.getValue().onConsentFormDismissed(mockFormError);
+    verify(result).success(mockFormError);
+  }
+
+  @Test
+  public void testUserMessagingPlatform_showPrivacyOptionsForm() {
+    manager.setActivity(activity);
+    MethodCall methodCall = new MethodCall("UserMessagingPlatform#showPrivacyOptionsForm", null);
+    Result result = mock(Result.class);
+
+    manager.onMethodCall(methodCall, result);
+
+    ArgumentCaptor<OnConsentFormDismissedListener> listenerCaptor =
+        ArgumentCaptor.forClass(OnConsentFormDismissedListener.class);
+    mockedUmp.verify(
+        () -> UserMessagingPlatform.showPrivacyOptionsForm(eq(activity), listenerCaptor.capture()));
+    listenerCaptor.getValue().onConsentFormDismissed(null);
+    verify(result).success(isNull());
+  }
+
+  @Test
+  public void testUserMessagingPlatform_showPrivacyOptionsForm_withFormError() {
+    manager.setActivity(activity);
+    FormError mockFormError = mock(FormError.class);
+    MethodCall methodCall = new MethodCall("UserMessagingPlatform#showPrivacyOptionsForm", null);
+    Result result = mock(Result.class);
+
+    manager.onMethodCall(methodCall, result);
+
+    ArgumentCaptor<OnConsentFormDismissedListener> listenerCaptor =
+        ArgumentCaptor.forClass(OnConsentFormDismissedListener.class);
+    mockedUmp.verify(
+        () -> UserMessagingPlatform.showPrivacyOptionsForm(eq(activity), listenerCaptor.capture()));
+    listenerCaptor.getValue().onConsentFormDismissed(mockFormError);
+    verify(result).success(mockFormError);
   }
 
   @Test

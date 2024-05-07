@@ -131,6 +131,35 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
                   });
           break;
         }
+      case "ConsentInformation#canRequestAds":
+        result.success(getConsentInformation().canRequestAds());
+        break;
+      case "ConsentInformation#getPrivacyOptionsRequirementStatus":
+        switch (getConsentInformation().getPrivacyOptionsRequirementStatus()) {
+          case NOT_REQUIRED:
+            result.success(0);
+            break;
+          case REQUIRED:
+            result.success(1);
+            break;
+          default:
+            result.success(2);
+        }
+        break;
+      case "UserMessagingPlatform#loadAndShowConsentFormIfRequired":
+        if (activity == null) {
+          result.error(
+              INTERNAL_ERROR_CODE,
+              "UserMessagingPlatform#loadAndShowConsentFormIfRequired called before plugin has been registered to an activity.",
+              null);
+          break;
+        }
+        UserMessagingPlatform.loadAndShowConsentFormIfRequired(
+            activity,
+            loadAndShowError -> {
+              result.success(loadAndShowError);
+            });
+        break;
       case "UserMessagingPlatform#loadConsentForm":
         UserMessagingPlatform.loadConsentForm(
             context,
@@ -147,6 +176,20 @@ public class UserMessagingPlatformManager implements MethodCallHandler {
                 result.error(
                     Integer.toString(formError.getErrorCode()), formError.getMessage(), null);
               }
+            });
+        break;
+      case "UserMessagingPlatform#showPrivacyOptionsForm":
+        if (activity == null) {
+          result.error(
+              INTERNAL_ERROR_CODE,
+              "UserMessagingPlatform#showPrivacyOptionsForm called before plugin has been registered to an activity.",
+              null);
+          break;
+        }
+        UserMessagingPlatform.showPrivacyOptionsForm(
+            activity,
+            loadAndShowError -> {
+              result.success(loadAndShowError);
             });
         break;
       case "ConsentInformation#isConsentFormAvailable":
