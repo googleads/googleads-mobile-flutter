@@ -21,56 +21,71 @@ class BannerExample extends StatefulWidget {
 
 class BannerExampleState extends State<BannerExample> {
   BannerAd? _bannerAd;
+  bool _isLoaded = false;
+  Orientation? _currentOrientation;
 
   final String _adUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/6300978111'
-      : 'ca-app-pub-3940256099942544/2934735716';
-
-  @override
-  void initState() {
-    super.initState();
-    _loadAd();
-  }
+      ? 'ca-app-pub-3940256099942544/9214589741'
+      : 'ca-app-pub-3940256099942544/2435281174';
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Banner Example',
-      home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Banner Example'),
-          ),
-          body: Stack(
-            children: [
-              if (_bannerAd != null)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SafeArea(
-                    child: SizedBox(
-                      width: _bannerAd!.size.width.toDouble(),
-                      height: _bannerAd!.size.height.toDouble(),
-                      child: AdWidget(ad: _bannerAd!),
-                    ),
-                  ),
-                )
-            ],
-          )),
-    );
+        title: 'Banner Example',
+        home: Scaffold(
+            appBar: AppBar(
+              title: const Text('Banner Example'),
+            ),
+            body: OrientationBuilder(
+              builder: (context, orientation) {
+                if (_currentOrientation != orientation) {
+                  _isLoaded = false;
+                  _loadAd();
+                  _currentOrientation = orientation;
+                }
+
+                return Stack(
+                  children: [
+                    if (_bannerAd != null && _isLoaded)
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: SafeArea(
+                          child: SizedBox(
+                            width: _bannerAd!.size.width.toDouble(),
+                            height: _bannerAd!.size.height.toDouble(),
+                            child: AdWidget(ad: _bannerAd!),
+                          ),
+                        ),
+                      )
+                  ],
+                );
+              },
+            )));
   }
 
   /// Loads and shows a banner ad.
   ///
-  /// Dimensions of the ad are determined by the AdSize class.
+  /// Dimensions of the ad are determined by the width of the screen.
   void _loadAd() async {
+    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
+    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        MediaQuery.sizeOf(context).width.truncate());
+
+    if (size == null) {
+      // Unable to get width of anchored banner.
+      return;
+    }
+
     BannerAd(
       adUnitId: _adUnitId,
       request: const AdRequest(),
-      size: AdSize.banner,
+      size: size,
       listener: BannerAdListener(
         // Called when an ad is successfully received.
         onAdLoaded: (ad) {
           setState(() {
             _bannerAd = ad as BannerAd;
+            _isLoaded = true;
           });
         },
         // Called when an ad request failed.
