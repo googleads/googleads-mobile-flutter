@@ -3,7 +3,7 @@ package io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmoneti
 import com.vungle.ads.VunglePrivacySettings
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
-/** GmaMediationLiftoffmonetizePlugin */
+/** Manages LiftoffPrivacyApi and implements the needed methods. */
 class GmaMediationLiftoffmonetizePlugin: FlutterPlugin, LiftoffPrivacyApi {
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     LiftoffPrivacyApi.setUp(flutterPluginBinding.binaryMessenger, this)
