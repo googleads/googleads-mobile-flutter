@@ -16,12 +16,12 @@ import 'package:gma_mediation_liftoffmonetize/liftoff_privacy_api.g.dart';
 
 /// This class has entrypoint to call Liftoff Monetize's SDK APIs.
 class GmaMediationLiftoffmonetize {
-  static Future<void> setGDPRStatus(
+  Future<void> setGDPRStatus(
       bool optedIn, String? consentMessageVersion) async {
     await LiftoffPrivacyApi().setGDPRStatus(optedIn, consentMessageVersion);
   }
 
-  static Future<void> setCCPAStatus(bool optedIn) async {
+  Future<void> setCCPAStatus(bool optedIn) async {
     await LiftoffPrivacyApi().setCCPAStatus(optedIn);
   }
 }
