@@ -1,0 +1,3 @@
+package io.flutter.plugins.googlemobileads.mediation.gma_mediation_mintegral
+
+internal class GmaMediationMintegralPluginTest
