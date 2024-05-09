@@ -1,0 +1,53 @@
+#  Copyright 2024 Google LLC
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#  https://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+name: gma_mediation_mintegral
+
+on:
+  pull_request:
+    paths:
+    - "packages/mediation/gma_mediation_mintegral/**"
+    - ".github/workflows/gma_mediation_mintegral.yaml"
+    - "packages/mediation/gma_mediation_mintegral/ios/**"
+    - "packages/mediation/gma_mediation_mintegral/android/**"
+  push:
+    branches:
+    - main
+
+jobs:
+  flutter:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 30
+    steps:
+    - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b
+      with:
+        fetch-depth: 0
+    - name: "Install Flutter"
+      run: ./.github/workflows/scripts/install-flutter.sh stable
+    - name: "Install Tools"
+      run: ./.github/workflows/scripts/install-tools.sh
+    - name: "Flutter Analyze"
+      run: |
+        cd packages/mediation/gma_mediation_mintegral
+        flutter analyze
+    - name: "Flutter Publish"
+      run: |
+        cd packages/mediation/gma_mediation_mintegral
+        flutter pub publish --dry-run
+    - name: "Flutter Format"
+      run: |
+        flutter pub global activate flutter_plugin_tools
+        flutter pub global run flutter_plugin_tools format
+        ./.github/workflows/scripts/validate-formatting.sh

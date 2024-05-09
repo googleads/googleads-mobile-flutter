@@ -198,7 +198,8 @@ class AdRequest {
       this.neighboringContentUrls,
       this.nonPersonalizedAds,
       this.httpTimeoutMillis,
-      @deprecated this.mediationExtrasIdentifier,
+      @Deprecated('Use mediationExtras instead.')
+      this.mediationExtrasIdentifier,
       this.extras,
       this.mediationExtras});
 
@@ -230,7 +231,7 @@ class AdRequest {
   /// to the ad request. This identifier will get passed to your platform-side
   /// mediation extras factory class, allowing for additional customization
   /// of network extras.
-  @deprecated
+  @Deprecated('Use mediationExtras instead.')
   final String? mediationExtrasIdentifier;
 
   /// Extras to pass to the AdMob adapter.
@@ -252,6 +253,18 @@ class AdRequest {
         mapEquals<String, String>(extras, other.extras) &&
         mediationExtras == other.mediationExtras;
   }
+
+  @override
+  int get hashCode => Object.hash(
+      keywords,
+      contentUrl,
+      nonPersonalizedAds,
+      neighboringContentUrls,
+      httpTimeoutMillis,
+      //ignore: deprecated_member_use_from_same_package
+      mediationExtrasIdentifier,
+      extras,
+      mediationExtras);
 }
 
 /// Targeting info per the Ad Manager API.
@@ -303,6 +316,10 @@ class AdManagerAdRequest extends AdRequest {
             other.customTargetingLists.toString() &&
         publisherProvidedId == other.publisherProvidedId;
   }
+
+  @override
+  int get hashCode =>
+      Object.hash(customTargeting, customTargetingLists, publisherProvidedId);
 }
 
 /// An [AdSize] with the given width and a Google-optimized height to create a banner ad.
@@ -554,6 +571,9 @@ class AdSize {
   bool operator ==(Object other) {
     return other is AdSize && width == other.width && height == other.height;
   }
+
+  @override
+  int get hashCode => Object.hash(width, height);
 }
 
 /// The base class for all ads.
@@ -1353,6 +1373,9 @@ class ServerSideVerificationOptions {
         userId == other.userId &&
         customData == other.customData;
   }
+
+  @override
+  int get hashCode => Object.hash(userId, customData);
 }
 
 /// A full-screen app open ad for the Google Mobile Ads Plugin.
@@ -1505,6 +1528,15 @@ class NativeAdOptions {
         shouldRequestMultipleImages == other.shouldRequestMultipleImages &&
         shouldReturnUrlsForImageAssets == other.shouldReturnUrlsForImageAssets;
   }
+
+  @override
+  int get hashCode => Object.hash(
+      adChoicesPlacement,
+      mediaAspectRatio,
+      videoOptions,
+      requestCustomMuteThisAd,
+      shouldRequestMultipleImages,
+      shouldReturnUrlsForImageAssets);
 }
 
 /// Options for controlling video playback in supported ad formats.
@@ -1539,4 +1571,8 @@ class VideoOptions {
         customControlsRequested == other.customControlsRequested &&
         startMuted == other.startMuted;
   }
+
+  @override
+  int get hashCode =>
+      Object.hash(clickToExpandRequested, customControlsRequested, startMuted);
 }
