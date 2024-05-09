@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'consent_manager.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
   runApp(const MaterialApp(
     home: RewardedExample(),
   ));
@@ -20,8 +21,14 @@ class RewardedExample extends StatefulWidget {
 }
 
 class RewardedExampleState extends State<RewardedExample> {
+  static const privacySettingsText = 'Privacy Settings';
+
+  final _consentManager = ConsentManager();
   final CountdownTimer _countdownTimer = CountdownTimer();
   var _showWatchVideoButton = false;
+  var _gamePaused = false;
+  var _gameOver = false;
+  var _isMobileAdsInitializeCalled = false;
   var _coins = 0;
   RewardedAd? _rewardedAd;
 
@@ -33,20 +40,55 @@ class RewardedExampleState extends State<RewardedExample> {
   void initState() {
     super.initState();
 
+    _consentManager.gatherConsent((consentGatheringError) {
+      if (consentGatheringError != null) {
+        // Consent not obtained in current session.
+        debugPrint(
+            "${consentGatheringError.errorCode}: ${consentGatheringError.message}");
+      }
+
+      // Kick off the first play of the "game".
+      _startNewGame();
+
+      // Attempt to initialize the Mobile Ads SDK.
+      _initializeMobileAdsSDK();
+    });
+
+    // This sample attempts to load ads using consent obtained in the previous session.
+    _initializeMobileAdsSDK();
+
+    // Show the "Watch video" button when the timer reaches zero.
     _countdownTimer.addListener(() => setState(() {
           if (_countdownTimer.isComplete) {
+            _gameOver = true;
             _showWatchVideoButton = true;
             _coins += 1;
           } else {
             _showWatchVideoButton = false;
           }
         }));
-    _startNewGame();
   }
 
   void _startNewGame() {
-    _loadAd();
     _countdownTimer.start();
+    _gameOver = false;
+    _gamePaused = false;
+  }
+
+  void _pauseGame() {
+    if (_gameOver || _gamePaused) {
+      return;
+    }
+    _countdownTimer.pause();
+    _gamePaused = true;
+  }
+
+  void _resumeGame() {
+    if (_gameOver || !_gamePaused) {
+      return;
+    }
+    _countdownTimer.resume();
+    _gamePaused = false;
   }
 
   @override
@@ -55,8 +97,10 @@ class RewardedExampleState extends State<RewardedExample> {
       title: 'Rewarded Example',
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('Rewarded Example'),
-          ),
+              title: const Text('Rewarded Example'),
+              actions: _isMobileAdsInitializeCalled
+                  ? _privacySettingsAppBarAction()
+                  : null),
           body: Stack(
             children: [
               const Align(
@@ -82,6 +126,7 @@ class RewardedExampleState extends State<RewardedExample> {
                         child: TextButton(
                           onPressed: () {
                             _startNewGame();
+                            _loadAd();
                           },
                           child: const Text('Play Again'),
                         ),
@@ -116,8 +161,48 @@ class RewardedExampleState extends State<RewardedExample> {
     );
   }
 
+  List<Widget> _privacySettingsAppBarAction() {
+    return <Widget>[
+      // Regenerate the options menu to include a privacy setting.
+      FutureBuilder(
+          future: _consentManager.isPrivacyOptionsRequired(),
+          builder: (context, snapshot) {
+            final bool visibility = snapshot.data ?? false;
+            return Visibility(
+                visible: visibility,
+                child: PopupMenuButton<String>(
+                  onSelected: (String result) {
+                    if (result == privacySettingsText) {
+                      _pauseGame();
+                      _consentManager.showPrivacyOptionsForm((formError) {
+                        if (formError != null) {
+                          debugPrint(
+                              "${formError.errorCode}: ${formError.message}");
+                        }
+                        _resumeGame();
+                      });
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                        value: privacySettingsText,
+                        child: Text(privacySettingsText))
+                  ],
+                ));
+          })
+    ];
+  }
+
   /// Loads a rewarded ad.
-  void _loadAd() {
+  void _loadAd() async {
+    // Only load an ad if the Mobile Ads SDK has gathered consent aligned with
+    // the app's configured messages.
+    var canRequestAds = await _consentManager.canRequestAds();
+    if (!canRequestAds) {
+      return;
+    }
+
     RewardedAd.load(
         adUnitId: _adUnitId,
         request: const AdRequest(),
@@ -144,6 +229,26 @@ class RewardedExampleState extends State<RewardedExample> {
           // ignore: avoid_print
           print('RewardedAd failed to load: $error');
         }));
+  }
+
+  /// Initialize the Mobile Ads SDK if the SDK has gathered consent aligned with
+  /// the app's configured messages.
+  void _initializeMobileAdsSDK() async {
+    if (_isMobileAdsInitializeCalled) {
+      return;
+    }
+
+    var canRequestAds = await _consentManager.canRequestAds();
+    if (canRequestAds) {
+      setState(() {
+        _isMobileAdsInitializeCalled = true;
+      });
+
+      // Initialize the Mobile Ads SDK.
+      MobileAds.instance.initialize();
+      // Load an ad.
+      _loadAd();
+    }
   }
 
   @override

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 // ignore_for_file: public_member_api_docs
+import 'package:app_open_example/consent_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io' show Platform;
@@ -33,7 +34,14 @@ class AppOpenAdManager {
       : 'ca-app-pub-3940256099942544/5575463023';
 
   /// Load an [AppOpenAd].
-  void loadAd() {
+  void loadAd() async {
+    // Only load an ad if the Mobile Ads SDK has gathered consent aligned with
+    // the app's configured messages.
+    var canRequestAds = await ConsentManager.instance.canRequestAds();
+    if (!canRequestAds) {
+      return;
+    }
+
     AppOpenAd.load(
       adUnitId: adUnitId,
       request: const AdRequest(),
