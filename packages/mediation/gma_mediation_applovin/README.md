@@ -33,4 +33,4 @@ use [github's issue tracker](https://github.com/googleads/googleads-mobile-flutt
 
 ## License
 
-[Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html)
+[Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0)
