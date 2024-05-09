@@ -13,8 +13,48 @@
 // limitations under the License.
 
 import Flutter
+import IronSource
 import UIKit
 
-public class GmaMediationIronsourcePlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) { }
+/// Manages IronSourcePrivacyApi and implements the needed methods.
+public class GmaMediationIronsourcePlugin: NSObject, FlutterPlugin, IronSourcePrivacyApi {
+  let ironSourceSdk: IronSourceSdkProtocol
+
+  init (ironSourceSdk: IronSourceSdkProtocol) {
+    self.ironSourceSdk = ironSourceSdk
+  }
+
+  public static func register(with registrar: FlutterPluginRegistrar) {
+    let messenger : FlutterBinaryMessenger = registrar.messenger()
+    let api : IronSourcePrivacyApi& NSObjectProtocol = GmaMediationIronsourcePlugin.init(ironSourceSdk: IronSourceSdkImpl())
+    IronSourcePrivacyApiSetup.setUp(binaryMessenger: messenger, api: api)
+  }
+  public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+    let messenger : FlutterBinaryMessenger = registrar.messenger()
+    IronSourcePrivacyApiSetup.setUp(binaryMessenger: messenger, api: nil)
+  }
+
+  func setConsent(gdprConsent: Bool) throws {
+    ironSourceSdk.setConsent(gdprConsent: gdprConsent)
+  }
+
+  func setDoNotSell(doNotSell: Bool) throws {
+    ironSourceSdk.setDoNotSell(onKey: "do_not_sell", withValue: doNotSell ? "YES" : "NO")
+  }
+}
+
+protocol IronSourceSdkProtocol {
+  func setConsent(gdprConsent: Bool)
+
+  func setDoNotSell(onKey: String, withValue: String)
+}
+
+class IronSourceSdkImpl : IronSourceSdkProtocol {
+  func setConsent(gdprConsent: Bool) {
+    IronSource.setConsent(gdprConsent)
+  }
+
+  func setDoNotSell(onKey: String, withValue: String) {
+    IronSource.setMetaDataWithKey(onKey, value: withValue)
+  }
 }

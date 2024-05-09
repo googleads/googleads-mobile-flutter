@@ -19,9 +19,10 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'app_lifecycle_reactor.dart';
 import 'app_open_ad_manager.dart';
 
+import 'consent_manager.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
   runApp(const MainApp());
 }
 
@@ -48,16 +49,34 @@ class HomePage extends StatefulWidget {
 
 /// Example home page for an app open ad.
 class _HomePageState extends State<HomePage> {
+  static const privacySettingsText = 'Privacy Settings';
+
+  final _appOpenAdManager = AppOpenAdManager();
+  var _isMobileAdsInitializeCalled = false;
   int _counter = 0;
   late AppLifecycleReactor _appLifecycleReactor;
 
   @override
   void initState() {
     super.initState();
-    AppOpenAdManager appOpenAdManager = AppOpenAdManager()..loadAd();
+
     _appLifecycleReactor =
-        AppLifecycleReactor(appOpenAdManager: appOpenAdManager);
+        AppLifecycleReactor(appOpenAdManager: _appOpenAdManager);
     _appLifecycleReactor.listenToAppStateChanges();
+
+    ConsentManager.instance.gatherConsent((consentGatheringError) {
+      if (consentGatheringError != null) {
+        // Consent not obtained in current session.
+        debugPrint(
+            "${consentGatheringError.errorCode}: ${consentGatheringError.message}");
+      }
+
+      // Attempt to initialize the Mobile Ads SDK.
+      _initializeMobileAdsSDK();
+    });
+
+    // This sample attempts to load ads using consent obtained in the previous session.
+    _initializeMobileAdsSDK();
   }
 
   void _incrementCounter() {
@@ -71,6 +90,9 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('App Open Demo Home Page'),
+        actions: _isMobileAdsInitializeCalled
+            ? _privacySettingsAppBarAction()
+            : null,
       ),
       body: Center(
         child: Column(
@@ -92,5 +114,57 @@ class _HomePageState extends State<HomePage> {
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  List<Widget> _privacySettingsAppBarAction() {
+    return <Widget>[
+      // Regenerate the options menu to include a privacy setting.
+      FutureBuilder(
+          future: ConsentManager.instance.isPrivacyOptionsRequired(),
+          builder: (context, snapshot) {
+            final bool visibility = snapshot.data ?? false;
+            return Visibility(
+                visible: visibility,
+                child: PopupMenuButton<String>(
+                  onSelected: (String result) {
+                    if (result == privacySettingsText) {
+                      ConsentManager.instance
+                          .showPrivacyOptionsForm((formError) {
+                        if (formError != null) {
+                          debugPrint(
+                              "${formError.errorCode}: ${formError.message}");
+                        }
+                      });
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                        value: privacySettingsText,
+                        child: Text(privacySettingsText))
+                  ],
+                ));
+          })
+    ];
+  }
+
+  /// Initialize the Mobile Ads SDK if the SDK has gathered consent aligned with
+  /// the app's configured messages.
+  void _initializeMobileAdsSDK() async {
+    if (_isMobileAdsInitializeCalled) {
+      return;
+    }
+
+    var canRequestAds = await ConsentManager.instance.canRequestAds();
+    if (canRequestAds) {
+      setState(() {
+        _isMobileAdsInitializeCalled = true;
+      });
+
+      // Initialize the Mobile Ads SDK.
+      MobileAds.instance.initialize();
+      // Load an ad.
+      _appOpenAdManager.loadAd();
+    }
   }
 }

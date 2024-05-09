@@ -19,6 +19,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 
 import com.google.android.ump.ConsentForm;
+import com.google.android.ump.FormError;
 import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.List;
@@ -129,5 +130,17 @@ public class UserMessagingCodecTest {
     codec.disposeConsentForm(form);
     decoded = (ConsentForm) codec.decodeMessage((ByteBuffer) message.position(0));
     assertNull(decoded);
+  }
+
+  @Test
+  public void testFormError() {
+    FormError formError = new FormError(123, "testMessage");
+
+    final ByteBuffer message = codec.encodeMessage(formError);
+    FormError decoded = (FormError) codec.decodeMessage((ByteBuffer) message.position(0));
+
+    assert decoded != null;
+    assertEquals(formError.getErrorCode(), decoded.getErrorCode());
+    assertEquals(formError.getMessage(), decoded.getMessage());
   }
 }

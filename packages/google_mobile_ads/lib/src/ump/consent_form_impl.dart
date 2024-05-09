@@ -37,4 +37,7 @@ class ConsentFormImpl extends ConsentForm {
   bool operator ==(Object other) {
     return other is ConsentFormImpl && platformHash == other.platformHash;
   }
+
+  @override
+  int get hashCode => platformHash.hashCode;
 }

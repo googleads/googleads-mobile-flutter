@@ -11,8 +11,19 @@ live, production ads. Failure to do so can lead to suspension of your account.
 
 The main steps to integrate banner ads are:
 
-1. Load an ad
-2. Display an ad
+1. Determine the ad width
+2. Load an ad
+3. Display an ad
+
+### Determine the ad width
+If you use a hardcoded width, you're done. To use our preferred [Banner](https://developers.google.com/admob/flutter/banner/anchored-adaptive) format, the sample shows how to get the size of the window containing your app to determine the ad width.
+
+```
+final size = await AdSize.
+    getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        MediaQuery.of(context).size.width.truncate());
+```
+
 
 ### Load an ad
 The sample shows how to load a banner ad.
@@ -21,12 +32,13 @@ The sample shows how to load a banner ad.
 BannerAd(
       adUnitId: _adUnitId,
       request: const AdRequest(),
-      size: AdSize.Banner,
+      size: size,
       listener: BannerAdListener(
         // Called when an ad is successfully received.
         onAdLoaded: (ad) {
           setState(() {
             _bannerAd = ad as BannerAd;
+            _isLoaded = true;
           });
         },
         ...
@@ -34,8 +46,8 @@ BannerAd(
     ).load();
  ```
 
- ### Display an ad
- The sample shows how to display a banner ad.
+### Display an ad
+The sample shows how to display a banner ad.
 
  ```
 Widget build(BuildContext context) {
@@ -43,7 +55,7 @@ Widget build(BuildContext context) {
     ...
       body: Stack(
         children: [
-          if (_bannerAd != null)
+          if (_bannerAd != null && _isLoaded)
             Align(
               alignment: Alignment.bottomCenter,
               child: SafeArea(
