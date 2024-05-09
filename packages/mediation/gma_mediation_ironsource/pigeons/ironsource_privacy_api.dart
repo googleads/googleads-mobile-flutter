@@ -31,8 +31,12 @@ import 'package:pigeon/pigeon.dart';
   ),
 )
 @HostApi()
+
+/// The generated classes set the channels to call the methods in the corresponding kotlin IronSourcePrivacyApi interface and swift IronSourcePrivacyApi protocol from the dart layer.
 abstract class IronSourcePrivacyApi {
+  // Used to configure GDPR consent on the Android or iOS ironSource SDK
   void setConsent(bool gdprConsent);
 
+  // Used to opt out of the sale of personal information on the Android or iOS ironSource SDK
   void setDoNotSell(bool doNotSell);
 }

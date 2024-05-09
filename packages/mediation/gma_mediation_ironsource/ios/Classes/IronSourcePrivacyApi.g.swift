@@ -38,6 +38,8 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   if value is NSNull { return nil }
   return value as! T?
 }
+/// The generated classes set the channels to call the methods in the corresponding kotlin IronSourcePrivacyApi interface and swift IronSourcePrivacyApi protocol from the dart layer.
+///
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol IronSourcePrivacyApi {
   func setConsent(gdprConsent: Bool) throws

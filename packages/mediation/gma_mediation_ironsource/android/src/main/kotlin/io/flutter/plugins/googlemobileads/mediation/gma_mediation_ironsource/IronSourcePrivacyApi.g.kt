@@ -42,7 +42,11 @@ class IronSourcePrivacyError (
   override val message: String? = null,
   val details: Any? = null
 ) : Throwable()
-/** Generated interface from Pigeon that represents a handler of messages from Flutter. */
+/**
+ * The generated classes set the channels to call the methods in the corresponding kotlin IronSourcePrivacyApi interface and swift IronSourcePrivacyApi protocol from the dart layer.
+ *
+ * Generated interface from Pigeon that represents a handler of messages from Flutter.
+ */
 interface IronSourcePrivacyApi {
   fun setConsent(gdprConsent: Boolean)
   fun setDoNotSell(doNotSell: Boolean)

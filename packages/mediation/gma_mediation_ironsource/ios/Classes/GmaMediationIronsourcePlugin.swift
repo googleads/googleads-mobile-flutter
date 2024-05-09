@@ -16,6 +16,7 @@ import Flutter
 import IronSource
 import UIKit
 
+/// Manages IronSourcePrivacyApi and implements the needed methods.
 public class GmaMediationIronsourcePlugin: NSObject, FlutterPlugin, IronSourcePrivacyApi {
   let ironSourceSdk: IronSourceSdkProtocol
 
@@ -27,6 +28,10 @@ public class GmaMediationIronsourcePlugin: NSObject, FlutterPlugin, IronSourcePr
     let messenger : FlutterBinaryMessenger = registrar.messenger()
     let api : IronSourcePrivacyApi& NSObjectProtocol = GmaMediationIronsourcePlugin.init(ironSourceSdk: IronSourceSdkImpl())
     IronSourcePrivacyApiSetup.setUp(binaryMessenger: messenger, api: api)
+  }
+  public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+    let messenger : FlutterBinaryMessenger = registrar.messenger()
+    IronSourcePrivacyApiSetup.setUp(binaryMessenger: messenger, api: nil)
   }
 
   func setConsent(gdprConsent: Bool) throws {

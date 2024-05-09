@@ -15,6 +15,7 @@ PlatformException _createConnectionError(String channelName) {
   );
 }
 
+/// The generated classes set the channels to call the methods in the corresponding kotlin IronSourcePrivacyApi interface and swift IronSourcePrivacyApi protocol from the dart layer.
 class IronSourcePrivacyApi {
   /// Constructor for [IronSourcePrivacyApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
