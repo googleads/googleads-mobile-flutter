@@ -21,6 +21,7 @@ analyzer:
     packages/mediation/gma_mediation_inmobi/**
     packages/mediation/gma_mediation_ironsource/**
     packages/mediation/gma_mediation_meta/**
+    packages/mediation/gma_mediation_unity/**
   ]
   errors:
     omit_local_variable_types: ignore

@@ -1270,7 +1270,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.orientationValue);
     } else if (value is AnchoredAdaptiveBannerAdSize) {
       buffer.putUint8(_valueAnchoredAdaptiveBannerAdSize);
-      var orientationValue;
+      String? orientationValue;
       if (value.orientation != null) {
         orientationValue = (value.orientation as Orientation).name;
       }
