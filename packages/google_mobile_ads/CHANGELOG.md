@@ -1,4 +1,4 @@
-## Next Version
+## 5.1.0
 * Adds support for APIs from the [Android](https://developers.google.com/admob/android/privacy/release-notes) UMP SDK version 2.2.0.
 * Adds support for APIs from the [iOS](https://developers.google.com/admob/ios/privacy/download#release_notes) UMP SDK version 2.4.0.
 
