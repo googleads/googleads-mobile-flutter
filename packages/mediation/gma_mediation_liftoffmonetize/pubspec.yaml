@@ -1,0 +1,30 @@
+name: gma_mediation_liftoffmonetize
+description: "Mediation Adapter that enables sending ad requests to the LiftoffMonetize ad network using the google_mobile_ads plugin."
+version: 1.0.0
+repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/mediation/gma_mediation_liftoffmonetize
+
+environment:
+  sdk: '>=3.2.5 <4.0.0'
+  flutter: '>=3.3.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_mobile_ads: ^5.1.0
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+  lint: ^2.3.0
+  pigeon: ^17.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmonetize
+        pluginClass: GmaMediationLiftoffmonetizePlugin
+      ios:
+        pluginClass: GmaMediationLiftoffmonetizePlugin

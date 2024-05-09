@@ -10,7 +10,6 @@ mediation of the Meta Ad Network through the Google Mobile Ads SDK.
 For instructions on how to use with the google_mobile_ads plugin, refer to the 
 developer guide for [Meta Audience Network](https://developers.google.com/admob/flutter/mediation/meta).
 
-
 ## Downloads
 
 See [pub.dev](https://pub.dev/packages/gma_mediation_meta/versions) for the
