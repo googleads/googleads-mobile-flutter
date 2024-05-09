@@ -17,6 +17,7 @@ package io.flutter.plugins.googlemobileads.usermessagingplatform;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.ump.ConsentForm;
+import com.google.android.ump.FormError;
 import io.flutter.plugin.common.StandardMessageCodec;
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
@@ -31,6 +32,7 @@ public class UserMessagingCodec extends StandardMessageCodec {
   private static final byte VALUE_CONSENT_REQUEST_PARAMETERS = (byte) 129;
   private static final byte VALUE_CONSENT_DEBUG_SETTINGS = (byte) 130;
   private static final byte VALUE_CONSENT_FORM = (byte) 131;
+  private static final byte VALUE_FORM_ERROR = (byte) 132;
 
   private final Map<Integer, ConsentForm> consentFormMap;
 
@@ -53,6 +55,11 @@ public class UserMessagingCodec extends StandardMessageCodec {
     } else if (value instanceof ConsentForm) {
       stream.write(VALUE_CONSENT_FORM);
       writeValue(stream, value.hashCode());
+    } else if (value instanceof FormError) {
+      stream.write(VALUE_FORM_ERROR);
+      FormError formError = (FormError) value;
+      writeValue(stream, formError.getErrorCode());
+      writeValue(stream, formError.getMessage());
     } else {
       super.writeValue(stream, value);
     }
@@ -95,6 +102,12 @@ public class UserMessagingCodec extends StandardMessageCodec {
         {
           Integer hash = (Integer) readValueOfType(buffer.get(), buffer);
           return consentFormMap.get(hash);
+        }
+      case VALUE_FORM_ERROR:
+        {
+          Integer errorCode = (Integer) readValueOfType(buffer.get(), buffer);
+          String errorMessage = (String) readValueOfType(buffer.get(), buffer);
+          return new FormError(errorCode, errorMessage);
         }
       default:
         return super.readValueOfType(type, buffer);

@@ -267,5 +267,151 @@ void main() {
       expect(method, equals('ConsentForm#dispose'));
       expect(arguments, {'consentForm': consentForm});
     });
+
+    test('canRequestAds()', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(methodChannel, (call) async {
+        expect(call.method, equals('ConsentInformation#canRequestAds'));
+        expect(call.arguments, null);
+        return Future<dynamic>.value(true);
+      });
+
+      bool canRequestAds = await channel.canRequestAds();
+
+      expect(canRequestAds, true);
+    });
+
+    test('getPrivacyOptionsRequirementStatus() maps 1 to required', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(methodChannel, (call) async {
+        expect(call.method,
+            equals('ConsentInformation#getPrivacyOptionsRequirementStatus'));
+        expect(call.arguments, null);
+        return Future<dynamic>.value(1);
+      });
+
+      PrivacyOptionsRequirementStatus privacyStatus =
+          await channel.getPrivacyOptionsRequirementStatus();
+
+      expect(privacyStatus, PrivacyOptionsRequirementStatus.required);
+    });
+
+    test('getPrivacyOptionsRequirementStatus() maps 0 to notRequired',
+        () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(methodChannel, (call) async {
+        expect(call.method,
+            equals('ConsentInformation#getPrivacyOptionsRequirementStatus'));
+        expect(call.arguments, null);
+        return Future<dynamic>.value(0);
+      });
+
+      PrivacyOptionsRequirementStatus privacyStatus =
+          await channel.getPrivacyOptionsRequirementStatus();
+
+      expect(privacyStatus, PrivacyOptionsRequirementStatus.notRequired);
+    });
+
+    test('loadAndShowConsentFormIfRequired() success', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(methodChannel, (call) async {
+        expect(call.method,
+            equals('UserMessagingPlatform#loadAndShowConsentFormIfRequired'));
+        expect(call.arguments, null);
+        return Future<dynamic>.value();
+      });
+      Completer<FormError?> successCompleter = Completer<FormError?>();
+
+      successCompleter.complete(channel.loadAndShowConsentFormIfRequired());
+
+      FormError? error = await successCompleter.future;
+      expect(error, null);
+    });
+
+    test('loadAndShowConsentFormIfRequired() failure', () async {
+      FormError? testError = FormError(errorCode: 55, message: 'msg');
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(methodChannel, (call) async {
+        expect(call.method,
+            equals('UserMessagingPlatform#loadAndShowConsentFormIfRequired'));
+        expect(call.arguments, null);
+        return Future<dynamic>.value(testError);
+      });
+      Completer<FormError?> failureCompleter = Completer<FormError?>();
+
+      failureCompleter.complete(channel.loadAndShowConsentFormIfRequired());
+
+      FormError? error = await failureCompleter.future;
+      expect(failureCompleter.isCompleted, true);
+      expect(error, testError);
+    });
+
+    test('loadAndShowConsentFormIfRequired() error', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(methodChannel, (call) async {
+        expect(call.method,
+            equals('UserMessagingPlatform#loadAndShowConsentFormIfRequired'));
+        expect(call.arguments, null);
+        return Future.error(PlatformException(code: '55', message: 'msg'));
+      });
+      Completer<FormError?> errorCompleter = Completer<FormError?>();
+
+      errorCompleter.complete(channel.loadAndShowConsentFormIfRequired());
+
+      FormError? error = await errorCompleter.future;
+      expect(errorCompleter.isCompleted, true);
+      expect(error, FormError(errorCode: 55, message: 'msg'));
+    });
+
+    test('showPrivacyOptionsForm() success', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(methodChannel, (call) async {
+        expect(call.method,
+            equals('UserMessagingPlatform#showPrivacyOptionsForm'));
+        expect(call.arguments, null);
+        return Future<dynamic>.value();
+      });
+      Completer<FormError?> successCompleter = Completer<FormError?>();
+
+      successCompleter.complete(channel.showPrivacyOptionsForm());
+
+      FormError? error = await successCompleter.future;
+      expect(error, null);
+    });
+
+    test('showPrivacyOptionsForm() failure', () async {
+      FormError? testError = FormError(errorCode: 55, message: 'msg');
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(methodChannel, (call) async {
+        expect(call.method,
+            equals('UserMessagingPlatform#showPrivacyOptionsForm'));
+        expect(call.arguments, null);
+        return Future<dynamic>.value(testError);
+      });
+      Completer<FormError?> failureCompleter = Completer<FormError?>();
+
+      failureCompleter.complete(channel.showPrivacyOptionsForm());
+
+      FormError? error = await failureCompleter.future;
+      expect(failureCompleter.isCompleted, true);
+      expect(error, testError);
+    });
+
+    test('showPrivacyOptionsForm() error', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(methodChannel, (call) async {
+        expect(call.method,
+            equals('UserMessagingPlatform#showPrivacyOptionsForm'));
+        expect(call.arguments, null);
+        return Future.error(PlatformException(code: '55', message: 'msg'));
+      });
+      Completer<FormError?> errorCompleter = Completer<FormError?>();
+
+      errorCompleter.complete(channel.showPrivacyOptionsForm());
+
+      FormError? error = await errorCompleter.future;
+      expect(errorCompleter.isCompleted, true);
+      expect(error, FormError(errorCode: 55, message: 'msg'));
+    });
   });
 }

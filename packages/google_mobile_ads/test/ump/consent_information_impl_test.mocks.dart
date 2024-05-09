@@ -115,4 +115,15 @@ class MockUserMessagingChannel extends _i1.Mock
         returnValue: _i5.Future<void>.value(),
         returnValueForMissingStub: _i5.Future<void>.value(),
       ) as _i5.Future<void>);
+  @override
+  _i5.Future<bool> canRequestAds() => (super.noSuchMethod(
+        Invocation.method(#canRequestAds, []),
+        returnValue: _i5.Future<bool>.value(false),
+      ) as _i5.Future<bool>);
+  @override
+  _i5.Future<_i4.PrivacyOptionsRequirementStatus>
+      getPrivacyOptionsRequirementStatus() => (super.noSuchMethod(
+          Invocation.method(#getPrivacyOptionsRequirementStatus, []),
+          returnValue: _i5.Future<_i4.PrivacyOptionsRequirementStatus>.value(
+              _i4.PrivacyOptionsRequirementStatus.unknown)));
 }

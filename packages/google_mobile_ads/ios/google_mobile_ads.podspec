@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'google_mobile_ads'
-  s.version          = '1.0.0'
+  s.version          = '5.1.0'
   s.summary          = 'Google Mobile Ads plugin for Flutter.'
   s.description      = <<-DESC
 Google Mobile Ads plugin for Flutter.
