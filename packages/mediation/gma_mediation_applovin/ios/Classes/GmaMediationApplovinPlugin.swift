@@ -16,6 +16,7 @@ import AppLovinSDK
 import Flutter
 import UIKit
 
+/// Manages AppLovinSDKApi and implements the needed methods.
 public class GmaMediationApplovinPlugin: NSObject, FlutterPlugin, AppLovinSDKApi {
   let applovinSdk: ALSdkProtocol
 
@@ -27,6 +28,10 @@ public class GmaMediationApplovinPlugin: NSObject, FlutterPlugin, AppLovinSDKApi
     let messenger : FlutterBinaryMessenger = registrar.messenger()
     let api : AppLovinSDKApi& NSObjectProtocol = GmaMediationApplovinPlugin.init(applovinSdk: ALSdkImpl())
     AppLovinSDKApiSetup.setUp(binaryMessenger: messenger, api: api)
+  }
+  public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+    let messenger : FlutterBinaryMessenger = registrar.messenger()
+    AppLovinSDKApiSetup.setUp(binaryMessenger: messenger, api: nil)
   }
 
   func setHasUserConsent(hasUserConsent: Bool) {
