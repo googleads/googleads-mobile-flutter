@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_pangle'
-  s.version          = '1.0.0'
+  s.version          = '1.1.0'
   s.summary          = 'Google Mobile Ads Mediation of Pangle.'
   s.description      = <<-DESC
   Mediation Adapter for Pangle to use with Google Mobile Ads.
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationPangle', '~> 5.8.0.8.0'
+  s.dependency 'GoogleMobileAdsMediationPangle', '~> 5.9.0.7.0'
   s.platform = :ios, '12.0'
 
   # Flutter.framework does not contain a i386 slice.
