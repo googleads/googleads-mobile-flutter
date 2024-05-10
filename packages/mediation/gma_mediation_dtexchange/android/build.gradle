@@ -50,7 +50,8 @@ android {
     }
 
     dependencies {
-        implementation 'com.google.ads.mediation:fyber:8.2.6.1'
+        implementation 'com.google.ads.mediation:fyber:8.2.7.0'
+        implementation 'androidx.core:core-ktx:1.8.0'
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
         testImplementation 'org.mockito:mockito-core:5.0.0'
     }
