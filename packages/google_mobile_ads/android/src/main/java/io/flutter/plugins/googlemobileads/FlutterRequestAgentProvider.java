@@ -7,7 +7,9 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
-/** Class that helps detect whether the news or game template is being used. */
+/**
+ * Class that helps detect whether the news or game template is being used.
+ */
 class FlutterRequestAgentProvider {
 
   static final String GAME_VERSION_KEY =
@@ -15,8 +17,10 @@ class FlutterRequestAgentProvider {
   static final String NEWS_VERSION_KEY =
       "io.flutter.plugins.googlemobileads.FLUTTER_NEWS_TEMPLATE_VERSION";
 
-  @Nullable private String newsTemplateVersion;
-  @Nullable private String gameTemplateVersion;
+  @Nullable
+  private String newsTemplateVersion;
+  @Nullable
+  private String gameTemplateVersion;
 
   FlutterRequestAgentProvider(Context context) {
     processGameAndNewsTemplateVersions(context);
@@ -29,7 +33,8 @@ class FlutterRequestAgentProvider {
         info = context
             .getApplicationContext()
             .getPackageManager()
-            .getApplicationInfo(context.getPackageName(), PackageManager.ApplicationInfoFlags.of(PackageManager.GET_META_DATA));
+            .getApplicationInfo(context.getPackageName(),
+                PackageManager.ApplicationInfoFlags.of(PackageManager.GET_META_DATA));
       } else {
         info = context
             .getApplicationContext()
