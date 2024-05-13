@@ -30,7 +30,8 @@ class FlutterRequestAgentProvider {
             context
                 .getApplicationContext()
                 .getPackageManager()
-                .getApplicationInfo(context.getPackageName(),
+                .getApplicationInfo(
+                    context.getPackageName(),
                     PackageManager.ApplicationInfoFlags.of(PackageManager.GET_META_DATA));
       } else {
         info =
