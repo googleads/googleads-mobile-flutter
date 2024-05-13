@@ -50,7 +50,7 @@ public class FlutterRequestAgentProviderTest {
     doReturn(mockContext).when(mockContext).getApplicationContext();
     doReturn(mockPackageManager).when(mockContext).getPackageManager();
     doReturn(PACKAGE_NAME).when(mockContext).getPackageName();
-    if (Build.VERSION.SDK_INT >= 33) {
+    if (Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
       doReturn(mockApplicationInfo)
           .when(mockPackageManager)
           .getApplicationInfo(
