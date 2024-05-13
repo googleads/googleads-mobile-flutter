@@ -17,10 +17,8 @@ class FlutterRequestAgentProvider {
   static final String NEWS_VERSION_KEY =
       "io.flutter.plugins.googlemobileads.FLUTTER_NEWS_TEMPLATE_VERSION";
 
-  @Nullable
-  private String newsTemplateVersion;
-  @Nullable
-  private String gameTemplateVersion;
+  @Nullable private String newsTemplateVersion;
+  @Nullable private String gameTemplateVersion;
 
   FlutterRequestAgentProvider(Context context) {
     processGameAndNewsTemplateVersions(context);
@@ -30,16 +28,18 @@ class FlutterRequestAgentProvider {
     try {
       ApplicationInfo info;
       if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-        info = context
-            .getApplicationContext()
-            .getPackageManager()
-            .getApplicationInfo(context.getPackageName(),
-                PackageManager.ApplicationInfoFlags.of(PackageManager.GET_META_DATA));
+        info =
+            context
+                .getApplicationContext()
+                .getPackageManager()
+                .getApplicationInfo(context.getPackageName(),
+                    PackageManager.ApplicationInfoFlags.of(PackageManager.GET_META_DATA));
       } else {
-        info = context
-            .getApplicationContext()
-            .getPackageManager()
-            .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+        info =
+            context
+                .getApplicationContext()
+                .getPackageManager()
+                .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
       }
       Bundle metaData = info.metaData;
       if (metaData != null) {
