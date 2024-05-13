@@ -7,9 +7,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
-/**
- * Class that helps detect whether the news or game template is being used.
- */
+/** Class that helps detect whether the news or game template is being used. */
 class FlutterRequestAgentProvider {
 
   static final String GAME_VERSION_KEY =
