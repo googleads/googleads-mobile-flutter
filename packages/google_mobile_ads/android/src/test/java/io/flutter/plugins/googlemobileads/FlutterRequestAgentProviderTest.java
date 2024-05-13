@@ -58,9 +58,7 @@ public class FlutterRequestAgentProviderTest {
     if (Build.VERSION.SDK_INT >= TIRAMISU) {
       doReturn(mockApplicationInfo)
           .when(mockPackageManager)
-          .getApplicationInfo(
-              eq(PACKAGE_NAME),
-              any());
+          .getApplicationInfo(eq(PACKAGE_NAME), any());
     } else {
       doReturn(mockApplicationInfo)
           .when(mockPackageManager)
