@@ -31,10 +31,6 @@ import 'package:mockito/mockito.dart' as _i1;
 /// See the documentation for Mockito's code generation for more information.
 class MockUserMessagingChannel extends _i1.Mock
     implements _i2.UserMessagingChannel {
-  MockUserMessagingChannel() {
-    _i1.throwOnMissingStub(this);
-  }
-
   @override
   void requestConsentInfoUpdate(
     _i3.ConsentRequestParameters? params,
@@ -60,6 +56,7 @@ class MockUserMessagingChannel extends _i1.Mock
           [],
         ),
         returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
       ) as _i5.Future<bool>);
 
   @override
@@ -69,6 +66,8 @@ class MockUserMessagingChannel extends _i1.Mock
           [],
         ),
         returnValue:
+            _i5.Future<_i4.ConsentStatus>.value(_i4.ConsentStatus.notRequired),
+        returnValueForMissingStub:
             _i5.Future<_i4.ConsentStatus>.value(_i4.ConsentStatus.notRequired),
       ) as _i5.Future<_i4.ConsentStatus>);
 
@@ -89,6 +88,7 @@ class MockUserMessagingChannel extends _i1.Mock
           [],
         ),
         returnValue: _i5.Future<bool>.value(false),
+        returnValueForMissingStub: _i5.Future<bool>.value(false),
       ) as _i5.Future<bool>);
 
   @override
@@ -100,6 +100,9 @@ class MockUserMessagingChannel extends _i1.Mock
             ),
             returnValue: _i5.Future<_i4.PrivacyOptionsRequirementStatus>.value(
                 _i4.PrivacyOptionsRequirementStatus.notRequired),
+            returnValueForMissingStub:
+                _i5.Future<_i4.PrivacyOptionsRequirementStatus>.value(
+                    _i4.PrivacyOptionsRequirementStatus.notRequired),
           ) as _i5.Future<_i4.PrivacyOptionsRequirementStatus>);
 
   @override
@@ -126,6 +129,7 @@ class MockUserMessagingChannel extends _i1.Mock
           [],
         ),
         returnValue: _i5.Future<_i7.FormError?>.value(),
+        returnValueForMissingStub: _i5.Future<_i7.FormError?>.value(),
       ) as _i5.Future<_i7.FormError?>);
 
   @override
@@ -151,6 +155,7 @@ class MockUserMessagingChannel extends _i1.Mock
           [],
         ),
         returnValue: _i5.Future<_i7.FormError?>.value(),
+        returnValueForMissingStub: _i5.Future<_i7.FormError?>.value(),
       ) as _i5.Future<_i7.FormError?>);
 
   @override
