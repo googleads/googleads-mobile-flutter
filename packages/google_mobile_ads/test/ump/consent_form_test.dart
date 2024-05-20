@@ -24,7 +24,7 @@ import 'package:mockito/mockito.dart';
 
 import 'consent_form_test.mocks.dart';
 
-@GenerateMocks([UserMessagingChannel])
+@GenerateNiceMocks(<MockSpec<Object>>[MockSpec<UserMessagingChannel>()])
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
