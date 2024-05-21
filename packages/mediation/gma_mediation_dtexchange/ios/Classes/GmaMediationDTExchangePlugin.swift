@@ -15,6 +15,10 @@ public class GmaMediationDTExchangePlugin: NSObject, FlutterPlugin, DTExchangePr
     let api : DTExchangePrivacyApi&NSObjectProtocol=GmaMediationDTExchangePlugin.init(dtExchangeApi: DTExchangePrivacyImpl())
     DTExchangePrivacyApiSetup.setUp(binaryMessenger: messenger, api: api)
   }
+  public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+    let messenger : FlutterBinaryMessenger = registrar.messenger()
+    DTExchangePrivacyApiSetup.setUp(binaryMessenger: messenger, api: nil)
+  }
 
   func setGDPRConsent(gdprConsent: Bool) throws {
     dtExchangeApi.setGDPRConsent(gdprConsent: gdprConsent)
