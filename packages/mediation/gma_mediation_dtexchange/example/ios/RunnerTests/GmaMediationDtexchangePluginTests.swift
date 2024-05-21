@@ -4,30 +4,30 @@ import XCTest
 @testable import gma_mediation_dtexchange
 
 class GmaMediationDtexchangePluginTests: XCTestCase {
-  func testSetGDPRConsent() {
+  func testSetLgpdConsent() {
     let dtExchangeFake = DTExchangePrivacyFake()
     let plugin = GmaMediationDTExchangePlugin.init(dtExchangeApi: dtExchangeFake)
 
     do {
-      try plugin.setGDPRConsent(gdprConsent: true)
+      try plugin.setLgpdConsent(wasConsentGiven: true)
     } catch {
-      fatalError("testSetGDPRConsent FAILED: setGDPRConsent did not complete.")
+      fatalError("testSetLgpdConsent FAILED: setLgpdConsent did not complete.")
     }
 
-    XCTAssertEqual(dtExchangeFake.gdprConsent, true)
+    XCTAssertEqual(dtExchangeFake.lgdpConsent, true)
   }
 
-  func testSetGDPRConsentString() {
+  func testClearLgpdConsentData() {
     let dtExchangeFake = DTExchangePrivacyFake()
     let plugin = GmaMediationDTExchangePlugin.init(dtExchangeApi: dtExchangeFake)
 
     do {
-      try plugin.setGDPRConsentString(gdprConsentString: "testString")
+      try plugin.clearLgpdConsentData()
     } catch {
-      fatalError("testSetGDPRConsentString FAILED: setGDPRConsentString did not complete.")
+      fatalError("testClearLgpdConsentData FAILED: clearLgpdConsentData did not complete.")
     }
 
-    XCTAssertEqual(dtExchangeFake.gdprString, "testString")
+    XCTAssertEqual(dtExchangeFake.clearLgdp, 1)
   }
 
   func testSetUSPrivacyString() {
@@ -42,28 +42,47 @@ class GmaMediationDtexchangePluginTests: XCTestCase {
 
     XCTAssertEqual(dtExchangeFake.usPrivacyString, "testString")
   }
+
+  func testClearUSPrivacyString() {
+    let dtExchangeFake = DTExchangePrivacyFake()
+    let plugin = GmaMediationDTExchangePlugin.init(dtExchangeApi: dtExchangeFake)
+
+    do {
+      try plugin.clearUSPrivacyString()
+    } catch {
+      fatalError("testClearUSPrivacyString FAILED: clearUSPrivacyString did not complete.")
+    }
+
+    XCTAssertEqual(dtExchangeFake.clearUSPrivacy, 1)
+  }
 }
 
 class DTExchangePrivacyFake : DTExchangePrivacyProtocol {
-  var gdprConsent: Bool
-  var gdprString: String
+  var lgdpConsent: Bool
+  var clearLgdp: Int
   var usPrivacyString: String
+  var clearUSPrivacy: Int
 
   init() {
-    gdprConsent = false
-    gdprString = ""
+    lgdpConsent = false
+    clearLgdp = 0
     usPrivacyString = ""
+    clearUSPrivacy = 0
   }
 
-  func setGDPRConsent(gdprConsent: Bool) {
-    self.gdprConsent = gdprConsent
+  func setLgpdConsent(wasConsentGiven: Bool) {
+    self.lgdpConsent = wasConsentGiven
   }
 
-  func setGDPRConsentString(gdprConsentString: String) {
-    self.gdprString = gdprConsentString
+  func clearLgpdConsentData() {
+    self.clearLgdp += 1
   }
 
   func setUSPrivacyString(usPrivacyString: String) {
     self.usPrivacyString = usPrivacyString
+  }
+
+  func clearUSPrivacyString() {
+    self.clearUSPrivacy += 1
   }
 }

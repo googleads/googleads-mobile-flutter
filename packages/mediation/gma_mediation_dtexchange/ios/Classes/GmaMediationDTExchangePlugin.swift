@@ -20,37 +20,47 @@ public class GmaMediationDTExchangePlugin: NSObject, FlutterPlugin, DTExchangePr
     DTExchangePrivacyApiSetup.setUp(binaryMessenger: messenger, api: nil)
   }
 
-  func setGDPRConsent(gdprConsent: Bool) throws {
-    dtExchangeApi.setGDPRConsent(gdprConsent: gdprConsent)
+  func setLgpdConsent(wasConsentGiven: Bool) throws {
+    dtExchangeApi.setLgpdConsent(wasConsentGiven: wasConsentGiven)
   }
 
-  func setGDPRConsentString(gdprConsentString: String) throws {
-    dtExchangeApi.setGDPRConsentString(gdprConsentString: gdprConsentString)
+  func clearLgpdConsentData() throws {
+    dtExchangeApi.clearLgpdConsentData()
   }
 
   func setUSPrivacyString(usPrivacyString: String) throws {
     dtExchangeApi.setUSPrivacyString(usPrivacyString: usPrivacyString)
   }
+
+  func clearUSPrivacyString() throws {
+    dtExchangeApi.clearUSPrivacyString()
+  }
 }
 
 protocol DTExchangePrivacyProtocol {
-  func setGDPRConsent(gdprConsent: Bool)
+  func setLgpdConsent(wasConsentGiven: Bool)
 
-  func setGDPRConsentString(gdprConsentString: String)
+  func clearLgpdConsentData()
 
   func setUSPrivacyString(usPrivacyString: String)
+
+  func clearUSPrivacyString()
 }
 
 class DTExchangePrivacyImpl : DTExchangePrivacyProtocol {
-  func setGDPRConsent(gdprConsent: Bool) {
-    IASDKCore.sharedInstance().gdprConsent = gdprConsent ? IAGDPRConsentType.given : IAGDPRConsentType.denied
+  func setLgpdConsent(wasConsentGiven: Bool) {
+    IASDKCore.sharedInstance().lgpdConsent = wasConsentGiven ? IALGPDConsentType.given : IALGPDConsentType.denied
   }
   
-  func setGDPRConsentString(gdprConsentString: String) {
-    IASDKCore.sharedInstance().gdprConsentString = gdprConsentString
+  func clearLgpdConsentData() {
+    IASDKCore.sharedInstance().clearLGPDConsentData()
   }
-  
+
   func setUSPrivacyString(usPrivacyString: String) {
     IASDKCore.sharedInstance().ccpaString = usPrivacyString
+  }
+
+  func clearUSPrivacyString() {
+    IASDKCore.sharedInstance().ccpaString = nil
   }
 }
