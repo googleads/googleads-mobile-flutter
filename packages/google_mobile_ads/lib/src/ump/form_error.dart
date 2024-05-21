@@ -37,4 +37,7 @@ class FormError {
         errorCode == other.errorCode &&
         message == other.message;
   }
+
+  @override
+  int get hashCode => Object.hash(errorCode, message);
 }

@@ -14,20 +14,21 @@
 
 import 'package:gma_mediation_applovin/applovin_sdk_api.g.dart';
 
+/// This class has entrypoint to call AppLovin's SDK APIs.
 class GmaMediationApplovin {
-  static Future<void> setHasUserConsent(bool hasUserConsent) async {
+  Future<void> setHasUserConsent(bool hasUserConsent) async {
     AppLovinSDKApi().setHasUserConsent(hasUserConsent);
   }
 
-  static Future<void> setIsAgeRestrictedUser(bool isAgeRestrictedUser) async {
+  Future<void> setIsAgeRestrictedUser(bool isAgeRestrictedUser) async {
     AppLovinSDKApi().setIsAgeRestrictedUser(isAgeRestrictedUser);
   }
 
-  static Future<void> setDoNotSell(bool doNotSell) async {
+  Future<void> setDoNotSell(bool doNotSell) async {
     AppLovinSDKApi().setDoNotSell(doNotSell);
   }
 
-  static Future<void> initializeSdk(String sdkKey) async {
+  Future<void> initializeSdk(String sdkKey) async {
     AppLovinSDKApi().initializeSdk(sdkKey);
   }
 }

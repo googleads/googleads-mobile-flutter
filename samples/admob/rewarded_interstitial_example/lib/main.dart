@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:rewarded_interstitial_example/ad_dialog.dart';
 
+import 'consent_manager.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
   runApp(const MaterialApp(
     home: RewardedInterstitialExample(),
   ));
@@ -23,8 +24,14 @@ class RewardedInterstitialExample extends StatefulWidget {
 
 class RewardedInterstitialExampleState
     extends State<RewardedInterstitialExample> {
-  final CountdownTimer _countdownTimer = CountdownTimer(10);
+  static const privacySettingsText = 'Privacy Settings';
+
+  final _consentManager = ConsentManager();
+  final CountdownTimer _countdownTimer = CountdownTimer(5);
   var _coins = 0;
+  var _gamePaused = false;
+  var _gameOver = false;
+  var _isMobileAdsInitializeCalled = false;
   RewardedInterstitialAd? _rewardedInterstitialAd;
 
   final String _adUnitId = Platform.isAndroid
@@ -35,31 +42,69 @@ class RewardedInterstitialExampleState
   void initState() {
     super.initState();
 
-    _countdownTimer.addListener(() => setState(() {
+    _consentManager.gatherConsent((consentGatheringError) {
+      if (consentGatheringError != null) {
+        // Consent not obtained in current session.
+        debugPrint(
+            "${consentGatheringError.errorCode}: ${consentGatheringError
+                .message}");
+      }
+
+      // Kick off the first play of the "game".
+      _startNewGame();
+
+      // Attempt to initialize the Mobile Ads SDK.
+      _initializeMobileAdsSDK();
+    });
+
+    // This sample attempts to load ads using consent obtained in the previous session.
+    _initializeMobileAdsSDK();
+
+    // Show an alert dialog when the timer reaches zero.
+    _countdownTimer.addListener(() =>
+        setState(() {
           if (_countdownTimer.isComplete) {
             showDialog(
                 context: context,
-                builder: (context) => AdDialog(showAd: () {
+                builder: (context) =>
+                    AdDialog(showAd: () {
+                      _gameOver = true;
                       _showAdCallback();
                     }));
             _coins += 1;
           }
         }));
-    _startNewGame();
   }
 
   void _startNewGame() {
-    _loadAd();
     _countdownTimer.start();
+    _gameOver = false;
+    _gamePaused = false;
+  }
+
+  void _pauseGame() {
+    if (_gameOver || _gamePaused) {
+      return;
+    }
+    _countdownTimer.pause();
+    _gamePaused = true;
+  }
+
+  void _resumeGame() {
+    if (_gameOver || !_gamePaused) {
+      return;
+    }
+    _countdownTimer.resume();
+    _gamePaused = false;
   }
 
   void _showAdCallback() {
     _rewardedInterstitialAd?.show(
         onUserEarnedReward: (AdWithoutView view, RewardItem rewardItem) {
-      // ignore: avoid_print
-      print('Reward amount: ${rewardItem.amount}');
-      setState(() => _coins += rewardItem.amount.toInt());
-    });
+          // ignore: avoid_print
+          print('Reward amount: ${rewardItem.amount}');
+          setState(() => _coins += rewardItem.amount.toInt());
+        });
   }
 
   @override
@@ -68,7 +113,10 @@ class RewardedInterstitialExampleState
       title: 'Rewarded Interstitial Example',
       home: Scaffold(
           appBar: AppBar(
-            title: const Text('Rewarded Interstitial Example'),
+              title: const Text('Rewarded Interstitial Example'),
+              actions: _isMobileAdsInitializeCalled
+                  ? _privacySettingsAppBarAction()
+                  : null
           ),
           body: Stack(
             children: [
@@ -79,7 +127,7 @@ class RewardedInterstitialExampleState
                     child: Text(
                       'The Impossible Game',
                       style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                   )),
               Align(
@@ -95,6 +143,7 @@ class RewardedInterstitialExampleState
                         child: TextButton(
                           onPressed: () {
                             _startNewGame();
+                            _loadAd();
                           },
                           child: const Text('Play Again'),
                         ),
@@ -112,15 +161,56 @@ class RewardedInterstitialExampleState
     );
   }
 
+  List<Widget> _privacySettingsAppBarAction() {
+    return <Widget>[
+      // Regenerate the options menu to include a privacy setting.
+      FutureBuilder(
+          future: _consentManager.isPrivacyOptionsRequired(),
+          builder: (context, snapshot) {
+            final bool visibility = snapshot.data ?? false;
+            return Visibility(
+                visible: visibility,
+                child: PopupMenuButton<String>(
+                  onSelected: (String result) {
+                    if (result == privacySettingsText) {
+                      _pauseGame();
+                      _consentManager.showPrivacyOptionsForm((formError) {
+                        if (formError != null) {
+                          debugPrint(
+                              "${formError.errorCode}: ${formError.message}");
+                        }
+                        _resumeGame();
+                      });
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                  <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                        value: privacySettingsText,
+                        child: Text(privacySettingsText))
+                  ],
+                ));
+          })
+    ];
+  }
+
+
   /// Loads a rewarded interstitial ad.
-  void _loadAd() {
+  void _loadAd() async {
+    // Only load an ad if the Mobile Ads SDK has gathered consent aligned with
+    // the app's configured messages.
+    var canRequestAds = await _consentManager.canRequestAds();
+    if (!canRequestAds) {
+      return;
+    }
+
     RewardedInterstitialAd.load(
         adUnitId: _adUnitId,
         request: const AdRequest(),
         rewardedInterstitialAdLoadCallback:
-            RewardedInterstitialAdLoadCallback(onAdLoaded: (ad) {
+        RewardedInterstitialAdLoadCallback(onAdLoaded: (ad) {
           ad.fullScreenContentCallback = FullScreenContentCallback(
-              // Called when the ad showed the full screen content.
+            // Called when the ad showed the full screen content.
               onAdShowedFullScreenContent: (ad) {},
               // Called when an impression occurs on the ad.
               onAdImpression: (ad) {},
@@ -141,6 +231,26 @@ class RewardedInterstitialExampleState
           // ignore: avoid_print
           print('RewardedInterstitialAd failed to load: $error');
         }));
+  }
+
+  /// Initialize the Mobile Ads SDK if the SDK has gathered consent aligned with
+  /// the app's configured messages.
+  void _initializeMobileAdsSDK() async {
+    if (_isMobileAdsInitializeCalled) {
+      return;
+    }
+
+    var canRequestAds = await _consentManager.canRequestAds();
+    if (canRequestAds) {
+      setState(() {
+        _isMobileAdsInitializeCalled = true;
+      });
+
+      // Initialize the Mobile Ads SDK.
+      MobileAds.instance.initialize();
+      // Load an ad.
+      _loadAd();
+    }
   }
 
   @override

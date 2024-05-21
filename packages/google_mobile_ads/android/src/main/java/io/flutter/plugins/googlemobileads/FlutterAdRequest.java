@@ -36,7 +36,11 @@ class FlutterAdRequest {
   @Nullable private final List<String> neighboringContentUrls;
   @Nullable private final Integer httpTimeoutMillis;
   @Nullable private final String mediationExtrasIdentifier;
-  @Nullable private final MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+
+  @SuppressWarnings("deprecation")
+  @Nullable
+  private final MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+
   @Nullable private final Map<String, String> adMobExtras;
   @NonNull private final String requestAgent;
   @Nullable private final List<FlutterMediationExtras> mediationExtras;
@@ -48,7 +52,11 @@ class FlutterAdRequest {
     @Nullable private List<String> neighboringContentUrls;
     @Nullable private Integer httpTimeoutMillis;
     @Nullable private String mediationExtrasIdentifier;
-    @Nullable private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+
+    @SuppressWarnings("deprecation")
+    @Nullable
+    private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
+
     @Nullable private Map<String, String> adMobExtras;
     @NonNull private String requestAgent;
 
@@ -97,6 +105,7 @@ class FlutterAdRequest {
     }
 
     @CanIgnoreReturnValue
+    @SuppressWarnings("deprecation")
     Builder setMediationNetworkExtrasProvider(
         @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
       this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
@@ -145,6 +154,7 @@ class FlutterAdRequest {
       return mediationExtrasIdentifier;
     }
 
+    @SuppressWarnings("deprecation")
     @Nullable
     protected MediationNetworkExtrasProvider getMediationNetworkExtrasProvider() {
       return mediationNetworkExtrasProvider;
@@ -180,6 +190,7 @@ class FlutterAdRequest {
     }
   }
 
+  @SuppressWarnings("deprecation")
   protected FlutterAdRequest(
       @Nullable List<String> keywords,
       @Nullable String contentUrl,

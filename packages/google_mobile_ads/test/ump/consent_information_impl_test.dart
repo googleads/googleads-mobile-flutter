@@ -109,5 +109,25 @@ void main() {
       expect(errorCompleter.isCompleted, true);
       expect(responseError, formError);
     });
+
+    test('canRequestAds()', () async {
+      when(mockChannel.canRequestAds()).thenAnswer((_) => Future.value(true));
+
+      bool canRequestAds = await consentInfo.canRequestAds();
+
+      verify(mockChannel.canRequestAds());
+      expect(canRequestAds, true);
+    });
+
+    test('getPrivacyOptionsRequirementStatus()', () async {
+      when(mockChannel.getPrivacyOptionsRequirementStatus()).thenAnswer(
+          (_) => Future.value(PrivacyOptionsRequirementStatus.required));
+
+      PrivacyOptionsRequirementStatus status =
+          await consentInfo.getPrivacyOptionsRequirementStatus();
+
+      verify(mockChannel.getPrivacyOptionsRequirementStatus());
+      expect(status, PrivacyOptionsRequirementStatus.required);
+    });
   });
 }

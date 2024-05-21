@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 enum CountdownState {
   notStarted,
   active,
+  paused,
   ended,
 }
 
@@ -13,19 +14,36 @@ class CountdownTimer extends ChangeNotifier {
   late var timeLeft = _countdownTime;
   var _countdownState = CountdownState.notStarted;
   bool get isComplete => _countdownState == CountdownState.ended;
+  Timer? _timer;
 
   CountdownTimer(this._countdownTime);
 
   void start() {
     timeLeft = _countdownTime;
-    _resumeTimer();
+    _startTimer();
     _countdownState = CountdownState.active;
 
     notifyListeners();
   }
 
-  void _resumeTimer() {
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+  void resume() {
+    if (_countdownState != CountdownState.paused) {
+      return;
+    }
+    _startTimer();
+    _countdownState = CountdownState.active;
+  }
+
+  void pause() {
+    if (_countdownState != CountdownState.active) {
+      return;
+    }
+    _timer?.cancel();
+    _countdownState = CountdownState.paused;
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       timeLeft--;
 
       if (timeLeft == 0) {

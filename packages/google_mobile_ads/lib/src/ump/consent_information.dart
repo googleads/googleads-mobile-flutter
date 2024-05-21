@@ -61,6 +61,24 @@ abstract class ConsentInformation {
   /// the platform API has been called.
   Future<void> reset();
 
+  /// Indicates whether the app has completed the necessary steps for gathering updated user consent.
+  Future<bool> canRequestAds();
+
+  /// Indicates the privacy options requirement status as a [PrivacyOptionsRequirementStatus].
+  Future<PrivacyOptionsRequirementStatus> getPrivacyOptionsRequirementStatus();
+
   /// The static [ConsentInformation] instance.
   static ConsentInformation instance = ConsentInformationImpl();
+}
+
+/// Values indicate whether a privacy options button is required.
+enum PrivacyOptionsRequirementStatus {
+  /// Privacy options entry point is not required.
+  notRequired,
+
+  /// Privacy options entry point is required.
+  required,
+
+  /// Privacy options requirement status is unknown.
+  unknown;
 }

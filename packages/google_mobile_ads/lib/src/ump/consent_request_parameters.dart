@@ -34,6 +34,10 @@ class ConsentRequestParameters {
         tagForUnderAgeOfConsent == other.tagForUnderAgeOfConsent &&
         consentDebugSettings == other.consentDebugSettings;
   }
+
+  @override
+  int get hashCode =>
+      Object.hash(tagForUnderAgeOfConsent, consentDebugSettings);
 }
 
 /// Debug settings to hardcode in test requests.
@@ -55,6 +59,9 @@ class ConsentDebugSettings {
         debugGeography == other.debugGeography &&
         listEquals(testIdentifiers, other.testIdentifiers);
   }
+
+  @override
+  int get hashCode => Object.hash(debugGeography, testIdentifiers);
 }
 
 /// Debug values for testing geography.
