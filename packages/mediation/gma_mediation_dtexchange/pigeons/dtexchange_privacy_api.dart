@@ -30,15 +30,17 @@ import 'package:pigeon/pigeon.dart';
   ),
 )
 @HostApi()
-
 /// The generated classes set the channels to call the methods in the corresponding kotlin DTExchangePrivacyApi interface and swift DTExchangePrivacyApi protocol from the dart layer.
 abstract class DTExchangePrivacyApi {
-  /// Used to configure GDPR on the Android or iOS DTExchange SDK
-  void setGDPRConsent(bool gdprConsent);
+  /// Used to configure LGDP on the Android or iOS DTExchange SDK.
+  void setLgpdConsent(bool wasConsentGiven);
 
-  /// Used to configure GDPR String on the Android or iOS DTExchange SDK
-  void setGDPRConsentString(String gdprConsentString);
+  /// Used to clear the LGDP flag on the Android or iOS DTExchange SDK.
+  void clearLgpdConsentData();
 
-  /// Used to configure consent to Sell Personal Information on the Android or iOS DTExchange SDK
+  /// Used to configure consent to Sell Personal Information on the Android or iOS DTExchange SDK.
   void setUSPrivacyString(String usPrivacyString);
+
+  /// Used to clear the US Privacy flag on the Android or iOS DTExchange SDK.
+  void clearUSPrivacyString();
 }

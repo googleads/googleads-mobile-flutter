@@ -13,15 +13,19 @@ class GmaMediationDTExchangePlugin: FlutterPlugin, DTExchangePrivacyApi {
     DTExchangePrivacyApi.setUp(binding.binaryMessenger, null)
   }
 
-  override fun setGDPRConsent(gdprConsent: Boolean) {
-    InneractiveAdManager.setGdprConsent(gdprConsent)
+  override fun setLgpdConsent(wasConsentGiven: Boolean) {
+    InneractiveAdManager.setLgpdConsent(wasConsentGiven)
   }
 
-  override fun setGDPRConsentString(gdprConsentString: String) {
-    InneractiveAdManager.setGdprConsentString(gdprConsentString)
+  override fun clearLgpdConsentData() {
+    InneractiveAdManager.clearLgpdConsentData()
   }
 
   override fun setUSPrivacyString(usPrivacyString: String) {
     InneractiveAdManager.setUSPrivacyString(usPrivacyString)
+  }
+
+  override fun clearUSPrivacyString() {
+    InneractiveAdManager.clearUSPrivacyString()
   }
 }

@@ -10,40 +10,40 @@ import org.mockito.kotlin.eq
 @RunWith(AndroidJUnit4::class)
 internal class GmaMediationDtexchangePluginTest {
   @Test
-  fun setGDPRConsent_withTrueValue_invokesSetGdprConsentWithTrueValue() {
+  fun setLgpdConsent_withTrueValue_invokesSetLgpdConsentWithTrueValue() {
     val plugin = GmaMediationDTExchangePlugin()
     mockStatic(InneractiveAdManager::class.java).use { mockedDTExchangeAdManager ->
 
-      plugin.setGDPRConsent(true)
+      plugin.setLgpdConsent(true)
 
       mockedDTExchangeAdManager.verify {
-        InneractiveAdManager.setGdprConsent(eq(true))
+        InneractiveAdManager.setLgpdConsent(eq(true))
       }
     }
   }
 
   @Test
-  fun setGDPRConsent_withFalseValue_invokesSetGdprConsentWithFalseValue() {
+  fun setLgpdConsent_withFalseValue_invokesSetLgpdConsentWithFalseValue() {
     val plugin = GmaMediationDTExchangePlugin()
     mockStatic(InneractiveAdManager::class.java).use { mockedDTExchangeAdManager ->
 
-      plugin.setGDPRConsent(false)
+      plugin.setLgpdConsent(false)
 
       mockedDTExchangeAdManager.verify {
-        InneractiveAdManager.setGdprConsent(eq(false))
+        InneractiveAdManager.setLgpdConsent(eq(false))
       }
     }
   }
 
   @Test
-  fun setGDPRConsentString_invokesSetGdprConsentString() {
+  fun clearLgpdConsentData_invokesClearLgpdConsentData() {
     val plugin = GmaMediationDTExchangePlugin()
     mockStatic(InneractiveAdManager::class.java).use { mockedDTExchangeAdManager ->
 
-      plugin.setGDPRConsentString(TEST_CONSENT_STRING)
+      plugin.clearLgpdConsentData()
 
       mockedDTExchangeAdManager.verify {
-        InneractiveAdManager.setGdprConsentString(eq(TEST_CONSENT_STRING))
+        InneractiveAdManager.clearLgpdConsentData()
       }
     }
   }
@@ -57,6 +57,19 @@ internal class GmaMediationDtexchangePluginTest {
 
       mockedDTExchangeAdManager.verify {
         InneractiveAdManager.setUSPrivacyString(eq(TEST_CONSENT_STRING))
+      }
+    }
+  }
+
+  @Test
+  fun clearUSPrivacyString_invokesClearUSPrivacyString() {
+    val plugin = GmaMediationDTExchangePlugin()
+    mockStatic(InneractiveAdManager::class.java).use { mockedDTExchangeAdManager ->
+
+      plugin.clearUSPrivacyString()
+
+      mockedDTExchangeAdManager.verify {
+        InneractiveAdManager.clearUSPrivacyString()
       }
     }
   }
