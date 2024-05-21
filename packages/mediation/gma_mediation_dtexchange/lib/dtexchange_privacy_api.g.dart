@@ -20,25 +20,30 @@ class DTExchangePrivacyApi {
   /// Constructor for [DTExchangePrivacyApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  DTExchangePrivacyApi({BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
+  DTExchangePrivacyApi(
+      {BinaryMessenger? binaryMessenger, String messageChannelSuffix = ''})
       : __pigeon_binaryMessenger = binaryMessenger,
-        __pigeon_messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+        __pigeon_messageChannelSuffix =
+            messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
   final BinaryMessenger? __pigeon_binaryMessenger;
 
-  static const MessageCodec<Object?> pigeonChannelCodec = StandardMessageCodec();
+  static const MessageCodec<Object?> pigeonChannelCodec =
+      StandardMessageCodec();
 
   final String __pigeon_messageChannelSuffix;
 
   /// Used to configure LGDP on the Android or iOS DTExchange SDK.
   Future<void> setLgpdConsent(bool wasConsentGiven) async {
-    final String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setLgpdConsent$__pigeon_messageChannelSuffix';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    final String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setLgpdConsent$__pigeon_messageChannelSuffix';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
     );
-    final List<Object?>? __pigeon_replyList =
-        await __pigeon_channel.send(<Object?>[wasConsentGiven]) as List<Object?>?;
+    final List<Object?>? __pigeon_replyList = await __pigeon_channel
+        .send(<Object?>[wasConsentGiven]) as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -54,8 +59,10 @@ class DTExchangePrivacyApi {
 
   /// Used to clear the LGDP flag on the Android or iOS DTExchange SDK.
   Future<void> clearLgpdConsentData() async {
-    final String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.clearLgpdConsentData$__pigeon_messageChannelSuffix';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    final String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.clearLgpdConsentData$__pigeon_messageChannelSuffix';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
@@ -77,14 +84,16 @@ class DTExchangePrivacyApi {
 
   /// Used to configure consent to Sell Personal Information on the Android or iOS DTExchange SDK.
   Future<void> setUSPrivacyString(String usPrivacyString) async {
-    final String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setUSPrivacyString$__pigeon_messageChannelSuffix';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    final String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.setUSPrivacyString$__pigeon_messageChannelSuffix';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,
     );
-    final List<Object?>? __pigeon_replyList =
-        await __pigeon_channel.send(<Object?>[usPrivacyString]) as List<Object?>?;
+    final List<Object?>? __pigeon_replyList = await __pigeon_channel
+        .send(<Object?>[usPrivacyString]) as List<Object?>?;
     if (__pigeon_replyList == null) {
       throw _createConnectionError(__pigeon_channelName);
     } else if (__pigeon_replyList.length > 1) {
@@ -100,8 +109,10 @@ class DTExchangePrivacyApi {
 
   /// Used to clear the US Privacy flag on the Android or iOS DTExchange SDK.
   Future<void> clearUSPrivacyString() async {
-    final String __pigeon_channelName = 'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.clearUSPrivacyString$__pigeon_messageChannelSuffix';
-    final BasicMessageChannel<Object?> __pigeon_channel = BasicMessageChannel<Object?>(
+    final String __pigeon_channelName =
+        'dev.flutter.pigeon.gma_mediation_dtexchange.DTExchangePrivacyApi.clearUSPrivacyString$__pigeon_messageChannelSuffix';
+    final BasicMessageChannel<Object?> __pigeon_channel =
+        BasicMessageChannel<Object?>(
       __pigeon_channelName,
       pigeonChannelCodec,
       binaryMessenger: __pigeon_binaryMessenger,

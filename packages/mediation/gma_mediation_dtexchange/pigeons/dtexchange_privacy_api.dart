@@ -30,6 +30,7 @@ import 'package:pigeon/pigeon.dart';
   ),
 )
 @HostApi()
+
 /// The generated classes set the channels to call the methods in the corresponding kotlin DTExchangePrivacyApi interface and swift DTExchangePrivacyApi protocol from the dart layer.
 abstract class DTExchangePrivacyApi {
   /// Used to configure LGDP on the Android or iOS DTExchange SDK.
