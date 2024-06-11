@@ -29,7 +29,7 @@ android {
         namespace 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmonetize'
     }
 
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
