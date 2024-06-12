@@ -22,7 +22,7 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
 
     if (project.android.hasProperty('namespace')) {
         namespace 'io.flutter.plugins.googlemobileads'
