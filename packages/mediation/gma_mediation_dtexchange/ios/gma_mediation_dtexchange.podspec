@@ -18,6 +18,7 @@ Mediation Adapter for DT Exchange to use with Google Mobile Ads.
   s.dependency 'Flutter'
   s.dependency 'GoogleMobileAdsMediationFyber', '~> 8.2.8.0'
   s.platform = :ios, '12.0'
+  s.static_framework = true
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
