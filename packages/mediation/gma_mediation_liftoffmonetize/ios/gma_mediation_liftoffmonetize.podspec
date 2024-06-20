@@ -18,6 +18,7 @@ Mediation Adapter for Liftoff Monetize to use with Google Mobile Ads.
   s.dependency 'GoogleMobileAdsMediationVungle', '~>7.3.2.0'
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
+  s.static_framework = true
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
