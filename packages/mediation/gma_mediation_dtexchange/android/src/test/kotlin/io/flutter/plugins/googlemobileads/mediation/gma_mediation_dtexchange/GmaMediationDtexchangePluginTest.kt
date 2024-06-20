@@ -1,27 +1,80 @@
 package io.flutter.plugins.googlemobileads.mediation.gma_mediation_dtexchange
 
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
-import kotlin.test.Test
-import org.mockito.Mockito
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.fyber.inneractive.sdk.external.InneractiveAdManager
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mockito.mockStatic
+import org.mockito.kotlin.eq
 
-/*
- * This demonstrates a simple unit test of the Kotlin portion of this plugin's implementation.
- *
- * Once you have built the plugin's example app, you can run these tests from the command
- * line by running `./gradlew testDebugUnitTest` in the `example/android/` directory, or
- * you can run them directly from IDEs that support JUnit such as Android Studio.
- */
-
+@RunWith(AndroidJUnit4::class)
 internal class GmaMediationDtexchangePluginTest {
   @Test
-  fun onMethodCall_getPlatformVersion_returnsExpectedValue() {
-    val plugin = GmaMediationDtexchangePlugin()
+  fun setLgpdConsent_withTrueValue_invokesSetLgpdConsentWithTrueValue() {
+    val plugin = GmaMediationDTExchangePlugin()
+    mockStatic(InneractiveAdManager::class.java).use { mockedDTExchangeAdManager ->
 
-    val call = MethodCall("getPlatformVersion", null)
-    val mockResult: MethodChannel.Result = Mockito.mock(MethodChannel.Result::class.java)
-    plugin.onMethodCall(call, mockResult)
+      plugin.setLgpdConsent(true)
 
-    Mockito.verify(mockResult).success("Android " + android.os.Build.VERSION.RELEASE)
+      mockedDTExchangeAdManager.verify {
+        InneractiveAdManager.setLgpdConsent(eq(true))
+      }
+    }
+  }
+
+  @Test
+  fun setLgpdConsent_withFalseValue_invokesSetLgpdConsentWithFalseValue() {
+    val plugin = GmaMediationDTExchangePlugin()
+    mockStatic(InneractiveAdManager::class.java).use { mockedDTExchangeAdManager ->
+
+      plugin.setLgpdConsent(false)
+
+      mockedDTExchangeAdManager.verify {
+        InneractiveAdManager.setLgpdConsent(eq(false))
+      }
+    }
+  }
+
+  @Test
+  fun clearLgpdConsentData_invokesClearLgpdConsentData() {
+    val plugin = GmaMediationDTExchangePlugin()
+    mockStatic(InneractiveAdManager::class.java).use { mockedDTExchangeAdManager ->
+
+      plugin.clearLgpdConsentData()
+
+      mockedDTExchangeAdManager.verify {
+        InneractiveAdManager.clearLgpdConsentData()
+      }
+    }
+  }
+
+  @Test
+  fun setUSPrivacyString_invokesSetUSPrivacyString() {
+    val plugin = GmaMediationDTExchangePlugin()
+    mockStatic(InneractiveAdManager::class.java).use { mockedDTExchangeAdManager ->
+
+      plugin.setUSPrivacyString(TEST_CONSENT_STRING)
+
+      mockedDTExchangeAdManager.verify {
+        InneractiveAdManager.setUSPrivacyString(eq(TEST_CONSENT_STRING))
+      }
+    }
+  }
+
+  @Test
+  fun clearUSPrivacyString_invokesClearUSPrivacyString() {
+    val plugin = GmaMediationDTExchangePlugin()
+    mockStatic(InneractiveAdManager::class.java).use { mockedDTExchangeAdManager ->
+
+      plugin.clearUSPrivacyString()
+
+      mockedDTExchangeAdManager.verify {
+        InneractiveAdManager.clearUSPrivacyString()
+      }
+    }
+  }
+
+  companion object {
+    const val TEST_CONSENT_STRING = "testConsentString"
   }
 }

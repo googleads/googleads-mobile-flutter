@@ -14,10 +14,11 @@ dependencies:
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
-  flutter_lints: ^3.0.0
+  flutter_lints: ^4.0.0
   flutter_test:
     sdk: flutter
   lint: ^2.3.0
+  pigeon: ^19.0.0
 
 flutter:
   plugin:
