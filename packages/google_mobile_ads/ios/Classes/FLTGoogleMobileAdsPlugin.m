@@ -223,14 +223,25 @@
 #pragma clang diagnostic pop
   }
 
-  // Get the presented view controller. This fixes an issue in the add to app
-  // case: https://github.com/googleads/googleads-mobile-flutter/issues/700
-  UIViewController *presentedViewController = root;
-  while (presentedViewController.presentedViewController) {
-    presentedViewController = presentedViewController.presentedViewController;
-  }
-  return presentedViewController;
+    return [topViewControllerWithRootViewController: root];
 }
+
+- (UIViewController*)topViewControllerWithRootViewController:(UIViewController*)rootViewController {
+    
+    if ([rootViewController isKindOfClass:[UITabBarController class]]) {
+        UITabBarController* tabBarController = (UITabBarController*)rootViewController;
+        return [self topViewControllerWithRootViewController:tabBarController.selectedViewController];
+        
+    } else if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+        UINavigationController* navigationController = (UINavigationController*)rootViewController;
+        return [self topViewControllerWithRootViewController:navigationController.visibleViewController];
+        
+    } else {
+        return rootViewController;
+    }
+
+}
+
 
 - (void)handleMethodCall:(FlutterMethodCall *)call
                   result:(FlutterResult)result {
