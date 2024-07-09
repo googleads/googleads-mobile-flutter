@@ -148,13 +148,14 @@ class InterstitialExampleState extends State<InterstitialExample> {
                   ))
               .toList(),
           onSelected: (item) {
+            _pauseGame();
             switch (item.value) {
               case 0:
                 MobileAds.instance.openAdInspector((error) {
                   // Error will be non-null if ad inspector closed due to an error.
+                  _resumeGame();
                 });
               case 1:
-                _pauseGame();
                 _consentManager.showPrivacyOptionsForm((formError) {
                   if (formError != null) {
                     debugPrint("${formError.errorCode}: ${formError.message}");
