@@ -22,7 +22,7 @@ class InterstitialExample extends StatefulWidget {
   InterstitialExampleState createState() => InterstitialExampleState();
 }
 
-class InterstitialExampleState extends State<InterstitialExample> with WidgetsBindingObserver {
+class InterstitialExampleState extends State<InterstitialExample> {
   InterstitialAd? _interstitialAd;
   final _consentManager = ConsentManager();
   final _gameLength = 5;
@@ -40,9 +40,6 @@ class InterstitialExampleState extends State<InterstitialExample> with WidgetsBi
   @override
   void initState() {
     super.initState();
-
-    // Observe lifecycle events
-    WidgetsBinding.instance.addObserver(this);
 
     _consentManager.gatherConsent((consentGatheringError) {
       if (consentGatheringError != null) {
@@ -157,10 +154,12 @@ class InterstitialExampleState extends State<InterstitialExample> with WidgetsBi
                   // Error will be non-null if ad inspector closed due to an error.
                 });
               case 1:
+                _pauseGame();
                 _consentManager.showPrivacyOptionsForm((formError) {
                   if (formError != null) {
                     debugPrint("${formError.errorCode}: ${formError.message}");
                   }
+                  _resumeGame();
                 });
             }
           })
@@ -267,23 +266,8 @@ class InterstitialExampleState extends State<InterstitialExample> with WidgetsBi
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
-    switch (state) {
-      case AppLifecycleState.resumed:
-        _resumeGame();
-      case AppLifecycleState.paused:
-        _pauseGame();
-      default:
-        break;
-    }
-  }
-
-  @override
   void dispose() {
     _interstitialAd?.dispose();
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 }
