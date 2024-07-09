@@ -1,4 +1,4 @@
-// Example app bar class.
+/// Example app bar class.
 class AppBarItem {
   static const adInpsectorText = 'Ad Inspector';
 
