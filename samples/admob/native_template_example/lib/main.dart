@@ -63,8 +63,7 @@ class NativeExampleState extends State<NativeExample> {
         title: 'Native Example',
         home: Scaffold(
             appBar: AppBar(
-                title: const Text('Native Example'),
-                actions: _appBarActions()),
+                title: const Text('Native Example'), actions: _appBarActions()),
             body: SizedBox(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
