@@ -1,9 +1,11 @@
-import 'countdown_timer.dart';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'app_bar_item.dart';
 import 'consent_manager.dart';
+import 'countdown_timer.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +14,7 @@ void main() {
   ));
 }
 
-/// A simple app that loads a rewarded ad.
+/// An example app that loads a rewarded ad.
 class RewardedExample extends StatefulWidget {
   const RewardedExample({super.key});
 
@@ -21,14 +23,13 @@ class RewardedExample extends StatefulWidget {
 }
 
 class RewardedExampleState extends State<RewardedExample> {
-  static const privacySettingsText = 'Privacy Settings';
-
   final _consentManager = ConsentManager();
   final CountdownTimer _countdownTimer = CountdownTimer();
   var _showWatchVideoButton = false;
   var _gamePaused = false;
   var _gameOver = false;
   var _isMobileAdsInitializeCalled = false;
+  var _isPrivacyOptionsRequired = false;
   var _coins = 0;
   RewardedAd? _rewardedAd;
 
@@ -49,6 +50,9 @@ class RewardedExampleState extends State<RewardedExample> {
 
       // Kick off the first play of the "game".
       _startNewGame();
+
+      // Check if a privacy options entry point is required.
+      _getIsPrivacyOptionsRequired();
 
       // Attempt to initialize the Mobile Ads SDK.
       _initializeMobileAdsSDK();
@@ -97,10 +101,7 @@ class RewardedExampleState extends State<RewardedExample> {
       title: 'Rewarded Example',
       home: Scaffold(
           appBar: AppBar(
-              title: const Text('Rewarded Example'),
-              actions: _isMobileAdsInitializeCalled
-                  ? _privacySettingsAppBarAction()
-                  : null),
+              title: const Text('Rewarded Example'), actions: _appBarActions()),
           body: Stack(
             children: [
               const Align(
@@ -161,35 +162,39 @@ class RewardedExampleState extends State<RewardedExample> {
     );
   }
 
-  List<Widget> _privacySettingsAppBarAction() {
+  List<Widget> _appBarActions() {
+    var array = [AppBarItem(AppBarItem.adInpsectorText, 0)];
+
+    if (_isPrivacyOptionsRequired) {
+      array.add(AppBarItem(AppBarItem.privacySettingsText, 1));
+    }
+
     return <Widget>[
-      // Regenerate the options menu to include a privacy setting.
-      FutureBuilder(
-          future: _consentManager.isPrivacyOptionsRequired(),
-          builder: (context, snapshot) {
-            final bool visibility = snapshot.data ?? false;
-            return Visibility(
-                visible: visibility,
-                child: PopupMenuButton<String>(
-                  onSelected: (String result) {
-                    if (result == privacySettingsText) {
-                      _pauseGame();
-                      _consentManager.showPrivacyOptionsForm((formError) {
-                        if (formError != null) {
-                          debugPrint(
-                              "${formError.errorCode}: ${formError.message}");
-                        }
-                        _resumeGame();
-                      });
-                    }
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(
-                        value: privacySettingsText,
-                        child: Text(privacySettingsText))
-                  ],
-                ));
+      PopupMenuButton<AppBarItem>(
+          itemBuilder: (context) => array
+              .map((item) => PopupMenuItem<AppBarItem>(
+                    value: item,
+                    child: Text(
+                      item.label,
+                    ),
+                  ))
+              .toList(),
+          onSelected: (item) {
+            _pauseGame();
+            switch (item.value) {
+              case 0:
+                MobileAds.instance.openAdInspector((error) {
+                  // Error will be non-null if ad inspector closed due to an error.
+                  _resumeGame();
+                });
+              case 1:
+                _consentManager.showPrivacyOptionsForm((formError) {
+                  if (formError != null) {
+                    debugPrint("${formError.errorCode}: ${formError.message}");
+                  }
+                  _resumeGame();
+                });
+            }
           })
     ];
   }
@@ -231,6 +236,15 @@ class RewardedExampleState extends State<RewardedExample> {
         }));
   }
 
+  /// Redraw the app bar actions if a privacy options entry point is required.
+  void _getIsPrivacyOptionsRequired() async {
+    if (await _consentManager.isPrivacyOptionsRequired()) {
+      setState(() {
+        _isPrivacyOptionsRequired = true;
+      });
+    }
+  }
+
   /// Initialize the Mobile Ads SDK if the SDK has gathered consent aligned with
   /// the app's configured messages.
   void _initializeMobileAdsSDK() async {
@@ -238,14 +252,12 @@ class RewardedExampleState extends State<RewardedExample> {
       return;
     }
 
-    var canRequestAds = await _consentManager.canRequestAds();
-    if (canRequestAds) {
-      setState(() {
-        _isMobileAdsInitializeCalled = true;
-      });
+    if (await _consentManager.canRequestAds()) {
+      _isMobileAdsInitializeCalled = true;
 
       // Initialize the Mobile Ads SDK.
       MobileAds.instance.initialize();
+
       // Load an ad.
       _loadAd();
     }
