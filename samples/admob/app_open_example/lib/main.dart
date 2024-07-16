@@ -16,9 +16,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+import 'app_bar_item.dart';
 import 'app_lifecycle_reactor.dart';
 import 'app_open_ad_manager.dart';
-
 import 'consent_manager.dart';
 
 void main() {
@@ -49,10 +50,9 @@ class HomePage extends StatefulWidget {
 
 /// Example home page for an app open ad.
 class _HomePageState extends State<HomePage> {
-  static const privacySettingsText = 'Privacy Settings';
-
   final _appOpenAdManager = AppOpenAdManager();
   var _isMobileAdsInitializeCalled = false;
+  var _isPrivacyOptionsRequired = false;
   int _counter = 0;
   late AppLifecycleReactor _appLifecycleReactor;
 
@@ -70,6 +70,9 @@ class _HomePageState extends State<HomePage> {
         debugPrint(
             "${consentGatheringError.errorCode}: ${consentGatheringError.message}");
       }
+
+      // Check if a privacy options entry point is required.
+      _getIsPrivacyOptionsRequired();
 
       // Attempt to initialize the Mobile Ads SDK.
       _initializeMobileAdsSDK();
@@ -90,9 +93,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('App Open Demo Home Page'),
-        actions: _isMobileAdsInitializeCalled
-            ? _privacySettingsAppBarAction()
-            : null,
+        actions: _appBarActions(),
       ),
       body: Center(
         child: Column(
@@ -116,36 +117,47 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  List<Widget> _privacySettingsAppBarAction() {
+  List<Widget> _appBarActions() {
+    var array = [AppBarItem(AppBarItem.adInpsectorText, 0)];
+
+    if (_isPrivacyOptionsRequired) {
+      array.add(AppBarItem(AppBarItem.privacySettingsText, 1));
+    }
+
     return <Widget>[
-      // Regenerate the options menu to include a privacy setting.
-      FutureBuilder(
-          future: ConsentManager.instance.isPrivacyOptionsRequired(),
-          builder: (context, snapshot) {
-            final bool visibility = snapshot.data ?? false;
-            return Visibility(
-                visible: visibility,
-                child: PopupMenuButton<String>(
-                  onSelected: (String result) {
-                    if (result == privacySettingsText) {
-                      ConsentManager.instance
-                          .showPrivacyOptionsForm((formError) {
-                        if (formError != null) {
-                          debugPrint(
-                              "${formError.errorCode}: ${formError.message}");
-                        }
-                      });
-                    }
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(
-                        value: privacySettingsText,
-                        child: Text(privacySettingsText))
-                  ],
-                ));
+      PopupMenuButton<AppBarItem>(
+          itemBuilder: (context) => array
+              .map((item) => PopupMenuItem<AppBarItem>(
+                    value: item,
+                    child: Text(
+                      item.label,
+                    ),
+                  ))
+              .toList(),
+          onSelected: (item) {
+            switch (item.value) {
+              case 0:
+                MobileAds.instance.openAdInspector((error) {
+                  // Error will be non-null if ad inspector closed due to an error.
+                });
+              case 1:
+                ConsentManager.instance.showPrivacyOptionsForm((formError) {
+                  if (formError != null) {
+                    debugPrint("${formError.errorCode}: ${formError.message}");
+                  }
+                });
+            }
           })
     ];
+  }
+
+  /// Redraw the app bar actions if a privacy options entry point is required.
+  void _getIsPrivacyOptionsRequired() async {
+    if (await ConsentManager.instance.isPrivacyOptionsRequired()) {
+      setState(() {
+        _isPrivacyOptionsRequired = true;
+      });
+    }
   }
 
   /// Initialize the Mobile Ads SDK if the SDK has gathered consent aligned with
@@ -155,14 +167,12 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
-    var canRequestAds = await ConsentManager.instance.canRequestAds();
-    if (canRequestAds) {
-      setState(() {
-        _isMobileAdsInitializeCalled = true;
-      });
+    if (await ConsentManager.instance.canRequestAds()) {
+      _isMobileAdsInitializeCalled = true;
 
       // Initialize the Mobile Ads SDK.
       MobileAds.instance.initialize();
+
       // Load an ad.
       _appOpenAdManager.loadAd();
     }
