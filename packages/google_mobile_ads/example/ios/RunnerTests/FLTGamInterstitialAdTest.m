@@ -40,7 +40,6 @@
   FLTGAMInterstitialAd *ad =
       [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
                                              request:request
-                                  rootViewController:mockRootViewController
                                                 adId:@1];
   ad.manager = mockManager;
 
@@ -118,7 +117,7 @@
             }]]);
 
   // Show the ad
-  [ad show];
+  [ad showFromRootViewController:mockRootViewController];
 
   OCMVerify([interstitialClassMock
       presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);
@@ -145,12 +144,9 @@
   GAMRequest *gadRequest = OCMClassMock([GAMRequest class]);
   OCMStub([request asGAMRequest:[OCMArg any]]).andReturn(gadRequest);
 
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
   FLTGAMInterstitialAd *ad =
       [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
                                              request:request
-                                  rootViewController:mockRootViewController
                                                 adId:@1];
   ad.manager = mockManager;
 

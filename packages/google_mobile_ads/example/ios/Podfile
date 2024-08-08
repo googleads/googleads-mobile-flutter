@@ -28,7 +28,6 @@ require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelpe
 flutter_ios_podfile_setup
 
 target 'Runner' do
-  use_frameworks!
   use_modular_headers!
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
@@ -36,7 +35,7 @@ target 'Runner' do
     inherit! :search_paths
 
     # Matches test_spec dependency.
-    pod 'OCMock', '3.6'
+    pod 'OCMock', '3.9.3'
   end
 end
 

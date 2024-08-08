@@ -67,7 +67,8 @@
   [_ads removeAllObjects];
 }
 
-- (void)showAdWithID:(NSNumber *_Nonnull)adId {
+- (void)showAdWithID:(NSNumber *_Nonnull)adId
+  rootViewController:(UIViewController *_Nonnull)rootViewController{
   id<FLTAdWithoutView> ad = (id<FLTAdWithoutView>)[self adFor:adId];
 
   if (!ad) {
@@ -75,7 +76,7 @@
     return;
   }
 
-  [ad show];
+  [ad showFromRootViewController:rootViewController];
 }
 
 - (void)onAdLoaded:(id<FLTAd> _Nonnull)ad

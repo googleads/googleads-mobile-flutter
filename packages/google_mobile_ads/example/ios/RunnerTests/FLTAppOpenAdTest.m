@@ -61,7 +61,6 @@
   FLTAppOpenAd *ad =
       [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
                                      request:request
-                          rootViewController:mockRootViewController
                                         adId:@1];
   ad.manager = mockManager;
 
@@ -128,7 +127,7 @@
               return TRUE;
             }]]);
 
-  [ad show];
+  [ad showFromRootViewController:mockRootViewController];
 
   OCMVerify([appOpenClassMock
       presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);
@@ -162,12 +161,9 @@
 
 // Helper for testing failed to load.
 - (void)testFailedToLoad:(FLTAdRequest *)request {
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
   FLTAppOpenAd *ad =
       [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
                                      request:request
-                          rootViewController:mockRootViewController
                                         adId:@1];
   ad.manager = mockManager;
 

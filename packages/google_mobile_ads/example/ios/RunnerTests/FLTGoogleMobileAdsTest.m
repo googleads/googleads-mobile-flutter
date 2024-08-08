@@ -252,7 +252,6 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   FLTRewardedAd *ad = [[FLTRewardedAd alloc]
         initWithAdUnitId:@"testId"
                  request:[[FLTAdRequest alloc] init]
-      rootViewController:OCMClassMock([UIViewController class])
                     adId:@1];
   [_manager loadAd:ad];
 
@@ -279,7 +278,6 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc]
         initWithAdUnitId:@"testId"
                  request:[[FLTAdRequest alloc] init]
-      rootViewController:OCMClassMock([UIViewController class])
                     adId:@1];
   [_manager loadAd:ad];
 
@@ -372,7 +370,6 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   FLTRewardedAd *rewardedAd = [[FLTRewardedAd alloc]
         initWithAdUnitId:@"testId"
                  request:[[FLTAdRequest alloc] init]
-      rootViewController:OCMClassMock([UIViewController class])
                     adId:@1];
   [_manager loadAd:rewardedAd];
 
@@ -402,7 +399,6 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
       [[FLTRewardedInterstitialAd alloc]
             initWithAdUnitId:@"testId"
                      request:[[FLTAdRequest alloc] init]
-          rootViewController:OCMClassMock([UIViewController class])
                         adId:@1];
   [_manager loadAd:rewardedInterstitialAd];
 
@@ -466,7 +462,6 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
       [[FLTRewardedInterstitialAd alloc]
             initWithAdUnitId:@"testId"
                      request:[[FLTAdRequest alloc] init]
-          rootViewController:OCMClassMock([UIViewController class])
                         adId:@1];
 
   [_manager adDidRecordClick:rewardedInterstitialAd];

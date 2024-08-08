@@ -55,7 +55,6 @@
   FLTRewardedAd *ad =
       [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
                                       request:request
-                           rootViewController:mockRootViewController
                                          adId:@1];
   ad.manager = mockManager;
 
@@ -147,7 +146,7 @@
       setServerSideVerificationOptions:[OCMArg isEqual:gadOptions]]);
 
   // Show the ad and verify callbacks invoked
-  [ad show];
+  [ad showFromRootViewController:mockRootViewController];
 
   OCMVerify([rewardedClassMock
       presentFromRootViewController:[OCMArg isEqual:mockRootViewController]
@@ -216,12 +215,9 @@
 
 // Helper for testing failed to load.
 - (void)testFailedToLoad:(FLTAdRequest *)request {
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
   FLTRewardedAd *ad =
       [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
                                       request:request
-                           rootViewController:mockRootViewController
                                          adId:@1];
   ad.manager = mockManager;
 

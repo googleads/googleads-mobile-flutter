@@ -55,7 +55,6 @@
   FLTRewardedInterstitialAd *ad =
       [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
                                                   request:request
-                                       rootViewController:mockRootViewController
                                                      adId:@1];
   ad.manager = mockManager;
 
@@ -152,7 +151,7 @@
       setServerSideVerificationOptions:[OCMArg isEqual:gadOptions]]);
 
   // Show the ad and verify callbacks are invoked
-  [ad show];
+  [ad showFromRootViewController:mockRootViewController];
 
   OCMVerify([rewardedInterstitialClassMock
       presentFromRootViewController:[OCMArg isEqual:mockRootViewController]
@@ -202,12 +201,9 @@
 
 // Helper for testing failed to load.
 - (void)testFailedToLoad:(FLTAdRequest *)request {
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
   FLTRewardedInterstitialAd *ad =
       [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
                                                   request:request
-                                       rootViewController:mockRootViewController
                                                      adId:@1];
   ad.manager = mockManager;
 

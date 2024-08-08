@@ -619,7 +619,7 @@
       format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
 }
 
-- (void)show {
+- (void)showFromRootViewController:(UIViewController *)rootViewController {
   // Must be overridden by subclasses
   [NSException
        raise:NSInternalInconsistencyException
@@ -674,20 +674,17 @@
 @implementation FLTInterstitialAd {
   GADInterstitialAd *_interstitialView;
   FLTAdRequest *_adRequest;
-  UIViewController *_rootViewController;
   NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
-              rootViewController:(UIViewController *_Nonnull)rootViewController
                             adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _adUnitId = [adUnitId copy];
-    _rootViewController = rootViewController;
   }
   return self;
 }
@@ -729,9 +726,9 @@
       }];
 }
 
-- (void)show {
+- (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController {
   if (self.interstitial) {
-    [self.interstitial presentFromRootViewController:_rootViewController];
+    [self.interstitial presentFromRootViewController:rootViewController];
   } else {
     NSLog(@"InterstitialAd failed to show because the ad was not ready.");
   }
@@ -744,20 +741,17 @@
 @implementation FLTGAMInterstitialAd {
   GAMInterstitialAd *_insterstitial;
   FLTGAMAdRequest *_adRequest;
-  UIViewController *_rootViewController;
   NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTGAMAdRequest *_Nonnull)request
-              rootViewController:(UIViewController *_Nonnull)rootViewController
                             adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _adUnitId = [adUnitId copy];
-    _rootViewController = rootViewController;
   }
   return self;
 }
@@ -795,9 +789,9 @@
               }];
 }
 
-- (void)show {
+- (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController {
   if (self.interstitial) {
-    [self.interstitial presentFromRootViewController:_rootViewController];
+    [self.interstitial presentFromRootViewController:rootViewController];
   } else {
     NSLog(@"InterstitialAd failed to show because the ad was not ready.");
   }
@@ -817,19 +811,16 @@
 @implementation FLTRewardedAd {
   GADRewardedAd *_rewardedView;
   FLTAdRequest *_adRequest;
-  UIViewController *_rootViewController;
   NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
-              rootViewController:(UIViewController *_Nonnull)rootViewController
                             adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
-    _rootViewController = rootViewController;
     _adUnitId = [adUnitId copy];
   }
   return self;
@@ -878,10 +869,10 @@
                 }];
 }
 
-- (void)show {
+- (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController {
   if (self.rewardedAd) {
     [self.rewardedAd
-        presentFromRootViewController:_rootViewController
+        presentFromRootViewController:rootViewController
              userDidEarnRewardHandler:^{
                GADAdReward *reward = self.rewardedAd.adReward;
                FLTRewardItem *fltReward =
@@ -912,19 +903,16 @@
 @implementation FLTRewardedInterstitialAd {
   GADRewardedInterstitialAd *_rewardedInterstitialView;
   FLTAdRequest *_adRequest;
-  UIViewController *_rootViewController;
   NSString *_adUnitId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
-              rootViewController:(UIViewController *_Nonnull)rootViewController
                             adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
-    _rootViewController = rootViewController;
     _adUnitId = [adUnitId copy];
   }
   return self;
@@ -976,10 +964,10 @@
       }];
 }
 
-- (void)show {
+- (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController {
   if (self.rewardedInterstitialAd) {
     [self.rewardedInterstitialAd
-        presentFromRootViewController:_rootViewController
+        presentFromRootViewController:rootViewController
              userDidEarnRewardHandler:^{
                GADAdReward *reward = self.rewardedInterstitialAd.adReward;
                FLTRewardItem *fltReward =
@@ -1012,20 +1000,16 @@
 @implementation FLTAppOpenAd {
   GADAppOpenAd *_appOpenAd;
   FLTAdRequest *_adRequest;
-  UIViewController *_rootViewController;
   NSString *_adUnitId;
 }
 
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                       rootViewController:
-                           (UIViewController *_Nonnull)rootViewController
                                      adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
-    _rootViewController = rootViewController;
     _adUnitId = [adUnitId copy];
   }
   return self;
@@ -1075,9 +1059,9 @@
                }];
 }
 
-- (void)show {
+- (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController {
   if (self.appOpenAd) {
-    [self.appOpenAd presentFromRootViewController:_rootViewController];
+    [self.appOpenAd presentFromRootViewController:rootViewController];
   } else {
     NSLog(@"AppOpenAd failed to show because the ad was not ready.");
   }

@@ -213,27 +213,46 @@
 
 - (UIViewController *)rootController {
   UIViewController *root =
-      UIApplication.sharedApplication.delegate.window.rootViewController;
+    UIApplication.sharedApplication.delegate.window.rootViewController;
   if ([FLTAdUtil isNull:root]) {
-    // UIApplication.sharedApplication.delegate.window is not guaranteed to be
-    // set. Use the keyWindow in this case.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  // UIApplication.sharedApplication.delegate.window is not guaranteed to be
+  // set. Use the keyWindow in this case.
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     root = UIApplication.sharedApplication.keyWindow.rootViewController;
-#pragma clang diagnostic pop
+  #pragma clang diagnostic pop
   }
 
-  // Get the presented view controller. This fixes an issue in the add to app
-  // case: https://github.com/googleads/googleads-mobile-flutter/issues/700
   UIViewController *presentedViewController = root;
-  while (presentedViewController.presentedViewController) {
-    presentedViewController = presentedViewController.presentedViewController;
+  while (presentedViewController.presentedViewController && ![presentedViewController.presentedViewController isBeingDismissed]) {
+    if ([presentedViewController isKindOfClass:[UITabBarController class]]) {
+      UITabBarController* tabBarController = (UITabBarController*)presentedViewController;
+      presentedViewController = tabBarController.selectedViewController;
+    } else if ([presentedViewController isKindOfClass:[UINavigationController class]]) {
+      UINavigationController* navigationController = (UINavigationController*)presentedViewController;
+      presentedViewController = navigationController.visibleViewController;
+    } else {
+      presentedViewController = presentedViewController.presentedViewController;
+    }
   }
   return presentedViewController;
 }
 
+- (UIViewController*)topViewControllerWithRootViewController:(UIViewController*)rootViewController {
+  if ([rootViewController isKindOfClass:[UITabBarController class]]) {
+    UITabBarController* tabBarController = (UITabBarController*)rootViewController;
+    return [self topViewControllerWithRootViewController:tabBarController.selectedViewController];
+  } else if ([rootViewController isKindOfClass:[UINavigationController class]]) {
+    UINavigationController* navigationController = (UINavigationController*)rootViewController;
+    return [self topViewControllerWithRootViewController:navigationController.visibleViewController];
+  } else {
+    return rootViewController;
+  }
+}
+
 - (void)handleMethodCall:(FlutterMethodCall *)call
                   result:(FlutterResult)result {
+  NSLog(@"handleMethodCall %@", call.method);
   UIViewController *rootController = self.rootController;
 
   if ([call.method isEqualToString:@"MobileAds#initialize"]) {
@@ -426,7 +445,6 @@
     FLTInterstitialAd *ad =
         [[FLTInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                             request:call.arguments[@"request"]
-                                 rootViewController:rootController
                                                adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
@@ -434,7 +452,6 @@
     FLTGAMInterstitialAd *ad = [[FLTGAMInterstitialAd alloc]
           initWithAdUnitId:call.arguments[@"adUnitId"]
                    request:call.arguments[@"request"]
-        rootViewController:rootController
                       adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
@@ -455,7 +472,6 @@
     FLTRewardedAd *ad =
         [[FLTRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                         request:request
-                             rootViewController:rootController
                                            adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
@@ -476,7 +492,6 @@
     FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc]
           initWithAdUnitId:call.arguments[@"adUnitId"]
                    request:request
-        rootViewController:rootController
                       adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
@@ -496,7 +511,6 @@
     FLTAppOpenAd *ad =
         [[FLTAppOpenAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                        request:request
-                            rootViewController:rootController
                                           adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
@@ -504,7 +518,8 @@
     [_manager dispose:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method isEqualToString:@"showAdWithoutView"]) {
-    [_manager showAdWithID:call.arguments[@"adId"]];
+    [_manager showAdWithID:call.arguments[@"adId"]
+        rootViewController:rootController];
     result(nil);
   } else if ([call.method
                  isEqualToString:@"AdSize#getAnchoredAdaptiveBannerAdSize"]) {
