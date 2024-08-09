@@ -26,10 +26,9 @@
     _ads = [[FLTGoogleMobileAdsCollection alloc] init];
     NSObject<FlutterMethodCodec> *methodCodec = [FlutterStandardMethodCodec
         codecWithReaderWriter:[[FLTGoogleMobileAdsReaderWriter alloc] init]];
-    _channel = [[FlutterMethodChannel alloc]
-           initWithName:@"plugins.flutter.io/google_mobile_ads"
-        binaryMessenger:binaryMessenger
-                  codec:methodCodec];
+    _channel = [[FlutterMethodChannel alloc] initWithName:@"plugins.flutter.io/google_mobile_ads"
+                                          binaryMessenger:binaryMessenger
+                                                    codec:methodCodec];
   }
   return self;
 }
@@ -68,7 +67,7 @@
 }
 
 - (void)showAdWithID:(NSNumber *_Nonnull)adId
-  rootViewController:(UIViewController *_Nonnull)rootViewController{
+    rootViewController:(UIViewController *_Nonnull)rootViewController {
   id<FLTAdWithoutView> ad = (id<FLTAdWithoutView>)[self adFor:adId];
 
   if (!ad) {
@@ -79,14 +78,12 @@
   [ad showFromRootViewController:rootViewController];
 }
 
-- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad
-      responseInfo:(GADResponseInfo *_Nonnull)responseInfo {
+- (void)onAdLoaded:(id<FLTAd> _Nonnull)ad responseInfo:(GADResponseInfo *_Nonnull)responseInfo {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
                  @"adId" : ad.adId,
                  @"eventName" : @"onAdLoaded",
-                 @"responseInfo" : [[FLTGADResponseInfo alloc]
-                     initWithResponseInfo:responseInfo]
+                 @"responseInfo" : [[FLTGADResponseInfo alloc] initWithResponseInfo:responseInfo]
                }];
 }
 
@@ -99,9 +96,7 @@
                }];
 }
 
-- (void)onAppEvent:(id<FLTAd> _Nonnull)ad
-              name:(NSString *)name
-              data:(NSString *)data {
+- (void)onAppEvent:(id<FLTAd> _Nonnull)ad name:(NSString *)name data:(NSString *)data {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
                  @"adId" : ad.adId,
@@ -137,10 +132,8 @@
                }];
 }
 
-- (void)onRewardedInterstitialAdUserEarnedReward:
-            (FLTRewardedInterstitialAd *_Nonnull)ad
-                                          reward:
-                                              (FLTRewardItem *_Nonnull)reward {
+- (void)onRewardedInterstitialAdUserEarnedReward:(FLTRewardedInterstitialAd *_Nonnull)ad
+                                          reward:(FLTRewardItem *_Nonnull)reward {
   [_channel invokeMethod:@"onAdEvent"
                arguments:@{
                  @"adId" : ad.adId,
@@ -239,17 +232,12 @@
                                             viewIdentifier:(int64_t)viewId
                                                  arguments:(id _Nullable)args {
   NSNumber *adId = args;
-  NSObject<FlutterPlatformView> *view =
-      (NSObject<FlutterPlatformView> *)[_manager adFor:adId];
+  NSObject<FlutterPlatformView> *view = (NSObject<FlutterPlatformView> *)[_manager adFor:adId];
 
   if (!view) {
     NSString *reason = [NSString
-        stringWithFormat:
-            @"Could not find an ad with id: %@. Was this ad already disposed?",
-            adId];
-    @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                   reason:reason
-                                 userInfo:nil];
+        stringWithFormat:@"Could not find an ad with id: %@. Was this ad already disposed?", adId];
+    @throw [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
   }
   return view;
 }
