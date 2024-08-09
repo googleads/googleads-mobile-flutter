@@ -51,7 +51,6 @@ typedef NS_ENUM(NSUInteger, FLTAdapterInitializationState) {
 @interface FLTServerSideVerificationOptions : NSObject
 @property(nonatomic, copy, nullable) NSString *userIdentifier;
 @property(nonatomic, copy, nullable) NSString *customRewardString;
-- (GADServerSideVerificationOptions *_Nonnull)
-    asGADServerSideVerificationOptions;
+- (GADServerSideVerificationOptions *_Nonnull)asGADServerSideVerificationOptions;
 @end
 NS_ASSUME_NONNULL_END

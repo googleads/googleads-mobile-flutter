@@ -29,24 +29,21 @@
     FLTAppStateNotifier *__weak weakSelf = self;
     _observers = [[NSMutableArray alloc] init];
     _eventChannel = [FlutterEventChannel
-        eventChannelWithName:
-            @"plugins.flutter.io/google_mobile_ads/app_state_event"
+        eventChannelWithName:@"plugins.flutter.io/google_mobile_ads/app_state_event"
              binaryMessenger:messenger];
     _methodChannel = [FlutterMethodChannel
-        methodChannelWithName:
-            @"plugins.flutter.io/google_mobile_ads/app_state_method"
+        methodChannelWithName:@"plugins.flutter.io/google_mobile_ads/app_state_method"
               binaryMessenger:messenger];
     [_eventChannel setStreamHandler:self];
-    [_methodChannel setMethodCallHandler:^(FlutterMethodCall *_Nonnull call,
-                                           FlutterResult _Nonnull result) {
-      [weakSelf handleMethodCall:call result:result];
-    }];
+    [_methodChannel
+        setMethodCallHandler:^(FlutterMethodCall *_Nonnull call, FlutterResult _Nonnull result) {
+          [weakSelf handleMethodCall:call result:result];
+        }];
   }
   return self;
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call
-                  result:(FlutterResult _Nonnull)result {
+- (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call result:(FlutterResult _Nonnull)result {
   if ([call.method isEqualToString:@"start"]) {
     [self addAppStateObservers];
     result(nil);
@@ -93,13 +90,13 @@
                 }];
     [_observers addObject:foregroundSceneObserver];
 
-    id<NSObject> backgroundSceneObserver = [NSNotificationCenter.defaultCenter
-        addObserverForName:UISceneDidEnterBackgroundNotification
-                    object:nil
-                     queue:nil
-                usingBlock:^(NSNotification *_Nonnull note) {
-                  [self handleDidEnterBackground];
-                }];
+    id<NSObject> backgroundSceneObserver =
+        [NSNotificationCenter.defaultCenter addObserverForName:UISceneDidEnterBackgroundNotification
+                                                        object:nil
+                                                         queue:nil
+                                                    usingBlock:^(NSNotification *_Nonnull note) {
+                                                      [self handleDidEnterBackground];
+                                                    }];
     [_observers addObject:backgroundSceneObserver];
   }
 }
@@ -133,8 +130,7 @@
 }
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
-                                       eventSink:
-                                           (nonnull FlutterEventSink)events {
+                                       eventSink:(nonnull FlutterEventSink)events {
   _events = events;
   return nil;
 }

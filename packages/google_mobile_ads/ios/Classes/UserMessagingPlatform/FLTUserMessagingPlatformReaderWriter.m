@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #import "FLTUserMessagingPlatformReaderWriter.h"
-#import "../FLTAdUtil.h"
 #include <UserMessagingPlatform/UserMessagingPlatform.h>
+#import "../FLTAdUtil.h"
 
 // The type values below must be consistent for each platform.
 typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
@@ -62,8 +62,7 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
   return reader;
 }
 
-- (FlutterStandardWriter *_Nonnull)writerWithData:
-    (NSMutableData *_Nonnull)data {
+- (FlutterStandardWriter *_Nonnull)writerWithData:(NSMutableData *_Nonnull)data {
   FLTUserMessagingPlatformWriter *writer =
       [[FLTUserMessagingPlatformWriter alloc] initWithData:data];
   writer.consentFormDict = self.consentFormDict;
@@ -83,14 +82,12 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
     UMPRequestParameters *params = (UMPRequestParameters *)value;
 
     [self writeByte:FLTValueConsentRequestParameters];
-    [self writeValue:[[NSNumber alloc]
-                         initWithBool:params.tagForUnderAgeOfConsent]];
+    [self writeValue:[[NSNumber alloc] initWithBool:params.tagForUnderAgeOfConsent]];
     [self writeValue:params.debugSettings];
   } else if ([value isKindOfClass:[UMPDebugSettings class]]) {
     UMPDebugSettings *debugSettings = (UMPDebugSettings *)value;
     [self writeByte:FLTValueConsentDebugSettings];
-    [self
-        writeValue:[[NSNumber alloc] initWithInteger:debugSettings.geography]];
+    [self writeValue:[[NSNumber alloc] initWithInteger:debugSettings.geography]];
     [self writeValue:debugSettings.testDeviceIdentifiers];
   } else {
     [super writeValue:value];
@@ -104,34 +101,33 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
 - (id _Nullable)readValueOfType:(UInt8)type {
   FLTUserMessagingPlatformField field = (FLTUserMessagingPlatformField)type;
   switch (field) {
-  case FLTValueConsentRequestParameters: {
-    UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
-    NSNumber *tfuac = [self readValueOfType:[self readByte]];
+    case FLTValueConsentRequestParameters: {
+      UMPRequestParameters *parameters = [[UMPRequestParameters alloc] init];
+      NSNumber *tfuac = [self readValueOfType:[self readByte]];
 
-    parameters.tagForUnderAgeOfConsent = tfuac.boolValue;
-    UMPDebugSettings *debugSettings = [self readValueOfType:[self readByte]];
-    parameters.debugSettings = debugSettings;
-    return parameters;
-  }
-  case FLTValueConsentDebugSettings: {
-    UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
-    NSNumber *geography = [self readValueOfType:[self readByte]];
-    NSArray<NSString *> *testIdentifiers =
-        [self readValueOfType:[self readByte]];
-    if ([FLTAdUtil isNotNull:geography]) {
-      debugSettings.geography = geography.intValue;
+      parameters.tagForUnderAgeOfConsent = tfuac.boolValue;
+      UMPDebugSettings *debugSettings = [self readValueOfType:[self readByte]];
+      parameters.debugSettings = debugSettings;
+      return parameters;
     }
-    if ([FLTAdUtil isNotNull:testIdentifiers]) {
-      debugSettings.testDeviceIdentifiers = testIdentifiers;
+    case FLTValueConsentDebugSettings: {
+      UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
+      NSNumber *geography = [self readValueOfType:[self readByte]];
+      NSArray<NSString *> *testIdentifiers = [self readValueOfType:[self readByte]];
+      if ([FLTAdUtil isNotNull:geography]) {
+        debugSettings.geography = geography.intValue;
+      }
+      if ([FLTAdUtil isNotNull:testIdentifiers]) {
+        debugSettings.testDeviceIdentifiers = testIdentifiers;
+      }
+      return debugSettings;
     }
-    return debugSettings;
-  }
-  case FLTValueConsentForm: {
-    NSNumber *hash = [self readValueOfType:[self readByte]];
-    return _consentFormDict[hash];
-  }
-  default:
-    return [super readValueOfType:type];
+    case FLTValueConsentForm: {
+      NSNumber *hash = [self readValueOfType:[self readByte]];
+      return _consentFormDict[hash];
+    }
+    default:
+      return [super readValueOfType:type];
   }
 }
 

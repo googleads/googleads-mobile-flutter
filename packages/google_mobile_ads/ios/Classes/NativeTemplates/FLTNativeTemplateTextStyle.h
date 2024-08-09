@@ -20,11 +20,10 @@
  */
 @interface FLTNativeTemplateTextStyle : NSObject
 
-- (instancetype _Nonnull)
-    initWithTextColor:(FLTNativeTemplateColor *_Nullable)textColor
-      backgroundColor:(FLTNativeTemplateColor *_Nullable)backgroundColor
-            fontStyle:(FLTNativeTemplateFontStyleWrapper *_Nullable)fontStyle
-                 size:(NSNumber *_Nullable)size;
+- (instancetype _Nonnull)initWithTextColor:(FLTNativeTemplateColor *_Nullable)textColor
+                           backgroundColor:(FLTNativeTemplateColor *_Nullable)backgroundColor
+                                 fontStyle:(FLTNativeTemplateFontStyleWrapper *_Nullable)fontStyle
+                                      size:(NSNumber *_Nullable)size;
 
 @property(readonly) FLTNativeTemplateColor *_Nullable textColor;
 @property(readonly) FLTNativeTemplateColor *_Nullable backgroundColor;

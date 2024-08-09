@@ -34,20 +34,16 @@
 }
 
 - (void)setUp {
-  id<FlutterBinaryMessenger> messenger =
-      OCMProtocolMock(@protocol(FlutterBinaryMessenger));
-  FLTAdInstanceManager *manager =
-      [[FLTAdInstanceManager alloc] initWithBinaryMessenger:messenger];
+  id<FlutterBinaryMessenger> messenger = OCMProtocolMock(@protocol(FlutterBinaryMessenger));
+  FLTAdInstanceManager *manager = [[FLTAdInstanceManager alloc] initWithBinaryMessenger:messenger];
   _mockAdInstanceManager = OCMPartialMock(manager);
   _fltGoogleMobileAdsPlugin = [[FLTGoogleMobileAdsPlugin alloc] init];
-  [_fltGoogleMobileAdsPlugin setValue:_mockAdInstanceManager
-                               forKey:@"_manager"];
+  [_fltGoogleMobileAdsPlugin setValue:_mockAdInstanceManager forKey:@"_manager"];
 }
 
 - (void)testDisposeAd {
-  FlutterMethodCall *methodCall =
-      [FlutterMethodCall methodCallWithMethodName:@"disposeAd"
-                                        arguments:@{@"adId" : @1}];
+  FlutterMethodCall *methodCall = [FlutterMethodCall methodCallWithMethodName:@"disposeAd"
+                                                                    arguments:@{@"adId" : @1}];
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
   FlutterResult result = ^(id _Nullable result) {
@@ -65,13 +61,12 @@
 - (void)testLoadRewardedAd {
   FLTAdRequest *request = [[FLTAdRequest alloc] init];
   request.keywords = @[ @"apple" ];
-  FlutterMethodCall *methodCall =
-      [FlutterMethodCall methodCallWithMethodName:@"loadRewardedAd"
-                                        arguments:@{
-                                          @"adId" : @2,
-                                          @"adUnitId" : @"testId",
-                                          @"request" : request,
-                                        }];
+  FlutterMethodCall *methodCall = [FlutterMethodCall methodCallWithMethodName:@"loadRewardedAd"
+                                                                    arguments:@{
+                                                                      @"adId" : @2,
+                                                                      @"adUnitId" : @"testId",
+                                                                      @"request" : request,
+                                                                    }];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -91,13 +86,12 @@
     XCTAssertEqualObjects(adUnit, @"testId");
     return YES;
   };
-  OCMVerify([_mockAdInstanceManager
-      loadAd:[OCMArg checkWithBlock:verificationBlock]]);
+  OCMVerify([_mockAdInstanceManager loadAd:[OCMArg checkWithBlock:verificationBlock]]);
 }
 
 - (void)testInternalInit {
-  FlutterMethodCall *methodCall =
-      [FlutterMethodCall methodCallWithMethodName:@"_init" arguments:@{}];
+  FlutterMethodCall *methodCall = [FlutterMethodCall methodCallWithMethodName:@"_init"
+                                                                    arguments:@{}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -117,22 +111,19 @@
   id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
   OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
       .andReturn((GADMobileAds *)gadMobileAdsClassMock);
-  GADInitializationStatus *mockInitStatus =
-      OCMClassMock([GADInitializationStatus class]);
+  GADInitializationStatus *mockInitStatus = OCMClassMock([GADInitializationStatus class]);
   OCMStub([mockInitStatus adapterStatusesByClassName]).andReturn(@{});
   OCMStub([gadMobileAdsClassMock startWithCompletionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
         // Invoke the init handler twice.
-        __unsafe_unretained GADInitializationCompletionHandler
-            completionHandler;
+        __unsafe_unretained GADInitializationCompletionHandler completionHandler;
         [invocation getArgument:&completionHandler atIndex:2];
         completionHandler(mockInitStatus);
         completionHandler(mockInitStatus);
       });
 
   FlutterMethodCall *methodCall =
-      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#initialize"
-                                        arguments:@{}];
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#initialize" arguments:@{}];
   __block int resultInvokedCount = 0;
   __block id _Nullable returnedResult;
   FlutterResult result = ^(id _Nullable result) {
@@ -142,8 +133,7 @@
 
   [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
   XCTAssertEqual(resultInvokedCount, 1);
-  XCTAssertEqual(
-      [((FLTInitializationStatus *)returnedResult) adapterStatuses].count, 0);
+  XCTAssertEqual([((FLTInitializationStatus *)returnedResult) adapterStatuses].count, 0);
 }
 
 - (void)testSetSameAppKeyEnabledYes {
@@ -152,12 +142,11 @@
       .andReturn((GADMobileAds *)gadMobileAdsClassMock);
   GADRequestConfiguration *gadRequestConfigurationMock =
       OCMClassMock([GADRequestConfiguration class]);
-  OCMStub([gadMobileAdsClassMock requestConfiguration])
-      .andReturn(gadRequestConfigurationMock);
+  OCMStub([gadMobileAdsClassMock requestConfiguration]).andReturn(gadRequestConfigurationMock);
 
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"MobileAds#setSameAppKeyEnabled"
-                     arguments:@{@"isEnabled" : @(YES)}];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setSameAppKeyEnabled"
+                                        arguments:@{@"isEnabled" : @(YES)}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -170,8 +159,7 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
-  OCMVerify([gadRequestConfigurationMock
-      setPublisherFirstPartyIDEnabled:[OCMArg isEqual:@(YES)]]);
+  OCMVerify([gadRequestConfigurationMock setPublisherFirstPartyIDEnabled:[OCMArg isEqual:@(YES)]]);
 }
 
 - (void)testRegisterWebView {
@@ -181,8 +169,7 @@
 
   WKWebView *mockWebView = OCMClassMock([WKWebView class]);
   id fltAdUtilMock = OCMClassMock([FLTAdUtil class]);
-  OCMStub(ClassMethod([fltAdUtilMock getWebView:[OCMArg any]
-                          flutterPluginRegistry:[OCMArg any]]))
+  OCMStub(ClassMethod([fltAdUtilMock getWebView:[OCMArg any] flutterPluginRegistry:[OCMArg any]]))
       .andReturn(mockWebView);
 
   FlutterMethodCall *methodCall =
@@ -208,12 +195,11 @@
       .andReturn((GADMobileAds *)gadMobileAdsClassMock);
   GADRequestConfiguration *gadRequestConfigurationMock =
       OCMClassMock([GADRequestConfiguration class]);
-  OCMStub([gadMobileAdsClassMock requestConfiguration])
-      .andReturn(gadRequestConfigurationMock);
+  OCMStub([gadMobileAdsClassMock requestConfiguration]).andReturn(gadRequestConfigurationMock);
 
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"MobileAds#setSameAppKeyEnabled"
-                     arguments:@{@"isEnabled" : @0}];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setSameAppKeyEnabled"
+                                        arguments:@{@"isEnabled" : @0}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -228,9 +214,9 @@
   XCTAssertNil(returnedResult);
   OCMVerify([gadRequestConfigurationMock setPublisherFirstPartyIDEnabled:NO]);
 
-  FlutterMethodCall *methodCallWithBool = [FlutterMethodCall
-      methodCallWithMethodName:@"MobileAds#setSameAppKeyEnabled"
-                     arguments:@{@"isEnabled" : @NO}];
+  FlutterMethodCall *methodCallWithBool =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setSameAppKeyEnabled"
+                                        arguments:@{@"isEnabled" : @NO}];
 
   __block bool resultInvokedWithBool = false;
   __block id _Nullable returnedResultWithBool;
@@ -239,8 +225,7 @@
     returnedResultWithBool = result;
   };
 
-  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCallWithBool
-                                       result:resultWithBool];
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCallWithBool result:resultWithBool];
 
   XCTAssertTrue(resultInvokedWithBool);
   XCTAssertNil(returnedResultWithBool);
@@ -265,9 +250,8 @@
   XCTAssertNil(returnedResult);
   XCTAssertTrue(GADMobileAds.sharedInstance.applicationMuted);
 
-  methodCall =
-      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setAppMuted"
-                                        arguments:@{@"muted" : @(NO)}];
+  methodCall = [FlutterMethodCall methodCallWithMethodName:@"MobileAds#setAppMuted"
+                                                 arguments:@{@"muted" : @(NO)}];
 
   resultInvoked = false;
   result = ^(id _Nullable result) {
@@ -305,9 +289,9 @@
   id gadMobileAdsClassMock = OCMClassMock([GADMobileAds class]);
   OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
       .andReturn((GADMobileAds *)gadMobileAdsClassMock);
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"MobileAds#disableSDKCrashReporting"
-                     arguments:@{}];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#disableSDKCrashReporting"
+                                        arguments:@{}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -328,9 +312,9 @@
   OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
       .andReturn((GADMobileAds *)gadMobileAdsClassMock);
 
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"MobileAds#disableMediationInitialization"
-                     arguments:@{}];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#disableMediationInitialization"
+                                        arguments:@{}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -348,8 +332,7 @@
 
 - (void)testGetVersionString {
   FlutterMethodCall *methodCall =
-      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#getVersionString"
-                                        arguments:@{}];
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#getVersionString" arguments:@{}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -361,15 +344,14 @@
   [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
   XCTAssertTrue(resultInvoked);
-  XCTAssertEqual(
-      returnedResult,
-      GADGetStringFromVersionNumber(GADMobileAds.sharedInstance.versionNumber));
+  XCTAssertEqual(returnedResult,
+                 GADGetStringFromVersionNumber(GADMobileAds.sharedInstance.versionNumber));
 }
 
 - (void)testOpenDebugMenu {
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"MobileAds#openDebugMenu"
-                     arguments:@{@"adUnitId" : @"test-ad-unit"}];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#openDebugMenu"
+                                        arguments:@{@"adUnitId" : @"test-ad-unit"}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -378,16 +360,14 @@
     returnedResult = result;
   };
 
-  FLTGoogleMobileAdsPlugin *mockPlugin =
-      OCMPartialMock(_fltGoogleMobileAdsPlugin);
+  FLTGoogleMobileAdsPlugin *mockPlugin = OCMPartialMock(_fltGoogleMobileAdsPlugin);
   UIViewController *mockUIViewController = OCMClassMock(UIViewController.class);
   OCMStub([mockPlugin rootController]).andReturn(mockUIViewController);
 
   [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
   OCMVerify([mockUIViewController
-      presentViewController:[OCMArg isKindOfClass:[GADDebugOptionsViewController
-                                                      class]]
+      presentViewController:[OCMArg isKindOfClass:[GADDebugOptionsViewController class]]
                    animated:[OCMArg any]
                  completion:[OCMArg isNil]]);
   XCTAssertTrue(resultInvoked);
@@ -396,8 +376,7 @@
 
 - (void)testOpenAdInspectorSuccess {
   FlutterMethodCall *methodCall =
-      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#openAdInspector"
-                                        arguments:@{}];
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#openAdInspector" arguments:@{}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -410,9 +389,8 @@
   OCMStub(ClassMethod([gadMobileAdsClassMock sharedInstance]))
       .andReturn((GADMobileAds *)gadMobileAdsClassMock);
 
-  OCMStub([gadMobileAdsClassMock
-              presentAdInspectorFromViewController:[OCMArg any]
-                                 completionHandler:[OCMArg any]])
+  OCMStub([gadMobileAdsClassMock presentAdInspectorFromViewController:[OCMArg any]
+                                                    completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
         __unsafe_unretained GADAdInspectorCompletionHandler completionHandler;
         [invocation getArgument:&completionHandler atIndex:3];
@@ -421,17 +399,15 @@
 
   [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
-  OCMVerify([gadMobileAdsClassMock
-      presentAdInspectorFromViewController:[OCMArg any]
-                         completionHandler:[OCMArg any]]);
+  OCMVerify([gadMobileAdsClassMock presentAdInspectorFromViewController:[OCMArg any]
+                                                      completionHandler:[OCMArg any]]);
   XCTAssertTrue(resultInvoked);
   XCTAssertEqual(returnedResult, nil);
 }
 
 - (void)testOpenAdInspectorError {
   FlutterMethodCall *methodCall =
-      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#openAdInspector"
-                                        arguments:@{}];
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#openAdInspector" arguments:@{}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -448,9 +424,8 @@
   };
   NSError *error = [NSError errorWithDomain:@"domain" code:1 userInfo:userInfo];
 
-  OCMStub([gadMobileAdsClassMock
-              presentAdInspectorFromViewController:[OCMArg any]
-                                 completionHandler:[OCMArg any]])
+  OCMStub([gadMobileAdsClassMock presentAdInspectorFromViewController:[OCMArg any]
+                                                    completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
         __unsafe_unretained GADAdInspectorCompletionHandler completionHandler;
         [invocation getArgument:&completionHandler atIndex:3];
@@ -459,9 +434,8 @@
 
   [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
-  OCMVerify([gadMobileAdsClassMock
-      presentAdInspectorFromViewController:[OCMArg any]
-                         completionHandler:[OCMArg any]]);
+  OCMVerify([gadMobileAdsClassMock presentAdInspectorFromViewController:[OCMArg any]
+                                                      completionHandler:[OCMArg any]]);
   XCTAssertTrue(resultInvoked);
   FlutterError *resultError = (FlutterError *)returnedResult;
 
@@ -471,9 +445,9 @@
 }
 
 - (void)testGetRequestConfiguration {
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"MobileAds#getRequestConfiguration"
-                     arguments:@{}];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"MobileAds#getRequestConfiguration"
+                                        arguments:@{}];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -485,17 +459,16 @@
   [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
   XCTAssertTrue(resultInvoked);
-  XCTAssertEqual(returnedResult,
-                 [GADMobileAds.sharedInstance requestConfiguration]);
+  XCTAssertEqual(returnedResult, [GADMobileAds.sharedInstance requestConfiguration]);
 }
 
 - (void)testGetAnchoredAdaptiveBannerAdSize {
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
-                     arguments:@{
-                       @"orientation" : @"portrait",
-                       @"width" : @23,
-                     }];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
+                                        arguments:@{
+                                          @"orientation" : @"portrait",
+                                          @"width" : @23,
+                                        }];
 
   __block bool resultInvoked = false;
   __block id _Nullable returnedResult;
@@ -507,35 +480,14 @@
   [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
 
   XCTAssertTrue(resultInvoked);
-  XCTAssertEqual(
-      [returnedResult doubleValue],
-      GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(23).size.height);
+  XCTAssertEqual([returnedResult doubleValue],
+                 GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(23).size.height);
 
-  methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
-                     arguments:@{
-                       @"orientation" : @"landscape",
-                       @"width" : @34,
-                     }];
-
-  resultInvoked = false;
-  result = ^(id _Nullable result) {
-    resultInvoked = true;
-    returnedResult = result;
-  };
-
-  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
-
-  XCTAssertTrue(resultInvoked);
-  XCTAssertEqual(
-      [returnedResult doubleValue],
-      GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(34).size.height);
-
-  methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
-                     arguments:@{
-                       @"width" : @45,
-                     }];
+  methodCall = [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
+                                                 arguments:@{
+                                                   @"orientation" : @"landscape",
+                                                   @"width" : @34,
+                                                 }];
 
   resultInvoked = false;
   result = ^(id _Nullable result) {
@@ -547,20 +499,36 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertEqual([returnedResult doubleValue],
-                 GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(45)
-                     .size.height);
+                 GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(34).size.height);
+
+  methodCall = [FlutterMethodCall methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
+                                                 arguments:@{
+                                                   @"width" : @45,
+                                                 }];
+
+  resultInvoked = false;
+  result = ^(id _Nullable result) {
+    resultInvoked = true;
+    returnedResult = result;
+  };
+
+  [_fltGoogleMobileAdsPlugin handleMethodCall:methodCall result:result];
+
+  XCTAssertTrue(resultInvoked);
+  XCTAssertEqual([returnedResult doubleValue],
+                 GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(45).size.height);
 }
 
 - (void)testGetAdSize_bannerAd {
   // Method calls to load a banner ad.
-  FlutterMethodCall *loadAdMethodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"loadBannerAd"
-                     arguments:@{
-                       @"adId" : @(1),
-                       @"adUnitId" : @"ad-unit-id",
-                       @"size" : [[FLTAdSize alloc] initWithWidth:@1 height:@2],
-                       @"request" : [[FLTAdRequest alloc] init],
-                     }];
+  FlutterMethodCall *loadAdMethodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"loadBannerAd"
+                                        arguments:@{
+                                          @"adId" : @(1),
+                                          @"adUnitId" : @"ad-unit-id",
+                                          @"size" : [[FLTAdSize alloc] initWithWidth:@1 height:@2],
+                                          @"request" : [[FLTAdRequest alloc] init],
+                                        }];
 
   __block bool loadAdResultInvoked = false;
   __block id _Nullable returnedLoadAdResult;
@@ -569,8 +537,7 @@
     returnedLoadAdResult = result;
   };
 
-  [_fltGoogleMobileAdsPlugin handleMethodCall:loadAdMethodCall
-                                       result:loadAdResult];
+  [_fltGoogleMobileAdsPlugin handleMethodCall:loadAdMethodCall result:loadAdResult];
 
   XCTAssertTrue(loadAdResultInvoked);
   XCTAssertNil(returnedLoadAdResult);
@@ -584,10 +551,8 @@
   };
 
   FlutterMethodCall *getAdSizeMethodCall =
-      [FlutterMethodCall methodCallWithMethodName:@"getAdSize"
-                                        arguments:@{@"adId" : @(1)}];
-  [_fltGoogleMobileAdsPlugin handleMethodCall:getAdSizeMethodCall
-                                       result:getAdSizeResult];
+      [FlutterMethodCall methodCallWithMethodName:@"getAdSize" arguments:@{@"adId" : @(1)}];
+  [_fltGoogleMobileAdsPlugin handleMethodCall:getAdSizeMethodCall result:getAdSizeResult];
 
   XCTAssertTrue(getAdSizeResultInvoked);
   XCTAssertEqualObjects(returnedGetAdSizeResult.width, @1);
@@ -602,13 +567,13 @@
   // Method calls to set ssv
   FLTServerSideVerificationOptions *mockSSV =
       OCMClassMock([FLTServerSideVerificationOptions class]);
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"setServerSideVerificationOptions"
-                     arguments:@{
-                       @"adId" : @(1),
-                       @"adUnitId" : @"ad-unit-id",
-                       @"serverSideVerificationOptions" : mockSSV,
-                     }];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"setServerSideVerificationOptions"
+                                        arguments:@{
+                                          @"adId" : @(1),
+                                          @"adUnitId" : @"ad-unit-id",
+                                          @"serverSideVerificationOptions" : mockSSV,
+                                        }];
 
   __block bool resultInvoked = false;
   FlutterResult result = ^(id _Nullable result) {
@@ -623,20 +588,19 @@
 
 - (void)testServerSideVerificationOptions_rewardedInterstitialAd {
   // Mock having already loaded an ad
-  FLTRewardedInterstitialAd *mockAd =
-      OCMClassMock([FLTRewardedInterstitialAd class]);
+  FLTRewardedInterstitialAd *mockAd = OCMClassMock([FLTRewardedInterstitialAd class]);
   OCMStub([_mockAdInstanceManager adFor:[OCMArg isEqual:@1]]).andReturn(mockAd);
 
   // Method calls to set ssv
   FLTServerSideVerificationOptions *mockSSV =
       OCMClassMock([FLTServerSideVerificationOptions class]);
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"setServerSideVerificationOptions"
-                     arguments:@{
-                       @"adId" : @(1),
-                       @"adUnitId" : @"ad-unit-id",
-                       @"serverSideVerificationOptions" : mockSSV,
-                     }];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"setServerSideVerificationOptions"
+                                        arguments:@{
+                                          @"adId" : @(1),
+                                          @"adUnitId" : @"ad-unit-id",
+                                          @"serverSideVerificationOptions" : mockSSV,
+                                        }];
 
   __block bool resultInvoked = false;
   FlutterResult result = ^(id _Nullable result) {
@@ -653,13 +617,13 @@
   // Try to set ssv without any ads being loaded
   FLTServerSideVerificationOptions *mockSSV =
       OCMClassMock([FLTServerSideVerificationOptions class]);
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"setServerSideVerificationOptions"
-                     arguments:@{
-                       @"adId" : @(1),
-                       @"adUnitId" : @"ad-unit-id",
-                       @"serverSideVerificationOptions" : mockSSV,
-                     }];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"setServerSideVerificationOptions"
+                                        arguments:@{
+                                          @"adId" : @(1),
+                                          @"adUnitId" : @"ad-unit-id",
+                                          @"serverSideVerificationOptions" : mockSSV,
+                                        }];
 
   __block bool resultInvoked = false;
   FlutterResult result = ^(id _Nullable result) {
@@ -681,13 +645,13 @@
   // Try to set ssv without any ads being loaded
   FLTServerSideVerificationOptions *mockSSV =
       OCMClassMock([FLTServerSideVerificationOptions class]);
-  FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"setServerSideVerificationOptions"
-                     arguments:@{
-                       @"adId" : @(1),
-                       @"adUnitId" : @"ad-unit-id",
-                       @"serverSideVerificationOptions" : mockSSV,
-                     }];
+  FlutterMethodCall *methodCall =
+      [FlutterMethodCall methodCallWithMethodName:@"setServerSideVerificationOptions"
+                                        arguments:@{
+                                          @"adId" : @(1),
+                                          @"adUnitId" : @"ad-unit-id",
+                                          @"serverSideVerificationOptions" : mockSSV,
+                                        }];
 
   __block bool resultInvoked = false;
   FlutterResult result = ^(id _Nullable result) {

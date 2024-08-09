@@ -21,7 +21,7 @@
 #import "FLTMediationNetworkExtrasProvider.h"
 #import "FLTMobileAds_Internal.h"
 
-#define FLTLogWarning(format, ...)                                             \
+#define FLTLogWarning(format, ...) \
   NSLog((@"GoogleMobileAdsPlugin <warning> " format), ##__VA_ARGS__)
 
 /**
@@ -42,8 +42,7 @@
  * @return a `GADNativeAdView` that is overlaid on top of the FlutterView.
  */
 - (GADNativeAdView *_Nullable)createNativeAd:(GADNativeAd *_Nonnull)nativeAd
-                               customOptions:
-                                   (NSDictionary *_Nullable)customOptions;
+                               customOptions:(NSDictionary *_Nullable)customOptions;
 @end
 
 /**
@@ -63,19 +62,15 @@
  * a FLTGoogleMobileAdsPlugin in the registry.
  */
 + (BOOL)registerMediationNetworkExtrasProvider:
-            (id<FLTMediationNetworkExtrasProvider> _Nonnull)
-                mediationNetworkExtrasProvider
-                                      registry:
-                                          (id<FlutterPluginRegistry> _Nonnull)
-                                              registry
+            (id<FLTMediationNetworkExtrasProvider> _Nonnull)mediationNetworkExtrasProvider
+                                      registry:(id<FlutterPluginRegistry> _Nonnull)registry
     __deprecated_msg("Use MediationExtras instead");
 
 /*
  * Unregisters any FLTMediationNetworkExtrasProvider that was associated with
  * the FLTGoogleMobileAdsPlugin in registry.
  */
-+ (void)unregisterMediationNetworkExtrasProvider:
-    (id<FlutterPluginRegistry> _Nonnull)registry
++ (void)unregisterMediationNetworkExtrasProvider:(id<FlutterPluginRegistry> _Nonnull)registry
     __deprecated_msg("Use MediationExtras instead");
 
 /**
@@ -92,8 +87,7 @@
  */
 + (BOOL)registerNativeAdFactory:(id<FlutterPluginRegistry> _Nonnull)registry
                       factoryId:(NSString *_Nonnull)factoryId
-                nativeAdFactory:
-                    (id<FLTNativeAdFactory> _Nonnull)nativeAdFactory;
+                nativeAdFactory:(id<FLTNativeAdFactory> _Nonnull)nativeAdFactory;
 
 /**
  * Unregisters a `FLTNativeAdFactory` used to create `GADNativeAdView`s from a
@@ -105,7 +99,7 @@
  * @return the previous `FLTNativeAdFactory` associated with this factoryId, or
  * null if there was none for this factoryId.
  */
-+ (id<FLTNativeAdFactory> _Nullable)
-    unregisterNativeAdFactory:(id<FlutterPluginRegistry> _Nonnull)registry
-                    factoryId:(NSString *_Nonnull)factoryId;
++ (id<FLTNativeAdFactory> _Nullable)unregisterNativeAdFactory:
+                                        (id<FlutterPluginRegistry> _Nonnull)registry
+                                                    factoryId:(NSString *_Nonnull)factoryId;
 @end

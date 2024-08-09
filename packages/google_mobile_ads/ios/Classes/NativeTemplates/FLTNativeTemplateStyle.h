@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#import <Foundation/Foundation.h>
+#import <GoogleMobileAds/GADNativeAd.h>
+#import <UIKit/UIKit.h>
 #import "FLTNativeTemplateColor.h"
 #import "FLTNativeTemplateTextStyle.h"
 #import "FLTNativeTemplateType.h"
 #import "GADTTemplateView.h"
-#import <Foundation/Foundation.h>
-#import <GoogleMobileAds/GADNativeAd.h>
-#import <UIKit/UIKit.h>
 
 /**
  * Wraps a GADTTemplateView for being displayed as a platform view.
@@ -35,13 +35,10 @@
 - (instancetype _Nonnull)
     initWithTemplateType:(FLTNativeTemplateType *_Nonnull)templateType
      mainBackgroundColor:(FLTNativeTemplateColor *_Nullable)mainBackgroundColor
-       callToActionStyle:
-           (FLTNativeTemplateTextStyle *_Nullable)callToActionStyle
+       callToActionStyle:(FLTNativeTemplateTextStyle *_Nullable)callToActionStyle
         primaryTextStyle:(FLTNativeTemplateTextStyle *_Nullable)primaryTextStyle
-      secondaryTextStyle:
-          (FLTNativeTemplateTextStyle *_Nullable)secondaryTextStyle
-       tertiaryTextStyle:
-           (FLTNativeTemplateTextStyle *_Nullable)tertiaryTextStyle
+      secondaryTextStyle:(FLTNativeTemplateTextStyle *_Nullable)secondaryTextStyle
+       tertiaryTextStyle:(FLTNativeTemplateTextStyle *_Nullable)tertiaryTextStyle
             cornerRadius:(NSNumber *_Nullable)cornerRadius;
 @property(readonly) FLTNativeTemplateType *_Nonnull templateType;
 @property(readonly) FLTNativeTemplateColor *_Nullable mainBackgroundColor;
@@ -52,7 +49,6 @@
 @property(readonly) NSNumber *_Nullable cornerRadius;
 
 /** The actual view to be displayed. */
-- (FLTNativeTemplateViewWrapper *_Nonnull)getDisplayedView:
-    (GADNativeAd *_Nonnull)gadNativeAd;
+- (FLTNativeTemplateViewWrapper *_Nonnull)getDisplayedView:(GADNativeAd *_Nonnull)gadNativeAd;
 
 @end
