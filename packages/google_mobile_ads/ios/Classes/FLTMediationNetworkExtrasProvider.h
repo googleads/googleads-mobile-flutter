@@ -35,8 +35,8 @@ __attribute__((deprecated))
  * which extras to include for an ad request, beyond just the ad unit.
  * @return an array of GADAdNetworkExtras to include in the ad request.
  */
-- (NSArray<id<GADAdNetworkExtras>> *_Nullable)getMediationExtras:(NSString *_Nonnull)adUnitId
-                                       mediationExtrasIdentifier:
-                                           (NSString *_Nullable)mediationExtrasIdentifier;
+- (NSArray<id<GADAdNetworkExtras>> *_Nullable)
+           getMediationExtras:(NSString *_Nonnull)adUnitId
+    mediationExtrasIdentifier:(NSString *_Nullable)mediationExtrasIdentifier;
 
 @end

@@ -30,20 +30,22 @@ static NSString *_requestAgent;
 
 + (NSString *)requestAgent {
   NSString *newsTemplateString = @"";
-  id newsTemplateVersion =
-      [NSBundle.mainBundle objectForInfoDictionaryKey:@"FLTNewsTemplateVersion"];
+  id newsTemplateVersion = [NSBundle.mainBundle
+      objectForInfoDictionaryKey:@"FLTNewsTemplateVersion"];
   if ([newsTemplateVersion isKindOfClass:[NSString class]]) {
-    newsTemplateString = [NSString stringWithFormat:@"_News-%@", newsTemplateVersion];
+    newsTemplateString =
+        [NSString stringWithFormat:@"_News-%@", newsTemplateVersion];
   }
 
   NSString *gameTemplateString = @"";
-  id gameTemplateVersion =
-      [NSBundle.mainBundle objectForInfoDictionaryKey:@"FLTGameTemplateVersion"];
+  id gameTemplateVersion = [NSBundle.mainBundle
+      objectForInfoDictionaryKey:@"FLTGameTemplateVersion"];
   if ([gameTemplateVersion isKindOfClass:[NSString class]]) {
-    gameTemplateString = [NSString stringWithFormat:@"_Game-%@", gameTemplateVersion];
+    gameTemplateString =
+        [NSString stringWithFormat:@"_Game-%@", gameTemplateVersion];
   }
-  return [NSString stringWithFormat:@"%@%@%@", FLT_REQUEST_AGENT_VERSIONED, newsTemplateString,
-                                    gameTemplateString];
+  return [NSString stringWithFormat:@"%@%@%@", FLT_REQUEST_AGENT_VERSIONED,
+                                    newsTemplateString, gameTemplateString];
 }
 
 + (WKWebView *)getWebView:(NSNumber *)webViewId

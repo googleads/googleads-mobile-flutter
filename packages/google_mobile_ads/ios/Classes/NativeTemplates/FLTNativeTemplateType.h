@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import <Foundation/Foundation.h>
 #import "GADTTemplateView.h"
+#import <Foundation/Foundation.h>
 
 /** Maps int values to template layout types. */
 @interface FLTNativeTemplateType : NSObject

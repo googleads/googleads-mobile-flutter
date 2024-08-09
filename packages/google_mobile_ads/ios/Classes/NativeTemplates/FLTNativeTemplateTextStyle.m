@@ -17,10 +17,11 @@
 
 @implementation FLTNativeTemplateTextStyle
 
-- (instancetype _Nonnull)initWithTextColor:(FLTNativeTemplateColor *_Nullable)textColor
-                           backgroundColor:(FLTNativeTemplateColor *_Nullable)backgroundColor
-                                 fontStyle:(FLTNativeTemplateFontStyleWrapper *_Nullable)fontStyle
-                                      size:(NSNumber *_Nullable)size {
+- (instancetype _Nonnull)
+    initWithTextColor:(FLTNativeTemplateColor *_Nullable)textColor
+      backgroundColor:(FLTNativeTemplateColor *_Nullable)backgroundColor
+            fontStyle:(FLTNativeTemplateFontStyleWrapper *_Nullable)fontStyle
+                 size:(NSNumber *_Nullable)size {
   self = [super init];
   if (self) {
     _textColor = textColor;
@@ -36,26 +37,29 @@
     return nil;
   }
 
-  CGFloat size = [FLTAdUtil isNull:_size] ? UIFont.systemFontSize : _size.floatValue;
+  CGFloat size =
+      [FLTAdUtil isNull:_size] ? UIFont.systemFontSize : _size.floatValue;
   if ([FLTAdUtil isNull:_fontStyle]) {
     return [UIFont systemFontOfSize:size];
   } else {
     switch (_fontStyle.fontStyle) {
-      case FLTNativeTemplateFontNormal:
-        return [UIFont systemFontOfSize:size];
-      case FLTNativeTemplateFontBold:
-        return [UIFont boldSystemFontOfSize:size];
-      case FLTNativeTemplateFontItalic:
-        return [UIFont italicSystemFontOfSize:size];
-      case FLTNativeTemplateFontMonospace:
-        if (@available(iOS 13.0, *)) {
-          return [UIFont monospacedSystemFontOfSize:size weight:UIFontWeightRegular];
-        } else {
-          return [UIFont monospacedDigitSystemFontOfSize:size weight:UIFontWeightRegular];
-        }
-      default:
-        NSLog(@"Unknown fontStyle case: %ld", _fontStyle.fontStyle);
-        return [UIFont systemFontOfSize:size];
+    case FLTNativeTemplateFontNormal:
+      return [UIFont systemFontOfSize:size];
+    case FLTNativeTemplateFontBold:
+      return [UIFont boldSystemFontOfSize:size];
+    case FLTNativeTemplateFontItalic:
+      return [UIFont italicSystemFontOfSize:size];
+    case FLTNativeTemplateFontMonospace:
+      if (@available(iOS 13.0, *)) {
+        return [UIFont monospacedSystemFontOfSize:size
+                                           weight:UIFontWeightRegular];
+      } else {
+        return [UIFont monospacedDigitSystemFontOfSize:size
+                                                weight:UIFontWeightRegular];
+      }
+    default:
+      NSLog(@"Unknown fontStyle case: %ld", _fontStyle.fontStyle);
+      return [UIFont systemFontOfSize:size];
     }
   }
 }

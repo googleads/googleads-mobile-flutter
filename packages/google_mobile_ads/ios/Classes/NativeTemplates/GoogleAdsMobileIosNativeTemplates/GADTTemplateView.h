@@ -22,13 +22,16 @@ typedef NSString *GADTNativeTemplateStyleKey NS_STRING_ENUM;
 #pragma mark - Call To Action
 
 /// Call to action font. Expects a UIFont.
-extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyCallToActionFont;
+extern GADTNativeTemplateStyleKey const
+    GADTNativeTemplateStyleKeyCallToActionFont;
 
 /// Call to action font color. Expects a UIColor.
-extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyCallToActionFontColor;
+extern GADTNativeTemplateStyleKey const
+    GADTNativeTemplateStyleKeyCallToActionFontColor;
 
 /// Call to action background color. Expects a UIColor.
-extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyCallToActionBackgroundColor;
+extern GADTNativeTemplateStyleKey const
+    GADTNativeTemplateStyleKeyCallToActionBackgroundColor;
 
 /// The font, font color and background color for the first row of text in the
 /// template. All templates have a primary text area which is populated by the
@@ -39,10 +42,12 @@ extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyCallToActionBa
 extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyPrimaryFont;
 
 /// Primary text font color. Expects a UIColor.
-extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyPrimaryFontColor;
+extern GADTNativeTemplateStyleKey const
+    GADTNativeTemplateStyleKeyPrimaryFontColor;
 
 /// Primary text background color. Expects a UIColor.
-extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyPrimaryBackgroundColor;
+extern GADTNativeTemplateStyleKey const
+    GADTNativeTemplateStyleKeyPrimaryBackgroundColor;
 
 /// The font, font color and background color for the second row of text in the
 /// template. All templates have a secondary text area which is populated either
@@ -53,10 +58,12 @@ extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyPrimaryBackgro
 extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeySecondaryFont;
 
 /// Secondary text font color. Expects a UIColor.
-extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeySecondaryFontColor;
+extern GADTNativeTemplateStyleKey const
+    GADTNativeTemplateStyleKeySecondaryFontColor;
 
 /// Secondary text background color. Expects a UIColor.
-extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeySecondaryBackgroundColor;
+extern GADTNativeTemplateStyleKey const
+    GADTNativeTemplateStyleKeySecondaryBackgroundColor;
 
 /// The font, font color and background color for the third row of text in the
 /// template. The third row is used to display store name or the default
@@ -67,15 +74,18 @@ extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeySecondaryBackg
 extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyTertiaryFont;
 
 /// Tertiary text font color. Expects a UIColor.
-extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyTertiaryFontColor;
+extern GADTNativeTemplateStyleKey const
+    GADTNativeTemplateStyleKeyTertiaryFontColor;
 
 /// Tertiary text background color. Expects a UIColor.
-extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyTertiaryBackgroundColor;
+extern GADTNativeTemplateStyleKey const
+    GADTNativeTemplateStyleKeyTertiaryBackgroundColor;
 
 #pragma mark - Additional Style Options
 
 /// The background color for the bulk of the ad. Expects a UIColor.
-extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyMainBackgroundColor;
+extern GADTNativeTemplateStyleKey const
+    GADTNativeTemplateStyleKeyMainBackgroundColor;
 
 /// The corner rounding radius for the icon view and call to action. Expects an
 /// NSNumber.
@@ -84,7 +94,8 @@ extern GADTNativeTemplateStyleKey const GADTNativeTemplateStyleKeyCornerRadius;
 /// The super class for every template object.
 /// This class has the majority of all layout and styling logic.
 @interface GADTTemplateView : GADNativeAdView
-@property(nonatomic, copy) NSDictionary<GADTNativeTemplateStyleKey, NSObject *> *styles;
+@property(nonatomic, copy)
+    NSDictionary<GADTNativeTemplateStyleKey, NSObject *> *styles;
 @property(weak) IBOutlet UILabel *adBadge;
 @property(weak) UIView *rootView;
 

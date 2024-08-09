@@ -22,10 +22,13 @@
 - (instancetype _Nonnull)
     initWithTemplateType:(FLTNativeTemplateType *_Nonnull)templateType
      mainBackgroundColor:(FLTNativeTemplateColor *_Nullable)mainBackgroundColor
-       callToActionStyle:(FLTNativeTemplateTextStyle *_Nullable)callToActionStyle
+       callToActionStyle:
+           (FLTNativeTemplateTextStyle *_Nullable)callToActionStyle
         primaryTextStyle:(FLTNativeTemplateTextStyle *_Nullable)primaryTextStyle
-      secondaryTextStyle:(FLTNativeTemplateTextStyle *_Nullable)secondaryTextStyle
-       tertiaryTextStyle:(FLTNativeTemplateTextStyle *_Nullable)tertiaryTextStyle
+      secondaryTextStyle:
+          (FLTNativeTemplateTextStyle *_Nullable)secondaryTextStyle
+       tertiaryTextStyle:
+           (FLTNativeTemplateTextStyle *_Nullable)tertiaryTextStyle
             cornerRadius:(NSNumber *_Nullable)cornerRadius {
   self = [super init];
   if (self) {
@@ -40,13 +43,15 @@
   return self;
 }
 
-- (FLTNativeTemplateViewWrapper *_Nonnull)getDisplayedView:(GADNativeAd *_Nonnull)gadNativeAd {
+- (FLTNativeTemplateViewWrapper *_Nonnull)getDisplayedView:
+    (GADNativeAd *_Nonnull)gadNativeAd {
   GADTTemplateView *templateView = _templateType.templateView;
   templateView.nativeAd = gadNativeAd;
 
   NSMutableDictionary *styles = [[NSMutableDictionary alloc] init];
   if ([FLTAdUtil isNotNull:_mainBackgroundColor]) {
-    styles[GADTNativeTemplateStyleKeyMainBackgroundColor] = _mainBackgroundColor.uiColor;
+    styles[GADTNativeTemplateStyleKeyMainBackgroundColor] =
+        _mainBackgroundColor.uiColor;
   }
   if ([FLTAdUtil isNotNull:_cornerRadius]) {
     styles[GADTNativeTemplateStyleKeyCornerRadius] = _cornerRadius;
@@ -57,7 +62,8 @@
           _callToActionStyle.backgroundColor.uiColor;
     }
     if ([FLTAdUtil isNotNull:_callToActionStyle.uiFont]) {
-      styles[GADTNativeTemplateStyleKeyCallToActionFont] = _callToActionStyle.uiFont;
+      styles[GADTNativeTemplateStyleKeyCallToActionFont] =
+          _callToActionStyle.uiFont;
     }
     if ([FLTAdUtil isNotNull:_callToActionStyle.textColor]) {
       styles[GADTNativeTemplateStyleKeyCallToActionFontColor] =
@@ -73,7 +79,8 @@
       styles[GADTNativeTemplateStyleKeyPrimaryFont] = _primaryTextStyle.uiFont;
     }
     if ([FLTAdUtil isNotNull:_primaryTextStyle.textColor]) {
-      styles[GADTNativeTemplateStyleKeyPrimaryFontColor] = _primaryTextStyle.textColor.uiColor;
+      styles[GADTNativeTemplateStyleKeyPrimaryFontColor] =
+          _primaryTextStyle.textColor.uiColor;
     }
   }
   if ([FLTAdUtil isNotNull:_secondaryTextStyle]) {
@@ -82,10 +89,12 @@
           _secondaryTextStyle.backgroundColor.uiColor;
     }
     if ([FLTAdUtil isNotNull:_secondaryTextStyle.uiFont]) {
-      styles[GADTNativeTemplateStyleKeySecondaryFont] = _secondaryTextStyle.uiFont;
+      styles[GADTNativeTemplateStyleKeySecondaryFont] =
+          _secondaryTextStyle.uiFont;
     }
     if ([FLTAdUtil isNotNull:_secondaryTextStyle.textColor]) {
-      styles[GADTNativeTemplateStyleKeySecondaryFontColor] = _secondaryTextStyle.textColor.uiColor;
+      styles[GADTNativeTemplateStyleKeySecondaryFontColor] =
+          _secondaryTextStyle.textColor.uiColor;
     }
   }
   if ([FLTAdUtil isNotNull:_tertiaryTextStyle]) {
@@ -94,10 +103,12 @@
           _tertiaryTextStyle.backgroundColor.uiColor;
     }
     if ([FLTAdUtil isNotNull:_tertiaryTextStyle.uiFont]) {
-      styles[GADTNativeTemplateStyleKeyTertiaryFont] = _tertiaryTextStyle.uiFont;
+      styles[GADTNativeTemplateStyleKeyTertiaryFont] =
+          _tertiaryTextStyle.uiFont;
     }
     if ([FLTAdUtil isNotNull:_tertiaryTextStyle.textColor]) {
-      styles[GADTNativeTemplateStyleKeyTertiaryFontColor] = _tertiaryTextStyle.textColor.uiColor;
+      styles[GADTNativeTemplateStyleKeyTertiaryFontColor] =
+          _tertiaryTextStyle.textColor.uiColor;
     }
   }
   templateView.styles = styles;
@@ -120,21 +131,24 @@
     // aligns the template view
     if (_templateView.superview) {
       [_templateView.superview
-          addConstraint:[NSLayoutConstraint constraintWithItem:_templateView.superview
-                                                     attribute:NSLayoutAttributeTop
-                                                     relatedBy:NSLayoutRelationEqual
-                                                        toItem:_templateView
-                                                     attribute:NSLayoutAttributeTop
-                                                    multiplier:1
-                                                      constant:0]];
+          addConstraint:[NSLayoutConstraint
+                            constraintWithItem:_templateView.superview
+                                     attribute:NSLayoutAttributeTop
+                                     relatedBy:NSLayoutRelationEqual
+                                        toItem:_templateView
+                                     attribute:NSLayoutAttributeTop
+                                    multiplier:1
+                                      constant:0]];
       [_templateView.superview
-          addConstraint:[NSLayoutConstraint constraintWithItem:_templateView.superview
-                                                     attribute:NSLayoutAttributeBottom
-                                                     relatedBy:NSLayoutRelationGreaterThanOrEqual
-                                                        toItem:_templateView
-                                                     attribute:NSLayoutAttributeBottom
-                                                    multiplier:1
-                                                      constant:0]];
+          addConstraint:
+              [NSLayoutConstraint
+                  constraintWithItem:_templateView.superview
+                           attribute:NSLayoutAttributeBottom
+                           relatedBy:NSLayoutRelationGreaterThanOrEqual
+                              toItem:_templateView
+                           attribute:NSLayoutAttributeBottom
+                          multiplier:1
+                            constant:0]];
     }
     [_templateView addHorizontalConstraintsToSuperviewWidth];
   }
