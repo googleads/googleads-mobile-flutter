@@ -227,13 +227,13 @@
   while (presentedViewController.presentedViewController &&
          ![presentedViewController.presentedViewController isBeingDismissed]) {
     if ([presentedViewController isKindOfClass:[UITabBarController class]]) {
-      UITabBarController* tabBarController =
-          (UITabBarController*)presentedViewController;
+      UITabBarController *tabBarController =
+          (UITabBarController *)presentedViewController;
       presentedViewController = tabBarController.selectedViewController;
     } else if ([presentedViewController
                    isKindOfClass:[UINavigationController class]]) {
-      UINavigationController* navigationController =
-          (UINavigationController*)presentedViewController;
+      UINavigationController *navigationController =
+          (UINavigationController *)presentedViewController;
       presentedViewController = navigationController.visibleViewController;
     } else {
       presentedViewController = presentedViewController.presentedViewController;
@@ -442,9 +442,9 @@
     result(nil);
   } else if ([call.method isEqualToString:@"loadAdManagerInterstitialAd"]) {
     FLTGAMInterstitialAd *ad = [[FLTGAMInterstitialAd alloc]
-          initWithAdUnitId:call.arguments[@"adUnitId"]
-                   request:call.arguments[@"request"]
-                      adId:call.arguments[@"adId"]];
+        initWithAdUnitId:call.arguments[@"adUnitId"]
+                 request:call.arguments[@"request"]
+                    adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedAd"]) {
@@ -482,9 +482,9 @@
     }
 
     FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc]
-          initWithAdUnitId:call.arguments[@"adUnitId"]
-                   request:request
-                      adId:call.arguments[@"adId"]];
+        initWithAdUnitId:call.arguments[@"adUnitId"]
+                 request:request
+                    adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
