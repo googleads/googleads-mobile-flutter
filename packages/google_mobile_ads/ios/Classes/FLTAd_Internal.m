@@ -726,7 +726,8 @@
       }];
 }
 
-- (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController {
+- (void)showFromRootViewController:
+    (UIViewController *_Nonnull)rootViewController {
   if (self.interstitial) {
     [self.interstitial presentFromRootViewController:rootViewController];
   } else {
@@ -789,7 +790,8 @@
               }];
 }
 
-- (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController {
+- (void)showFromRootViewController:
+    (UIViewController *_Nonnull)rootViewController {
   if (self.interstitial) {
     [self.interstitial presentFromRootViewController:rootViewController];
   } else {
@@ -869,7 +871,8 @@
                 }];
 }
 
-- (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController {
+- (void)showFromRootViewController:
+    (UIViewController *_Nonnull)rootViewController {
   if (self.rewardedAd) {
     [self.rewardedAd
         presentFromRootViewController:rootViewController
@@ -964,7 +967,8 @@
       }];
 }
 
-- (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController {
+- (void)showFromRootViewController:
+    (UIViewController *_Nonnull)rootViewController {
   if (self.rewardedInterstitialAd) {
     [self.rewardedInterstitialAd
         presentFromRootViewController:rootViewController
@@ -1059,7 +1063,8 @@
                }];
 }
 
-- (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController {
+- (void)showFromRootViewController:
+    (UIViewController *_Nonnull)rootViewController {
   if (self.appOpenAd) {
     [self.appOpenAd presentFromRootViewController:rootViewController];
   } else {

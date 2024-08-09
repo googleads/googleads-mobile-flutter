@@ -52,10 +52,9 @@
                gadOrGAMRequest:(GADRequest *)gadOrGAMRequest {
   UIViewController *mockRootViewController =
       OCMClassMock([UIViewController class]);
-  FLTRewardedAd *ad =
-      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                      request:request
-                                         adId:@1];
+  FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                                      request:request
+                                                         adId:@1];
   ad.manager = mockManager;
 
   // Stub the load call to invoke successful load callback.
@@ -215,10 +214,9 @@
 
 // Helper for testing failed to load.
 - (void)testFailedToLoad:(FLTAdRequest *)request {
-  FLTRewardedAd *ad =
-      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                      request:request
-                                         adId:@1];
+  FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                                      request:request
+                                                         adId:@1];
   ad.manager = mockManager;
 
   id rewardedClassMock = OCMClassMock([GADRewardedAd class]);

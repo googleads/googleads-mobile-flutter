@@ -68,7 +68,7 @@
 }
 
 - (void)showAdWithID:(NSNumber *_Nonnull)adId
-  rootViewController:(UIViewController *_Nonnull)rootViewController{
+    rootViewController:(UIViewController *_Nonnull)rootViewController{
   id<FLTAdWithoutView> ad = (id<FLTAdWithoutView>)[self adFor:adId];
 
   if (!ad) {

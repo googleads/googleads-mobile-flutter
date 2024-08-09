@@ -213,41 +213,33 @@
 
 - (UIViewController *)rootController {
   UIViewController *root =
-    UIApplication.sharedApplication.delegate.window.rootViewController;
+      UIApplication.sharedApplication.delegate.window.rootViewController;
   if ([FLTAdUtil isNull:root]) {
-  // UIApplication.sharedApplication.delegate.window is not guaranteed to be
-  // set. Use the keyWindow in this case.
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
+// UIApplication.sharedApplication.delegate.window is not guaranteed to be
+// set. Use the keyWindow in this case.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     root = UIApplication.sharedApplication.keyWindow.rootViewController;
-  #pragma clang diagnostic pop
+#pragma clang diagnostic pop
   }
 
   UIViewController *presentedViewController = root;
-  while (presentedViewController.presentedViewController && ![presentedViewController.presentedViewController isBeingDismissed]) {
+  while (presentedViewController.presentedViewController &&
+         ![presentedViewController.presentedViewController isBeingDismissed]) {
     if ([presentedViewController isKindOfClass:[UITabBarController class]]) {
-      UITabBarController* tabBarController = (UITabBarController*)presentedViewController;
+      UITabBarController* tabBarController =
+          (UITabBarController*)presentedViewController;
       presentedViewController = tabBarController.selectedViewController;
-    } else if ([presentedViewController isKindOfClass:[UINavigationController class]]) {
-      UINavigationController* navigationController = (UINavigationController*)presentedViewController;
+    } else if ([presentedViewController
+                   isKindOfClass:[UINavigationController class]]) {
+      UINavigationController* navigationController =
+          (UINavigationController*)presentedViewController;
       presentedViewController = navigationController.visibleViewController;
     } else {
       presentedViewController = presentedViewController.presentedViewController;
     }
   }
   return presentedViewController;
-}
-
-- (UIViewController*)topViewControllerWithRootViewController:(UIViewController*)rootViewController {
-  if ([rootViewController isKindOfClass:[UITabBarController class]]) {
-    UITabBarController* tabBarController = (UITabBarController*)rootViewController;
-    return [self topViewControllerWithRootViewController:tabBarController.selectedViewController];
-  } else if ([rootViewController isKindOfClass:[UINavigationController class]]) {
-    UINavigationController* navigationController = (UINavigationController*)rootViewController;
-    return [self topViewControllerWithRootViewController:navigationController.visibleViewController];
-  } else {
-    return rootViewController;
-  }
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call

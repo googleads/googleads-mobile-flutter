@@ -164,7 +164,8 @@
 @end
 
 @protocol FLTAdWithoutView
-- (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController;
+- (void)showFromRootViewController:
+    (UIViewController *_Nonnull)rootViewController;
 @end
 
 @interface FLTBaseAd : NSObject

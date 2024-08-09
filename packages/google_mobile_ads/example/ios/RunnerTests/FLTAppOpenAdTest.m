@@ -58,10 +58,9 @@
               gadOrGAMRequest:(GADRequest *)gadOrGAMRequest {
   UIViewController *mockRootViewController =
       OCMClassMock([UIViewController class]);
-  FLTAppOpenAd *ad =
-      [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
-                                     request:request
-                                        adId:@1];
+  FLTAppOpenAd *ad = [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
+                                                    request:request
+                                                       adId:@1];
   ad.manager = mockManager;
 
   // Stub the load call to invoke successful load callback.
@@ -161,10 +160,9 @@
 
 // Helper for testing failed to load.
 - (void)testFailedToLoad:(FLTAdRequest *)request {
-  FLTAppOpenAd *ad =
-      [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
-                                     request:request
-                                        adId:@1];
+  FLTAppOpenAd *ad = [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
+                                                    request:request
+                                                       adId:@1];
   ad.manager = mockManager;
 
   id appOpenClassMock = OCMClassMock([GADAppOpenAd class]);
