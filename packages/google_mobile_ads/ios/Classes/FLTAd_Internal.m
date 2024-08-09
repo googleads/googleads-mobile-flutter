@@ -17,9 +17,10 @@
 #import "FLTNativeTemplateStyle.h"
 
 @implementation FLTAdSize
-- (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width height:(NSNumber *_Nonnull)height {
-  return
-      [self initWithAdSize:GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, height.doubleValue))];
+- (instancetype _Nonnull)initWithWidth:(NSNumber *_Nonnull)width
+                                height:(NSNumber *_Nonnull)height {
+  return [self initWithAdSize:GADAdSizeFromCGSize(CGSizeMake(
+                                  width.doubleValue, height.doubleValue))];
 }
 
 - (instancetype _Nonnull)initWithAdSize:(GADAdSize)size {
@@ -34,31 +35,42 @@
 @end
 
 @implementation FLTAdSizeFactory
-- (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+- (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width {
   return GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
 }
 
-- (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+- (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width {
   return GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
 }
 
-- (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
-  return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
+- (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width {
+  return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(
+      width.doubleValue);
 }
 
-- (GADAdSize)currentOrientationInlineAdaptiveBannerSizeWithWidth:(NSNumber *_Nonnull)width {
-  return GADCurrentOrientationInlineAdaptiveBannerAdSizeWithWidth(width.floatValue);
+- (GADAdSize)currentOrientationInlineAdaptiveBannerSizeWithWidth:
+    (NSNumber *_Nonnull)width {
+  return GADCurrentOrientationInlineAdaptiveBannerAdSizeWithWidth(
+      width.floatValue);
 }
 
-- (GADAdSize)portraitOrientationInlineAdaptiveBannerSizeWithWidth:(NSNumber *_Nonnull)width {
+- (GADAdSize)portraitOrientationInlineAdaptiveBannerSizeWithWidth:
+    (NSNumber *_Nonnull)width {
   return GADPortraitInlineAdaptiveBannerAdSizeWithWidth(width.floatValue);
 }
-- (GADAdSize)landscapeInlineAdaptiveBannerAdSizeWithWidth:(NSNumber *_Nonnull)width {
+- (GADAdSize)landscapeInlineAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width {
   return GADLandscapeInlineAdaptiveBannerAdSizeWithWidth(width.floatValue);
 }
-- (GADAdSize)inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:(NSNumber *_Nonnull)width
-                                                   maxHeight:(NSNumber *_Nonnull)maxHeight {
-  return GADInlineAdaptiveBannerAdSizeWithWidthAndMaxHeight(width.floatValue, maxHeight.floatValue);
+- (GADAdSize)
+    inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:(NSNumber *_Nonnull)width
+                                          maxHeight:
+                                              (NSNumber *_Nonnull)maxHeight {
+  return GADInlineAdaptiveBannerAdSizeWithWidthAndMaxHeight(
+      width.floatValue, maxHeight.floatValue);
 }
 
 @end
@@ -69,7 +81,8 @@
                                    width:(NSNumber *_Nonnull)width {
   GADAdSize size;
   if ([FLTAdUtil isNull:orientation]) {
-    size = [factory currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:width];
+    size =
+        [factory currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:width];
   } else if ([orientation isEqualToString:@"portrait"]) {
     size = [factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:width];
   } else if ([orientation isEqualToString:@"landscape"]) {
@@ -94,13 +107,18 @@
                              orientation:(NSNumber *_Nullable)orientation {
   GADAdSize gadAdSize;
   if ([FLTAdUtil isNotNull:orientation]) {
-    gadAdSize = orientation.intValue == 0
-                    ? [factory portraitOrientationInlineAdaptiveBannerSizeWithWidth:width]
-                    : [factory landscapeInlineAdaptiveBannerAdSizeWithWidth:width];
+    gadAdSize =
+        orientation.intValue == 0
+            ? [factory
+                  portraitOrientationInlineAdaptiveBannerSizeWithWidth:width]
+            : [factory landscapeInlineAdaptiveBannerAdSizeWithWidth:width];
   } else if ([FLTAdUtil isNotNull:maxHeight]) {
-    gadAdSize = [factory inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:width maxHeight:maxHeight];
+    gadAdSize =
+        [factory inlineAdaptiveBannerAdSizeWithWidthAndMaxHeight:width
+                                                       maxHeight:maxHeight];
   } else {
-    gadAdSize = [factory currentOrientationInlineAdaptiveBannerSizeWithWidth:width];
+    gadAdSize =
+        [factory currentOrientationInlineAdaptiveBannerSizeWithWidth:width];
   }
   self = [self initWithAdSize:gadAdSize];
   if (self) {
@@ -122,7 +140,8 @@
     size = kGADAdSizeSmartBannerLandscape;
 #pragma clang diagnostic pop
   } else {
-    NSLog(@"SmartBanner orientation should be 'portrait' or 'landscape': %@", orientation);
+    NSLog(@"SmartBanner orientation should be 'portrait' or 'landscape': %@",
+          orientation);
     return nil;
   }
 
@@ -150,18 +169,21 @@
 
 @implementation FLTAdRequest
 
-- (void)addNetworkExtrasToGADRequest:(GADRequest *)request adUnitId:(NSString *_Nonnull)adUnitId {
+- (void)addNetworkExtrasToGADRequest:(GADRequest *)request
+                            adUnitId:(NSString *_Nonnull)adUnitId {
   NSArray<id<GADAdNetworkExtras>> *extras;
 
   if (_mediationExtras != NULL) {
-    NSMutableArray<id<GADAdNetworkExtras>> *flutterExtras = [NSMutableArray array];
+    NSMutableArray<id<GADAdNetworkExtras>> *flutterExtras =
+        [NSMutableArray array];
     for (id<FlutterMediationExtras> extra in _mediationExtras) {
       [flutterExtras addObject:[extra getMediationExtras]];
     }
     extras = [NSArray arrayWithArray:flutterExtras];
   } else {
-    extras = [_mediationNetworkExtrasProvider getMediationExtras:adUnitId
-                                       mediationExtrasIdentifier:_mediationExtrasIdentifier];
+    extras = [_mediationNetworkExtrasProvider
+               getMediationExtras:adUnitId
+        mediationExtrasIdentifier:_mediationExtrasIdentifier];
   }
   BOOL addedNpaToGADExtras = false;
 
@@ -170,8 +192,8 @@
       // If GADExtras are present and npa is true, add npa = 1 to the GADExtras
       if ([extra isKindOfClass:[GADExtras class]] && _nonPersonalizedAds) {
         GADExtras *gadExtras = (GADExtras *)extra;
-        NSMutableDictionary *newParams =
-            [[NSMutableDictionary alloc] initWithDictionary:gadExtras.additionalParameters];
+        NSMutableDictionary *newParams = [[NSMutableDictionary alloc]
+            initWithDictionary:gadExtras.additionalParameters];
         newParams[@"npa"] = @"1";
         gadExtras.additionalParameters = newParams;
         [request registerAdNetworkExtras:gadExtras];
@@ -218,20 +240,25 @@
 
 @implementation FLTGADResponseInfo
 
-- (instancetype _Nonnull)initWithResponseInfo:(GADResponseInfo *_Nonnull)responseInfo {
+- (instancetype _Nonnull)initWithResponseInfo:
+    (GADResponseInfo *_Nonnull)responseInfo {
   self = [super init];
   if (self) {
     _responseIdentifier = responseInfo.responseIdentifier;
-    _adNetworkClassName = responseInfo.loadedAdNetworkResponseInfo.adNetworkClassName;
-    NSMutableArray<FLTGADAdNetworkResponseInfo *> *infoArray = [[NSMutableArray alloc] init];
-    for (GADAdNetworkResponseInfo *adNetworkInfo in responseInfo.adNetworkInfoArray) {
-      [infoArray
-          addObject:[[FLTGADAdNetworkResponseInfo alloc] initWithResponseInfo:adNetworkInfo]];
+    _adNetworkClassName =
+        responseInfo.loadedAdNetworkResponseInfo.adNetworkClassName;
+    NSMutableArray<FLTGADAdNetworkResponseInfo *> *infoArray =
+        [[NSMutableArray alloc] init];
+    for (GADAdNetworkResponseInfo *adNetworkInfo in responseInfo
+             .adNetworkInfoArray) {
+      [infoArray addObject:[[FLTGADAdNetworkResponseInfo alloc]
+                               initWithResponseInfo:adNetworkInfo]];
     }
     _adNetworkInfoArray = infoArray;
     _loadedAdNetworkResponseInfo = [[FLTGADAdNetworkResponseInfo alloc]
         initWithResponseInfo:responseInfo.loadedAdNetworkResponseInfo];
-    _extrasDictionary = responseInfo.extrasDictionary ? responseInfo.extrasDictionary : @{};
+    _extrasDictionary =
+        responseInfo.extrasDictionary ? responseInfo.extrasDictionary : @{};
   }
   return self;
 }
@@ -239,11 +266,13 @@
 
 @implementation FLTGADAdNetworkResponseInfo
 
-- (instancetype _Nonnull)initWithResponseInfo:(GADAdNetworkResponseInfo *_Nonnull)responseInfo {
+- (instancetype _Nonnull)initWithResponseInfo:
+    (GADAdNetworkResponseInfo *_Nonnull)responseInfo {
   self = [super init];
   if (self) {
     _adNetworkClassName = responseInfo.adNetworkClassName;
-    NSNumber *timeInMillis = [[NSNumber alloc] initWithDouble:responseInfo.latency * 1000];
+    NSNumber *timeInMillis =
+        [[NSNumber alloc] initWithDouble:responseInfo.latency * 1000];
     _latency = @(timeInMillis.longValue);
     _dictionaryDescription = responseInfo.dictionaryRepresentation.description;
     _adUnitMapping = [[NSMutableDictionary alloc] init];
@@ -274,9 +303,11 @@
     _code = error.code;
     _domain = error.domain;
     _message = error.localizedDescription;
-    GADResponseInfo *responseInfo = error.userInfo[GADErrorUserInfoKeyResponseInfo];
+    GADResponseInfo *responseInfo =
+        error.userInfo[GADErrorUserInfoKeyResponseInfo];
     if (responseInfo) {
-      _responseInfo = [[FLTGADResponseInfo alloc] initWithResponseInfo:responseInfo];
+      _responseInfo =
+          [[FLTGADResponseInfo alloc] initWithResponseInfo:responseInfo];
     }
   }
   return self;
@@ -297,7 +328,8 @@
   NSMutableDictionary<NSString *, NSString *> *targetingDictionary =
       [NSMutableDictionary dictionaryWithDictionary:self.customTargeting];
   for (NSString *key in self.customTargetingLists) {
-    targetingDictionary[key] = [self.customTargetingLists[key] componentsJoinedByString:@","];
+    targetingDictionary[key] =
+        [self.customTargetingLists[key] componentsJoinedByString:@","];
   }
   request.customTargeting = targetingDictionary;
   [self addNetworkExtrasToGADRequest:request adUnitId:adUnitId];
@@ -342,9 +374,10 @@
         return;
       }
       [weakSelf.manager onPaidEvent:weakSelf
-                              value:[[FLTAdValue alloc] initWithValue:value.value
-                                                            precision:(NSInteger)value.precision
-                                                         currencyCode:value.currencyCode]];
+                              value:[[FLTAdValue alloc]
+                                        initWithValue:value.value
+                                            precision:(NSInteger)value.precision
+                                         currencyCode:value.currencyCode]];
     };
   }
   return self;
@@ -372,7 +405,8 @@
   [manager onAdLoaded:self responseInfo:bannerView.responseInfo];
 }
 
-- (void)bannerView:(GADBannerView *)bannerView didFailToReceiveAdWithError:(NSError *)error {
+- (void)bannerView:(GADBannerView *)bannerView
+    didFailToReceiveAdWithError:(NSError *)error {
   [manager onAdFailedToLoad:self error:error];
 }
 
@@ -428,7 +462,8 @@
     _bannerView.appEventDelegate = self;
     _bannerView.delegate = self;
 
-    NSMutableArray<NSValue *> *validAdSizes = [NSMutableArray arrayWithCapacity:sizes.count];
+    NSMutableArray<NSValue *> *validAdSizes =
+        [NSMutableArray arrayWithCapacity:sizes.count];
     for (FLTAdSize *size in sizes) {
       [validAdSizes addObject:NSValueFromGADAdSize(size.size)];
     }
@@ -440,9 +475,10 @@
         return;
       }
       [weakSelf.manager onPaidEvent:weakSelf
-                              value:[[FLTAdValue alloc] initWithValue:value.value
-                                                            precision:(NSInteger)value.precision
-                                                         currencyCode:value.currencyCode]];
+                              value:[[FLTAdValue alloc]
+                                        initWithValue:value.value
+                                            precision:(NSInteger)value.precision
+                                         currencyCode:value.currencyCode]];
     };
   }
   return self;
@@ -504,9 +540,10 @@
         return;
       }
       [weakSelf.manager onPaidEvent:weakSelf
-                              value:[[FLTAdValue alloc] initWithValue:value.value
-                                                            precision:(NSInteger)value.precision
-                                                         currencyCode:value.currencyCode]];
+                              value:[[FLTAdValue alloc]
+                                        initWithValue:value.value
+                                            precision:(NSInteger)value.precision
+                                         currencyCode:value.currencyCode]];
     };
   }
   return self;
@@ -533,23 +570,27 @@
   [scrollView addSubview:_bannerView];
 
   _bannerView.translatesAutoresizingMaskIntoConstraints = false;
-  NSLayoutConstraint *width = [NSLayoutConstraint constraintWithItem:_bannerView
-                                                           attribute:NSLayoutAttributeWidth
-                                                           relatedBy:0
-                                                              toItem:scrollView
-                                                           attribute:NSLayoutAttributeWidth
-                                                          multiplier:1.0
-                                                            constant:0];
+  NSLayoutConstraint *width =
+      [NSLayoutConstraint constraintWithItem:_bannerView
+                                   attribute:NSLayoutAttributeWidth
+                                   relatedBy:0
+                                      toItem:scrollView
+                                   attribute:NSLayoutAttributeWidth
+                                  multiplier:1.0
+                                    constant:0];
   [scrollView addConstraint:width];
   _containerView = scrollView;
-  [_bannerView.widthAnchor constraintEqualToAnchor:scrollView.widthAnchor].active = YES;
-  [_bannerView.topAnchor constraintEqualToAnchor:scrollView.topAnchor].active = YES;
+  [_bannerView.widthAnchor constraintEqualToAnchor:scrollView.widthAnchor]
+      .active = YES;
+  [_bannerView.topAnchor constraintEqualToAnchor:scrollView.topAnchor].active =
+      YES;
   return scrollView;
 }
 
 #pragma mark - GADAdSizeDelegate
 
-- (void)adView:(GADBannerView *)bannerView willChangeAdSizeTo:(GADAdSize)adSize {
+- (void)adView:(GADBannerView *)bannerView
+    willChangeAdSizeTo:(GADAdSize)adSize {
   CGFloat height = adSize.size.height;
   [self.manager onFluidAdHeightChanged:self height:height];
 }
@@ -573,14 +614,16 @@
 
 - (void)load {
   // Must be overridden by subclasses
-  [NSException raise:NSInternalInconsistencyException
-              format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+  [NSException
+       raise:NSInternalInconsistencyException
+      format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
 }
 
 - (void)showFromRootViewController:(UIViewController *)rootViewController {
   // Must be overridden by subclasses
-  [NSException raise:NSInternalInconsistencyException
-              format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
+  [NSException
+       raise:NSInternalInconsistencyException
+      format:@"You must override %@ in a subclass", NSStringFromSelector(_cmd)];
 }
 
 - (void)ad:(nonnull id<GADFullScreenPresentingAd>)ad
@@ -588,25 +631,30 @@
   [manager didFailToPresentFullScreenContentWithError:self error:error];
 }
 
-- (void)adWillPresentFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+- (void)adWillPresentFullScreenContent:
+    (nonnull id<GADFullScreenPresentingAd>)ad {
   // Manually hide the status bar. This is a fix for
   // https://github.com/googleads/googleads-mobile-flutter/issues/191
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  _statusBarVisibilityBeforeAdShow = UIApplication.sharedApplication.statusBarHidden;
+  _statusBarVisibilityBeforeAdShow =
+      UIApplication.sharedApplication.statusBarHidden;
   [UIApplication.sharedApplication setStatusBarHidden:YES];
 #pragma clang diagnostic pop
   [manager adWillPresentFullScreenContent:self];
 }
 
-- (void)adDidDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+- (void)adDidDismissFullScreenContent:
+    (nonnull id<GADFullScreenPresentingAd>)ad {
   [manager adDidDismissFullScreenContent:self];
 }
 
-- (void)adWillDismissFullScreenContent:(nonnull id<GADFullScreenPresentingAd>)ad {
+- (void)adWillDismissFullScreenContent:
+    (nonnull id<GADFullScreenPresentingAd>)ad {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  [UIApplication.sharedApplication setStatusBarHidden:_statusBarVisibilityBeforeAdShow];
+  [UIApplication.sharedApplication
+      setStatusBarHidden:_statusBarVisibilityBeforeAdShow];
 #pragma clang diagnostic pop
   [manager adWillDismissFullScreenContent:self];
 }
@@ -650,30 +698,32 @@
 }
 
 - (void)load {
-  [GADInterstitialAd loadWithAdUnitID:_adUnitId
-                              request:[_adRequest asGADRequest:_adUnitId]
-                    completionHandler:^(GADInterstitialAd *ad, NSError *error) {
-                      if (error) {
-                        [self.manager onAdFailedToLoad:self error:error];
-                        return;
-                      }
+  [GADInterstitialAd
+       loadWithAdUnitID:_adUnitId
+                request:[_adRequest asGADRequest:_adUnitId]
+      completionHandler:^(GADInterstitialAd *ad, NSError *error) {
+        if (error) {
+          [self.manager onAdFailedToLoad:self error:error];
+          return;
+        }
 
-                      ad.fullScreenContentDelegate = self;
-                      self->_interstitialView = ad;
-                      __weak FLTInterstitialAd *weakSelf = self;
-                      ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-                        if (weakSelf.manager == nil) {
-                          return;
-                        }
-                        [weakSelf.manager
-                            onPaidEvent:weakSelf
-                                  value:[[FLTAdValue alloc] initWithValue:value.value
-                                                                precision:(NSInteger)value.precision
-                                                             currencyCode:value.currencyCode]];
-                      };
+        ad.fullScreenContentDelegate = self;
+        self->_interstitialView = ad;
+        __weak FLTInterstitialAd *weakSelf = self;
+        ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+          if (weakSelf.manager == nil) {
+            return;
+          }
+          [weakSelf.manager
+              onPaidEvent:weakSelf
+                    value:[[FLTAdValue alloc]
+                              initWithValue:value.value
+                                  precision:(NSInteger)value.precision
+                               currencyCode:value.currencyCode]];
+        };
 
-                      [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
-                    }];
+        [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+      }];
 }
 
 - (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController {
@@ -729,9 +779,10 @@
                   }
                   [weakSelf.manager
                       onPaidEvent:weakSelf
-                            value:[[FLTAdValue alloc] initWithValue:value.value
-                                                          precision:(NSInteger)value.precision
-                                                       currencyCode:value.currencyCode]];
+                            value:[[FLTAdValue alloc]
+                                      initWithValue:value.value
+                                          precision:(NSInteger)value.precision
+                                       currencyCode:value.currencyCode]];
                 };
 
                 self->_insterstitial = ad;
@@ -793,7 +844,8 @@
 
   [GADRewardedAd loadWithAdUnitID:_adUnitId
                           request:request
-                completionHandler:^(GADRewardedAd *_Nullable rewardedAd, NSError *_Nullable error) {
+                completionHandler:^(GADRewardedAd *_Nullable rewardedAd,
+                                    NSError *_Nullable error) {
                   if (error) {
                     [self.manager onAdFailedToLoad:self error:error];
                     return;
@@ -805,26 +857,30 @@
                     }
                     [weakSelf.manager
                         onPaidEvent:weakSelf
-                              value:[[FLTAdValue alloc] initWithValue:value.value
-                                                            precision:(NSInteger)value.precision
-                                                         currencyCode:value.currencyCode]];
+                              value:[[FLTAdValue alloc]
+                                        initWithValue:value.value
+                                            precision:(NSInteger)value.precision
+                                         currencyCode:value.currencyCode]];
                   };
                   rewardedAd.fullScreenContentDelegate = self;
                   self->_rewardedView = rewardedAd;
-                  [self.manager onAdLoaded:self responseInfo:rewardedAd.responseInfo];
+                  [self.manager onAdLoaded:self
+                              responseInfo:rewardedAd.responseInfo];
                 }];
 }
 
 - (void)showFromRootViewController:(UIViewController *_Nonnull)rootViewController {
   if (self.rewardedAd) {
-    [self.rewardedAd presentFromRootViewController:rootViewController
-                          userDidEarnRewardHandler:^{
-                            GADAdReward *reward = self.rewardedAd.adReward;
-                            FLTRewardItem *fltReward =
-                                [[FLTRewardItem alloc] initWithAmount:reward.amount
-                                                                 type:reward.type];
-                            [self.manager onRewardedAdUserEarnedReward:self reward:fltReward];
-                          }];
+    [self.rewardedAd
+        presentFromRootViewController:rootViewController
+             userDidEarnRewardHandler:^{
+               GADAdReward *reward = self.rewardedAd.adReward;
+               FLTRewardItem *fltReward =
+                   [[FLTRewardItem alloc] initWithAmount:reward.amount
+                                                    type:reward.type];
+               [self.manager onRewardedAdUserEarnedReward:self
+                                                   reward:fltReward];
+             }];
   } else {
     NSLog(@"RewardedAd failed to show because the ad was not ready.");
   }
@@ -881,25 +937,30 @@
   [GADRewardedInterstitialAd
        loadWithAdUnitID:_adUnitId
                 request:request
-      completionHandler:^(GADRewardedInterstitialAd *_Nullable rewardedInterstitialAd,
-                          NSError *_Nullable error) {
+      completionHandler:^(
+          GADRewardedInterstitialAd *_Nullable rewardedInterstitialAd,
+          NSError *_Nullable error) {
         if (error) {
           [self.manager onAdFailedToLoad:self error:error];
           return;
         }
         __weak FLTRewardedInterstitialAd *weakSelf = self;
-        rewardedInterstitialAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-          if (weakSelf.manager == nil) {
-            return;
-          }
-          [weakSelf.manager onPaidEvent:weakSelf
-                                  value:[[FLTAdValue alloc] initWithValue:value.value
-                                                                precision:(NSInteger)value.precision
-                                                             currencyCode:value.currencyCode]];
-        };
+        rewardedInterstitialAd.paidEventHandler =
+            ^(GADAdValue *_Nonnull value) {
+              if (weakSelf.manager == nil) {
+                return;
+              }
+              [weakSelf.manager
+                  onPaidEvent:weakSelf
+                        value:[[FLTAdValue alloc]
+                                  initWithValue:value.value
+                                      precision:(NSInteger)value.precision
+                                   currencyCode:value.currencyCode]];
+            };
         rewardedInterstitialAd.fullScreenContentDelegate = self;
         self->_rewardedInterstitialView = rewardedInterstitialAd;
-        [self.manager onAdLoaded:self responseInfo:rewardedInterstitialAd.responseInfo];
+        [self.manager onAdLoaded:self
+                    responseInfo:rewardedInterstitialAd.responseInfo];
       }];
 }
 
@@ -909,12 +970,16 @@
         presentFromRootViewController:rootViewController
              userDidEarnRewardHandler:^{
                GADAdReward *reward = self.rewardedInterstitialAd.adReward;
-               FLTRewardItem *fltReward = [[FLTRewardItem alloc] initWithAmount:reward.amount
-                                                                           type:reward.type];
-               [self.manager onRewardedInterstitialAdUserEarnedReward:self reward:fltReward];
+               FLTRewardItem *fltReward =
+                   [[FLTRewardItem alloc] initWithAmount:reward.amount
+                                                    type:reward.type];
+               [self.manager
+                   onRewardedInterstitialAdUserEarnedReward:self
+                                                     reward:fltReward];
              }];
   } else {
-    NSLog(@"RewardedInterstitialAd failed to show because the ad was not ready.");
+    NSLog(
+        @"RewardedInterstitialAd failed to show because the ad was not ready.");
   }
 }
 
@@ -968,7 +1033,8 @@
 
   [GADAppOpenAd loadWithAdUnitID:_adUnitId
                          request:request
-               completionHandler:^(GADAppOpenAd *_Nullable appOpenAd, NSError *_Nullable error) {
+               completionHandler:^(GADAppOpenAd *_Nullable appOpenAd,
+                                   NSError *_Nullable error) {
                  if (error) {
                    [self.manager onAdFailedToLoad:self error:error];
                    return;
@@ -980,14 +1046,16 @@
                    }
                    [weakSelf.manager
                        onPaidEvent:weakSelf
-                             value:[[FLTAdValue alloc] initWithValue:value.value
-                                                           precision:(NSInteger)value.precision
-                                                        currencyCode:value.currencyCode]];
+                             value:[[FLTAdValue alloc]
+                                       initWithValue:value.value
+                                           precision:(NSInteger)value.precision
+                                        currencyCode:value.currencyCode]];
                  };
                  appOpenAd.fullScreenContentDelegate = self;
 
                  self->_appOpenAd = appOpenAd;
-                 [self.manager onAdLoaded:self responseInfo:appOpenAd.responseInfo];
+                 [self.manager onAdLoaded:self
+                             responseInfo:appOpenAd.responseInfo];
                }];
 }
 
@@ -1014,14 +1082,15 @@
   FLTNativeTemplateStyle *_nativeTemplateStyle;
 }
 
-- (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
-                                  request:(FLTAdRequest *_Nonnull)request
-                          nativeAdFactory:(NSObject<FLTNativeAdFactory> *_Nonnull)nativeAdFactory
-                            customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions
-                       rootViewController:(UIViewController *_Nonnull)rootViewController
-                                     adId:(NSNumber *_Nonnull)adId
-                          nativeAdOptions:(FLTNativeAdOptions *_Nullable)nativeAdOptions
-                      nativeTemplateStyle:(FLTNativeTemplateStyle *_Nullable)nativeTemplateStyle {
+- (instancetype _Nonnull)
+       initWithAdUnitId:(NSString *_Nonnull)adUnitId
+                request:(FLTAdRequest *_Nonnull)request
+        nativeAdFactory:(NSObject<FLTNativeAdFactory> *_Nonnull)nativeAdFactory
+          customOptions:(NSDictionary<NSString *, id> *_Nullable)customOptions
+     rootViewController:(UIViewController *_Nonnull)rootViewController
+                   adId:(NSNumber *_Nonnull)adId
+        nativeAdOptions:(FLTNativeAdOptions *_Nullable)nativeAdOptions
+    nativeTemplateStyle:(FLTNativeTemplateStyle *_Nullable)nativeTemplateStyle {
   self = [super init];
   if (self) {
     self.adId = adId;
@@ -1034,10 +1103,11 @@
             ? @[]
             : nativeAdOptions.asGADAdLoaderOptions;
 
-    _adLoader = [[GADAdLoader alloc] initWithAdUnitID:_adUnitId
-                                   rootViewController:rootViewController
-                                              adTypes:@[ GADAdLoaderAdTypeNative ]
-                                              options:adLoaderOptions];
+    _adLoader =
+        [[GADAdLoader alloc] initWithAdUnitID:_adUnitId
+                           rootViewController:rootViewController
+                                      adTypes:@[ GADAdLoaderAdTypeNative ]
+                                      options:adLoaderOptions];
     _nativeAdOptions = nativeAdOptions;
     _nativeTemplateStyle = nativeTemplateStyle;
     self.adLoader.delegate = self;
@@ -1063,14 +1133,16 @@
 
 #pragma mark - GADNativeAdLoaderDelegate
 
-- (void)adLoader:(GADAdLoader *)adLoader didReceiveNativeAd:(GADNativeAd *)nativeAd {
+- (void)adLoader:(GADAdLoader *)adLoader
+    didReceiveNativeAd:(GADNativeAd *)nativeAd {
   // Use Nil instead of Null to fix crash with Swift integrations.
   NSDictionary<NSString *, id> *customOptions =
       [[NSNull null] isEqual:_customOptions] ? nil : _customOptions;
   if ([FLTAdUtil isNotNull:_nativeTemplateStyle]) {
     _view = [_nativeTemplateStyle getDisplayedView:nativeAd];
   } else if ([FLTAdUtil isNotNull:_nativeAdFactory]) {
-    _view = [_nativeAdFactory createNativeAd:nativeAd customOptions:customOptions];
+    _view = [_nativeAdFactory createNativeAd:nativeAd
+                               customOptions:customOptions];
   }
 
   nativeAd.delegate = self;
@@ -1080,15 +1152,17 @@
     if (weakSelf.manager == nil) {
       return;
     }
-    [weakSelf.manager onPaidEvent:weakSelf
-                            value:[[FLTAdValue alloc] initWithValue:value.value
-                                                          precision:(NSInteger)value.precision
-                                                       currencyCode:value.currencyCode]];
+    [weakSelf.manager
+        onPaidEvent:weakSelf
+              value:[[FLTAdValue alloc] initWithValue:value.value
+                                            precision:(NSInteger)value.precision
+                                         currencyCode:value.currencyCode]];
   };
   [manager onAdLoaded:self responseInfo:nativeAd.responseInfo];
 }
 
-- (void)adLoader:(GADAdLoader *)adLoader didFailToReceiveAdWithError:(NSError *)error {
+- (void)adLoader:(GADAdLoader *)adLoader
+    didFailToReceiveAdWithError:(NSError *)error {
   [manager onAdFailedToLoad:self error:error];
 }
 
@@ -1124,7 +1198,8 @@
 @end
 
 @implementation FLTRewardItem
-- (instancetype _Nonnull)initWithAmount:(NSNumber *_Nonnull)amount type:(NSString *_Nonnull)type {
+- (instancetype _Nonnull)initWithAmount:(NSNumber *_Nonnull)amount
+                                   type:(NSString *_Nonnull)type {
   self = [super init];
   if (self) {
     _amount = amount;
@@ -1156,7 +1231,8 @@
   self = [super init];
   if (self) {
     _valueMicros =
-        [value decimalNumberByMultiplyingBy:[[NSDecimalNumber alloc] initWithInteger:1000000]];
+        [value decimalNumberByMultiplyingBy:[[NSDecimalNumber alloc]
+                                                initWithInteger:1000000]];
     _precision = precision;
     _currencyCode = currencyCode;
   }
@@ -1165,9 +1241,10 @@
 @end
 
 @implementation FLTVideoOptions
-- (instancetype _Nonnull)initWithClickToExpandRequested:(NSNumber *_Nullable)clickToExpandRequested
-                                customControlsRequested:(NSNumber *_Nullable)customControlsRequested
-                                             startMuted:(NSNumber *_Nullable)startMuted {
+- (instancetype _Nonnull)
+    initWithClickToExpandRequested:(NSNumber *_Nullable)clickToExpandRequested
+           customControlsRequested:(NSNumber *_Nullable)customControlsRequested
+                        startMuted:(NSNumber *_Nullable)startMuted {
   self = [super init];
   if (self) {
     _clickToExpandRequested = clickToExpandRequested;
@@ -1194,13 +1271,15 @@
 @end
 
 @implementation FLTNativeAdOptions
-- (instancetype _Nonnull)initWithAdChoicesPlacement:(NSNumber *_Nullable)adChoicesPlacement
-                                   mediaAspectRatio:(NSNumber *_Nullable)mediaAspectRatio
-                                       videoOptions:(FLTVideoOptions *_Nullable)videoOptions
-                            requestCustomMuteThisAd:(NSNumber *_Nullable)requestCustomMuteThisAd
-                        shouldRequestMultipleImages:(NSNumber *_Nullable)shouldRequestMultipleImages
-                     shouldReturnUrlsForImageAssets:
-                         (NSNumber *_Nullable)shouldReturnUrlsForImageAssets {
+- (instancetype _Nonnull)
+        initWithAdChoicesPlacement:(NSNumber *_Nullable)adChoicesPlacement
+                  mediaAspectRatio:(NSNumber *_Nullable)mediaAspectRatio
+                      videoOptions:(FLTVideoOptions *_Nullable)videoOptions
+           requestCustomMuteThisAd:(NSNumber *_Nullable)requestCustomMuteThisAd
+       shouldRequestMultipleImages:
+           (NSNumber *_Nullable)shouldRequestMultipleImages
+    shouldReturnUrlsForImageAssets:
+        (NSNumber *_Nullable)shouldReturnUrlsForImageAssets {
   self = [super init];
   if (self) {
     _adChoicesPlacement = adChoicesPlacement;
@@ -1216,60 +1295,69 @@
 - (NSArray<GADAdLoaderOptions *> *_Nonnull)asGADAdLoaderOptions {
   NSMutableArray<GADAdLoaderOptions *> *options = [NSMutableArray array];
 
-  GADNativeAdImageAdLoaderOptions *imageOptions = [[GADNativeAdImageAdLoaderOptions alloc] init];
+  GADNativeAdImageAdLoaderOptions *imageOptions =
+      [[GADNativeAdImageAdLoaderOptions alloc] init];
   if ([FLTAdUtil isNotNull:_shouldReturnUrlsForImageAssets]) {
-    imageOptions.disableImageLoading = _shouldReturnUrlsForImageAssets.boolValue;
+    imageOptions.disableImageLoading =
+        _shouldReturnUrlsForImageAssets.boolValue;
   }
   if ([FLTAdUtil isNotNull:_shouldRequestMultipleImages]) {
-    imageOptions.shouldRequestMultipleImages = _shouldRequestMultipleImages.boolValue;
+    imageOptions.shouldRequestMultipleImages =
+        _shouldRequestMultipleImages.boolValue;
   }
   [options addObject:imageOptions];
 
   if ([FLTAdUtil isNotNull:_adChoicesPlacement]) {
-    GADNativeAdViewAdOptions *adViewOptions = [[GADNativeAdViewAdOptions alloc] init];
+    GADNativeAdViewAdOptions *adViewOptions =
+        [[GADNativeAdViewAdOptions alloc] init];
     switch (_adChoicesPlacement.intValue) {
-      case 0:
-        adViewOptions.preferredAdChoicesPosition = GADAdChoicesPositionTopRightCorner;
-        break;
-      case 1:
-        adViewOptions.preferredAdChoicesPosition = GADAdChoicesPositionTopLeftCorner;
-        break;
-      case 2:
-        adViewOptions.preferredAdChoicesPosition = GADAdChoicesPositionBottomRightCorner;
-        break;
-      case 3:
-        adViewOptions.preferredAdChoicesPosition = GADAdChoicesPositionBottomLeftCorner;
-        break;
-      default:
-        NSLog(@"AdChoicesPlacement should be an int in the range [0, 3]: %d",
-              _adChoicesPlacement.intValue);
-        break;
+    case 0:
+      adViewOptions.preferredAdChoicesPosition =
+          GADAdChoicesPositionTopRightCorner;
+      break;
+    case 1:
+      adViewOptions.preferredAdChoicesPosition =
+          GADAdChoicesPositionTopLeftCorner;
+      break;
+    case 2:
+      adViewOptions.preferredAdChoicesPosition =
+          GADAdChoicesPositionBottomRightCorner;
+      break;
+    case 3:
+      adViewOptions.preferredAdChoicesPosition =
+          GADAdChoicesPositionBottomLeftCorner;
+      break;
+    default:
+      NSLog(@"AdChoicesPlacement should be an int in the range [0, 3]: %d",
+            _adChoicesPlacement.intValue);
+      break;
     }
     [options addObject:adViewOptions];
   }
 
   if ([FLTAdUtil isNotNull:_mediaAspectRatio]) {
-    GADNativeAdMediaAdLoaderOptions *mediaOptions = [[GADNativeAdMediaAdLoaderOptions alloc] init];
+    GADNativeAdMediaAdLoaderOptions *mediaOptions =
+        [[GADNativeAdMediaAdLoaderOptions alloc] init];
     switch (_mediaAspectRatio.intValue) {
-      case 0:
-        mediaOptions.mediaAspectRatio = GADMediaAspectRatioUnknown;
-        break;
-      case 1:
-        mediaOptions.mediaAspectRatio = GADMediaAspectRatioAny;
-        break;
-      case 2:
-        mediaOptions.mediaAspectRatio = GADMediaAspectRatioLandscape;
-        break;
-      case 3:
-        mediaOptions.mediaAspectRatio = GADMediaAspectRatioPortrait;
-        break;
-      case 4:
-        mediaOptions.mediaAspectRatio = GADMediaAspectRatioSquare;
-        break;
-      default:
-        NSLog(@"MediaAspectRatio should be an int in the range [0, 4]: %d",
-              _mediaAspectRatio.intValue);
-        break;
+    case 0:
+      mediaOptions.mediaAspectRatio = GADMediaAspectRatioUnknown;
+      break;
+    case 1:
+      mediaOptions.mediaAspectRatio = GADMediaAspectRatioAny;
+      break;
+    case 2:
+      mediaOptions.mediaAspectRatio = GADMediaAspectRatioLandscape;
+      break;
+    case 3:
+      mediaOptions.mediaAspectRatio = GADMediaAspectRatioPortrait;
+      break;
+    case 4:
+      mediaOptions.mediaAspectRatio = GADMediaAspectRatioSquare;
+      break;
+    default:
+      NSLog(@"MediaAspectRatio should be an int in the range [0, 4]: %d",
+            _mediaAspectRatio.intValue);
+      break;
     }
     [options addObject:mediaOptions];
   }
