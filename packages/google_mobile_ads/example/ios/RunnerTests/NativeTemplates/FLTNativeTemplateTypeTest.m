@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "FLTNativeTemplateType.h"
 #import <XCTest/XCTest.h>
+#import "FLTNativeTemplateType.h"
 
 @interface FLTNativeTemplateTypeTest : XCTestCase
 @end
@@ -21,21 +21,17 @@
 @implementation FLTNativeTemplateTypeTest
 
 - (void)testXibName {
-  FLTNativeTemplateType *templateTypeSmall =
-      [[FLTNativeTemplateType alloc] initWithInt:0];
+  FLTNativeTemplateType *templateTypeSmall = [[FLTNativeTemplateType alloc] initWithInt:0];
   XCTAssertEqualObjects(templateTypeSmall.xibName, @"GADTSmallTemplateView");
 
-  FLTNativeTemplateType *templateTypeMedium =
-      [[FLTNativeTemplateType alloc] initWithInt:1];
+  FLTNativeTemplateType *templateTypeMedium = [[FLTNativeTemplateType alloc] initWithInt:1];
   XCTAssertEqualObjects(templateTypeMedium.xibName, @"GADTMediumTemplateView");
 
   // Unknown templates default to medium
-  FLTNativeTemplateType *templateTypeUnknown =
-      [[FLTNativeTemplateType alloc] initWithInt:-1];
+  FLTNativeTemplateType *templateTypeUnknown = [[FLTNativeTemplateType alloc] initWithInt:-1];
   XCTAssertEqualObjects(templateTypeUnknown.xibName, @"GADTMediumTemplateView");
 
-  FLTNativeTemplateType *templateType =
-      [[FLTNativeTemplateType alloc] initWithInt:2];
+  FLTNativeTemplateType *templateType = [[FLTNativeTemplateType alloc] initWithInt:2];
   XCTAssertEqualObjects(templateType.xibName, @"GADTMediumTemplateView");
 }
 

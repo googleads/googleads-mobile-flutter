@@ -32,65 +32,40 @@
 }
 
 - (void)testRequestAgent_noTemplateMetadata {
-  OCMStub(
-      [_mockMainBundle
-          objectForInfoDictionaryKey:[OCMArg
-                                         isEqual:@"FLTNewsTemplateVersion"]])
+  OCMStub([_mockMainBundle objectForInfoDictionaryKey:[OCMArg isEqual:@"FLTNewsTemplateVersion"]])
       .andReturn(nil);
-  OCMStub(
-      [_mockMainBundle
-          objectForInfoDictionaryKey:[OCMArg
-                                         isEqual:@"FLTGameTemplateVersion"]])
+  OCMStub([_mockMainBundle objectForInfoDictionaryKey:[OCMArg isEqual:@"FLTGameTemplateVersion"]])
       .andReturn(nil);
   XCTAssertEqualObjects([FLTAdUtil requestAgent], FLT_REQUEST_AGENT_VERSIONED);
 }
 
 - (void)testRequestAgent_newsTemplateMetadata {
-  OCMStub(
-      [_mockMainBundle
-          objectForInfoDictionaryKey:[OCMArg
-                                         isEqual:@"FLTNewsTemplateVersion"]])
+  OCMStub([_mockMainBundle objectForInfoDictionaryKey:[OCMArg isEqual:@"FLTNewsTemplateVersion"]])
       .andReturn(@"v1.2.3");
-  OCMStub(
-      [_mockMainBundle
-          objectForInfoDictionaryKey:[OCMArg
-                                         isEqual:@"FLTGameTemplateVersion"]])
+  OCMStub([_mockMainBundle objectForInfoDictionaryKey:[OCMArg isEqual:@"FLTGameTemplateVersion"]])
       .andReturn(nil);
-  NSString *expected = [NSString
-      stringWithFormat:@"%@%@", FLT_REQUEST_AGENT_VERSIONED, @"_News-v1.2.3"];
+  NSString *expected =
+      [NSString stringWithFormat:@"%@%@", FLT_REQUEST_AGENT_VERSIONED, @"_News-v1.2.3"];
   XCTAssertEqualObjects([FLTAdUtil requestAgent], expected);
 }
 
 - (void)testRequestAgent_gameTemplateMetadata {
-  OCMStub(
-      [_mockMainBundle
-          objectForInfoDictionaryKey:[OCMArg
-                                         isEqual:@"FLTNewsTemplateVersion"]])
+  OCMStub([_mockMainBundle objectForInfoDictionaryKey:[OCMArg isEqual:@"FLTNewsTemplateVersion"]])
       .andReturn(nil);
-  OCMStub(
-      [_mockMainBundle
-          objectForInfoDictionaryKey:[OCMArg
-                                         isEqual:@"FLTGameTemplateVersion"]])
+  OCMStub([_mockMainBundle objectForInfoDictionaryKey:[OCMArg isEqual:@"FLTGameTemplateVersion"]])
       .andReturn(@"123456");
-  NSString *expected = [NSString
-      stringWithFormat:@"%@%@", FLT_REQUEST_AGENT_VERSIONED, @"_Game-123456"];
+  NSString *expected =
+      [NSString stringWithFormat:@"%@%@", FLT_REQUEST_AGENT_VERSIONED, @"_Game-123456"];
   XCTAssertEqualObjects([FLTAdUtil requestAgent], expected);
 }
 
 - (void)testRequestAgent_gameAndNewsTemplateMetadata {
-  OCMStub(
-      [_mockMainBundle
-          objectForInfoDictionaryKey:[OCMArg
-                                         isEqual:@"FLTNewsTemplateVersion"]])
+  OCMStub([_mockMainBundle objectForInfoDictionaryKey:[OCMArg isEqual:@"FLTNewsTemplateVersion"]])
       .andReturn(@"123456");
-  OCMStub(
-      [_mockMainBundle
-          objectForInfoDictionaryKey:[OCMArg
-                                         isEqual:@"FLTGameTemplateVersion"]])
+  OCMStub([_mockMainBundle objectForInfoDictionaryKey:[OCMArg isEqual:@"FLTGameTemplateVersion"]])
       .andReturn(@"789z");
-  NSString *expected =
-      [NSString stringWithFormat:@"%@%@%@", FLT_REQUEST_AGENT_VERSIONED,
-                                 @"_News-123456", @"_Game-789z"];
+  NSString *expected = [NSString
+      stringWithFormat:@"%@%@%@", FLT_REQUEST_AGENT_VERSIONED, @"_News-123456", @"_Game-789z"];
   XCTAssertEqualObjects([FLTAdUtil requestAgent], expected);
 }
 

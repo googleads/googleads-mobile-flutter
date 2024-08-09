@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "FLTNativeTemplateColor.h"
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
+#import "FLTNativeTemplateColor.h"
 
 @interface FLTNativeTemplateColorTest : XCTestCase
 @end
@@ -22,11 +22,11 @@
 @implementation FLTNativeTemplateColorTest
 
 - (void)testConvertToUiColor {
-  FLTNativeTemplateColor *color = [[FLTNativeTemplateColor alloc]
-      initWithAlpha:[[NSNumber alloc] initWithFloat:5.0f]
-                red:@10.0f
-              green:[[NSNumber alloc] initWithFloat:15.0f]
-               blue:[[NSNumber alloc] initWithFloat:20.0f]];
+  FLTNativeTemplateColor *color =
+      [[FLTNativeTemplateColor alloc] initWithAlpha:[[NSNumber alloc] initWithFloat:5.0f]
+                                                red:@10.0f
+                                              green:[[NSNumber alloc] initWithFloat:15.0f]
+                                               blue:[[NSNumber alloc] initWithFloat:20.0f]];
   CGFloat alpha;
   CGFloat red;
   CGFloat green;
