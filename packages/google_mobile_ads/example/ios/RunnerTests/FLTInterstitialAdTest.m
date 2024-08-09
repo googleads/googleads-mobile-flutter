@@ -35,12 +35,10 @@
   GADRequest *gadRequest = OCMClassMock([GADRequest class]);
   OCMStub([request asGADRequest:[OCMArg any]]).andReturn(gadRequest);
 
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
-  FLTInterstitialAd *ad =
-      [[FLTInterstitialAd alloc] initWithAdUnitId:@"testId"
-                                          request:request
-                                             adId:@1];
+  UIViewController *mockRootViewController = OCMClassMock([UIViewController class]);
+  FLTInterstitialAd *ad = [[FLTInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                              request:request
+                                                                 adId:@1];
   ad.manager = mockManager;
 
   id interstitialClassMock = OCMClassMock([GADInterstitialAd class]);
@@ -63,8 +61,7 @@
         [delegate adDidDismissFullScreenContent:interstitialClassMock];
         [delegate adWillPresentFullScreenContent:interstitialClassMock];
         [delegate adWillDismissFullScreenContent:interstitialClassMock];
-        [delegate ad:interstitialClassMock
-            didFailToPresentFullScreenContentWithError:error];
+        [delegate ad:interstitialClassMock didFailToPresentFullScreenContentWithError:error];
       });
 
   GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
@@ -75,35 +72,31 @@
   OCMStub([adValue value]).andReturn(NSDecimalNumber.one);
   OCMStub([adValue precision]).andReturn(GADAdValuePrecisionEstimated);
   OCMStub([adValue currencyCode]).andReturn(@"currencyCode");
-  OCMStub([interstitialClassMock
-      setPaidEventHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
-        GADPaidEventHandler handler = obj;
-        handler(adValue);
-        return YES;
-      }]]);
+  OCMStub([interstitialClassMock setPaidEventHandler:[OCMArg checkWithBlock:^BOOL(id obj) {
+                                   GADPaidEventHandler handler = obj;
+                                   handler(adValue);
+                                   return YES;
+                                 }]]);
   // Call load and verify interactions with mocks.
   [ad load];
 
-  OCMVerify(ClassMethod([interstitialClassMock
-       loadWithAdUnitID:[OCMArg isEqual:@"testId"]
-                request:[OCMArg isEqual:gadRequest]
-      completionHandler:[OCMArg any]]));
+  OCMVerify(ClassMethod([interstitialClassMock loadWithAdUnitID:[OCMArg isEqual:@"testId"]
+                                                        request:[OCMArg isEqual:gadRequest]
+                                              completionHandler:[OCMArg any]]));
   OCMVerify([mockManager onAdLoaded:[OCMArg isEqual:ad]
                        responseInfo:[OCMArg isEqual:mockResponseInfo]]);
-  OCMVerify(
-      [interstitialClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
+  OCMVerify([interstitialClassMock setFullScreenContentDelegate:[OCMArg isEqual:ad]]);
   XCTAssertEqual(ad.interstitial, interstitialClassMock);
-  OCMVerify([mockManager
-      onPaidEvent:[OCMArg isEqual:ad]
-            value:[OCMArg checkWithBlock:^BOOL(id obj) {
-              FLTAdValue *adValue = obj;
-              XCTAssertEqualObjects(
-                  adValue.valueMicros,
-                  [[NSDecimalNumber alloc] initWithInt:1000000]);
-              XCTAssertEqual(adValue.precision, GADAdValuePrecisionEstimated);
-              XCTAssertEqualObjects(adValue.currencyCode, @"currencyCode");
-              return TRUE;
-            }]]);
+  OCMVerify([mockManager onPaidEvent:[OCMArg isEqual:ad]
+                               value:[OCMArg checkWithBlock:^BOOL(id obj) {
+                                 FLTAdValue *adValue = obj;
+                                 XCTAssertEqualObjects(
+                                     adValue.valueMicros,
+                                     [[NSDecimalNumber alloc] initWithInt:1000000]);
+                                 XCTAssertEqual(adValue.precision, GADAdValuePrecisionEstimated);
+                                 XCTAssertEqualObjects(adValue.currencyCode, @"currencyCode");
+                                 return TRUE;
+                               }]]);
 
   // Show the ad
   [ad showFromRootViewController:mockRootViewController];
@@ -117,9 +110,8 @@
   OCMVerify([mockManager adWillDismissFullScreenContent:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidRecordImpression:[OCMArg isEqual:ad]]);
   OCMVerify([mockManager adDidRecordClick:[OCMArg isEqual:ad]]);
-  OCMVerify([mockManager
-      didFailToPresentFullScreenContentWithError:[OCMArg isEqual:ad]
-                                           error:[OCMArg isEqual:error]]);
+  OCMVerify([mockManager didFailToPresentFullScreenContentWithError:[OCMArg isEqual:ad]
+                                                              error:[OCMArg isEqual:error]]);
 }
 
 - (void)testFailedToLoad {
@@ -128,10 +120,9 @@
   GADRequest *gadRequest = OCMClassMock([GADRequest class]);
   OCMStub([request asGADRequest:[OCMArg any]]).andReturn(gadRequest);
 
-  FLTInterstitialAd *ad =
-      [[FLTInterstitialAd alloc] initWithAdUnitId:@"testId"
-                                          request:request
-                                             adId:@1];
+  FLTInterstitialAd *ad = [[FLTInterstitialAd alloc] initWithAdUnitId:@"testId"
+                                                              request:request
+                                                                 adId:@1];
   ad.manager = mockManager;
 
   id interstitialClassMock = OCMClassMock([GADInterstitialAd class]);
@@ -147,12 +138,10 @@
 
   [ad load];
 
-  OCMVerify(ClassMethod([interstitialClassMock
-       loadWithAdUnitID:[OCMArg isEqual:@"testId"]
-                request:[OCMArg isEqual:gadRequest]
-      completionHandler:[OCMArg any]]));
-  OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad]
-                                    error:[OCMArg isEqual:error]]);
+  OCMVerify(ClassMethod([interstitialClassMock loadWithAdUnitID:[OCMArg isEqual:@"testId"]
+                                                        request:[OCMArg isEqual:gadRequest]
+                                              completionHandler:[OCMArg any]]));
+  OCMVerify([mockManager onAdFailedToLoad:[OCMArg isEqual:ad] error:[OCMArg isEqual:error]]);
 }
 
 @end
