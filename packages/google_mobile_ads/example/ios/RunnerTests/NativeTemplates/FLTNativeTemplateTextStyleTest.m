@@ -36,8 +36,10 @@
 }
 
 - (void)testInitWithDefinedParams {
-  FLTNativeTemplateColor *textColor = OCMClassMock([FLTNativeTemplateColor class]);
-  FLTNativeTemplateColor *backgroundColor = OCMClassMock([FLTNativeTemplateColor class]);
+  FLTNativeTemplateColor *textColor =
+      OCMClassMock([FLTNativeTemplateColor class]);
+  FLTNativeTemplateColor *backgroundColor =
+      OCMClassMock([FLTNativeTemplateColor class]);
   FLTNativeTemplateFontStyleWrapper *fontStyleWrapper =
       OCMClassMock([FLTNativeTemplateFontStyleWrapper class]);
   OCMStub([fontStyleWrapper fontStyle]).andReturn(FLTNativeTemplateFontBold);
@@ -62,8 +64,10 @@
 }
 
 - (void)testUiFontWithMissingSize {
-  FLTNativeTemplateColor *textColor = OCMClassMock([FLTNativeTemplateColor class]);
-  FLTNativeTemplateColor *backgroundColor = OCMClassMock([FLTNativeTemplateColor class]);
+  FLTNativeTemplateColor *textColor =
+      OCMClassMock([FLTNativeTemplateColor class]);
+  FLTNativeTemplateColor *backgroundColor =
+      OCMClassMock([FLTNativeTemplateColor class]);
   FLTNativeTemplateFontStyleWrapper *fontStyleWrapper =
       OCMClassMock([FLTNativeTemplateFontStyleWrapper class]);
   OCMStub([fontStyleWrapper fontStyle]).andReturn(FLTNativeTemplateFontItalic);
@@ -88,8 +92,10 @@
 }
 
 - (void)testUiFontWithMissingFontStyle {
-  FLTNativeTemplateColor *textColor = OCMClassMock([FLTNativeTemplateColor class]);
-  FLTNativeTemplateColor *backgroundColor = OCMClassMock([FLTNativeTemplateColor class]);
+  FLTNativeTemplateColor *textColor =
+      OCMClassMock([FLTNativeTemplateColor class]);
+  FLTNativeTemplateColor *backgroundColor =
+      OCMClassMock([FLTNativeTemplateColor class]);
   NSNumber *size = [[NSNumber alloc] initWithFloat:14.0f];
   FLTNativeTemplateTextStyle *textStyle =
       [[FLTNativeTemplateTextStyle alloc] initWithTextColor:textColor
@@ -111,8 +117,10 @@
 }
 
 - (void)testUiFontWithUnknownFontStyle {
-  FLTNativeTemplateColor *textColor = OCMClassMock([FLTNativeTemplateColor class]);
-  FLTNativeTemplateColor *backgroundColor = OCMClassMock([FLTNativeTemplateColor class]);
+  FLTNativeTemplateColor *textColor =
+      OCMClassMock([FLTNativeTemplateColor class]);
+  FLTNativeTemplateColor *backgroundColor =
+      OCMClassMock([FLTNativeTemplateColor class]);
   NSNumber *size = [[NSNumber alloc] initWithFloat:14.0f];
   FLTNativeTemplateFontStyleWrapper *fontStyleWrapper =
       OCMClassMock([FLTNativeTemplateFontStyleWrapper class]);

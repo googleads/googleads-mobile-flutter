@@ -28,7 +28,8 @@
 
 - (void)setUp {
   readerWriter = [[FLTUserMessagingPlatformReaderWriter alloc] init];
-  messageCodec = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
+  messageCodec =
+      [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
 }
 
 - (void)testRequestParams_default {
@@ -36,7 +37,8 @@
   NSData *encodedMessage = [messageCodec encode:requestParameters];
 
   UMPRequestParameters *decoded = [messageCodec decode:encodedMessage];
-  XCTAssertEqual(decoded.tagForUnderAgeOfConsent, requestParameters.tagForUnderAgeOfConsent);
+  XCTAssertEqual(decoded.tagForUnderAgeOfConsent,
+                 requestParameters.tagForUnderAgeOfConsent);
   XCTAssertEqual(decoded.debugSettings, requestParameters.debugSettings);
 }
 
@@ -47,8 +49,10 @@
   NSData *encodedMessage = [messageCodec encode:requestParameters];
 
   UMPRequestParameters *decoded = [messageCodec decode:encodedMessage];
-  XCTAssertEqual(decoded.tagForUnderAgeOfConsent, requestParameters.tagForUnderAgeOfConsent);
-  XCTAssertEqual(decoded.debugSettings.geography, requestParameters.debugSettings.geography);
+  XCTAssertEqual(decoded.tagForUnderAgeOfConsent,
+                 requestParameters.tagForUnderAgeOfConsent);
+  XCTAssertEqual(decoded.debugSettings.geography,
+                 requestParameters.debugSettings.geography);
   XCTAssertEqual(decoded.debugSettings.testDeviceIdentifiers,
                  requestParameters.debugSettings.testDeviceIdentifiers);
 }
@@ -59,7 +63,8 @@
 
   UMPDebugSettings *decoded = [messageCodec decode:encodedMessage];
   XCTAssertEqual(decoded.geography, debugSettings.geography);
-  XCTAssertEqual(decoded.testDeviceIdentifiers, debugSettings.testDeviceIdentifiers);
+  XCTAssertEqual(decoded.testDeviceIdentifiers,
+                 debugSettings.testDeviceIdentifiers);
 }
 
 - (void)testConsentDebugSettings_geographyTestDeviceIdentifiers {
@@ -70,7 +75,8 @@
 
   UMPDebugSettings *decoded = [messageCodec decode:encodedMessage];
   XCTAssertEqual(decoded.geography, debugSettings.geography);
-  XCTAssertEqualObjects(decoded.testDeviceIdentifiers, debugSettings.testDeviceIdentifiers);
+  XCTAssertEqualObjects(decoded.testDeviceIdentifiers,
+                        debugSettings.testDeviceIdentifiers);
 }
 
 - (void)testConsentFormTrackAndDispose {
