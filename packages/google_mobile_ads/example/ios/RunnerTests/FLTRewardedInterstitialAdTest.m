@@ -151,7 +151,7 @@
       setServerSideVerificationOptions:[OCMArg isEqual:gadOptions]]);
 
   // Show the ad and verify callbacks are invoked
-  [ad showFromRootViewController:mockRootViewController];
+  [ad show];
 
   OCMVerify([rewardedInterstitialClassMock
       presentFromRootViewController:[OCMArg isEqual:mockRootViewController]

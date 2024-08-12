@@ -117,7 +117,7 @@
             }]]);
 
   // Show the ad
-  [ad showFromRootViewController:mockRootViewController];
+  [ad show];
 
   OCMVerify([interstitialClassMock
       presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);

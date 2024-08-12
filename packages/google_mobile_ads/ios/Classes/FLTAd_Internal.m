@@ -726,10 +726,9 @@
       }];
 }
 
-- (void)showFromRootViewController:
-    (UIViewController *_Nonnull)rootViewController {
+- (void)show {
   if (self.interstitial) {
-    [self.interstitial presentFromRootViewController:rootViewController];
+    [self.interstitial presentFromRootViewController:nil];
   } else {
     NSLog(@"InterstitialAd failed to show because the ad was not ready.");
   }
@@ -790,10 +789,9 @@
               }];
 }
 
-- (void)showFromRootViewController:
-    (UIViewController *_Nonnull)rootViewController {
+- (void)show {
   if (self.interstitial) {
-    [self.interstitial presentFromRootViewController:rootViewController];
+    [self.interstitial presentFromRootViewController:nil];
   } else {
     NSLog(@"InterstitialAd failed to show because the ad was not ready.");
   }
@@ -871,11 +869,10 @@
                 }];
 }
 
-- (void)showFromRootViewController:
-    (UIViewController *_Nonnull)rootViewController {
+- (void)show {
   if (self.rewardedAd) {
     [self.rewardedAd
-        presentFromRootViewController:rootViewController
+        presentFromRootViewController:nil
              userDidEarnRewardHandler:^{
                GADAdReward *reward = self.rewardedAd.adReward;
                FLTRewardItem *fltReward =
@@ -967,11 +964,10 @@
       }];
 }
 
-- (void)showFromRootViewController:
-    (UIViewController *_Nonnull)rootViewController {
+- (void)show {
   if (self.rewardedInterstitialAd) {
     [self.rewardedInterstitialAd
-        presentFromRootViewController:rootViewController
+        presentFromRootViewController:nil
              userDidEarnRewardHandler:^{
                GADAdReward *reward = self.rewardedInterstitialAd.adReward;
                FLTRewardItem *fltReward =
@@ -1063,10 +1059,9 @@
                }];
 }
 
-- (void)showFromRootViewController:
-    (UIViewController *_Nonnull)rootViewController {
+- (void)show {
   if (self.appOpenAd) {
-    [self.appOpenAd presentFromRootViewController:rootViewController];
+    [self.appOpenAd presentFromRootViewController:nil];
   } else {
     NSLog(@"AppOpenAd failed to show because the ad was not ready.");
   }

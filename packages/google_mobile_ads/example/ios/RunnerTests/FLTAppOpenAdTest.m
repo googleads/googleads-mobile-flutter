@@ -126,7 +126,7 @@
               return TRUE;
             }]]);
 
-  [ad showFromRootViewController:mockRootViewController];
+  [ad show];
 
   OCMVerify([appOpenClassMock
       presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);

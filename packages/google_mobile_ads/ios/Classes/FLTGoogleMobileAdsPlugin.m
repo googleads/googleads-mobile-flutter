@@ -244,7 +244,6 @@
 
 - (void)handleMethodCall:(FlutterMethodCall *)call
                   result:(FlutterResult)result {
-  NSLog(@"handleMethodCall %@", call.method);
   UIViewController *rootController = self.rootController;
 
   if ([call.method isEqualToString:@"MobileAds#initialize"]) {
@@ -510,8 +509,7 @@
     [_manager dispose:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method isEqualToString:@"showAdWithoutView"]) {
-    [_manager showAdWithID:call.arguments[@"adId"]
-        rootViewController:rootController];
+    [_manager showAdWithID:call.arguments[@"adId"]];
     result(nil);
   } else if ([call.method
                  isEqualToString:@"AdSize#getAnchoredAdaptiveBannerAdSize"]) {
