@@ -223,6 +223,8 @@
 #pragma clang diagnostic pop
   }
 
+  // Get the presented view controller. This fixes an issue in the add to app
+  // case: https://github.com/googleads/googleads-mobile-flutter/issues/700
   UIViewController *presentedViewController = root;
   while (presentedViewController.presentedViewController &&
          ![presentedViewController.presentedViewController isBeingDismissed]) {
