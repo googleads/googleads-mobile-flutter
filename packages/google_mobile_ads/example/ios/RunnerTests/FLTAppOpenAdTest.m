@@ -126,8 +126,7 @@
 
   [ad show];
 
-  OCMVerify([appOpenClassMock
-      presentFromRootViewController:[OCMArg isNil]]);
+  OCMVerify([appOpenClassMock presentFromRootViewController:[OCMArg isNil]]);
 
   // Verify full screen callbacks.
   OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);

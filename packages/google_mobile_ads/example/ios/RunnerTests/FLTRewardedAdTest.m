@@ -145,9 +145,8 @@
   // Show the ad and verify callbacks invoked
   [ad show];
 
-  OCMVerify([rewardedClassMock
-      presentFromRootViewController:[OCMArg isNil]
-           userDidEarnRewardHandler:[OCMArg any]]);
+  OCMVerify([rewardedClassMock presentFromRootViewController:[OCMArg isNil]
+                                    userDidEarnRewardHandler:[OCMArg any]]);
 
   [fullScreenContentDelegate adWillPresentFullScreenContent:rewardedClassMock];
   OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);
