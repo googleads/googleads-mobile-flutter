@@ -35,12 +35,9 @@
   GAMRequest *gadRequest = OCMClassMock([GAMRequest class]);
   OCMStub([request asGAMRequest:[OCMArg any]]).andReturn(gadRequest);
 
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
   FLTGAMInterstitialAd *ad =
       [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
                                              request:request
-                                  rootViewController:mockRootViewController
                                                 adId:@1];
   ad.manager = mockManager;
 
@@ -120,8 +117,8 @@
   // Show the ad
   [ad show];
 
-  OCMVerify([interstitialClassMock
-      presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);
+  OCMVerify(
+      [interstitialClassMock presentFromRootViewController:[OCMArg isNil]]);
 
   // Verify full screen callbacks.
   OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);
@@ -145,12 +142,9 @@
   GAMRequest *gadRequest = OCMClassMock([GAMRequest class]);
   OCMStub([request asGAMRequest:[OCMArg any]]).andReturn(gadRequest);
 
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
   FLTGAMInterstitialAd *ad =
       [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
                                              request:request
-                                  rootViewController:mockRootViewController
                                                 adId:@1];
   ad.manager = mockManager;
 

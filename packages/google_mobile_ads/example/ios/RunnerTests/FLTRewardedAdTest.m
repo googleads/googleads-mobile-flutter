@@ -50,13 +50,9 @@
 // Helper method for testing with FLTAdRequest and FLTGAMAdRequest.
 - (void)testLoadShowRewardedAd:(FLTAdRequest *)request
                gadOrGAMRequest:(GADRequest *)gadOrGAMRequest {
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
-  FLTRewardedAd *ad =
-      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                      request:request
-                           rootViewController:mockRootViewController
-                                         adId:@1];
+  FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                                      request:request
+                                                         adId:@1];
   ad.manager = mockManager;
 
   // Stub the load call to invoke successful load callback.
@@ -149,9 +145,8 @@
   // Show the ad and verify callbacks invoked
   [ad show];
 
-  OCMVerify([rewardedClassMock
-      presentFromRootViewController:[OCMArg isEqual:mockRootViewController]
-           userDidEarnRewardHandler:[OCMArg any]]);
+  OCMVerify([rewardedClassMock presentFromRootViewController:[OCMArg isNil]
+                                    userDidEarnRewardHandler:[OCMArg any]]);
 
   [fullScreenContentDelegate adWillPresentFullScreenContent:rewardedClassMock];
   OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);
@@ -216,13 +211,9 @@
 
 // Helper for testing failed to load.
 - (void)testFailedToLoad:(FLTAdRequest *)request {
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
-  FLTRewardedAd *ad =
-      [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
-                                      request:request
-                           rootViewController:mockRootViewController
-                                         adId:@1];
+  FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
+                                                      request:request
+                                                         adId:@1];
   ad.manager = mockManager;
 
   id rewardedClassMock = OCMClassMock([GADRewardedAd class]);
