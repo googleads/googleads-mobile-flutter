@@ -50,8 +50,6 @@
 // Helper method for testing with FLTAdRequest and FLTGAMAdRequest.
 - (void)testLoadShowRewardedInterstitialAd:(FLTAdRequest *)request
                            gadOrGAMRequest:(GADRequest *)gadOrGAMRequest {
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
   FLTRewardedInterstitialAd *ad =
       [[FLTRewardedInterstitialAd alloc] initWithAdUnitId:@"testId"
                                                   request:request
@@ -154,7 +152,7 @@
   [ad show];
 
   OCMVerify([rewardedInterstitialClassMock
-      presentFromRootViewController:[OCMArg isEqual:mockRootViewController]
+      presentFromRootViewController:[OCMArg isNil]
            userDidEarnRewardHandler:[OCMArg any]]);
 
   // Verify full screen callbacks.

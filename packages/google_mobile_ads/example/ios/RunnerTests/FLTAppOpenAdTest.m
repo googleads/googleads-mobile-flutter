@@ -56,8 +56,6 @@
 // Helper method for testing with FLTAdRequest and FLTGAMAdRequest.
 - (void)testLoadShowAppOpenAd:(FLTAdRequest *)request
               gadOrGAMRequest:(GADRequest *)gadOrGAMRequest {
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
   FLTAppOpenAd *ad = [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
                                                     request:request
                                                        adId:@1];
@@ -129,7 +127,7 @@
   [ad show];
 
   OCMVerify([appOpenClassMock
-      presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);
+      presentFromRootViewController:[OCMArg isNil]]);
 
   // Verify full screen callbacks.
   OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);

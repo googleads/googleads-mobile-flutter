@@ -35,8 +35,6 @@
   GAMRequest *gadRequest = OCMClassMock([GAMRequest class]);
   OCMStub([request asGAMRequest:[OCMArg any]]).andReturn(gadRequest);
 
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
   FLTGAMInterstitialAd *ad =
       [[FLTGAMInterstitialAd alloc] initWithAdUnitId:@"testId"
                                              request:request
@@ -120,7 +118,7 @@
   [ad show];
 
   OCMVerify([interstitialClassMock
-      presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);
+      presentFromRootViewController:[OCMArg isNil]]);
 
   // Verify full screen callbacks.
   OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);

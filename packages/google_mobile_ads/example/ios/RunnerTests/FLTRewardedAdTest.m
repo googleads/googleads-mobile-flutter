@@ -50,8 +50,6 @@
 // Helper method for testing with FLTAdRequest and FLTGAMAdRequest.
 - (void)testLoadShowRewardedAd:(FLTAdRequest *)request
                gadOrGAMRequest:(GADRequest *)gadOrGAMRequest {
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
   FLTRewardedAd *ad = [[FLTRewardedAd alloc] initWithAdUnitId:@"testId"
                                                       request:request
                                                          adId:@1];
@@ -148,7 +146,7 @@
   [ad show];
 
   OCMVerify([rewardedClassMock
-      presentFromRootViewController:[OCMArg isEqual:mockRootViewController]
+      presentFromRootViewController:[OCMArg isNil]
            userDidEarnRewardHandler:[OCMArg any]]);
 
   [fullScreenContentDelegate adWillPresentFullScreenContent:rewardedClassMock];
