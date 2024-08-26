@@ -50,9 +50,9 @@ android {
     }
 
     dependencies {
-        implementation 'com.applovin:applovin-sdk:12.4.3'
-        implementation 'com.google.ads.mediation:applovin:12.4.3.0'
-        implementation 'com.google.android.gms:play-services-ads:23.0.0'
+        implementation 'com.applovin:applovin-sdk:12.6.1'
+        implementation 'com.google.ads.mediation:applovin:12.6.1.0'
+        implementation 'com.google.android.gms:play-services-ads:23.3.0'
         implementation 'androidx.core:core-ktx:1.8.0'
         testImplementation 'junit:junit:4.13.2'
         testImplementation 'androidx.test:core:1.5.0'
