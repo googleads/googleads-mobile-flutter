@@ -53,7 +53,6 @@ class _HomePageState extends State<HomePage> {
   final _appOpenAdManager = AppOpenAdManager();
   var _isMobileAdsInitializeCalled = false;
   var _isPrivacyOptionsRequired = false;
-  int _counter = 0;
   late AppLifecycleReactor _appLifecycleReactor;
 
   @override
@@ -80,12 +79,6 @@ class _HomePageState extends State<HomePage> {
 
     // This sample attempts to load ads using consent obtained in the previous session.
     _initializeMobileAdsSDK();
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
   }
 
   @override
