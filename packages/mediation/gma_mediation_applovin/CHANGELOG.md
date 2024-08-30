@@ -1,5 +1,10 @@
 ## AppLovin Flutter Mediation Adapter Changelog
 
+#### 1.2.0
+* Verified compatibility with AppLovin Android adapter version 12.6.1.0.
+* Verified compatibility with AppLovin iOS adapter version 12.6.1.0.
+* Built and tested with the Google Mobile Ads Flutter Plugin version 5.1.0.
+
 #### 1.1.0
 * API for the GmaMediationApplovin is no longer static.
 * Verified compatibility with AppLovin Android adapter version 12.4.3.0.
