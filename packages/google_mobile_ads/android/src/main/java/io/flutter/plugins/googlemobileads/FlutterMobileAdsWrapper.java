@@ -36,7 +36,12 @@ public class FlutterMobileAdsWrapper {
   /** Initializes the sdk. */
   public void initialize(
       @NonNull Context context, @NonNull OnInitializationCompleteListener listener) {
-    MobileAds.initialize(context, listener);
+    new Thread(
+            () -> {
+              // Initialize the Google Mobile Ads SDK on a background thread.
+              MobileAds.initialize(context, listener);
+            })
+            .start();
   }
 
   /** Wrapper for setAppMuted. */
