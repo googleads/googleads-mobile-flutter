@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_ironsource'
-  s.version          = '1.0.0'
+  s.version          = '1.2.0'
   s.summary          = 'Google Mobile Ads Mediation of ironSource.'
   s.description      = <<-DESC
 Mediation Adapter for ironSource to use with Google Mobile Ads.
@@ -16,7 +16,7 @@ Mediation Adapter for ironSource to use with Google Mobile Ads.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationIronSource', '~>8.0.0.0.0'
+  s.dependency 'GoogleMobileAdsMediationIronSource', '~>8.2.0.0.0'
   s.platform = :ios, '12.0'
   s.static_framework = true
 
