@@ -50,7 +50,7 @@ android {
     }
 
     dependencies {
-        implementation 'com.google.ads.mediation:vungle:7.3.2.0'
+        implementation 'com.google.ads.mediation:vungle:7.4.0.1'
         testImplementation 'junit:junit:4.13.2'
         testImplementation 'androidx.test:core:1.5.0'
         testImplementation 'androidx.test:core-ktx:1.5.0'
