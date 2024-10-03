@@ -43,11 +43,7 @@
             binaryMessenger:controller.binaryMessenger];
   [methodChannel setMethodCallHandler:^(FlutterMethodCall *call,
                                         FlutterResult result) {
-    if ([call.method isEqualToString:@"setIsAgeRestrictedUser"]) {
-      [ALPrivacySettings
-          setIsAgeRestrictedUser:call.arguments[@"isAgeRestricted"]];
-      result(nil);
-    } else if ([call.method isEqualToString:@"setHasUserConsent"]) {
+    if ([call.method isEqualToString:@"setHasUserConsent"]) {
       [ALPrivacySettings setHasUserConsent:call.arguments[@"hasUserConsent"]];
       result(nil);
     } else {
