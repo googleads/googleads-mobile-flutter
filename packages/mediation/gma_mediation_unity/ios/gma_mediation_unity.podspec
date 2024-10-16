@@ -16,7 +16,7 @@ Mediation Adapter for Unity Ads to use with Google Mobile Ads.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationUnity', '~>4.12.2.0'
+  s.dependency 'GoogleMobileAdsMediationUnity', '~>4.12.3.1'
   s.platform = :ios, '12.0'
   s.static_framework = true
 
