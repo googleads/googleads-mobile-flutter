@@ -1,3 +1,6 @@
+## Next Version
+* Updated WebView Flutter Android dependency 
+
 ## 5.2.0
 * Removed use of rootViewController for iOS GMA SDK which solved issues like 
   https://github.com/googleads/googleads-mobile-flutter/issues/1146 and https://github.com/googleads/googleads-mobile-flutter/issues/700.
