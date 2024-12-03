@@ -14,6 +14,8 @@
 
 import 'package:pigeon/pigeon.dart';
 
+enum ChartboostPrivacyStandard { GDPR, CCPA }
+
 @ConfigurePigeon(
   PigeonOptions(
     dartOut: 'lib/chartboost_sdk_api.g.dart',
@@ -30,6 +32,16 @@ import 'package:pigeon/pigeon.dart';
   ),
 )
 @HostApi()
+/// The generated classes set the channels to call the methods in the
+/// corresponding kotlin ChartboostSDKApi interface and swift ChartboostSDKApi
+/// protocol from the dart layer.
+abstract class ChartboostSDKApi {
+  /// Used to configure GDPR consent on the Android or iOS Chartboost SDK
+  void setGDPRConsent(bool userConsent);
 
-/// The generated classes set the channels to call the methods in the corresponding kotlin ChartboostSDKApi interface and swift ChartboostSDKApi protocol from the dart layer.
-abstract class ChartboostSDKApi {}
+  /// Used to opt out of the sale of personal information in Chartboost SDK.
+  void setCCPAConsent(bool userOptIn);
+
+  /// Used to clear any of the privacy data use consent above.
+  void clearDataUseConsent(ChartboostPrivacyStandard privacyStandard);
+}

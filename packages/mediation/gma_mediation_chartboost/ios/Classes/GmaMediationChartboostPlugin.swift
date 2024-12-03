@@ -12,10 +12,74 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import ChartboostSDK
 import Flutter
 import UIKit
 
-/** Required to link the iOS dependency of the Chartboost Adapter. */
-public class GmaMediationChartboostPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) { }
+/// Required to link the iOS dependency of the Chartboost Adapter.
+public class GmaMediationChartboostPlugin: NSObject, FlutterPlugin, ChartboostSDKApi {
+  let chartboostApi: ChartboostApiProtocol
+
+  init(chartboostApi: ChartboostApiProtocol) {
+    self.chartboostApi = chartboostApi
+  }
+
+  public static func register(with registrar: FlutterPluginRegistrar) {
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
+    let api: ChartboostSDKApi & NSObjectProtocol = GmaMediationChartboostPlugin(
+      chartboostApi: ChartboostApiImpl())
+    ChartboostSDKApiSetup.setUp(binaryMessenger: messenger, api: api)
+  }
+
+  public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
+    ChartboostSDKApiSetup.setUp(binaryMessenger: messenger, api: nil)
+  }
+
+  func setGDPRConsent(userConsent: Bool) {
+    chartboostApi.setGDPRConsent(gdprConsent: userConsent)
+  }
+
+  func setCCPAConsent(userOptIn userConsent: Bool) {
+    chartboostApi.setCCPAConsent(ccpaConsent: userConsent)
+  }
+
+  func clearDataUseConsent(privacyStandard: ChartboostPrivacyStandard) throws {
+    try chartboostApi.clearDataUseConsent(privacyStandard: privacyStandard)
+  }
+}
+
+protocol ChartboostApiProtocol {
+  func setGDPRConsent(gdprConsent: Bool)
+  func setCCPAConsent(ccpaConsent: Bool)
+  func clearDataUseConsent(privacyStandard: ChartboostPrivacyStandard) throws
+}
+
+class ChartboostApiImpl: ChartboostApiProtocol {
+
+  func setGDPRConsent(gdprConsent: Bool) {
+    Chartboost.addDataUseConsent(
+      CHBDataUseConsent.GDPR(
+        gdprConsent
+          ? CHBDataUseConsent.GDPR.Consent.behavioral : CHBDataUseConsent.GDPR.Consent.nonBehavioral
+      )
+    )
+  }
+
+  func setCCPAConsent(ccpaConsent: Bool) {
+    Chartboost.addDataUseConsent(
+      CHBDataUseConsent.CCPA(
+        ccpaConsent
+          ? CHBDataUseConsent.CCPA.Consent.optInSale : CHBDataUseConsent.CCPA.Consent.optOutSale)
+    )
+  }
+
+  func clearDataUseConsent(privacyStandard: ChartboostPrivacyStandard) throws {
+    switch privacyStandard {
+    case .gDPR:
+      Chartboost.clearDataUseConsent(for: CHBPrivacyStandard.GDPR)
+    case .cCPA:
+      Chartboost.clearDataUseConsent(for: CHBPrivacyStandard.CCPA)
+    }
+  }
 }
