@@ -15,6 +15,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -410,6 +411,45 @@ void main() {
       } finally {
         expect(tester.takeException(), isNull);
       }
+    });
+
+    testWidgets('passes gestureRecognizers to PlatformView on iOS',
+        (WidgetTester tester) async {
+      final gestureRecognizers = <Factory<OneSequenceGestureRecognizer>>{
+        Factory<OneSequenceGestureRecognizer>(() => PanGestureRecognizer()),
+        Factory<OneSequenceGestureRecognizer>(() => TapGestureRecognizer()),
+      };
+
+      final NativeAd ad = NativeAd(
+        adUnitId: 'test-ad-unit',
+        factoryId: '0',
+        listener: NativeAdListener(),
+        request: AdRequest(),
+      );
+
+      await ad.load();
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Material(
+            child: AdWidget(
+              ad: ad,
+              gestureRecognizers: gestureRecognizers,
+            ),
+          ),
+        ),
+      );
+
+      final uiKitViewFinder = find.byType(UiKitView);
+      expect(uiKitViewFinder, findsOneWidget);
+
+      final uiKitView = tester.widget<UiKitView>(uiKitViewFinder);
+      expect(uiKitView.gestureRecognizers, gestureRecognizers);
+
+      debugDefaultTargetPlatformOverride = null;
+      await ad.dispose();
     });
 
     test('load show rewarded', () async {

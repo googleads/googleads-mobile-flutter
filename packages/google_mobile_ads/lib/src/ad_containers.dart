@@ -645,6 +645,10 @@ abstract class AdWithoutView extends Ad {
 /// (e.g. [BannerAd] and [NativeAd]) and allows them to be added to the Flutter
 /// widget tree.
 ///
+/// Optionally, you can provide [gestureRecognizers] to enable custom gesture
+/// interactions with the ad content. For example, this can allow users to
+/// swipe or perform other gestures based on your app's requirements.
+///
 /// Must call `load()` first before showing the widget. Otherwise, a
 /// [PlatformException] will be thrown.
 class AdWidget extends StatefulWidget {
