@@ -651,10 +651,17 @@ class AdWidget extends StatefulWidget {
   /// Default constructor for [AdWidget].
   ///
   /// [ad] must be loaded before this is added to the widget tree.
-  const AdWidget({Key? key, required this.ad}) : super(key: key);
+  const AdWidget({
+    Key? key,
+    required this.ad,
+    this.gestureRecognizers,
+  }) : super(key: key);
 
   /// Ad to be displayed as a widget.
   final AdWithView ad;
+
+  /// Gesture recognizers to enable custom interactions with ads
+  final Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers;
 
   @override
   _AdWidgetState createState() => _AdWidgetState();
@@ -714,7 +721,8 @@ class _AdWidgetState extends State<AdWidget> {
             (BuildContext context, PlatformViewController controller) {
           return AndroidViewSurface(
             controller: controller as AndroidViewController,
-            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+            gestureRecognizers: widget.gestureRecognizers ??
+                const <Factory<OneSequenceGestureRecognizer>>{},
             hitTestBehavior: PlatformViewHitTestBehavior.opaque,
           );
         },
@@ -736,6 +744,7 @@ class _AdWidgetState extends State<AdWidget> {
       viewType: '${instanceManager.channel.name}/ad_widget',
       creationParams: instanceManager.adIdFor(widget.ad),
       creationParamsCodec: StandardMessageCodec(),
+      gestureRecognizers: widget.gestureRecognizers,
     );
   }
 }
