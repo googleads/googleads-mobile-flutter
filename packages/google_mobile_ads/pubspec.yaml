@@ -28,12 +28,12 @@ flutter:
         pluginClass: FLTGoogleMobileAdsPlugin
 
 dependencies:
-  meta: ^1.10.0
+  meta: ^1.16.0
   flutter:
     sdk: flutter
-  webview_flutter_android: ^4.0.0
-  webview_flutter_wkwebview: ^3.12.0
-  webview_flutter: ^4.7.0
+  webview_flutter_android: ^4.2.0
+  webview_flutter_wkwebview: ^3.16.3
+  webview_flutter: ^4.10.0
 
 dev_dependencies:
   pedantic: ^1.11.0
