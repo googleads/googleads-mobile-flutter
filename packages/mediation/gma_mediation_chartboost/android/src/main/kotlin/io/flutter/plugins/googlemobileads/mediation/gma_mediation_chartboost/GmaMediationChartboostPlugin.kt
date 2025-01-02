@@ -14,11 +14,45 @@
 
 package io.flutter.plugins.googlemobileads.mediation.gma_mediation_chartboost
 
+import android.content.Context
+import com.chartboost.sdk.Chartboost
+import com.chartboost.sdk.privacy.model.CCPA
+import com.chartboost.sdk.privacy.model.GDPR
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
 /** Required to link the Android dependency of the Chartboost Adapter. */
-class GmaMediationChartboostPlugin: FlutterPlugin {
-  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) { }
+class GmaMediationChartboostPlugin : FlutterPlugin, ActivityAware, ChartboostSDKApi {
+  private lateinit var context: Context
 
-  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) { }
+  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    context = flutterPluginBinding.applicationContext
+    ChartboostSDKApi.setUp(flutterPluginBinding.binaryMessenger, this)
+  }
+
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+    ChartboostSDKApi.setUp(binding.binaryMessenger, null)
+  }
+
+  override fun setGDPRConsent(userConsent: Boolean) {
+    val dataUserConsent =
+      if (userConsent) GDPR(GDPR.GDPR_CONSENT.BEHAVIORAL)
+      else GDPR(GDPR.GDPR_CONSENT.NON_BEHAVIORAL)
+    Chartboost.addDataUseConsent(context, dataUserConsent)
+  }
+
+  override fun setCCPAConsent(userOptIn: Boolean) {
+    val dataUseConsent =
+      if (userOptIn) CCPA(CCPA.CCPA_CONSENT.OPT_IN_SALE) else CCPA(CCPA.CCPA_CONSENT.OPT_OUT_SALE)
+    Chartboost.addDataUseConsent(context, dataUseConsent)
+  }
+
+  override fun onDetachedFromActivity() {}
+
+  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {}
+
+  override fun onAttachedToActivity(binding: ActivityPluginBinding) {}
+
+  override fun onDetachedFromActivityForConfigChanges() {}
 }

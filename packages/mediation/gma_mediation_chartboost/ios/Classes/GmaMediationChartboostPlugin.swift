@@ -15,7 +15,56 @@
 import Flutter
 import UIKit
 
-/** Required to link the iOS dependency of the Chartboost Adapter. */
-public class GmaMediationChartboostPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) { }
+/// Required to link the iOS dependency of the Chartboost Adapter.
+public class GmaMediationChartboostPlugin: NSObject, FlutterPlugin, ChartboostSDKApi {
+  let chartboostApi: ChartboostApiProtocol
+
+  init(chartboostApi: ChartboostApiProtocol) {
+    self.chartboostApi = chartboostApi
+  }
+
+  public static func register(with registrar: FlutterPluginRegistrar) {
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
+    let api: ChartboostSDKApi & NSObjectProtocol = GmaMediationChartboostPlugin(
+      chartboostApi: ChartboostApiImpl())
+    ChartboostSDKApiSetup.setUp(binaryMessenger: messenger, api: api)
+  }
+
+  public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
+    ChartboostSDKApiSetup.setUp(binaryMessenger: messenger, api: nil)
+  }
+
+  func setGDPRConsent(userConsent: Bool) {
+    chartboostApi.setGDPRConsent(gdprConsent: userConsent)
+  }
+
+  func setCCPAConsent(userConsent: Bool) {
+    chartboostApi.setCCPAConsent(ccpaConsent: userConsent)
+  }
+}
+
+protocol ChartboostApiProtocol {
+  func setGDPRConsent(gdprConsent: Bool)
+  func setCCPAConsent(ccpaConsent: Bool)
+}
+
+class ChartboostApiImpl: ChartboostApiProtocol {
+
+  func setGDPRConsent(gdprConsent: Bool) {
+    Chartboost.addDataUseConsent(
+      CHBDataUseConsent.GDPR(
+        gdprConsent
+          ? CHBDataUseConsent.GDPR.Consent.behavioral : CHBDataUseConsent.GDPR.Consent.nonbehavioral
+      )
+    )
+  }
+
+  func setCCPAConsent(ccpaConsent: Bool) {
+    Chartboost.addDataUseConsent(
+      CHBDataUseConsent.CCPA(
+        ccpaConsent
+          ? CHBDataUseConsent.CCPA.Consent.optInSale : CHBDataUseConsent.CCPA.Consent.optOutSale)
+    )
+  }
 }

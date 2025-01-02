@@ -31,5 +31,13 @@ import 'package:pigeon/pigeon.dart';
 )
 @HostApi()
 
-/// The generated classes set the channels to call the methods in the corresponding kotlin ChartboostSDKApi interface and swift ChartboostSDKApi protocol from the dart layer.
-abstract class ChartboostSDKApi { }
+/// The generated classes set the channels to call the methods in the
+/// corresponding kotlin ChartboostSDKApi interface and swift ChartboostSDKApi
+/// protocol from the dart layer.
+abstract class ChartboostSDKApi {
+  /// Used to configure GDPR consent on the Android or iOS Chartboost SDK
+  void setGDPRConsent(bool userConsent);
+
+  /// Used to opt out of the sale of personal information in Chartboost SDK.
+  void setCCPAConsent(bool userOptIn);
+}

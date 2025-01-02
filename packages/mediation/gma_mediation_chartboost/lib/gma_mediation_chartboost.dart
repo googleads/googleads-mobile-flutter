@@ -12,5 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// This empty class is needed to allow correct compatibility analysis with host platforms.
-class GmaMediationChartboost {}
+import 'package:gma_mediation_chartboost/chartboost_sdk_api.g.dart';
+
+/// This class has entrypoint to call Chartboost SDK APIs.
+class GmaMediationChartboost {
+  Future<void> setGDPRConsent(bool userConsent) async {
+    ChartboostSDKApi().setGDPRConsent(userConsent);
+  }
+
+  Future<void> setCCPAConsent(bool userOptIn) async {
+    ChartboostSDKApi().setCCPAConsent(userOptIn);
+  }
+}
