@@ -988,10 +988,10 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.size);
     } else if (value is Color) {
       buffer.putUint8(_valueColor);
-      writeValue(buffer, value.alpha);
-      writeValue(buffer, value.red);
-      writeValue(buffer, value.green);
-      writeValue(buffer, value.blue);
+      writeValue(buffer, value.a);
+      writeValue(buffer, value.r);
+      writeValue(buffer, value.g);
+      writeValue(buffer, value.b);
     } else if (value is NativeTemplateFontStyle) {
       buffer.putUint8(_valueNativeTemplateFontStyle);
       writeValue(buffer, value.index);
