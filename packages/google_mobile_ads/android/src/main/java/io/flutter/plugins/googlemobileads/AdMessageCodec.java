@@ -252,11 +252,11 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, textStyle.getSize());
     } else if (value instanceof ColorDrawable) {
       stream.write(VALUE_COLOR);
-      int colorValue = ((ColorDrawable) value).getColor();
-      writeValue(stream, Color.alpha(colorValue));
-      writeValue(stream, Color.red(colorValue));
-      writeValue(stream, Color.green(colorValue));
-      writeValue(stream, Color.blue(colorValue));
+      Color colorValue = Color.valueOf(((ColorDrawable) value).getColor());
+      writeValue(stream, colorValue.alpha());
+      writeValue(stream, colorValue.red());
+      writeValue(stream, colorValue.green());
+      writeValue(stream, colorValue.blue());
     } else {
       super.writeValue(stream, value);
     }
