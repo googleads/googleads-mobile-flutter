@@ -41,9 +41,9 @@ android {
         implementation 'androidx.lifecycle:lifecycle-process:2.6.2'
         implementation 'com.google.errorprone:error_prone_annotations:2.16'
         testImplementation 'junit:junit:4.13.2'
-        testImplementation 'org.hamcrest:hamcrest:2.2'
+        testImplementation 'org.hamcrest:hamcrest:3.0'
         testImplementation 'org.mockito:mockito-inline:5.2.0'
-        testImplementation 'org.robolectric:robolectric:4.10.3'
+        testImplementation 'org.robolectric:robolectric:4.14.1'
         testImplementation 'androidx.test:core:1.5.0'
     }
     testOptions {
