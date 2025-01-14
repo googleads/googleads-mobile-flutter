@@ -22,6 +22,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/src/ad_inspector_containers.dart';
 import 'package:google_mobile_ads/src/ad_listeners.dart';
@@ -1211,11 +1212,11 @@ class AdMessageCodec extends StandardMessageCodec {
           size: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueColor:
-        return Color.fromARGB(
-            readValueOfType(buffer.getUint8(), buffer),
-            readValueOfType(buffer.getUint8(), buffer),
-            readValueOfType(buffer.getUint8(), buffer),
-            readValueOfType(buffer.getUint8(), buffer));
+        return Color.from(
+            alpha: readValueOfType(buffer.getUint8(), buffer).toDouble(),
+            red: readValueOfType(buffer.getUint8(), buffer).toDouble(),
+            green: readValueOfType(buffer.getUint8(), buffer).toDouble(),
+            blue: readValueOfType(buffer.getUint8(), buffer).toDouble());
       case _valueNativeTemplateFontStyle:
         return NativeTemplateFontStyle
             .values[readValueOfType(buffer.getUint8(), buffer)];

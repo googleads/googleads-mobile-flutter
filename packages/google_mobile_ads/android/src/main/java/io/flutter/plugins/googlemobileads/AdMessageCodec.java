@@ -433,11 +433,11 @@ class AdMessageCodec extends StandardMessageCodec {
         return FlutterNativeTemplateType.fromIntValue(
             (Integer) readValueOfType(buffer.get(), buffer));
       case VALUE_COLOR:
-        final Integer alpha = (Integer) readValueOfType(buffer.get(), buffer);
-        final Integer red = (Integer) readValueOfType(buffer.get(), buffer);
-        final Integer green = (Integer) readValueOfType(buffer.get(), buffer);
-        final Integer blue = (Integer) readValueOfType(buffer.get(), buffer);
-        return new ColorDrawable(Color.argb(alpha, red, green, blue));
+        final Double alpha = (Double) readValueOfType(buffer.get(), buffer);
+        final Double red = (Double) readValueOfType(buffer.get(), buffer);
+        final Double green = (Double) readValueOfType(buffer.get(), buffer);
+        final Double blue = (Double) readValueOfType(buffer.get(), buffer);
+        return new ColorDrawable(Color.argb(alpha.floatValue(), red.floatValue(), green.floatValue(), blue.floatValue()));
       default:
         return super.readValueOfType(type, buffer);
     }

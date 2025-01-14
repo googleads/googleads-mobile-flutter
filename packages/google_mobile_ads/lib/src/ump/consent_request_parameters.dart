@@ -79,6 +79,6 @@ enum DebugGeography {
   /// Geography appears as in a regulated US State for debug devices.
   debugGeographyRegulatedUsState,
 
-  /// Geography appears as in a regulated US State for debug devices.
+  /// Geography appears as in a region with no regulation in force.
   debugGeographyOther
 }
