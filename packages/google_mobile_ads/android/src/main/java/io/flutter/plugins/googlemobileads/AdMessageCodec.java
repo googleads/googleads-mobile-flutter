@@ -437,7 +437,9 @@ class AdMessageCodec extends StandardMessageCodec {
         final Double red = (Double) readValueOfType(buffer.get(), buffer);
         final Double green = (Double) readValueOfType(buffer.get(), buffer);
         final Double blue = (Double) readValueOfType(buffer.get(), buffer);
-        return new ColorDrawable(Color.argb(alpha.floatValue(), red.floatValue(), green.floatValue(), blue.floatValue()));
+        return new ColorDrawable(
+            Color.argb(
+                alpha.floatValue(), red.floatValue(), green.floatValue(), blue.floatValue()));
       default:
         return super.readValueOfType(type, buffer);
     }
