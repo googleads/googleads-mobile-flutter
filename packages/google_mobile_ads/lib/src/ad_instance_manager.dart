@@ -989,10 +989,10 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.size);
     } else if (value is Color) {
       buffer.putUint8(_valueColor);
-      writeValue(buffer, value.a);
-      writeValue(buffer, value.r);
-      writeValue(buffer, value.g);
-      writeValue(buffer, value.b);
+      writeValue(buffer, (value.a * 255).toInt());
+      writeValue(buffer, (value.r * 255).toInt());
+      writeValue(buffer, (value.g * 255).toInt());
+      writeValue(buffer, (value.b * 255).toInt());
     } else if (value is NativeTemplateFontStyle) {
       buffer.putUint8(_valueNativeTemplateFontStyle);
       writeValue(buffer, value.index);
@@ -1212,11 +1212,11 @@ class AdMessageCodec extends StandardMessageCodec {
           size: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueColor:
-        return Color.from(
-            alpha: readValueOfType(buffer.getUint8(), buffer).toDouble(),
-            red: readValueOfType(buffer.getUint8(), buffer).toDouble(),
-            green: readValueOfType(buffer.getUint8(), buffer).toDouble(),
-            blue: readValueOfType(buffer.getUint8(), buffer).toDouble());
+        return Color.fromARGB(
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer),
+            readValueOfType(buffer.getUint8(), buffer));
       case _valueNativeTemplateFontStyle:
         return NativeTemplateFontStyle
             .values[readValueOfType(buffer.getUint8(), buffer)];

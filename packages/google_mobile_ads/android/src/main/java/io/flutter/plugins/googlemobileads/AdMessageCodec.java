@@ -252,11 +252,11 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, textStyle.getSize());
     } else if (value instanceof ColorDrawable) {
       stream.write(VALUE_COLOR);
-      Color colorValue = Color.valueOf(((ColorDrawable) value).getColor());
-      writeValue(stream, colorValue.alpha());
-      writeValue(stream, colorValue.red());
-      writeValue(stream, colorValue.green());
-      writeValue(stream, colorValue.blue());
+      int colorValue = ((ColorDrawable) value).getColor();
+      writeValue(stream, Color.alpha(colorValue));
+      writeValue(stream, Color.red(colorValue));
+      writeValue(stream, Color.green(colorValue));
+      writeValue(stream, Color.blue(colorValue));
     } else {
       super.writeValue(stream, value);
     }
@@ -433,13 +433,11 @@ class AdMessageCodec extends StandardMessageCodec {
         return FlutterNativeTemplateType.fromIntValue(
             (Integer) readValueOfType(buffer.get(), buffer));
       case VALUE_COLOR:
-        final Double alpha = (Double) readValueOfType(buffer.get(), buffer);
-        final Double red = (Double) readValueOfType(buffer.get(), buffer);
-        final Double green = (Double) readValueOfType(buffer.get(), buffer);
-        final Double blue = (Double) readValueOfType(buffer.get(), buffer);
-        return new ColorDrawable(
-            Color.argb(
-                alpha.floatValue(), red.floatValue(), green.floatValue(), blue.floatValue()));
+        final Integer alpha = (Integer) readValueOfType(buffer.get(), buffer);
+        final Integer red = (Integer) readValueOfType(buffer.get(), buffer);
+        final Integer green = (Integer) readValueOfType(buffer.get(), buffer);
+        final Integer blue = (Integer) readValueOfType(buffer.get(), buffer);
+        return new ColorDrawable(Color.argb(alpha, red, green, blue));
       default:
         return super.readValueOfType(type, buffer);
     }
