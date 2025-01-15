@@ -1,5 +1,6 @@
 ## Next Version
 * Updated WebView Flutter Android dependency 
+* Adds support for the new Debug Geography enums for the UMP SDK
 
 ## 5.2.0
 * Removed use of rootViewController for iOS GMA SDK which solved issues like 
