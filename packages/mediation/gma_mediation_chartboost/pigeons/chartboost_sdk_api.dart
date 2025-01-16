@@ -32,4 +32,4 @@ import 'package:pigeon/pigeon.dart';
 @HostApi()
 
 /// The generated classes set the channels to call the methods in the corresponding kotlin ChartboostSDKApi interface and swift ChartboostSDKApi protocol from the dart layer.
-abstract class ChartboostSDKApi { }
+abstract class ChartboostSDKApi {}
