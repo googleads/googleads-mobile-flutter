@@ -516,7 +516,7 @@ void main() {
 
     test('encode/decode non-empty native text style', () {
       final textStyle = NativeTemplateTextStyle(
-        textColor: Colors.red,
+        textColor: Colors.red.shade900,
         backgroundColor: Colors.blue.withAlpha(50),
         style: NativeTemplateFontStyle.normal,
         size: 20,
@@ -540,16 +540,16 @@ void main() {
           templateType: TemplateType.medium,
           callToActionTextStyle: NativeTemplateTextStyle(),
           primaryTextStyle: NativeTemplateTextStyle(
-            textColor: Colors.blue,
+            textColor: Colors.blue.shade900,
           ),
           secondaryTextStyle: NativeTemplateTextStyle(
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.green.shade900,
             style: NativeTemplateFontStyle.italic,
           ),
           tertiaryTextStyle: NativeTemplateTextStyle(
             size: 15,
           ),
-          mainBackgroundColor: Colors.cyan,
+          mainBackgroundColor: Colors.cyan.shade900,
           cornerRadius: 12);
       final byteData = codec.encodeMessage(templateStyle);
       final result = codec.decodeMessage(byteData);
@@ -562,10 +562,10 @@ void main() {
           templateType: TemplateType.medium,
           callToActionTextStyle: NativeTemplateTextStyle(),
           primaryTextStyle: NativeTemplateTextStyle(
-            textColor: Colors.blue,
+            textColor: Colors.blue.shade900,
           ),
           secondaryTextStyle: NativeTemplateTextStyle(
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.green.shade900,
             style: NativeTemplateFontStyle.italic,
           ),
           tertiaryTextStyle: NativeTemplateTextStyle(
