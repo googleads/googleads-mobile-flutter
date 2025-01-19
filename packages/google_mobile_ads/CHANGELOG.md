@@ -1,6 +1,9 @@
-## Next Version
+## 5.3.0
 * Updated WebView Flutter Android dependency 
-* Adds support for the new Debug Geography enums for the UMP SDK
+* Adds support for the new Debug Geography enums for the UMP SDK: 
+  * [Android](https://developers.google.com/admob/android/privacy/release-notes) UMP SDK version 3.1.0. and [iOS](https://developers.google.com/admob/ios/privacy/download#release_notes) UMP SDK version 2.7.0.
+* Updates GMA [iOS](https://developers.google.com/admob/ios/rel-notes) dependency to 11.13.0
+* Updates GMA [Android](https://developers.google.com/admob/android/rel-notes) dependency to 23.6.0
 
 ## 5.2.0
 * Removed use of rootViewController for iOS GMA SDK which solved issues like 
