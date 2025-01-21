@@ -16,13 +16,12 @@ package io.flutter.plugins.googlemobileads.mediation.gma_mediation_applovin
 
 import android.content.Context
 import com.applovin.sdk.AppLovinPrivacySettings
-import com.applovin.sdk.AppLovinSdk
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
-/** Links the Android dependency of the AppLovin Adapter and calls the AppLovin SDK APIs.  */
-class GmaMediationApplovinPlugin: FlutterPlugin, ActivityAware, AppLovinSDKApi {
+/** Links the Android dependency of the AppLovin Adapter and calls the AppLovin SDK APIs. */
+class GmaMediationApplovinPlugin : FlutterPlugin, ActivityAware, AppLovinSDKApi {
   private lateinit var context: Context
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -34,20 +33,12 @@ class GmaMediationApplovinPlugin: FlutterPlugin, ActivityAware, AppLovinSDKApi {
     AppLovinSDKApi.setUp(binding.binaryMessenger, null)
   }
 
-  override fun setHasUserConsent(hasUserConsent: Boolean){
+  override fun setHasUserConsent(hasUserConsent: Boolean) {
     AppLovinPrivacySettings.setHasUserConsent(hasUserConsent, context)
-  }
-
-  override fun setIsAgeRestrictedUser(isAgeRestrictedUser: Boolean){
-    AppLovinPrivacySettings.setIsAgeRestrictedUser(isAgeRestrictedUser, context)
   }
 
   override fun setDoNotSell(doNotSell: Boolean) {
     AppLovinPrivacySettings.setDoNotSell(doNotSell, context)
-  }
-
-  override fun initializeSdk(sdkKey: String) {
-    AppLovinSdk.getInstance(sdkKey, null, context).initializeSdk()
   }
 
   override fun onDetachedFromActivity() {}

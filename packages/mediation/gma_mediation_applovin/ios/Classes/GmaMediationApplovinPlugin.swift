@@ -20,59 +20,41 @@ import UIKit
 public class GmaMediationApplovinPlugin: NSObject, FlutterPlugin, AppLovinSDKApi {
   let applovinSdk: ALSdkProtocol
 
-  init (applovinSdk: ALSdkProtocol) {
+  init(applovinSdk: ALSdkProtocol) {
     self.applovinSdk = applovinSdk
   }
 
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let messenger : FlutterBinaryMessenger = registrar.messenger()
-    let api : AppLovinSDKApi& NSObjectProtocol = GmaMediationApplovinPlugin.init(applovinSdk: ALSdkImpl())
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
+    let api: AppLovinSDKApi & NSObjectProtocol = GmaMediationApplovinPlugin.init(
+      applovinSdk: ALSdkImpl())
     AppLovinSDKApiSetup.setUp(binaryMessenger: messenger, api: api)
   }
   public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-    let messenger : FlutterBinaryMessenger = registrar.messenger()
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
     AppLovinSDKApiSetup.setUp(binaryMessenger: messenger, api: nil)
   }
 
   func setHasUserConsent(hasUserConsent: Bool) {
     applovinSdk.setHasUserConsent(hasUserConsent: hasUserConsent)
   }
-  func setIsAgeRestrictedUser(isAgeRestrictedUser: Bool) {
-    applovinSdk.setIsAgeRestrictedUser(isAgeRestrictedUser: isAgeRestrictedUser)
-  }
   func setDoNotSell(doNotSell: Bool) {
     applovinSdk.setDoNotSell(doNotSell: doNotSell)
-  }
-  func initializeSdk(sdkKey: String) {
-    applovinSdk.initializeSdk(sdkKey: sdkKey)
   }
 }
 
 protocol ALSdkProtocol {
   func setHasUserConsent(hasUserConsent: Bool)
 
-  func setIsAgeRestrictedUser(isAgeRestrictedUser: Bool)
-
   func setDoNotSell(doNotSell: Bool)
-
-  func initializeSdk(sdkKey: String)
 }
 
-class ALSdkImpl : ALSdkProtocol {
+class ALSdkImpl: ALSdkProtocol {
   func setHasUserConsent(hasUserConsent: Bool) {
     ALPrivacySettings.setHasUserConsent(hasUserConsent)
   }
 
-  func setIsAgeRestrictedUser(isAgeRestrictedUser: Bool) {
-    ALPrivacySettings.setIsAgeRestrictedUser(isAgeRestrictedUser)
-  }
-
   func setDoNotSell(doNotSell: Bool) {
     ALPrivacySettings.setDoNotSell(doNotSell)
-  }
-
-  func initializeSdk(sdkKey: String) {
-    let sdk = ALSdk.shared(withKey: sdkKey)
-    sdk?.initializeSdk()
   }
 }
