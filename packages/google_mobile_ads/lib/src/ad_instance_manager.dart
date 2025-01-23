@@ -991,6 +991,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.size);
     } else if (value is Color) {
       buffer.putUint8(_valueColor);
+      // Color values to be updated to non-deprecated attributes in next major release
       writeValue(buffer, value.alpha);
       writeValue(buffer, value.red);
       writeValue(buffer, value.green);
