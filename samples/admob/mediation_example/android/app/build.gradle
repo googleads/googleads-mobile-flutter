@@ -25,8 +25,9 @@ apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace "com.example.mediationexample"
     compileSdkVersion flutter.compileSdkVersion
-    ndkVersion = "26.1.10909125"
+    ndkVersion = flutter.ndkVersion
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
