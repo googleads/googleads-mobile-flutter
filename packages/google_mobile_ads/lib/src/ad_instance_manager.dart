@@ -16,6 +16,8 @@
 
 // ignore_for_file: deprecated_member_use_from_same_package
 
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
@@ -989,10 +991,11 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.size);
     } else if (value is Color) {
       buffer.putUint8(_valueColor);
-      writeValue(buffer, (value.a * 255).toInt());
-      writeValue(buffer, (value.r * 255).toInt());
-      writeValue(buffer, (value.g * 255).toInt());
-      writeValue(buffer, (value.b * 255).toInt());
+      // Color values to be updated to non-deprecated attributes in next major release
+      writeValue(buffer, value.alpha);
+      writeValue(buffer, value.red);
+      writeValue(buffer, value.green);
+      writeValue(buffer, value.blue);
     } else if (value is NativeTemplateFontStyle) {
       buffer.putUint8(_valueNativeTemplateFontStyle);
       writeValue(buffer, value.index);
