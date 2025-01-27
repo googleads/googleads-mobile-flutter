@@ -69,7 +69,7 @@
 
 - (void)testConsentDebugSettings_geographyTestDeviceIdentifiers {
   UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
-  debugSettings.geography = UMPDebugGeographyNotEEA;
+  debugSettings.geography = UMPDebugGeographyOther;
   debugSettings.testDeviceIdentifiers = @[ @"id-1", @"id-2" ];
   NSData *encodedMessage = [messageCodec encode:debugSettings];
 

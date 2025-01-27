@@ -14,7 +14,10 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import static android.os.Build.VERSION_CODES.S;
+import static android.os.Build.VERSION_CODES.TIRAMISU;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -23,14 +26,17 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Bundle;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 /** Tests {@link FlutterRequestAgentProvider}. */
 @RunWith(RobolectricTestRunner.class)
+@Config(sdk = {S, TIRAMISU})
 public class FlutterRequestAgentProviderTest {
 
   private Context mockContext;
@@ -49,9 +55,15 @@ public class FlutterRequestAgentProviderTest {
     doReturn(mockContext).when(mockContext).getApplicationContext();
     doReturn(mockPackageManager).when(mockContext).getPackageManager();
     doReturn(PACKAGE_NAME).when(mockContext).getPackageName();
-    doReturn(mockApplicationInfo)
-        .when(mockPackageManager)
-        .getApplicationInfo(eq(PACKAGE_NAME), eq(PackageManager.GET_META_DATA));
+    if (Build.VERSION.SDK_INT >= TIRAMISU) {
+      doReturn(mockApplicationInfo)
+          .when(mockPackageManager)
+          .getApplicationInfo(eq(PACKAGE_NAME), any());
+    } else {
+      doReturn(mockApplicationInfo)
+          .when(mockPackageManager)
+          .getApplicationInfo(eq(PACKAGE_NAME), eq(PackageManager.GET_META_DATA));
+    }
   }
 
   @Test

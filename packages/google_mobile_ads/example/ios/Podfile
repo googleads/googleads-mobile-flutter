@@ -36,7 +36,7 @@ target 'Runner' do
     inherit! :search_paths
 
     # Matches test_spec dependency.
-    pod 'OCMock', '3.6'
+    pod 'OCMock', '3.9.3'
   end
 end
 

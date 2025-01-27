@@ -2,14 +2,14 @@ group 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_ironsource'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '2.0.21'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.android.tools.build:gradle:8.0.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -18,6 +18,9 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url = uri("https://android-sdk.is.com/")
+        }
     }
 }
 
@@ -50,20 +53,30 @@ android {
     }
 
     dependencies {
-        implementation 'com.google.ads.mediation:ironsource:7.9.0.0'
-        testImplementation 'org.jetbrains.kotlin:kotlin-test'
-        testImplementation 'org.mockito:mockito-core:5.0.0'
+        implementation 'com.google.ads.mediation:ironsource:8.2.1.0'
+        testImplementation 'junit:junit:4.13.2'
+        testImplementation 'androidx.test:core:1.5.0'
+        testImplementation 'androidx.test:core-ktx:1.5.0'
+        testImplementation 'androidx.test.ext:junit:1.1.5'
+        testImplementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.20'
+        testImplementation 'org.mockito:mockito-core:5.5.0'
+        testImplementation 'org.mockito.kotlin:mockito-kotlin:5.1.0'
+        testImplementation 'org.robolectric:robolectric:4.10.3'
     }
 
     testOptions {
         unitTests.all {
-            useJUnitPlatform()
+            useJUnit()
 
             testLogging {
-               events "passed", "skipped", "failed", "standardOut", "standardError"
-               outputs.upToDateWhen {false}
-               showStandardStreams = true
+                events "passed", "skipped", "failed", "standardOut", "standardError"
+                outputs.upToDateWhen {false}
+                showStandardStreams = true
             }
+        }
+        unitTests {
+            includeAndroidResources = true
+            unitTests.returnDefaultValues = true
         }
     }
 }

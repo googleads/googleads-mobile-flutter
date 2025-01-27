@@ -34,6 +34,10 @@ class ConsentRequestParameters {
         tagForUnderAgeOfConsent == other.tagForUnderAgeOfConsent &&
         consentDebugSettings == other.consentDebugSettings;
   }
+
+  @override
+  int get hashCode =>
+      Object.hash(tagForUnderAgeOfConsent, consentDebugSettings);
 }
 
 /// Debug settings to hardcode in test requests.
@@ -55,6 +59,9 @@ class ConsentDebugSettings {
         debugGeography == other.debugGeography &&
         listEquals(testIdentifiers, other.testIdentifiers);
   }
+
+  @override
+  int get hashCode => Object.hash(debugGeography, testIdentifiers);
 }
 
 /// Debug values for testing geography.
@@ -66,5 +73,12 @@ enum DebugGeography {
   debugGeographyEea,
 
   /// Geography appears as not in EEA for debug devices.
-  debugGeographyNotEea
+  @Deprecated('Use DebugGeography.debugGeographyOther')
+  debugGeographyNotEea,
+
+  /// Geography appears as in a regulated US State for debug devices.
+  debugGeographyRegulatedUsState,
+
+  /// Geography appears as in a region with no regulation in force.
+  debugGeographyOther
 }

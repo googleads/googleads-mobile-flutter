@@ -37,4 +37,4 @@ post_install do |installer|
   end
 end
 
-pod 'GoogleMobileAdsMediationAppLovin'
+pod 'GoogleMobileAdsMediationAppLovin', '< 13.0.0.0'

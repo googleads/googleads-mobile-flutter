@@ -16,12 +16,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+import 'app_bar_item.dart';
 import 'app_lifecycle_reactor.dart';
 import 'app_open_ad_manager.dart';
+import 'consent_manager.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize();
   runApp(const MainApp());
 }
 
@@ -48,22 +50,35 @@ class HomePage extends StatefulWidget {
 
 /// Example home page for an app open ad.
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
+  final _appOpenAdManager = AppOpenAdManager();
+  var _isMobileAdsInitializeCalled = false;
+  var _isPrivacyOptionsRequired = false;
   late AppLifecycleReactor _appLifecycleReactor;
 
   @override
   void initState() {
     super.initState();
-    AppOpenAdManager appOpenAdManager = AppOpenAdManager()..loadAd();
-    _appLifecycleReactor =
-        AppLifecycleReactor(appOpenAdManager: appOpenAdManager);
-    _appLifecycleReactor.listenToAppStateChanges();
-  }
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
+    _appLifecycleReactor =
+        AppLifecycleReactor(appOpenAdManager: _appOpenAdManager);
+    _appLifecycleReactor.listenToAppStateChanges();
+
+    ConsentManager.instance.gatherConsent((consentGatheringError) {
+      if (consentGatheringError != null) {
+        // Consent not obtained in current session.
+        debugPrint(
+            "${consentGatheringError.errorCode}: ${consentGatheringError.message}");
+      }
+
+      // Check if a privacy options entry point is required.
+      _getIsPrivacyOptionsRequired();
+
+      // Attempt to initialize the Mobile Ads SDK.
+      _initializeMobileAdsSDK();
     });
+
+    // This sample attempts to load ads using consent obtained in the previous session.
+    _initializeMobileAdsSDK();
   }
 
   @override
@@ -71,26 +86,79 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('App Open Demo Home Page'),
+        actions: _appBarActions(),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              'Leave and switch back to the app to see the ad.',
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  List<Widget> _appBarActions() {
+    var array = [AppBarItem(AppBarItem.adInpsectorText, 0)];
+
+    if (_isPrivacyOptionsRequired) {
+      array.add(AppBarItem(AppBarItem.privacySettingsText, 1));
+    }
+
+    return <Widget>[
+      PopupMenuButton<AppBarItem>(
+          itemBuilder: (context) => array
+              .map((item) => PopupMenuItem<AppBarItem>(
+                    value: item,
+                    child: Text(
+                      item.label,
+                    ),
+                  ))
+              .toList(),
+          onSelected: (item) {
+            switch (item.value) {
+              case 0:
+                MobileAds.instance.openAdInspector((error) {
+                  // Error will be non-null if ad inspector closed due to an error.
+                });
+              case 1:
+                ConsentManager.instance.showPrivacyOptionsForm((formError) {
+                  if (formError != null) {
+                    debugPrint("${formError.errorCode}: ${formError.message}");
+                  }
+                });
+            }
+          })
+    ];
+  }
+
+  /// Redraw the app bar actions if a privacy options entry point is required.
+  void _getIsPrivacyOptionsRequired() async {
+    if (await ConsentManager.instance.isPrivacyOptionsRequired()) {
+      setState(() {
+        _isPrivacyOptionsRequired = true;
+      });
+    }
+  }
+
+  /// Initialize the Mobile Ads SDK if the SDK has gathered consent aligned with
+  /// the app's configured messages.
+  void _initializeMobileAdsSDK() async {
+    if (_isMobileAdsInitializeCalled) {
+      return;
+    }
+
+    if (await ConsentManager.instance.canRequestAds()) {
+      _isMobileAdsInitializeCalled = true;
+
+      // Initialize the Mobile Ads SDK.
+      MobileAds.instance.initialize();
+
+      // Load an ad.
+      _appOpenAdManager.loadAd();
+    }
   }
 }

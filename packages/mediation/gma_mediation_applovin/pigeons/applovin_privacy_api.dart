@@ -14,25 +14,28 @@
 
 import 'package:pigeon/pigeon.dart';
 
-@ConfigurePigeon(PigeonOptions(
-  dartOut: 'lib/applovin_sdk_api.g.dart',
-  dartOptions: DartOptions(),
-  kotlinOut:
-      'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_applovin/AppLovinSDKApi.g.kt',
-  kotlinOptions: KotlinOptions(
+@ConfigurePigeon(
+  PigeonOptions(
+    dartOut: 'lib/applovin_sdk_api.g.dart',
+    dartOptions: DartOptions(),
+    kotlinOut:
+        'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_applovin/AppLovinSDKApi.g.kt',
+    kotlinOptions: KotlinOptions(
       package:
-          "io.flutter.plugins.googlemobileads.mediation.gma_mediation_applovin"),
-  swiftOut: 'ios/Classes/AppLovinSDKApi.g.swift',
-  swiftOptions: SwiftOptions(),
-  dartPackageName: 'gma_mediation_applovin',
-))
+          "io.flutter.plugins.googlemobileads.mediation.gma_mediation_applovin",
+    ),
+    swiftOut: 'ios/Classes/AppLovinSDKApi.g.swift',
+    swiftOptions: SwiftOptions(),
+    dartPackageName: 'gma_mediation_applovin',
+  ),
+)
 @HostApi()
+
+/// The generated classes set the channels to call the methods in the corresponding kotlin AppLovinSDKApi interface and swift AppLovinSDKApi protocol from the dart layer.
 abstract class AppLovinSDKApi {
+  /// Used to configure GDPR consent on the Android or iOS AppLovin SDK
   void setHasUserConsent(bool hasUserConsent);
 
-  void setIsAgeRestrictedUser(bool isAgeRestrictedUser);
-
+  /// Used to opt out of the sale of personal information in AppLovin SDK.
   void setDoNotSell(bool doNotSell);
-
-  void initializeSdk(String sdkKey);
 }

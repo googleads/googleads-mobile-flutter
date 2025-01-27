@@ -56,13 +56,9 @@
 // Helper method for testing with FLTAdRequest and FLTGAMAdRequest.
 - (void)testLoadShowAppOpenAd:(FLTAdRequest *)request
               gadOrGAMRequest:(GADRequest *)gadOrGAMRequest {
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
-  FLTAppOpenAd *ad =
-      [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
-                                     request:request
-                          rootViewController:mockRootViewController
-                                        adId:@1];
+  FLTAppOpenAd *ad = [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
+                                                    request:request
+                                                       adId:@1];
   ad.manager = mockManager;
 
   // Stub the load call to invoke successful load callback.
@@ -130,8 +126,7 @@
 
   [ad show];
 
-  OCMVerify([appOpenClassMock
-      presentFromRootViewController:[OCMArg isEqual:mockRootViewController]]);
+  OCMVerify([appOpenClassMock presentFromRootViewController:[OCMArg isNil]]);
 
   // Verify full screen callbacks.
   OCMVerify([mockManager adWillPresentFullScreenContent:[OCMArg isEqual:ad]]);
@@ -162,13 +157,9 @@
 
 // Helper for testing failed to load.
 - (void)testFailedToLoad:(FLTAdRequest *)request {
-  UIViewController *mockRootViewController =
-      OCMClassMock([UIViewController class]);
-  FLTAppOpenAd *ad =
-      [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
-                                     request:request
-                          rootViewController:mockRootViewController
-                                        adId:@1];
+  FLTAppOpenAd *ad = [[FLTAppOpenAd alloc] initWithAdUnitId:@"testId"
+                                                    request:request
+                                                       adId:@1];
   ad.manager = mockManager;
 
   id appOpenClassMock = OCMClassMock([GADAppOpenAd class]);

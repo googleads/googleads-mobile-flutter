@@ -70,5 +70,12 @@ void main() {
       ConsentForm decodedConsentForm = codec.decodeMessage(byteData);
       expect(decodedConsentForm, equals(consentFormImpl));
     });
+
+    test('encode and decode FormError', () async {
+      FormError formError = FormError(errorCode: 123, message: 'testError');
+      ByteData? byteData = codec.encodeMessage(formError);
+      FormError decodedFormError = codec.decodeMessage(byteData);
+      expect(decodedFormError, equals(formError));
+    });
   });
 }
