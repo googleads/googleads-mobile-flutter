@@ -92,7 +92,3 @@ jobs:
       run: |
         cd packages/mediation/gma_mediation_ironsource
         flutter analyze
-    - name: "Flutter Publish"
-      run: |
-        cd packages/mediation/gma_mediation_ironsource
-        flutter pub publish --dry-run

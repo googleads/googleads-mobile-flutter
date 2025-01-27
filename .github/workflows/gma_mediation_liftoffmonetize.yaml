@@ -94,7 +94,3 @@ jobs:
         run: |
           cd packages/mediation/gma_mediation_liftoffmonetize
           flutter analyze
-      - name: "Flutter Publish"
-        run: |
-          cd packages/mediation/gma_mediation_liftoffmonetize
-          flutter pub publish --dry-run

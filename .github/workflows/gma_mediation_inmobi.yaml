@@ -42,7 +42,3 @@ jobs:
       run: |
         cd packages/mediation/gma_mediation_inmobi
         flutter analyze
-    - name: "Flutter Publish"
-      run: |
-        cd packages/mediation/gma_mediation_inmobi
-        flutter pub publish --dry-run

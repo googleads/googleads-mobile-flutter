@@ -91,7 +91,3 @@ jobs:
         run: |
           cd packages/mediation/gma_mediation_unity/
           flutter analyze
-      - name: "Flutter Publish"
-        run: |
-          cd packages/mediation/gma_mediation_unity/
-          flutter pub publish --dry-run

@@ -42,7 +42,3 @@ jobs:
         run: |
           cd packages/mediation/gma_mediation_pangle/
           flutter analyze
-      - name: "Flutter Publish"
-        run: |
-          cd packages/mediation/gma_mediation_pangle/
-          flutter pub publish --dry-run
