@@ -47,8 +47,7 @@ class RewardedInterstitialExampleState
       if (consentGatheringError != null) {
         // Consent not obtained in current session.
         debugPrint(
-            "${consentGatheringError.errorCode}: ${consentGatheringError
-                .message}");
+            "${consentGatheringError.errorCode}: ${consentGatheringError.message}");
       }
 
       // Kick off the first play of the "game".
@@ -65,13 +64,11 @@ class RewardedInterstitialExampleState
     _initializeMobileAdsSDK();
 
     // Show an alert dialog when the timer reaches zero.
-    _countdownTimer.addListener(() =>
-        setState(() {
+    _countdownTimer.addListener(() => setState(() {
           if (_countdownTimer.isComplete) {
             showDialog(
                 context: context,
-                builder: (context) =>
-                    AdDialog(showAd: () {
+                builder: (context) => AdDialog(showAd: () {
                       _gameOver = true;
                       _showAdCallback();
                     }));
@@ -105,10 +102,10 @@ class RewardedInterstitialExampleState
   void _showAdCallback() {
     _rewardedInterstitialAd?.show(
         onUserEarnedReward: (AdWithoutView view, RewardItem rewardItem) {
-          // ignore: avoid_print
-          print('Reward amount: ${rewardItem.amount}');
-          setState(() => _coins += rewardItem.amount.toInt());
-        });
+      // ignore: avoid_print
+      print('Reward amount: ${rewardItem.amount}');
+      setState(() => _coins += rewardItem.amount.toInt());
+    });
   }
 
   @override
@@ -128,7 +125,7 @@ class RewardedInterstitialExampleState
                     child: Text(
                       'The Impossible Game',
                       style:
-                      TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                   )),
               Align(
@@ -171,16 +168,14 @@ class RewardedInterstitialExampleState
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-          itemBuilder: (context) =>
-              array
-                  .map((item) =>
-                  PopupMenuItem<AppBarItem>(
+          itemBuilder: (context) => array
+              .map((item) => PopupMenuItem<AppBarItem>(
                     value: item,
                     child: Text(
                       item.label,
                     ),
                   ))
-                  .toList(),
+              .toList(),
           onSelected: (item) {
             _pauseGame();
             switch (item.value) {
@@ -214,9 +209,9 @@ class RewardedInterstitialExampleState
         adUnitId: _adUnitId,
         request: const AdRequest(),
         rewardedInterstitialAdLoadCallback:
-        RewardedInterstitialAdLoadCallback(onAdLoaded: (ad) {
+            RewardedInterstitialAdLoadCallback(onAdLoaded: (ad) {
           ad.fullScreenContentCallback = FullScreenContentCallback(
-            // Called when the ad showed the full screen content.
+              // Called when the ad showed the full screen content.
               onAdShowedFullScreenContent: (ad) {},
               // Called when an impression occurs on the ad.
               onAdImpression: (ad) {},
