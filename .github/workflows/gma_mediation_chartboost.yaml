@@ -12,18 +12,18 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-name: gma_mediation_inmobi
+name: gma_mediation_chartboost
 
 on:
   pull_request:
     paths:
-    - "packages/mediation/gma_mediation_inmobi/**"
-    - ".github/workflows/gma_mediation_inmobi.yaml"
-    - "packages/mediation/gma_mediation_inmobi/ios/**"
-    - "packages/mediation/gma_mediation_inmobi/android/**"
+      - "packages/mediation/gma_mediation_chartboost/**"
+      - ".github/workflows/gma_mediation_chartboost.yaml"
+      - "packages/mediation/gma_mediation_chartboost/ios/**"
+      - "packages/mediation/gma_mediation_chartboost/android/**"
   push:
     branches:
-    - main
+      - main
 
 jobs:
   flutter:
@@ -31,14 +31,14 @@ jobs:
     if: github.event_name == 'pull_request'
     timeout-minutes: 30
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      with:
-        fetch-depth: 0
-    - name: "Install Flutter"
-      run: ./.github/workflows/scripts/install-flutter.sh stable
-    - name: "Install Tools"
-      run: ./.github/workflows/scripts/install-tools.sh
-    - name: "Flutter Analyze"
-      run: |
-        cd packages/mediation/gma_mediation_inmobi
-        flutter analyze
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh
+      - name: "Flutter Analyze"
+        run: |
+          cd packages/mediation/gma_mediation_chartboost/
+          flutter analyze
