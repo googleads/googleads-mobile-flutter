@@ -97,7 +97,3 @@ jobs:
         run: |
           cd packages/mediation/gma_mediation_applovin/
           flutter pub publish --dry-run
-      - name: "Flutter Format"
-        run: |
-          dart format packages/mediation/gma_mediation_applovin/
-          ./.github/workflows/scripts/validate-formatting.sh

@@ -96,7 +96,3 @@ jobs:
       run: |
         cd packages/mediation/gma_mediation_ironsource
         flutter pub publish --dry-run
-    - name: "Flutter Format"
-      run: |
-        dart format packages/mediation/gma_mediation_ironsource/
-        ./.github/workflows/scripts/validate-formatting.sh

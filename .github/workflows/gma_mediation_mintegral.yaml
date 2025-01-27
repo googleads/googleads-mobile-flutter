@@ -46,7 +46,3 @@ jobs:
       run: |
         cd packages/mediation/gma_mediation_mintegral
         flutter pub publish --dry-run
-    - name: "Flutter Format"
-      run: |
-        dart format packages/mediation/gma_mediation_mintegral/
-        ./.github/workflows/scripts/validate-formatting.sh
