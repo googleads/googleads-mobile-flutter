@@ -98,6 +98,5 @@ jobs:
         flutter pub publish --dry-run
     - name: "Flutter Format"
       run: |
-        flutter pub global activate flutter_plugin_tools
-        flutter pub global run flutter_plugin_tools format
+        dart format packages/mediation/gma_mediation_ironsource/
         ./.github/workflows/scripts/validate-formatting.sh

@@ -17,7 +17,7 @@ class ConsentManager {
   /// Helper variable to determine if the privacy options form is required.
   Future<bool> isPrivacyOptionsRequired() async {
     return await ConsentInformation.instance
-        .getPrivacyOptionsRequirementStatus() ==
+            .getPrivacyOptionsRequirementStatus() ==
         PrivacyOptionsRequirementStatus.required;
   }
 
@@ -30,7 +30,7 @@ class ConsentManager {
       debugGeography: DebugGeography.debugGeographyEea,
     );
     ConsentRequestParameters params =
-    ConsentRequestParameters(consentDebugSettings: debugSettings);
+        ConsentRequestParameters(consentDebugSettings: debugSettings);
 
     // Requesting an update to consent information should be called on every app launch.
     ConsentInformation.instance.requestConsentInfoUpdate(params, () async {
