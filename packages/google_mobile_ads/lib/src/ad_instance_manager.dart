@@ -50,9 +50,7 @@ AdInstanceManager instanceManager = AdInstanceManager(
 /// Maintains access to loaded [Ad] instances and handles sending/receiving
 /// messages to platform code.
 class AdInstanceManager {
-  AdInstanceManager(String channelName,
-      {this.webViewControllerUtil = const WebViewControllerUtil()})
-      : channel = MethodChannel(
+  AdInstanceManager(String channelName, {this.webViewControllerUtil = const WebViewControllerUtil()}) : channel = MethodChannel(
           channelName,
           StandardMethodCodec(AdMessageCodec()),
         ) {
