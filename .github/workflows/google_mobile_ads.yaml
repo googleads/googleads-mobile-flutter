@@ -104,6 +104,5 @@ jobs:
           flutter pub publish --dry-run
       - name: "Flutter Format"
         run: |
-          cd packages/google_mobile_ads/
-          dart format .
+          dart format packages/google_mobile_ads/
           ./.github/workflows/scripts/validate-formatting.sh
