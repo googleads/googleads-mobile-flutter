@@ -27,14 +27,6 @@ class GmaMediationApplovinPluginTests: XCTestCase {
     XCTAssertEqual(appLovinSdkFake.hasUserConsent, true)
   }
 
-  func testSetIsAgeRestrictedUser() {
-    let appLovinSdkFake = ALSdkFake()
-
-    GmaMediationApplovinPlugin(applovinSdk: appLovinSdkFake).setIsAgeRestrictedUser(isAgeRestrictedUser: true)
-
-    XCTAssertEqual(appLovinSdkFake.isAgeRestrictedUser, true)
-  }
-
   func testSetDoNotSell() {
     let appLovinSdkFake = ALSdkFake()
 
@@ -42,42 +34,22 @@ class GmaMediationApplovinPluginTests: XCTestCase {
 
     XCTAssertEqual(appLovinSdkFake.doNotSell, true)
   }
-
-  func testInitializeSdk() {
-    let appLovinSdkFake = ALSdkFake()
-
-    GmaMediationApplovinPlugin(applovinSdk: appLovinSdkFake).initializeSdk(sdkKey: "testKey")
-
-    XCTAssertEqual(appLovinSdkFake.initializeSdkCalls, 1)
-  }
 }
 
 class ALSdkFake: ALSdkProtocol {
   var hasUserConsent: Bool
-  var isAgeRestrictedUser: Bool
   var doNotSell: Bool
-  var initializeSdkCalls: Int
 
   init() {
     hasUserConsent = false
-    isAgeRestrictedUser = false
     doNotSell = false
-    initializeSdkCalls = 0
   }
 
   func setHasUserConsent(hasUserConsent: Bool) {
     self.hasUserConsent = hasUserConsent
   }
 
-  func setIsAgeRestrictedUser(isAgeRestrictedUser: Bool) {
-    self.isAgeRestrictedUser = isAgeRestrictedUser
-  }
-
   func setDoNotSell(doNotSell: Bool) {
     self.doNotSell = doNotSell
-  }
-
-  func initializeSdk(sdkKey: String) {
-    initializeSdkCalls += 1
   }
 }
