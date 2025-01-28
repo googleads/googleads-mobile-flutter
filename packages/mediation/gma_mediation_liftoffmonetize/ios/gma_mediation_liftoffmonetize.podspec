@@ -15,7 +15,7 @@ Mediation Adapter for Liftoff Monetize to use with Google Mobile Ads.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Public/**/*.h'
-  s.dependency 'GoogleMobileAdsMediationVungle', '~>7.4.0.1'
+  s.dependency 'GoogleMobileAdsMediationVungle', '~>7.4.4.0'
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
   s.static_framework = true
