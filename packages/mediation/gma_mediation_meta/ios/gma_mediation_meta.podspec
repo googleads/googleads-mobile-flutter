@@ -16,7 +16,7 @@ Mediation Adapter for Meta Audience Network to use with Google Mobile Ads.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationFacebook', '~> 6.15.2.0'
+  s.dependency 'GoogleMobileAdsMediationFacebook', '~> 6.16.0.0'
   s.platform = :ios, '12.0'
   s.static_framework = true
 
