@@ -16,7 +16,7 @@ Mediation Adapter for Mintegral to use with Google Mobile Ads.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationMintegral', '~>7.7.1.0'
+  s.dependency 'GoogleMobileAdsMediationMintegral', '~>7.7.5.0'
   s.platform = :ios, '12.0'
   s.static_framework = true
 
