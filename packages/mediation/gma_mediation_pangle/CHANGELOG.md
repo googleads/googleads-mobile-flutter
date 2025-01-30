@@ -1,6 +1,6 @@
 ## Pangle Flutter Mediation Adapter Changelog
 
-#### Next Version
+#### 2.0.0
 * Verified compatibility with Pangle Android adapter version 6.4.0.6.0.
 * Verified compatibility with Pangle iOS adapter version 6.4.1.1.0.
 * Built and tested with the Google Mobile Ads Flutter Plugin version 5.3.1.
