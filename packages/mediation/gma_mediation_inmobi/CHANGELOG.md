@@ -1,6 +1,6 @@
 ## InMobi Flutter Mediation Adapter Changelog
 
-#### Next Version
+#### 1.1.0
 * iOS plugin is now a static framework.
 * Verified compatibility with InMobi Android adapter version 10.8.0.0.
 * Verified compatibility with InMobi iOS adapter version 10.8.0.0.
