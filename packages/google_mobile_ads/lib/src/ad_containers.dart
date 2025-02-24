@@ -899,6 +899,17 @@ class BannerAd extends AdWithView {
   Future<AdSize?> getPlatformAdSize() async {
     return await instanceManager.getAdSize(this);
   }
+
+  bool isReadyForReuse() {
+    // already loaded ad
+    final int? id = instanceManager.adIdFor(this);
+
+    if (id != null) {
+      return !instanceManager.isWidgetAdIdMounted(id);
+    }
+    // not loaded ad
+    return false;
+  }
 }
 
 /// An 'AdManagerBannerAd' that has fluid ad size.
