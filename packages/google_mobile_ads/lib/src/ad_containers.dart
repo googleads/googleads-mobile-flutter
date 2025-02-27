@@ -900,14 +900,11 @@ class BannerAd extends AdWithView {
     return await instanceManager.getAdSize(this);
   }
 
-  bool isReadyForReuse() {
-    // already loaded ad
+  bool get isMounted {
     final int? id = instanceManager.adIdFor(this);
-
     if (id != null) {
-      return !instanceManager.isWidgetAdIdMounted(id);
+      return instanceManager.isWidgetAdIdMounted(id);
     }
-    // not loaded ad
     return false;
   }
 }
