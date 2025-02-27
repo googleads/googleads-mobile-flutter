@@ -322,7 +322,7 @@ void main() {
       expect(instanceManager.adIdFor(banner), isNull);
     });
 
-    test('not reusable before loaded, and reusable after loaded', () {
+    test('isMounted returns correct value', () {
       final BannerAd banner = BannerAd(
         adUnitId: 'test-ad-unit',
         size: AdSize.banner,
@@ -331,27 +331,18 @@ void main() {
       );
 
       expect(instanceManager.adIdFor(banner), isNull);
-      expect(banner.isReadyForReuse(), isFalse);
+      expect(banner.isMounted, isFalse);
 
       banner.load();
       final int? adId = instanceManager.adIdFor(banner);
       expect(adId, isNotNull);
-      expect(banner.isReadyForReuse(), isTrue);
-    });
+      expect(banner.isMounted, isFalse);
 
-    test('non-reusable after mounted, and back to reusable after unmounted', () {
-      final BannerAd banner = BannerAd(
-        adUnitId: 'test-ad-unit',
-        size: AdSize.banner,
-        listener: BannerAdListener(),
-        request: AdRequest(),
-      );
-      banner.load();
-      final int? adId = instanceManager.adIdFor(banner);
       instanceManager.mountWidgetAdId(adId!);
-      expect(banner.isReadyForReuse(), isFalse);
+      expect(banner.isMounted, isTrue);
+
       instanceManager.unmountWidgetAdId(adId!);
-      expect(banner.isReadyForReuse(), isTrue);
+      expect(banner.isMounted, isFalse);
     });
   });
 }
