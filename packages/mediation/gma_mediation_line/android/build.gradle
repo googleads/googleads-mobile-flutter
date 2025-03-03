@@ -24,6 +24,10 @@ allprojects {
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
+ext {
+    stringVersion = "2.9.20250110.0"
+}
+
 android {
     if (project.android.hasProperty("namespace")) {
         namespace = "io.flutter.plugins.googlemobileads.mediation.gma_mediation_line"
@@ -50,7 +54,7 @@ android {
     }
 
     dependencies {
-        implementation("com.google.ads.mediation:line:2.9.20250110.0")
+        implementation("com.google.ads.mediation:line:$stringVersion")
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.0.0")
     }

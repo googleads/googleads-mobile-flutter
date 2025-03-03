@@ -24,6 +24,10 @@ allprojects {
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
+ext {
+    stringVersion = "7.4.3.0"
+}
+
 android {
     if (project.android.hasProperty("namespace")) {
         namespace 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmonetize'
@@ -50,7 +54,7 @@ android {
     }
 
     dependencies {
-        implementation 'com.google.ads.mediation:vungle:7.4.3.0'
+        implementation "com.google.ads.mediation:vungle:$stringVersion"
         testImplementation 'junit:junit:4.13.2'
         testImplementation 'androidx.test:core:1.5.0'
         testImplementation 'androidx.test:core-ktx:1.5.0'
