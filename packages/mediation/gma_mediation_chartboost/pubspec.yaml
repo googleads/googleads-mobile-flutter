@@ -1,7 +1,7 @@
 name: gma_mediation_chartboost
 description: 'Mediation Adapter that enables sending ad requests to the Chartboost
   ad network using the google_mobile_ads plugin.'
-version: 1.0.0
+version: 1.0.1
 environment:
   sdk: ^3.5.4
   flutter: '>=3.3.0'
