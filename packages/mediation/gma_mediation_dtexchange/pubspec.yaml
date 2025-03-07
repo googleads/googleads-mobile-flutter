@@ -1,6 +1,6 @@
 name: gma_mediation_dtexchange
 description: "Mediation Adapter that enables sending ad requests to the DT Exchange ad network using the google_mobile_ads plugin."
-version: 1.1.0
+version: 1.1.1
 repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/mediation/gma_mediation_dtexchange
 
 environment:
