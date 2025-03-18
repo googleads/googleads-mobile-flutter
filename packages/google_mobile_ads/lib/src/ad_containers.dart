@@ -899,6 +899,16 @@ class BannerAd extends AdWithView {
   Future<AdSize?> getPlatformAdSize() async {
     return await instanceManager.getAdSize(this);
   }
+
+  /// Returns if the banner is mounted. A banner is mounted if it
+  /// is currently being used by an AdWidget.
+  bool get isMounted {
+    final int? id = instanceManager.adIdFor(this);
+    if (id != null) {
+      return instanceManager.isWidgetAdIdMounted(id);
+    }
+    return false;
+  }
 }
 
 /// An 'AdManagerBannerAd' that has fluid ad size.
