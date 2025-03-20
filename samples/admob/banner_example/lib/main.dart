@@ -8,9 +8,7 @@ import 'consent_manager.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MaterialApp(
-    home: BannerExample(),
-  ));
+  runApp(const MaterialApp(home: BannerExample()));
 }
 
 /// An example app that loads a banner ad.
@@ -29,9 +27,10 @@ class BannerExampleState extends State<BannerExample> {
   bool _isLoaded = false;
   Orientation? _currentOrientation;
 
-  final String _adUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/9214589741'
-      : 'ca-app-pub-3940256099942544/2435281174';
+  final String _adUnitId =
+      Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/9214589741'
+          : 'ca-app-pub-3940256099942544/2435281174';
 
   @override
   void initState() {
@@ -41,7 +40,8 @@ class BannerExampleState extends State<BannerExample> {
       if (consentGatheringError != null) {
         // Consent not obtained in current session.
         debugPrint(
-            "${consentGatheringError.errorCode}: ${consentGatheringError.message}");
+          "${consentGatheringError.errorCode}: ${consentGatheringError.message}",
+        );
       }
 
       // Check if a privacy options entry point is required.
@@ -58,34 +58,38 @@ class BannerExampleState extends State<BannerExample> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Banner Example',
-        home: Scaffold(
-            appBar: AppBar(
-                title: const Text('Banner Example'), actions: _appBarActions()),
-            body: OrientationBuilder(
-              builder: (context, orientation) {
-                if (_currentOrientation != orientation) {
-                  _isLoaded = false;
-                  _loadAd();
-                  _currentOrientation = orientation;
-                }
-                return Stack(
-                  children: [
-                    if (_bannerAd != null && _isLoaded)
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: SafeArea(
-                          child: SizedBox(
-                            width: _bannerAd!.size.width.toDouble(),
-                            height: _bannerAd!.size.height.toDouble(),
-                            child: AdWidget(ad: _bannerAd!),
-                          ),
-                        ),
-                      )
-                  ],
-                );
-              },
-            )));
+      title: 'Banner Example',
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Banner Example'),
+          actions: _appBarActions(),
+        ),
+        body: OrientationBuilder(
+          builder: (context, orientation) {
+            if (_currentOrientation != orientation) {
+              _isLoaded = false;
+              _loadAd();
+              _currentOrientation = orientation;
+            }
+            return Stack(
+              children: [
+                if (_bannerAd != null && _isLoaded)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SafeArea(
+                      child: SizedBox(
+                        width: _bannerAd!.size.width.toDouble(),
+                        height: _bannerAd!.size.height.toDouble(),
+                        child: AdWidget(ad: _bannerAd!),
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
   }
 
   List<Widget> _appBarActions() {
@@ -97,28 +101,31 @@ class BannerExampleState extends State<BannerExample> {
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-          itemBuilder: (context) => array
-              .map((item) => PopupMenuItem<AppBarItem>(
-                    value: item,
-                    child: Text(
-                      item.label,
-                    ),
-                  ))
-              .toList(),
-          onSelected: (item) {
-            switch (item.value) {
-              case 0:
-                MobileAds.instance.openAdInspector((error) {
-                  // Error will be non-null if ad inspector closed due to an error.
-                });
-              case 1:
-                _consentManager.showPrivacyOptionsForm((formError) {
-                  if (formError != null) {
-                    debugPrint("${formError.errorCode}: ${formError.message}");
-                  }
-                });
-            }
-          })
+        itemBuilder:
+            (context) =>
+                array
+                    .map(
+                      (item) => PopupMenuItem<AppBarItem>(
+                        value: item,
+                        child: Text(item.label),
+                      ),
+                    )
+                    .toList(),
+        onSelected: (item) {
+          switch (item.value) {
+            case 0:
+              MobileAds.instance.openAdInspector((error) {
+                // Error will be non-null if ad inspector closed due to an error.
+              });
+            case 1:
+              _consentManager.showPrivacyOptionsForm((formError) {
+                if (formError != null) {
+                  debugPrint("${formError.errorCode}: ${formError.message}");
+                }
+              });
+          }
+        },
+      ),
     ];
   }
 
@@ -139,7 +146,8 @@ class BannerExampleState extends State<BannerExample> {
 
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
     final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-        MediaQuery.sizeOf(context).width.truncate());
+      MediaQuery.sizeOf(context).width.truncate(),
+    );
 
     if (size == null) {
       // Unable to get width of anchored banner.
