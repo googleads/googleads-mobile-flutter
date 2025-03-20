@@ -39,9 +39,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Mediation Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -84,13 +82,14 @@ class _MyHomePageState extends State<MyHomePage> {
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           debugPrint(
-              '$ad loaded: ${ad.responseInfo?.mediationAdapterClassName}');
+            '$ad loaded: ${ad.responseInfo?.mediationAdapterClassName}',
+          );
           setState(() {
             _bannerIsLoaded = true;
           });
         },
-        onAdFailedToLoad: (ad, error) =>
-            debugPrint('$ad failed to load: ${error.message}'),
+        onAdFailedToLoad:
+            (ad, error) => debugPrint('$ad failed to load: ${error.message}'),
       ),
       request: AdRequest(nonPersonalizedAds: true),
     )..load();
@@ -101,44 +100,41 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<AppBarItem>>[
-                PopupMenuItem<AppBarItem>(
-                  value: adInspectorMenuItem,
-                  child: Text(adInspectorMenuItem.label),
-                ),
-              ],
-          onSelected: (item) {
-            MobileAds.instance.openAdInspector((error) {
-              // Error will be non-null if ad inspector closed due to an error.
-            });
-          })
+        itemBuilder:
+            (BuildContext context) => <PopupMenuEntry<AppBarItem>>[
+              PopupMenuItem<AppBarItem>(
+                value: adInspectorMenuItem,
+                child: Text(adInspectorMenuItem.label),
+              ),
+            ],
+        onSelected: (item) {
+          MobileAds.instance.openAdInspector((error) {
+            // Error will be non-null if ad inspector closed due to an error.
+          });
+        },
+      ),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: _appBarActions(),
-      ),
+      appBar: AppBar(title: Text(widget.title), actions: _appBarActions()),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
+            Text('You have pushed the button this many times:'),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             _bannerIsLoaded && _bannerAd != null
                 ? Container(
-                    height: _bannerAd!.size.height.toDouble(),
-                    width: _bannerAd!.size.width.toDouble(),
-                    child: AdWidget(ad: _bannerAd!),
-                  )
+                  height: _bannerAd!.size.height.toDouble(),
+                  width: _bannerAd!.size.width.toDouble(),
+                  child: AdWidget(ad: _bannerAd!),
+                )
                 : Text('ad is not loaded'),
           ],
         ),

@@ -9,9 +9,7 @@ import 'consent_manager.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MaterialApp(
-    home: InterstitialExample(),
-  ));
+  runApp(const MaterialApp(home: InterstitialExample()));
 }
 
 /// An example app that loads an interstitial ad.
@@ -33,9 +31,10 @@ class InterstitialExampleState extends State<InterstitialExample> {
   late var _counter = _gameLength;
   Timer? _timer;
 
-  final String _adUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/1033173712'
-      : 'ca-app-pub-3940256099942544/4411468910';
+  final String _adUnitId =
+      Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/1033173712'
+          : 'ca-app-pub-3940256099942544/4411468910';
 
   @override
   void initState() {
@@ -45,7 +44,8 @@ class InterstitialExampleState extends State<InterstitialExample> {
       if (consentGatheringError != null) {
         // Consent not obtained in current session.
         debugPrint(
-            "${consentGatheringError.errorCode}: ${consentGatheringError.message}");
+          "${consentGatheringError.errorCode}: ${consentGatheringError.message}",
+        );
       }
 
       // Kick off the first play of the "game".
@@ -91,42 +91,44 @@ class InterstitialExampleState extends State<InterstitialExample> {
     return MaterialApp(
       title: 'Interstitial Example',
       home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Interstitial Example'),
-            actions: _appBarActions(),
-          ),
-          body: Stack(
-            children: [
-              const Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Text(
-                      'The Impossible Game',
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        appBar: AppBar(
+          title: const Text('Interstitial Example'),
+          actions: _appBarActions(),
+        ),
+        body: Stack(
+          children: [
+            const Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: Text(
+                  'The Impossible Game',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('${_counter.toString()} seconds left!'),
+                  Visibility(
+                    visible: _counter == 0,
+                    child: TextButton(
+                      onPressed: () {
+                        _startNewGame();
+                        _loadAd();
+                      },
+                      child: const Text('Play Again'),
                     ),
-                  )),
-              Align(
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('${_counter.toString()} seconds left!'),
-                      Visibility(
-                        visible: _counter == 0,
-                        child: TextButton(
-                          onPressed: () {
-                            _startNewGame();
-                            _loadAd();
-                          },
-                          child: const Text('Play Again'),
-                        ),
-                      )
-                    ],
-                  )),
-            ],
-          )),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -139,31 +141,34 @@ class InterstitialExampleState extends State<InterstitialExample> {
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-          itemBuilder: (context) => array
-              .map((item) => PopupMenuItem<AppBarItem>(
-                    value: item,
-                    child: Text(
-                      item.label,
-                    ),
-                  ))
-              .toList(),
-          onSelected: (item) {
-            _pauseGame();
-            switch (item.value) {
-              case 0:
-                MobileAds.instance.openAdInspector((error) {
-                  // Error will be non-null if ad inspector closed due to an error.
-                  _resumeGame();
-                });
-              case 1:
-                _consentManager.showPrivacyOptionsForm((formError) {
-                  if (formError != null) {
-                    debugPrint("${formError.errorCode}: ${formError.message}");
-                  }
-                  _resumeGame();
-                });
-            }
-          })
+        itemBuilder:
+            (context) =>
+                array
+                    .map(
+                      (item) => PopupMenuItem<AppBarItem>(
+                        value: item,
+                        child: Text(item.label),
+                      ),
+                    )
+                    .toList(),
+        onSelected: (item) {
+          _pauseGame();
+          switch (item.value) {
+            case 0:
+              MobileAds.instance.openAdInspector((error) {
+                // Error will be non-null if ad inspector closed due to an error.
+                _resumeGame();
+              });
+            case 1:
+              _consentManager.showPrivacyOptionsForm((formError) {
+                if (formError != null) {
+                  debugPrint("${formError.errorCode}: ${formError.message}");
+                }
+                _resumeGame();
+              });
+          }
+        },
+      ),
     ];
   }
 
@@ -177,54 +182,58 @@ class InterstitialExampleState extends State<InterstitialExample> {
     }
 
     InterstitialAd.load(
-        adUnitId: _adUnitId,
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          // Called when an ad is successfully received.
-          onAdLoaded: (InterstitialAd ad) {
-            ad.fullScreenContentCallback = FullScreenContentCallback(
-                // Called when the ad showed the full screen content.
-                onAdShowedFullScreenContent: (ad) {},
-                // Called when an impression occurs on the ad.
-                onAdImpression: (ad) {},
-                // Called when the ad failed to show full screen content.
-                onAdFailedToShowFullScreenContent: (ad, err) {
-                  ad.dispose();
-                },
-                // Called when the ad dismissed full screen content.
-                onAdDismissedFullScreenContent: (ad) {
-                  ad.dispose();
-                },
-                // Called when a click is recorded for an ad.
-                onAdClicked: (ad) {});
+      adUnitId: _adUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        // Called when an ad is successfully received.
+        onAdLoaded: (InterstitialAd ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            // Called when the ad showed the full screen content.
+            onAdShowedFullScreenContent: (ad) {},
+            // Called when an impression occurs on the ad.
+            onAdImpression: (ad) {},
+            // Called when the ad failed to show full screen content.
+            onAdFailedToShowFullScreenContent: (ad, err) {
+              ad.dispose();
+            },
+            // Called when the ad dismissed full screen content.
+            onAdDismissedFullScreenContent: (ad) {
+              ad.dispose();
+            },
+            // Called when a click is recorded for an ad.
+            onAdClicked: (ad) {},
+          );
 
-            // Keep a reference to the ad so you can show it later.
-            _interstitialAd = ad;
-          },
-          // Called when an ad request failed.
-          onAdFailedToLoad: (LoadAdError error) {
-            // ignore: avoid_print
-            print('InterstitialAd failed to load: $error');
-          },
-        ));
+          // Keep a reference to the ad so you can show it later.
+          _interstitialAd = ad;
+        },
+        // Called when an ad request failed.
+        onAdFailedToLoad: (LoadAdError error) {
+          // ignore: avoid_print
+          print('InterstitialAd failed to load: $error');
+        },
+      ),
+    );
   }
 
   void _showAlert(BuildContext context) {
     showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: const Text('Game Over'),
-              content: Text('You lasted $_gameLength seconds'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _interstitialAd?.show();
-                  },
-                  child: const Text('OK'),
-                )
-              ],
-            ));
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Game Over'),
+            content: Text('You lasted $_gameLength seconds'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _interstitialAd?.show();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+    );
   }
 
   void _startTimer() {
