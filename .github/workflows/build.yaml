@@ -105,8 +105,8 @@ jobs:
         run: |
           cd $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
           flutter upgrade
-          flutter --version
-          dart --version
+          flutter clean
+          flutter pub get
           flutter analyze
         env:
           GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }} 
