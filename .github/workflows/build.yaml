@@ -104,6 +104,7 @@ jobs:
       - name: "Flutter Analyze"
         run: |
           cd $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
+          flutter upgrade
           flutter analyze
         env:
           GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }} 

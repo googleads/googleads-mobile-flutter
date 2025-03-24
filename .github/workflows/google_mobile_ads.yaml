@@ -97,6 +97,7 @@ jobs:
       - name: "Flutter Analyze"
         run: |
           cd packages/google_mobile_ads/
+          flutter upgrade
           flutter analyze
       - name: "Flutter Publish"
         run: |
