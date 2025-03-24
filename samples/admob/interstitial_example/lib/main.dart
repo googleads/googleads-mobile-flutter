@@ -31,10 +31,9 @@ class InterstitialExampleState extends State<InterstitialExample> {
   late var _counter = _gameLength;
   Timer? _timer;
 
-  final String _adUnitId =
-      Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/1033173712'
-          : 'ca-app-pub-3940256099942544/4411468910';
+  final String _adUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/1033173712'
+      : 'ca-app-pub-3940256099942544/4411468910';
 
   @override
   void initState() {
@@ -141,16 +140,14 @@ class InterstitialExampleState extends State<InterstitialExample> {
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-        itemBuilder:
-            (context) =>
-                array
-                    .map(
-                      (item) => PopupMenuItem<AppBarItem>(
-                        value: item,
-                        child: Text(item.label),
-                      ),
-                    )
-                    .toList(),
+        itemBuilder: (context) => array
+            .map(
+              (item) => PopupMenuItem<AppBarItem>(
+                value: item,
+                child: Text(item.label),
+              ),
+            )
+            .toList(),
         onSelected: (item) {
           _pauseGame();
           switch (item.value) {
@@ -219,20 +216,19 @@ class InterstitialExampleState extends State<InterstitialExample> {
   void _showAlert(BuildContext context) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Game Over'),
-            content: Text('You lasted $_gameLength seconds'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _interstitialAd?.show();
-                },
-                child: const Text('OK'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: const Text('Game Over'),
+        content: Text('You lasted $_gameLength seconds'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _interstitialAd?.show();
+            },
+            child: const Text('OK'),
           ),
+        ],
+      ),
     );
   }
 
