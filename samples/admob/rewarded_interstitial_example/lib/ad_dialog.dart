@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class AdDialog extends StatefulWidget {
   final VoidCallback showAd;
 
-  const AdDialog({Key? key, required this.showAd}) : super(key: key);
+  const AdDialog({super.key, required this.showAd});
 
   @override
   AdDialogState createState() => AdDialogState();
