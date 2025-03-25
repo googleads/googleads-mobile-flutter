@@ -112,5 +112,5 @@ jobs:
       - name: "Flutter Format"
         run: |
           dart format --version
-          dart format samples/
+          dart format samples/ --language-version latest
           ./.github/workflows/scripts/validate-formatting.sh
