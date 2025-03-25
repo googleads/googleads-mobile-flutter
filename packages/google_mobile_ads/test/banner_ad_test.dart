@@ -341,7 +341,7 @@ void main() {
       instanceManager.mountWidgetAdId(adId!);
       expect(banner.isMounted, isTrue);
 
-      instanceManager.unmountWidgetAdId(adId!);
+      instanceManager.unmountWidgetAdId(adId);
       expect(banner.isMounted, isFalse);
     });
   });
