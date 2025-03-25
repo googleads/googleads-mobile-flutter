@@ -111,5 +111,6 @@ jobs:
           GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }} 
       - name: "Flutter Format"
         run: |
+          dart format --version
           dart format samples/
           ./.github/workflows/scripts/validate-formatting.sh
