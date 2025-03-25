@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-include: package:flutter_lints/flutter.yaml
+include: package:pedantic/analysis_options.1.11.0.yaml
 
 analyzer:
   exclude: [
@@ -26,4 +26,9 @@ analyzer:
     packages/mediation/gma_mediation_pangle/**
     packages/mediation/gma_mediation_unity/**
   ]
+  errors:
+    omit_local_variable_types: ignore
 
+linter:
+  rules:
+    - public_member_api_docs
