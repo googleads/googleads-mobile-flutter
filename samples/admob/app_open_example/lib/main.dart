@@ -33,9 +33,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const HomePage(),
     );
   }
@@ -59,15 +57,17 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    _appLifecycleReactor =
-        AppLifecycleReactor(appOpenAdManager: _appOpenAdManager);
+    _appLifecycleReactor = AppLifecycleReactor(
+      appOpenAdManager: _appOpenAdManager,
+    );
     _appLifecycleReactor.listenToAppStateChanges();
 
     ConsentManager.instance.gatherConsent((consentGatheringError) {
       if (consentGatheringError != null) {
         // Consent not obtained in current session.
         debugPrint(
-            "${consentGatheringError.errorCode}: ${consentGatheringError.message}");
+          "${consentGatheringError.errorCode}: ${consentGatheringError.message}",
+        );
       }
 
       // Check if a privacy options entry point is required.
@@ -92,9 +92,7 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Leave and switch back to the app to see the ad.',
-            ),
+            Text('Leave and switch back to the app to see the ad.'),
           ],
         ),
       ),
@@ -110,28 +108,31 @@ class _HomePageState extends State<HomePage> {
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-          itemBuilder: (context) => array
-              .map((item) => PopupMenuItem<AppBarItem>(
-                    value: item,
-                    child: Text(
-                      item.label,
-                    ),
-                  ))
-              .toList(),
-          onSelected: (item) {
-            switch (item.value) {
-              case 0:
-                MobileAds.instance.openAdInspector((error) {
-                  // Error will be non-null if ad inspector closed due to an error.
-                });
-              case 1:
-                ConsentManager.instance.showPrivacyOptionsForm((formError) {
-                  if (formError != null) {
-                    debugPrint("${formError.errorCode}: ${formError.message}");
-                  }
-                });
-            }
-          })
+        itemBuilder:
+            (context) =>
+                array
+                    .map(
+                      (item) => PopupMenuItem<AppBarItem>(
+                        value: item,
+                        child: Text(item.label),
+                      ),
+                    )
+                    .toList(),
+        onSelected: (item) {
+          switch (item.value) {
+            case 0:
+              MobileAds.instance.openAdInspector((error) {
+                // Error will be non-null if ad inspector closed due to an error.
+              });
+            case 1:
+              ConsentManager.instance.showPrivacyOptionsForm((formError) {
+                if (formError != null) {
+                  debugPrint("${formError.errorCode}: ${formError.message}");
+                }
+              });
+          }
+        },
+      ),
     ];
   }
 

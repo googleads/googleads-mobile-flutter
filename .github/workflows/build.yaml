@@ -104,10 +104,13 @@ jobs:
       - name: "Flutter Analyze"
         run: |
           cd $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
+          flutter clean
+          flutter pub get
           flutter analyze
         env:
           GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }} 
       - name: "Flutter Format"
         run: |
-          dart format samples/
+          dart format --version
+          dart format samples/ --language-version latest
           ./.github/workflows/scripts/validate-formatting.sh

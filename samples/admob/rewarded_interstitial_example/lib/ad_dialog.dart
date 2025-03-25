@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 class AdDialog extends StatefulWidget {
   final VoidCallback showAd;
 
-  const AdDialog({
-    Key? key,
-    required this.showAd,
-  }) : super(key: key);
+  const AdDialog({super.key, required this.showAd});
 
   @override
   AdDialogState createState() => AdDialogState();
@@ -19,12 +16,14 @@ class AdDialogState extends State<AdDialog> {
 
   @override
   void initState() {
-    _countdownTimer.addListener(() => setState(() {
-          if (_countdownTimer.isComplete) {
-            Navigator.pop(context);
-            widget.showAd();
-          }
-        }));
+    _countdownTimer.addListener(
+      () => setState(() {
+        if (_countdownTimer.isComplete) {
+          Navigator.pop(context);
+          widget.showAd();
+        }
+      }),
+    );
     _countdownTimer.start();
 
     super.initState();
@@ -34,17 +33,17 @@ class AdDialogState extends State<AdDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Watch an ad for 10 more coins'),
-      content: Text('Video starting in ${_countdownTimer.timeLeft} seconds...',
-          style: const TextStyle(color: Colors.grey)),
+      content: Text(
+        'Video starting in ${_countdownTimer.timeLeft} seconds...',
+        style: const TextStyle(color: Colors.grey),
+      ),
       actions: <Widget>[
         TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text(
-              'No thanks',
-              style: TextStyle(color: Colors.red),
-            ))
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('No thanks', style: TextStyle(color: Colors.red)),
+        ),
       ],
     );
   }
