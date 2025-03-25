@@ -27,28 +27,35 @@ class ConsentManager {
   /// Helper method to call the Mobile Ads SDK to request consent information
   /// and load/show a consent form if necessary.
   void gatherConsent(
-      OnConsentGatheringCompleteListener onConsentGatheringCompleteListener) {
+    OnConsentGatheringCompleteListener onConsentGatheringCompleteListener,
+  ) {
     // For testing purposes, you can force a DebugGeography of Eea or NotEea.
     ConsentDebugSettings debugSettings = ConsentDebugSettings(
-        // debugGeography: DebugGeography.debugGeographyEea,
-        );
-    ConsentRequestParameters params =
-        ConsentRequestParameters(consentDebugSettings: debugSettings);
+      // debugGeography: DebugGeography.debugGeographyEea,
+    );
+    ConsentRequestParameters params = ConsentRequestParameters(
+      consentDebugSettings: debugSettings,
+    );
 
     // Requesting an update to consent information should be called on every app launch.
-    ConsentInformation.instance.requestConsentInfoUpdate(params, () async {
-      ConsentForm.loadAndShowConsentFormIfRequired((loadAndShowError) {
-        // Consent has been gathered.
-        onConsentGatheringCompleteListener(loadAndShowError);
-      });
-    }, (FormError formError) {
-      onConsentGatheringCompleteListener(formError);
-    });
+    ConsentInformation.instance.requestConsentInfoUpdate(
+      params,
+      () async {
+        ConsentForm.loadAndShowConsentFormIfRequired((loadAndShowError) {
+          // Consent has been gathered.
+          onConsentGatheringCompleteListener(loadAndShowError);
+        });
+      },
+      (FormError formError) {
+        onConsentGatheringCompleteListener(formError);
+      },
+    );
   }
 
   /// Helper method to call the Mobile Ads SDK method to show the privacy options form.
   void showPrivacyOptionsForm(
-      OnConsentFormDismissedListener onConsentFormDismissedListener) {
+    OnConsentFormDismissedListener onConsentFormDismissedListener,
+  ) {
     ConsentForm.showPrivacyOptionsForm(onConsentFormDismissedListener);
   }
 }

@@ -1,12 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-enum CountdownState {
-  notStarted,
-  active,
-  paused,
-  ended,
-}
+enum CountdownState { notStarted, active, paused, ended }
 
 /// A simple class that keeps track of a decrementing timer.
 class CountdownTimer extends ChangeNotifier {
