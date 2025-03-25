@@ -27,9 +27,10 @@ class BannerExampleState extends State<BannerExample> {
   bool _isLoaded = false;
   Orientation? _currentOrientation;
 
-  final String _adUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/9214589741'
-      : 'ca-app-pub-3940256099942544/2435281174';
+  final String _adUnitId =
+      Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/9214589741'
+          : 'ca-app-pub-3940256099942544/2435281174';
 
   @override
   void initState() {
@@ -100,14 +101,16 @@ class BannerExampleState extends State<BannerExample> {
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-        itemBuilder: (context) => array
-            .map(
-              (item) => PopupMenuItem<AppBarItem>(
-                value: item,
-                child: Text(item.label),
-              ),
-            )
-            .toList(),
+        itemBuilder:
+            (context) =>
+                array
+                    .map(
+                      (item) => PopupMenuItem<AppBarItem>(
+                        value: item,
+                        child: Text(item.label),
+                      ),
+                    )
+                    .toList(),
         onSelected: (item) {
           switch (item.value) {
             case 0:

@@ -28,8 +28,8 @@ class ConsentManager {
   ) {
     // For testing purposes, you can force a DebugGeography of Eea or NotEea.
     ConsentDebugSettings debugSettings = ConsentDebugSettings(
-        // debugGeography: DebugGeography.debugGeographyEea,
-        );
+      // debugGeography: DebugGeography.debugGeographyEea,
+    );
     ConsentRequestParameters params = ConsentRequestParameters(
       consentDebugSettings: debugSettings,
     );
