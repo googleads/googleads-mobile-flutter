@@ -900,8 +900,8 @@ class BannerAd extends AdWithView {
     return await instanceManager.getAdSize(this);
   }
 
-  /// Returns if the banner is mounted. A banner is mounted if it
-  /// is currently being used by an AdWidget.
+  /// Returns true if the ad Id is already mounted in a WidgetAd managed
+  /// by the instanceManager.
   bool get isMounted {
     final int? id = instanceManager.adIdFor(this);
     if (id != null) {
