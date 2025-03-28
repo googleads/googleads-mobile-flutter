@@ -37,7 +37,7 @@ class FlutterAdRequest {
   @Nullable private final Integer httpTimeoutMillis;
   @Nullable private final String mediationExtrasIdentifier;
 
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings("deprecation") // Keeping for compatibility
   @Nullable
   private final MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
 
@@ -53,7 +53,7 @@ class FlutterAdRequest {
     @Nullable private Integer httpTimeoutMillis;
     @Nullable private String mediationExtrasIdentifier;
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings("deprecation") // Keeping for compatibility
     @Nullable
     private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
 
@@ -105,7 +105,7 @@ class FlutterAdRequest {
     }
 
     @CanIgnoreReturnValue
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings("deprecation") // Keeping for compatibility
     Builder setMediationNetworkExtrasProvider(
         @Nullable MediationNetworkExtrasProvider mediationNetworkExtrasProvider) {
       this.mediationNetworkExtrasProvider = mediationNetworkExtrasProvider;
@@ -154,7 +154,7 @@ class FlutterAdRequest {
       return mediationExtrasIdentifier;
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings("deprecation") // Keeping for compatibility
     @Nullable
     protected MediationNetworkExtrasProvider getMediationNetworkExtrasProvider() {
       return mediationNetworkExtrasProvider;
@@ -190,7 +190,7 @@ class FlutterAdRequest {
     }
   }
 
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings("deprecation") // Keeping for compatibility
   protected FlutterAdRequest(
       @Nullable List<String> keywords,
       @Nullable String contentUrl,
@@ -340,7 +340,8 @@ class FlutterAdRequest {
         && Objects.equals(httpTimeoutMillis, request.httpTimeoutMillis)
         && Objects.equals(mediationExtrasIdentifier, request.mediationExtrasIdentifier)
         && Objects.equals(mediationNetworkExtrasProvider, request.mediationNetworkExtrasProvider)
-        && Objects.equals(adMobExtras, request.adMobExtras);
+        && Objects.equals(adMobExtras, request.adMobExtras)
+        && Objects.equals(mediationExtras, request.mediationExtras);
   }
 
   @Override

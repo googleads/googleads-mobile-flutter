@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
@@ -25,7 +26,7 @@ class FlutterRequestAgentProvider {
   private void processGameAndNewsTemplateVersions(Context context) {
     try {
       ApplicationInfo info;
-      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         info =
             context
                 .getApplicationContext()
