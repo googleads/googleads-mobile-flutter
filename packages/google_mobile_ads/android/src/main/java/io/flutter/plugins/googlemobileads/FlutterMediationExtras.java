@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.util.Pair;
 import com.google.android.gms.ads.mediation.MediationExtrasReceiver;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Mediation Adapters that require extra parameters provide implementations of this interface to
@@ -46,5 +47,22 @@ public abstract class FlutterMediationExtras {
    */
   public void setMediationExtras(Map<String, Object> extras) {
     this.extras = extras;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    } else if (!(o instanceof FlutterMediationExtras)) {
+      return false;
+    }
+
+    FlutterMediationExtras mediationExtras = (FlutterMediationExtras) o;
+    return Objects.equals(extras, mediationExtras.extras);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(extras);
   }
 }
