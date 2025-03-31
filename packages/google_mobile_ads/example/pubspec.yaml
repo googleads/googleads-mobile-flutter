@@ -15,6 +15,7 @@
 name: google_mobile_ads_example
 version: 1.0.0
 description: Demonstrates how to use the google mobile ads plugin.
+publish_to: none
 
 dependencies:
   flutter:
