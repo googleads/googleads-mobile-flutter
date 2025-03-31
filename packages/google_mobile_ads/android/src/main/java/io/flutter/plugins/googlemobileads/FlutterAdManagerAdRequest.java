@@ -76,7 +76,7 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
     }
   }
 
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings("deprecation") // Keeping for compatibility
   private FlutterAdManagerAdRequest(
       @Nullable List<String> keywords,
       @Nullable String contentUrl,

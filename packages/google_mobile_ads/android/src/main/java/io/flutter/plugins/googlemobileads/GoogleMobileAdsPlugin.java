@@ -69,7 +69,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   @Nullable private UserMessagingPlatformManager userMessagingPlatformManager;
   private final Map<String, NativeAdFactory> nativeAdFactories = new HashMap<>();
 
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings("deprecation") // Keeping for compatibility
   @Nullable
   private MediationNetworkExtrasProvider mediationNetworkExtrasProvider;
 
