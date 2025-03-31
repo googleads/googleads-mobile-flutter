@@ -32,8 +32,8 @@ import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateF
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateTextStyle;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateType;
-import java.lang.reflect.InvocationTargetException;
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Map;
