@@ -1,3 +1,9 @@
+## 6.0.0
+* Updates dart sdk low bound to 3.5.0.
+* Fixes AdMessageCodec deprecated API issue: https://github.com/googleads/googleads-mobile-flutter/issues/1242
+* Updates GMA [Android](https://developers.google.com/admob/android/rel-notes) dependency to 24.1.0
+* Updates GMA [iOS](https://developers.google.com/admob/ios/rel-notes) dependency to 12.2.0
+
 ## 5.3.1
 * Fixes dart SDK low bound building issues: https://github.com/googleads/googleads-mobile-flutter/issues/1234
 
