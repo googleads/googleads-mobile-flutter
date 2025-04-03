@@ -216,7 +216,7 @@
               loadAndPresentIfRequiredFromViewController:[OCMArg any]
                                        completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(NSError *loadError);
+        __unsafe_unretained void (^completionHandler)(NSError *loadError);
         [invocation getArgument:&completionHandler atIndex:3];
         completionHandler(nil);
       });
@@ -243,7 +243,7 @@
               loadAndPresentIfRequiredFromViewController:[OCMArg any]
                                        completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(NSError *loadError);
+        __unsafe_unretained void (^completionHandler)(NSError *loadError);
         [invocation getArgument:&completionHandler atIndex:3];
         completionHandler(error);
       });
@@ -321,7 +321,7 @@
               presentPrivacyOptionsFormFromViewController:[OCMArg any]
                                         completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(NSError *loadError);
+        __unsafe_unretained void (^completionHandler)(NSError *loadError);
         [invocation getArgument:&completionHandler atIndex:3];
         completionHandler(nil);
       });
@@ -347,7 +347,7 @@
               presentPrivacyOptionsFormFromViewController:[OCMArg any]
                                         completionHandler:[OCMArg any]])
       .andDo(^(NSInvocation *invocation) {
-        void (^completionHandler)(NSError *loadError);
+        __unsafe_unretained void (^completionHandler)(NSError *loadError);
         [invocation getArgument:&completionHandler atIndex:3];
         completionHandler(error);
       });

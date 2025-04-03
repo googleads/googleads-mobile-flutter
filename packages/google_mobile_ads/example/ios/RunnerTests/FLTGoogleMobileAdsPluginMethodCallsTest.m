@@ -263,6 +263,11 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
+  NSTimeInterval timeout = 5.0;
+  NSDate *startTime = [NSDate date];
+  while (!GADMobileAds.sharedInstance.applicationMuted && [[NSDate date] timeIntervalSinceDate:startTime] < timeout) {
+    [NSThread sleepForTimeInterval:0.1];
+  }
   XCTAssertTrue(GADMobileAds.sharedInstance.applicationMuted);
 
   methodCall =
@@ -279,6 +284,10 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
+  startTime = [NSDate date];
+  while (GADMobileAds.sharedInstance.applicationMuted && [[NSDate date] timeIntervalSinceDate:startTime] < timeout) {
+    [NSThread sleepForTimeInterval:0.1];
+  }
   XCTAssertFalse(GADMobileAds.sharedInstance.applicationMuted);
 }
 

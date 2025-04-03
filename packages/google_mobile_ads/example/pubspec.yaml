@@ -13,7 +13,9 @@
 #  limitations under the License.
 
 name: google_mobile_ads_example
+version: 1.0.0
 description: Demonstrates how to use the google mobile ads plugin.
+publish_to: none
 
 dependencies:
   flutter:
@@ -32,4 +34,4 @@ flutter:
   uses-material-design: true
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=3.6.0 <4.0.0"

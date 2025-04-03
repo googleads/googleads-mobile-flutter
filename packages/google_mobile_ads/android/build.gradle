@@ -1,5 +1,5 @@
 group 'io.flutter.plugins.googlemobileads'
-version '1.0-SNAPSHOT'
+version '6.0.0'
 
 buildscript {
     repositories {
@@ -22,21 +22,21 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 34
+    compileSdk 35
 
     if (project.android.hasProperty('namespace')) {
         namespace 'io.flutter.plugins.googlemobileads'
     }
 
     defaultConfig {
-        minSdkVersion 21
+        minSdk 23
     }
     lintOptions {
         disable 'InvalidPackage'
     }
     dependencies {
-        api 'com.google.android.gms:play-services-ads:23.6.0'
-        implementation 'com.google.android.ump:user-messaging-platform:3.1.0'
+        api 'com.google.android.gms:play-services-ads:24.1.0'
+        implementation 'com.google.android.ump:user-messaging-platform:3.2.0'
         implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
         implementation 'androidx.lifecycle:lifecycle-process:2.6.2'
         implementation 'com.google.errorprone:error_prone_annotations:2.16'
