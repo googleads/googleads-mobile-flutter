@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationIMobile', '>= 2.3.4.2'
+  s.dependency 'GoogleMobileAdsMediationIMobile', '>= 2.3.4.1'
   s.platform = :ios, '12.0'
   s.static_framework = true
 
