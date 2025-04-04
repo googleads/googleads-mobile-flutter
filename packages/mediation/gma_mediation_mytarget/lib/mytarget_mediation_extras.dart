@@ -15,9 +15,9 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 /// Extra information sent to the mytarget adapter through an [AdRequest] or an [AdManagerAdRequest].
-class mytargetMediationExtras implements MediationExtras {
+class MytargetMediationExtras implements MediationExtras {
   /// Default constructor with required extras value.
-  const mytargetMediationExtras({required this.isIOSDebugMode});
+  const MytargetMediationExtras({required this.isIOSDebugMode});
 
   /// Specifies whether to enable logging for iOS.
   final bool isIOSDebugMode;
