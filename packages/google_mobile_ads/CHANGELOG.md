@@ -1,6 +1,6 @@
 ## 6.0.0
 * Updates minimum Flutter SDK to 3.27.0
-* Updates dart sdk low bound to 3.6.0.
+* Updates Dart SDK low bound to 3.6.0.
 * Fixes AdMessageCodec deprecated API issue: https://github.com/googleads/googleads-mobile-flutter/issues/1242
 * Adds a new API (`isMounted`) to support recycling ad banners
 * Updates GMA [Android](https://developers.google.com/admob/android/rel-notes) dependency to 24.1.0
