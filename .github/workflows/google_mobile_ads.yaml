@@ -59,6 +59,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           fetch-depth: 0
+      - name: Select Xcode version
+        run: sudo xcode-select -s '/Applications/Xcode_16.2.0.app/Contents/Developer'
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
