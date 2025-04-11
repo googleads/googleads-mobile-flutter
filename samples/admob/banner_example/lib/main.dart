@@ -67,8 +67,10 @@ class BannerExampleState extends State<BannerExample> {
         body: OrientationBuilder(
           builder: (context, orientation) {
             if (_currentOrientation != orientation) {
-              _isLoaded = false;
-              _loadAd();
+              if (_currentOrientation != null) {
+                _isLoaded = false;
+                _loadAd();
+              }
               _currentOrientation = orientation;
             }
             return Stack(

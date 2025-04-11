@@ -2,13 +2,13 @@ import UIKit
 import Flutter
 
 @objc class NativeAdFactoryExample: NSObject, FLTNativeAdFactory {
-  func createNativeAd(_ nativeAd: GADNativeAd, customOptions: [AnyHashable : Any]? = nil) -> GADNativeAdView? {
+  func createNativeAd(_ nativeAd: NativeAd, customOptions: [AnyHashable : Any]? = nil) -> NativeAdView? {
 
     // Create and place ad in view hierarchy.
     let nativeAdView = Bundle.main.loadNibNamed(
             "NativeAdView",
             owner: nil,
-            options: nil)?.first as! GADNativeAdView
+            options: nil)?.first as! NativeAdView
 
     // Associate the native ad view with the native ad object. This is
     // required to make the ad clickable.
