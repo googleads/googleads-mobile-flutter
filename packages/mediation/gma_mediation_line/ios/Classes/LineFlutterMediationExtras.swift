@@ -17,14 +17,14 @@ import LineAdapter
 
 @objc protocol FLTMediationExtras {
   var extras: NSMutableDictionary { get }
-  func getMediationExtras() -> GADAdNetworkExtras
+  func getMediationExtras() -> AdNetworkExtras
 }
 
 @objc(GADFLineFlutterMediationExtras)
 class LineFlutterMediationExtras: NSObject, FLTMediationExtras {
   var extras: NSMutableDictionary = [:]
 
-  func getMediationExtras() -> GADAdNetworkExtras {
+  func getMediationExtras() -> AdNetworkExtras {
     let lineExtras = GADMediationAdapterLineExtras()
     if let enableAdSound = extras["enableAdSound"] as? Bool {
       lineExtras.adAudio =

@@ -17,14 +17,14 @@ import MyTargetAdapter
 
 @objc protocol FLTMediationExtras {
   var extras: NSMutableDictionary { get }
-  func getMediationExtras() -> GADAdNetworkExtras
+  func getMediationExtras() -> AdNetworkExtras
 }
 
 @objc(MytargetFlutterMediationExtras)
 class MytargetFlutterMediationExtras: NSObject, FLTMediationExtras {
   var extras: NSMutableDictionary = [:]
 
-  func getMediationExtras() -> GADAdNetworkExtras {
+  func getMediationExtras() -> AdNetworkExtras {
     let mytargetExtras = GADMAdapterMyTargetExtras()
     if let isIOSDebugMode = extras["isIOSDebugMode"] as? Bool {
       mytargetExtras.isDebugMode = isIOSDebugMode
