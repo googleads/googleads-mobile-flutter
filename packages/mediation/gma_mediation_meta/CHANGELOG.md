@@ -3,7 +3,7 @@
 #### Version 1.2.0
 * Supports [Meta Audience Network Android adapter version 6.19.0.1](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/meta/CHANGELOG.md#version-61901).
 * Supports [Meta Audience Network iOS adapter version 6.17.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Meta/CHANGELOG.md#version-61700).
-* Built and tested with the Google Mobile Ads Flutter Plugin version 5.3.1.
+* Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
 
 #### Version 1.1.0
 * iOS plugin is now a static framework.
