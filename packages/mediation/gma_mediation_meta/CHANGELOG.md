@@ -1,23 +1,24 @@
 ## Meta Audience Network Flutter Mediation Adapter Changelog
 
-#### Next Version
-* Built and tested with the Google Mobile Ads Flutter Plugin version 5.2.0.
+#### Version 1.2.0
+* Supports [Meta Audience Network Android adapter version 6.19.0.1](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/meta/CHANGELOG.md#version-61901).
+* Supports [Meta Audience Network iOS adapter version 6.17.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Meta/CHANGELOG.md#version-61700).
+* Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
 
-#### 1.1.0
-* Verified compatibility with Meta Android adapter version 6.17.0.0
-* Verified compatibility with Meta iOS adapter version 6.15.2.0
-* Built and tested with the Google Mobile Ads Flutter Plugin version 5.1.0.
+#### Version 1.1.0
+* iOS plugin is now a static framework.
+* Supports [Meta Audience Network Android adapter version 6.18.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/meta/CHANGELOG.md#version-61800).
+* Supports [Meta Audience Network iOS adapter version 6.16.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Meta/CHANGELOG.md#version-61600).
+* Built and tested with the Google Mobile Ads Flutter Plugin version 5.3.1.
 
-#### 1.0.1
-
+#### Version 1.0.1
 * Added dart class to allow correct compatibility analysis with host platforms
-* Verified compatibility with Meta Android adapter version 6.17.0.0
-* Verified compatibility with Meta iOS adapter version 6.15.0.0
+- Supports [Meta Audience Network Android adapter version 6.17.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/meta/CHANGELOG.md#version-61700).
+- Supports [Meta Audience Network iOS adapter version 6.15.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Meta/CHANGELOG.md#version-61500).
 * Built and tested with the Google Mobile Ads Flutter Plugin version 5.1.0.
 
-#### 1.0.0
-
+#### Version 1.0.0
 * Initial release.
-* Verified compatibility with Meta Android adapter version 6.17.0.0 
-* Verified compatibility with Meta iOS adapter version 6.15.0.0
+- Supports [Meta Audience Network Android adapter version 6.17.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/meta/CHANGELOG.md#version-61700).
+- Supports [Meta Audience Network iOS adapter version 6.15.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Meta/CHANGELOG.md#version-61500).
 * Built and tested with the Google Mobile Ads Flutter Plugin version 5.0.0.

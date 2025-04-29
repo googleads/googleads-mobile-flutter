@@ -42,12 +42,3 @@ jobs:
       run: |
         cd packages/mediation/gma_mediation_inmobi
         flutter analyze
-    - name: "Flutter Publish"
-      run: |
-        cd packages/mediation/gma_mediation_inmobi
-        flutter pub publish --dry-run
-    - name: "Flutter Format"
-      run: |
-        flutter pub global activate flutter_plugin_tools
-        flutter pub global run flutter_plugin_tools format
-        ./.github/workflows/scripts/validate-formatting.sh

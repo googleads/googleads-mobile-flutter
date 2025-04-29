@@ -1,0 +1,26 @@
+name: gma_mediation_imobile
+description: 'Mediation Adapter that enables sending ad requests to the imobile
+  ad network using the google_mobile_ads plugin.'
+version: 1.0.1
+environment:
+  sdk: ^3.7.0
+  flutter: '>=3.27.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  google_mobile_ads: ^6.0.0
+  plugin_platform_interface: ^2.0.2
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  lint: ^2.6.1
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: io.flutter.plugins.googlemobileads.mediation.gma_mediation_imobile
+        pluginClass: GmaMediationimobilePlugin
+      ios:
+        pluginClass: GmaMediationimobilePlugin
+repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/mediation/gma_mediation_imobile

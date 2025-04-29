@@ -1,5 +1,5 @@
 group 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_unity'
-version '1.0-SNAPSHOT'
+version = "1.4.0"
 
 buildscript {
     ext.kotlin_version = '2.0.21'
@@ -23,6 +23,10 @@ allprojects {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+
+ext {
+    stringVersion = "4.14.1.0"
+}
 
 android {
     if (project.android.hasProperty("namespace")) {
@@ -51,8 +55,8 @@ android {
     }
 
     dependencies {
-        implementation 'com.unity3d.ads:unity-ads:4.12.3'
-        implementation 'com.google.ads.mediation:unity:4.12.3.0'
+        implementation 'com.unity3d.ads:unity-ads:4.13.0'
+        implementation "com.google.ads.mediation:unity:$stringVersion"
         testImplementation 'junit:junit:4.13.2'
         testImplementation 'androidx.test:core:1.5.0'
         testImplementation 'androidx.test:core-ktx:1.5.0'

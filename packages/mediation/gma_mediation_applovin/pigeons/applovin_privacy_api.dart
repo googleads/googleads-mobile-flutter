@@ -36,12 +36,6 @@ abstract class AppLovinSDKApi {
   /// Used to configure GDPR consent on the Android or iOS AppLovin SDK
   void setHasUserConsent(bool hasUserConsent);
 
-  /// Used to acknowledge that the user is in an age-restricted category on the Android or iOS AppLovin SDK
-  void setIsAgeRestrictedUser(bool isAgeRestrictedUser);
-
   /// Used to opt out of the sale of personal information in AppLovin SDK.
   void setDoNotSell(bool doNotSell);
-
-  /// Used to initialize the Android or iOS AppLovin SDK. Can be called anytime before the adapter initialization to let AppLovin track events as soon as possible.
-  void initializeSdk(String sdkKey);
 }

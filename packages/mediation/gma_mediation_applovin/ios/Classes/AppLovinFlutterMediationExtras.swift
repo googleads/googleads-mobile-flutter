@@ -12,19 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import Foundation
 import AppLovinAdapter
+import Foundation
 
 @objc protocol FLTMediationExtras {
   var extras: NSMutableDictionary { get }
-  func getMediationExtras() -> GADAdNetworkExtras
+  func getMediationExtras() -> AdNetworkExtras
 }
 
 @objc(AppLovinFlutterMediationExtras)
-class AppLovinFlutterMediationExtras : NSObject, FLTMediationExtras {
+class AppLovinFlutterMediationExtras: NSObject, FLTMediationExtras {
   var extras: NSMutableDictionary = [:]
 
-  func getMediationExtras() -> GADAdNetworkExtras {
+  func getMediationExtras() -> AdNetworkExtras {
     let appLovinExtras = GADMAdapterAppLovinExtras()
     if let muteAudio = extras["isMuted"] as? Bool {
       appLovinExtras.muteAudio = muteAudio

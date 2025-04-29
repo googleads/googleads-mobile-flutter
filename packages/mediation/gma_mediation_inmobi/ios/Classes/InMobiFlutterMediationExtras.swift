@@ -17,14 +17,14 @@ import InMobiAdapter
 
 @objc protocol FLTMediationExtras {
   var extras: NSMutableDictionary { get }
-  func getMediationExtras() -> GADAdNetworkExtras
+  func getMediationExtras() -> AdNetworkExtras
 }
 
 @objc(InMobiFlutterMediationExtras)
-class InMobiFlutterMediationExtras : NSObject, FLTMediationExtras {
+class InMobiFlutterMediationExtras: NSObject, FLTMediationExtras {
   var extras: NSMutableDictionary = [:]
 
-  func getMediationExtras() -> GADAdNetworkExtras {
+  func getMediationExtras() -> AdNetworkExtras {
     let inMobiExtras = GADInMobiExtras()
     if let ageGroup = extras["ageGroup"] as? Int {
       switch ageGroup {
@@ -45,7 +45,7 @@ class InMobiFlutterMediationExtras : NSObject, FLTMediationExtras {
       case 7:
         inMobiExtras.ageGroup = IMSDKAgeGroup.above65
       default:
-        break;
+        break
       }
     }
     if let educationType = extras["educationType"] as? Int {
@@ -57,7 +57,7 @@ class InMobiFlutterMediationExtras : NSObject, FLTMediationExtras {
       case 2:
         inMobiExtras.educationType = IMSDKEducation.postGraduateOrAbove
       default:
-        break;
+        break
       }
     }
     if let logLevel = extras["logLevel"] as? Int {
@@ -69,7 +69,7 @@ class InMobiFlutterMediationExtras : NSObject, FLTMediationExtras {
       case 2:
         inMobiExtras.logLevel = IMSDKLogLevel.error
       default:
-        break;
+        break
       }
 
     }

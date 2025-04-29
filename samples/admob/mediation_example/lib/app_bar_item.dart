@@ -5,6 +5,7 @@ class AppBarItem {
 
   /// Button text.
   final String label;
+
   /// Button value.
   final int value;
 

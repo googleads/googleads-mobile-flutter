@@ -20,15 +20,7 @@ class GmaMediationApplovin {
     AppLovinSDKApi().setHasUserConsent(hasUserConsent);
   }
 
-  Future<void> setIsAgeRestrictedUser(bool isAgeRestrictedUser) async {
-    AppLovinSDKApi().setIsAgeRestrictedUser(isAgeRestrictedUser);
-  }
-
   Future<void> setDoNotSell(bool doNotSell) async {
     AppLovinSDKApi().setDoNotSell(doNotSell);
-  }
-
-  Future<void> initializeSdk(String sdkKey) async {
-    AppLovinSDKApi().initializeSdk(sdkKey);
   }
 }

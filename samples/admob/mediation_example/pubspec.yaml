@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_mobile_ads: ^5.3.0
+  google_mobile_ads: ^6.0.0
 
   # The following adds the Cupertino Icons font to your application.
 
@@ -31,6 +31,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
+  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
 
