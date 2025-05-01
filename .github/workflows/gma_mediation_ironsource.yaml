@@ -48,35 +48,36 @@ jobs:
         run: |
           cd packages/mediation/gma_mediation_ironsource/example/android
           ./gradlew :gma_mediation_ironsource:testDebugUnitTest
-  # Disabling for now since it seems xcode 16 is required
-  # iOS:
-  #   runs-on: macos-latest
-  #   timeout-minutes: 40
-  #   steps:
-  #     - uses: swift-actions/setup-swift@v2
-  #       with:
-  #         swift-version: "6.0.0"
-  #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-  #       with:
-  #         fetch-depth: 0
-  #     - name: "Install Flutter"
-  #       run: ./.github/workflows/scripts/install-flutter.sh stable
-  #     - name: "Install Tools"
-  #       run: |
-  #         ./.github/workflows/scripts/install-tools.sh
-  #     - name: "Unit Tests"
-  #       run: |
-  #         cd packages/mediation/gma_mediation_ironsource/example/ios
-  #         flutter clean
-  #         flutter pub get
-  #         flutter precache --ios
-  #         pod install
-  #         xcodebuild -configuration Debug -resultBundlePath TestResults VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.5' test
-  #     - uses: actions/upload-artifact@v4
-  #       if: failure()
-  #       with:
-  #         name: iOSTestResults
-  #         path: packages/mediation/gma_mediation_ironsource/example/ios/TestResults.xcresult
+  iOS:
+    runs-on: macos-latest
+    timeout-minutes: 40
+    steps:
+      - uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.0.0"
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          fetch-depth: 0
+      - name: Select Xcode version
+        run: sudo xcode-select -s '/Applications/Xcode_16.2.0.app/Contents/Developer'
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+      - name: "Unit Tests"
+        run: |
+          cd packages/mediation/gma_mediation_ironsource/example/ios
+          flutter clean
+          flutter pub get
+          flutter precache --ios
+          pod install
+          xcodebuild -configuration Debug -resultBundlePath TestResults VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.5' test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: iOSTestResults
+          path: packages/mediation/gma_mediation_ironsource/example/ios/TestResults.xcresult
   flutter:
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
