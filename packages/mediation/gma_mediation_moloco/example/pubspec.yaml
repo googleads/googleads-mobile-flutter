@@ -17,6 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  google_mobile_ads: ^6.0.0
   gma_mediation_moloco:
     # When depending on this package from a real application you should use:
     #   gma_mediation_moloco: ^x.y.z
