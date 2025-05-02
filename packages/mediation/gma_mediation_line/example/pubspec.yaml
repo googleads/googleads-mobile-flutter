@@ -5,7 +5,7 @@ description: "Demonstrates how to use the gma_mediation_line plugin."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ^3.5.4
+  sdk: ^3.6.0
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -17,6 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  google_mobile_ads: ^6.0.0
   gma_mediation_line:
     # When depending on this package from a real application you should use:
     #   gma_mediation_line: ^x.y.z
