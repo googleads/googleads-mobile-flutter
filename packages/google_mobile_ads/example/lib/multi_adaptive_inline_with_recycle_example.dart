@@ -23,6 +23,7 @@ class _MultiInlineAdaptiveWithRecycleExampleState extends State<MultiInlineAdapt
   final Map<BannerAd, int> _bannerPositions = {};
 
   BannerAd _createBannerAd() {
+    print("Create a banner ad");
     final String bannerId = Platform.isAndroid
         ? 'ca-app-pub-3940256099942544/6300978111'
         : 'ca-app-pub-3940256099942544/2934735716';
@@ -49,30 +50,29 @@ class _MultiInlineAdaptiveWithRecycleExampleState extends State<MultiInlineAdapt
   }
 
   BannerAd _getRecycledBannerAd(int bannerPosition) {
-    // If we already created a banner for this position, just reuse it.
-    BannerAd? bannerAd = _banners.firstWhereOrNull((banner) => _bannerPositions[banner] == bannerPosition);
-    if (bannerAd != null) {
-      return bannerAd;
+    // If we already created a banner for current position, just reuse it.
+    BannerAd? currentBannerAd = _bannerPositions.entries.firstWhereOrNull((entry) => entry.value == bannerPosition)?.key;
+    if (currentBannerAd != null) {
+      return currentBannerAd;
     }
 
-    // If the cache is not full, create a new banner
     if (_banners.length < _cacheSize) {
+      // If the cache is not full, create a new banner
       BannerAd bannerAd = _createBannerAd();
       _banners.add(bannerAd);
       _bannerPositions[bannerAd] = bannerPosition;
       return bannerAd;
-    }
-
-    // Now the cache is full, we should recycle the banner (if possible).
-    BannerAd banner = _banners[bannerPosition % _cacheSize];
-    if (banner.isMounted) {
-      // Create a new banner if it's not possible to recycle the banner
-      // e.g. show 15 banners on screen, but _cacheSize is only 10.
-      return _createBannerAd();
     } else {
-      // Found a recyclable banner, mark it as being used by current banner position.
-      _bannerPositions[banner] = bannerPosition;
-      return banner;
+      // If cache is full, we should recycle the banner (if possible).
+      BannerAd bannerAd = _banners[bannerPosition % _cacheSize];
+      if (bannerAd.isMounted) {
+        // Create a new banner if it's not possible to recycle the banner
+        // e.g. show 15 banners on screen, but _cacheSize is only 10.
+        // This should be a corner case indicating _cacheSize should be increased.
+        bannerAd = _createBannerAd();
+      }
+      _bannerPositions[bannerAd] = bannerPosition;
+      return bannerAd;
     }
   }
 
