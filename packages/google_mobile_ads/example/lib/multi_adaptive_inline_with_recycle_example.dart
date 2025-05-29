@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+/// This example demonstrates inline adaptive ads in a list view, where we
+/// recycle banners to improve performance.
 class MultiInlineAdaptiveWithRecycleExample extends StatefulWidget {
   const MultiInlineAdaptiveWithRecycleExample({super.key});
 
@@ -23,7 +25,6 @@ class _MultiInlineAdaptiveWithRecycleExampleState extends State<MultiInlineAdapt
   final Map<BannerAd, int> _bannerPositions = {};
 
   BannerAd _createBannerAd() {
-    print("Create a banner ad");
     final String bannerId = Platform.isAndroid
         ? 'ca-app-pub-3940256099942544/6300978111'
         : 'ca-app-pub-3940256099942544/2934735716';
@@ -62,18 +63,17 @@ class _MultiInlineAdaptiveWithRecycleExampleState extends State<MultiInlineAdapt
       _banners.add(bannerAd);
       _bannerPositions[bannerAd] = bannerPosition;
       return bannerAd;
-    } else {
-      // If cache is full, we should recycle the banner (if possible).
-      BannerAd bannerAd = _banners[bannerPosition % _cacheSize];
-      if (bannerAd.isMounted) {
-        // Create a new banner if it's not possible to recycle the banner
-        // e.g. show 15 banners on screen, but _cacheSize is only 10.
-        // This should be a corner case indicating _cacheSize should be increased.
-        bannerAd = _createBannerAd();
-      }
-      _bannerPositions[bannerAd] = bannerPosition;
-      return bannerAd;
     }
+    // If cache is full, we should recycle the banner (if possible).
+    BannerAd bannerAd = _banners[bannerPosition % _cacheSize];
+    if (bannerAd.isMounted) {
+      // Create a new banner if it's not possible to recycle the banner
+      // e.g. show 15 banners on screen, but _cacheSize is only 10.
+      // This should be a corner case indicating _cacheSize should be increased.
+      bannerAd = _createBannerAd();
+    }
+    _bannerPositions[bannerAd] = bannerPosition;
+    return bannerAd;
   }
 
   @override
@@ -91,15 +91,14 @@ class _MultiInlineAdaptiveWithRecycleExampleState extends State<MultiInlineAdapt
             final AdSize? adSize = _bannerSizes[bannerAd];
             if (adSize == null) {
               // Null adSize means the banner's content is not fetched yet.
-              return SizedBox(height: 50, child: Text("banner is loading"));
-            } else {
-              // Now this banner is loaded with ad content and corresponding ad size.
-              return SizedBox(width: adSize.width.toDouble(), height: adSize.height.toDouble(), child: AdWidget(ad: bannerAd));
+              return SizedBox(height: 50, child: Text('banner is loading'));
             }
-          } else {
-            // Show your regular non-ad content.
-            return SizedBox(height: 200, child: ColoredBox(color: Colors.yellow));
+            // Now this banner is loaded with ad content and corresponding ad size.
+            return SizedBox(width: adSize.width.toDouble(), height: adSize.height.toDouble(), child: AdWidget(ad: bannerAd));
           }
+
+          // Show your regular non-ad content.
+          return SizedBox(height: 200, child: ColoredBox(color: Colors.yellow));
         }),
     );
   }
