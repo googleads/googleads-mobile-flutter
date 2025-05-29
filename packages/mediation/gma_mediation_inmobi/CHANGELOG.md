@@ -1,6 +1,9 @@
 ## InMobi Flutter Mediation Adapter Changelog
 
-#### Version 1.1.2 (In progress)
+#### Version 1.1.2
+* Supports [inMobi Android adapter version 10.8.3.1](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/inmobi/CHANGELOG.md#version-10831).
+* Supports [inMobi iOS adapter version 10.8.3.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/InMobi/CHANGELOG.md#version-10830).
+* Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
 
 #### Version 1.1.1
 * Supports [inMobi Android adapter version 10.8.2.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/inmobi/CHANGELOG.md#version-10820).
