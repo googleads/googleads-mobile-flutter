@@ -33,10 +33,9 @@ class RewardedInterstitialExampleState
   var _isPrivacyOptionsRequired = false;
   RewardedInterstitialAd? _rewardedInterstitialAd;
 
-  final String _adUnitId =
-      Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/5354046379'
-          : 'ca-app-pub-3940256099942544/6978759866';
+  final String _adUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/5354046379'
+      : 'ca-app-pub-3940256099942544/6978759866';
 
   @override
   void initState() {
@@ -69,13 +68,12 @@ class RewardedInterstitialExampleState
         if (_countdownTimer.isComplete) {
           showDialog(
             context: context,
-            builder:
-                (context) => AdDialog(
-                  showAd: () {
-                    _gameOver = true;
-                    _showAdCallback();
-                  },
-                ),
+            builder: (context) => AdDialog(
+              showAd: () {
+                _gameOver = true;
+                _showAdCallback();
+              },
+            ),
           );
           _coins += 1;
         }
@@ -181,16 +179,14 @@ class RewardedInterstitialExampleState
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-        itemBuilder:
-            (context) =>
-                array
-                    .map(
-                      (item) => PopupMenuItem<AppBarItem>(
-                        value: item,
-                        child: Text(item.label),
-                      ),
-                    )
-                    .toList(),
+        itemBuilder: (context) => array
+            .map(
+              (item) => PopupMenuItem<AppBarItem>(
+                value: item,
+                child: Text(item.label),
+              ),
+            )
+            .toList(),
         onSelected: (item) {
           _pauseGame();
           switch (item.value) {

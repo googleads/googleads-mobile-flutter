@@ -27,10 +27,9 @@ class NativeExampleState extends State<NativeExample> {
   NativeAd? _nativeAd;
   bool _nativeAdIsLoaded = false;
 
-  final String _adUnitId =
-      Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/2247696110'
-          : 'ca-app-pub-3940256099942544/3986624511';
+  final String _adUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/2247696110'
+      : 'ca-app-pub-3940256099942544/3986624511';
 
   @override
   void initState() {
@@ -105,16 +104,14 @@ class NativeExampleState extends State<NativeExample> {
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-        itemBuilder:
-            (context) =>
-                array
-                    .map(
-                      (item) => PopupMenuItem<AppBarItem>(
-                        value: item,
-                        child: Text(item.label),
-                      ),
-                    )
-                    .toList(),
+        itemBuilder: (context) => array
+            .map(
+              (item) => PopupMenuItem<AppBarItem>(
+                value: item,
+                child: Text(item.label),
+              ),
+            )
+            .toList(),
         onSelected: (item) {
           switch (item.value) {
             case 0:
