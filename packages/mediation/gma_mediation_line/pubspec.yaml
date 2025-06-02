@@ -1,7 +1,7 @@
 name: gma_mediation_line
 description: 'Mediation Adapter that enables sending ad requests to the Line
   ad network using the google_mobile_ads plugin.'
-version: 1.0.2
+version: 1.0.3
 environment:
   sdk: '>=3.6.0 <4.0.0'
   flutter: '>=3.27.0'
