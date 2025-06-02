@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_liftoffmonetize'
-  s.version          = '1.2.0'
+  s.version          = '1.2.1'
   s.summary          = 'Google Mobile Ads Mediation of Liftoff Monetize.'
   s.description      = <<-DESC
 Mediation Adapter for Liftoff Monetize to use with Google Mobile Ads.
@@ -15,7 +15,7 @@ Mediation Adapter for Liftoff Monetize to use with Google Mobile Ads.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Public/**/*.h'
-  s.dependency 'GoogleMobileAdsMediationVungle', '~>7.5.0.0'
+  s.dependency 'GoogleMobileAdsMediationVungle', '~>7.5.1.0'
   s.dependency 'Flutter'
   s.platform = :ios, '12.0'
   s.static_framework = true
