@@ -6,10 +6,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 /// This example demonstrates inline adaptive ads in a list view, where we
 /// recycle banners to improve performance.
 class MultiInlineAdaptiveWithRecycleExample extends StatefulWidget {
-  const MultiInlineAdaptiveWithRecycleExample({super.key});
-
   @override
-  State<StatefulWidget> createState() => _MultiInlineAdaptiveWithRecycleExampleState();
+  _MultiInlineAdaptiveWithRecycleExampleState createState() => _MultiInlineAdaptiveWithRecycleExampleState();
 }
 
 class _MultiInlineAdaptiveWithRecycleExampleState extends State<MultiInlineAdaptiveWithRecycleExample> {
