@@ -7,11 +7,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 /// are recycle to improve performance.
 class MultiInlineAdaptiveWithRecycleExample extends StatefulWidget {
   @override
-  _MultiInlineAdaptiveWithRecycleExampleState createState() => _MultiInlineAdaptiveWithRecycleExampleState();
+  _MultiInlineAdaptiveWithRecycleExampleState createState() =>
+      _MultiInlineAdaptiveWithRecycleExampleState();
 }
 
-class _MultiInlineAdaptiveWithRecycleExampleState extends State<MultiInlineAdaptiveWithRecycleExample> {
-
+class _MultiInlineAdaptiveWithRecycleExampleState
+    extends State<MultiInlineAdaptiveWithRecycleExample> {
   // A list of all the banners created.
   final List<BannerAd> _banners = [];
   // Keep track of sizes of the banners (since they can be different sizes).
@@ -52,7 +53,9 @@ class _MultiInlineAdaptiveWithRecycleExampleState extends State<MultiInlineAdapt
 
   BannerAd _getRecycledBannerAd(int bannerPosition) {
     // If already created a banner for current position, just reuse it.
-    BannerAd? currentBannerAd = _bannerPositions.entries.firstWhereOrNull((entry) => entry.value == bannerPosition)?.key;
+    BannerAd? currentBannerAd = _bannerPositions.entries
+        .firstWhereOrNull((entry) => entry.value == bannerPosition)
+        ?.key;
     if (currentBannerAd != null) {
       return currentBannerAd;
     }
@@ -81,33 +84,37 @@ class _MultiInlineAdaptiveWithRecycleExampleState extends State<MultiInlineAdapt
     return Scaffold(
       appBar: AppBar(title: Text('Adaptive Size, Recycle')),
       body: ListView.builder(
-        // Arbitrary example of 100 items in the list.
-        itemCount: 100,
-        itemBuilder: (BuildContext context, int index) {
-          if (index % _adInterval == 0) {
-            int bannerPosition = index ~/ _adInterval;
-            BannerAd bannerAd = _getRecycledBannerAd(bannerPosition);
-            final AdSize? adSize = _bannerSizes[bannerAd];
-            if (adSize == null) {
-              // Null adSize means the banner's content is not fetched yet.
-              return SizedBox.shrink();
+          // Arbitrary example of 100 items in the list.
+          itemCount: 100,
+          itemBuilder: (BuildContext context, int index) {
+            if (index % _adInterval == 0) {
+              int bannerPosition = index ~/ _adInterval;
+              BannerAd bannerAd = _getRecycledBannerAd(bannerPosition);
+              final AdSize? adSize = _bannerSizes[bannerAd];
+              if (adSize == null) {
+                // Null adSize means the banner's content is not fetched yet.
+                return SizedBox.shrink();
+              }
+              // Now this banner is loaded with ad content and corresponding ad size.
+              return SizedBox(
+                  width: adSize.width.toDouble(),
+                  height: adSize.height.toDouble(),
+                  child: AdWidget(ad: bannerAd));
             }
-            // Now this banner is loaded with ad content and corresponding ad size.
-            return SizedBox(width: adSize.width.toDouble(), height: adSize.height.toDouble(), child: AdWidget(ad: bannerAd));
-          }
 
-          // Show your regular non-ad content.
-          return Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.blue,
-                width: 1.0,
-                style: BorderStyle.solid,
+            // Show your regular non-ad content.
+            return Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.blue,
+                  width: 1.0,
+                  style: BorderStyle.solid,
+                ),
               ),
-            ),
-            child: SizedBox(height: 100, child: ColoredBox(color: Colors.yellow)),
-          );
-        }),
+              child: SizedBox(
+                  height: 100, child: ColoredBox(color: Colors.yellow)),
+            );
+          }),
     );
   }
 
