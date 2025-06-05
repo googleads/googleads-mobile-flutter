@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-/// This example demonstrates inline adaptive ads in a list view, where we
-/// recycle banners to improve performance.
+/// This example demonstrates inline adaptive ads in a list view, where banners
+/// are recycle to improve performance.
 class MultiInlineAdaptiveWithRecycleExample extends StatefulWidget {
   @override
   _MultiInlineAdaptiveWithRecycleExampleState createState() => _MultiInlineAdaptiveWithRecycleExampleState();
@@ -51,7 +51,7 @@ class _MultiInlineAdaptiveWithRecycleExampleState extends State<MultiInlineAdapt
   }
 
   BannerAd _getRecycledBannerAd(int bannerPosition) {
-    // If we already created a banner for current position, just reuse it.
+    // If already created a banner for current position, just reuse it.
     BannerAd? currentBannerAd = _bannerPositions.entries.firstWhereOrNull((entry) => entry.value == bannerPosition)?.key;
     if (currentBannerAd != null) {
       return currentBannerAd;
@@ -64,7 +64,7 @@ class _MultiInlineAdaptiveWithRecycleExampleState extends State<MultiInlineAdapt
       _bannerPositions[bannerAd] = bannerPosition;
       return bannerAd;
     }
-    // If cache is full, we should recycle the banner (if possible).
+    // If cache is full, recycle the banner (if possible).
     BannerAd bannerAd = _banners[bannerPosition % _cacheSize];
     if (bannerAd.isMounted) {
       // Create a new banner if it's not possible to recycle the banner
