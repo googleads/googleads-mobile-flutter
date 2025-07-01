@@ -1,7 +1,7 @@
 name: gma_mediation_mytarget
 description: 'Mediation Adapter that enables sending ad requests to the mytarget
   ad network using the google_mobile_ads plugin.'
-version: 1.2.0
+version: 1.3.0
 environment:
   sdk: ^3.7.0
   flutter: '>=3.27.0'
