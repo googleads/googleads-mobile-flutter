@@ -1,5 +1,7 @@
 ## AppLovin Flutter Mediation Adapter Changelog
 
+#### Version 2.3.1 (In progress)
+
 #### Version 2.3.0 (In progress)
 
 #### Version 2.2.1
