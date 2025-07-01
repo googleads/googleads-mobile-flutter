@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_ironsource'
-  s.version          = '1.4.0'
+  s.version          = '1.4.1'
   s.summary          = 'Google Mobile Ads Mediation of ironSource.'
   s.description      = <<-DESC
 Mediation Adapter for ironSource to use with Google Mobile Ads.
