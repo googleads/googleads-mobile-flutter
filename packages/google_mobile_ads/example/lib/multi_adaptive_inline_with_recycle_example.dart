@@ -53,6 +53,9 @@ class _MultiInlineAdaptiveWithRecycleExampleState
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           _failedBanners.add(ad as BannerAd);
         },
+        onAdImpression: (Ad ad) {
+          print('Banner ad impression occurred.');
+        },
       ),
     );
     bannerAd.load();
