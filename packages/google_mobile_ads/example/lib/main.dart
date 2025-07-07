@@ -23,6 +23,7 @@ import 'dart:developer';
 import 'anchored_adaptive_example.dart';
 import 'fluid_example.dart';
 import 'inline_adaptive_example.dart';
+import 'multi_adaptive_inline_with_recycle_example.dart';
 import 'native_template_example.dart';
 import 'reusable_inline_example.dart';
 import 'webview_example.dart';
@@ -55,6 +56,8 @@ class _MyAppState extends State<MyApp> {
   static const rewardedInterstitialButtonText = 'RewardedInterstitialAd';
   static const fluidButtonText = 'Fluid';
   static const inlineAdaptiveButtonText = 'Inline adaptive';
+  static const mulipleInlineAdaptiveWithRecycleButtonText =
+      'Multiple inline adaptive with recycle';
   static const anchoredAdaptiveButtonText = 'Anchored adaptive';
   static const nativeTemplateButtonText = 'Native template';
   static const webviewExampleButtonText = 'Register WebView';
@@ -271,6 +274,14 @@ class _MyAppState extends State<MyApp> {
                             builder: (context) => InlineAdaptiveExample()),
                       );
                       break;
+                    case mulipleInlineAdaptiveWithRecycleButtonText:
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                MultiInlineAdaptiveWithRecycleExample()),
+                      );
+                      break;
                     case anchoredAdaptiveButtonText:
                       Navigator.push(
                         context,
@@ -323,6 +334,10 @@ class _MyAppState extends State<MyApp> {
                   PopupMenuItem<String>(
                     value: inlineAdaptiveButtonText,
                     child: Text(inlineAdaptiveButtonText),
+                  ),
+                  PopupMenuItem<String>(
+                    value: mulipleInlineAdaptiveWithRecycleButtonText,
+                    child: Text(mulipleInlineAdaptiveWithRecycleButtonText),
                   ),
                   PopupMenuItem<String>(
                     value: anchoredAdaptiveButtonText,
