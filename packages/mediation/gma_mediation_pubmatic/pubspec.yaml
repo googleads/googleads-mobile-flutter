@@ -1,0 +1,26 @@
+name: gma_mediation_pubmatic
+description: 'Mediation Adapter that enables sending ad requests to the Pubmatic
+  ad network using the google_mobile_ads plugin.'
+version: 1.0.0
+environment:
+  sdk: ^3.8.1
+  flutter: '>=3.3.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  google_mobile_ads: ^6.0.0
+  plugin_platform_interface: ^2.0.2
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  lint: ^2.8.0
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: io.flutter.plugins.googlemobileads.mediation.gma_mediation_pubmatic
+        pluginClass: GmaMediationPubmaticPlugin
+      ios:
+        pluginClass: GmaMediationPubmaticPlugin
+repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/mediation/gma_mediation_pubmatic
