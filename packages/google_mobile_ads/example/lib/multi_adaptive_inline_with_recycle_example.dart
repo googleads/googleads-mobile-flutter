@@ -17,6 +17,8 @@ class _MultiInlineAdaptiveWithRecycleExampleState
   final List<BannerAd> _banners = [];
   // Keep track of sizes of the banners (since they can be different sizes).
   final Map<BannerAd, AdSize> _bannerSizes = {};
+  // A set of all failed banners to retry.
+  final Set<BannerAd> _failedBanners = {};
 
   // The maximum number of banners to create.
   static const int _cacheSize = 10;
@@ -37,6 +39,9 @@ class _MultiInlineAdaptiveWithRecycleExampleState
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) async {
           BannerAd bannerAd = (ad as BannerAd);
+          if (_failedBanners.contains(bannerAd)) {
+            _failedBanners.remove(bannerAd);
+          }
           final AdSize? adSize = await bannerAd.getPlatformAdSize();
           // When the banner size is updated, rebuild by calling setState.
           if (adSize != null && adSize != _bannerSizes[bannerAd]) {
@@ -44,6 +49,9 @@ class _MultiInlineAdaptiveWithRecycleExampleState
               _bannerSizes[bannerAd] = adSize;
             });
           }
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          _failedBanners.add(ad as BannerAd);
         },
       ),
     );
@@ -69,6 +77,11 @@ class _MultiInlineAdaptiveWithRecycleExampleState
     }
     // If cache is full, recycle the banner (if possible).
     BannerAd bannerAd = _banners[bannerPosition % _cacheSize];
+    if (_failedBanners.contains(bannerAd)) {
+      // if it's failed previously, reload it.
+      bannerAd.load();
+      _failedBanners.remove(bannerAd);
+    }
     if (bannerAd.isMounted) {
       // Create a new banner if it's not possible to recycle the banner
       // e.g. show 15 banners on screen, but _cacheSize is only 10.

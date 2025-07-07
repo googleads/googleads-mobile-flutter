@@ -56,7 +56,8 @@ class _MyAppState extends State<MyApp> {
   static const rewardedInterstitialButtonText = 'RewardedInterstitialAd';
   static const fluidButtonText = 'Fluid';
   static const inlineAdaptiveButtonText = 'Inline adaptive';
-  static const mulipleInlineAdaptiveWithRecycleButtonText = 'Multiple inline adaptive with recycle';
+  static const mulipleInlineAdaptiveWithRecycleButtonText =
+      'Multiple inline adaptive with recycle';
   static const anchoredAdaptiveButtonText = 'Anchored adaptive';
   static const nativeTemplateButtonText = 'Native template';
   static const webviewExampleButtonText = 'Register WebView';
