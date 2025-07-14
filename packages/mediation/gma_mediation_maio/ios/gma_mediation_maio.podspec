@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_maio'
-  s.version = '1.0.2'
+  s.version = '1.0.3'
   s.summary = 'Google Mobile Ads Mediation of maio.'
   s.description      = <<-DESC
   Mediation Adapter for maio to use with Google Mobile Ads.
