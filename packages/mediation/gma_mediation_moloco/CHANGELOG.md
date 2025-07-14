@@ -1,5 +1,7 @@
 ## Moloco Flutter Mediation Adapter Changelog
 
+#### Version 1.5.0 (In progress)
+
 #### Version 1.4.0
 - Supports [Moloco Android adapter version 3.10.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/moloco/CHANGELOG.md#version-31000).
 - Supports [Moloco iOS adapter version 3.10.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Moloco/CHANGELOG.md#version-31000).
