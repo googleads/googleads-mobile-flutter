@@ -165,32 +165,39 @@ class BannerExampleState extends State<BannerExample> {
       request: const AdRequest(),
       size: size,
       listener: BannerAdListener(
-        // Called when an ad is successfully received.
         onAdLoaded: (ad) {
+          // Called when an ad is successfully received.
+          debugPrint("Ad was loaded.");
           setState(() {
             _bannerAd = ad as BannerAd;
           });
         },
-        // Called when an ad request failed.
         onAdFailedToLoad: (ad, err) {
+          // Called when an ad request failed.
+          debugPrint("Ad failed to load with error: $err");
           ad.dispose();
         },
         // [START_EXCLUDE silent]
         // [START ad_events]
         onAdOpened: (Ad ad) {
           // Called when an ad opens an overlay that covers the screen.
+          debugPrint("Ad was opened.");
         },
         onAdClosed: (Ad ad) {
           // Called when an ad removes an overlay that covers the screen.
+          debugPrint("Ad was closed.");
         },
         onAdImpression: (Ad ad) {
           // Called when an impression occurs on the ad.
+          debugPrint("Ad recorded an impression.");
         },
         onAdClicked: (Ad ad) {
           // Called when an a click event occurs on the ad.
+          debugPrint("Ad was clicked.");
         },
         onAdWillDismissScreen: (Ad ad) {
           // iOS only. Called before dismissing a full screen view.
+          debugPrint("Ad will be dismissed.");
         },
         // [END ad_events]
         // [END_EXCLUDE]
