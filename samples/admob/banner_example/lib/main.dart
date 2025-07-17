@@ -177,12 +177,21 @@ class BannerExampleState extends State<BannerExample> {
         },
         // [START_EXCLUDE silent]
         // [START ad_events]
-        // Called when an ad opens an overlay that covers the screen.
-        onAdOpened: (Ad ad) {},
-        // Called when an ad removes an overlay that covers the screen.
-        onAdClosed: (Ad ad) {},
-        // Called when an impression occurs on the ad.
-        onAdImpression: (Ad ad) {},
+        onAdOpened: (Ad ad) {
+          // Called when an ad opens an overlay that covers the screen.
+        },
+        onAdClosed: (Ad ad) {
+          // Called when an ad removes an overlay that covers the screen.
+        },
+        onAdImpression: (Ad ad) {
+          // Called when an impression occurs on the ad.
+        },
+        onAdClicked: (Ad ad) {
+          // Called when an a click event occurs on the ad.
+        },
+        onAdWillDismissScreen: (Ad ad) {
+          // iOS only. Called before dismissing a full screen view.
+        },
         // [END ad_events]
         // [END_EXCLUDE]
       ),
