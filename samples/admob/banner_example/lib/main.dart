@@ -209,8 +209,10 @@ class BannerExampleState extends State<BannerExample> {
     if (await _consentManager.canRequestAds()) {
       _isMobileAdsInitializeCalled = true;
 
+      // [START initialize_sdk]
       // Initialize the Mobile Ads SDK.
       MobileAds.instance.initialize();
+      // [END initialize_sdk]
 
       // Load an ad.
       _loadAd();
