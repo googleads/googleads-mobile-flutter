@@ -40,6 +40,7 @@ android {
         implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
         implementation 'androidx.lifecycle:lifecycle-process:2.6.2'
         implementation 'com.google.errorprone:error_prone_annotations:2.16'
+        implementation 'androidx.appcompat:appcompat:1.6.1'
         testImplementation 'junit:junit:4.13.2'
         testImplementation 'org.hamcrest:hamcrest:3.0'
         testImplementation 'org.mockito:mockito-core:5.15.2'
