@@ -1,5 +1,7 @@
 ## Pubmatic Flutter Mediation Adapter Changelog
 
+#### Version 1.0.1 (In progress)
+
 #### Version 1.0.0 (In progress)
 * Initial release.
 * Verified compatibility with Pubmatic Android adapter version 4.7.1.0
