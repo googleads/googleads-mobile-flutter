@@ -19,6 +19,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+/// Dart snippets for the developer guide.
 class _InterstitialAdSnippets {
   InterstitialAd? _interstitialAd;
   final String _adUnitId = Platform.isAndroid
