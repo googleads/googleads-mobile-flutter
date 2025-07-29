@@ -178,7 +178,6 @@ class InterstitialExampleState extends State<InterstitialExample> {
       return;
     }
 
-    // [START load_ad]
     InterstitialAd.load(
       adUnitId: _adUnitId,
       request: const AdRequest(),
@@ -188,12 +187,10 @@ class InterstitialExampleState extends State<InterstitialExample> {
           debugPrint('Ad was loaded.');
           // Keep a reference to the ad so you can show it later.
           _interstitialAd = ad;
-          // [START_EXCLUDE silent]
-          // [START ad_events]
           ad.fullScreenContentCallback = FullScreenContentCallback(
             onAdShowedFullScreenContent: (ad) {
               // Called when the ad showed the full screen content.
-              debugPrint("Ad showed full screen content.");
+              debugPrint('Ad showed full screen content.');
             },
             onAdFailedToShowFullScreenContent: (ad, err) {
               // Called when the ad failed to show full screen content.
@@ -204,21 +201,19 @@ class InterstitialExampleState extends State<InterstitialExample> {
             },
             onAdDismissedFullScreenContent: (ad) {
               // Called when the ad dismissed full screen content.
-              debugPrint("Ad was dismissed.");
+              debugPrint('Ad was dismissed.');
               // Dispose the ad here to free resources.
               ad.dispose();
             },
             onAdImpression: (ad) {
               // Called when an impression occurs on the ad.
-              debugPrint("Ad recorded an impression.");
+              debugPrint('Ad recorded an impression.');
             },
             onAdClicked: (ad) {
               // Called when a click is recorded for an ad.
-              debugPrint("Ad was clicked.");
+              debugPrint('Ad was clicked.');
             },
           );
-          // [END ad_events]
-          // [END_EXCLUDE]
         },
         onAdFailedToLoad: (LoadAdError error) {
           // Called when an ad request failed.
@@ -226,7 +221,6 @@ class InterstitialExampleState extends State<InterstitialExample> {
         },
       ),
     );
-    // [END load_ad]
   }
 
   void _showAlert(BuildContext context) {
