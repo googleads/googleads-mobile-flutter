@@ -27,6 +27,7 @@ class _InterstitialAdSnippets {
       : 'ca-app-pub-3940256099942544/4411468910';
 
   void _loadInterstitialAd() {
+    // [START load_ad]
     InterstitialAd.load(
       adUnitId: _adUnitId,
       request: const AdRequest(),
@@ -46,9 +47,11 @@ class _InterstitialAdSnippets {
         },
       ),
     );
+    // [END load_ad]
   }
 
   void _setFullScreenContentCallback(InterstitialAd ad) {
+    // [START ad_events]
     ad.fullScreenContentCallback = FullScreenContentCallback(
       onAdShowedFullScreenContent: (ad) {
         // Called when the ad showed the full screen content.
@@ -76,5 +79,6 @@ class _InterstitialAdSnippets {
         debugPrint('Ad was clicked.');
       },
     );
+    // [END ad_events]
   }
 }
