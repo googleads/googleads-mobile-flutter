@@ -59,8 +59,7 @@ class _InterstitialAdSnippets {
       },
       onAdFailedToShowFullScreenContent: (ad, err) {
         // Called when the ad failed to show full screen content.
-        debugPrint(
-            'Ad failed to show full screen content with error: $err');
+        debugPrint('Ad failed to show full screen content with error: $err');
         // Dispose the ad here to free resources.
         ad.dispose();
       },
