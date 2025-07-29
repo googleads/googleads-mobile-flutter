@@ -20,7 +20,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class _InterstitialAdSnippets {
-
   InterstitialAd? _interstitialAd;
   final String _adUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/1033173712'
