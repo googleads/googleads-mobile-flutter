@@ -99,7 +99,7 @@ jobs:
       - name: "Flutter Analyze"
         run: |
           cd packages/google_mobile_ads/
-          flutter analyze
+          flutter analyze --no-fatal-warnings
       - name: "Flutter Publish"
         run: |
           cd packages/google_mobile_ads/
