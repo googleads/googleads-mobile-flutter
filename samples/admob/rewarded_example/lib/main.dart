@@ -146,7 +146,9 @@ class RewardedExampleState extends State<RewardedExample> {
                         _rewardedAd?.show(
                           onUserEarnedReward:
                               (AdWithoutView ad, RewardItem rewardItem) {
-                            debugPrint('Reward amount: ${rewardItem.amount}');
+                            debugPrint(
+                                'Reward amount: ${rewardItem.amount}',
+                            );
                             // [START_EXCLUDE silent]
                             setState(
                               () => _coins += rewardItem.amount.toInt(),
