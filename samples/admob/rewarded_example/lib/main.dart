@@ -142,17 +142,21 @@ class RewardedExampleState extends State<RewardedExample> {
                     child: TextButton(
                       onPressed: () {
                         setState(() => _showWatchVideoButton = false);
-
+                        // [START show_ad]
                         _rewardedAd?.show(
                           onUserEarnedReward:
                               (AdWithoutView ad, RewardItem rewardItem) {
-                                // ignore: avoid_print
-                                print('Reward amount: ${rewardItem.amount}');
+                                debugPrint(
+                                  'Reward amount: ${rewardItem.amount}',
+                                );
+                                // [START_EXCLUDE silent]
                                 setState(
                                   () => _coins += rewardItem.amount.toInt(),
                                 );
+                                // [END_EXCLUDE]
                               },
                         );
+                        // [END show_ad]
                       },
                       child: const Text('Watch video for additional 10 coins'),
                     ),
