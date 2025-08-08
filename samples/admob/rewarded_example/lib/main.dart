@@ -147,7 +147,7 @@ class RewardedExampleState extends State<RewardedExample> {
                           onUserEarnedReward:
                               (AdWithoutView ad, RewardItem rewardItem) {
                             debugPrint(
-                                'Reward amount: ${rewardItem.amount}',
+                              'Reward amount: ${rewardItem.amount}',
                             );
                             // [START_EXCLUDE silent]
                             setState(
