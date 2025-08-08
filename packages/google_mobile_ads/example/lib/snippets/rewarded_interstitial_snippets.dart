@@ -89,8 +89,8 @@ class _RewardedInterstitialAdSnippets {
       rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           ServerSideVerificationOptions _options =
-          ServerSideVerificationOptions(
-              customData: 'SAMPLE_CUSTOM_DATA_STRING');
+              ServerSideVerificationOptions(
+                  customData: 'SAMPLE_CUSTOM_DATA_STRING');
           ad.setServerSideOptions(_options);
           _rewardedInterstitialAd = ad;
         },
