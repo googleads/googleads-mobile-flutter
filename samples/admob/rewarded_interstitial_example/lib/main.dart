@@ -104,13 +104,16 @@ class RewardedInterstitialExampleState
   }
 
   void _showAdCallback() {
+    // [START show_ad]
     _rewardedInterstitialAd?.show(
       onUserEarnedReward: (AdWithoutView view, RewardItem rewardItem) {
-        // ignore: avoid_print
-        print('Reward amount: ${rewardItem.amount}');
+        debugPrint('Reward amount: ${rewardItem.amount}');
+        // [START_EXCLUDE silent]
         setState(() => _coins += rewardItem.amount.toInt());
+        // [END_EXCLUDE]
       },
     );
+    // [END show_ad]
   }
 
   @override
