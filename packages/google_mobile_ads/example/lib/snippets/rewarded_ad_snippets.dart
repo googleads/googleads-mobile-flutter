@@ -81,21 +81,21 @@ class _RewardedAdSnippets {
     // [END ad_events]
   }
 
-  // [START validate_server_side_verification]
   void _validateServerSideVerification() {
+    // [START validate_server_side_verification]
     RewardedAd.load(
       adUnitId: _adUnitId,
       request: AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
           ServerSideVerificationOptions _options =
-              ServerSideVerificationOptions(customData: 'YOUR-CUSTOM-DATA');
+              ServerSideVerificationOptions(customData: 'SAMPLE_CUSTOM_DATA_STRING');
           ad.setServerSideOptions(_options);
           _rewardedAd = ad;
         },
         onAdFailedToLoad: (error) {},
       ),
     );
+    // [END validate_server_side_verification]
   }
-// [END validate_server_side_verification]
 }
