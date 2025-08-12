@@ -1,6 +1,7 @@
 ## Unity Ads Flutter Mediation Adapter Changelog
 
 #### Version 1.6.0 (In progress)
+- Now requires minimum iOS version 13.0.
 
 #### Version 1.5.1
 - Supports [Unity Android adapter version 4.15.1.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/unity/CHANGELOG.md#version-41510).
