@@ -61,6 +61,8 @@ jobs:
           fetch-depth: 0
       - name: Select Xcode version
         run: sudo xcode-select -s '/Applications/Xcode_16.2.0.app/Contents/Developer'
+      - name: Install iOS Platform
+        run: xcodebuild -downloadPlatform iOS
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
