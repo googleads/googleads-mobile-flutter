@@ -17,23 +17,26 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 /// Dart snippets for the developer guide.
-class _BannerAdSnippets {
+class _BannerAdWidget extends StatefulWidget {
+  const _BannerAdWidget();
+
+  @override
+  State<_BannerAdWidget> createState() => _BannerAdSnippets();
+}
+
+class _BannerAdSnippets extends State<_BannerAdWidget> {
   BannerAd? _bannerAd;
   final _adUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/9214589741'
       : 'ca-app-pub-3940256099942544/2435281174';
-  final _adManagerAdUnitId = '/21775744923/example/adaptive-banner';
-
-// ===================================================================
-// Ad Manager snippets
-// ===================================================================
+  final String _adManagerAdUnitId = '/21775744923/example/adaptive-banner';
 
   // [START load_ad_ad_manager]
-  void _loadAd(BuildContext context) async {
+  void _loadAd() async {
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
     final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
       MediaQuery.sizeOf(context).width.truncate(),
@@ -52,9 +55,9 @@ class _BannerAdSnippets {
         onAdLoaded: (ad) {
           // Called when an ad is successfully received.
           debugPrint('Ad was loaded.');
-          // setState(() {
-          //   _bannerAd = ad as BannerAd;
-          // });
+          setState(() {
+            _bannerAd = ad as BannerAd;
+          });
         },
         onAdFailedToLoad: (ad, err) {
           // Called when an ad request failed.
@@ -65,4 +68,10 @@ class _BannerAdSnippets {
     ).load());
   }
   // [END load_ad_ad_manager]
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
 }
