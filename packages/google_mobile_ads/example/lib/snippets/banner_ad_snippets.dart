@@ -32,6 +32,7 @@ class _BannerAdSnippets {
 // Ad Manager snippets
 // ===================================================================
 
+  // [START load_ad_ad_manager]
   void _loadAd(BuildContext context) async {
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
     final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
@@ -63,4 +64,5 @@ class _BannerAdSnippets {
       ),
     ).load());
   }
+  // [END load_ad_ad_manager]
 }
