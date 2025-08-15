@@ -25,6 +25,7 @@ class _InterstitialAdSnippets {
   final String _adUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/1033173712'
       : 'ca-app-pub-3940256099942544/4411468910';
+  final String _adManagerAdUnitId = '/21775744923/example/interstitial';
 
   void _loadInterstitialAd() {
     // [START load_ad]
@@ -79,5 +80,33 @@ class _InterstitialAdSnippets {
       },
     );
     // [END ad_events]
+  }
+
+// ===================================================================
+// Ad Manager snippets
+// ===================================================================
+
+  void _loadAdManagerInterstitialAd() {
+    // [START load_ad_ad_manager]
+    InterstitialAd.load(
+      adUnitId: _adUnitId,
+      request: const AdManagerAdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          // Called when an ad is successfully received.
+          debugPrint('Ad was loaded.');
+          // Keep a reference to the ad so you can show it later.
+          _interstitialAd = ad;
+          // [START_EXCLUDE silent]
+          _setFullScreenContentCallback(ad);
+          // [END_EXCLUDE]
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          // Called when an ad request failed.
+          debugPrint('Ad failed to load with error: $error');
+        },
+      ),
+    );
+    // [END load_ad_ad_manager]
   }
 }

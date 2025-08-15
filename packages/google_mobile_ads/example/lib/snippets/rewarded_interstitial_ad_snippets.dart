@@ -25,6 +25,8 @@ class _RewardedInterstitialAdSnippets {
   final String _adUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/5354046379'
       : 'ca-app-pub-3940256099942544/6978759866';
+  final String _adManagerAdUnitId =
+      '/21775744923/example/rewarded-interstitial';
 
   void _loadRewardedInterstitialAd() {
     // [START load_ad]
@@ -98,5 +100,52 @@ class _RewardedInterstitialAdSnippets {
       ),
     );
     // [END validate_server_side_verification]
+  }
+
+// ===================================================================
+// Ad Manager snippets
+// ===================================================================
+
+  void _loadAdManagerRewardedInterstitialAd() {
+    // [START load_ad_ad_manager]
+    RewardedInterstitialAd.load(
+      adUnitId: _adUnitId,
+      request: const AdManagerAdRequest(),
+      rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+        onAdLoaded: (RewardedInterstitialAd ad) {
+          // Called when an ad is successfully received.
+          debugPrint('Ad was loaded.');
+          // Keep a reference to the ad so you can show it later.
+          _rewardedInterstitialAd = ad;
+          // [START_EXCLUDE silent]
+          _setFullScreenContentCallback(ad);
+          // [END_EXCLUDE]
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          // Called when an ad request failed.
+          debugPrint('Ad failed to load with error: $error');
+        },
+      ),
+    );
+    // [END load_ad_ad_manager]
+  }
+
+  void _validateAdManagerServerSideVerification() {
+    // [START validate_server_side_verification_ad_manager]
+    RewardedInterstitialAd.load(
+      adUnitId: _adUnitId,
+      request: AdManagerAdRequest(),
+      rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          ServerSideVerificationOptions _options =
+              ServerSideVerificationOptions(
+                  customData: 'SAMPLE_CUSTOM_DATA_STRING');
+          ad.setServerSideOptions(_options);
+          _rewardedInterstitialAd = ad;
+        },
+        onAdFailedToLoad: (error) {},
+      ),
+    );
+    // [END validate_server_side_verification_ad_manager]
   }
 }
