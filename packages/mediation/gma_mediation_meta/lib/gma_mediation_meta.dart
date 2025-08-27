@@ -13,4 +13,4 @@
 // limitations under the License.
 
 /// This empty class is needed to allow correct compatibility analysis with host platforms.
-class GmaMediationUnity {}
+class GmaMediationMeta {}
