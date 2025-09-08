@@ -1,5 +1,7 @@
 ## Moloco Flutter Mediation Adapter Changelog
 
+#### Version 2.0.0 (In progress)
+
 #### Version 1.6.1 (In progress)
 
 #### Version 1.6.0
