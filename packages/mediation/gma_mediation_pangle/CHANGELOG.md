@@ -1,5 +1,7 @@
 ## Pangle Flutter Mediation Adapter Changelog
 
+#### Version 3.4.0 (In progress)
+
 #### Version 3.3.1 (In progress)
 
 #### Version 3.3.0 (In progress)
