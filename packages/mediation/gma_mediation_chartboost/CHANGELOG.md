@@ -1,5 +1,7 @@
 ## Chartboost Flutter Mediation Adapter Changelog
 
+#### Version 1.2.3 (In progress)
+
 #### Version 1.2.2 (In progress)
 
 #### Version 1.2.1
