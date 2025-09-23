@@ -1,7 +1,7 @@
 name: gma_mediation_bidmachine
 description: 'Mediation Adapter that enables sending ad requests to the BidMachine
   ad network using the google_mobile_ads plugin.'
-version: 1.0.0
+version: 1.0.1
 environment:
   sdk: ^3.8.1
   flutter: '>=3.3.0'
