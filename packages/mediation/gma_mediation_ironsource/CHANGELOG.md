@@ -1,5 +1,7 @@
 ## ironSource Flutter Mediation Adapter Changelog
 
+#### Version 1.6.1 (In progress)
+
 #### Version 1.6.0 (In progress)
 
 #### Version 1.5.0
