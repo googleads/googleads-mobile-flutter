@@ -1,8 +1,6 @@
 ## ironSource Flutter Mediation Adapter Changelog
 
-#### Version 1.6.1 (In progress)
-
-#### Version 1.6.0 (In progress)
+#### Version 2.0.0 (In progress)
 
 #### Version 1.5.0
 - Supports [ironSource Android adapter version 8.10.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/ironsource/CHANGELOG.md#version-81000).
