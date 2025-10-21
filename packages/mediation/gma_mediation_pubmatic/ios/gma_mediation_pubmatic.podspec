@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_pubmatic'
-  s.version = '1.2.0'
+  s.version = '1.3.0'
   s.summary = 'Google Mobile Ads Mediation of Pubmatic.'
   s.description      = <<-DESC
   Mediation Adapter for Pubmatic to use with Google Mobile Ads.
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationPubMatic', '~> 4.8.1.0'
+  s.dependency 'GoogleMobileAdsMediationPubMatic', '~> 4.9.0.0'
   s.platform = :ios, '12.0'
   s.static_framework = true
 
