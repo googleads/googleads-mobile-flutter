@@ -3,7 +3,7 @@ description: 'Mediation Adapter that enables sending ad requests to the mytarget
   ad network using the google_mobile_ads plugin.'
 version: 1.5.0
 environment:
-  sdk: ^3.7.0
+  sdk: ^3.6.0
   flutter: '>=3.27.0'
 dependencies:
   flutter:
