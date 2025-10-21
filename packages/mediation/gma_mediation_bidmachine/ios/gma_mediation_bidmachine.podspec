@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_bidmachine'
-  s.version = '1.0.1'
+  s.version = '1.1.0'
   s.summary = 'Google Mobile Ads Mediation of BidMachine.'
   s.description      = <<-DESC
   Mediation Adapter for BidMachine to use with Google Mobile Ads.
