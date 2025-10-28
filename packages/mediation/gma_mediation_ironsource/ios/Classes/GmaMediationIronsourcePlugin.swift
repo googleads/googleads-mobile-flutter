@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import Flutter
-import LevelPlay
+import IronSource
 import UIKit
 
 /// Manages IronSourcePrivacyApi and implements the needed methods.
