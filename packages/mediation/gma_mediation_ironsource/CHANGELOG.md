@@ -1,7 +1,10 @@
 ## ironSource Flutter Mediation Adapter Changelog
 
-#### Version 2.0.1 (In progress)
+#### Version 2.0.1
 - Fixed iOS build with new API
+- Supports [ironSource Android adapter version 9.0.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/ironsource/CHANGELOG.md#version-9000).
+- Supports [ironSource iOS adapter version 9.0.0.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/IronSource/CHANGELOG.md#version-90000).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
 
 #### Version 2.0.0
 - Supports [ironSource Android adapter version 9.0.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/ironsource/CHANGELOG.md#version-9000).
