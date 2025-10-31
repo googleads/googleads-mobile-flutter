@@ -1,6 +1,9 @@
 ## maio Flutter Mediation Adapter Changelog
 
-#### Version 1.1.0 (In progress)
+#### Version 1.1.0
+- Supports [maio Android adapter version 2.0.6.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/maio/CHANGELOG.md#version-2060).
+- Supports [maio iOS adapter version 2.2.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Maio/CHANGELOG.md#version-2200).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
 
 #### Version 1.0.3
 - Supports [maio Android adapter version 2.0.5.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/maio/CHANGELOG.md#version-2050).
