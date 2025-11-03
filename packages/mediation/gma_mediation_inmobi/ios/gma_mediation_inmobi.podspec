@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_inmobi'
-  s.version          = '1.1.5'
+  s.version          = '1.1.6'
   s.summary          = 'Google Mobile Ads Mediation of InMobi.'
   s.description      = <<-DESC
 Mediation Adapter for InMobi to use with Google Mobile Ads.
