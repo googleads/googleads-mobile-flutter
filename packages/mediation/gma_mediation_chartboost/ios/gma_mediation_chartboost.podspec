@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_chartboost'
-  s.version = '1.3.0'
+  s.version = '1.3.1'
   s.summary = 'Google Mobile Ads Mediation of Chartboost.'
   s.description      = <<-DESC
   Mediation Adapter for Chartboost to use with Google Mobile Ads.
