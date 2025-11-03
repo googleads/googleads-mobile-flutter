@@ -1,6 +1,6 @@
 name: gma_mediation_ironsource
 description: "Mediation Adapter that enables sending ad requests to the ironSource ad network using the google_mobile_ads plugin."
-version: 2.0.1
+version: 2.0.2
 repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/mediation/gma_mediation_ironsource
 
 environment:
