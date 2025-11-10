@@ -1,6 +1,9 @@
 ## AppLovin Flutter Mediation Adapter Changelog
 
-#### Version 2.4.0 (In progress)
+#### Version 2.4.0
+- Supports [AppLovin Android adapter version 13.4.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/applovin/CHANGELOG.md#version-13400).
+- Supports [AppLovin iOS adapter version 13.4.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/AppLovin/CHANGELOG.md#version-13400).
+* Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
 
 #### Version 2.3.2
 - Supports [AppLovin Android adapter version 13.3.1.1](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/applovin/CHANGELOG.md#version-13311).
