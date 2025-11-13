@@ -1,9 +1,9 @@
 name: gma_mediation_moloco
 description: 'Mediation Adapter that enables sending ad requests to the Moloco
   ad network using the google_mobile_ads plugin.'
-version: 2.0.0
+version: 2.1.0
 environment:
-  sdk: ^3.6.2
+  sdk: '>=3.6.0 <4.0.0'
   flutter: '>=3.27.0'
 dependencies:
   flutter:
