@@ -1,3 +1,10 @@
+## 6.1.0
+* Updates GMA [Android](https://developers.google.com/admob/android/rel-notes) dependency to 24.8.0
+* Updates GMA [iOS](https://developers.google.com/admob/ios/rel-notes) dependency to 12.14.0
+* Uses latest UMP SDK:
+  * [Android](https://developers.google.com/admob/android/privacy/release-notes) UMP SDK version 4.0.0.
+  * [iOS](https://developers.google.com/admob/ios/privacy/download#release_notes) UMP SDK version 3.1.0.
+
 ## 6.0.0
 * Updates minimum Flutter SDK to 3.27.0
 * Updates Dart SDK low bound to 3.6.0.
