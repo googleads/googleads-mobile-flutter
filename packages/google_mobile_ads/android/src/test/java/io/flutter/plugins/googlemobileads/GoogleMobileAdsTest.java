@@ -808,6 +808,73 @@ public class GoogleMobileAdsTest {
     verify(result).success(adSize.getHeight());
   }
 
+  @Test
+  public void testGetAdLoaderAdType_adLoaderAd() {
+    // Setup mocks
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    FlutterAdLoader mockLoader = mock(FlutterAdLoader.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(
+            mockFlutterPluginBinding, testManagerSpy, mockMobileAds, () -> mockLoader);
+    GoogleMobileAdsPlugin pluginSpy = spy(plugin);
+
+    // Load an ad loader ad
+    Map<String, Object> loadArgs = new HashMap<>();
+    loadArgs.put("adId", 1);
+    loadArgs.put("adUnitId", "test-ad-unit");
+    loadArgs.put("request", new FlutterAdRequest.Builder().build());
+
+    MethodCall loadAdLoaderAdMethodCall = new MethodCall("loadAdLoaderAd", loadArgs);
+    Result result = mock(Result.class);
+    pluginSpy.onMethodCall(loadAdLoaderAdMethodCall, result);
+    verify(result).success(null);
+
+    // Method call for getAdLoaderAdType.
+    Result getAdLoaderAdTypeResult = mock(Result.class);
+    Map<String, Object> getAdLoaderAdTypeArgs = Collections.singletonMap("adId", (Object) 1);
+    MethodCall getAdLoaderAdTypeMethodCall =
+        new MethodCall("getAdLoaderAdType", getAdLoaderAdTypeArgs);
+    pluginSpy.onMethodCall(getAdLoaderAdTypeMethodCall, getAdLoaderAdTypeResult);
+
+    ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
+    verify(getAdLoaderAdTypeResult).success(argumentCaptor.capture());
+    assertEquals(0, argumentCaptor.getValue().intValue());
+  }
+
+  @Test
+  public void testGetAdSize_adLoaderAd() {
+    // Setup mocks
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    FlutterAdLoader mockLoader = mock(FlutterAdLoader.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(
+            mockFlutterPluginBinding, testManagerSpy, mockMobileAds, () -> mockLoader);
+    GoogleMobileAdsPlugin pluginSpy = spy(plugin);
+
+    // Load a banner ad
+    Map<String, Object> loadArgs = new HashMap<>();
+    loadArgs.put("adId", 1);
+    loadArgs.put("adUnitId", "test-ad-unit");
+    loadArgs.put("request", new FlutterAdRequest.Builder().build());
+
+    MethodCall loadAdLoaderAdMethodCall = new MethodCall("loadAdLoaderAd", loadArgs);
+    Result result = mock(Result.class);
+    pluginSpy.onMethodCall(loadAdLoaderAdMethodCall, result);
+    verify(result).success(null);
+
+    // Method call for getAdSize.
+    Result getAdSizeResult = mock(Result.class);
+    Map<String, Object> getAdSizeArgs = Collections.singletonMap("adId", (Object) 1);
+    MethodCall getAdSizeMethodCall = new MethodCall("getAdSize", getAdSizeArgs);
+    pluginSpy.onMethodCall(getAdSizeMethodCall, getAdSizeResult);
+
+    ArgumentCaptor<FlutterAdSize> argumentCaptor = ArgumentCaptor.forClass(FlutterAdSize.class);
+    verify(getAdSizeResult).success(argumentCaptor.capture());
+    assertEquals(null, argumentCaptor.getValue());
+  }
+
   public void testGetAdSize_bannerAd() {
     // Setup mocks
     AdInstanceManager testManagerSpy = spy(testManager);
@@ -889,6 +956,39 @@ public class GoogleMobileAdsTest {
     ArgumentCaptor<FlutterAdSize> argumentCaptor = ArgumentCaptor.forClass(FlutterAdSize.class);
     verify(getAdSizeResult).success(argumentCaptor.capture());
     assertEquals(argumentCaptor.getValue().getAdSize(), adSize);
+  }
+
+  @Test
+  public void testGetFormatId_adLoaderAd() {
+    // Setup mocks
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    FlutterAdLoader mockLoader = mock(FlutterAdLoader.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(
+            mockFlutterPluginBinding, testManagerSpy, mockMobileAds, () -> mockLoader);
+    GoogleMobileAdsPlugin pluginSpy = spy(plugin);
+
+    // Load an ad loader ad
+    Map<String, Object> loadArgs = new HashMap<>();
+    loadArgs.put("adId", 1);
+    loadArgs.put("adUnitId", "test-ad-unit");
+    loadArgs.put("request", new FlutterAdRequest.Builder().build());
+
+    MethodCall loadAdLoaderAdMethodCall = new MethodCall("loadAdLoaderAd", loadArgs);
+    Result result = mock(Result.class);
+    pluginSpy.onMethodCall(loadAdLoaderAdMethodCall, result);
+    verify(result).success(null);
+
+    // Method call for getFormatId.
+    Result getFormatIdResult = mock(Result.class);
+    Map<String, Object> getFormatIdArgs = Collections.singletonMap("adId", (Object) 1);
+    MethodCall getFormatIdMethodCall = new MethodCall("getFormatId", getFormatIdArgs);
+    pluginSpy.onMethodCall(getFormatIdMethodCall, getFormatIdResult);
+
+    ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+    verify(getFormatIdResult).success(argumentCaptor.capture());
+    assertEquals(null, argumentCaptor.getValue());
   }
 
   @Test

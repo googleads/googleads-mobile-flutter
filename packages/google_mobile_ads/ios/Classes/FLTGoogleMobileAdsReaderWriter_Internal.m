@@ -47,8 +47,11 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   FLTAdmobFieldNativeTemplateFontStyle = 151,
   FLTAdmobFieldNativeTemplateType = 152,
   FLTAdmobFieldNativeTemplateColor = 153,
-  FLTAdmobFieldMediationExtras = 154
-
+  FLTAdmobFieldMediationExtras = 154,
+  FLTAdmobFieldAdManagerAdViewOptions = 155,
+  FLTAdmobBannerParameters = 156,
+  FLTAdmobCustomParameters = 157,
+  FLTAdmobNativeParameters = 158,
 };
 
 @interface FLTGoogleMobileAdsWriter : FlutterStandardWriter
@@ -341,6 +344,27 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
                                                    green:green
                                                     blue:blue];
   }
+  case FLTAdmobFieldAdManagerAdViewOptions: {
+    return [[FLTAdManagerAdViewOptions alloc]
+        initWithManualImpressionsEnabled:[self
+                                             readValueOfType:[self readByte]]];
+  }
+  case FLTAdmobBannerParameters: {
+    return [[FLTBannerParameters alloc]
+        initWithSizes:[self readValueOfType:[self readByte]]
+              options:[self readValueOfType:[self readByte]]];
+  }
+  case FLTAdmobCustomParameters: {
+    return [[FLTCustomParameters alloc]
+        initWithFormatIds:[self readValueOfType:[self readByte]]
+              viewOptions:[self readValueOfType:[self readByte]]];
+  }
+  case FLTAdmobNativeParameters: {
+    return [[FLTNativeParameters alloc]
+        initWithFactoryId:[self readValueOfType:[self readByte]]
+          nativeAdOptions:[self readValueOfType:[self readByte]]
+              viewOptions:[self readValueOfType:[self readByte]]];
+  }
   }
   return [super readValueOfType:type];
 }
@@ -524,6 +548,26 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:templateStyle.secondaryTextStyle];
     [self writeValue:templateStyle.tertiaryTextStyle];
     [self writeValue:templateStyle.cornerRadius];
+  } else if ([value isKindOfClass:[FLTAdManagerAdViewOptions class]]) {
+    [self writeByte:FLTAdmobFieldAdManagerAdViewOptions];
+    FLTAdManagerAdViewOptions *options = value;
+    [self writeValue:options.manualImpressionsEnabled];
+  } else if ([value isKindOfClass:[FLTBannerParameters class]]) {
+    [self writeByte:FLTAdmobBannerParameters];
+    FLTBannerParameters *bannerParameters = value;
+    [self writeValue:bannerParameters.sizes];
+    [self writeValue:bannerParameters.options];
+  } else if ([value isKindOfClass:[FLTCustomParameters class]]) {
+    [self writeByte:FLTAdmobCustomParameters];
+    FLTCustomParameters *customParameters = value;
+    [self writeValue:customParameters.formatIds];
+    [self writeValue:customParameters.viewOptions];
+  } else if ([value isKindOfClass:[FLTNativeParameters class]]) {
+    [self writeByte:FLTAdmobNativeParameters];
+    FLTNativeParameters *nativeParameters = value;
+    [self writeValue:nativeParameters.factoryId];
+    [self writeValue:nativeParameters.nativeAdOptions];
+    [self writeValue:nativeParameters.viewOptions];
   } else {
     [super writeValue:value];
   }

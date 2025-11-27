@@ -37,6 +37,8 @@
 		9E61AA6029BBE8FD00801A83 /* FLTNativeTemplateStyleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E61AA5B29BBE8FD00801A83 /* FLTNativeTemplateStyleTest.m */; };
 		9E61AA6129BBE8FD00801A83 /* FLTNativeTemplateFontStyleTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E61AA5C29BBE8FD00801A83 /* FLTNativeTemplateFontStyleTest.m */; };
 		9E61AA6229BBE8FD00801A83 /* FLTNativeTemplateColorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E61AA5D29BBE8FD00801A83 /* FLTNativeTemplateColorTest.m */; };
+		E276E99229DFB5870052484E /* FLTAdLoaderAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E276E99129DFB5870052484E /* FLTAdLoaderAdTest.m */; };
+		E2D4625F29DFC2560010C4D0 /* FLTAdManagerAdViewOptionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D4625E29DFC2560010C4D0 /* FLTAdManagerAdViewOptionsTest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -150,6 +152,8 @@
 		9EF4E6FE26392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsCollection_Internal.m; path = ../../ios/Classes/FLTGoogleMobileAdsCollection_Internal.m; sourceTree = "<group>"; };
 		9EF4E6FF26392B230007E4FE /* FLTMobileAds_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FLTMobileAds_Internal.h; path = ../../ios/Classes/FLTMobileAds_Internal.h; sourceTree = "<group>"; };
 		9EFEAB4E29B0019F000A063B /* GoogleMobileAds.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleMobileAds.xcframework; path = "Pods/Google-Mobile-Ads-SDK/Frameworks/GoogleMobileAdsFramework/GoogleMobileAds.xcframework"; sourceTree = "<group>"; };
+		E276E99129DFB5870052484E /* FLTAdLoaderAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTAdLoaderAdTest.m; sourceTree = "<group>"; };
+		E2D4625E29DFC2560010C4D0 /* FLTAdManagerAdViewOptionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTAdManagerAdViewOptionsTest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -272,6 +276,8 @@
 			children = (
 				9E61AA5829BBE8DA00801A83 /* NativeTemplates */,
 				9E61AA5529BBE8AF00801A83 /* UserMessagingPlatform */,
+				E276E99129DFB5870052484E /* FLTAdLoaderAdTest.m */,
+				E2D4625E29DFC2560010C4D0 /* FLTAdManagerAdViewOptionsTest.m */,
 				9E61AA2729BBE66900801A83 /* FLTAdUtilTest.m */,
 				9E61AA2429BBE66900801A83 /* FLTAppOpenAdTest.m */,
 				9E61AA2229BBE66900801A83 /* FLTBannerAdTest.m */,
@@ -512,8 +518,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				9E61AA5729BBE8D000801A83 /* FLTUserMessagingPlatformManagerTest.m in Sources */,
+				E276E99229DFB5870052484E /* FLTAdLoaderAdTest.m in Sources */,
 				9E61AA5329BBE88000801A83 /* FLTUserMessagingPlatformReaderWriterTest.m in Sources */,
 				9E61AA3229BBE66900801A83 /* FLTAppOpenAdTest.m in Sources */,
+				E2D4625F29DFC2560010C4D0 /* FLTAdManagerAdViewOptionsTest.m in Sources */,
 				9E61AA5F29BBE8FD00801A83 /* FLTNativeTemplateTypeTest.m in Sources */,
 				9E61AA3429BBE66900801A83 /* FLTGamInterstitialAdTest.m in Sources */,
 				9E61AA6029BBE8FD00801A83 /* FLTNativeTemplateStyleTest.m in Sources */,

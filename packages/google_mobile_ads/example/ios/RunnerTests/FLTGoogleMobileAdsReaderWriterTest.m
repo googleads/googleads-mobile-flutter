@@ -777,6 +777,124 @@
   XCTAssertEqual(first.intValue, second.intValue);
 }
 
+- (void)testEncodeDecodeAdManagerAdViewOptionsNil {
+  FLTAdManagerAdViewOptions *options =
+      [[FLTAdManagerAdViewOptions alloc] initWithManualImpressionsEnabled:nil];
+
+  NSData *encodedMessage = [_messageCodec encode:options];
+
+  FLTAdManagerAdViewOptions *decodedOptions =
+      [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedOptions.manualImpressionsEnabled, nil);
+}
+
+- (void)testEncodeDecodeAdManagerAdViewOptionsYes {
+  FLTAdManagerAdViewOptions *options = [[FLTAdManagerAdViewOptions alloc]
+      initWithManualImpressionsEnabled:@(YES)];
+
+  NSData *encodedMessage = [_messageCodec encode:options];
+
+  FLTAdManagerAdViewOptions *decodedOptions =
+      [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedOptions.manualImpressionsEnabled, @(YES));
+}
+
+- (void)testEncodeDecodeAdManagerAdViewOptionsNo {
+  FLTAdManagerAdViewOptions *options = [[FLTAdManagerAdViewOptions alloc]
+      initWithManualImpressionsEnabled:@(NO)];
+
+  NSData *encodedMessage = [_messageCodec encode:options];
+
+  FLTAdManagerAdViewOptions *decodedOptions =
+      [_messageCodec decode:encodedMessage];
+  XCTAssertEqual(decodedOptions.manualImpressionsEnabled, @(NO));
+}
+
+- (void)testEncodeDecodeBannerParameters {
+  FLTBannerParameters *parameters = [[FLTBannerParameters alloc]
+      initWithSizes:@[ [[FLTAdSize alloc] initWithWidth:@(1) height:@(2)] ]
+            options:[[FLTAdManagerAdViewOptions alloc]
+                        initWithManualImpressionsEnabled:nil]];
+
+  NSData *encodedMessage = [_messageCodec encode:parameters];
+
+  FLTBannerParameters *decodedParameters =
+      [_messageCodec decode:encodedMessage];
+
+  NSArray<FLTAdSize *> *sizes = decodedParameters.sizes;
+
+  XCTAssertEqual(sizes.count, 1);
+  XCTAssertEqualObjects(sizes[0].width, @(1));
+  XCTAssertEqualObjects(sizes[0].height, @(2));
+
+  FLTAdManagerAdViewOptions *options = decodedParameters.options;
+
+  XCTAssertNotNil(options);
+  XCTAssertNil(options.manualImpressionsEnabled);
+}
+
+- (void)testEncodeDecodeCustomParameters {
+  FLTCustomParameters *parameters = [[FLTCustomParameters alloc]
+      initWithFormatIds:@[ @"formatId0", @"formatId1" ]
+            viewOptions:@{@"key" : @"value"}];
+
+  NSData *encodedMessage = [_messageCodec encode:parameters];
+
+  FLTCustomParameters *decodedParameters =
+      [_messageCodec decode:encodedMessage];
+
+  NSArray<NSString *> *formatIds = decodedParameters.formatIds;
+
+  XCTAssertEqual(formatIds.count, 2);
+  XCTAssertEqualObjects(formatIds[0], @"formatId0");
+  XCTAssertEqualObjects(formatIds[1], @"formatId1");
+
+  NSDictionary<NSString *, id> *viewOptions = decodedParameters.viewOptions;
+
+  XCTAssertNotNil(viewOptions);
+  XCTAssertEqualObjects(viewOptions[@"key"], @"value");
+
+  NSDictionary<NSString *, id<FLTCustomAdFactory>> *factories =
+      decodedParameters.factories;
+
+  XCTAssertEqual(factories.count, 0);
+}
+
+- (void)testEncodeDecodeNativeParameters {
+  FLTNativeParameters *parameters = [[FLTNativeParameters alloc]
+      initWithFactoryId:@"factory-id"
+        nativeAdOptions:[[FLTNativeAdOptions alloc]
+                                initWithAdChoicesPlacement:@(1)
+                                          mediaAspectRatio:@(1)
+                                              videoOptions:nil
+                                   requestCustomMuteThisAd:@YES
+                               shouldRequestMultipleImages:@YES
+                            shouldReturnUrlsForImageAssets:@YES]
+            viewOptions:@{@"key" : @"value"}];
+
+  NSData *encodedMessage = [_messageCodec encode:parameters];
+
+  FLTNativeParameters *decodedParameters =
+      [_messageCodec decode:encodedMessage];
+
+  XCTAssertEqualObjects(decodedParameters.factoryId, @"factory-id");
+
+  XCTAssertEqualObjects(parameters.nativeAdOptions.adChoicesPlacement, @(1));
+  XCTAssertEqualObjects(parameters.nativeAdOptions.mediaAspectRatio, @(1));
+  XCTAssertNil(parameters.nativeAdOptions.videoOptions);
+  XCTAssertEqualObjects(parameters.nativeAdOptions.requestCustomMuteThisAd,
+                        @(YES));
+  XCTAssertEqualObjects(parameters.nativeAdOptions.shouldRequestMultipleImages,
+                        @(YES));
+  XCTAssertEqualObjects(
+      parameters.nativeAdOptions.shouldReturnUrlsForImageAssets, @(YES));
+
+  NSDictionary<NSString *, id> *viewOptions = decodedParameters.viewOptions;
+
+  XCTAssertNotNil(viewOptions);
+  XCTAssertEqualObjects(viewOptions[@"key"], @"value");
+}
+
 @end
 
 @implementation FLTTestAdSizeFactory

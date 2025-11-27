@@ -24,6 +24,7 @@
 
 @class FLTAdInstanceManager;
 @protocol FLTNativeAdFactory;
+@protocol FLTCustomAdFactory;
 
 @interface FLTAdSize : NSObject
 @property(readonly) GADAdSize size;
@@ -285,6 +286,15 @@
 - (NSArray<GADAdLoaderOptions *> *_Nonnull)asGADAdLoaderOptions;
 @end
 
+@interface FLTAdManagerAdViewOptions : NSObject
+@property(readonly, nullable) NSNumber *manualImpressionsEnabled;
+
+- (nonnull instancetype)initWithManualImpressionsEnabled:
+    (nullable NSNumber *)manualImpressionsEnabled;
+
+- (nonnull NSArray<GADAdLoaderOptions *> *)asGADAdLoaderOptions;
+@end
+
 @interface FLTNativeAd
     : FLTBaseAd <FLTAd, FlutterPlatformView, GADNativeAdDelegate,
                  GADNativeAdLoaderDelegate>
@@ -298,6 +308,61 @@
         nativeAdOptions:(FLTNativeAdOptions *_Nullable)nativeAdOptions
     nativeTemplateStyle:(FLTNativeTemplateStyle *_Nullable)nativeTemplateStyle;
 - (GADAdLoader *_Nonnull)adLoader;
+@end
+
+typedef NS_ENUM(NSInteger, FLTAdLoaderAdType) {
+  FLTAdLoaderAdTypeUnknown = 0,
+  FLTAdLoaderAdTypeBanner = 1,
+  FLTAdLoaderAdTypeCustom = 2,
+  FLTAdLoaderAdTypeNative = 3,
+};
+
+@interface FLTBannerParameters : NSObject
+@property(readonly, nonnull) NSArray<FLTAdSize *> *sizes;
+@property(readonly, nullable) FLTAdManagerAdViewOptions *options;
+- (nonnull instancetype)initWithSizes:(nonnull NSArray<FLTAdSize *> *)sizes
+                              options:
+                                  (nullable FLTAdManagerAdViewOptions *)options;
+@end
+
+@interface FLTCustomParameters : NSObject
+@property(readonly, nonnull) NSArray<NSString *> *formatIds;
+@property(readonly, nullable) NSDictionary<NSString *, id> *viewOptions;
+@property(nullable) NSDictionary<NSString *, id<FLTCustomAdFactory>> *factories;
+- (nonnull instancetype)
+    initWithFormatIds:(nonnull NSArray<NSString *> *)formatIds
+          viewOptions:(NSDictionary<NSString *, id> *_Nullable)viewOptions;
+@end
+
+@interface FLTNativeParameters : NSObject
+@property(readonly, nonnull) NSString *factoryId;
+@property(readonly, nullable) FLTNativeAdOptions *nativeAdOptions;
+@property(readonly, nullable) NSDictionary<NSString *, id> *viewOptions;
+@property(nullable) id<FLTNativeAdFactory> factory;
+- (nonnull instancetype)
+    initWithFactoryId:(nonnull NSString *)factoryId
+      nativeAdOptions:(nullable FLTNativeAdOptions *)nativeAdOptions
+          viewOptions:(nullable NSDictionary<NSString *, id> *)viewOptions;
+@end
+
+@interface FLTAdLoaderAd
+    : FLTBaseAd <FLTAd, FlutterPlatformView, GADAdLoaderDelegate,
+                 GAMBannerAdLoaderDelegate, GADBannerViewDelegate,
+                 GADAppEventDelegate, GADCustomNativeAdLoaderDelegate,
+                 GADCustomNativeAdDelegate, GADNativeAdLoaderDelegate,
+                 GADNativeAdDelegate>
+@property(readonly, nonnull) GADAdLoader *adLoader;
+@property(readonly) FLTAdLoaderAdType adLoaderAdType;
+@property(readonly, nullable) FLTAdSize *adSize;
+@property(readonly, nullable) NSString *formatId;
+- (nonnull instancetype)
+      initWithAdUnitId:(nonnull NSString *)adUnitId
+               request:(nonnull FLTAdRequest *)request
+    rootViewController:(nonnull UIViewController *)rootViewController
+                  adId:(nonnull NSNumber *)adId
+                banner:(nullable FLTBannerParameters *)bannerParameters
+                custom:(nullable FLTCustomParameters *)customParameters
+                native:(nullable FLTNativeParameters *)nativeParameters;
 @end
 
 @interface FLTRewardItem : NSObject

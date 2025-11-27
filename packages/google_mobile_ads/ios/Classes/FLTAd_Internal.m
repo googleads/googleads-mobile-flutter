@@ -1197,6 +1197,316 @@
 
 @end
 
+@implementation FLTBannerParameters
+- (nonnull instancetype)initWithSizes:(nonnull NSArray<FLTAdSize *> *)sizes
+                              options:(nullable FLTAdManagerAdViewOptions *)
+                                          options {
+  self = [super init];
+  _sizes = sizes;
+  _options = options;
+  return self;
+}
+@end
+
+@implementation FLTCustomParameters
+- (nonnull instancetype)
+    initWithFormatIds:(nonnull NSArray<NSString *> *)formatIds
+          viewOptions:(nullable NSDictionary<NSString *, id> *)viewOptions {
+  self = [super init];
+  _formatIds = formatIds;
+  _viewOptions = viewOptions;
+  _factories = [NSMutableDictionary dictionary];
+  return self;
+}
+@end
+
+@implementation FLTNativeParameters
+- (nonnull instancetype)
+    initWithFactoryId:(nonnull NSString *)factoryId
+      nativeAdOptions:(nullable FLTNativeAdOptions *)nativeAdOptions
+          viewOptions:(nullable NSDictionary<NSString *, id> *)viewOptions {
+  self = [super init];
+  _factoryId = factoryId;
+  _nativeAdOptions = nativeAdOptions;
+  _viewOptions = viewOptions;
+  return self;
+}
+@end
+
+#pragma mark - FLTAdLoaderAd
+
+@implementation FLTAdLoaderAd {
+  NSString *_adUnitId;
+  FLTAdRequest *_adRequest;
+  NSMutableArray<NSValue *> *_validAdSizes;
+  UIView *_view;
+  FLTBannerParameters *_banner;
+  FLTCustomParameters *_custom;
+  FLTNativeParameters *_native;
+}
+
+- (nonnull instancetype)
+      initWithAdUnitId:(nonnull NSString *)adUnitId
+               request:(nonnull FLTAdRequest *)request
+    rootViewController:(nonnull UIViewController *)rootViewController
+                  adId:(nonnull NSNumber *)adId
+                banner:(nullable FLTBannerParameters *)bannerParameters
+                custom:(nullable FLTCustomParameters *)customParameters
+                native:(nullable FLTNativeParameters *)nativeParameters {
+  self = [super init];
+  if (self) {
+    self.adId = adId;
+    _adUnitId = adUnitId;
+    _adRequest = request;
+    _adLoaderAdType = FLTAdLoaderAdTypeUnknown;
+    _formatId = nil;
+
+    NSMutableArray *adTypes = [[NSMutableArray alloc] init];
+    NSMutableArray *options = [[NSMutableArray alloc] init];
+
+    if (![FLTAdUtil isNull:bannerParameters]) {
+      _banner = bannerParameters;
+      _validAdSizes =
+          [NSMutableArray arrayWithCapacity:bannerParameters.sizes.count];
+      for (FLTAdSize *size in bannerParameters.sizes) {
+        [_validAdSizes addObject:NSValueFromGADAdSize(size.size)];
+      }
+
+      [adTypes addObject:GADAdLoaderAdTypeGAMBanner];
+
+      if (![FLTAdUtil isNull:_banner.options]) {
+        [options addObjectsFromArray:_banner.options.asGADAdLoaderOptions];
+      }
+    }
+
+    if (![FLTAdUtil isNull:customParameters]) {
+      _custom = customParameters;
+
+      [adTypes addObject:GADAdLoaderAdTypeCustomNative];
+    }
+
+    if (![FLTAdUtil isNull:nativeParameters]) {
+      _native = nativeParameters;
+
+      [adTypes addObject:GADAdLoaderAdTypeNative];
+
+      if (![FLTAdUtil isNull:_native.nativeAdOptions]) {
+        [options
+            addObjectsFromArray:_native.nativeAdOptions.asGADAdLoaderOptions];
+      }
+    }
+
+    _adLoader = [[GADAdLoader alloc] initWithAdUnitID:_adUnitId
+                                   rootViewController:rootViewController
+                                              adTypes:adTypes
+                                              options:options];
+    _adLoader.delegate = self;
+  }
+  return self;
+}
+
+- (FLTAdSize *)adSize {
+  if (_view && [_view isKindOfClass:[GADBannerView class]]) {
+    return [[FLTAdSize alloc] initWithAdSize:((GADBannerView *)_view).adSize];
+  }
+  return nil;
+}
+
+#pragma mark - FLTAd
+
+- (void)load {
+  GADRequest *request;
+  if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
+    request = [(FLTGAMAdRequest *)_adRequest asGAMRequest:_adUnitId];
+  } else {
+    request = [_adRequest asGADRequest:_adUnitId];
+  }
+  [_adLoader loadRequest:request];
+}
+
+#pragma mark - GADAdLoaderDelegate
+
+- (void)adLoader:(nonnull GADAdLoader *)adLoader
+    didFailToReceiveAdWithError:(nonnull NSError *)error {
+  [manager onAdFailedToLoad:self error:error];
+}
+
+#pragma mark - GAMBannerAdLoaderDelegate
+
+- (nonnull NSArray<NSValue *> *)validBannerSizesForAdLoader:
+    (nonnull GADAdLoader *)adLoader {
+  return _validAdSizes;
+}
+
+- (void)adLoader:(nonnull GADAdLoader *)adLoader
+    didReceiveGAMBannerView:(nonnull GAMBannerView *)bannerView {
+  _adLoaderAdType = FLTAdLoaderAdTypeBanner;
+  _view = bannerView;
+
+  bannerView.appEventDelegate = self;
+  bannerView.delegate = self;
+
+  __weak FLTAdLoaderAd *weakSelf = self;
+  bannerView.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+    if (weakSelf.manager == nil) {
+      return;
+    }
+    [weakSelf.manager
+        onPaidEvent:weakSelf
+              value:[[FLTAdValue alloc] initWithValue:value.value
+                                            precision:(NSInteger)value.precision
+                                         currencyCode:value.currencyCode]];
+  };
+
+  [bannerView recordImpression];
+
+  [manager onAdLoaded:self responseInfo:bannerView.responseInfo];
+}
+
+#pragma mark - GADBannerViewDelegate
+
+- (void)bannerViewDidReceiveAd:(nonnull GADBannerView *)bannerView {
+  // TODO  handled by adLoader:didReceiveGAMBannerView: ?
+}
+
+- (void)bannerView:(nonnull GADBannerView *)bannerView
+    didFailToReceiveAdWithError:(nonnull NSError *)error {
+  [manager onAdFailedToLoad:self error:error];
+}
+
+- (void)bannerViewDidRecordImpression:(nonnull GADBannerView *)bannerView {
+  [manager onBannerImpression:self];
+}
+
+- (void)bannerViewDidRecordClick:(nonnull GADBannerView *)bannerView {
+  [manager adDidRecordClick:self];
+}
+
+- (void)bannerViewWillPresentScreen:(nonnull GADBannerView *)bannerView {
+  [manager onBannerWillPresentScreen:self];
+}
+
+- (void)bannerViewWillDismissScreen:(nonnull GADBannerView *)bannerView {
+  [manager onBannerWillDismissScreen:self];
+}
+
+- (void)bannerViewDidDismissScreen:(nonnull GADBannerView *)bannerView {
+  [manager onBannerDidDismissScreen:self];
+}
+
+#pragma mark - GADAppEventDelegate
+
+- (void)adView:(nonnull GADBannerView *)banner
+    didReceiveAppEvent:(nonnull NSString *)name
+              withInfo:(nullable NSString *)info {
+  [self.manager onAppEvent:self name:name data:info];
+}
+
+#pragma mark - GADCustomNativeAdLoaderDelegate
+
+- (nonnull NSArray<NSString *> *)customNativeAdFormatIDsForAdLoader:
+    (nonnull GADAdLoader *)adLoader {
+  return _custom.formatIds;
+}
+
+- (void)adLoader:(nonnull GADAdLoader *)adLoader
+    didReceiveCustomNativeAd:(nonnull GADCustomNativeAd *)customNativeAd {
+  // Use Nil instead of Null to fix crash with Swift integrations.
+  NSDictionary<NSString *, id> *customOptions =
+      [[NSNull null] isEqual:_custom.viewOptions] ? nil : _custom.viewOptions;
+  _adLoaderAdType = FLTAdLoaderAdTypeCustom;
+  _formatId = customNativeAd.formatID;
+  _view = [_custom.factories[_formatId] createCustomNativeAd:customNativeAd
+                                               customOptions:customOptions];
+
+  customNativeAd.delegate = self;
+
+  [customNativeAd recordImpression];
+
+  [manager onAdLoaded:self responseInfo:customNativeAd.responseInfo];
+}
+
+#pragma mark - GADCustomNativeAdDelegate
+
+- (void)customNativeAdDidRecordImpression:
+    (nonnull GADCustomNativeAd *)nativeAd {
+  [manager onCustomNativeAdImpression:self];
+}
+
+- (void)customNativeAdDidRecordClick:(nonnull GADCustomNativeAd *)nativeAd {
+  [manager adDidRecordClick:self];
+}
+
+- (void)customNativeAdWillPresentScreen:(nonnull GADCustomNativeAd *)nativeAd {
+  [manager onCustomNativeAdWillPresentScreen:self];
+}
+
+- (void)customNativeAdWillDismissScreen:(nonnull GADCustomNativeAd *)nativeAd {
+  [manager onCustomNativeAdWillDismissScreen:self];
+}
+
+- (void)customNativeAdDidDismissScreen:(nonnull GADCustomNativeAd *)nativeAd {
+  [manager onCustomNativeAdDidDismissScreen:self];
+}
+
+#pragma mark - GADNativeAdLoaderDelegate
+
+- (void)adLoader:(nonnull GADAdLoader *)adLoader
+    didReceiveNativeAd:(nonnull GADNativeAd *)nativeAd {
+  // Use Nil instead of Null to fix crash with Swift integrations.
+  NSDictionary<NSString *, id> *customOptions =
+      [[NSNull null] isEqual:_native.viewOptions] ? nil : _native.viewOptions;
+  _adLoaderAdType = FLTAdLoaderAdTypeNative;
+  _view = [_native.factory createNativeAd:nativeAd customOptions:customOptions];
+  nativeAd.delegate = self;
+
+  __weak FLTAdLoaderAd *weakSelf = self;
+  nativeAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+    if (weakSelf.manager == nil) {
+      return;
+    }
+    [weakSelf.manager
+        onPaidEvent:weakSelf
+              value:[[FLTAdValue alloc] initWithValue:value.value
+                                            precision:(NSInteger)value.precision
+                                         currencyCode:value.currencyCode]];
+  };
+
+  [manager onAdLoaded:self responseInfo:nativeAd.responseInfo];
+}
+
+#pragma mark - GADNativeAdDelegate
+
+- (void)nativeAdDidRecordImpression:(nonnull GADNativeAd *)nativeAd {
+  [manager onNativeAdImpression:self];
+}
+
+- (void)nativeAdDidRecordClick:(nonnull GADNativeAd *)nativeAd {
+  [manager adDidRecordClick:self];
+}
+
+- (void)nativeAdWillPresentScreen:(nonnull GADNativeAd *)nativeAd {
+  [manager onNativeAdWillPresentScreen:self];
+}
+
+- (void)nativeAdWillDismissScreen:(nonnull GADNativeAd *)nativeAd {
+  [manager onNativeAdWillDismissScreen:self];
+}
+
+- (void)nativeAdDidDismissScreen:(nonnull GADNativeAd *)nativeAd {
+  [manager onNativeAdDidDismissScreen:self];
+}
+
+#pragma mark - FlutterPlatformView
+
+- (nonnull UIView *)view {
+  return _view;
+}
+
+@synthesize manager;
+
+@end
+
 @implementation FLTRewardItem
 - (instancetype _Nonnull)initWithAmount:(NSNumber *_Nonnull)amount
                                    type:(NSString *_Nonnull)type {
@@ -1368,4 +1678,25 @@
   return options;
 }
 
+@end
+
+@implementation FLTAdManagerAdViewOptions
+- (nonnull instancetype)initWithManualImpressionsEnabled:
+    (nullable NSNumber *)manualImpressionsEnabled {
+  self = [super init];
+  _manualImpressionsEnabled = manualImpressionsEnabled;
+  return self;
+}
+
+- (nonnull NSArray<GADAdLoaderOptions *> *)asGADAdLoaderOptions {
+  NSMutableArray<GADAdLoaderOptions *> *options = [NSMutableArray array];
+  if ([FLTAdUtil isNotNull:_manualImpressionsEnabled]) {
+    GAMBannerViewOptions *bannerViewOptions =
+        [[GAMBannerViewOptions alloc] init];
+    bannerViewOptions.manualImpressionEnabled =
+        _manualImpressionsEnabled.boolValue;
+    [options addObject:bannerViewOptions];
+  }
+  return options;
+}
 @end

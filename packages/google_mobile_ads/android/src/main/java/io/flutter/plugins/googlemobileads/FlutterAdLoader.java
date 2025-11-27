@@ -16,6 +16,7 @@ package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
@@ -136,5 +137,63 @@ public class FlutterAdLoader {
         .withAdListener(adListener)
         .build()
         .loadAd(adManagerAdRequest);
+  }
+
+  /** Load an ad loader ad. */
+  public void loadAdLoaderAd(
+      @NonNull String adUnitId,
+      @NonNull AdListener adListener,
+      @NonNull AdRequest request,
+      @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters,
+      @Nullable FlutterAdLoaderAd.CustomParameters customParameters,
+      @Nullable FlutterAdLoaderAd.NativeParameters nativeParameters) {
+    AdLoader.Builder builder = new AdLoader.Builder(context, adUnitId);
+    if (bannerParameters != null) {
+      builder = builder.forAdManagerAdView(bannerParameters.listener, bannerParameters.adSizes);
+      if (bannerParameters.adManagerAdViewOptions != null) {
+        builder.withAdManagerAdViewOptions(bannerParameters.adManagerAdViewOptions);
+      }
+    }
+    if (customParameters != null) {
+      for (String formatId : customParameters.factories.keySet()) {
+        builder = builder.forCustomFormatAd(formatId, customParameters.listener, null);
+      }
+    }
+    if (nativeParameters != null) {
+      builder = builder.forNativeAd(nativeParameters.listener);
+      if (nativeParameters.nativeAdOptions != null) {
+        builder = builder.withNativeAdOptions(nativeParameters.nativeAdOptions);
+      }
+    }
+    builder.withAdListener(adListener).build().loadAd(request);
+  }
+
+  /** Load an ad manager ad loader ad. */
+  public void loadAdManagerAdLoaderAd(
+      @NonNull String adUnitId,
+      @NonNull AdListener adListener,
+      @NonNull AdManagerAdRequest adManagerAdRequest,
+      @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters,
+      @Nullable FlutterAdLoaderAd.CustomParameters customParameters,
+      @Nullable FlutterAdLoaderAd.NativeParameters nativeParameters) {
+    AdLoader.Builder builder = new AdLoader.Builder(context, adUnitId);
+    if (bannerParameters != null) {
+      builder = builder.forAdManagerAdView(bannerParameters.listener, bannerParameters.adSizes);
+      if (bannerParameters.adManagerAdViewOptions != null) {
+        builder.withAdManagerAdViewOptions(bannerParameters.adManagerAdViewOptions);
+      }
+    }
+    if (customParameters != null) {
+      for (String formatId : customParameters.factories.keySet()) {
+        builder = builder.forCustomFormatAd(formatId, customParameters.listener, null);
+      }
+    }
+    if (nativeParameters != null) {
+      builder = builder.forNativeAd(nativeParameters.listener);
+      if (nativeParameters.nativeAdOptions != null) {
+        builder = builder.withNativeAdOptions(nativeParameters.nativeAdOptions);
+      }
+    }
+    builder.withAdListener(adListener).build().loadAd(adManagerAdRequest);
   }
 }

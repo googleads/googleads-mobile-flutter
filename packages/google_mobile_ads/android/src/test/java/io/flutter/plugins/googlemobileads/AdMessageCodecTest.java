@@ -537,6 +537,89 @@ public class AdMessageCodecTest {
         RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE);
     assertEquals(result.getTestDeviceIds(), Arrays.asList("test-device-id"));
   }
+
+  @Test
+  public void encodeAdManagerAdViewOptionsNull() {
+    final ByteBuffer data = codec.encodeMessage(new FlutterAdManagerAdViewOptions(null));
+
+    final FlutterAdManagerAdViewOptions result =
+        (FlutterAdManagerAdViewOptions) codec.decodeMessage((ByteBuffer) data.position(0));
+    assertNull(result.manualImpressionsEnabled);
+  }
+
+  @Test
+  public void encodeAdManagerAdViewOptionsTrue() {
+    final ByteBuffer data = codec.encodeMessage(new FlutterAdManagerAdViewOptions(true));
+
+    final FlutterAdManagerAdViewOptions result =
+        (FlutterAdManagerAdViewOptions) codec.decodeMessage((ByteBuffer) data.position(0));
+    assertTrue(result.manualImpressionsEnabled);
+  }
+
+  @Test
+  public void encodeAdManagerAdViewOptionsFalse() {
+    final ByteBuffer data = codec.encodeMessage(new FlutterAdManagerAdViewOptions(false));
+
+    final FlutterAdManagerAdViewOptions result =
+        (FlutterAdManagerAdViewOptions) codec.decodeMessage((ByteBuffer) data.position(0));
+    assertFalse(result.manualImpressionsEnabled);
+  }
+
+  @Test
+  public void encodeBannerParameters() {
+    final ByteBuffer data =
+        codec.encodeMessage(
+            new FlutterBannerParameters(
+                Collections.singletonList(new FlutterAdSize(1, 2)),
+                new FlutterAdManagerAdViewOptions(null)));
+
+    final FlutterBannerParameters result =
+        (FlutterBannerParameters) codec.decodeMessage((ByteBuffer) data.position(0));
+
+    assertEquals(result.sizes.size(), 1);
+    assertEquals(result.sizes.get(0).width, 1);
+    assertEquals(result.sizes.get(0).height, 2);
+    assertNull(result.adManagerAdViewOptions.manualImpressionsEnabled);
+  }
+
+  @Test
+  public void encodeCustomParameters() {
+    final ByteBuffer data =
+        codec.encodeMessage(
+            new FlutterCustomParameters(
+                Collections.singletonList("format-id"), Collections.singletonMap("key", "value")));
+
+    final FlutterCustomParameters result =
+        (FlutterCustomParameters) codec.decodeMessage((ByteBuffer) data.position(0));
+
+    assertEquals(result.formatIds.size(), 1);
+    assertEquals(result.formatIds.get(0), "format-id");
+    assertEquals(result.viewOptions.size(), 1);
+    assertEquals(result.viewOptions.get("key"), "value");
+  }
+
+  @Test
+  public void encodeNativeParameters() {
+    final ByteBuffer data =
+        codec.encodeMessage(
+            new FlutterNativeParameters(
+                "factory-id",
+                new FlutterNativeAdOptions(1, 1, null, true, true, true),
+                Collections.singletonMap("key", "value")));
+
+    final FlutterNativeParameters result =
+        (FlutterNativeParameters) codec.decodeMessage((ByteBuffer) data.position(0));
+
+    assertEquals(result.factoryId, "factory-id");
+    assertEquals(result.nativeAdOptions.adChoicesPlacement, Integer.valueOf(1));
+    assertEquals(result.nativeAdOptions.mediaAspectRatio, Integer.valueOf(1));
+    assertNull(result.nativeAdOptions.videoOptions);
+    assertTrue(result.nativeAdOptions.requestCustomMuteThisAd);
+    assertTrue(result.nativeAdOptions.shouldRequestMultipleImages);
+    assertTrue(result.nativeAdOptions.shouldReturnUrlsForImageAssets);
+    assertEquals(result.viewOptions.size(), 1);
+    assertEquals(result.viewOptions.get("key"), "value");
+  }
 }
 
 class DummyMediationExtras extends FlutterMediationExtras {

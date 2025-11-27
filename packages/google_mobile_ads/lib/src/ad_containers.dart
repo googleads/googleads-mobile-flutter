@@ -1081,6 +1081,98 @@ class NativeAd extends AdWithView {
   }
 }
 
+/// Type of ad served by [AdLoaderAd]
+enum AdLoaderAdType {
+  /// Unknown ad type
+  unknown,
+
+  /// Banner ad type
+  banner,
+
+  /// Custom ad type
+  custom,
+
+  /// Native ad type
+  native,
+}
+
+/// An AdLoaderAd.
+///
+/// A widget which uses the platforms' ad loader (an [AdLoader]
+/// (https://developers.google.com/android/reference/com/google/android/gms/ads/AdLoader)
+/// on Android, or a [GADAdLoader]
+/// (https://developers.google.com/ad-manager/mobile-ads-sdk/ios/api/reference/Classes/GADAdLoader)
+/// on iOS) to allow receiving multiple ad types for a given request.
+///
+/// These types are:
+///
+/// * A "banner" ad, ([AdManagerAdView]
+/// (https://developers.google.com/android/reference/com/google/android/gms/ads/admanager/AdManagerAdView)
+/// on Android and [GAMBannerView]
+/// (https://developers.google.com/ad-manager/mobile-ads-sdk/ios/api/reference/Classes/GAMBannerView.html)
+/// on iOS)
+///
+/// * A "custom" ad, ([NativeCustomFormatAd]
+/// (https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeCustomFormatAd)
+/// on Android and [GADCustomNativeAd]
+/// (https://developers.google.com/admob/ios/api/reference/Classes/GADCustomNativeAd.html) on iOS)
+///
+/// * A "native" ad, ([NativeAd]
+/// (https://developers.google.com/android/reference/com/google/android/gms/ads/nativead/NativeAd)
+/// on Android and [GADNativeAd]
+/// (https://developers.google.com/admob/ios/api/reference/Classes/GADNativeAd.html) on iOS)
+class AdLoaderAd extends AdWithView {
+  /// Creates an [AdLoaderAd]
+  ///
+  /// A valid [adUnitId], nonnull [listener] and nonnull [request] are required.
+  AdLoaderAd({
+    required String adUnitId,
+    required this.listener,
+    required AdRequest request,
+    this.banner,
+    this.custom,
+    this.native,
+  }) : super(adUnitId: adUnitId, listener: listener) {
+    if (request is AdManagerAdRequest) {
+      adManagerRequest = request;
+    } else {
+      this.request = request;
+    }
+  }
+
+  /// A listener for receiving events in the ad lifecycle.
+  @override
+  final AdLoaderAdListener listener;
+
+  /// Targeting information used to fetch an [Ad].
+  AdRequest? request;
+
+  /// Targeting information used to fetch an [Ad] with Ad Manager.
+  AdManagerAdRequest? adManagerRequest;
+
+  /// Optional parameters used to configure served "banner" ads
+  final BannerParameters? banner;
+
+  /// Optional parameters used to configure served "custom" ads
+  final CustomParameters? custom;
+
+  /// Optional parameters used to configure served "native" ads
+  final NativeParameters? native;
+
+  @override
+  Future<void> load() => instanceManager.loadAdLoaderAd(this);
+
+  /// Returns the AdLoaderAdType of the currently served ad.
+  Future<AdLoaderAdType> getAdLoaderAdType() =>
+      instanceManager.getAdLoaderAdType(this);
+
+  /// Returns the AdSize of the associated platform ad object.
+  Future<AdSize?> getPlatformAdSize() => instanceManager.getAdSize(this);
+
+  /// Returns the formatId of the served Custom ad.
+  Future<String?> getFormatId() => instanceManager.getFormatId(this);
+}
+
 /// A full-screen interstitial ad for the Google Mobile Ads Plugin.
 class InterstitialAd extends AdWithoutView {
   /// Creates an [InterstitialAd].
@@ -1484,6 +1576,108 @@ enum AdChoicesPlacement {
 
   /// Bottom left corner.
   bottomLeftCorner
+}
+
+/// Used to configure ad manager ad view requests.
+class AdManagerAdViewOptions {
+  /// Whether manual impression reporting is enabled
+  ///
+  /// Default value is false.
+  final bool? manualImpressionsEnabled;
+
+  /// Construct an [AdManagerAdViewOptions], an optional class used to further customize
+  /// ad manager ad view requests.
+  AdManagerAdViewOptions({
+    this.manualImpressionsEnabled,
+  });
+
+  @override
+  bool operator ==(other) {
+    return other is AdManagerAdViewOptions &&
+        manualImpressionsEnabled == other.manualImpressionsEnabled;
+  }
+}
+
+/// Central configuration item for ad manager ad view requests served by
+/// an [AdLoaderAd].
+class BannerParameters {
+  /// List of sizes the [AdLoaderAd] should expect
+  final List<AdSize> sizes;
+
+  /// Additional options used when configuring the ad manager ad view
+  final AdManagerAdViewOptions? adManagerAdViewOptions;
+
+  /// Construct a [BannerParameters], used by an [AdLoaderAd] to configure
+  /// ad manager ad views
+  BannerParameters({
+    required this.sizes,
+    this.adManagerAdViewOptions,
+  });
+
+  @override
+  bool operator ==(other) {
+    return other is BannerParameters &&
+        listEquals<AdSize>(sizes, other.sizes) &&
+        adManagerAdViewOptions == other.adManagerAdViewOptions;
+  }
+}
+
+/// Central configuration item for custom format requests served
+/// by an [AdLoaderAd]
+class CustomParameters {
+  /// A list of format IDs, corresponding to those in the
+  /// Google Ad Manager console
+  final List<String> formatIds;
+
+  /// View options used to create the Platform view
+  ///
+  /// These options are passed to the platform's `CustomAdFactory`
+  Map<String, Object>? viewOptions;
+
+  /// Construct a [CustomParameters] instance, used by an [AdLoaderAd] to
+  /// configure custom view
+  CustomParameters({
+    required this.formatIds,
+    this.viewOptions,
+  });
+
+  @override
+  bool operator ==(other) {
+    return other is CustomParameters &&
+        listEquals<String>(formatIds, other.formatIds) &&
+        mapEquals<String, Object>(viewOptions, other.viewOptions);
+  }
+}
+
+/// Central configuration item for native view requests served by an
+/// [AdLoaderAd].
+class NativeParameters {
+  /// An identifier for the factory that creates the Platform view.
+  final String factoryId;
+
+  /// Options to configure the native ad request.
+  final NativeAdOptions? nativeAdOptions;
+
+  /// Optional options used to create the Platform view.
+  ///
+  /// These options are passed to the platform's `NativeAdFactory`.
+  final Map<String, Object>? viewOptions;
+
+  /// Construct a [NativeParameters] instance, used by an [AdLoaderAd] to
+  /// configure native views.
+  NativeParameters({
+    required this.factoryId,
+    this.nativeAdOptions,
+    this.viewOptions,
+  });
+
+  @override
+  bool operator ==(other) {
+    return other is NativeParameters &&
+        factoryId == other.factoryId &&
+        nativeAdOptions == other.nativeAdOptions &&
+        mapEquals<String, Object>(viewOptions, other.viewOptions);
+  }
 }
 
 /// Used to configure native ad requests.

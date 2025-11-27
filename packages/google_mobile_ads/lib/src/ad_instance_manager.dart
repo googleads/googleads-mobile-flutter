@@ -102,14 +102,17 @@ class AdInstanceManager {
         break;
       case 'onNativeAdWillPresentScreen': // Fall through
       case 'onBannerWillPresentScreen':
+      case 'onCustomNativeWillPresentScreen':
         _invokeOnAdOpened(ad, eventName);
         break;
       case 'onNativeAdDidDismissScreen': // Fall through
       case 'onBannerDidDismissScreen':
+      case 'onCustomNativeAdDidDismissScreen':
         _invokeOnAdClosed(ad, eventName);
         break;
       case 'onBannerWillDismissScreen': // Fall through
       case 'onNativeAdWillDismissScreen':
+      case 'onCustomNativeAdWillDismissScreen':
         if (ad is AdWithView) {
           ad.listener.onAdWillDismissScreen?.call(ad);
         } else {
@@ -123,6 +126,7 @@ class AdInstanceManager {
       case 'onBannerImpression':
       case 'adDidRecordImpression': // Fall through
       case 'onNativeAdImpression': // Fall through
+      case 'onCustomNativeAdImpression':
         _invokeOnAdImpression(ad, eventName);
         break;
       case 'adWillPresentFullScreenContent':
@@ -453,6 +457,53 @@ class AdInstanceManager {
         },
       );
 
+  Future<String?> getFormatId(Ad ad) =>
+      instanceManager.channel.invokeMethod<String>(
+        'getFormatId',
+        <dynamic, dynamic>{
+          'adId': adIdFor(ad),
+        },
+      );
+
+  Future<AdLoaderAdType> getAdLoaderAdType(Ad ad) async {
+    int adLoaderAdType = (await instanceManager.channel.invokeMethod<int>(
+      'getAdLoaderAdType',
+      <dynamic, dynamic>{
+        'adId': adIdFor(ad),
+      },
+    ))!;
+
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      switch (adLoaderAdType) {
+        case 0:
+          return AdLoaderAdType.unknown;
+        case 1:
+          return AdLoaderAdType.banner;
+        case 2:
+          return AdLoaderAdType.custom;
+        case 3:
+          return AdLoaderAdType.native;
+        default:
+          debugPrint('Error: unknown AdLoaderAdType value: $adLoaderAdType');
+          return AdLoaderAdType.unknown;
+      }
+    } else {
+      switch (adLoaderAdType) {
+        case 0:
+          return AdLoaderAdType.unknown;
+        case 1:
+          return AdLoaderAdType.banner;
+        case 2:
+          return AdLoaderAdType.custom;
+        case 3:
+          return AdLoaderAdType.native;
+        default:
+          debugPrint('Error: unknown AdLoaderAdType value: $adLoaderAdType');
+          return AdLoaderAdType.unknown;
+      }
+    }
+  }
+
   /// Returns null if an invalid [adId] was passed in.
   Ad? adFor(int adId) => _loadedAds[adId];
 
@@ -529,6 +580,30 @@ class AdInstanceManager {
         'nativeAdOptions': ad.nativeAdOptions,
         'customOptions': ad.customOptions,
         'nativeTemplateStyle': ad.nativeTemplateStyle,
+      },
+    );
+  }
+
+  /// Starts loading the ad if not previously loaded.
+  ///
+  /// Loading also terminates if ad is already in the process of loading.
+  Future<void> loadAdLoaderAd(AdLoaderAd ad) {
+    if (adIdFor(ad) != null) {
+      return Future<void>.value();
+    }
+
+    final int adId = _nextAdId++;
+    _loadedAds[adId] = ad;
+    return channel.invokeMethod<void>(
+      'loadAdLoaderAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+        'adManagerRequest': ad.adManagerRequest,
+        'banner': ad.banner,
+        'custom': ad.custom,
+        'native': ad.native,
       },
     );
   }
@@ -862,6 +937,10 @@ class AdMessageCodec extends StandardMessageCodec {
   static const int _valueNativeTemplateType = 152;
   static const int _valueColor = 153;
   static const int _valueMediationExtras = 154;
+  static const int _valueAdManagerAdViewOptions = 155;
+  static const int _valueBannerParameters = 156;
+  static const int _valueCustomParameters = 157;
+  static const int _valueNativeParameters = 158;
 
   @override
   void writeValue(WriteBuffer buffer, dynamic value) {
@@ -998,6 +1077,22 @@ class AdMessageCodec extends StandardMessageCodec {
     } else if (value is NativeTemplateFontStyle) {
       buffer.putUint8(_valueNativeTemplateFontStyle);
       writeValue(buffer, value.index);
+    } else if (value is AdManagerAdViewOptions) {
+      buffer.putUint8(_valueAdManagerAdViewOptions);
+      writeValue(buffer, value.manualImpressionsEnabled);
+    } else if (value is BannerParameters) {
+      buffer.putUint8(_valueBannerParameters);
+      writeValue(buffer, value.sizes);
+      writeValue(buffer, value.adManagerAdViewOptions);
+    } else if (value is CustomParameters) {
+      buffer.putUint8(_valueCustomParameters);
+      writeValue(buffer, value.formatIds);
+      writeValue(buffer, value.viewOptions);
+    } else if (value is NativeParameters) {
+      buffer.putUint8(_valueNativeParameters);
+      writeValue(buffer, value.factoryId);
+      writeValue(buffer, value.nativeAdOptions);
+      writeValue(buffer, value.viewOptions);
     } else {
       super.writeValue(buffer, value);
     }
@@ -1222,6 +1317,28 @@ class AdMessageCodec extends StandardMessageCodec {
       case _valueNativeTemplateFontStyle:
         return NativeTemplateFontStyle
             .values[readValueOfType(buffer.getUint8(), buffer)];
+      case _valueAdManagerAdViewOptions:
+        return AdManagerAdViewOptions(
+          manualImpressionsEnabled: readValueOfType(buffer.getUint8(), buffer),
+        );
+      case _valueBannerParameters:
+        return BannerParameters(
+          sizes: readValueOfType(buffer.getUint8(), buffer)?.cast<AdSize>(),
+          adManagerAdViewOptions: readValueOfType(buffer.getUint8(), buffer),
+        );
+      case _valueCustomParameters:
+        return CustomParameters(
+          formatIds: readValueOfType(buffer.getUint8(), buffer).cast<String>(),
+          viewOptions: readValueOfType(buffer.getUint8(), buffer)
+              ?.cast<String, Object>(),
+        );
+      case _valueNativeParameters:
+        return NativeParameters(
+          factoryId: readValueOfType(buffer.getUint8(), buffer),
+          nativeAdOptions: readValueOfType(buffer.getUint8(), buffer),
+          viewOptions: readValueOfType(buffer.getUint8(), buffer)
+              ?.cast<String, Object>(),
+        );
       default:
         return super.readValueOfType(type, buffer);
     }
