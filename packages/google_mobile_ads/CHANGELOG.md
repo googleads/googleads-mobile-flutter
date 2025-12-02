@@ -1,4 +1,8 @@
 ## 6.1.0
+* Added character limits expected for Native Ad Templates. Issues [1243](https://github.com/googleads/googleads-mobile-flutter/issues/1234) and [1332](https://github.com/googleads/googleads-mobile-flutter/issues/1332)
+* Fixed padding for Native Ads small template. [Issue 1357](https://github.com/googleads/googleads-mobile-flutter/issues/1357)
+* Updated to use Gradle plugin 9.2.1 [Issue 1361](https://github.com/googleads/googleads-mobile-flutter/issues/1361)
+* Updates dependencies. [Issue 1366](https://github.com/googleads/googleads-mobile-flutter/issues/1366)
 * Updates GMA [Android](https://developers.google.com/admob/android/rel-notes) dependency to 24.8.0
 * Updates GMA [iOS](https://developers.google.com/admob/ios/rel-notes) dependency to 12.14.0
 * Uses latest UMP SDK:

@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    compileSdk 35
+    compileSdk 36
 
     namespace 'io.flutter.plugins.googlemobileadsexample'
 
