@@ -28,7 +28,7 @@ flutter:
         pluginClass: FLTGoogleMobileAdsPlugin
 
 dependencies:
-  meta: ^1.17.0
+  meta: ^1.16.0
   flutter:
     sdk: flutter
   webview_flutter_android: ^4.10.9
@@ -48,5 +48,5 @@ dev_dependencies:
 
 
 environment:
-  sdk: ">=3.10.0 <4.0.0"
-  flutter: ">=3.38.0"
+  sdk: ">=3.9.0 <4.0.0"
+  flutter: ">=3.35.1"
