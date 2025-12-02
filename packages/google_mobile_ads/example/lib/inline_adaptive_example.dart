@@ -59,7 +59,7 @@ class _InlineAdaptiveExampleState extends State<InlineAdaptiveExample> {
     _inlineAdaptiveAd = AdManagerBannerAd(
       adUnitId: Platform.isAndroid
           ? '/21775744923/example/banner'
-          : '/6499/example/adaptive-banner',
+          : '/21775744923/example/adaptive-banner',
       sizes: [size],
       request: AdManagerAdRequest(),
       listener: AdManagerBannerAdListener(
