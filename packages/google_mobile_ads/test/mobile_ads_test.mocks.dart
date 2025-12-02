@@ -36,76 +36,41 @@ import 'package:webview_flutter_platform_interface/webview_flutter_platform_inte
 
 class _FakePlatformWebViewController_0 extends _i1.SmartFake
     implements _i2.PlatformWebViewController {
-  _FakePlatformWebViewController_0(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakePlatformWebViewController_0(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeObject_1 extends _i1.SmartFake implements Object {
-  _FakeObject_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeObject_1(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeOffset_2 extends _i1.SmartFake implements _i3.Offset {
-  _FakeOffset_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeOffset_2(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeMethodChannel_3 extends _i1.SmartFake implements _i4.MethodChannel {
-  _FakeMethodChannel_3(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeMethodChannel_3(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeWebViewControllerUtil_4 extends _i1.SmartFake
     implements _i5.WebViewControllerUtil {
-  _FakeWebViewControllerUtil_4(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeWebViewControllerUtil_4(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeInitializationStatus_5 extends _i1.SmartFake
     implements _i6.InitializationStatus {
-  _FakeInitializationStatus_5(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeInitializationStatus_5(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 class _FakeRequestConfiguration_6 extends _i1.SmartFake
     implements _i7.RequestConfiguration {
-  _FakeRequestConfiguration_6(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
+  _FakeRequestConfiguration_6(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
 }
 
 /// A class which mocks [WebViewController].
@@ -117,48 +82,42 @@ class MockWebViewController extends _i1.Mock implements _i8.WebViewController {
   }
 
   @override
-  _i2.PlatformWebViewController get platform => (super.noSuchMethod(
-        Invocation.getter(#platform),
-        returnValue: _FakePlatformWebViewController_0(
-          this,
-          Invocation.getter(#platform),
-        ),
-      ) as _i2.PlatformWebViewController);
-
-  @override
-  _i9.Future<void> loadFile(String? absoluteFilePath) => (super.noSuchMethod(
-        Invocation.method(
-          #loadFile,
-          [absoluteFilePath],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
-
-  @override
-  _i9.Future<void> loadFlutterAsset(String? key) => (super.noSuchMethod(
-        Invocation.method(
-          #loadFlutterAsset,
-          [key],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
-
-  @override
-  _i9.Future<void> loadHtmlString(
-    String? html, {
-    String? baseUrl,
-  }) =>
+  _i2.PlatformWebViewController get platform =>
       (super.noSuchMethod(
-        Invocation.method(
-          #loadHtmlString,
-          [html],
-          {#baseUrl: baseUrl},
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.getter(#platform),
+            returnValue: _FakePlatformWebViewController_0(
+              this,
+              Invocation.getter(#platform),
+            ),
+          )
+          as _i2.PlatformWebViewController);
+
+  @override
+  _i9.Future<void> loadFile(String? absoluteFilePath) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadFile, [absoluteFilePath]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> loadFlutterAsset(String? key) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadFlutterAsset, [key]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> loadHtmlString(String? html, {String? baseUrl}) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadHtmlString, [html], {#baseUrl: baseUrl}),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> loadRequest(
@@ -168,132 +127,115 @@ class MockWebViewController extends _i1.Mock implements _i8.WebViewController {
     _i10.Uint8List? body,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #loadRequest,
-          [uri],
-          {
-            #method: method,
-            #headers: headers,
-            #body: body,
-          },
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(
+              #loadRequest,
+              [uri],
+              {#method: method, #headers: headers, #body: body},
+            ),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<String?> currentUrl() => (super.noSuchMethod(
-        Invocation.method(
-          #currentUrl,
-          [],
-        ),
-        returnValue: _i9.Future<String?>.value(),
-      ) as _i9.Future<String?>);
+  _i9.Future<String?> currentUrl() =>
+      (super.noSuchMethod(
+            Invocation.method(#currentUrl, []),
+            returnValue: _i9.Future<String?>.value(),
+          )
+          as _i9.Future<String?>);
 
   @override
-  _i9.Future<bool> canGoBack() => (super.noSuchMethod(
-        Invocation.method(
-          #canGoBack,
-          [],
-        ),
-        returnValue: _i9.Future<bool>.value(false),
-      ) as _i9.Future<bool>);
+  _i9.Future<bool> canGoBack() =>
+      (super.noSuchMethod(
+            Invocation.method(#canGoBack, []),
+            returnValue: _i9.Future<bool>.value(false),
+          )
+          as _i9.Future<bool>);
 
   @override
-  _i9.Future<bool> canGoForward() => (super.noSuchMethod(
-        Invocation.method(
-          #canGoForward,
-          [],
-        ),
-        returnValue: _i9.Future<bool>.value(false),
-      ) as _i9.Future<bool>);
+  _i9.Future<bool> canGoForward() =>
+      (super.noSuchMethod(
+            Invocation.method(#canGoForward, []),
+            returnValue: _i9.Future<bool>.value(false),
+          )
+          as _i9.Future<bool>);
 
   @override
-  _i9.Future<void> goBack() => (super.noSuchMethod(
-        Invocation.method(
-          #goBack,
-          [],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> goBack() =>
+      (super.noSuchMethod(
+            Invocation.method(#goBack, []),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> goForward() => (super.noSuchMethod(
-        Invocation.method(
-          #goForward,
-          [],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> goForward() =>
+      (super.noSuchMethod(
+            Invocation.method(#goForward, []),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> reload() => (super.noSuchMethod(
-        Invocation.method(
-          #reload,
-          [],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> reload() =>
+      (super.noSuchMethod(
+            Invocation.method(#reload, []),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> setNavigationDelegate(_i11.NavigationDelegate? delegate) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setNavigationDelegate,
-          [delegate],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#setNavigationDelegate, [delegate]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> clearCache() => (super.noSuchMethod(
-        Invocation.method(
-          #clearCache,
-          [],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> clearCache() =>
+      (super.noSuchMethod(
+            Invocation.method(#clearCache, []),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> clearLocalStorage() => (super.noSuchMethod(
-        Invocation.method(
-          #clearLocalStorage,
-          [],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> clearLocalStorage() =>
+      (super.noSuchMethod(
+            Invocation.method(#clearLocalStorage, []),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> runJavaScript(String? javaScript) => (super.noSuchMethod(
-        Invocation.method(
-          #runJavaScript,
-          [javaScript],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> runJavaScript(String? javaScript) =>
+      (super.noSuchMethod(
+            Invocation.method(#runJavaScript, [javaScript]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<Object> runJavaScriptReturningResult(String? javaScript) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #runJavaScriptReturningResult,
-          [javaScript],
-        ),
-        returnValue: _i9.Future<Object>.value(_FakeObject_1(
-          this,
-          Invocation.method(
-            #runJavaScriptReturningResult,
-            [javaScript],
-          ),
-        )),
-      ) as _i9.Future<Object>);
+            Invocation.method(#runJavaScriptReturningResult, [javaScript]),
+            returnValue: _i9.Future<Object>.value(
+              _FakeObject_1(
+                this,
+                Invocation.method(#runJavaScriptReturningResult, [javaScript]),
+              ),
+            ),
+          )
+          as _i9.Future<Object>);
 
   @override
   _i9.Future<void> addJavaScriptChannel(
@@ -301,196 +243,172 @@ class MockWebViewController extends _i1.Mock implements _i8.WebViewController {
     required void Function(_i2.JavaScriptMessage)? onMessageReceived,
   }) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #addJavaScriptChannel,
-          [name],
-          {#onMessageReceived: onMessageReceived},
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(
+              #addJavaScriptChannel,
+              [name],
+              {#onMessageReceived: onMessageReceived},
+            ),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> removeJavaScriptChannel(String? javaScriptChannelName) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #removeJavaScriptChannel,
-          [javaScriptChannelName],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#removeJavaScriptChannel, [
+              javaScriptChannelName,
+            ]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<String?> getTitle() => (super.noSuchMethod(
-        Invocation.method(
-          #getTitle,
-          [],
-        ),
-        returnValue: _i9.Future<String?>.value(),
-      ) as _i9.Future<String?>);
-
-  @override
-  _i9.Future<void> scrollTo(
-    int? x,
-    int? y,
-  ) =>
+  _i9.Future<String?> getTitle() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #scrollTo,
-          [
-            x,
-            y,
-          ],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#getTitle, []),
+            returnValue: _i9.Future<String?>.value(),
+          )
+          as _i9.Future<String?>);
 
   @override
-  _i9.Future<void> scrollBy(
-    int? x,
-    int? y,
-  ) =>
+  _i9.Future<void> scrollTo(int? x, int? y) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #scrollBy,
-          [
-            x,
-            y,
-          ],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#scrollTo, [x, y]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<_i3.Offset> getScrollPosition() => (super.noSuchMethod(
-        Invocation.method(
-          #getScrollPosition,
-          [],
-        ),
-        returnValue: _i9.Future<_i3.Offset>.value(_FakeOffset_2(
-          this,
-          Invocation.method(
-            #getScrollPosition,
-            [],
-          ),
-        )),
-      ) as _i9.Future<_i3.Offset>);
+  _i9.Future<void> scrollBy(int? x, int? y) =>
+      (super.noSuchMethod(
+            Invocation.method(#scrollBy, [x, y]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> enableZoom(bool? enabled) => (super.noSuchMethod(
-        Invocation.method(
-          #enableZoom,
-          [enabled],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<_i3.Offset> getScrollPosition() =>
+      (super.noSuchMethod(
+            Invocation.method(#getScrollPosition, []),
+            returnValue: _i9.Future<_i3.Offset>.value(
+              _FakeOffset_2(this, Invocation.method(#getScrollPosition, [])),
+            ),
+          )
+          as _i9.Future<_i3.Offset>);
 
   @override
-  _i9.Future<void> setBackgroundColor(_i3.Color? color) => (super.noSuchMethod(
-        Invocation.method(
-          #setBackgroundColor,
-          [color],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> enableZoom(bool? enabled) =>
+      (super.noSuchMethod(
+            Invocation.method(#enableZoom, [enabled]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
+
+  @override
+  _i9.Future<void> setBackgroundColor(_i3.Color? color) =>
+      (super.noSuchMethod(
+            Invocation.method(#setBackgroundColor, [color]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> setJavaScriptMode(_i2.JavaScriptMode? javaScriptMode) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setJavaScriptMode,
-          [javaScriptMode],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#setJavaScriptMode, [javaScriptMode]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> setUserAgent(String? userAgent) => (super.noSuchMethod(
-        Invocation.method(
-          #setUserAgent,
-          [userAgent],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> setUserAgent(String? userAgent) =>
+      (super.noSuchMethod(
+            Invocation.method(#setUserAgent, [userAgent]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> setOnConsoleMessage(
-          void Function(_i2.JavaScriptConsoleMessage)? onConsoleMessage) =>
+    void Function(_i2.JavaScriptConsoleMessage)? onConsoleMessage,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setOnConsoleMessage,
-          [onConsoleMessage],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#setOnConsoleMessage, [onConsoleMessage]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> setOnJavaScriptAlertDialog(
-          _i9.Future<void> Function(_i2.JavaScriptAlertDialogRequest)?
-              onJavaScriptAlertDialog) =>
+    _i9.Future<void> Function(_i2.JavaScriptAlertDialogRequest)?
+    onJavaScriptAlertDialog,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setOnJavaScriptAlertDialog,
-          [onJavaScriptAlertDialog],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#setOnJavaScriptAlertDialog, [
+              onJavaScriptAlertDialog,
+            ]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> setOnJavaScriptConfirmDialog(
-          _i9.Future<bool> Function(_i2.JavaScriptConfirmDialogRequest)?
-              onJavaScriptConfirmDialog) =>
+    _i9.Future<bool> Function(_i2.JavaScriptConfirmDialogRequest)?
+    onJavaScriptConfirmDialog,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setOnJavaScriptConfirmDialog,
-          [onJavaScriptConfirmDialog],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#setOnJavaScriptConfirmDialog, [
+              onJavaScriptConfirmDialog,
+            ]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> setOnJavaScriptTextInputDialog(
-          _i9.Future<String> Function(_i2.JavaScriptTextInputDialogRequest)?
-              onJavaScriptTextInputDialog) =>
+    _i9.Future<String> Function(_i2.JavaScriptTextInputDialogRequest)?
+    onJavaScriptTextInputDialog,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setOnJavaScriptTextInputDialog,
-          [onJavaScriptTextInputDialog],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#setOnJavaScriptTextInputDialog, [
+              onJavaScriptTextInputDialog,
+            ]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<String?> getUserAgent() => (super.noSuchMethod(
-        Invocation.method(
-          #getUserAgent,
-          [],
-        ),
-        returnValue: _i9.Future<String?>.value(),
-      ) as _i9.Future<String?>);
+  _i9.Future<String?> getUserAgent() =>
+      (super.noSuchMethod(
+            Invocation.method(#getUserAgent, []),
+            returnValue: _i9.Future<String?>.value(),
+          )
+          as _i9.Future<String?>);
 
   @override
   _i9.Future<void> setOnScrollPositionChange(
-          void Function(_i2.ScrollPositionChange)? onScrollPositionChange) =>
+    void Function(_i2.ScrollPositionChange)? onScrollPositionChange,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setOnScrollPositionChange,
-          [onScrollPositionChange],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#setOnScrollPositionChange, [
+              onScrollPositionChange,
+            ]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 }
 
 /// A class which mocks [AdInstanceManager].
@@ -502,263 +420,231 @@ class MockAdInstanceManager extends _i1.Mock implements _i12.AdInstanceManager {
   }
 
   @override
-  _i4.MethodChannel get channel => (super.noSuchMethod(
-        Invocation.getter(#channel),
-        returnValue: _FakeMethodChannel_3(
-          this,
-          Invocation.getter(#channel),
-        ),
-      ) as _i4.MethodChannel);
+  _i4.MethodChannel get channel =>
+      (super.noSuchMethod(
+            Invocation.getter(#channel),
+            returnValue: _FakeMethodChannel_3(
+              this,
+              Invocation.getter(#channel),
+            ),
+          )
+          as _i4.MethodChannel);
 
   @override
-  _i5.WebViewControllerUtil get webViewControllerUtil => (super.noSuchMethod(
-        Invocation.getter(#webViewControllerUtil),
-        returnValue: _FakeWebViewControllerUtil_4(
-          this,
-          Invocation.getter(#webViewControllerUtil),
-        ),
-      ) as _i5.WebViewControllerUtil);
+  _i5.WebViewControllerUtil get webViewControllerUtil =>
+      (super.noSuchMethod(
+            Invocation.getter(#webViewControllerUtil),
+            returnValue: _FakeWebViewControllerUtil_4(
+              this,
+              Invocation.getter(#webViewControllerUtil),
+            ),
+          )
+          as _i5.WebViewControllerUtil);
 
   @override
-  _i9.Future<_i6.InitializationStatus> initialize() => (super.noSuchMethod(
-        Invocation.method(
-          #initialize,
-          [],
-        ),
-        returnValue: _i9.Future<_i6.InitializationStatus>.value(
-            _FakeInitializationStatus_5(
-          this,
-          Invocation.method(
-            #initialize,
-            [],
-          ),
-        )),
-      ) as _i9.Future<_i6.InitializationStatus>);
+  _i9.Future<_i6.InitializationStatus> initialize() =>
+      (super.noSuchMethod(
+            Invocation.method(#initialize, []),
+            returnValue: _i9.Future<_i6.InitializationStatus>.value(
+              _FakeInitializationStatus_5(
+                this,
+                Invocation.method(#initialize, []),
+              ),
+            ),
+          )
+          as _i9.Future<_i6.InitializationStatus>);
 
   @override
-  _i9.Future<_i13.AdSize?> getAdSize(_i13.Ad? ad) => (super.noSuchMethod(
-        Invocation.method(
-          #getAdSize,
-          [ad],
-        ),
-        returnValue: _i9.Future<_i13.AdSize?>.value(),
-      ) as _i9.Future<_i13.AdSize?>);
+  _i9.Future<_i13.AdSize?> getAdSize(_i13.Ad? ad) =>
+      (super.noSuchMethod(
+            Invocation.method(#getAdSize, [ad]),
+            returnValue: _i9.Future<_i13.AdSize?>.value(),
+          )
+          as _i9.Future<_i13.AdSize?>);
 
   @override
-  _i13.Ad? adFor(int? adId) => (super.noSuchMethod(Invocation.method(
-        #adFor,
-        [adId],
-      )) as _i13.Ad?);
+  _i13.Ad? adFor(int? adId) =>
+      (super.noSuchMethod(Invocation.method(#adFor, [adId])) as _i13.Ad?);
 
   @override
-  int? adIdFor(_i13.Ad? ad) => (super.noSuchMethod(Invocation.method(
-        #adIdFor,
-        [ad],
-      )) as int?);
+  int? adIdFor(_i13.Ad? ad) =>
+      (super.noSuchMethod(Invocation.method(#adIdFor, [ad])) as int?);
 
   @override
-  bool isWidgetAdIdMounted(int? adId) => (super.noSuchMethod(
-        Invocation.method(
-          #isWidgetAdIdMounted,
-          [adId],
-        ),
-        returnValue: false,
-      ) as bool);
+  bool isWidgetAdIdMounted(int? adId) =>
+      (super.noSuchMethod(
+            Invocation.method(#isWidgetAdIdMounted, [adId]),
+            returnValue: false,
+          )
+          as bool);
 
   @override
   void mountWidgetAdId(int? adId) => super.noSuchMethod(
-        Invocation.method(
-          #mountWidgetAdId,
-          [adId],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#mountWidgetAdId, [adId]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   void unmountWidgetAdId(int? adId) => super.noSuchMethod(
-        Invocation.method(
-          #unmountWidgetAdId,
-          [adId],
-        ),
-        returnValueForMissingStub: null,
-      );
+    Invocation.method(#unmountWidgetAdId, [adId]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i9.Future<void> loadBannerAd(_i13.BannerAd? ad) => (super.noSuchMethod(
-        Invocation.method(
-          #loadBannerAd,
-          [ad],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> loadBannerAd(_i13.BannerAd? ad) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadBannerAd, [ad]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> loadInterstitialAd(_i13.InterstitialAd? ad) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #loadInterstitialAd,
-          [ad],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#loadInterstitialAd, [ad]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> loadNativeAd(_i13.NativeAd? ad) => (super.noSuchMethod(
-        Invocation.method(
-          #loadNativeAd,
-          [ad],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> loadNativeAd(_i13.NativeAd? ad) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadNativeAd, [ad]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> loadRewardedAd(_i13.RewardedAd? ad) => (super.noSuchMethod(
-        Invocation.method(
-          #loadRewardedAd,
-          [ad],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> loadRewardedAd(_i13.RewardedAd? ad) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadRewardedAd, [ad]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> loadRewardedInterstitialAd(
-          _i13.RewardedInterstitialAd? ad) =>
+    _i13.RewardedInterstitialAd? ad,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #loadRewardedInterstitialAd,
-          [ad],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#loadRewardedInterstitialAd, [ad]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> loadAppOpenAd(_i13.AppOpenAd? ad) => (super.noSuchMethod(
-        Invocation.method(
-          #loadAppOpenAd,
-          [ad],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> loadAppOpenAd(_i13.AppOpenAd? ad) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadAppOpenAd, [ad]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> loadAdManagerBannerAd(_i13.AdManagerBannerAd? ad) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #loadAdManagerBannerAd,
-          [ad],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#loadAdManagerBannerAd, [ad]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> loadFluidAd(_i13.FluidAdManagerBannerAd? ad) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #loadFluidAd,
-          [ad],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#loadFluidAd, [ad]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> loadAdManagerInterstitialAd(
-          _i13.AdManagerInterstitialAd? ad) =>
+    _i13.AdManagerInterstitialAd? ad,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #loadAdManagerInterstitialAd,
-          [ad],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#loadAdManagerInterstitialAd, [ad]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> disposeAd(_i13.Ad? ad) => (super.noSuchMethod(
-        Invocation.method(
-          #disposeAd,
-          [ad],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> disposeAd(_i13.Ad? ad) =>
+      (super.noSuchMethod(
+            Invocation.method(#disposeAd, [ad]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> showAdWithoutView(_i13.AdWithoutView? ad) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #showAdWithoutView,
-          [ad],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#showAdWithoutView, [ad]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<_i7.RequestConfiguration> getRequestConfiguration() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #getRequestConfiguration,
-          [],
-        ),
-        returnValue: _i9.Future<_i7.RequestConfiguration>.value(
-            _FakeRequestConfiguration_6(
-          this,
-          Invocation.method(
-            #getRequestConfiguration,
-            [],
-          ),
-        )),
-      ) as _i9.Future<_i7.RequestConfiguration>);
+            Invocation.method(#getRequestConfiguration, []),
+            returnValue: _i9.Future<_i7.RequestConfiguration>.value(
+              _FakeRequestConfiguration_6(
+                this,
+                Invocation.method(#getRequestConfiguration, []),
+              ),
+            ),
+          )
+          as _i9.Future<_i7.RequestConfiguration>);
 
   @override
   _i9.Future<void> updateRequestConfiguration(
-          _i7.RequestConfiguration? requestConfiguration) =>
+    _i7.RequestConfiguration? requestConfiguration,
+  ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #updateRequestConfiguration,
-          [requestConfiguration],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#updateRequestConfiguration, [
+              requestConfiguration,
+            ]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> setSameAppKeyEnabled(bool? isEnabled) => (super.noSuchMethod(
-        Invocation.method(
-          #setSameAppKeyEnabled,
-          [isEnabled],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> setSameAppKeyEnabled(bool? isEnabled) =>
+      (super.noSuchMethod(
+            Invocation.method(#setSameAppKeyEnabled, [isEnabled]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> setAppMuted(bool? muted) => (super.noSuchMethod(
-        Invocation.method(
-          #setAppMuted,
-          [muted],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> setAppMuted(bool? muted) =>
+      (super.noSuchMethod(
+            Invocation.method(#setAppMuted, [muted]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> setAppVolume(double? volume) => (super.noSuchMethod(
-        Invocation.method(
-          #setAppVolume,
-          [volume],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> setAppVolume(double? volume) =>
+      (super.noSuchMethod(
+            Invocation.method(#setAppVolume, [volume]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> setImmersiveMode(
@@ -766,51 +652,42 @@ class MockAdInstanceManager extends _i1.Mock implements _i12.AdInstanceManager {
     bool? immersiveModeEnabled,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setImmersiveMode,
-          [
-            ad,
-            immersiveModeEnabled,
-          ],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#setImmersiveMode, [ad, immersiveModeEnabled]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> disableSDKCrashReporting() => (super.noSuchMethod(
-        Invocation.method(
-          #disableSDKCrashReporting,
-          [],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> disableSDKCrashReporting() =>
+      (super.noSuchMethod(
+            Invocation.method(#disableSDKCrashReporting, []),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> disableMediationInitialization() => (super.noSuchMethod(
-        Invocation.method(
-          #disableMediationInitialization,
-          [],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> disableMediationInitialization() =>
+      (super.noSuchMethod(
+            Invocation.method(#disableMediationInitialization, []),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<String> getVersionString() => (super.noSuchMethod(
-        Invocation.method(
-          #getVersionString,
-          [],
-        ),
-        returnValue: _i9.Future<String>.value(_i14.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getVersionString,
-            [],
-          ),
-        )),
-      ) as _i9.Future<String>);
+  _i9.Future<String> getVersionString() =>
+      (super.noSuchMethod(
+            Invocation.method(#getVersionString, []),
+            returnValue: _i9.Future<String>.value(
+              _i14.dummyValue<String>(
+                this,
+                Invocation.method(#getVersionString, []),
+              ),
+            ),
+          )
+          as _i9.Future<String>);
 
   @override
   _i9.Future<void> setServerSideVerificationOptions(
@@ -818,54 +695,42 @@ class MockAdInstanceManager extends _i1.Mock implements _i12.AdInstanceManager {
     _i13.Ad? ad,
   ) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #setServerSideVerificationOptions,
-          [
-            options,
-            ad,
-          ],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#setServerSideVerificationOptions, [options, ad]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  _i9.Future<void> openDebugMenu(String? adUnitId) => (super.noSuchMethod(
-        Invocation.method(
-          #openDebugMenu,
-          [adUnitId],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+  _i9.Future<void> openDebugMenu(String? adUnitId) =>
+      (super.noSuchMethod(
+            Invocation.method(#openDebugMenu, [adUnitId]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
   _i9.Future<void> registerWebView(_i8.WebViewController? controller) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #registerWebView,
-          [controller],
-        ),
-        returnValue: _i9.Future<void>.value(),
-        returnValueForMissingStub: _i9.Future<void>.value(),
-      ) as _i9.Future<void>);
+            Invocation.method(#registerWebView, [controller]),
+            returnValue: _i9.Future<void>.value(),
+            returnValueForMissingStub: _i9.Future<void>.value(),
+          )
+          as _i9.Future<void>);
 
   @override
-  int getWebViewId(_i8.WebViewController? controller) => (super.noSuchMethod(
-        Invocation.method(
-          #getWebViewId,
-          [controller],
-        ),
-        returnValue: 0,
-      ) as int);
+  int getWebViewId(_i8.WebViewController? controller) =>
+      (super.noSuchMethod(
+            Invocation.method(#getWebViewId, [controller]),
+            returnValue: 0,
+          )
+          as int);
 
   @override
   void openAdInspector(_i15.OnAdInspectorClosedListener? listener) =>
       super.noSuchMethod(
-        Invocation.method(
-          #openAdInspector,
-          [listener],
-        ),
+        Invocation.method(#openAdInspector, [listener]),
         returnValueForMissingStub: null,
       );
 }
@@ -882,10 +747,8 @@ class MockWebViewControllerUtil extends _i1.Mock
   @override
   int webViewIdentifier(_i8.WebViewController? controller) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #webViewIdentifier,
-          [controller],
-        ),
-        returnValue: 0,
-      ) as int);
+            Invocation.method(#webViewIdentifier, [controller]),
+            returnValue: 0,
+          )
+          as int);
 }

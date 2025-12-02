@@ -63,7 +63,8 @@ class MobileAds {
 
   /// Update the [RequestConfiguration] to apply for future ad requests.
   Future<void> updateRequestConfiguration(
-      RequestConfiguration requestConfiguration) {
+    RequestConfiguration requestConfiguration,
+  ) {
     return instanceManager.updateRequestConfiguration(requestConfiguration);
   }
 
@@ -157,9 +158,9 @@ class InitializationStatus {
   ///
   /// Returned when calling [MobileAds.initialize];
   InitializationStatus(Map<String, AdapterStatus> adapterStatuses)
-      : adapterStatuses = Map<String, AdapterStatus>.unmodifiable(
-          adapterStatuses,
-        );
+    : adapterStatuses = Map<String, AdapterStatus>.unmodifiable(
+        adapterStatuses,
+      );
 
   /// Initialization status of each known ad network, keyed by its adapter's class name.
   final Map<String, AdapterStatus> adapterStatuses;

@@ -23,7 +23,7 @@ enum AppState {
   background,
 
   /// App is foregrounded.
-  foreground
+  foreground,
 }
 
 /// Notifies changes in app foreground/background.
@@ -46,8 +46,10 @@ class AppStateEventNotifier {
   /// Call [startListening] before subscribing to this stream to
   /// start listening to background/foreground events on the platform side.
   static Stream<AppState> get appStateStream =>
-      _eventChannel.receiveBroadcastStream().map((event) =>
-          event == 'foreground' ? AppState.foreground : AppState.background);
+      _eventChannel.receiveBroadcastStream().map(
+        (event) =>
+            event == 'foreground' ? AppState.foreground : AppState.background,
+      );
 
   /// Start listening to background/foreground events.
   static Future<void> startListening() async {

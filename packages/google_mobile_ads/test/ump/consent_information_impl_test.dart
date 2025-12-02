@@ -47,8 +47,9 @@ void main() {
 
     test('getConsentStatus()', () async {
       ConsentStatus status = ConsentStatus.required;
-      when(mockChannel.getConsentStatus())
-          .thenAnswer((_) => Future.value(status));
+      when(
+        mockChannel.getConsentStatus(),
+      ).thenAnswer((_) => Future.value(status));
 
       ConsentStatus responseStatus = await consentInfo.getConsentStatus();
 
@@ -57,8 +58,9 @@ void main() {
     });
 
     test('isConsentFormAvailable()', () async {
-      when(mockChannel.isConsentFormAvailable())
-          .thenAnswer((_) => Future.value(false));
+      when(
+        mockChannel.isConsentFormAvailable(),
+      ).thenAnswer((_) => Future.value(false));
 
       bool isConsentFormAvailable = await consentInfo.isConsentFormAvailable();
 
@@ -67,8 +69,9 @@ void main() {
     });
 
     test('requestConsentInfoUpdate() success', () async {
-      when(mockChannel.requestConsentInfoUpdate(any, any, any))
-          .thenAnswer((invocation) {
+      when(mockChannel.requestConsentInfoUpdate(any, any, any)).thenAnswer((
+        invocation,
+      ) {
         invocation.positionalArguments[1]();
       });
 
@@ -77,9 +80,10 @@ void main() {
       Completer<FormError> errorCompleter = Completer<FormError>();
 
       consentInfo.requestConsentInfoUpdate(
-          params,
-          () => successCompleter.complete(),
-          (error) => errorCompleter.complete(error));
+        params,
+        () => successCompleter.complete(),
+        (error) => errorCompleter.complete(error),
+      );
 
       await successCompleter.future;
       verify(mockChannel.requestConsentInfoUpdate(params, any, any));
@@ -89,8 +93,9 @@ void main() {
 
     test('requestConsentInfoUpdate() failure', () async {
       FormError formError = FormError(errorCode: 1, message: 'msg');
-      when(mockChannel.requestConsentInfoUpdate(any, any, any))
-          .thenAnswer((invocation) {
+      when(mockChannel.requestConsentInfoUpdate(any, any, any)).thenAnswer((
+        invocation,
+      ) {
         invocation.positionalArguments[2](formError);
       });
 
@@ -99,9 +104,10 @@ void main() {
       Completer<FormError> errorCompleter = Completer<FormError>();
 
       consentInfo.requestConsentInfoUpdate(
-          params,
-          () => successCompleter.complete(),
-          (error) => errorCompleter.complete(error));
+        params,
+        () => successCompleter.complete(),
+        (error) => errorCompleter.complete(error),
+      );
 
       FormError responseError = await errorCompleter.future;
       verify(mockChannel.requestConsentInfoUpdate(params, any, any));
@@ -121,10 +127,11 @@ void main() {
 
     test('getPrivacyOptionsRequirementStatus()', () async {
       when(mockChannel.getPrivacyOptionsRequirementStatus()).thenAnswer(
-          (_) => Future.value(PrivacyOptionsRequirementStatus.required));
+        (_) => Future.value(PrivacyOptionsRequirementStatus.required),
+      );
 
-      PrivacyOptionsRequirementStatus status =
-          await consentInfo.getPrivacyOptionsRequirementStatus();
+      PrivacyOptionsRequirementStatus status = await consentInfo
+          .getPrivacyOptionsRequirementStatus();
 
       verify(mockChannel.getPrivacyOptionsRequirementStatus());
       expect(status, PrivacyOptionsRequirementStatus.required);

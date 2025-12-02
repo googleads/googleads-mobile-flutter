@@ -92,7 +92,8 @@ class _RewardedInterstitialAdSnippets {
         onAdLoaded: (ad) {
           ServerSideVerificationOptions _options =
               ServerSideVerificationOptions(
-                  customData: 'SAMPLE_CUSTOM_DATA_STRING');
+                customData: 'SAMPLE_CUSTOM_DATA_STRING',
+              );
           ad.setServerSideOptions(_options);
           _rewardedInterstitialAd = ad;
         },
@@ -102,9 +103,9 @@ class _RewardedInterstitialAdSnippets {
     // [END validate_server_side_verification]
   }
 
-// ===================================================================
-// Ad Manager snippets
-// ===================================================================
+  // ===================================================================
+  // Ad Manager snippets
+  // ===================================================================
 
   void _loadAdManagerRewardedInterstitialAd() {
     // [START load_ad_ad_manager]
@@ -139,7 +140,8 @@ class _RewardedInterstitialAdSnippets {
         onAdLoaded: (ad) {
           ServerSideVerificationOptions _options =
               ServerSideVerificationOptions(
-                  customData: 'SAMPLE_CUSTOM_DATA_STRING');
+                customData: 'SAMPLE_CUSTOM_DATA_STRING',
+              );
           ad.setServerSideOptions(_options);
           _rewardedInterstitialAd = ad;
         },

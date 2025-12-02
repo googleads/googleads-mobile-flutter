@@ -91,7 +91,8 @@ class _RewardedAdSnippets {
         onAdLoaded: (ad) {
           ServerSideVerificationOptions _options =
               ServerSideVerificationOptions(
-                  customData: 'SAMPLE_CUSTOM_DATA_STRING');
+                customData: 'SAMPLE_CUSTOM_DATA_STRING',
+              );
           ad.setServerSideOptions(_options);
           _rewardedAd = ad;
         },
@@ -101,9 +102,9 @@ class _RewardedAdSnippets {
     // [END validate_server_side_verification]
   }
 
-// ===================================================================
-// Ad Manager snippets
-// ===================================================================
+  // ===================================================================
+  // Ad Manager snippets
+  // ===================================================================
 
   void _loadAdManagerRewardedAd() {
     // [START load_ad_ad_manager]
@@ -138,7 +139,8 @@ class _RewardedAdSnippets {
         onAdLoaded: (ad) {
           ServerSideVerificationOptions _options =
               ServerSideVerificationOptions(
-                  customData: 'SAMPLE_CUSTOM_DATA_STRING');
+                customData: 'SAMPLE_CUSTOM_DATA_STRING',
+              );
           ad.setServerSideOptions(_options);
           _rewardedAd = ad;
         },

@@ -69,8 +69,9 @@ void main() {
     test('dispose()', () async {
       ConsentFormImpl form = ConsentFormImpl(1);
 
-      when(mockChannel.disposeConsentForm(form))
-          .thenAnswer((realInvocation) => Future.value());
+      when(
+        mockChannel.disposeConsentForm(form),
+      ).thenAnswer((realInvocation) => Future.value());
 
       await form.dispose();
       verify(mockChannel.disposeConsentForm(form));

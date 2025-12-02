@@ -30,22 +30,24 @@ void main() {
 
     setUp(() async {
       log.clear();
-      instanceManager =
-          AdInstanceManager('plugins.flutter.io/google_mobile_ads');
+      instanceManager = AdInstanceManager(
+        'plugins.flutter.io/google_mobile_ads',
+      );
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(instanceManager.channel,
-              (MethodCall methodCall) async {
-        log.add(methodCall);
-        switch (methodCall.method) {
-          case 'loadAppOpenAd':
-          case 'showAdWithoutView':
-          case 'disposeAd':
-            return Future<void>.value();
-          default:
-            assert(false);
-            return null;
-        }
-      });
+          .setMockMethodCallHandler(instanceManager.channel, (
+            MethodCall methodCall,
+          ) async {
+            log.add(methodCall);
+            switch (methodCall.method) {
+              case 'loadAppOpenAd':
+              case 'showAdWithoutView':
+              case 'disposeAd':
+                return Future<void>.value();
+              default:
+                assert(false);
+                return null;
+            }
+          });
     });
 
     test('load show android', () async {
@@ -56,19 +58,23 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: request,
         adLoadCallback: AppOpenAdLoadCallback(
-            onAdLoaded: (ad) {
-              appOpenAd = ad;
-            },
-            onAdFailedToLoad: (error) {}),
+          onAdLoaded: (ad) {
+            appOpenAd = ad;
+          },
+          onAdFailedToLoad: (error) {},
+        ),
       );
 
       expect(log, <Matcher>[
-        isMethodCall('loadAppOpenAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': request,
-          'adManagerRequest': null,
-        }),
+        isMethodCall(
+          'loadAppOpenAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': request,
+            'adManagerRequest': null,
+          },
+        ),
       ]);
 
       // Simulate load callback
@@ -84,9 +90,10 @@ void main() {
       // Show the ad and verify method call.
       await appOpenAd!.show();
       expect(log, <Matcher>[
-        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
-          'adId': 0,
-        })
+        isMethodCall(
+          'showAdWithoutView',
+          arguments: <dynamic, dynamic>{'adId': 0},
+        ),
       ]);
 
       // Check that full screen events are passed correctly.
@@ -112,15 +119,25 @@ void main() {
       expect(await clickedCompleter.future, appOpenAd);
 
       await TestUtil.sendAdEvent(
-          0, 'onAdShowedFullScreenContent', instanceManager);
+        0,
+        'onAdShowedFullScreenContent',
+        instanceManager,
+      );
       expect(await showedCompleter.future, appOpenAd);
 
       await TestUtil.sendAdEvent(
-          0, 'onAdDismissedFullScreenContent', instanceManager);
+        0,
+        'onAdDismissedFullScreenContent',
+        instanceManager,
+      );
       expect(await dismissedCompleter.future, appOpenAd);
 
-      await TestUtil.sendAdEvent(0, 'onFailedToShowFullScreenContent',
-          instanceManager, {'error': AdError(1, 'domain', 'message')});
+      await TestUtil.sendAdEvent(
+        0,
+        'onFailedToShowFullScreenContent',
+        instanceManager,
+        {'error': AdError(1, 'domain', 'message')},
+      );
       expect(await failedToShowCompleter.future, appOpenAd);
 
       // Check paid event callback
@@ -135,7 +152,11 @@ void main() {
         'currencyCode': 'USD',
       };
       await TestUtil.sendAdEvent(
-          0, 'onPaidEvent', instanceManager, paidEventArgs);
+        0,
+        'onPaidEvent',
+        instanceManager,
+        paidEventArgs,
+      );
       List<dynamic> paidEventCallback = await paidEventCompleter.future;
       expect(paidEventCallback[0], appOpenAd);
       expect(paidEventCallback[1], 1.2345);
@@ -152,19 +173,23 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: request,
         adLoadCallback: AppOpenAdLoadCallback(
-            onAdLoaded: (ad) {
-              appOpenAd = ad;
-            },
-            onAdFailedToLoad: (error) {}),
+          onAdLoaded: (ad) {
+            appOpenAd = ad;
+          },
+          onAdFailedToLoad: (error) {},
+        ),
       );
 
       expect(log, <Matcher>[
-        isMethodCall('loadAppOpenAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': request,
-          'adManagerRequest': null,
-        }),
+        isMethodCall(
+          'loadAppOpenAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': request,
+            'adManagerRequest': null,
+          },
+        ),
       ]);
 
       // Simulate load callback
@@ -180,9 +205,10 @@ void main() {
       // Show the ad and verify method call.
       await appOpenAd!.show();
       expect(log, <Matcher>[
-        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
-          'adId': 0,
-        })
+        isMethodCall(
+          'showAdWithoutView',
+          arguments: <dynamic, dynamic>{'adId': 0},
+        ),
       ]);
 
       // Check that full screen events are passed correctly.
@@ -211,22 +237,32 @@ void main() {
       expect(await clickedCompleter.future, appOpenAd);
 
       await TestUtil.sendAdEvent(
-          0, 'adWillPresentFullScreenContent', instanceManager);
+        0,
+        'adWillPresentFullScreenContent',
+        instanceManager,
+      );
       expect(await showedCompleter.future, appOpenAd);
 
       await TestUtil.sendAdEvent(
-          0, 'adDidDismissFullScreenContent', instanceManager);
+        0,
+        'adDidDismissFullScreenContent',
+        instanceManager,
+      );
       expect(await dismissedCompleter.future, appOpenAd);
 
       await TestUtil.sendAdEvent(
-          0, 'adWillDismissFullScreenContent', instanceManager);
+        0,
+        'adWillDismissFullScreenContent',
+        instanceManager,
+      );
       expect(await dismissedCompleter.future, appOpenAd);
 
       await TestUtil.sendAdEvent(
-          0,
-          'didFailToPresentFullScreenContentWithError',
-          instanceManager,
-          {'error': AdError(1, 'domain', 'message')});
+        0,
+        'didFailToPresentFullScreenContentWithError',
+        instanceManager,
+        {'error': AdError(1, 'domain', 'message')},
+      );
       expect(await failedToShowCompleter.future, appOpenAd);
 
       // Check paid event callback
@@ -241,7 +277,11 @@ void main() {
         'currencyCode': 'USD',
       };
       await TestUtil.sendAdEvent(
-          0, 'onPaidEvent', instanceManager, paidEventArgs);
+        0,
+        'onPaidEvent',
+        instanceManager,
+        paidEventArgs,
+      );
       List<dynamic> paidEventCallback = await paidEventCompleter.future;
       expect(paidEventCallback[0], appOpenAd);
       expect(paidEventCallback[1], 1.2345);

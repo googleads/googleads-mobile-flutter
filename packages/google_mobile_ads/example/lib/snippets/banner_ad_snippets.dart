@@ -47,25 +47,27 @@ class _BannerAdSnippets extends State<_BannerAdWidget> {
       return;
     }
 
-    unawaited(BannerAd(
-      adUnitId: _adUnitId,
-      request: const AdManagerAdRequest(),
-      size: size,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          // Called when an ad is successfully received.
-          debugPrint('Ad was loaded.');
-          setState(() {
-            _bannerAd = ad as BannerAd;
-          });
-        },
-        onAdFailedToLoad: (ad, err) {
-          // Called when an ad request failed.
-          debugPrint('Ad failed to load with error: $err');
-          ad.dispose();
-        },
-      ),
-    ).load());
+    unawaited(
+      BannerAd(
+        adUnitId: _adUnitId,
+        request: const AdManagerAdRequest(),
+        size: size,
+        listener: BannerAdListener(
+          onAdLoaded: (ad) {
+            // Called when an ad is successfully received.
+            debugPrint('Ad was loaded.');
+            setState(() {
+              _bannerAd = ad as BannerAd;
+            });
+          },
+          onAdFailedToLoad: (ad, err) {
+            // Called when an ad request failed.
+            debugPrint('Ad failed to load with error: $err');
+            ad.dispose();
+          },
+        ),
+      ).load(),
+    );
   }
   // [END load_ad_ad_manager]
 

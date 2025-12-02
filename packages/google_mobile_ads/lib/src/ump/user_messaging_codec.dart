@@ -52,21 +52,28 @@ class UserMessagingCodec extends StandardMessageCodec {
     switch (type) {
       case _valueConsentRequestParameters:
         bool? tfuac = readValueOfType(buffer.getUint8(), buffer);
-        ConsentDebugSettings? debugSettings =
-            readValueOfType(buffer.getUint8(), buffer);
+        ConsentDebugSettings? debugSettings = readValueOfType(
+          buffer.getUint8(),
+          buffer,
+        );
         return ConsentRequestParameters(
-            tagForUnderAgeOfConsent: tfuac,
-            consentDebugSettings: debugSettings);
+          tagForUnderAgeOfConsent: tfuac,
+          consentDebugSettings: debugSettings,
+        );
       case _valueConsentDebugSettings:
         int? debugGeographyInt = readValueOfType(buffer.getUint8(), buffer);
         DebugGeography? debugGeography;
         if (debugGeographyInt != null) {
           debugGeography = DebugGeography.values[debugGeographyInt];
         }
-        List<String>? testIds =
-            readValueOfType(buffer.getUint8(), buffer)?.cast<String>();
+        List<String>? testIds = readValueOfType(
+          buffer.getUint8(),
+          buffer,
+        )?.cast<String>();
         return ConsentDebugSettings(
-            debugGeography: debugGeography, testIdentifiers: testIds);
+          debugGeography: debugGeography,
+          testIdentifiers: testIds,
+        );
       case _valueConsentForm:
         final int hashCode = readValueOfType(buffer.getUint8(), buffer);
         return ConsentFormImpl(hashCode);
