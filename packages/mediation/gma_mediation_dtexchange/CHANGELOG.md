@@ -1,5 +1,7 @@
 ## DT Exchange Flutter Mediation Adapter Changelog
 
+#### Version 1.3.1 (In progress)
+
 #### Version 1.3.0 (In progress)
 
 #### Version 1.2.0
