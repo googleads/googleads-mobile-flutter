@@ -3,7 +3,7 @@ version '6.0.0'
 
 buildscript {
     ext {
-        agp_version = '8.13.1'
+        agp_version = '8.3.0'
     }
     repositories {
         google()
@@ -25,14 +25,14 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdk 36
+    compileSdk 35
 
     if (project.android.hasProperty('namespace')) {
         namespace 'io.flutter.plugins.googlemobileads'
     }
 
     defaultConfig {
-        minSdk 24
+        minSdk 23
     }
     lintOptions {
         disable 'InvalidPackage'

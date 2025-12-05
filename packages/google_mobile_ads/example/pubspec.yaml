@@ -22,7 +22,7 @@ dependencies:
     sdk: flutter
   google_mobile_ads:
     path: ../
-  webview_flutter_android: ^4.10.9
+  webview_flutter_android: ^4.10.1
   webview_flutter: ^4.10.0
 
 dev_dependencies:
@@ -34,4 +34,4 @@ flutter:
   uses-material-design: true
 
 environment:
-  sdk: ">=3.9.0 <4.0.0"
+  sdk: ">=3.8.1 <4.0.0"
