@@ -1,5 +1,7 @@
 ## Mintegral Flutter Mediation Adapter Changelog
 
+#### Version 2.0.1 (In progress)
+
 #### Version 2.0.0
 - Supports [Mintegral Android adapter version 17.0.21.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/mintegral/CHANGELOG.md#version-170210).
 - Supports [Mintegral iOS adapter version 8.0.2.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Mintegral/CHANGELOG.md#version-8020).
