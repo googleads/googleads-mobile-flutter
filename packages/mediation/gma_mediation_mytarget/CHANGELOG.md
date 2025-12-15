@@ -1,5 +1,7 @@
 ## myTarget Flutter Mediation Adapter Changelog
 
+#### Version 1.7.0 (In progress)
+
 #### Version 1.6.0
 * Supports [myTarget Android adapter version 5.27.4.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/mytarget/CHANGELOG.md#version-52740).
 * Supports [myTarget iOS adapter version 5.37.1.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/MyTarget/CHANGELOG.md#version-53710).
