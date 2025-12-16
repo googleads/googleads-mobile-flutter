@@ -41,7 +41,8 @@ void main() {
 
     test('encode and decode ConsentDebugSettings only geography', () async {
       ConsentDebugSettings debugSettings = ConsentDebugSettings(
-          debugGeography: DebugGeography.debugGeographyDisabled);
+        debugGeography: DebugGeography.debugGeographyDisabled,
+      );
       ByteData? byteData = codec.encodeMessage(debugSettings);
       ConsentDebugSettings decodedDebugSettings = codec.decodeMessage(byteData);
       expect(debugSettings, decodedDebugSettings);
@@ -49,7 +50,8 @@ void main() {
 
     test('encode and decode ConsentDebugSettings only testIds', () async {
       ConsentDebugSettings debugSettings = ConsentDebugSettings(
-          testIdentifiers: ['test-identifier1', 'test-identifier2']);
+        testIdentifiers: ['test-identifier1', 'test-identifier2'],
+      );
       ByteData? byteData = codec.encodeMessage(debugSettings);
       ConsentDebugSettings decodedDebugSettings = codec.decodeMessage(byteData);
       expect(debugSettings, equals(decodedDebugSettings));
@@ -57,8 +59,9 @@ void main() {
 
     test('encode and decode ConsentDebugSettings testIds and geo', () async {
       ConsentDebugSettings debugSettings = ConsentDebugSettings(
-          debugGeography: DebugGeography.debugGeographyEea,
-          testIdentifiers: ['test-identifier1', 'test-identifier2']);
+        debugGeography: DebugGeography.debugGeographyEea,
+        testIdentifiers: ['test-identifier1', 'test-identifier2'],
+      );
       ByteData? byteData = codec.encodeMessage(debugSettings);
       ConsentDebugSettings decodedDebugSettings = codec.decodeMessage(byteData);
       expect(debugSettings, equals(decodedDebugSettings));

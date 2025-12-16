@@ -30,23 +30,25 @@ void main() {
 
     setUp(() async {
       log.clear();
-      instanceManager =
-          AdInstanceManager('plugins.flutter.io/google_mobile_ads');
+      instanceManager = AdInstanceManager(
+        'plugins.flutter.io/google_mobile_ads',
+      );
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(instanceManager.channel,
-              (MethodCall methodCall) async {
-        log.add(methodCall);
-        switch (methodCall.method) {
-          case 'loadRewardedInterstitialAd':
-          case 'showAdWithoutView':
-          case 'disposeAd':
-          case 'setServerSideVerificationOptions':
-            return Future<void>.value();
-          default:
-            assert(false);
-            return null;
-        }
-      });
+          .setMockMethodCallHandler(instanceManager.channel, (
+            MethodCall methodCall,
+          ) async {
+            log.add(methodCall);
+            switch (methodCall.method) {
+              case 'loadRewardedInterstitialAd':
+              case 'showAdWithoutView':
+              case 'disposeAd':
+              case 'setServerSideVerificationOptions':
+                return Future<void>.value();
+              default:
+                assert(false);
+                return null;
+            }
+          });
     });
 
     test('load show rewarded interstitial android', () async {
@@ -57,10 +59,11 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: request,
         rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-            onAdLoaded: (ad) {
-              rewardedInterstitial = ad;
-            },
-            onAdFailedToLoad: (error) => null),
+          onAdLoaded: (ad) {
+            rewardedInterstitial = ad;
+          },
+          onAdFailedToLoad: (error) => null,
+        ),
       );
 
       RewardedInterstitialAd createdAd =
@@ -68,24 +71,29 @@ void main() {
       (createdAd).rewardedInterstitialAdLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
-        isMethodCall('loadRewardedInterstitialAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': request,
-          'adManagerRequest': null,
-        }),
+        isMethodCall(
+          'loadRewardedInterstitialAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': request,
+            'adManagerRequest': null,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
       expect(rewardedInterstitial, createdAd);
 
       log.clear();
-      await rewardedInterstitial!
-          .show(onUserEarnedReward: (ad, reward) => null);
+      await rewardedInterstitial!.show(
+        onUserEarnedReward: (ad, reward) => null,
+      );
       expect(log, <Matcher>[
-        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
-          'adId': 0,
-        })
+        isMethodCall(
+          'showAdWithoutView',
+          arguments: <dynamic, dynamic>{'adId': 0},
+        ),
       ]);
 
       // Check that full screen events are passed correctly.
@@ -102,30 +110,41 @@ void main() {
 
       rewardedInterstitial!.fullScreenContentCallback =
           FullScreenContentCallback(
-        onAdImpression: (ad) => impressionCompleter.complete(ad),
-        onAdShowedFullScreenContent: (ad) => showedCompleter.complete(ad),
-        onAdFailedToShowFullScreenContent: (ad, error) =>
-            failedToShowCompleter.complete(ad),
-        onAdDismissedFullScreenContent: (ad) => dismissedCompleter.complete(ad),
-        onAdClicked: (ad) => clickedCompleter.complete(ad),
-      );
+            onAdImpression: (ad) => impressionCompleter.complete(ad),
+            onAdShowedFullScreenContent: (ad) => showedCompleter.complete(ad),
+            onAdFailedToShowFullScreenContent: (ad, error) =>
+                failedToShowCompleter.complete(ad),
+            onAdDismissedFullScreenContent: (ad) =>
+                dismissedCompleter.complete(ad),
+            onAdClicked: (ad) => clickedCompleter.complete(ad),
+          );
 
       await TestUtil.sendAdEvent(0, 'onAdImpression', instanceManager);
       expect(await impressionCompleter.future, rewardedInterstitial);
 
       await TestUtil.sendAdEvent(
-          0, 'onAdShowedFullScreenContent', instanceManager);
+        0,
+        'onAdShowedFullScreenContent',
+        instanceManager,
+      );
       expect(await showedCompleter.future, rewardedInterstitial);
 
       await TestUtil.sendAdEvent(
-          0, 'onAdDismissedFullScreenContent', instanceManager);
+        0,
+        'onAdDismissedFullScreenContent',
+        instanceManager,
+      );
       expect(await dismissedCompleter.future, rewardedInterstitial);
 
       await TestUtil.sendAdEvent(0, 'onAdClicked', instanceManager);
       expect(await clickedCompleter.future, rewardedInterstitial);
 
-      await TestUtil.sendAdEvent(0, 'onFailedToShowFullScreenContent',
-          instanceManager, {'error': AdError(1, 'domain', 'message')});
+      await TestUtil.sendAdEvent(
+        0,
+        'onFailedToShowFullScreenContent',
+        instanceManager,
+        {'error': AdError(1, 'domain', 'message')},
+      );
       expect(await failedToShowCompleter.future, rewardedInterstitial);
 
       // Check paid event callback
@@ -140,7 +159,11 @@ void main() {
         'currencyCode': 'USD',
       };
       await TestUtil.sendAdEvent(
-          0, 'onPaidEvent', instanceManager, paidEventArgs);
+        0,
+        'onPaidEvent',
+        instanceManager,
+        paidEventArgs,
+      );
       List<dynamic> paidEventCallback = await paidEventCompleter.future;
       expect(paidEventCallback[0], rewardedInterstitial);
       expect(paidEventCallback[1], 1.2345);
@@ -156,10 +179,11 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: request,
         rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-            onAdLoaded: (ad) {
-              rewardedInterstitial = ad;
-            },
-            onAdFailedToLoad: (error) => null),
+          onAdLoaded: (ad) {
+            rewardedInterstitial = ad;
+          },
+          onAdFailedToLoad: (error) => null,
+        ),
       );
 
       RewardedInterstitialAd createdAd =
@@ -167,24 +191,29 @@ void main() {
       (createdAd).rewardedInterstitialAdLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
-        isMethodCall('loadRewardedInterstitialAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': request,
-          'adManagerRequest': null,
-        }),
+        isMethodCall(
+          'loadRewardedInterstitialAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': request,
+            'adManagerRequest': null,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
       expect(rewardedInterstitial, createdAd);
 
       log.clear();
-      await rewardedInterstitial!
-          .show(onUserEarnedReward: (ad, reward) => null);
+      await rewardedInterstitial!.show(
+        onUserEarnedReward: (ad, reward) => null,
+      );
       expect(log, <Matcher>[
-        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
-          'adId': 0,
-        })
+        isMethodCall(
+          'showAdWithoutView',
+          arguments: <dynamic, dynamic>{'adId': 0},
+        ),
       ]);
 
       // Check that full screen events are passed correctly.
@@ -203,39 +232,50 @@ void main() {
 
       rewardedInterstitial!.fullScreenContentCallback =
           FullScreenContentCallback(
-        onAdImpression: (ad) => impressionCompleter.complete(ad),
-        onAdShowedFullScreenContent: (ad) => showedCompleter.complete(ad),
-        onAdFailedToShowFullScreenContent: (ad, error) =>
-            failedToShowCompleter.complete(ad),
-        onAdDismissedFullScreenContent: (ad) => dismissedCompleter.complete(ad),
-        onAdClicked: (ad) => clickedCompleter.complete(ad),
-        onAdWillDismissFullScreenContent: (ad) =>
-            willDismissCompleter.complete(ad),
-      );
+            onAdImpression: (ad) => impressionCompleter.complete(ad),
+            onAdShowedFullScreenContent: (ad) => showedCompleter.complete(ad),
+            onAdFailedToShowFullScreenContent: (ad, error) =>
+                failedToShowCompleter.complete(ad),
+            onAdDismissedFullScreenContent: (ad) =>
+                dismissedCompleter.complete(ad),
+            onAdClicked: (ad) => clickedCompleter.complete(ad),
+            onAdWillDismissFullScreenContent: (ad) =>
+                willDismissCompleter.complete(ad),
+          );
 
       await TestUtil.sendAdEvent(0, 'adDidRecordImpression', instanceManager);
       expect(await impressionCompleter.future, rewardedInterstitial);
 
       await TestUtil.sendAdEvent(
-          0, 'adWillPresentFullScreenContent', instanceManager);
+        0,
+        'adWillPresentFullScreenContent',
+        instanceManager,
+      );
       expect(await showedCompleter.future, rewardedInterstitial);
 
       await TestUtil.sendAdEvent(
-          0, 'adDidDismissFullScreenContent', instanceManager);
+        0,
+        'adDidDismissFullScreenContent',
+        instanceManager,
+      );
       expect(await dismissedCompleter.future, rewardedInterstitial);
 
       await TestUtil.sendAdEvent(
-          0, 'adWillDismissFullScreenContent', instanceManager);
+        0,
+        'adWillDismissFullScreenContent',
+        instanceManager,
+      );
       expect(await dismissedCompleter.future, rewardedInterstitial);
 
       await TestUtil.sendAdEvent(0, 'adDidRecordClick', instanceManager);
       expect(await clickedCompleter.future, rewardedInterstitial);
 
       await TestUtil.sendAdEvent(
-          0,
-          'didFailToPresentFullScreenContentWithError',
-          instanceManager,
-          {'error': AdError(1, 'domain', 'message')});
+        0,
+        'didFailToPresentFullScreenContentWithError',
+        instanceManager,
+        {'error': AdError(1, 'domain', 'message')},
+      );
       expect(await failedToShowCompleter.future, rewardedInterstitial);
 
       // Check paid event callback
@@ -250,7 +290,11 @@ void main() {
         'currencyCode': 'USD',
       };
       await TestUtil.sendAdEvent(
-          0, 'onPaidEvent', instanceManager, paidEventArgs);
+        0,
+        'onPaidEvent',
+        instanceManager,
+        paidEventArgs,
+      );
       List<dynamic> paidEventCallback = await paidEventCompleter.future;
       expect(paidEventCallback[0], rewardedInterstitial);
       expect(paidEventCallback[1], 1.2345);
@@ -265,10 +309,11 @@ void main() {
         adUnitId: 'test-ad-unit',
         adManagerRequest: request,
         rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-            onAdLoaded: (ad) {
-              rewardedInterstitial = ad;
-            },
-            onAdFailedToLoad: (error) => null),
+          onAdLoaded: (ad) {
+            rewardedInterstitial = ad;
+          },
+          onAdFailedToLoad: (error) => null,
+        ),
       );
 
       RewardedInterstitialAd createdAd =
@@ -276,23 +321,28 @@ void main() {
       (createdAd).rewardedInterstitialAdLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
-        isMethodCall('loadRewardedInterstitialAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': null,
-          'adManagerRequest': request,
-        }),
+        isMethodCall(
+          'loadRewardedInterstitialAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': null,
+            'adManagerRequest': request,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
 
       log.clear();
-      await rewardedInterstitial!
-          .show(onUserEarnedReward: (ad, reward) => null);
+      await rewardedInterstitial!.show(
+        onUserEarnedReward: (ad, reward) => null,
+      );
       expect(log, <Matcher>[
-        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
-          'adId': 0,
-        })
+        isMethodCall(
+          'showAdWithoutView',
+          arguments: <dynamic, dynamic>{'adId': 0},
+        ),
       ]);
     });
 
@@ -303,17 +353,21 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: request,
         rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-            onAdLoaded: (ad) => null,
-            onAdFailedToLoad: (error) => resultsCompleter.complete(error)),
+          onAdLoaded: (ad) => null,
+          onAdFailedToLoad: (error) => resultsCompleter.complete(error),
+        ),
       );
 
       expect(log, <Matcher>[
-        isMethodCall('loadRewardedInterstitialAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': request,
-          'adManagerRequest': null,
-        })
+        isMethodCall(
+          'loadRewardedInterstitialAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': request,
+            'adManagerRequest': null,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -346,11 +400,15 @@ void main() {
         'loadAdError': LoadAdError(1, 'domain', 'message', responseInfo),
       });
 
-      final ByteData data =
-          instanceManager.channel.codec.encodeMethodCall(methodCall);
+      final ByteData data = instanceManager.channel.codec.encodeMethodCall(
+        methodCall,
+      );
       await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .handlePlatformMessage(
-              'plugins.flutter.io/google_mobile_ads', data, (data) {});
+            'plugins.flutter.io/google_mobile_ads',
+            data,
+            (data) {},
+          );
 
       // The ad reference should be freed when load failure occurs.
       expect(instanceManager.adFor(0), isNull);
@@ -361,8 +419,10 @@ void main() {
       expect(result.domain, 'domain');
       expect(result.message, 'message');
       expect(result.responseInfo!.responseId, responseInfo.responseId);
-      expect(result.responseInfo!.mediationAdapterClassName,
-          responseInfo.mediationAdapterClassName);
+      expect(
+        result.responseInfo!.mediationAdapterClassName,
+        responseInfo.mediationAdapterClassName,
+      );
       expect(result.responseInfo!.responseExtras, responseInfo.responseExtras);
       List<AdapterResponseInfo> responses =
           result.responseInfo!.adapterResponses!;
@@ -384,10 +444,11 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: AdRequest(),
         rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-            onAdLoaded: (ad) {
-              rewardedInterstitial = ad;
-            },
-            onAdFailedToLoad: (error) => null),
+          onAdLoaded: (ad) {
+            rewardedInterstitial = ad;
+          },
+          onAdFailedToLoad: (error) => null,
+        ),
       );
 
       RewardedInterstitialAd createdAd =
@@ -395,8 +456,9 @@ void main() {
       createdAd.rewardedInterstitialAdLoadCallback.onAdLoaded(createdAd);
       // Reward callback is now set when you call show.
       await rewardedInterstitial!.show(
-          onUserEarnedReward: (ad, item) =>
-              resultCompleter.complete(<Object>[ad, item]));
+        onUserEarnedReward: (ad, item) =>
+            resultCompleter.complete(<Object>[ad, item]),
+      );
 
       final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
         'adId': 0,
@@ -404,11 +466,15 @@ void main() {
         'rewardItem': RewardItem(1, 'one'),
       });
 
-      final ByteData data =
-          instanceManager.channel.codec.encodeMethodCall(methodCall);
+      final ByteData data = instanceManager.channel.codec.encodeMethodCall(
+        methodCall,
+      );
       await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .handlePlatformMessage(
-              'plugins.flutter.io/google_mobile_ads', data, (data) {});
+            'plugins.flutter.io/google_mobile_ads',
+            data,
+            (data) {},
+          );
 
       final List<dynamic> result = await resultCompleter.future;
       expect(result[0], rewardedInterstitial!);
@@ -422,10 +488,11 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: AdRequest(),
         rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-            onAdLoaded: (ad) {
-              adLoadCompleter.complete(ad);
-            },
-            onAdFailedToLoad: (_) => null),
+          onAdLoaded: (ad) {
+            adLoadCompleter.complete(ad);
+          },
+          onAdFailedToLoad: (_) => null,
+        ),
       );
 
       await TestUtil.sendAdEvent(0, 'onAdLoaded', instanceManager);
@@ -433,15 +500,19 @@ void main() {
       final ad = await adLoadCompleter.future;
 
       log.clear();
-      final ssv =
-          ServerSideVerificationOptions(userId: 'id', customData: 'data');
+      final ssv = ServerSideVerificationOptions(
+        userId: 'id',
+        customData: 'data',
+      );
       await ad.setServerSideOptions(ssv);
       expect(log, <Matcher>[
-        isMethodCall('setServerSideVerificationOptions',
-            arguments: <dynamic, dynamic>{
-              'adId': 0,
-              'serverSideVerificationOptions': ssv,
-            }),
+        isMethodCall(
+          'setServerSideVerificationOptions',
+          arguments: <dynamic, dynamic>{
+            'adId': 0,
+            'serverSideVerificationOptions': ssv,
+          },
+        ),
       ]);
     });
   });

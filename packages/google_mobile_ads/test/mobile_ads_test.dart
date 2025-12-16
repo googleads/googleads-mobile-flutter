@@ -40,57 +40,62 @@ void main() {
     });
 
     setUp(() async {
-      instanceManager =
-          AdInstanceManager('plugins.flutter.io/google_mobile_ads');
+      instanceManager = AdInstanceManager(
+        'plugins.flutter.io/google_mobile_ads',
+      );
       log.clear();
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
-              MethodChannel(
-                'plugins.flutter.io/google_mobile_ads',
-                StandardMethodCodec(AdMessageCodec()),
-              ), (MethodCall methodCall) async {
-        log.add(methodCall);
-        switch (methodCall.method) {
-          case 'MobileAds#initialize':
-            return InitializationStatus(<String, AdapterStatus>{
-              'aName': AdapterStatus(
-                AdapterInitializationState.notReady,
-                'desc',
-                0,
-              ),
-            });
-          case '_init':
-          case 'MobileAds#setSameAppKeyEnabled':
-          case 'MobileAds#setAppMuted':
-          case 'MobileAds#setAppVolume':
-          case 'MobileAds#disableSDKCrashReporting':
-          case 'MobileAds#disableMediationInitialization':
-            return null;
-          case 'MobileAds#getVersionString':
-            return Future<String>.value('Test-SDK-Version');
-          case 'MobileAds#updateRequestConfiguration':
-            return null;
-          case 'MobileAds#registerWebView':
-            return null;
-          case 'MobileAds#getRequestConfiguration':
-            return RequestConfiguration(
-              maxAdContentRating: MaxAdContentRating.ma,
-              tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
-              tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.no,
-              testDeviceIds: <String>['test-device-id'],
-            );
-          case 'AdSize#getAnchoredAdaptiveBannerAdSize':
-            return null;
-          default:
-            assert(false);
-            return null;
-        }
-      });
+            MethodChannel(
+              'plugins.flutter.io/google_mobile_ads',
+              StandardMethodCodec(AdMessageCodec()),
+            ),
+            (MethodCall methodCall) async {
+              log.add(methodCall);
+              switch (methodCall.method) {
+                case 'MobileAds#initialize':
+                  return InitializationStatus(<String, AdapterStatus>{
+                    'aName': AdapterStatus(
+                      AdapterInitializationState.notReady,
+                      'desc',
+                      0,
+                    ),
+                  });
+                case '_init':
+                case 'MobileAds#setSameAppKeyEnabled':
+                case 'MobileAds#setAppMuted':
+                case 'MobileAds#setAppVolume':
+                case 'MobileAds#disableSDKCrashReporting':
+                case 'MobileAds#disableMediationInitialization':
+                  return null;
+                case 'MobileAds#getVersionString':
+                  return Future<String>.value('Test-SDK-Version');
+                case 'MobileAds#updateRequestConfiguration':
+                  return null;
+                case 'MobileAds#registerWebView':
+                  return null;
+                case 'MobileAds#getRequestConfiguration':
+                  return RequestConfiguration(
+                    maxAdContentRating: MaxAdContentRating.ma,
+                    tagForChildDirectedTreatment:
+                        TagForChildDirectedTreatment.yes,
+                    tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.no,
+                    testDeviceIds: <String>['test-device-id'],
+                  );
+                case 'AdSize#getAnchoredAdaptiveBannerAdSize':
+                  return null;
+                default:
+                  assert(false);
+                  return null;
+              }
+            },
+          );
     });
 
     test('encode/decode $AdapterInitializationState', () {
-      final ByteData byteData =
-          codec.encodeMessage(AdapterInitializationState.ready)!;
+      final ByteData byteData = codec.encodeMessage(
+        AdapterInitializationState.ready,
+      )!;
 
       final AdapterInitializationState result = codec.decodeMessage(byteData);
       expect(result, AdapterInitializationState.ready);
@@ -98,11 +103,9 @@ void main() {
 
     test('encode/decode $AdapterStatus', () {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
-      final ByteData byteData = codec.encodeMessage(AdapterStatus(
-        AdapterInitializationState.notReady,
-        'describe',
-        23,
-      ))!;
+      final ByteData byteData = codec.encodeMessage(
+        AdapterStatus(AdapterInitializationState.notReady, 'describe', 23),
+      )!;
 
       AdapterStatus result = codec.decodeMessage(byteData);
       expect(result.state, AdapterInitializationState.notReady);
@@ -132,14 +135,15 @@ void main() {
     });
 
     test('encode/decode $InitializationStatus', () {
-      final ByteData byteData =
-          codec.encodeMessage(InitializationStatus(<String, AdapterStatus>{
-        'adMediation': AdapterStatus(
-          AdapterInitializationState.ready,
-          'aDescription',
-          0,
-        ),
-      }))!;
+      final ByteData byteData = codec.encodeMessage(
+        InitializationStatus(<String, AdapterStatus>{
+          'adMediation': AdapterStatus(
+            AdapterInitializationState.ready,
+            'aDescription',
+            0,
+          ),
+        }),
+      )!;
 
       final InitializationStatus result = codec.decodeMessage(byteData);
       expect(result.adapterStatuses, hasLength(1));
@@ -154,7 +158,7 @@ void main() {
 
       expect(log, <Matcher>[
         isMethodCall('_init', arguments: null),
-        isMethodCall('MobileAds#initialize', arguments: null)
+        isMethodCall('MobileAds#initialize', arguments: null),
       ]);
 
       expect(result.adapterStatuses, hasLength(1));
@@ -167,8 +171,9 @@ void main() {
     test('$MobileAds.registerWebView', () async {
       instanceManager = MockAdInstanceManager();
       final webView = MockWebViewController();
-      when(instanceManager.registerWebView(webView))
-          .thenAnswer((realInvocation) => Future.value());
+      when(
+        instanceManager.registerWebView(webView),
+      ).thenAnswer((realInvocation) => Future.value());
       await MobileAds.instance.registerWebView(webView);
 
       verify(instanceManager.registerWebView(webView));
@@ -179,13 +184,14 @@ void main() {
       final mockWebViewControllerUtil = MockWebViewControllerUtil();
       when(mockWebViewControllerUtil.webViewIdentifier(any)).thenReturn(1);
       instanceManager = AdInstanceManager(
-          'plugins.flutter.io/google_mobile_ads',
-          webViewControllerUtil: mockWebViewControllerUtil);
+        'plugins.flutter.io/google_mobile_ads',
+        webViewControllerUtil: mockWebViewControllerUtil,
+      );
       final webView = MockWebViewController();
       await MobileAds.instance.registerWebView(webView);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#registerWebView', arguments: {'webViewId': 1})
+        isMethodCall('MobileAds#registerWebView', arguments: {'webViewId': 1}),
       ]);
     });
 
@@ -194,25 +200,28 @@ void main() {
       final mockWebViewControllerUtil = MockWebViewControllerUtil();
       when(mockWebViewControllerUtil.webViewIdentifier(any)).thenReturn(1);
       instanceManager = AdInstanceManager(
-          'plugins.flutter.io/google_mobile_ads',
-          webViewControllerUtil: mockWebViewControllerUtil);
+        'plugins.flutter.io/google_mobile_ads',
+        webViewControllerUtil: mockWebViewControllerUtil,
+      );
       final webView = MockWebViewController();
       await MobileAds.instance.registerWebView(webView);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#registerWebView', arguments: {'webViewId': 1})
+        isMethodCall('MobileAds#registerWebView', arguments: {'webViewId': 1}),
       ]);
     });
 
     test('$MobileAds.openAdInspector success', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
-              MethodChannel(
-                'plugins.flutter.io/google_mobile_ads',
-                StandardMethodCodec(AdMessageCodec()),
-              ), (MethodCall methodCall) async {
-        return null;
-      });
+            MethodChannel(
+              'plugins.flutter.io/google_mobile_ads',
+              StandardMethodCodec(AdMessageCodec()),
+            ),
+            (MethodCall methodCall) async {
+              return null;
+            },
+          );
 
       Completer<AdInspectorError?> completer = Completer<AdInspectorError?>();
       MobileAds.instance.openAdInspector((error) {
@@ -226,13 +235,18 @@ void main() {
     test('$MobileAds.openAdInspector error', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
-              MethodChannel(
-                'plugins.flutter.io/google_mobile_ads',
-                StandardMethodCodec(AdMessageCodec()),
-              ), (MethodCall methodCall) async {
-        throw PlatformException(
-            code: '1', details: 'details', message: 'message');
-      });
+            MethodChannel(
+              'plugins.flutter.io/google_mobile_ads',
+              StandardMethodCodec(AdMessageCodec()),
+            ),
+            (MethodCall methodCall) async {
+              throw PlatformException(
+                code: '1',
+                details: 'details',
+                message: 'message',
+              );
+            },
+          );
 
       Completer<AdInspectorError?> completer = Completer<AdInspectorError?>();
       MobileAds.instance.openAdInspector((error) {
@@ -251,17 +265,23 @@ void main() {
       await MobileAds.instance.setSameAppKeyEnabled(true);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setSameAppKeyEnabled',
-            arguments: {'isEnabled': true})
+        isMethodCall(
+          'MobileAds#setSameAppKeyEnabled',
+          arguments: {'isEnabled': true},
+        ),
       ]);
 
       await MobileAds.instance.setSameAppKeyEnabled(false);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setSameAppKeyEnabled',
-            arguments: {'isEnabled': true}),
-        isMethodCall('MobileAds#setSameAppKeyEnabled',
-            arguments: {'isEnabled': false})
+        isMethodCall(
+          'MobileAds#setSameAppKeyEnabled',
+          arguments: {'isEnabled': true},
+        ),
+        isMethodCall(
+          'MobileAds#setSameAppKeyEnabled',
+          arguments: {'isEnabled': false},
+        ),
       ]);
     });
 
@@ -277,8 +297,9 @@ void main() {
       expect(result.shouldReturnUrlsForImageAssets, null);
       expect(result.videoOptions, null);
 
-      byteData =
-          codec.encodeMessage(NativeAdOptions(videoOptions: VideoOptions()))!;
+      byteData = codec.encodeMessage(
+        NativeAdOptions(videoOptions: VideoOptions()),
+      )!;
       result = codec.decodeMessage(byteData);
       expect(result.mediaAspectRatio, null);
       expect(result.adChoicesPlacement, null);
@@ -292,16 +313,17 @@ void main() {
 
     test('encode/decode native ad options', () {
       NativeAdOptions nativeAdOptions = NativeAdOptions(
-          adChoicesPlacement: AdChoicesPlacement.topRightCorner,
-          mediaAspectRatio: MediaAspectRatio.unknown,
-          videoOptions: VideoOptions(
-            clickToExpandRequested: false,
-            customControlsRequested: false,
-            startMuted: false,
-          ),
-          requestCustomMuteThisAd: false,
-          shouldRequestMultipleImages: false,
-          shouldReturnUrlsForImageAssets: false);
+        adChoicesPlacement: AdChoicesPlacement.topRightCorner,
+        mediaAspectRatio: MediaAspectRatio.unknown,
+        videoOptions: VideoOptions(
+          clickToExpandRequested: false,
+          customControlsRequested: false,
+          startMuted: false,
+        ),
+        requestCustomMuteThisAd: false,
+        shouldRequestMultipleImages: false,
+        shouldReturnUrlsForImageAssets: false,
+      );
 
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       ByteData byteData = codec.encodeMessage(nativeAdOptions)!;
@@ -317,16 +339,17 @@ void main() {
       expect(result.videoOptions!.clickToExpandRequested, false);
 
       nativeAdOptions = NativeAdOptions(
-          adChoicesPlacement: AdChoicesPlacement.bottomLeftCorner,
-          mediaAspectRatio: MediaAspectRatio.landscape,
-          videoOptions: VideoOptions(
-            clickToExpandRequested: true,
-            customControlsRequested: true,
-            startMuted: true,
-          ),
-          requestCustomMuteThisAd: true,
-          shouldRequestMultipleImages: true,
-          shouldReturnUrlsForImageAssets: true);
+        adChoicesPlacement: AdChoicesPlacement.bottomLeftCorner,
+        mediaAspectRatio: MediaAspectRatio.landscape,
+        videoOptions: VideoOptions(
+          clickToExpandRequested: true,
+          customControlsRequested: true,
+          startMuted: true,
+        ),
+        requestCustomMuteThisAd: true,
+        shouldRequestMultipleImages: true,
+        shouldReturnUrlsForImageAssets: true,
+      );
 
       byteData = codec.encodeMessage(nativeAdOptions)!;
       result = codec.decodeMessage(byteData);
@@ -345,14 +368,14 @@ void main() {
       await MobileAds.instance.setAppMuted(true);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setAppMuted', arguments: {'muted': true})
+        isMethodCall('MobileAds#setAppMuted', arguments: {'muted': true}),
       ]);
 
       await MobileAds.instance.setAppMuted(false);
 
       expect(log, <Matcher>[
         isMethodCall('MobileAds#setAppMuted', arguments: {'muted': true}),
-        isMethodCall('MobileAds#setAppMuted', arguments: {'muted': false})
+        isMethodCall('MobileAds#setAppMuted', arguments: {'muted': false}),
       ]);
     });
 
@@ -360,7 +383,7 @@ void main() {
       await MobileAds.instance.setAppVolume(1.0);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setAppVolume', arguments: {'volume': 1.0})
+        isMethodCall('MobileAds#setAppVolume', arguments: {'volume': 1.0}),
       ]);
     });
 
@@ -369,7 +392,7 @@ void main() {
       await MobileAds.instance.disableSDKCrashReporting();
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#disableSDKCrashReporting', arguments: null)
+        isMethodCall('MobileAds#disableSDKCrashReporting', arguments: null),
       ]);
     });
 
@@ -377,8 +400,10 @@ void main() {
       await MobileAds.instance.disableMediationInitialization();
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#disableMediationInitialization',
-            arguments: null)
+        isMethodCall(
+          'MobileAds#disableMediationInitialization',
+          arguments: null,
+        ),
       ]);
     });
 
@@ -386,7 +411,7 @@ void main() {
       await MobileAds.instance.getVersionString();
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#getVersionString', arguments: null)
+        isMethodCall('MobileAds#getVersionString', arguments: null),
       ]);
     });
 
@@ -394,42 +419,56 @@ void main() {
       await AdSize.getAnchoredAdaptiveBannerAdSize(Orientation.portrait, 23);
 
       expect(log, <Matcher>[
-        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
-            arguments: {'orientation': 'portrait', 'width': 23})
+        isMethodCall(
+          'AdSize#getAnchoredAdaptiveBannerAdSize',
+          arguments: {'orientation': 'portrait', 'width': 23},
+        ),
       ]);
 
       await AdSize.getAnchoredAdaptiveBannerAdSize(Orientation.landscape, 34);
 
       expect(log, <Matcher>[
-        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
-            arguments: {'orientation': 'portrait', 'width': 23}),
-        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
-            arguments: {'orientation': 'landscape', 'width': 34})
+        isMethodCall(
+          'AdSize#getAnchoredAdaptiveBannerAdSize',
+          arguments: {'orientation': 'portrait', 'width': 23},
+        ),
+        isMethodCall(
+          'AdSize#getAnchoredAdaptiveBannerAdSize',
+          arguments: {'orientation': 'landscape', 'width': 34},
+        ),
       ]);
 
       await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(45);
 
       expect(log, <Matcher>[
-        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
-            arguments: {'orientation': 'portrait', 'width': 23}),
-        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
-            arguments: {'orientation': 'landscape', 'width': 34}),
-        isMethodCall('AdSize#getAnchoredAdaptiveBannerAdSize',
-            arguments: {'width': 45})
+        isMethodCall(
+          'AdSize#getAnchoredAdaptiveBannerAdSize',
+          arguments: {'orientation': 'portrait', 'width': 23},
+        ),
+        isMethodCall(
+          'AdSize#getAnchoredAdaptiveBannerAdSize',
+          arguments: {'orientation': 'landscape', 'width': 34},
+        ),
+        isMethodCall(
+          'AdSize#getAnchoredAdaptiveBannerAdSize',
+          arguments: {'width': 45},
+        ),
       ]);
     });
 
     test('encode/decode $MobileAds.getRequestConfiguration', () async {
-      RequestConfiguration requestConfig =
-          await MobileAds.instance.getRequestConfiguration();
+      RequestConfiguration requestConfig = await MobileAds.instance
+          .getRequestConfiguration();
 
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       ByteData byteData = codec.encodeMessage(requestConfig)!;
       RequestConfiguration result = codec.decodeMessage(byteData);
 
       expect(result.maxAdContentRating, MaxAdContentRating.ma);
-      expect(result.tagForChildDirectedTreatment,
-          TagForChildDirectedTreatment.yes);
+      expect(
+        result.tagForChildDirectedTreatment,
+        TagForChildDirectedTreatment.yes,
+      );
       expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
       expect(result.testDeviceIds, ['test-device-id']);
 
@@ -438,8 +477,10 @@ void main() {
       result = codec.decodeMessage(byteData);
 
       expect(result.maxAdContentRating, MaxAdContentRating.ma);
-      expect(result.tagForChildDirectedTreatment,
-          TagForChildDirectedTreatment.yes);
+      expect(
+        result.tagForChildDirectedTreatment,
+        TagForChildDirectedTreatment.yes,
+      );
       expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
       expect(result.testDeviceIds, ['test-device-id']);
     });
@@ -455,39 +496,49 @@ void main() {
       await MobileAds.instance.updateRequestConfiguration(requestConfiguration);
 
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      RequestConfiguration result =
-          await MobileAds.instance.getRequestConfiguration();
+      RequestConfiguration result = await MobileAds.instance
+          .getRequestConfiguration();
       expect(result.maxAdContentRating, MaxAdContentRating.ma);
-      expect(result.tagForChildDirectedTreatment,
-          TagForChildDirectedTreatment.yes);
+      expect(
+        result.tagForChildDirectedTreatment,
+        TagForChildDirectedTreatment.yes,
+      );
       expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
       expect(result.testDeviceIds, <String>['test-device-id']);
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#updateRequestConfiguration', arguments: {
-          'maxAdContentRating': MaxAdContentRating.ma,
-          'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
-          'testDeviceIds': <String>['test-device-id'],
-          'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.no,
-        }),
-        isMethodCall('MobileAds#getRequestConfiguration', arguments: null)
+        isMethodCall(
+          'MobileAds#updateRequestConfiguration',
+          arguments: {
+            'maxAdContentRating': MaxAdContentRating.ma,
+            'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
+            'testDeviceIds': <String>['test-device-id'],
+            'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.no,
+          },
+        ),
+        isMethodCall('MobileAds#getRequestConfiguration', arguments: null),
       ]);
 
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       result = await MobileAds.instance.getRequestConfiguration();
       expect(result.maxAdContentRating, MaxAdContentRating.ma);
-      expect(result.tagForChildDirectedTreatment,
-          TagForChildDirectedTreatment.yes);
+      expect(
+        result.tagForChildDirectedTreatment,
+        TagForChildDirectedTreatment.yes,
+      );
       expect(result.tagForUnderAgeOfConsent, TagForUnderAgeOfConsent.no);
       expect(result.testDeviceIds, <String>['test-device-id']);
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#updateRequestConfiguration', arguments: {
-          'maxAdContentRating': MaxAdContentRating.ma,
-          'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
-          'testDeviceIds': <String>['test-device-id'],
-          'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.no,
-        }),
+        isMethodCall(
+          'MobileAds#updateRequestConfiguration',
+          arguments: {
+            'maxAdContentRating': MaxAdContentRating.ma,
+            'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
+            'testDeviceIds': <String>['test-device-id'],
+            'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.no,
+          },
+        ),
         isMethodCall('MobileAds#getRequestConfiguration', arguments: null),
-        isMethodCall('MobileAds#getRequestConfiguration', arguments: null)
+        isMethodCall('MobileAds#getRequestConfiguration', arguments: null),
       ]);
     });
 
@@ -527,8 +578,9 @@ void main() {
     });
 
     test('encode/decode empty native template style', () {
-      final templateStyle =
-          NativeTemplateStyle(templateType: TemplateType.medium);
+      final templateStyle = NativeTemplateStyle(
+        templateType: TemplateType.medium,
+      );
       final byteData = codec.encodeMessage(templateStyle);
       final result = codec.decodeMessage(byteData);
       expect(result, templateStyle);
@@ -537,20 +589,19 @@ void main() {
     test('encode/decode non-empty native template style, ios', () {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       final templateStyle = NativeTemplateStyle(
-          templateType: TemplateType.medium,
-          callToActionTextStyle: NativeTemplateTextStyle(),
-          primaryTextStyle: NativeTemplateTextStyle(
-            textColor: Colors.blue.shade900,
-          ),
-          secondaryTextStyle: NativeTemplateTextStyle(
-            backgroundColor: Colors.green.shade900,
-            style: NativeTemplateFontStyle.italic,
-          ),
-          tertiaryTextStyle: NativeTemplateTextStyle(
-            size: 15,
-          ),
-          mainBackgroundColor: Colors.cyan.shade900,
-          cornerRadius: 12);
+        templateType: TemplateType.medium,
+        callToActionTextStyle: NativeTemplateTextStyle(),
+        primaryTextStyle: NativeTemplateTextStyle(
+          textColor: Colors.blue.shade900,
+        ),
+        secondaryTextStyle: NativeTemplateTextStyle(
+          backgroundColor: Colors.green.shade900,
+          style: NativeTemplateFontStyle.italic,
+        ),
+        tertiaryTextStyle: NativeTemplateTextStyle(size: 15),
+        mainBackgroundColor: Colors.cyan.shade900,
+        cornerRadius: 12,
+      );
       final byteData = codec.encodeMessage(templateStyle);
       final result = codec.decodeMessage(byteData);
       expect(result, templateStyle);
@@ -559,20 +610,19 @@ void main() {
     test('encode/decode non-empty native template style, android', () {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       final templateStyle = NativeTemplateStyle(
-          templateType: TemplateType.medium,
-          callToActionTextStyle: NativeTemplateTextStyle(),
-          primaryTextStyle: NativeTemplateTextStyle(
-            textColor: Colors.blue.shade900,
-          ),
-          secondaryTextStyle: NativeTemplateTextStyle(
-            backgroundColor: Colors.green.shade900,
-            style: NativeTemplateFontStyle.italic,
-          ),
-          tertiaryTextStyle: NativeTemplateTextStyle(
-            size: 15,
-          ),
-          mainBackgroundColor: Color.fromARGB(1, 2, 3, 4),
-          cornerRadius: 12);
+        templateType: TemplateType.medium,
+        callToActionTextStyle: NativeTemplateTextStyle(),
+        primaryTextStyle: NativeTemplateTextStyle(
+          textColor: Colors.blue.shade900,
+        ),
+        secondaryTextStyle: NativeTemplateTextStyle(
+          backgroundColor: Colors.green.shade900,
+          style: NativeTemplateFontStyle.italic,
+        ),
+        tertiaryTextStyle: NativeTemplateTextStyle(size: 15),
+        mainBackgroundColor: Color.fromARGB(1, 2, 3, 4),
+        cornerRadius: 12,
+      );
       final byteData = codec.encodeMessage(templateStyle);
       final NativeTemplateStyle result = codec.decodeMessage(byteData);
       // cornerRadius is dropped on android

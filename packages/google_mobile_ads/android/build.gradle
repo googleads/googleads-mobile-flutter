@@ -1,14 +1,17 @@
 group 'io.flutter.plugins.googlemobileads'
-version '6.0.0'
+version '7.0.0'
 
 buildscript {
+    ext {
+        agp_version = '8.13.1'
+    }
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.3.2'
+        classpath "com.android.tools.build:gradle:$agp_version"
     }
 }
 
@@ -22,29 +25,29 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdk 35
+    compileSdk 36
 
     if (project.android.hasProperty('namespace')) {
         namespace 'io.flutter.plugins.googlemobileads'
     }
 
     defaultConfig {
-        minSdk 23
+        minSdk 24
     }
     lintOptions {
         disable 'InvalidPackage'
     }
     dependencies {
-        api 'com.google.android.gms:play-services-ads:24.1.0'
-        implementation 'com.google.android.ump:user-messaging-platform:3.2.0'
-        implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-        implementation 'androidx.lifecycle:lifecycle-process:2.6.2'
-        implementation 'com.google.errorprone:error_prone_annotations:2.16'
+        api 'com.google.android.gms:play-services-ads:24.9.0'
+        implementation 'com.google.android.ump:user-messaging-platform:4.0.0'
+        implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+        implementation 'androidx.lifecycle:lifecycle-process:2.10.0'
+        implementation 'com.google.errorprone:error_prone_annotations:2.44.0'
         testImplementation 'junit:junit:4.13.2'
         testImplementation 'org.hamcrest:hamcrest:3.0'
-        testImplementation 'org.mockito:mockito-core:5.15.2'
-        testImplementation 'org.robolectric:robolectric:4.14.1'
-        testImplementation 'androidx.test:core:1.5.0'
+        testImplementation 'org.mockito:mockito-core:5.20.0'
+        testImplementation 'org.robolectric:robolectric:4.16'
+        testImplementation 'androidx.test:core:1.7.0'
     }
     testOptions {
         unitTests {
@@ -54,15 +57,11 @@ android {
 }
 
 afterEvaluate {
-    def containsEmbeddingDependencies = false
-    for (def configuration : configurations.all) {
-        for (def dependency : configuration.dependencies) {
-            if (dependency.group == 'io.flutter' &&
+    def containsEmbeddingDependencies = configurations.any { configuration ->
+        configuration.dependencies.any { dependency ->
+            dependency.group == 'io.flutter' &&
                     dependency.name.startsWith('flutter_embedding') &&
-                    dependency.isTransitive()) {
-                containsEmbeddingDependencies = true
-                break
-            }
+                    (dependency instanceof ModuleDependency && dependency.isTransitive())
         }
     }
     if (!containsEmbeddingDependencies) {

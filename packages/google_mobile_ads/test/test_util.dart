@@ -24,19 +24,24 @@ class TestUtil {
   /// [additionalArgs], encodes it into [ByteData] and sends it as a platform
   /// message to [instanceManager].
   static Future<void> sendAdEvent(
-      int adId, String eventName, AdInstanceManager instanceManager,
-      [Map<String, dynamic>? additionalArgs]) async {
-    Map<String, dynamic> args = {
-      'adId': adId,
-      'eventName': eventName,
-    };
-    additionalArgs?.entries
-        .forEach((element) => args[element.key] = element.value);
+    int adId,
+    String eventName,
+    AdInstanceManager instanceManager, [
+    Map<String, dynamic>? additionalArgs,
+  ]) async {
+    Map<String, dynamic> args = {'adId': adId, 'eventName': eventName};
+    additionalArgs?.entries.forEach(
+      (element) => args[element.key] = element.value,
+    );
     final MethodCall methodCall = MethodCall('onAdEvent', args);
-    final ByteData data =
-        instanceManager.channel.codec.encodeMethodCall(methodCall);
+    final ByteData data = instanceManager.channel.codec.encodeMethodCall(
+      methodCall,
+    );
     await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .handlePlatformMessage(
-            'plugins.flutter.io/google_mobile_ads', data, (data) {});
+          'plugins.flutter.io/google_mobile_ads',
+          data,
+          (data) {},
+        );
   }
 }

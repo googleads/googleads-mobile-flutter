@@ -24,7 +24,10 @@ import 'package:flutter/services.dart';
 Future<void> handlePlatformMessage(ByteData? data) async {
   await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .handlePlatformMessage(
-          'plugins.flutter.io/google_mobile_ads', data, (data) {});
+        'plugins.flutter.io/google_mobile_ads',
+        data,
+        (data) {},
+      );
 }
 
 // ignore_for_file: deprecated_member_use_from_same_package
@@ -37,33 +40,35 @@ void main() {
 
     setUp(() async {
       log.clear();
-      instanceManager =
-          AdInstanceManager('plugins.flutter.io/google_mobile_ads');
+      instanceManager = AdInstanceManager(
+        'plugins.flutter.io/google_mobile_ads',
+      );
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(instanceManager.channel,
-              (MethodCall methodCall) async {
-        log.add(methodCall);
-        switch (methodCall.method) {
-          case 'MobileAds#updateRequestConfiguration':
-          case 'MobileAds#setSameAppKeyEnabled':
-          case 'setImmersiveMode':
-          case 'loadBannerAd':
-          case 'loadNativeAd':
-          case 'showAdWithoutView':
-          case 'disposeAd':
-          case 'loadRewardedAd':
-          case 'loadInterstitialAd':
-          case 'loadAdManagerInterstitialAd':
-          case 'loadAdManagerBannerAd':
-          case 'setServerSideVerificationOptions':
-            return Future<void>.value();
-          case 'getAdSize':
-            return Future<dynamic>.value(AdSize.banner);
-          default:
-            assert(false);
-            return null;
-        }
-      });
+          .setMockMethodCallHandler(instanceManager.channel, (
+            MethodCall methodCall,
+          ) async {
+            log.add(methodCall);
+            switch (methodCall.method) {
+              case 'MobileAds#updateRequestConfiguration':
+              case 'MobileAds#setSameAppKeyEnabled':
+              case 'setImmersiveMode':
+              case 'loadBannerAd':
+              case 'loadNativeAd':
+              case 'showAdWithoutView':
+              case 'disposeAd':
+              case 'loadRewardedAd':
+              case 'loadInterstitialAd':
+              case 'loadAdManagerInterstitialAd':
+              case 'loadAdManagerBannerAd':
+              case 'setServerSideVerificationOptions':
+                return Future<void>.value();
+              case 'getAdSize':
+                return Future<dynamic>.value(AdSize.banner);
+              default:
+                assert(false);
+                return null;
+            }
+          });
     });
 
     test('updateRequestConfiguration', () async {
@@ -75,13 +80,15 @@ void main() {
       );
       await instanceManager.updateRequestConfiguration(requestConfiguration);
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#updateRequestConfiguration',
-            arguments: <String, dynamic>{
-              'maxAdContentRating': MaxAdContentRating.ma,
-              'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
-              'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.yes,
-              'testDeviceIds': <String>['test-device-id'],
-            })
+        isMethodCall(
+          'MobileAds#updateRequestConfiguration',
+          arguments: <String, dynamic>{
+            'maxAdContentRating': MaxAdContentRating.ma,
+            'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
+            'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.yes,
+            'testDeviceIds': <String>['test-device-id'],
+          },
+        ),
       ]);
     });
 
@@ -89,23 +96,23 @@ void main() {
       await instanceManager.setSameAppKeyEnabled(true);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setSameAppKeyEnabled',
-            arguments: <String, dynamic>{
-              'isEnabled': true,
-            })
+        isMethodCall(
+          'MobileAds#setSameAppKeyEnabled',
+          arguments: <String, dynamic>{'isEnabled': true},
+        ),
       ]);
 
       await instanceManager.setSameAppKeyEnabled(false);
 
       expect(log, <Matcher>[
-        isMethodCall('MobileAds#setSameAppKeyEnabled',
-            arguments: <String, dynamic>{
-              'isEnabled': true,
-            }),
-        isMethodCall('MobileAds#setSameAppKeyEnabled',
-            arguments: <String, dynamic>{
-              'isEnabled': false,
-            })
+        isMethodCall(
+          'MobileAds#setSameAppKeyEnabled',
+          arguments: <String, dynamic>{'isEnabled': true},
+        ),
+        isMethodCall(
+          'MobileAds#setSameAppKeyEnabled',
+          arguments: <String, dynamic>{'isEnabled': false},
+        ),
       ]);
     });
 
@@ -116,22 +123,26 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: request,
         rewardedAdLoadCallback: RewardedAdLoadCallback(
-            onAdLoaded: (ad) {
-              rewarded = ad;
-            },
-            onAdFailedToLoad: (error) => null),
+          onAdLoaded: (ad) {
+            rewarded = ad;
+          },
+          onAdFailedToLoad: (error) => null,
+        ),
       );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
-        isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': request,
-          'adManagerRequest': null,
-        }),
+        isMethodCall(
+          'loadRewardedAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': request,
+            'adManagerRequest': null,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -141,8 +152,10 @@ void main() {
       log.clear();
       await createdAd.setImmersiveMode(true);
       expect(log, <Matcher>[
-        isMethodCall('setImmersiveMode',
-            arguments: {'adId': 0, 'immersiveModeEnabled': true})
+        isMethodCall(
+          'setImmersiveMode',
+          arguments: {'adId': 0, 'immersiveModeEnabled': true},
+        ),
       ]);
 
       // Set ssv
@@ -150,8 +163,10 @@ void main() {
       final ssv = ServerSideVerificationOptions();
       await createdAd.setServerSideOptions(ssv);
       expect(log, <Matcher>[
-        isMethodCall('setServerSideVerificationOptions',
-            arguments: {'adId': 0, 'serverSideVerificationOptions': ssv})
+        isMethodCall(
+          'setServerSideVerificationOptions',
+          arguments: {'adId': 0, 'serverSideVerificationOptions': ssv},
+        ),
       ]);
     });
 
@@ -161,21 +176,25 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
-            onAdLoaded: (ad) {
-              interstitial = ad;
-            },
-            onAdFailedToLoad: (error) => null),
+          onAdLoaded: (ad) {
+            interstitial = ad;
+          },
+          onAdFailedToLoad: (error) => null,
+        ),
       );
 
       InterstitialAd createdAd = (instanceManager.adFor(0) as InterstitialAd);
       (createdAd).adLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
-        isMethodCall('loadInterstitialAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': interstitial!.request,
-        })
+        isMethodCall(
+          'loadInterstitialAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': interstitial!.request,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -183,8 +202,10 @@ void main() {
       log.clear();
       await createdAd.setImmersiveMode(false);
       expect(log, <Matcher>[
-        isMethodCall('setImmersiveMode',
-            arguments: {'adId': 0, 'immersiveModeEnabled': false})
+        isMethodCall(
+          'setImmersiveMode',
+          arguments: {'adId': 0, 'immersiveModeEnabled': false},
+        ),
       ]);
     });
 
@@ -194,10 +215,11 @@ void main() {
         adUnitId: 'test-id',
         request: AdManagerAdRequest(),
         adLoadCallback: AdManagerInterstitialAdLoadCallback(
-            onAdLoaded: (ad) {
-              interstitial = ad;
-            },
-            onAdFailedToLoad: (error) => null),
+          onAdLoaded: (ad) {
+            interstitial = ad;
+          },
+          onAdFailedToLoad: (error) => null,
+        ),
       );
 
       AdManagerInterstitialAd createdAd =
@@ -205,12 +227,14 @@ void main() {
       (createdAd).adLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
-        isMethodCall('loadAdManagerInterstitialAd',
-            arguments: <String, dynamic>{
-              'adId': 0,
-              'adUnitId': 'test-id',
-              'request': interstitial!.request,
-            })
+        isMethodCall(
+          'loadAdManagerInterstitialAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-id',
+            'request': interstitial!.request,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -218,24 +242,27 @@ void main() {
       log.clear();
       await createdAd.setImmersiveMode(true);
       expect(log, <Matcher>[
-        isMethodCall('setImmersiveMode',
-            arguments: {'adId': 0, 'immersiveModeEnabled': true})
+        isMethodCall(
+          'setImmersiveMode',
+          arguments: {'adId': 0, 'immersiveModeEnabled': true},
+        ),
       ]);
     });
 
     test('load native', () async {
       final Map<String, Object> options = <String, Object>{'a': 1, 'b': 2};
       final NativeAdOptions nativeAdOptions = NativeAdOptions(
-          adChoicesPlacement: AdChoicesPlacement.bottomLeftCorner,
-          mediaAspectRatio: MediaAspectRatio.any,
-          videoOptions: VideoOptions(
-            clickToExpandRequested: true,
-            customControlsRequested: true,
-            startMuted: true,
-          ),
-          requestCustomMuteThisAd: false,
-          shouldRequestMultipleImages: true,
-          shouldReturnUrlsForImageAssets: false);
+        adChoicesPlacement: AdChoicesPlacement.bottomLeftCorner,
+        mediaAspectRatio: MediaAspectRatio.any,
+        videoOptions: VideoOptions(
+          clickToExpandRequested: true,
+          customControlsRequested: true,
+          startMuted: true,
+        ),
+        requestCustomMuteThisAd: false,
+        shouldRequestMultipleImages: true,
+        shouldReturnUrlsForImageAssets: false,
+      );
       final NativeAd native = NativeAd(
         adUnitId: 'test-ad-unit',
         factoryId: '0',
@@ -247,16 +274,19 @@ void main() {
 
       await native.load();
       expect(log, <Matcher>[
-        isMethodCall('loadNativeAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': native.request,
-          'adManagerRequest': null,
-          'factoryId': '0',
-          'nativeAdOptions': nativeAdOptions,
-          'customOptions': options,
-          'nativeTemplateStyle': null,
-        })
+        isMethodCall(
+          'loadNativeAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': native.request,
+            'adManagerRequest': null,
+            'factoryId': '0',
+            'nativeAdOptions': nativeAdOptions,
+            'customOptions': options,
+            'nativeTemplateStyle': null,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -270,22 +300,26 @@ void main() {
         customOptions: options,
         listener: NativeAdListener(),
         adManagerRequest: AdManagerAdRequest(),
-        nativeTemplateStyle:
-            NativeTemplateStyle(templateType: TemplateType.medium),
+        nativeTemplateStyle: NativeTemplateStyle(
+          templateType: TemplateType.medium,
+        ),
       );
 
       await native.load();
       expect(log, <Matcher>[
-        isMethodCall('loadNativeAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-id',
-          'request': null,
-          'adManagerRequest': native.adManagerRequest,
-          'factoryId': '0',
-          'nativeAdOptions': null,
-          'customOptions': options,
-          'nativeTemplateStyle': native.nativeTemplateStyle,
-        })
+        isMethodCall(
+          'loadNativeAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-id',
+            'request': null,
+            'adManagerRequest': native.adManagerRequest,
+            'factoryId': '0',
+            'nativeAdOptions': null,
+            'customOptions': options,
+            'nativeTemplateStyle': native.nativeTemplateStyle,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -348,12 +382,7 @@ void main() {
             child: SizedBox(
               width: 100,
               height: 100,
-              child: Stack(
-                children: <Widget>[
-                  widget,
-                  widget,
-                ],
-              ),
+              child: Stack(children: <Widget>[widget, widget]),
             ),
           ),
         );
@@ -361,56 +390,50 @@ void main() {
         dynamic exception = tester.takeException();
         expect(exception, isA<FlutterError>());
         expect(
-            (exception as FlutterError).toStringDeep(),
-            'FlutterError\n'
-            '   This AdWidget is already in the Widget tree\n'
-            '   If you placed this AdWidget in a list, make sure you create a new\n'
-            '   instance in the builder function with a unique ad object.\n'
-            '   Make sure you are not using the same ad object in more than one\n'
-            '   AdWidget.\n'
-            '');
+          (exception as FlutterError).toStringDeep(),
+          'FlutterError\n'
+          '   This AdWidget is already in the Widget tree\n'
+          '   If you placed this AdWidget in a list, make sure you create a new\n'
+          '   instance in the builder function with a unique ad object.\n'
+          '   Make sure you are not using the same ad object in more than one\n'
+          '   AdWidget.\n'
+          '',
+        );
       }
     });
 
     testWidgets(
-        'ad objects can be reused if the widget holding the object is disposed',
-        (WidgetTester tester) async {
-      final NativeAd ad = NativeAd(
-        adUnitId: 'test-ad-unit',
-        factoryId: '0',
-        listener: NativeAdListener(),
-        request: AdRequest(),
-      );
-      await ad.load();
-      final AdWidget widget = AdWidget(ad: ad);
-      try {
-        await tester.pumpWidget(
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: SizedBox(
-              width: 100,
-              height: 100,
-              child: widget,
-            ),
-          ),
+      'ad objects can be reused if the widget holding the object is disposed',
+      (WidgetTester tester) async {
+        final NativeAd ad = NativeAd(
+          adUnitId: 'test-ad-unit',
+          factoryId: '0',
+          listener: NativeAdListener(),
+          request: AdRequest(),
         );
-
-        await tester.pumpWidget(Container());
-
-        await tester.pumpWidget(
-          Directionality(
-            textDirection: TextDirection.ltr,
-            child: SizedBox(
-              width: 100,
-              height: 100,
-              child: widget,
+        await ad.load();
+        final AdWidget widget = AdWidget(ad: ad);
+        try {
+          await tester.pumpWidget(
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: SizedBox(width: 100, height: 100, child: widget),
             ),
-          ),
-        );
-      } finally {
-        expect(tester.takeException(), isNull);
-      }
-    });
+          );
+
+          await tester.pumpWidget(Container());
+
+          await tester.pumpWidget(
+            Directionality(
+              textDirection: TextDirection.ltr,
+              child: SizedBox(width: 100, height: 100, child: widget),
+            ),
+          );
+        } finally {
+          expect(tester.takeException(), isNull);
+        }
+      },
+    );
 
     test('load show rewarded', () async {
       RewardedAd? rewarded;
@@ -419,22 +442,26 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: request,
         rewardedAdLoadCallback: RewardedAdLoadCallback(
-            onAdLoaded: (ad) {
-              rewarded = ad;
-            },
-            onAdFailedToLoad: (error) => null),
+          onAdLoaded: (ad) {
+            rewarded = ad;
+          },
+          onAdFailedToLoad: (error) => null,
+        ),
       );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
-        isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': request,
-          'adManagerRequest': null,
-        }),
+        isMethodCall(
+          'loadRewardedAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': request,
+            'adManagerRequest': null,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -443,9 +470,10 @@ void main() {
       log.clear();
       await rewarded!.show(onUserEarnedReward: (ad, reward) => null);
       expect(log, <Matcher>[
-        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
-          'adId': 0,
-        })
+        isMethodCall(
+          'showAdWithoutView',
+          arguments: <dynamic, dynamic>{'adId': 0},
+        ),
       ]);
     });
 
@@ -456,22 +484,26 @@ void main() {
         adUnitId: 'test-ad-unit',
         adManagerRequest: request,
         rewardedAdLoadCallback: RewardedAdLoadCallback(
-            onAdLoaded: (ad) {
-              rewarded = ad;
-            },
-            onAdFailedToLoad: (error) => null),
+          onAdLoaded: (ad) {
+            rewarded = ad;
+          },
+          onAdFailedToLoad: (error) => null,
+        ),
       );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       (createdAd).rewardedAdLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
-        isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': null,
-          'adManagerRequest': request,
-        }),
+        isMethodCall(
+          'loadRewardedAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': null,
+            'adManagerRequest': request,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -479,9 +511,10 @@ void main() {
       log.clear();
       await rewarded!.show(onUserEarnedReward: (ad, reward) => null);
       expect(log, <Matcher>[
-        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
-          'adId': 0,
-        })
+        isMethodCall(
+          'showAdWithoutView',
+          arguments: <dynamic, dynamic>{'adId': 0},
+        ),
       ]);
     });
 
@@ -491,21 +524,25 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
-            onAdLoaded: (ad) {
-              interstitial = ad;
-            },
-            onAdFailedToLoad: (error) => null),
+          onAdLoaded: (ad) {
+            interstitial = ad;
+          },
+          onAdFailedToLoad: (error) => null,
+        ),
       );
 
       InterstitialAd createdAd = (instanceManager.adFor(0) as InterstitialAd);
       (createdAd).adLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
-        isMethodCall('loadInterstitialAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': interstitial!.request,
-        })
+        isMethodCall(
+          'loadInterstitialAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': interstitial!.request,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -513,9 +550,10 @@ void main() {
       log.clear();
       await interstitial!.show();
       expect(log, <Matcher>[
-        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
-          'adId': 0,
-        })
+        isMethodCall(
+          'showAdWithoutView',
+          arguments: <dynamic, dynamic>{'adId': 0},
+        ),
       ]);
     });
 
@@ -525,10 +563,11 @@ void main() {
         adUnitId: 'test-id',
         request: AdManagerAdRequest(),
         adLoadCallback: AdManagerInterstitialAdLoadCallback(
-            onAdLoaded: (ad) {
-              interstitial = ad;
-            },
-            onAdFailedToLoad: (error) => null),
+          onAdLoaded: (ad) {
+            interstitial = ad;
+          },
+          onAdFailedToLoad: (error) => null,
+        ),
       );
 
       AdManagerInterstitialAd createdAd =
@@ -536,12 +575,14 @@ void main() {
       (createdAd).adLoadCallback.onAdLoaded(createdAd);
 
       expect(log, <Matcher>[
-        isMethodCall('loadAdManagerInterstitialAd',
-            arguments: <String, dynamic>{
-              'adId': 0,
-              'adUnitId': 'test-id',
-              'request': interstitial!.request,
-            })
+        isMethodCall(
+          'loadAdManagerInterstitialAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-id',
+            'request': interstitial!.request,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -549,9 +590,10 @@ void main() {
       log.clear();
       await interstitial!.show();
       expect(log, <Matcher>[
-        isMethodCall('showAdWithoutView', arguments: <dynamic, dynamic>{
-          'adId': 0,
-        })
+        isMethodCall(
+          'showAdWithoutView',
+          arguments: <dynamic, dynamic>{'adId': 0},
+        ),
       ]);
     });
 
@@ -562,16 +604,20 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: request,
         adLoadCallback: InterstitialAdLoadCallback(
-            onAdLoaded: (ad) => null,
-            onAdFailedToLoad: (error) => resultsCompleter.complete(error)),
+          onAdLoaded: (ad) => null,
+          onAdFailedToLoad: (error) => resultsCompleter.complete(error),
+        ),
       );
 
       expect(log, <Matcher>[
-        isMethodCall('loadInterstitialAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': request,
-        })
+        isMethodCall(
+          'loadInterstitialAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': request,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -604,8 +650,9 @@ void main() {
         'loadAdError': LoadAdError(1, 'domain', 'message', responseInfo),
       });
 
-      final ByteData data =
-          instanceManager.channel.codec.encodeMethodCall(methodCall);
+      final ByteData data = instanceManager.channel.codec.encodeMethodCall(
+        methodCall,
+      );
 
       await handlePlatformMessage(data);
 
@@ -618,8 +665,10 @@ void main() {
       expect(result.domain, 'domain');
       expect(result.message, 'message');
       expect(result.responseInfo!.responseId, responseInfo.responseId);
-      expect(result.responseInfo!.mediationAdapterClassName,
-          responseInfo.mediationAdapterClassName);
+      expect(
+        result.responseInfo!.mediationAdapterClassName,
+        responseInfo.mediationAdapterClassName,
+      );
       expect(result.responseInfo!.responseExtras, responseInfo.responseExtras);
       List<AdapterResponseInfo> responses =
           result.responseInfo!.adapterResponses!;
@@ -639,17 +688,20 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: request,
         adLoadCallback: AdManagerInterstitialAdLoadCallback(
-            onAdLoaded: (ad) => null,
-            onAdFailedToLoad: (error) => resultsCompleter.complete(error)),
+          onAdLoaded: (ad) => null,
+          onAdFailedToLoad: (error) => resultsCompleter.complete(error),
+        ),
       );
 
       expect(log, <Matcher>[
-        isMethodCall('loadAdManagerInterstitialAd',
-            arguments: <String, dynamic>{
-              'adId': 0,
-              'adUnitId': 'test-ad-unit',
-              'request': request,
-            })
+        isMethodCall(
+          'loadAdManagerInterstitialAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': request,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -682,8 +734,9 @@ void main() {
         'loadAdError': LoadAdError(1, 'domain', 'message', responseInfo),
       });
 
-      final ByteData data =
-          instanceManager.channel.codec.encodeMethodCall(methodCall);
+      final ByteData data = instanceManager.channel.codec.encodeMethodCall(
+        methodCall,
+      );
       await handlePlatformMessage(data);
       // The ad reference should be freed when load failure occurs.
       expect(instanceManager.adFor(0), isNull);
@@ -694,8 +747,10 @@ void main() {
       expect(result.domain, 'domain');
       expect(result.message, 'message');
       expect(result.responseInfo!.responseId, responseInfo.responseId);
-      expect(result.responseInfo!.mediationAdapterClassName,
-          responseInfo.mediationAdapterClassName);
+      expect(
+        result.responseInfo!.mediationAdapterClassName,
+        responseInfo.mediationAdapterClassName,
+      );
       expect(result.responseInfo!.responseExtras, responseInfo.responseExtras);
       List<AdapterResponseInfo> responses =
           result.responseInfo!.adapterResponses!;
@@ -715,17 +770,21 @@ void main() {
         adUnitId: 'test-ad-unit',
         request: request,
         rewardedAdLoadCallback: RewardedAdLoadCallback(
-            onAdLoaded: (ad) => null,
-            onAdFailedToLoad: (error) => resultsCompleter.complete(error)),
+          onAdLoaded: (ad) => null,
+          onAdFailedToLoad: (error) => resultsCompleter.complete(error),
+        ),
       );
 
       expect(log, <Matcher>[
-        isMethodCall('loadRewardedAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'test-ad-unit',
-          'request': request,
-          'adManagerRequest': null,
-        })
+        isMethodCall(
+          'loadRewardedAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': request,
+            'adManagerRequest': null,
+          },
+        ),
       ]);
 
       expect(instanceManager.adFor(0), isNotNull);
@@ -758,8 +817,9 @@ void main() {
         'loadAdError': LoadAdError(1, 'domain', 'message', responseInfo),
       });
 
-      final ByteData data =
-          instanceManager.channel.codec.encodeMethodCall(methodCall);
+      final ByteData data = instanceManager.channel.codec.encodeMethodCall(
+        methodCall,
+      );
 
       await handlePlatformMessage(data);
 
@@ -772,8 +832,10 @@ void main() {
       expect(result.domain, 'domain');
       expect(result.message, 'message');
       expect(result.responseInfo!.responseId, responseInfo.responseId);
-      expect(result.responseInfo!.mediationAdapterClassName,
-          responseInfo.mediationAdapterClassName);
+      expect(
+        result.responseInfo!.mediationAdapterClassName,
+        responseInfo.mediationAdapterClassName,
+      );
       expect(result.responseInfo!.responseExtras, responseInfo.responseExtras);
       List<AdapterResponseInfo> responses =
           result.responseInfo!.adapterResponses!;
@@ -793,17 +855,21 @@ void main() {
         adUnitId: 'test-ad-unit',
         factoryId: 'testId',
         listener: NativeAdListener(
-            onAdImpression: (Ad ad) => adEventCompleter.complete(ad)),
+          onAdImpression: (Ad ad) => adEventCompleter.complete(ad),
+        ),
         request: AdRequest(),
       );
 
       await native.load();
 
-      final MethodCall methodCall = MethodCall('onAdEvent',
-          <dynamic, dynamic>{'adId': 0, 'eventName': 'onAdImpression'});
+      final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+        'adId': 0,
+        'eventName': 'onAdImpression',
+      });
 
-      final ByteData data =
-          instanceManager.channel.codec.encodeMethodCall(methodCall);
+      final ByteData data = instanceManager.channel.codec.encodeMethodCall(
+        methodCall,
+      );
 
       await handlePlatformMessage(data);
 
@@ -816,13 +882,15 @@ void main() {
 
         AdRequest request = AdRequest();
         await RewardedAd.load(
-            adUnitId: 'test-ad-unit',
-            request: request,
-            rewardedAdLoadCallback: RewardedAdLoadCallback(
-                onAdLoaded: (ad) {
-                  loadCompleter.complete(ad);
-                },
-                onAdFailedToLoad: (error) => null));
+          adUnitId: 'test-ad-unit',
+          request: request,
+          rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) {
+              loadCompleter.complete(ad);
+            },
+            onAdFailedToLoad: (error) => null,
+          ),
+        );
 
         AdapterResponseInfo adapterResponseInfo = AdapterResponseInfo(
           adapterClassName: 'adapter-name',
@@ -858,8 +926,9 @@ void main() {
           'responseInfo': responseInfo,
         });
 
-        ByteData data =
-            instanceManager.channel.codec.encodeMethodCall(methodCall);
+        ByteData data = instanceManager.channel.codec.encodeMethodCall(
+          methodCall,
+        );
 
         await handlePlatformMessage(data);
         final ad = await loadCompleter.future;
@@ -899,20 +968,23 @@ void main() {
 
       RewardedAd? rewarded;
       await RewardedAd.load(
-          adUnitId: 'test-ad-unit',
-          request: AdRequest(),
-          rewardedAdLoadCallback: RewardedAdLoadCallback(
-              onAdLoaded: (ad) {
-                rewarded = ad;
-              },
-              onAdFailedToLoad: (error) => null));
+        adUnitId: 'test-ad-unit',
+        request: AdRequest(),
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (ad) {
+            rewarded = ad;
+          },
+          onAdFailedToLoad: (error) => null,
+        ),
+      );
 
       RewardedAd createdAd = instanceManager.adFor(0) as RewardedAd;
       createdAd.rewardedAdLoadCallback.onAdLoaded(createdAd);
       // Reward callback is now set when you call show.
       await rewarded!.show(
-          onUserEarnedReward: (ad, item) =>
-              resultCompleter.complete(<Object>[ad, item]));
+        onUserEarnedReward: (ad, item) =>
+            resultCompleter.complete(<Object>[ad, item]),
+      );
 
       final MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
         'adId': 0,
@@ -920,8 +992,9 @@ void main() {
         'rewardItem': RewardItem(1, 'one'),
       });
 
-      final ByteData data =
-          instanceManager.channel.codec.encodeMethodCall(methodCall);
+      final ByteData data = instanceManager.channel.codec.encodeMethodCall(
+        methodCall,
+      );
 
       await handlePlatformMessage(data);
 
@@ -939,8 +1012,12 @@ void main() {
         size: AdSize.banner,
         listener: BannerAdListener(
           onPaidEvent: (Ad ad, double value, precision, String currencyCode) =>
-              resultCompleter
-                  .complete(<Object>[ad, value, precision, currencyCode]),
+              resultCompleter.complete(<Object>[
+                ad,
+                value,
+                precision,
+                currencyCode,
+              ]),
         ),
         request: AdRequest(),
       );
@@ -956,8 +1033,9 @@ void main() {
         'currencyCode': 'USD',
       });
 
-      ByteData data =
-          instanceManager.channel.codec.encodeMethodCall(methodCall);
+      ByteData data = instanceManager.channel.codec.encodeMethodCall(
+        methodCall,
+      );
 
       await handlePlatformMessage(data);
 
@@ -978,7 +1056,8 @@ void main() {
       });
       data = instanceManager.channel.codec.encodeMethodCall(methodCall);
       await handlePlatformMessage(
-          instanceManager.channel.codec.encodeMethodCall(methodCall));
+        instanceManager.channel.codec.encodeMethodCall(methodCall),
+      );
       result = await resultCompleter.future;
       expect(result[2], PrecisionType.unknown);
 
@@ -994,7 +1073,8 @@ void main() {
       });
       data = instanceManager.channel.codec.encodeMethodCall(methodCall);
       await handlePlatformMessage(
-          instanceManager.channel.codec.encodeMethodCall(methodCall));
+        instanceManager.channel.codec.encodeMethodCall(methodCall),
+      );
       result = await resultCompleter.future;
       expect(result[1], 12345);
       expect(result[2], PrecisionType.estimated);
@@ -1100,8 +1180,10 @@ void main() {
       expect(error.message, 'message');
       expect(error.responseInfo?.responseId, responseInfo.responseId);
       expect(error.responseInfo?.responseExtras, responseInfo.responseExtras);
-      expect(error.responseInfo?.mediationAdapterClassName,
-          responseInfo.mediationAdapterClassName);
+      expect(
+        error.responseInfo?.mediationAdapterClassName,
+        responseInfo.mediationAdapterClassName,
+      );
       expect(error.responseInfo?.adapterResponses, null);
     });
 
@@ -1115,7 +1197,8 @@ void main() {
 
     test('encode/decode $InlineAdaptiveSize', () async {
       ByteData byteData = codec.encodeMessage(
-          AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(100))!;
+        AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(100),
+      )!;
 
       InlineAdaptiveSize result = codec.decodeMessage(byteData);
       expect(result.orientation, null);
@@ -1123,8 +1206,9 @@ void main() {
       expect(result.maxHeight, null);
       expect(result.height, 0);
 
-      byteData = codec
-          .encodeMessage(AdSize.getPortraitInlineAdaptiveBannerAdSize(200))!;
+      byteData = codec.encodeMessage(
+        AdSize.getPortraitInlineAdaptiveBannerAdSize(200),
+      )!;
 
       result = codec.decodeMessage(byteData);
       expect(result.orientation, Orientation.portrait);
@@ -1132,8 +1216,9 @@ void main() {
       expect(result.maxHeight, null);
       expect(result.height, 0);
 
-      byteData = codec
-          .encodeMessage(AdSize.getLandscapeInlineAdaptiveBannerAdSize(20))!;
+      byteData = codec.encodeMessage(
+        AdSize.getLandscapeInlineAdaptiveBannerAdSize(20),
+      )!;
 
       result = codec.decodeMessage(byteData);
       expect(result.orientation, Orientation.landscape);
@@ -1141,8 +1226,9 @@ void main() {
       expect(result.maxHeight, null);
       expect(result.height, 0);
 
-      byteData =
-          codec.encodeMessage(AdSize.getInlineAdaptiveBannerAdSize(20, 50))!;
+      byteData = codec.encodeMessage(
+        AdSize.getInlineAdaptiveBannerAdSize(20, 50),
+      )!;
 
       result = codec.decodeMessage(byteData);
       expect(result.orientation, null);
@@ -1153,27 +1239,38 @@ void main() {
 
     test('encode/decode $AnchoredAdaptiveBannerAdSize', () async {
       final ByteData byteDataPortrait = codec.encodeMessage(
-          AnchoredAdaptiveBannerAdSize(Orientation.portrait,
-              width: 23, height: 34))!;
+        AnchoredAdaptiveBannerAdSize(
+          Orientation.portrait,
+          width: 23,
+          height: 34,
+        ),
+      )!;
 
-      final AnchoredAdaptiveBannerAdSize resultPortrait =
-          codec.decodeMessage(byteDataPortrait);
+      final AnchoredAdaptiveBannerAdSize resultPortrait = codec.decodeMessage(
+        byteDataPortrait,
+      );
       expect(resultPortrait.orientation, Orientation.portrait);
       expect(resultPortrait.width, 23);
       expect(resultPortrait.height, -1);
 
       final ByteData byteDataLandscape = codec.encodeMessage(
-          AnchoredAdaptiveBannerAdSize(Orientation.landscape,
-              width: 34, height: 23))!;
+        AnchoredAdaptiveBannerAdSize(
+          Orientation.landscape,
+          width: 34,
+          height: 23,
+        ),
+      )!;
 
-      final AnchoredAdaptiveBannerAdSize resultLandscape =
-          codec.decodeMessage(byteDataLandscape);
+      final AnchoredAdaptiveBannerAdSize resultLandscape = codec.decodeMessage(
+        byteDataLandscape,
+      );
       expect(resultLandscape.orientation, Orientation.landscape);
       expect(resultLandscape.width, 34);
       expect(resultLandscape.height, -1);
 
       final ByteData byteData = codec.encodeMessage(
-          AnchoredAdaptiveBannerAdSize(null, width: 45, height: 34))!;
+        AnchoredAdaptiveBannerAdSize(null, width: 45, height: 34),
+      )!;
 
       final AnchoredAdaptiveBannerAdSize result = codec.decodeMessage(byteData);
       expect(result.orientation, null);
@@ -1183,8 +1280,9 @@ void main() {
 
     test('encode/decode $SmartBannerAdSize', () async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-      final ByteData byteData =
-          codec.encodeMessage(SmartBannerAdSize(Orientation.portrait))!;
+      final ByteData byteData = codec.encodeMessage(
+        SmartBannerAdSize(Orientation.portrait),
+      )!;
 
       final SmartBannerAdSize result = codec.decodeMessage(byteData);
       expect(result.orientation, Orientation.portrait);
@@ -1228,7 +1326,7 @@ void main() {
         contentUrl: 'dat',
         customTargeting: <String, String>{'boy': 'who'},
         customTargetingLists: <String, List<String>>{
-          'him': <String>['is']
+          'him': <String>['is'],
         },
         nonPersonalizedAds: true,
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
@@ -1244,7 +1342,7 @@ void main() {
         contentUrl: 'dat',
         customTargeting: <String, String>{'boy': 'who'},
         customTargetingLists: <String, List<String>>{
-          'him': <String>['is']
+          'him': <String>['is'],
         },
         nonPersonalizedAds: true,
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
@@ -1253,10 +1351,7 @@ void main() {
         mediationExtrasIdentifier: 'identifier',
         extras: {'key': 'value'},
       );
-      expect(
-        codec.decodeMessage(byteData),
-        decodedRequest,
-      );
+      expect(codec.decodeMessage(byteData), decodedRequest);
     });
 
     test('encode/decode $AdManagerAdRequest iOS', () async {
@@ -1267,7 +1362,7 @@ void main() {
         contentUrl: 'dat',
         customTargeting: <String, String>{'boy': 'who'},
         customTargetingLists: <String, List<String>>{
-          'him': <String>['is']
+          'him': <String>['is'],
         },
         nonPersonalizedAds: true,
         neighboringContentUrls: <String>['url1.com', 'url2.com'],
@@ -1298,17 +1393,21 @@ void main() {
           adUnitId: 'test-ad-unit',
           factoryId: 'testId',
           listener: NativeAdListener(
-              onAdClicked: (ad) => adClickCompleter.complete(ad)),
+            onAdClicked: (ad) => adClickCompleter.complete(ad),
+          ),
           request: AdRequest(),
         );
 
         await native.load();
 
-        final MethodCall methodCall = MethodCall('onAdEvent',
-            <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
+        final MethodCall methodCall = MethodCall(
+          'onAdEvent',
+          <dynamic, dynamic>{'adId': adId, 'eventName': eventName},
+        );
 
-        final ByteData data =
-            instanceManager.channel.codec.encodeMethodCall(methodCall);
+        final ByteData data = instanceManager.channel.codec.encodeMethodCall(
+          methodCall,
+        );
         await handlePlatformMessage(data);
 
         expect(adClickCompleter.future, completion(native));
@@ -1329,28 +1428,34 @@ void main() {
         RewardedAd? rewarded;
         AdRequest request = AdRequest();
         await RewardedAd.load(
-            adUnitId: 'test-ad-unit',
-            request: request,
-            rewardedAdLoadCallback: RewardedAdLoadCallback(
-                onAdLoaded: (ad) {
-                  rewarded = ad;
-                  ad.fullScreenContentCallback = FullScreenContentCallback(
-                      onAdClicked: (ad) => adClickCompleter.complete(ad));
-                },
-                onAdFailedToLoad: (error) => null));
+          adUnitId: 'test-ad-unit',
+          request: request,
+          rewardedAdLoadCallback: RewardedAdLoadCallback(
+            onAdLoaded: (ad) {
+              rewarded = ad;
+              ad.fullScreenContentCallback = FullScreenContentCallback(
+                onAdClicked: (ad) => adClickCompleter.complete(ad),
+              );
+            },
+            onAdFailedToLoad: (error) => null,
+          ),
+        );
 
         MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
           'adId': adId,
           'eventName': 'onAdLoaded',
         });
 
-        ByteData data =
-            instanceManager.channel.codec.encodeMethodCall(methodCall);
+        ByteData data = instanceManager.channel.codec.encodeMethodCall(
+          methodCall,
+        );
         await handlePlatformMessage(data);
 
         // Handle adDidRecordClick method call
-        methodCall = MethodCall('onAdEvent',
-            <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
+        methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+          'adId': adId,
+          'eventName': eventName,
+        });
 
         data = instanceManager.channel.codec.encodeMethodCall(methodCall);
         await handlePlatformMessage(data);
@@ -1376,12 +1481,14 @@ void main() {
           adUnitId: 'test-ad-unit',
           request: request,
           adLoadCallback: InterstitialAdLoadCallback(
-              onAdLoaded: (ad) {
-                interstitialAd = ad;
-                ad.fullScreenContentCallback = FullScreenContentCallback(
-                    onAdClicked: (ad) => adClickCompleter.complete(ad));
-              },
-              onAdFailedToLoad: (error) => null),
+            onAdLoaded: (ad) {
+              interstitialAd = ad;
+              ad.fullScreenContentCallback = FullScreenContentCallback(
+                onAdClicked: (ad) => adClickCompleter.complete(ad),
+              );
+            },
+            onAdFailedToLoad: (error) => null,
+          ),
         );
 
         MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
@@ -1389,13 +1496,16 @@ void main() {
           'eventName': 'onAdLoaded',
         });
 
-        ByteData data =
-            instanceManager.channel.codec.encodeMethodCall(methodCall);
+        ByteData data = instanceManager.channel.codec.encodeMethodCall(
+          methodCall,
+        );
         await handlePlatformMessage(data);
 
         // Handle adDidRecordClick method call
-        methodCall = MethodCall('onAdEvent',
-            <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
+        methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+          'adId': adId,
+          'eventName': eventName,
+        });
 
         data = instanceManager.channel.codec.encodeMethodCall(methodCall);
         await handlePlatformMessage(data);
@@ -1421,12 +1531,14 @@ void main() {
           adUnitId: 'test-ad-unit',
           request: request,
           adLoadCallback: InterstitialAdLoadCallback(
-              onAdLoaded: (ad) {
-                interstitialAd = ad;
-                ad.fullScreenContentCallback = FullScreenContentCallback(
-                    onAdClicked: (ad) => adClickCompleter.complete(ad));
-              },
-              onAdFailedToLoad: (error) => null),
+            onAdLoaded: (ad) {
+              interstitialAd = ad;
+              ad.fullScreenContentCallback = FullScreenContentCallback(
+                onAdClicked: (ad) => adClickCompleter.complete(ad),
+              );
+            },
+            onAdFailedToLoad: (error) => null,
+          ),
         );
 
         MethodCall methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
@@ -1434,13 +1546,16 @@ void main() {
           'eventName': 'onAdLoaded',
         });
 
-        ByteData data =
-            instanceManager.channel.codec.encodeMethodCall(methodCall);
+        ByteData data = instanceManager.channel.codec.encodeMethodCall(
+          methodCall,
+        );
         await handlePlatformMessage(data);
 
         // Handle adDidRecordClick method call
-        methodCall = MethodCall('onAdEvent',
-            <dynamic, dynamic>{'adId': adId, 'eventName': eventName});
+        methodCall = MethodCall('onAdEvent', <dynamic, dynamic>{
+          'adId': adId,
+          'eventName': eventName,
+        });
 
         data = instanceManager.channel.codec.encodeMethodCall(methodCall);
         await handlePlatformMessage(data);

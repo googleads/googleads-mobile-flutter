@@ -38,74 +38,77 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: ListView.separated(
-            itemCount: 20,
-            separatorBuilder: (BuildContext context, int index) {
-              return Container(
-                height: 40,
-              );
-            },
-            itemBuilder: (BuildContext context, int index) {
-              final BannerAd? bannerAd = _bannerAd;
-              if (index == 5 && _bannerAdIsLoaded && bannerAd != null) {
-                return Container(
-                    height: bannerAd.size.height.toDouble(),
-                    width: bannerAd.size.width.toDouble(),
-                    child: AdWidget(ad: bannerAd));
-              }
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: ListView.separated(
+        itemCount: 20,
+        separatorBuilder: (BuildContext context, int index) {
+          return Container(height: 40);
+        },
+        itemBuilder: (BuildContext context, int index) {
+          final BannerAd? bannerAd = _bannerAd;
+          if (index == 5 && _bannerAdIsLoaded && bannerAd != null) {
+            return Container(
+              height: bannerAd.size.height.toDouble(),
+              width: bannerAd.size.width.toDouble(),
+              child: AdWidget(ad: bannerAd),
+            );
+          }
 
-              final AdManagerBannerAd? adManagerBannerAd = _adManagerBannerAd;
-              if (index == 10 &&
-                  _adManagerBannerAdIsLoaded &&
-                  adManagerBannerAd != null) {
-                return Container(
-                    height: adManagerBannerAd.sizes[0].height.toDouble(),
-                    width: adManagerBannerAd.sizes[0].width.toDouble(),
-                    child: AdWidget(ad: _adManagerBannerAd!));
-              }
+          final AdManagerBannerAd? adManagerBannerAd = _adManagerBannerAd;
+          if (index == 10 &&
+              _adManagerBannerAdIsLoaded &&
+              adManagerBannerAd != null) {
+            return Container(
+              height: adManagerBannerAd.sizes[0].height.toDouble(),
+              width: adManagerBannerAd.sizes[0].width.toDouble(),
+              child: AdWidget(ad: _adManagerBannerAd!),
+            );
+          }
 
-              final NativeAd? nativeAd = _nativeAd;
-              if (index == 15 && _nativeAdIsLoaded && nativeAd != null) {
-                return Container(
-                    width: 250, height: 350, child: AdWidget(ad: nativeAd));
-              }
+          final NativeAd? nativeAd = _nativeAd;
+          if (index == 15 && _nativeAdIsLoaded && nativeAd != null) {
+            return Container(
+              width: 250,
+              height: 350,
+              child: AdWidget(ad: nativeAd),
+            );
+          }
 
-              return Text(
-                Constants.placeholderText,
-                style: TextStyle(fontSize: 24),
-              );
-            },
-          ),
-        ),
-      );
+          return Text(
+            Constants.placeholderText,
+            style: TextStyle(fontSize: 24),
+          );
+        },
+      ),
+    ),
+  );
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Create the ad objects and load ads.
     _bannerAd = BannerAd(
-        size: AdSize.banner,
-        adUnitId: Platform.isAndroid
-            ? 'ca-app-pub-3940256099942544/6300978111'
-            : 'ca-app-pub-3940256099942544/2934735716',
-        listener: BannerAdListener(
-          onAdLoaded: (Ad ad) {
-            print('$BannerAd loaded.');
-            setState(() {
-              _bannerAdIsLoaded = true;
-            });
-          },
-          onAdFailedToLoad: (Ad ad, LoadAdError error) {
-            print('$BannerAd failedToLoad: $error');
-            ad.dispose();
-          },
-          onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
-          onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
-        ),
-        request: AdRequest())
-      ..load();
+      size: AdSize.banner,
+      adUnitId: Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/6300978111'
+          : 'ca-app-pub-3940256099942544/2934735716',
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          print('$BannerAd loaded.');
+          setState(() {
+            _bannerAdIsLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('$BannerAd failedToLoad: $error');
+          ad.dispose();
+        },
+        onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
+        onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
+      ),
+      request: AdRequest(),
+    )..load();
 
     _nativeAd = NativeAd(
       adUnitId: Platform.isAndroid

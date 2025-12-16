@@ -17,8 +17,10 @@ import 'package:flutter/foundation.dart';
 /// Parameters sent on updating user consent info.
 class ConsentRequestParameters {
   /// Construct a [ConsentRequestParameters].
-  ConsentRequestParameters(
-      {this.tagForUnderAgeOfConsent, this.consentDebugSettings});
+  ConsentRequestParameters({
+    this.tagForUnderAgeOfConsent,
+    this.consentDebugSettings,
+  });
 
   /// Tag for underage of consent.
   ///
@@ -80,5 +82,5 @@ enum DebugGeography {
   debugGeographyRegulatedUsState,
 
   /// Geography appears as in a region with no regulation in force.
-  debugGeographyOther
+  debugGeographyOther,
 }

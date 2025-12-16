@@ -54,12 +54,13 @@ class _InlineAdaptiveExampleState extends State<InlineAdaptiveExample> {
 
     // Get an inline adaptive size for the current orientation.
     AdSize size = AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(
-        _adWidth.truncate());
+      _adWidth.truncate(),
+    );
 
     _inlineAdaptiveAd = AdManagerBannerAd(
       adUnitId: Platform.isAndroid
           ? '/21775744923/example/banner'
-          : '/6499/example/adaptive-banner',
+          : '/21775744923/example/adaptive-banner',
       sizes: [size],
       request: AdManagerAdRequest(),
       listener: AdManagerBannerAdListener(
@@ -103,13 +104,12 @@ class _InlineAdaptiveExampleState extends State<InlineAdaptiveExample> {
             _isLoaded &&
             _adSize != null) {
           return Align(
-              child: Container(
-            width: _adWidth,
-            height: _adSize!.height.toDouble(),
-            child: AdWidget(
-              ad: _inlineAdaptiveAd!,
+            child: Container(
+              width: _adWidth,
+              height: _adSize!.height.toDouble(),
+              child: AdWidget(ad: _inlineAdaptiveAd!),
             ),
-          ));
+          );
         }
         // Reload the ad if the orientation changes.
         if (_currentOrientation != orientation) {
@@ -123,31 +123,28 @@ class _InlineAdaptiveExampleState extends State<InlineAdaptiveExample> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(
-        title: Text('Inline adaptive banner example'),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: _insets),
-          child: ListView.separated(
-            itemCount: 3,
-            separatorBuilder: (BuildContext context, int index) {
-              return Container(
-                height: 40,
-              );
-            },
-            itemBuilder: (BuildContext context, int index) {
-              if (index == 1) {
-                return _getAdWidget();
-              }
-              return Text(
-                Constants.placeholderText,
-                style: TextStyle(fontSize: 24),
-              );
-            },
-          ),
+    appBar: AppBar(title: Text('Inline adaptive banner example')),
+    body: Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: _insets),
+        child: ListView.separated(
+          itemCount: 3,
+          separatorBuilder: (BuildContext context, int index) {
+            return Container(height: 40);
+          },
+          itemBuilder: (BuildContext context, int index) {
+            if (index == 1) {
+              return _getAdWidget();
+            }
+            return Text(
+              Constants.placeholderText,
+              style: TextStyle(fontSize: 24),
+            );
+          },
         ),
-      ));
+      ),
+    ),
+  );
 
   @override
   void dispose() {

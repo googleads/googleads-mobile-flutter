@@ -26,19 +26,24 @@ typedef GenericAdEventCallback<Ad> = void Function(Ad ad);
 typedef FullScreenAdLoadErrorCallback = void Function(LoadAdError error);
 
 /// The callback type for when a user earns a reward.
-typedef OnUserEarnedRewardCallback = void Function(
-    AdWithoutView ad, RewardItem reward);
+typedef OnUserEarnedRewardCallback =
+    void Function(AdWithoutView ad, RewardItem reward);
 
 /// The callback type to handle an error loading an [Ad].
 typedef AdLoadErrorCallback = void Function(Ad ad, LoadAdError error);
 
 /// The callback type for when an ad receives revenue value.
-typedef OnPaidEventCallback = void Function(
-    Ad ad, double valueMicros, PrecisionType precision, String currencyCode);
+typedef OnPaidEventCallback =
+    void Function(
+      Ad ad,
+      double valueMicros,
+      PrecisionType precision,
+      String currencyCode,
+    );
 
 /// The callback type for when a fluid ad's height changes.
-typedef OnFluidAdHeightChangedListener = void Function(
-    FluidAdManagerBannerAd ad, double height);
+typedef OnFluidAdHeightChangedListener =
+    void Function(FluidAdManagerBannerAd ad, double height);
 
 /// Allowed constants for precision type in [OnPaidEventCallback].
 enum PrecisionType {
@@ -52,7 +57,7 @@ enum PrecisionType {
   publisherProvided,
 
   /// The precise value paid for this ad.
-  precise
+  precise,
 }
 
 /// Listener for app events.
@@ -131,15 +136,15 @@ class BannerAdListener extends AdWithViewListener {
     OnPaidEventCallback? onPaidEvent,
     AdEventCallback? onAdClicked,
   }) : super(
-          onAdLoaded: onAdLoaded,
-          onAdFailedToLoad: onAdFailedToLoad,
-          onAdOpened: onAdOpened,
-          onAdClosed: onAdClosed,
-          onAdWillDismissScreen: onAdWillDismissScreen,
-          onAdImpression: onAdImpression,
-          onPaidEvent: onPaidEvent,
-          onAdClicked: onAdClicked,
-        );
+         onAdLoaded: onAdLoaded,
+         onAdFailedToLoad: onAdFailedToLoad,
+         onAdOpened: onAdOpened,
+         onAdClosed: onAdClosed,
+         onAdWillDismissScreen: onAdWillDismissScreen,
+         onAdImpression: onAdImpression,
+         onPaidEvent: onPaidEvent,
+         onAdClicked: onAdClicked,
+       );
 }
 
 /// A listener for receiving notifications for the lifecycle of an [AdManagerBannerAd].
@@ -170,15 +175,15 @@ class AdManagerBannerAdListener extends BannerAdListener
     this.onAppEvent,
     AdEventCallback? onAdClicked,
   }) : super(
-          onAdLoaded: onAdLoaded,
-          onAdFailedToLoad: onAdFailedToLoad,
-          onAdOpened: onAdOpened,
-          onAdWillDismissScreen: onAdWillDismissScreen,
-          onAdClosed: onAdClosed,
-          onAdImpression: onAdImpression,
-          onPaidEvent: onPaidEvent,
-          onAdClicked: onAdClicked,
-        );
+         onAdLoaded: onAdLoaded,
+         onAdFailedToLoad: onAdFailedToLoad,
+         onAdOpened: onAdOpened,
+         onAdWillDismissScreen: onAdWillDismissScreen,
+         onAdClosed: onAdClosed,
+         onAdImpression: onAdImpression,
+         onPaidEvent: onPaidEvent,
+         onAdClicked: onAdClicked,
+       );
 
   /// Called when an app event is received.
   @override
@@ -211,14 +216,15 @@ class NativeAdListener extends AdWithViewListener {
     OnPaidEventCallback? onPaidEvent,
     AdEventCallback? onAdClicked,
   }) : super(
-            onAdLoaded: onAdLoaded,
-            onAdFailedToLoad: onAdFailedToLoad,
-            onAdOpened: onAdOpened,
-            onAdWillDismissScreen: onAdWillDismissScreen,
-            onAdClosed: onAdClosed,
-            onAdImpression: onAdImpression,
-            onPaidEvent: onPaidEvent,
-            onAdClicked: onAdClicked);
+         onAdLoaded: onAdLoaded,
+         onAdFailedToLoad: onAdFailedToLoad,
+         onAdOpened: onAdOpened,
+         onAdWillDismissScreen: onAdWillDismissScreen,
+         onAdClosed: onAdClosed,
+         onAdImpression: onAdImpression,
+         onPaidEvent: onPaidEvent,
+         onAdClicked: onAdClicked,
+       );
 }
 
 /// Callback events for for full screen ads, such as Rewarded and Interstitial.

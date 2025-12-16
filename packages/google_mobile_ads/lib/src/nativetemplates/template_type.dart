@@ -18,5 +18,5 @@ enum TemplateType {
   small,
 
   /// Medium layout
-  medium
+  medium,
 }

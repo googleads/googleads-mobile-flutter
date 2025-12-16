@@ -36,136 +36,112 @@ class MockUserMessagingChannel extends _i1.Mock
     _i3.ConsentRequestParameters? params,
     _i4.OnConsentInfoUpdateSuccessListener? successListener,
     _i4.OnConsentInfoUpdateFailureListener? failureListener,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #requestConsentInfoUpdate,
-          [
-            params,
-            successListener,
-            failureListener,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  ) => super.noSuchMethod(
+    Invocation.method(#requestConsentInfoUpdate, [
+      params,
+      successListener,
+      failureListener,
+    ]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i5.Future<bool> isConsentFormAvailable() => (super.noSuchMethod(
-        Invocation.method(
-          #isConsentFormAvailable,
-          [],
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-        returnValueForMissingStub: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+  _i5.Future<bool> isConsentFormAvailable() =>
+      (super.noSuchMethod(
+            Invocation.method(#isConsentFormAvailable, []),
+            returnValue: _i5.Future<bool>.value(false),
+            returnValueForMissingStub: _i5.Future<bool>.value(false),
+          )
+          as _i5.Future<bool>);
 
   @override
-  _i5.Future<_i4.ConsentStatus> getConsentStatus() => (super.noSuchMethod(
-        Invocation.method(
-          #getConsentStatus,
-          [],
-        ),
-        returnValue:
-            _i5.Future<_i4.ConsentStatus>.value(_i4.ConsentStatus.notRequired),
-        returnValueForMissingStub:
-            _i5.Future<_i4.ConsentStatus>.value(_i4.ConsentStatus.notRequired),
-      ) as _i5.Future<_i4.ConsentStatus>);
+  _i5.Future<_i4.ConsentStatus> getConsentStatus() =>
+      (super.noSuchMethod(
+            Invocation.method(#getConsentStatus, []),
+            returnValue: _i5.Future<_i4.ConsentStatus>.value(
+              _i4.ConsentStatus.notRequired,
+            ),
+            returnValueForMissingStub: _i5.Future<_i4.ConsentStatus>.value(
+              _i4.ConsentStatus.notRequired,
+            ),
+          )
+          as _i5.Future<_i4.ConsentStatus>);
 
   @override
-  _i5.Future<void> reset() => (super.noSuchMethod(
-        Invocation.method(
-          #reset,
-          [],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+  _i5.Future<void> reset() =>
+      (super.noSuchMethod(
+            Invocation.method(#reset, []),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 
   @override
-  _i5.Future<bool> canRequestAds() => (super.noSuchMethod(
-        Invocation.method(
-          #canRequestAds,
-          [],
-        ),
-        returnValue: _i5.Future<bool>.value(false),
-        returnValueForMissingStub: _i5.Future<bool>.value(false),
-      ) as _i5.Future<bool>);
+  _i5.Future<bool> canRequestAds() =>
+      (super.noSuchMethod(
+            Invocation.method(#canRequestAds, []),
+            returnValue: _i5.Future<bool>.value(false),
+            returnValueForMissingStub: _i5.Future<bool>.value(false),
+          )
+          as _i5.Future<bool>);
 
   @override
   _i5.Future<_i4.PrivacyOptionsRequirementStatus>
-      getPrivacyOptionsRequirementStatus() => (super.noSuchMethod(
-            Invocation.method(
-              #getPrivacyOptionsRequirementStatus,
-              [],
-            ),
+  getPrivacyOptionsRequirementStatus() =>
+      (super.noSuchMethod(
+            Invocation.method(#getPrivacyOptionsRequirementStatus, []),
             returnValue: _i5.Future<_i4.PrivacyOptionsRequirementStatus>.value(
-                _i4.PrivacyOptionsRequirementStatus.notRequired),
+              _i4.PrivacyOptionsRequirementStatus.notRequired,
+            ),
             returnValueForMissingStub:
                 _i5.Future<_i4.PrivacyOptionsRequirementStatus>.value(
-                    _i4.PrivacyOptionsRequirementStatus.notRequired),
-          ) as _i5.Future<_i4.PrivacyOptionsRequirementStatus>);
+                  _i4.PrivacyOptionsRequirementStatus.notRequired,
+                ),
+          )
+          as _i5.Future<_i4.PrivacyOptionsRequirementStatus>);
 
   @override
   void loadConsentForm(
     _i6.OnConsentFormLoadSuccessListener? successListener,
     _i6.OnConsentFormLoadFailureListener? failureListener,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #loadConsentForm,
-          [
-            successListener,
-            failureListener,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  ) => super.noSuchMethod(
+    Invocation.method(#loadConsentForm, [successListener, failureListener]),
+    returnValueForMissingStub: null,
+  );
 
   @override
   _i5.Future<_i7.FormError?> loadAndShowConsentFormIfRequired() =>
       (super.noSuchMethod(
-        Invocation.method(
-          #loadAndShowConsentFormIfRequired,
-          [],
-        ),
-        returnValue: _i5.Future<_i7.FormError?>.value(),
-        returnValueForMissingStub: _i5.Future<_i7.FormError?>.value(),
-      ) as _i5.Future<_i7.FormError?>);
+            Invocation.method(#loadAndShowConsentFormIfRequired, []),
+            returnValue: _i5.Future<_i7.FormError?>.value(),
+            returnValueForMissingStub: _i5.Future<_i7.FormError?>.value(),
+          )
+          as _i5.Future<_i7.FormError?>);
 
   @override
   void show(
     _i6.ConsentForm? consentForm,
     _i6.OnConsentFormDismissedListener? onConsentFormDismissedListener,
-  ) =>
-      super.noSuchMethod(
-        Invocation.method(
-          #show,
-          [
-            consentForm,
-            onConsentFormDismissedListener,
-          ],
-        ),
-        returnValueForMissingStub: null,
-      );
+  ) => super.noSuchMethod(
+    Invocation.method(#show, [consentForm, onConsentFormDismissedListener]),
+    returnValueForMissingStub: null,
+  );
 
   @override
-  _i5.Future<_i7.FormError?> showPrivacyOptionsForm() => (super.noSuchMethod(
-        Invocation.method(
-          #showPrivacyOptionsForm,
-          [],
-        ),
-        returnValue: _i5.Future<_i7.FormError?>.value(),
-        returnValueForMissingStub: _i5.Future<_i7.FormError?>.value(),
-      ) as _i5.Future<_i7.FormError?>);
+  _i5.Future<_i7.FormError?> showPrivacyOptionsForm() =>
+      (super.noSuchMethod(
+            Invocation.method(#showPrivacyOptionsForm, []),
+            returnValue: _i5.Future<_i7.FormError?>.value(),
+            returnValueForMissingStub: _i5.Future<_i7.FormError?>.value(),
+          )
+          as _i5.Future<_i7.FormError?>);
 
   @override
   _i5.Future<void> disposeConsentForm(_i6.ConsentForm? consentForm) =>
       (super.noSuchMethod(
-        Invocation.method(
-          #disposeConsentForm,
-          [consentForm],
-        ),
-        returnValue: _i5.Future<void>.value(),
-        returnValueForMissingStub: _i5.Future<void>.value(),
-      ) as _i5.Future<void>);
+            Invocation.method(#disposeConsentForm, [consentForm]),
+            returnValue: _i5.Future<void>.value(),
+            returnValueForMissingStub: _i5.Future<void>.value(),
+          )
+          as _i5.Future<void>);
 }

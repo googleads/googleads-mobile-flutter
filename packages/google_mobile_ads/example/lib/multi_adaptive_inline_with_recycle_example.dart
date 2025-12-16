@@ -100,37 +100,41 @@ class _MultiInlineAdaptiveWithRecycleExampleState
     return Scaffold(
       appBar: AppBar(title: Text('Adaptive Size, Recycle')),
       body: ListView.builder(
-          // Arbitrary example of 100 items in the list.
-          itemCount: 100,
-          itemBuilder: (BuildContext context, int index) {
-            if (index % _adInterval == 0) {
-              int bannerPosition = index ~/ _adInterval;
-              BannerAd bannerAd = _getRecycledBannerAd(bannerPosition);
-              final AdSize? adSize = _bannerSizes[bannerAd];
-              if (adSize == null) {
-                // Null adSize means the banner's content is not fetched yet.
-                return SizedBox.shrink();
-              }
-              // Now this banner is loaded with ad content and corresponding ad size.
-              return SizedBox(
-                  width: adSize.width.toDouble(),
-                  height: adSize.height.toDouble(),
-                  child: AdWidget(ad: bannerAd));
+        // Arbitrary example of 100 items in the list.
+        itemCount: 100,
+        itemBuilder: (BuildContext context, int index) {
+          if (index % _adInterval == 0) {
+            int bannerPosition = index ~/ _adInterval;
+            BannerAd bannerAd = _getRecycledBannerAd(bannerPosition);
+            final AdSize? adSize = _bannerSizes[bannerAd];
+            if (adSize == null) {
+              // Null adSize means the banner's content is not fetched yet.
+              return SizedBox.shrink();
             }
-
-            // Show your regular non-ad content.
-            return Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.blue,
-                  width: 1.0,
-                  style: BorderStyle.solid,
-                ),
-              ),
-              child: SizedBox(
-                  height: 100, child: ColoredBox(color: Colors.yellow)),
+            // Now this banner is loaded with ad content and corresponding ad size.
+            return SizedBox(
+              width: adSize.width.toDouble(),
+              height: adSize.height.toDouble(),
+              child: AdWidget(ad: bannerAd),
             );
-          }),
+          }
+
+          // Show your regular non-ad content.
+          return Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.blue,
+                width: 1.0,
+                style: BorderStyle.solid,
+              ),
+            ),
+            child: SizedBox(
+              height: 100,
+              child: ColoredBox(color: Colors.yellow),
+            ),
+          );
+        },
+      ),
     );
   }
 
