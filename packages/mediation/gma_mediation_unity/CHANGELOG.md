@@ -1,5 +1,7 @@
 ## Unity Ads Flutter Mediation Adapter Changelog
 
+#### Version 1.6.4 (In progress)
+
 #### Version 1.6.3 (In progress)
 
 #### Version 1.6.2
