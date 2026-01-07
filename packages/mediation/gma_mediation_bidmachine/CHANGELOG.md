@@ -1,5 +1,7 @@
 ## BidMachine Flutter Mediation Adapter Changelog
 
+#### Version 1.3.1 (In progress)
+
 #### Version 1.3.0
 - Supports [BidMachine Android adapter version 3.5.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/bidmachine/CHANGELOG.md#version-3500).
 - Supports [BidMachine iOS adapter version 3.5.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/BidMachine/CHANGELOG.md#version-3500).
