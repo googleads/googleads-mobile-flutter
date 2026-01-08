@@ -30,6 +30,7 @@ import 'package:pigeon/pigeon.dart';
   ),
 )
 @HostApi()
+
 /// The generated classes set the channels to call the methods in the corresponding kotlin MolocoSDKApi interface and swift MolocoSDKApi protocol from the dart layer.
 abstract class MolocoSDKApi {
   // TODO: Add SDK methods here.
