@@ -4,17 +4,17 @@ version: 1.6.4
 repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/mediation/gma_mediation_unity
 
 environment:
-  sdk: '>=3.6.0 <4.0.0'
+  sdk: '>=3.9.0 <4.0.0'
   flutter: '>=3.27.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  google_mobile_ads: ^6.0.0
+  google_mobile_ads: ^7.0.0
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
-  flutter_lints: ^3.0.0
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
   lint: ^2.3.0
