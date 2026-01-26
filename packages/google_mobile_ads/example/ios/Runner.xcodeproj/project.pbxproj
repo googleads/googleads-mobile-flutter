@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3378E6382F26E4F80045E7DA /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 3378E6372F26E4F80045E7DA /* FlutterGeneratedPluginSwiftPackage */; };
+		33BB199B2F27F2E0000F183D /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 33BB199A2F27F2E0000F183D /* FlutterGeneratedPluginSwiftPackage */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */; };
 		887A5D54EBB22EE56FEA68C0 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27D45D7A6903C5DAFE9FAFAD /* Pods_RunnerTests.framework */; };
@@ -73,29 +74,6 @@
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		27D45D7A6903C5DAFE9FAFAD /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		33AC258D2F27AF1A00996361 /* FLTAd_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTAd_Internal.h; sourceTree = "<group>"; };
-		33AC258E2F27AF1A00996361 /* FLTAdInstanceManager_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTAdInstanceManager_Internal.h; sourceTree = "<group>"; };
-		33AC258F2F27AF1A00996361 /* FLTAdUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTAdUtil.h; sourceTree = "<group>"; };
-		33AC25902F27AF1A00996361 /* FLTAppStateNotifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTAppStateNotifier.h; sourceTree = "<group>"; };
-		33AC25912F27AF1A00996361 /* FLTConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTConstants.h; sourceTree = "<group>"; };
-		33AC25922F27AF1A00996361 /* FLTGoogleMobileAdsCollection_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTGoogleMobileAdsCollection_Internal.h; sourceTree = "<group>"; };
-		33AC25932F27AF1A00996361 /* FLTGoogleMobileAdsPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTGoogleMobileAdsPlugin.h; sourceTree = "<group>"; };
-		33AC25942F27AF1A00996361 /* FLTGoogleMobileAdsReaderWriter_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTGoogleMobileAdsReaderWriter_Internal.h; sourceTree = "<group>"; };
-		33AC25952F27AF1A00996361 /* FLTMediationExtras.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTMediationExtras.h; sourceTree = "<group>"; };
-		33AC25962F27AF1A00996361 /* FLTMediationNetworkExtrasProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTMediationNetworkExtrasProvider.h; sourceTree = "<group>"; };
-		33AC25972F27AF1A00996361 /* FLTMobileAds_Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTMobileAds_Internal.h; sourceTree = "<group>"; };
-		33AC25982F27AF1A00996361 /* FLTNativeTemplateColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTNativeTemplateColor.h; sourceTree = "<group>"; };
-		33AC25992F27AF1A00996361 /* FLTNativeTemplateFontStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTNativeTemplateFontStyle.h; sourceTree = "<group>"; };
-		33AC259A2F27AF1A00996361 /* FLTNativeTemplateStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTNativeTemplateStyle.h; sourceTree = "<group>"; };
-		33AC259B2F27AF1A00996361 /* FLTNativeTemplateTextStyle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTNativeTemplateTextStyle.h; sourceTree = "<group>"; };
-		33AC259C2F27AF1A00996361 /* FLTNativeTemplateType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTNativeTemplateType.h; sourceTree = "<group>"; };
-		33AC259D2F27AF1A00996361 /* FLTNSString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTNSString.h; sourceTree = "<group>"; };
-		33AC259E2F27AF1A00996361 /* GADTFullScreenTemplateView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GADTFullScreenTemplateView.h; sourceTree = "<group>"; };
-		33AC259F2F27AF1A00996361 /* GADTMediumTemplateView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GADTMediumTemplateView.h; sourceTree = "<group>"; };
-		33AC25A02F27AF1A00996361 /* GADTSmallTemplateView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GADTSmallTemplateView.h; sourceTree = "<group>"; };
-		33AC25A12F27AF1A00996361 /* GADTTemplateView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GADTTemplateView.h; sourceTree = "<group>"; };
-		33B27DF02F27F4BB003F87EC /* FLTUserMessagingPlatformManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTUserMessagingPlatformManager.h; sourceTree = "<group>"; };
-		33B27DF12F27F4BB003F87EC /* FLTUserMessagingPlatformReaderWriter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FLTUserMessagingPlatformReaderWriter.h; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		784666492D4C4C64000A1A5F /* FlutterFramework */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterFramework; path = Flutter/ephemeral/Packages/.packages/FlutterFramework; sourceTree = "<group>"; };
 		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
@@ -111,11 +89,6 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9E091BBD294BB06600245390 /* FLTNativeTemplateType.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FLTNativeTemplateType.m; sourceTree = "<group>"; };
-		9E091BBE294BBFEB00245390 /* FLTNativeTemplateTextStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FLTNativeTemplateTextStyle.m; sourceTree = "<group>"; };
-		9E091BBF294BC29500245390 /* FLTNativeTemplateFontStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FLTNativeTemplateFontStyle.m; sourceTree = "<group>"; };
-		9E091BC0294BCE2C00245390 /* FLTNativeTemplateStyle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FLTNativeTemplateStyle.m; sourceTree = "<group>"; };
-		9E5A534826AA235D00B9438D /* FLTAdUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTAdUtil.m; path = ../../ios/google_mobile_ads/Sources/google_mobile_ads/FLTAdUtil.m; sourceTree = "<group>"; };
 		9E61AA1629BBE51900801A83 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E61AA1F29BBE58400801A83 /* FLTAdRequestTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTAdRequestTest.m; sourceTree = "<group>"; };
 		9E61AA2129BBE66900801A83 /* FLTGoogleMobileAdsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTGoogleMobileAdsTest.m; sourceTree = "<group>"; };
@@ -139,28 +112,8 @@
 		9E61AA5B29BBE8FD00801A83 /* FLTNativeTemplateStyleTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTNativeTemplateStyleTest.m; path = NativeTemplates/FLTNativeTemplateStyleTest.m; sourceTree = "<group>"; };
 		9E61AA5C29BBE8FD00801A83 /* FLTNativeTemplateFontStyleTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTNativeTemplateFontStyleTest.m; path = NativeTemplates/FLTNativeTemplateFontStyleTest.m; sourceTree = "<group>"; };
 		9E61AA5D29BBE8FD00801A83 /* FLTNativeTemplateColorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTNativeTemplateColorTest.m; path = NativeTemplates/FLTNativeTemplateColorTest.m; sourceTree = "<group>"; };
-		9E7B9D8E273206F800C6A6AB /* FLTAppStateNotifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTAppStateNotifier.m; path = ../../ios/google_mobile_ads/Sources/google_mobile_ads/FLTAppStateNotifier.m; sourceTree = "<group>"; };
 		9EA7213525BB6464008D57E3 /* GoogleMobileAds.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleMobileAds.xcframework; path = "Pods/Google-Mobile-Ads-SDK/Frameworks/GoogleMobileAdsFramework-Current/GoogleMobileAds.xcframework"; sourceTree = "<group>"; };
-		9EAB471F286A4C73004456D0 /* FLTNSString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLTNSString.m; path = ../../ios/google_mobile_ads/Sources/google_mobile_ads/FLTNSString.m; sourceTree = "<group>"; };
-		9EB849FF294A903400F2A80D /* FLTNativeTemplateColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTNativeTemplateColor.m; sourceTree = "<group>"; };
-		9EB84A18294A989500F2A80D /* GADTFullScreenTemplateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GADTFullScreenTemplateView.xib; path = ../Resources/GADTFullScreenTemplateView.xib; sourceTree = "<group>"; };
-		9EB84A1A294A98DB00F2A80D /* GADTFullScreenTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GADTFullScreenTemplateView.m; path = ../GoogleAdsMobileIosNativeTemplates/GADTFullScreenTemplateView.m; sourceTree = "<group>"; };
-		9EB84A1D294A99A300F2A80D /* GADTMediumTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GADTMediumTemplateView.m; path = ../GoogleAdsMobileIosNativeTemplates/GADTMediumTemplateView.m; sourceTree = "<group>"; };
-		9EB84A20294A9A1F00F2A80D /* GADTSmallTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GADTSmallTemplateView.m; path = ../GoogleAdsMobileIosNativeTemplates/GADTSmallTemplateView.m; sourceTree = "<group>"; };
-		9EB84A23294A9A8600F2A80D /* GADTTemplateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GADTTemplateView.m; path = ../GoogleAdsMobileIosNativeTemplates/GADTTemplateView.m; sourceTree = "<group>"; };
-		9EB84A25294A9AD100F2A80D /* GADTMediumTemplateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = GADTMediumTemplateView.xib; path = ../Resources/GADTMediumTemplateView.xib; sourceTree = "<group>"; };
-		9EB84A26294A9AF300F2A80D /* GADTSmallTemplateView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GADTSmallTemplateView.xib; path = ../Resources/GADTSmallTemplateView.xib; sourceTree = "<group>"; };
-		9EB9FE51280F6CA200DDBB4F /* FLTUserMessagingPlatformManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTUserMessagingPlatformManager.m; sourceTree = "<group>"; };
-		9EB9FE52280F6CA200DDBB4F /* FLTUserMessagingPlatformManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLTUserMessagingPlatformManager.h; sourceTree = "<group>"; };
-		9EB9FE54280F6F2100DDBB4F /* FLTUserMessagingPlatformReaderWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLTUserMessagingPlatformReaderWriter.h; sourceTree = "<group>"; };
-		9EB9FE55280F6F2100DDBB4F /* FLTUserMessagingPlatformReaderWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTUserMessagingPlatformReaderWriter.m; sourceTree = "<group>"; };
 		9EB9FE57280F853D00DDBB4F /* UserMessagingPlatform.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = UserMessagingPlatform.xcframework; path = Pods/GoogleUserMessagingPlatform/Frameworks/Release/UserMessagingPlatform.xcframework; sourceTree = "<group>"; };
-		9EF4E6F426392B230007E4FE /* FLTAd_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTAd_Internal.m; path = ../../ios/google_mobile_ads/Sources/google_mobile_ads/FLTAd_Internal.m; sourceTree = "<group>"; };
-		9EF4E6F626392B230007E4FE /* FLTMobileAds_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTMobileAds_Internal.m; path = ../../ios/google_mobile_ads/Sources/google_mobile_ads/FLTMobileAds_Internal.m; sourceTree = "<group>"; };
-		9EF4E6F926392B230007E4FE /* FLTAdInstanceManager_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTAdInstanceManager_Internal.m; path = ../../ios/google_mobile_ads/Sources/google_mobile_ads/FLTAdInstanceManager_Internal.m; sourceTree = "<group>"; };
-		9EF4E6FA26392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsReaderWriter_Internal.m; path = ../../ios/google_mobile_ads/Sources/google_mobile_ads/FLTGoogleMobileAdsReaderWriter_Internal.m; sourceTree = "<group>"; };
-		9EF4E6FC26392B230007E4FE /* FLTGoogleMobileAdsPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsPlugin.m; path = ../../ios/google_mobile_ads/Sources/google_mobile_ads/FLTGoogleMobileAdsPlugin.m; sourceTree = "<group>"; };
-		9EF4E6FE26392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FLTGoogleMobileAdsCollection_Internal.m; path = ../../ios/google_mobile_ads/Sources/google_mobile_ads/FLTGoogleMobileAdsCollection_Internal.m; sourceTree = "<group>"; };
 		9EFEAB4E29B0019F000A063B /* GoogleMobileAds.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = GoogleMobileAds.xcframework; path = "Pods/Google-Mobile-Ads-SDK/Frameworks/GoogleMobileAdsFramework/GoogleMobileAds.xcframework"; sourceTree = "<group>"; };
 		A380EE5B67A6B0F501F9FBF1 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		FE39CA478AEB75A8616A301A /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,6 +127,7 @@
 				78A318202AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 				EBE2BC5BBFE6DB1E33F703F6 /* Pods_Runner.framework in Frameworks */,
 				3378E6382F26E4F80045E7DA /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
+				33BB199B2F27F2E0000F183D /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,45 +152,6 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
-		};
-		33AC25A22F27AF1A00996361 /* google_mobile_ads */ = {
-			isa = PBXGroup;
-			children = (
-				33AC258D2F27AF1A00996361 /* FLTAd_Internal.h */,
-				33AC258E2F27AF1A00996361 /* FLTAdInstanceManager_Internal.h */,
-				33AC258F2F27AF1A00996361 /* FLTAdUtil.h */,
-				33AC25902F27AF1A00996361 /* FLTAppStateNotifier.h */,
-				33AC25912F27AF1A00996361 /* FLTConstants.h */,
-				33AC25922F27AF1A00996361 /* FLTGoogleMobileAdsCollection_Internal.h */,
-				33AC25932F27AF1A00996361 /* FLTGoogleMobileAdsPlugin.h */,
-				33AC25942F27AF1A00996361 /* FLTGoogleMobileAdsReaderWriter_Internal.h */,
-				33AC25952F27AF1A00996361 /* FLTMediationExtras.h */,
-				33AC25962F27AF1A00996361 /* FLTMediationNetworkExtrasProvider.h */,
-				33AC25972F27AF1A00996361 /* FLTMobileAds_Internal.h */,
-				33AC25982F27AF1A00996361 /* FLTNativeTemplateColor.h */,
-				33AC25992F27AF1A00996361 /* FLTNativeTemplateFontStyle.h */,
-				33AC259A2F27AF1A00996361 /* FLTNativeTemplateStyle.h */,
-				33AC259B2F27AF1A00996361 /* FLTNativeTemplateTextStyle.h */,
-				33AC259C2F27AF1A00996361 /* FLTNativeTemplateType.h */,
-				33AC259D2F27AF1A00996361 /* FLTNSString.h */,
-				33B27DF02F27F4BB003F87EC /* FLTUserMessagingPlatformManager.h */,
-				33B27DF12F27F4BB003F87EC /* FLTUserMessagingPlatformReaderWriter.h */,
-				33AC259E2F27AF1A00996361 /* GADTFullScreenTemplateView.h */,
-				33AC259F2F27AF1A00996361 /* GADTMediumTemplateView.h */,
-				33AC25A02F27AF1A00996361 /* GADTSmallTemplateView.h */,
-				33AC25A12F27AF1A00996361 /* GADTTemplateView.h */,
-			);
-			path = google_mobile_ads;
-			sourceTree = "<group>";
-		};
-		33AC25A32F27AF1A00996361 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				33AC25A22F27AF1A00996361 /* google_mobile_ads */,
-			);
-			name = include;
-			path = "/Users/stuartmorgan/src/googleads-mobile-flutter/packages/google_mobile_ads/ios/google_mobile_ads/Sources/google_mobile_ads/include";
-			sourceTree = "<absolute>";
 		};
 		5B6AAA352BAC85BF7DD68C46 /* Frameworks */ = {
 			isa = PBXGroup;
@@ -266,18 +181,6 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
-				33AC25A32F27AF1A00996361 /* include */,
-				9E9D10C72949637600300686 /* NativeTemplates */,
-				9EB9FE50280F6CA200DDBB4F /* UserMessagingPlatform */,
-				9EAB471F286A4C73004456D0 /* FLTNSString.m */,
-				9E7B9D8E273206F800C6A6AB /* FLTAppStateNotifier.m */,
-				9E5A534826AA235D00B9438D /* FLTAdUtil.m */,
-				9EF4E6F426392B230007E4FE /* FLTAd_Internal.m */,
-				9EF4E6F926392B230007E4FE /* FLTAdInstanceManager_Internal.m */,
-				9EF4E6FE26392B230007E4FE /* FLTGoogleMobileAdsCollection_Internal.m */,
-				9EF4E6FC26392B230007E4FE /* FLTGoogleMobileAdsPlugin.m */,
-				9EF4E6FA26392B230007E4FE /* FLTGoogleMobileAdsReaderWriter_Internal.m */,
-				9EF4E6F626392B230007E4FE /* FLTMobileAds_Internal.m */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				9E61AA1729BBE51900801A83 /* RunnerTests */,
@@ -366,46 +269,6 @@
 			name = NativeTemplates;
 			sourceTree = "<group>";
 		};
-		9E9D10C72949637600300686 /* NativeTemplates */ = {
-			isa = PBXGroup;
-			children = (
-				9EB84A16294A984C00F2A80D /* GoogleAdsMobileIosNativeTemplates */,
-				9EB849FF294A903400F2A80D /* FLTNativeTemplateColor.m */,
-				9E091BBF294BC29500245390 /* FLTNativeTemplateFontStyle.m */,
-				9E091BC0294BCE2C00245390 /* FLTNativeTemplateStyle.m */,
-				9E091BBE294BBFEB00245390 /* FLTNativeTemplateTextStyle.m */,
-				9E091BBD294BB06600245390 /* FLTNativeTemplateType.m */,
-			);
-			name = NativeTemplates;
-			path = ../../ios/google_mobile_ads/Sources/google_mobile_ads/NativeTemplates;
-			sourceTree = "<group>";
-		};
-		9EB84A16294A984C00F2A80D /* GoogleAdsMobileIosNativeTemplates */ = {
-			isa = PBXGroup;
-			children = (
-				9EB84A26294A9AF300F2A80D /* GADTSmallTemplateView.xib */,
-				9EB84A25294A9AD100F2A80D /* GADTMediumTemplateView.xib */,
-				9EB84A18294A989500F2A80D /* GADTFullScreenTemplateView.xib */,
-				9EB84A23294A9A8600F2A80D /* GADTTemplateView.m */,
-				9EB84A20294A9A1F00F2A80D /* GADTSmallTemplateView.m */,
-				9EB84A1D294A99A300F2A80D /* GADTMediumTemplateView.m */,
-				9EB84A1A294A98DB00F2A80D /* GADTFullScreenTemplateView.m */,
-			);
-			name = GoogleAdsMobileIosNativeTemplates;
-			sourceTree = "<group>";
-		};
-		9EB9FE50280F6CA200DDBB4F /* UserMessagingPlatform */ = {
-			isa = PBXGroup;
-			children = (
-				9EB9FE54280F6F2100DDBB4F /* FLTUserMessagingPlatformReaderWriter.h */,
-				9EB9FE55280F6F2100DDBB4F /* FLTUserMessagingPlatformReaderWriter.m */,
-				9EB9FE51280F6CA200DDBB4F /* FLTUserMessagingPlatformManager.m */,
-				9EB9FE52280F6CA200DDBB4F /* FLTUserMessagingPlatformManager.h */,
-			);
-			name = UserMessagingPlatform;
-			path = ../../ios/google_mobile_ads/Sources/google_mobile_ads/UserMessagingPlatform;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -428,6 +291,7 @@
 			name = Runner;
 			packageProductDependencies = (
 				78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */,
+				33BB199A2F27F2E0000F183D /* FlutterGeneratedPluginSwiftPackage */,
 			);
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
@@ -483,8 +347,7 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */,
-				3378E6362F26E4F80045E7DA /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */,
+				33BB19992F27F2E0000F183D /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -934,11 +797,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		3378E6362F26E4F80045E7DA /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage;
-		};
-		781AD8BC2B33823900A9FFBB /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */ = {
+		33BB19992F27F2E0000F183D /* XCLocalSwiftPackageReference "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage;
 		};
@@ -946,6 +805,10 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		3378E6372F26E4F80045E7DA /* FlutterGeneratedPluginSwiftPackage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlutterGeneratedPluginSwiftPackage;
+		};
+		33BB199A2F27F2E0000F183D /* FlutterGeneratedPluginSwiftPackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlutterGeneratedPluginSwiftPackage;
 		};
