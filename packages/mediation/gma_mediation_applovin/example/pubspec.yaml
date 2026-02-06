@@ -5,7 +5,7 @@ description: "Demonstrates how to use the gma_mediation_applovin plugin."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: '>=3.6.0 <4.0.0'
+  sdk: '>=3.9.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -17,7 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  google_mobile_ads: ^6.0.0
+  google_mobile_ads: ^7.0.0
   gma_mediation_applovin:
     # When depending on this package from a real application you should use:
     #   gma_mediation_applovin: ^x.y.z
@@ -41,7 +41,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
