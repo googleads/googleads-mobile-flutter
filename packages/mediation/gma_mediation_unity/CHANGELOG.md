@@ -1,5 +1,7 @@
 ## Unity Ads Flutter Mediation Adapter Changelog
 
+#### Version 1.6.5 (In progress)
+
 #### Version 1.6.4
 - Updated minimum Flutter version to 3.35.1
 - Updated to support Google Mobile Ads Flutter Plugin version 7.0.0
