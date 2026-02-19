@@ -1,5 +1,7 @@
 ## Chartboost Flutter Mediation Adapter Changelog
 
+#### Version 1.4.1 (In progress)
+
 #### Version 1.4.0
 - Updated minimum Flutter version to 3.35.1
 - Updated to support Google Mobile Ads Flutter Plugin version 7.0.0
