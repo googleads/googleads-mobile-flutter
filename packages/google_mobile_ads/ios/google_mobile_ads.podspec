@@ -17,7 +17,7 @@ Google Mobile Ads plugin for Flutter.
   s.dependency 'Flutter'
   s.dependency 'Google-Mobile-Ads-SDK','~> 12.14.0'
   s.dependency 'webview_flutter_wkwebview'
-  s.ios.deployment_target = '12.0'
+  s.ios.deployment_target = '13.0'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS' => 'armv7 arm64 x86_64' }
   s.static_framework = true
   s.resource_bundles = {
