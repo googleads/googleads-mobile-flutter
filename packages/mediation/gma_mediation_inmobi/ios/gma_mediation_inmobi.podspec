@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_inmobi'
-  s.version          = '1.1.1'
+  s.version          = '2.0.1'
   s.summary          = 'Google Mobile Ads Mediation of InMobi.'
   s.description      = <<-DESC
 Mediation Adapter for InMobi to use with Google Mobile Ads.
@@ -16,8 +16,8 @@ Mediation Adapter for InMobi to use with Google Mobile Ads.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationInMobi', '~> 10.8.2.0'
-  s.platform = :ios, '12.0'
+  s.dependency 'GoogleMobileAdsMediationInMobi', '~> 11.1.0.1'
+  s.platform = :ios, '13.0'
   s.static_framework = true
 
   # Flutter.framework does not contain a i386 slice.

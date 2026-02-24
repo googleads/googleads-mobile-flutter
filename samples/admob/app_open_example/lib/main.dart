@@ -108,16 +108,14 @@ class _HomePageState extends State<HomePage> {
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-        itemBuilder:
-            (context) =>
-                array
-                    .map(
-                      (item) => PopupMenuItem<AppBarItem>(
-                        value: item,
-                        child: Text(item.label),
-                      ),
-                    )
-                    .toList(),
+        itemBuilder: (context) => array
+            .map(
+              (item) => PopupMenuItem<AppBarItem>(
+                value: item,
+                child: Text(item.label),
+              ),
+            )
+            .toList(),
         onSelected: (item) {
           switch (item.value) {
             case 0:

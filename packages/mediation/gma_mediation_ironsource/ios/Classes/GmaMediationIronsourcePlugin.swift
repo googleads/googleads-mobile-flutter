@@ -20,17 +20,18 @@ import UIKit
 public class GmaMediationIronsourcePlugin: NSObject, FlutterPlugin, IronSourcePrivacyApi {
   let ironSourceSdk: IronSourceSdkProtocol
 
-  init (ironSourceSdk: IronSourceSdkProtocol) {
+  init(ironSourceSdk: IronSourceSdkProtocol) {
     self.ironSourceSdk = ironSourceSdk
   }
 
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let messenger : FlutterBinaryMessenger = registrar.messenger()
-    let api : IronSourcePrivacyApi& NSObjectProtocol = GmaMediationIronsourcePlugin.init(ironSourceSdk: IronSourceSdkImpl())
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
+    let api: IronSourcePrivacyApi & NSObjectProtocol = GmaMediationIronsourcePlugin.init(
+      ironSourceSdk: IronSourceSdkImpl())
     IronSourcePrivacyApiSetup.setUp(binaryMessenger: messenger, api: api)
   }
   public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-    let messenger : FlutterBinaryMessenger = registrar.messenger()
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
     IronSourcePrivacyApiSetup.setUp(binaryMessenger: messenger, api: nil)
   }
 
@@ -49,12 +50,12 @@ protocol IronSourceSdkProtocol {
   func setDoNotSell(onKey: String, withValue: String)
 }
 
-class IronSourceSdkImpl : IronSourceSdkProtocol {
+class IronSourceSdkImpl: IronSourceSdkProtocol {
   func setConsent(gdprConsent: Bool) {
-    IronSource.setConsent(gdprConsent)
+    LevelPlay.setConsent(gdprConsent)
   }
 
   func setDoNotSell(onKey: String, withValue: String) {
-    IronSource.setMetaDataWithKey(onKey, value: withValue)
+    LevelPlay.setMetaDataWithKey(onKey, value: withValue)
   }
 }

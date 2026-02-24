@@ -15,7 +15,7 @@
 package io.flutter.plugins.googlemobileads.mediation.gma_mediation_ironsource
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.ironsource.mediationsdk.IronSource
+import com.unity3d.mediation.LevelPlay
 import io.flutter.plugins.googlemobileads.mediation.gma_mediation_ironsource.GmaMediationIronsourcePlugin.Companion.FALSE
 import io.flutter.plugins.googlemobileads.mediation.gma_mediation_ironsource.GmaMediationIronsourcePlugin.Companion.IRONSOURCE_DONOTSELL_KEY
 import io.flutter.plugins.googlemobileads.mediation.gma_mediation_ironsource.GmaMediationIronsourcePlugin.Companion.TRUE
@@ -29,52 +29,40 @@ internal class GmaMediationIronsourcePluginTest {
   @Test
   fun setConsent_withTrueValue_invokesIronSourceSetConsent() {
     val plugin = GmaMediationIronsourcePlugin()
-    mockStatic(IronSource::class.java).use { mockedIronSource ->
-
+    mockStatic(LevelPlay::class.java).use { mockedIronSource ->
       plugin.setConsent(true)
 
-      mockedIronSource.verify {
-        IronSource.setConsent(eq(true))
-      }
+      mockedIronSource.verify { LevelPlay.setConsent(eq(true)) }
     }
   }
 
   @Test
   fun setConsent_withFalseValue_invokesIronSourceSetConsent() {
     val plugin = GmaMediationIronsourcePlugin()
-    mockStatic(IronSource::class.java).use { mockedIronSource ->
-
+    mockStatic(LevelPlay::class.java).use { mockedIronSource ->
       plugin.setConsent(false)
 
-      mockedIronSource.verify {
-        IronSource.setConsent(eq(false))
-      }
+      mockedIronSource.verify { LevelPlay.setConsent(eq(false)) }
     }
   }
 
   @Test
   fun setDoNotSell_withTrueValue_invokesIronSourceMetaDataWithCorrectKeyAndValue() {
     val plugin = GmaMediationIronsourcePlugin()
-    mockStatic(IronSource::class.java).use { mockedIronSource ->
-
+    mockStatic(LevelPlay::class.java).use { mockedIronSource ->
       plugin.setDoNotSell(true)
 
-      mockedIronSource.verify {
-        IronSource.setMetaData(eq(IRONSOURCE_DONOTSELL_KEY), eq(TRUE))
-      }
+      mockedIronSource.verify { LevelPlay.setMetaData(eq(IRONSOURCE_DONOTSELL_KEY), eq(TRUE)) }
     }
   }
 
   @Test
   fun setDoNotSell_withFalseValue_invokesIronSourceMetaDataWithCorrectKeyAndValue() {
     val plugin = GmaMediationIronsourcePlugin()
-    mockStatic(IronSource::class.java).use { mockedIronSource ->
-
+    mockStatic(LevelPlay::class.java).use { mockedIronSource ->
       plugin.setDoNotSell(false)
 
-      mockedIronSource.verify {
-        IronSource.setMetaData(eq(IRONSOURCE_DONOTSELL_KEY), eq(FALSE))
-      }
+      mockedIronSource.verify { LevelPlay.setMetaData(eq(IRONSOURCE_DONOTSELL_KEY), eq(FALSE)) }
     }
   }
 }

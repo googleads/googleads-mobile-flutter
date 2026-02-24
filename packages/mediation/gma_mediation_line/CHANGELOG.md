@@ -1,5 +1,29 @@
 ## Line Flutter Mediation Adapter Changelog
 
+#### Version 2.0.0 (In progress)
+- Updated minimum Flutter version to 3.35.1
+- Updated to support Google Mobile Ads Flutter Plugin version 7.0.0
+
+#### Version 1.0.6
+- Supports [Line Android adapter version 2.9.20251028.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/line/CHANGELOG.md#version-29202510280).
+- Supports [Line iOS adapter version 2.9.20251119.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Line/CHANGELOG.md#version-29202511190).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0
+
+#### Version 1.0.5
+- Supports [Line Android adapter version 2.9.20250924.1](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/line/CHANGELOG.md#version-29202509241).
+- Supports [Line iOS adapter version 2.9.20250930.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Line/CHANGELOG.md#version-29202509300).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0
+
+#### Version 1.0.4
+- Supports [Line Android adapter version 2.9.20250718.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/line/CHANGELOG.md#version-29202507180).
+- Supports [Line iOS adapter version 2.9.20250512.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Line/CHANGELOG.md#version-29202505120).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0
+
+#### Version 1.0.3
+- Supports [Line Android adapter version 2.9.20250519.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/line/CHANGELOG.md#version-29202505190).
+- Supports [Line iOS adapter version 2.9.20250512.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Line/CHANGELOG.md#version-29202505120).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0
+
 #### Version 1.0.2
 - Supports [Line Android adapter version 2.9.20250317.1](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/line/CHANGELOG.md#version-29202503171).
 - Supports [Line iOS adapter version 2.9.20241106.3](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Line/CHANGELOG.md#version-29202411063).

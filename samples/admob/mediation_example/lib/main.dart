@@ -88,8 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
             _bannerIsLoaded = true;
           });
         },
-        onAdFailedToLoad:
-            (ad, error) => debugPrint('$ad failed to load: ${error.message}'),
+        onAdFailedToLoad: (ad, error) =>
+            debugPrint('$ad failed to load: ${error.message}'),
       ),
       request: AdRequest(nonPersonalizedAds: true),
     )..load();
@@ -100,13 +100,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-        itemBuilder:
-            (BuildContext context) => <PopupMenuEntry<AppBarItem>>[
-              PopupMenuItem<AppBarItem>(
-                value: adInspectorMenuItem,
-                child: Text(adInspectorMenuItem.label),
-              ),
-            ],
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<AppBarItem>>[
+          PopupMenuItem<AppBarItem>(
+            value: adInspectorMenuItem,
+            child: Text(adInspectorMenuItem.label),
+          ),
+        ],
         onSelected: (item) {
           MobileAds.instance.openAdInspector((error) {
             // Error will be non-null if ad inspector closed due to an error.
@@ -131,10 +130,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             _bannerIsLoaded && _bannerAd != null
                 ? Container(
-                  height: _bannerAd!.size.height.toDouble(),
-                  width: _bannerAd!.size.width.toDouble(),
-                  child: AdWidget(ad: _bannerAd!),
-                )
+                    height: _bannerAd!.size.height.toDouble(),
+                    width: _bannerAd!.size.width.toDouble(),
+                    child: AdWidget(ad: _bannerAd!),
+                  )
                 : Text('ad is not loaded'),
           ],
         ),

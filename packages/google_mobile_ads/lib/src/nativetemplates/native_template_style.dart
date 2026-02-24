@@ -74,12 +74,12 @@ class NativeTemplateStyle {
 
   @override
   int get hashCode => Object.hashAll([
-        templateType,
-        callToActionTextStyle,
-        primaryTextStyle,
-        secondaryTextStyle,
-        tertiaryTextStyle,
-        mainBackgroundColor,
-        cornerRadius
-      ]);
+    templateType,
+    callToActionTextStyle,
+    primaryTextStyle,
+    secondaryTextStyle,
+    tertiaryTextStyle,
+    mainBackgroundColor,
+    cornerRadius,
+  ]);
 }

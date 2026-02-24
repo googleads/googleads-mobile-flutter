@@ -21,8 +21,8 @@ import 'user_messaging_channel.dart';
 typedef OnConsentFormDismissedListener = void Function(FormError? formError);
 
 /// Callback to be invoked when a consent form loads successfully
-typedef OnConsentFormLoadSuccessListener = void Function(
-    ConsentForm consentForm);
+typedef OnConsentFormLoadSuccessListener =
+    void Function(ConsentForm consentForm);
 
 /// Callback to be invoked when a consent form failed to load.
 typedef OnConsentFormLoadFailureListener = void Function(FormError formError);
@@ -34,9 +34,11 @@ abstract class ConsentForm {
 
   /// Presents a privacy options form.
   static Future<void> showPrivacyOptionsForm(
-      OnConsentFormDismissedListener onConsentFormDismissedListener) async {
+    OnConsentFormDismissedListener onConsentFormDismissedListener,
+  ) async {
     onConsentFormDismissedListener(
-        await UserMessagingChannel.instance.showPrivacyOptionsForm());
+      await UserMessagingChannel.instance.showPrivacyOptionsForm(),
+    );
   }
 
   /// Free platform resources associated with this object.
@@ -48,16 +50,22 @@ abstract class ConsentForm {
   ///
   /// Check that [ConsentInformation.isConsentFormAvailable()] returns true
   /// prior to calling this method.
-  static void loadConsentForm(OnConsentFormLoadSuccessListener successListener,
-      OnConsentFormLoadFailureListener failureListener) {
-    UserMessagingChannel.instance
-        .loadConsentForm(successListener, failureListener);
+  static void loadConsentForm(
+    OnConsentFormLoadSuccessListener successListener,
+    OnConsentFormLoadFailureListener failureListener,
+  ) {
+    UserMessagingChannel.instance.loadConsentForm(
+      successListener,
+      failureListener,
+    );
   }
 
   /// Loads a consent form and immediately shows it.
   static Future<void> loadAndShowConsentFormIfRequired(
-      OnConsentFormDismissedListener onConsentFormDismissedListener) async {
+    OnConsentFormDismissedListener onConsentFormDismissedListener,
+  ) async {
     onConsentFormDismissedListener(
-        await UserMessagingChannel.instance.loadAndShowConsentFormIfRequired());
+      await UserMessagingChannel.instance.loadAndShowConsentFormIfRequired(),
+    );
   }
 }

@@ -52,7 +52,8 @@ class _AnchoredAdaptiveExampleState extends State<AnchoredAdaptiveExample> {
 
     final AnchoredAdaptiveBannerAdSize? size =
         await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-            MediaQuery.of(context).size.width.truncate());
+          MediaQuery.of(context).size.width.truncate(),
+        );
 
     if (size == null) {
       print('Unable to get height of anchored banner.');
@@ -113,30 +114,29 @@ class _AnchoredAdaptiveExampleState extends State<AnchoredAdaptiveExample> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: Text('Anchored adaptive banner example'),
-        ),
-        body: Center(
-          child: Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: <Widget>[
-              ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  itemBuilder: (context, index) {
-                    return Text(
-                      Constants.placeholderText,
-                      style: TextStyle(fontSize: 24),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return Container(height: 40);
-                  },
-                  itemCount: 5),
-              _getAdWidget(),
-            ],
+    appBar: AppBar(title: Text('Anchored adaptive banner example')),
+    body: Center(
+      child: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: <Widget>[
+          ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            itemBuilder: (context, index) {
+              return Text(
+                Constants.placeholderText,
+                style: TextStyle(fontSize: 24),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return Container(height: 40);
+            },
+            itemCount: 5,
           ),
-        ),
-      );
+          _getAdWidget(),
+        ],
+      ),
+    ),
+  );
 
   @override
   void dispose() {

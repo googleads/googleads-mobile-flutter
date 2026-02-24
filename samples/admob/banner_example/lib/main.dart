@@ -24,13 +24,11 @@ class BannerExampleState extends State<BannerExample> {
   var _isMobileAdsInitializeCalled = false;
   var _isPrivacyOptionsRequired = false;
   BannerAd? _bannerAd;
-  bool _isLoaded = false;
   Orientation? _currentOrientation;
 
-  final String _adUnitId =
-      Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/9214589741'
-          : 'ca-app-pub-3940256099942544/2435281174';
+  final String _adUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/9214589741'
+      : 'ca-app-pub-3940256099942544/2435281174';
 
   @override
   void initState() {
@@ -68,14 +66,17 @@ class BannerExampleState extends State<BannerExample> {
           builder: (context, orientation) {
             if (_currentOrientation != orientation) {
               if (_currentOrientation != null) {
-                _isLoaded = false;
+                // Dispose the old ad, set it to null, and load a new one.
+                _bannerAd?.dispose();
+                _bannerAd = null;
                 _loadAd();
               }
               _currentOrientation = orientation;
             }
             return Stack(
               children: [
-                if (_bannerAd != null && _isLoaded)
+                // [START display_ad]
+                if (_bannerAd != null)
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: SafeArea(
@@ -86,6 +87,7 @@ class BannerExampleState extends State<BannerExample> {
                       ),
                     ),
                   ),
+                // [END display_ad]
               ],
             );
           },
@@ -103,16 +105,14 @@ class BannerExampleState extends State<BannerExample> {
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-        itemBuilder:
-            (context) =>
-                array
-                    .map(
-                      (item) => PopupMenuItem<AppBarItem>(
-                        value: item,
-                        child: Text(item.label),
-                      ),
-                    )
-                    .toList(),
+        itemBuilder: (context) => array
+            .map(
+              (item) => PopupMenuItem<AppBarItem>(
+                value: item,
+                child: Text(item.label),
+              ),
+            )
+            .toList(),
         onSelected: (item) {
           switch (item.value) {
             case 0:
@@ -134,7 +134,9 @@ class BannerExampleState extends State<BannerExample> {
   /// Loads and shows a banner ad.
   ///
   /// Dimensions of the ad are determined by the width of the screen.
+  // [START load_ad]
   void _loadAd() async {
+    // [START_EXCLUDE silent]
     // Only load an ad if the Mobile Ads SDK has gathered consent aligned with
     // the app's configured messages.
     var canRequestAds = await _consentManager.canRequestAds();
@@ -145,11 +147,13 @@ class BannerExampleState extends State<BannerExample> {
     if (!mounted) {
       return;
     }
-
+    // [END_EXCLUDE]
+    // [START get_ad_size]
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
     final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
       MediaQuery.sizeOf(context).width.truncate(),
     );
+    // [END get_ad_size]
 
     if (size == null) {
       // Unable to get width of anchored banner.
@@ -161,26 +165,46 @@ class BannerExampleState extends State<BannerExample> {
       request: const AdRequest(),
       size: size,
       listener: BannerAdListener(
-        // Called when an ad is successfully received.
         onAdLoaded: (ad) {
+          // Called when an ad is successfully received.
+          debugPrint("Ad was loaded.");
           setState(() {
             _bannerAd = ad as BannerAd;
-            _isLoaded = true;
           });
         },
-        // Called when an ad request failed.
         onAdFailedToLoad: (ad, err) {
+          // Called when an ad request failed.
+          debugPrint("Ad failed to load with error: $err");
           ad.dispose();
         },
-        // Called when an ad opens an overlay that covers the screen.
-        onAdOpened: (Ad ad) {},
-        // Called when an ad removes an overlay that covers the screen.
-        onAdClosed: (Ad ad) {},
-        // Called when an impression occurs on the ad.
-        onAdImpression: (Ad ad) {},
+        // [START_EXCLUDE silent]
+        // [START ad_events]
+        onAdOpened: (Ad ad) {
+          // Called when an ad opens an overlay that covers the screen.
+          debugPrint("Ad was opened.");
+        },
+        onAdClosed: (Ad ad) {
+          // Called when an ad removes an overlay that covers the screen.
+          debugPrint("Ad was closed.");
+        },
+        onAdImpression: (Ad ad) {
+          // Called when an impression occurs on the ad.
+          debugPrint("Ad recorded an impression.");
+        },
+        onAdClicked: (Ad ad) {
+          // Called when an a click event occurs on the ad.
+          debugPrint("Ad was clicked.");
+        },
+        onAdWillDismissScreen: (Ad ad) {
+          // iOS only. Called before dismissing a full screen view.
+          debugPrint("Ad will be dismissed.");
+        },
+        // [END ad_events]
+        // [END_EXCLUDE]
       ),
     ).load();
   }
+  // [END load_ad]
 
   /// Redraw the app bar actions if a privacy options entry point is required.
   void _getIsPrivacyOptionsRequired() async {
@@ -201,8 +225,10 @@ class BannerExampleState extends State<BannerExample> {
     if (await _consentManager.canRequestAds()) {
       _isMobileAdsInitializeCalled = true;
 
+      // [START initialize_sdk]
       // Initialize the Mobile Ads SDK.
       MobileAds.instance.initialize();
+      // [END initialize_sdk]
 
       // Load an ad.
       _loadAd();

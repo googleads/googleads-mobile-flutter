@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_moloco'
-  s.version = '1.3.0'
+  s.version = '3.2.0'
   s.summary = 'Google Mobile Ads Mediation of Moloco.'
   s.description      = <<-DESC
   Mediation Adapter for Moloco to use with Google Mobile Ads.
@@ -11,8 +11,8 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationMoloco', '~> 3.9.0.0'
-  s.platform = :ios, '12.0'
+  s.dependency 'GoogleMobileAdsMediationMoloco', '~> 4.2.0.0'
+  s.platform = :ios, '13.0'
   s.static_framework = true
 
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

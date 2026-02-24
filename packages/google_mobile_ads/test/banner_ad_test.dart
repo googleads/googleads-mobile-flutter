@@ -30,21 +30,23 @@ void main() {
 
     setUp(() async {
       log.clear();
-      instanceManager =
-          AdInstanceManager('plugins.flutter.io/google_mobile_ads');
+      instanceManager = AdInstanceManager(
+        'plugins.flutter.io/google_mobile_ads',
+      );
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(instanceManager.channel,
-              (MethodCall methodCall) async {
-        log.add(methodCall);
-        switch (methodCall.method) {
-          case 'loadBannerAd':
-          case 'disposeAd':
-            return Future<void>.value();
-          default:
-            assert(false);
-            return null;
-        }
-      });
+          .setMockMethodCallHandler(instanceManager.channel, (
+            MethodCall methodCall,
+          ) async {
+            log.add(methodCall);
+            switch (methodCall.method) {
+              case 'loadBannerAd':
+              case 'disposeAd':
+                return Future<void>.value();
+              default:
+                assert(false);
+                return null;
+            }
+          });
     });
 
     test('android loaded events', () async {
@@ -81,12 +83,15 @@ void main() {
       await bannerAd.load();
 
       expect(log, <Matcher>[
-        isMethodCall('loadBannerAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'ad-unit',
-          'request': request,
-          'size': AdSize.banner,
-        }),
+        isMethodCall(
+          'loadBannerAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'ad-unit',
+            'request': request,
+            'size': AdSize.banner,
+          },
+        ),
       ]);
 
       // Simulate load callback
@@ -118,7 +123,11 @@ void main() {
         'currencyCode': 'USD',
       };
       await TestUtil.sendAdEvent(
-          0, 'onPaidEvent', instanceManager, paidEventArgs);
+        0,
+        'onPaidEvent',
+        instanceManager,
+        paidEventArgs,
+      );
       List<dynamic> paidEventCallback = await paidEvent.future;
       expect(paidEventCallback[0], bannerAd);
       expect(paidEventCallback[1], 1.2345);
@@ -135,8 +144,9 @@ void main() {
           adUnitId: 'test-ad-unit',
           size: AdSize.banner,
           listener: BannerAdListener(
-              onAdFailedToLoad: (Ad ad, LoadAdError error) =>
-                  resultsCompleter.complete(<dynamic>[ad, error])),
+            onAdFailedToLoad: (Ad ad, LoadAdError error) =>
+                resultsCompleter.complete(<dynamic>[ad, error]),
+          ),
           request: AdRequest(),
         );
 
@@ -164,16 +174,20 @@ void main() {
 
         final MethodCall methodCall =
             MethodCall('onAdEvent', <dynamic, dynamic>{
-          'adId': adId,
-          'eventName': 'onAdFailedToLoad',
-          'loadAdError': LoadAdError(1, 'domain', 'message', responseInfo),
-        });
+              'adId': adId,
+              'eventName': 'onAdFailedToLoad',
+              'loadAdError': LoadAdError(1, 'domain', 'message', responseInfo),
+            });
 
-        final ByteData data =
-            instanceManager.channel.codec.encodeMethodCall(methodCall);
+        final ByteData data = instanceManager.channel.codec.encodeMethodCall(
+          methodCall,
+        );
         await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .handlePlatformMessage(
-                'plugins.flutter.io/google_mobile_ads', data, (data) {});
+              'plugins.flutter.io/google_mobile_ads',
+              data,
+              (data) {},
+            );
 
         final List<dynamic> results = await resultsCompleter.future;
         expect(results[0], banner);
@@ -181,10 +195,14 @@ void main() {
         expect(results[1].domain, 'domain');
         expect(results[1].message, 'message');
         expect(results[1].responseInfo.responseId, responseInfo.responseId);
-        expect(results[1].responseInfo.mediationAdapterClassName,
-            responseInfo.mediationAdapterClassName);
-        expect(results[1].responseInfo.responseExtras,
-            responseInfo.responseExtras);
+        expect(
+          results[1].responseInfo.mediationAdapterClassName,
+          responseInfo.mediationAdapterClassName,
+        );
+        expect(
+          results[1].responseInfo.responseExtras,
+          responseInfo.responseExtras,
+        );
         List<AdapterResponseInfo> responses =
             results[1].responseInfo.adapterResponses;
         expect(responses.first.adapterClassName, 'adapter-name');
@@ -239,12 +257,15 @@ void main() {
       await bannerAd.load();
 
       expect(log, <Matcher>[
-        isMethodCall('loadBannerAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'ad-unit',
-          'request': request,
-          'size': AdSize.banner,
-        }),
+        isMethodCall(
+          'loadBannerAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'ad-unit',
+            'request': request,
+            'size': AdSize.banner,
+          },
+        ),
       ]);
 
       // Simulate load callback
@@ -262,15 +283,24 @@ void main() {
       expect(await clicked.future, bannerAd);
 
       await TestUtil.sendAdEvent(
-          0, 'onBannerWillPresentScreen', instanceManager);
+        0,
+        'onBannerWillPresentScreen',
+        instanceManager,
+      );
       expect(await opened.future, bannerAd);
 
       await TestUtil.sendAdEvent(
-          0, 'onBannerDidDismissScreen', instanceManager);
+        0,
+        'onBannerDidDismissScreen',
+        instanceManager,
+      );
       expect(await closed.future, bannerAd);
 
       await TestUtil.sendAdEvent(
-          0, 'onBannerWillDismissScreen', instanceManager);
+        0,
+        'onBannerWillDismissScreen',
+        instanceManager,
+      );
       expect(await willDismiss.future, bannerAd);
 
       const paidEventArgs = {
@@ -279,7 +309,11 @@ void main() {
         'currencyCode': 'USD',
       };
       await TestUtil.sendAdEvent(
-          0, 'onPaidEvent', instanceManager, paidEventArgs);
+        0,
+        'onPaidEvent',
+        instanceManager,
+        paidEventArgs,
+      );
       List<dynamic> paidEventCallback = await paidEvent.future;
       expect(paidEventCallback[0], bannerAd);
       expect(paidEventCallback[1], 1.2345);
@@ -299,9 +333,7 @@ void main() {
       log.clear();
       await banner.dispose();
       expect(log, <Matcher>[
-        isMethodCall('disposeAd', arguments: <String, dynamic>{
-          'adId': 0,
-        })
+        isMethodCall('disposeAd', arguments: <String, dynamic>{'adId': 0}),
       ]);
 
       expect(instanceManager.adFor(0), isNull);

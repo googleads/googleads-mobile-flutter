@@ -1,15 +1,15 @@
 group = "io.flutter.plugins.googlemobileads.mediation.gma_mediation_line"
-version = "1.0.2"
+version = "2.0.0"
 
 buildscript {
-    ext.kotlin_version = "1.8.22"
+    ext.kotlin_version = "2.2.21"
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.1.0")
+        classpath("com.android.tools.build:gradle:8.13.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
@@ -25,7 +25,7 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 ext {
-    stringVersion = "2.9.20250317.1"
+    stringVersion = "3.0.1.0"
 }
 
 android {
@@ -33,7 +33,7 @@ android {
         namespace = "io.flutter.plugins.googlemobileads.mediation.gma_mediation_line"
     }
 
-    compileSdk = 34
+    compileSdk = 36
 
     compileOptions {
 		sourceCompatibility = JavaVersion.VERSION_11
@@ -56,7 +56,7 @@ android {
     dependencies {
         implementation("com.google.ads.mediation:line:$stringVersion")
         testImplementation("org.jetbrains.kotlin:kotlin-test")
-        testImplementation("org.mockito:mockito-core:5.0.0")
+        testImplementation("org.mockito:mockito-core:5.5.0")
     }
 
     testOptions {

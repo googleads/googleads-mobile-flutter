@@ -62,12 +62,16 @@ class _WebViewExampleState extends State<WebViewExample> {
     );
     if (controller.platform is AndroidWebViewController) {
       AndroidWebViewCookieManager cookieManager = AndroidWebViewCookieManager(
-          PlatformWebViewCookieManagerCreationParams());
+        PlatformWebViewCookieManagerCreationParams(),
+      );
       await cookieManager.setAcceptThirdPartyCookies(
-          controller.platform as AndroidWebViewController, true);
+        controller.platform as AndroidWebViewController,
+        true,
+      );
     }
     await MobileAds.instance.registerWebView(controller);
-    await controller
-        .loadRequest(Uri.parse('https://webview-api-for-ads-test.glitch.me/'));
+    await controller.loadRequest(
+      Uri.parse('https://webview-api-for-ads-test.glitch.me/'),
+    );
   }
 }

@@ -42,9 +42,10 @@ enum ConsentStatus {
 abstract class ConsentInformation {
   /// Requests a consent information update.
   void requestConsentInfoUpdate(
-      ConsentRequestParameters params,
-      OnConsentInfoUpdateSuccessListener successListener,
-      OnConsentInfoUpdateFailureListener failureListener);
+    ConsentRequestParameters params,
+    OnConsentInfoUpdateSuccessListener successListener,
+    OnConsentInfoUpdateFailureListener failureListener,
+  );
 
   /// Returns true if a ConsentForm is available, false otherwise.
   Future<bool> isConsentFormAvailable();
@@ -80,5 +81,5 @@ enum PrivacyOptionsRequirementStatus {
   required,
 
   /// Privacy options requirement status is unknown.
-  unknown;
+  unknown,
 }

@@ -23,6 +23,7 @@ import 'dart:developer';
 import 'anchored_adaptive_example.dart';
 import 'fluid_example.dart';
 import 'inline_adaptive_example.dart';
+import 'multi_adaptive_inline_with_recycle_example.dart';
 import 'native_template_example.dart';
 import 'reusable_inline_example.dart';
 import 'webview_example.dart';
@@ -55,6 +56,8 @@ class _MyAppState extends State<MyApp> {
   static const rewardedInterstitialButtonText = 'RewardedInterstitialAd';
   static const fluidButtonText = 'Fluid';
   static const inlineAdaptiveButtonText = 'Inline adaptive';
+  static const mulipleInlineAdaptiveWithRecycleButtonText =
+      'Multiple inline adaptive with recycle';
   static const anchoredAdaptiveButtonText = 'Anchored adaptive';
   static const nativeTemplateButtonText = 'Native template';
   static const webviewExampleButtonText = 'Register WebView';
@@ -73,7 +76,8 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     MobileAds.instance.updateRequestConfiguration(
-        RequestConfiguration(testDeviceIds: [testDevice]));
+      RequestConfiguration(testDeviceIds: [testDevice]),
+    );
     _createInterstitialAd();
     _createRewardedAd();
     _createRewardedInterstitialAd();
@@ -81,26 +85,27 @@ class _MyAppState extends State<MyApp> {
 
   void _createInterstitialAd() {
     InterstitialAd.load(
-        adUnitId: Platform.isAndroid
-            ? 'ca-app-pub-3940256099942544/1033173712'
-            : 'ca-app-pub-3940256099942544/4411468910',
-        request: request,
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            print('$ad loaded');
-            _interstitialAd = ad;
-            _numInterstitialLoadAttempts = 0;
-            _interstitialAd!.setImmersiveMode(true);
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            print('InterstitialAd failed to load: $error.');
-            _numInterstitialLoadAttempts += 1;
-            _interstitialAd = null;
-            if (_numInterstitialLoadAttempts < maxFailedLoadAttempts) {
-              _createInterstitialAd();
-            }
-          },
-        ));
+      adUnitId: Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/1033173712'
+          : 'ca-app-pub-3940256099942544/4411468910',
+      request: request,
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          print('$ad loaded');
+          _interstitialAd = ad;
+          _numInterstitialLoadAttempts = 0;
+          _interstitialAd!.setImmersiveMode(true);
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('InterstitialAd failed to load: $error.');
+          _numInterstitialLoadAttempts += 1;
+          _interstitialAd = null;
+          if (_numInterstitialLoadAttempts < maxFailedLoadAttempts) {
+            _createInterstitialAd();
+          }
+        },
+      ),
+    );
   }
 
   void _showInterstitialAd() {
@@ -128,25 +133,26 @@ class _MyAppState extends State<MyApp> {
 
   void _createRewardedAd() {
     RewardedAd.load(
-        adUnitId: Platform.isAndroid
-            ? 'ca-app-pub-3940256099942544/5224354917'
-            : 'ca-app-pub-3940256099942544/1712485313',
-        request: request,
-        rewardedAdLoadCallback: RewardedAdLoadCallback(
-          onAdLoaded: (RewardedAd ad) {
-            print('$ad loaded.');
-            _rewardedAd = ad;
-            _numRewardedLoadAttempts = 0;
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            print('RewardedAd failed to load: $error');
-            _rewardedAd = null;
-            _numRewardedLoadAttempts += 1;
-            if (_numRewardedLoadAttempts < maxFailedLoadAttempts) {
-              _createRewardedAd();
-            }
-          },
-        ));
+      adUnitId: Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/5224354917'
+          : 'ca-app-pub-3940256099942544/1712485313',
+      request: request,
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
+        onAdLoaded: (RewardedAd ad) {
+          print('$ad loaded.');
+          _rewardedAd = ad;
+          _numRewardedLoadAttempts = 0;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('RewardedAd failed to load: $error');
+          _rewardedAd = null;
+          _numRewardedLoadAttempts += 1;
+          if (_numRewardedLoadAttempts < maxFailedLoadAttempts) {
+            _createRewardedAd();
+          }
+        },
+      ),
+    );
   }
 
   void _showRewardedAd() {
@@ -171,33 +177,35 @@ class _MyAppState extends State<MyApp> {
 
     _rewardedAd!.setImmersiveMode(true);
     _rewardedAd!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
-    });
+      onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+        print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
+      },
+    );
     _rewardedAd = null;
   }
 
   void _createRewardedInterstitialAd() {
     RewardedInterstitialAd.load(
-        adUnitId: Platform.isAndroid
-            ? 'ca-app-pub-3940256099942544/5354046379'
-            : 'ca-app-pub-3940256099942544/6978759866',
-        request: request,
-        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
-          onAdLoaded: (RewardedInterstitialAd ad) {
-            print('$ad loaded.');
-            _rewardedInterstitialAd = ad;
-            _numRewardedInterstitialLoadAttempts = 0;
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            print('RewardedInterstitialAd failed to load: $error');
-            _rewardedInterstitialAd = null;
-            _numRewardedInterstitialLoadAttempts += 1;
-            if (_numRewardedInterstitialLoadAttempts < maxFailedLoadAttempts) {
-              _createRewardedInterstitialAd();
-            }
-          },
-        ));
+      adUnitId: Platform.isAndroid
+          ? 'ca-app-pub-3940256099942544/5354046379'
+          : 'ca-app-pub-3940256099942544/6978759866',
+      request: request,
+      rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+        onAdLoaded: (RewardedInterstitialAd ad) {
+          print('$ad loaded.');
+          _rewardedInterstitialAd = ad;
+          _numRewardedInterstitialLoadAttempts = 0;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('RewardedInterstitialAd failed to load: $error');
+          _rewardedInterstitialAd = null;
+          _numRewardedInterstitialLoadAttempts += 1;
+          if (_numRewardedInterstitialLoadAttempts < maxFailedLoadAttempts) {
+            _createRewardedInterstitialAd();
+          }
+        },
+      ),
+    );
   }
 
   void _showRewardedInterstitialAd() {
@@ -207,26 +215,27 @@ class _MyAppState extends State<MyApp> {
     }
     _rewardedInterstitialAd!.fullScreenContentCallback =
         FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedInterstitialAd ad) =>
-          print('$ad onAdShowedFullScreenContent.'),
-      onAdDismissedFullScreenContent: (RewardedInterstitialAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
-        ad.dispose();
-        _createRewardedInterstitialAd();
-      },
-      onAdFailedToShowFullScreenContent:
-          (RewardedInterstitialAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
-        ad.dispose();
-        _createRewardedInterstitialAd();
-      },
-    );
+          onAdShowedFullScreenContent: (RewardedInterstitialAd ad) =>
+              print('$ad onAdShowedFullScreenContent.'),
+          onAdDismissedFullScreenContent: (RewardedInterstitialAd ad) {
+            print('$ad onAdDismissedFullScreenContent.');
+            ad.dispose();
+            _createRewardedInterstitialAd();
+          },
+          onAdFailedToShowFullScreenContent:
+              (RewardedInterstitialAd ad, AdError error) {
+                print('$ad onAdFailedToShowFullScreenContent: $error');
+                ad.dispose();
+                _createRewardedInterstitialAd();
+              },
+        );
 
     _rewardedInterstitialAd!.setImmersiveMode(true);
     _rewardedInterstitialAd!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
-    });
+      onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
+        print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
+      },
+    );
     _rewardedInterstitialAd = null;
   }
 
@@ -241,112 +250,139 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Builder(builder: (BuildContext context) {
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('AdMob Plugin example app'),
-            actions: <Widget>[
-              PopupMenuButton<String>(
-                onSelected: (String result) {
-                  switch (result) {
-                    case interstitialButtonText:
-                      _showInterstitialAd();
-                      break;
-                    case rewardedButtonText:
-                      _showRewardedAd();
-                      break;
-                    case rewardedInterstitialButtonText:
-                      _showRewardedInterstitialAd();
-                      break;
-                    case fluidButtonText:
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => FluidExample()),
-                      );
-                      break;
-                    case inlineAdaptiveButtonText:
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => InlineAdaptiveExample()),
-                      );
-                      break;
-                    case anchoredAdaptiveButtonText:
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AnchoredAdaptiveExample()),
-                      );
-                      break;
-                    case nativeTemplateButtonText:
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NativeTemplateExample()),
-                      );
-                      break;
-                    case webviewExampleButtonText:
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WebViewExample()),
-                      );
-                      break;
-                    case adInspectorButtonText:
-                      MobileAds.instance.openAdInspector((error) => log(
-                          'Ad Inspector ' +
-                              (error == null
-                                  ? 'opened.'
-                                  : 'error: ' + (error.message ?? ''))));
-                      break;
-                    default:
-                      throw AssertionError('unexpected button: $result');
-                  }
-                },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  PopupMenuItem<String>(
-                    value: interstitialButtonText,
-                    child: Text(interstitialButtonText),
-                  ),
-                  PopupMenuItem<String>(
-                    value: rewardedButtonText,
-                    child: Text(rewardedButtonText),
-                  ),
-                  PopupMenuItem<String>(
-                    value: rewardedInterstitialButtonText,
-                    child: Text(rewardedInterstitialButtonText),
-                  ),
-                  PopupMenuItem<String>(
-                    value: fluidButtonText,
-                    child: Text(fluidButtonText),
-                  ),
-                  PopupMenuItem<String>(
-                    value: inlineAdaptiveButtonText,
-                    child: Text(inlineAdaptiveButtonText),
-                  ),
-                  PopupMenuItem<String>(
-                    value: anchoredAdaptiveButtonText,
-                    child: Text(anchoredAdaptiveButtonText),
-                  ),
-                  PopupMenuItem<String>(
-                    value: nativeTemplateButtonText,
-                    child: Text(nativeTemplateButtonText),
-                  ),
-                  PopupMenuItem<String>(
-                    value: webviewExampleButtonText,
-                    child: Text(webviewExampleButtonText),
-                  ),
-                  PopupMenuItem<String>(
-                    value: adInspectorButtonText,
-                    child: Text(adInspectorButtonText),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          body: SafeArea(child: ReusableInlineExample()),
-        );
-      }),
+      home: Builder(
+        builder: (BuildContext context) {
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('AdMob Plugin example app'),
+              actions: <Widget>[
+                PopupMenuButton<String>(
+                  onSelected: (String result) {
+                    switch (result) {
+                      case interstitialButtonText:
+                        _showInterstitialAd();
+                        break;
+                      case rewardedButtonText:
+                        _showRewardedAd();
+                        break;
+                      case rewardedInterstitialButtonText:
+                        _showRewardedInterstitialAd();
+                        break;
+                      case fluidButtonText:
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FluidExample(),
+                          ),
+                        );
+                        break;
+                      case inlineAdaptiveButtonText:
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InlineAdaptiveExample(),
+                          ),
+                        );
+                        break;
+                      case mulipleInlineAdaptiveWithRecycleButtonText:
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MultiInlineAdaptiveWithRecycleExample(),
+                          ),
+                        );
+                        break;
+                      case anchoredAdaptiveButtonText:
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AnchoredAdaptiveExample(),
+                          ),
+                        );
+                        break;
+                      case nativeTemplateButtonText:
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NativeTemplateExample(),
+                          ),
+                        );
+                        break;
+                      case webviewExampleButtonText:
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => WebViewExample(),
+                          ),
+                        );
+                        break;
+                      case adInspectorButtonText:
+                        MobileAds.instance.openAdInspector(
+                          (error) => log(
+                            'Ad Inspector ' +
+                                (error == null
+                                    ? 'opened.'
+                                    : 'error: ' + (error.message ?? '')),
+                          ),
+                        );
+                        break;
+                      default:
+                        throw AssertionError('unexpected button: $result');
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                        PopupMenuItem<String>(
+                          value: interstitialButtonText,
+                          child: Text(interstitialButtonText),
+                        ),
+                        PopupMenuItem<String>(
+                          value: rewardedButtonText,
+                          child: Text(rewardedButtonText),
+                        ),
+                        PopupMenuItem<String>(
+                          value: rewardedInterstitialButtonText,
+                          child: Text(rewardedInterstitialButtonText),
+                        ),
+                        PopupMenuItem<String>(
+                          value: fluidButtonText,
+                          child: Text(fluidButtonText),
+                        ),
+                        PopupMenuItem<String>(
+                          value: inlineAdaptiveButtonText,
+                          child: Text(inlineAdaptiveButtonText),
+                        ),
+                        PopupMenuItem<String>(
+                          value: mulipleInlineAdaptiveWithRecycleButtonText,
+                          child: Text(
+                            mulipleInlineAdaptiveWithRecycleButtonText,
+                          ),
+                        ),
+                        PopupMenuItem<String>(
+                          value: anchoredAdaptiveButtonText,
+                          child: Text(anchoredAdaptiveButtonText),
+                        ),
+                        PopupMenuItem<String>(
+                          value: nativeTemplateButtonText,
+                          child: Text(nativeTemplateButtonText),
+                        ),
+                        PopupMenuItem<String>(
+                          value: webviewExampleButtonText,
+                          child: Text(webviewExampleButtonText),
+                        ),
+                        PopupMenuItem<String>(
+                          value: adInspectorButtonText,
+                          child: Text(adInspectorButtonText),
+                        ),
+                      ],
+                ),
+              ],
+            ),
+            body: SafeArea(child: ReusableInlineExample()),
+          );
+        },
+      ),
     );
   }
 }

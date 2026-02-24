@@ -29,31 +29,40 @@ void main() {
     late UserMessagingChannel channel;
     setUp(() async {
       methodChannel = MethodChannel(
-          'test-channel', StandardMethodCodec(UserMessagingCodec()));
+        'test-channel',
+        StandardMethodCodec(UserMessagingCodec()),
+      );
       channel = UserMessagingChannel(methodChannel);
     });
 
     test('requestConsentInfoUpdate() success', () async {
       ConsentRequestParameters params = ConsentRequestParameters(
-          tagForUnderAgeOfConsent: true,
-          consentDebugSettings: ConsentDebugSettings());
+        tagForUnderAgeOfConsent: true,
+        consentDebugSettings: ConsentDebugSettings(),
+      );
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (MethodCall call) async {
-        expect(
-            call.method, equals('ConsentInformation#requestConsentInfoUpdate'));
-        expect(call.arguments, equals({'params': params}));
-        return Future<dynamic>.value();
-      });
+            expect(
+              call.method,
+              equals('ConsentInformation#requestConsentInfoUpdate'),
+            );
+            expect(call.arguments, equals({'params': params}));
+            return Future<dynamic>.value();
+          });
 
       Completer<void> successCompleter = Completer<void>();
       Completer<FormError> failureCompleter = Completer<FormError>();
       // Test function
-      channel.requestConsentInfoUpdate(params, () {
-        successCompleter.complete();
-      }, (error) {
-        failureCompleter.complete(error);
-      });
+      channel.requestConsentInfoUpdate(
+        params,
+        () {
+          successCompleter.complete();
+        },
+        (error) {
+          failureCompleter.complete(error);
+        },
+      );
       await successCompleter.future;
 
       expect(successCompleter.isCompleted, true);
@@ -62,17 +71,25 @@ void main() {
 
     test('requestConsentInfoUpdate() failure', () async {
       ConsentRequestParameters params = ConsentRequestParameters(
-          tagForUnderAgeOfConsent: true,
-          consentDebugSettings: ConsentDebugSettings());
+        tagForUnderAgeOfConsent: true,
+        consentDebugSettings: ConsentDebugSettings(),
+      );
 
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (MethodCall call) async {
-        expect(
-            call.method, equals('ConsentInformation#requestConsentInfoUpdate'));
-        expect(call.arguments, equals({'params': params}));
-        return Future.error(PlatformException(
-            code: '1', message: 'message', details: 'details'));
-      });
+            expect(
+              call.method,
+              equals('ConsentInformation#requestConsentInfoUpdate'),
+            );
+            expect(call.arguments, equals({'params': params}));
+            return Future.error(
+              PlatformException(
+                code: '1',
+                message: 'message',
+                details: 'details',
+              ),
+            );
+          });
 
       Completer<void> successCompleter = Completer<void>();
       Completer<FormError> failureCompleter = Completer<FormError>();
@@ -98,11 +115,13 @@ void main() {
     test('isConsentFormAvailable() true', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (MethodCall call) async {
-        expect(
-            call.method, equals('ConsentInformation#isConsentFormAvailable'));
-        expect(call.arguments, null);
-        return Future<dynamic>.value(true);
-      });
+            expect(
+              call.method,
+              equals('ConsentInformation#isConsentFormAvailable'),
+            );
+            expect(call.arguments, null);
+            return Future<dynamic>.value(true);
+          });
 
       bool isAvailable = await channel.isConsentFormAvailable();
 
@@ -112,11 +131,13 @@ void main() {
     test('isConsentFormAvailable() false', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (MethodCall call) async {
-        expect(
-            call.method, equals('ConsentInformation#isConsentFormAvailable'));
-        expect(call.arguments, null);
-        return Future<dynamic>.value(false);
-      });
+            expect(
+              call.method,
+              equals('ConsentInformation#isConsentFormAvailable'),
+            );
+            expect(call.arguments, null);
+            return Future<dynamic>.value(false);
+          });
 
       bool isAvailable = await channel.isConsentFormAvailable();
 
@@ -126,10 +147,10 @@ void main() {
     test('getConsentStatus()', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (MethodCall call) async {
-        expect(call.method, equals('ConsentInformation#getConsentStatus'));
-        expect(call.arguments, null);
-        return Future<dynamic>.value(1);
-      });
+            expect(call.method, equals('ConsentInformation#getConsentStatus'));
+            expect(call.arguments, null);
+            return Future<dynamic>.value(1);
+          });
 
       ConsentStatus status = await channel.getConsentStatus();
 
@@ -141,10 +162,10 @@ void main() {
       dynamic arguments;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (MethodCall call) async {
-        method = call.method;
-        arguments = call.arguments;
-        return Future<void>.value();
-      });
+            method = call.method;
+            arguments = call.arguments;
+            return Future<void>.value();
+          });
 
       await channel.reset();
 
@@ -158,18 +179,19 @@ void main() {
       ConsentForm consentForm = ConsentFormImpl(1);
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (MethodCall call) async {
-        method = call.method;
-        arguments = call.arguments;
-        return Future<dynamic>.value(consentForm);
-      });
+            method = call.method;
+            arguments = call.arguments;
+            return Future<dynamic>.value(consentForm);
+          });
 
       Completer<ConsentForm> successCompleter = Completer<ConsentForm>();
       Completer<FormError> failureCompleter = Completer<FormError>();
 
       // Test function
       channel.loadConsentForm(
-          (consentForm) => successCompleter.complete(consentForm),
-          (formError) => failureCompleter.complete(formError));
+        (consentForm) => successCompleter.complete(consentForm),
+        (formError) => failureCompleter.complete(formError),
+      );
 
       ConsentForm response = await successCompleter.future;
       expect(successCompleter.isCompleted, true);
@@ -184,18 +206,21 @@ void main() {
       dynamic arguments;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (MethodCall call) async {
-        method = call.method;
-        arguments = call.arguments;
-        return Future.error(PlatformException(code: '2', message: 'message'));
-      });
+            method = call.method;
+            arguments = call.arguments;
+            return Future.error(
+              PlatformException(code: '2', message: 'message'),
+            );
+          });
 
       Completer<ConsentForm> successCompleter = Completer<ConsentForm>();
       Completer<FormError> failureCompleter = Completer<FormError>();
 
       // Test function
       channel.loadConsentForm(
-          (consentForm) => successCompleter.complete(consentForm),
-          (formError) => failureCompleter.complete(formError));
+        (consentForm) => successCompleter.complete(consentForm),
+        (formError) => failureCompleter.complete(formError),
+      );
 
       FormError error = await failureCompleter.future;
       expect(successCompleter.isCompleted, false);
@@ -211,10 +236,10 @@ void main() {
       ConsentFormImpl consentForm = ConsentFormImpl(1);
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (MethodCall call) async {
-        method = call.method;
-        arguments = call.arguments;
-        return Future<void>.value();
-      });
+            method = call.method;
+            arguments = call.arguments;
+            return Future<void>.value();
+          });
 
       Completer<FormError?> successCompleter = Completer<FormError?>();
 
@@ -234,10 +259,10 @@ void main() {
       ConsentFormImpl consentForm = ConsentFormImpl(1);
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (MethodCall call) async {
-        method = call.method;
-        arguments = call.arguments;
-        return Future.error(PlatformException(code: '55', message: 'msg'));
-      });
+            method = call.method;
+            arguments = call.arguments;
+            return Future.error(PlatformException(code: '55', message: 'msg'));
+          });
 
       Completer<FormError?> successCompleter = Completer<FormError?>();
 
@@ -256,10 +281,10 @@ void main() {
       dynamic arguments;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (MethodCall call) async {
-        method = call.method;
-        arguments = call.arguments;
-        return Future<void>.value();
-      });
+            method = call.method;
+            arguments = call.arguments;
+            return Future<void>.value();
+          });
 
       ConsentForm consentForm = ConsentFormImpl(1);
       await channel.disposeConsentForm(consentForm);
@@ -271,10 +296,10 @@ void main() {
     test('canRequestAds()', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (call) async {
-        expect(call.method, equals('ConsentInformation#canRequestAds'));
-        expect(call.arguments, null);
-        return Future<dynamic>.value(true);
-      });
+            expect(call.method, equals('ConsentInformation#canRequestAds'));
+            expect(call.arguments, null);
+            return Future<dynamic>.value(true);
+          });
 
       bool canRequestAds = await channel.canRequestAds();
 
@@ -284,42 +309,50 @@ void main() {
     test('getPrivacyOptionsRequirementStatus() maps 1 to required', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (call) async {
-        expect(call.method,
-            equals('ConsentInformation#getPrivacyOptionsRequirementStatus'));
-        expect(call.arguments, null);
-        return Future<dynamic>.value(1);
-      });
+            expect(
+              call.method,
+              equals('ConsentInformation#getPrivacyOptionsRequirementStatus'),
+            );
+            expect(call.arguments, null);
+            return Future<dynamic>.value(1);
+          });
 
-      PrivacyOptionsRequirementStatus privacyStatus =
-          await channel.getPrivacyOptionsRequirementStatus();
+      PrivacyOptionsRequirementStatus privacyStatus = await channel
+          .getPrivacyOptionsRequirementStatus();
 
       expect(privacyStatus, PrivacyOptionsRequirementStatus.required);
     });
 
-    test('getPrivacyOptionsRequirementStatus() maps 0 to notRequired',
-        () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(methodChannel, (call) async {
-        expect(call.method,
-            equals('ConsentInformation#getPrivacyOptionsRequirementStatus'));
-        expect(call.arguments, null);
-        return Future<dynamic>.value(0);
-      });
+    test(
+      'getPrivacyOptionsRequirementStatus() maps 0 to notRequired',
+      () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(methodChannel, (call) async {
+              expect(
+                call.method,
+                equals('ConsentInformation#getPrivacyOptionsRequirementStatus'),
+              );
+              expect(call.arguments, null);
+              return Future<dynamic>.value(0);
+            });
 
-      PrivacyOptionsRequirementStatus privacyStatus =
-          await channel.getPrivacyOptionsRequirementStatus();
+        PrivacyOptionsRequirementStatus privacyStatus = await channel
+            .getPrivacyOptionsRequirementStatus();
 
-      expect(privacyStatus, PrivacyOptionsRequirementStatus.notRequired);
-    });
+        expect(privacyStatus, PrivacyOptionsRequirementStatus.notRequired);
+      },
+    );
 
     test('loadAndShowConsentFormIfRequired() success', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (call) async {
-        expect(call.method,
-            equals('UserMessagingPlatform#loadAndShowConsentFormIfRequired'));
-        expect(call.arguments, null);
-        return Future<dynamic>.value();
-      });
+            expect(
+              call.method,
+              equals('UserMessagingPlatform#loadAndShowConsentFormIfRequired'),
+            );
+            expect(call.arguments, null);
+            return Future<dynamic>.value();
+          });
       Completer<FormError?> successCompleter = Completer<FormError?>();
 
       successCompleter.complete(channel.loadAndShowConsentFormIfRequired());
@@ -332,11 +365,13 @@ void main() {
       FormError? testError = FormError(errorCode: 55, message: 'msg');
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (call) async {
-        expect(call.method,
-            equals('UserMessagingPlatform#loadAndShowConsentFormIfRequired'));
-        expect(call.arguments, null);
-        return Future<dynamic>.value(testError);
-      });
+            expect(
+              call.method,
+              equals('UserMessagingPlatform#loadAndShowConsentFormIfRequired'),
+            );
+            expect(call.arguments, null);
+            return Future<dynamic>.value(testError);
+          });
       Completer<FormError?> failureCompleter = Completer<FormError?>();
 
       failureCompleter.complete(channel.loadAndShowConsentFormIfRequired());
@@ -349,11 +384,13 @@ void main() {
     test('loadAndShowConsentFormIfRequired() error', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (call) async {
-        expect(call.method,
-            equals('UserMessagingPlatform#loadAndShowConsentFormIfRequired'));
-        expect(call.arguments, null);
-        return Future.error(PlatformException(code: '55', message: 'msg'));
-      });
+            expect(
+              call.method,
+              equals('UserMessagingPlatform#loadAndShowConsentFormIfRequired'),
+            );
+            expect(call.arguments, null);
+            return Future.error(PlatformException(code: '55', message: 'msg'));
+          });
       Completer<FormError?> errorCompleter = Completer<FormError?>();
 
       errorCompleter.complete(channel.loadAndShowConsentFormIfRequired());
@@ -366,11 +403,13 @@ void main() {
     test('showPrivacyOptionsForm() success', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (call) async {
-        expect(call.method,
-            equals('UserMessagingPlatform#showPrivacyOptionsForm'));
-        expect(call.arguments, null);
-        return Future<dynamic>.value();
-      });
+            expect(
+              call.method,
+              equals('UserMessagingPlatform#showPrivacyOptionsForm'),
+            );
+            expect(call.arguments, null);
+            return Future<dynamic>.value();
+          });
       Completer<FormError?> successCompleter = Completer<FormError?>();
 
       successCompleter.complete(channel.showPrivacyOptionsForm());
@@ -383,11 +422,13 @@ void main() {
       FormError? testError = FormError(errorCode: 55, message: 'msg');
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (call) async {
-        expect(call.method,
-            equals('UserMessagingPlatform#showPrivacyOptionsForm'));
-        expect(call.arguments, null);
-        return Future<dynamic>.value(testError);
-      });
+            expect(
+              call.method,
+              equals('UserMessagingPlatform#showPrivacyOptionsForm'),
+            );
+            expect(call.arguments, null);
+            return Future<dynamic>.value(testError);
+          });
       Completer<FormError?> failureCompleter = Completer<FormError?>();
 
       failureCompleter.complete(channel.showPrivacyOptionsForm());
@@ -400,11 +441,13 @@ void main() {
     test('showPrivacyOptionsForm() error', () async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(methodChannel, (call) async {
-        expect(call.method,
-            equals('UserMessagingPlatform#showPrivacyOptionsForm'));
-        expect(call.arguments, null);
-        return Future.error(PlatformException(code: '55', message: 'msg'));
-      });
+            expect(
+              call.method,
+              equals('UserMessagingPlatform#showPrivacyOptionsForm'),
+            );
+            expect(call.arguments, null);
+            return Future.error(PlatformException(code: '55', message: 'msg'));
+          });
       Completer<FormError?> errorCompleter = Completer<FormError?>();
 
       errorCompleter.complete(channel.showPrivacyOptionsForm());

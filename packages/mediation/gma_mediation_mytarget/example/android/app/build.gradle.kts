@@ -23,7 +23,7 @@ android {
     applicationId = "io.flutter.plugins.googlemobileads.mediation.gma_mediation_mytarget_example"
     // You can update the following values to match your application needs.
     // For more information, see: https://flutter.dev/to/review-gradle-config.
-    minSdk = 23
+    minSdk = 24
     targetSdk = flutter.targetSdkVersion
     versionCode = flutter.versionCode
     versionName = flutter.versionName

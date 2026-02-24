@@ -65,12 +65,13 @@ class AdError {
 class ResponseInfo {
   /// Constructs a [ResponseInfo] with the [responseId] and [mediationAdapterClassName].
   @protected
-  const ResponseInfo(
-      {this.responseId,
-      this.mediationAdapterClassName,
-      this.adapterResponses,
-      this.loadedAdapterResponseInfo,
-      required this.responseExtras});
+  const ResponseInfo({
+    this.responseId,
+    this.mediationAdapterClassName,
+    this.adapterResponses,
+    this.loadedAdapterResponseInfo,
+    required this.responseExtras,
+  });
 
   /// An identifier for the loaded ad.
   final String? responseId;
@@ -174,7 +175,7 @@ class LoadAdError extends AdError {
   /// Default constructor for [LoadAdError].
   @protected
   LoadAdError(int code, String domain, String message, this.responseInfo)
-      : super(code, domain, message);
+    : super(code, domain, message);
 
   /// The [ResponseInfo] for the error.
   final ResponseInfo? responseInfo;
@@ -192,16 +193,16 @@ class LoadAdError extends AdError {
 /// [AdRequest.Builder for Android](https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest.Builder).
 class AdRequest {
   /// Default constructor for [AdRequest].
-  const AdRequest(
-      {this.keywords,
-      this.contentUrl,
-      this.neighboringContentUrls,
-      this.nonPersonalizedAds,
-      this.httpTimeoutMillis,
-      @Deprecated('Use mediationExtras instead.')
-      this.mediationExtrasIdentifier,
-      this.extras,
-      this.mediationExtras});
+  const AdRequest({
+    this.keywords,
+    this.contentUrl,
+    this.neighboringContentUrls,
+    this.nonPersonalizedAds,
+    this.httpTimeoutMillis,
+    @Deprecated('Use mediationExtras instead.') this.mediationExtrasIdentifier,
+    this.extras,
+    this.mediationExtras,
+  });
 
   /// Words or phrases describing the current user activity.
   final List<String>? keywords;
@@ -256,15 +257,16 @@ class AdRequest {
 
   @override
   int get hashCode => Object.hash(
-      keywords,
-      contentUrl,
-      nonPersonalizedAds,
-      neighboringContentUrls,
-      httpTimeoutMillis,
-      //ignore: deprecated_member_use_from_same_package
-      mediationExtrasIdentifier,
-      extras,
-      mediationExtras);
+    keywords,
+    contentUrl,
+    nonPersonalizedAds,
+    neighboringContentUrls,
+    httpTimeoutMillis,
+    //ignore: deprecated_member_use_from_same_package
+    mediationExtrasIdentifier,
+    extras,
+    mediationExtras,
+  );
 }
 
 /// Targeting info per the Ad Manager API.
@@ -283,16 +285,16 @@ class AdManagerAdRequest extends AdRequest {
     Map<String, String>? extras,
     List<MediationExtras>? mediationExtras,
   }) : super(
-          keywords: keywords,
-          contentUrl: contentUrl,
-          neighboringContentUrls: neighboringContentUrls,
-          nonPersonalizedAds: nonPersonalizedAds,
-          httpTimeoutMillis: httpTimeoutMillis,
-          //ignore: deprecated_member_use_from_same_package
-          mediationExtrasIdentifier: mediationExtrasIdentifier,
-          extras: extras,
-          mediationExtras: mediationExtras,
-        );
+         keywords: keywords,
+         contentUrl: contentUrl,
+         neighboringContentUrls: neighboringContentUrls,
+         nonPersonalizedAds: nonPersonalizedAds,
+         httpTimeoutMillis: httpTimeoutMillis,
+         //ignore: deprecated_member_use_from_same_package
+         mediationExtrasIdentifier: mediationExtrasIdentifier,
+         extras: extras,
+         mediationExtras: mediationExtras,
+       );
 
   /// Key-value pairs used for custom targeting.
   final Map<String, String>? customTargeting;
@@ -391,8 +393,8 @@ class InlineAdaptiveSize extends AdSize {
   int? get orientationValue => orientation == null
       ? null
       : orientation == Orientation.portrait
-          ? 0
-          : 1;
+      ? 0
+      : 1;
 }
 
 /// [AdSize] represents the size of a banner ad.
@@ -403,10 +405,7 @@ class InlineAdaptiveSize extends AdSize {
 /// additional details.
 class AdSize {
   /// Constructs an [AdSize] with the given [width] and [height].
-  const AdSize({
-    required this.width,
-    required this.height,
-  });
+  const AdSize({required this.width, required this.height});
 
   /// The vertical span of an ad.
   final int height;
@@ -445,10 +444,7 @@ class AdSize {
   ) async {
     final num? height = await instanceManager.channel.invokeMethod<num?>(
       'AdSize#getAnchoredAdaptiveBannerAdSize',
-      <String, Object?>{
-        'orientation': orientation.name,
-        'width': width,
-      },
+      <String, Object?>{'orientation': orientation.name, 'width': width},
     );
 
     if (height == null) return null;
@@ -466,12 +462,10 @@ class AdSize {
   /// This function always returns the same height for any width / device combination.
   /// For more details, visit: https://developers.google.com/android/reference/com/google/android/gms/ads/AdSize#getCurrentOrientationAnchoredAdaptiveBannerAdSize(android.content.Context,%20int)
   static Future<AnchoredAdaptiveBannerAdSize?>
-      getCurrentOrientationAnchoredAdaptiveBannerAdSize(int width) async {
+  getCurrentOrientationAnchoredAdaptiveBannerAdSize(int width) async {
     final num? height = await instanceManager.channel.invokeMethod<num?>(
       'AdSize#getAnchoredAdaptiveBannerAdSize',
-      <String, Object?>{
-        'width': width,
-      },
+      <String, Object?>{'width': width},
     );
 
     if (height == null) return null;
@@ -493,7 +487,8 @@ class AdSize {
   /// This ad size is most suitable for ads intended to be displayed inside
   /// scrollable content.
   static InlineAdaptiveSize getCurrentOrientationInlineAdaptiveBannerAdSize(
-      int width) {
+    int width,
+  ) {
     return InlineAdaptiveSize._(width: width);
   }
 
@@ -509,7 +504,9 @@ class AdSize {
   /// scrollable content.
   static InlineAdaptiveSize getLandscapeInlineAdaptiveBannerAdSize(int width) {
     return InlineAdaptiveSize._(
-        width: width, orientation: Orientation.landscape);
+      width: width,
+      orientation: Orientation.landscape,
+    );
   }
 
   /// Gets an AdSize in portrait orientation with the given width and 0 height.
@@ -524,7 +521,9 @@ class AdSize {
   /// scrollable content.
   static InlineAdaptiveSize getPortraitInlineAdaptiveBannerAdSize(int width) {
     return InlineAdaptiveSize._(
-        width: width, orientation: Orientation.portrait);
+      width: width,
+      orientation: Orientation.portrait,
+    );
   }
 
   /// Gets an AdSize with the given width and height that is always 0.
@@ -537,7 +536,9 @@ class AdSize {
   /// This ad size is most suitable for ads intended to be displayed inside
   /// scrollable content.
   static InlineAdaptiveSize getInlineAdaptiveBannerAdSize(
-      int width, int maxHeight) {
+    int width,
+    int maxHeight,
+  ) {
     return InlineAdaptiveSize._(width: width, maxHeight: maxHeight);
   }
 
@@ -605,7 +606,7 @@ abstract class Ad {
 abstract class AdWithView extends Ad {
   /// Default constructor, used by subclasses.
   AdWithView({required String adUnitId, required this.listener})
-      : super(adUnitId: adUnitId);
+    : super(adUnitId: adUnitId);
 
   /// The [AdWithViewListener] for the ad.
   final AdWithViewListener listener;
@@ -693,18 +694,22 @@ class _AdWidgetState extends State<AdWidget> {
       throw FlutterError.fromParts(<DiagnosticsNode>[
         ErrorSummary('This AdWidget is already in the Widget tree'),
         ErrorHint(
-            'If you placed this AdWidget in a list, make sure you create a new instance '
-            'in the builder function with a unique ad object.'),
+          'If you placed this AdWidget in a list, make sure you create a new instance '
+          'in the builder function with a unique ad object.',
+        ),
         ErrorHint(
-            'Make sure you are not using the same ad object in more than one AdWidget.'),
+          'Make sure you are not using the same ad object in more than one AdWidget.',
+        ),
       ]);
     }
     if (_adLoadNotCalled) {
       throw FlutterError.fromParts(<DiagnosticsNode>[
         ErrorSummary(
-            'AdWidget requires Ad.load to be called before AdWidget is inserted into the tree'),
+          'AdWidget requires Ad.load to be called before AdWidget is inserted into the tree',
+        ),
         ErrorHint(
-            'Parameter ad is not loaded. Call Ad.load before AdWidget is inserted into the tree.'),
+          'Parameter ad is not loaded. Call Ad.load before AdWidget is inserted into the tree.',
+        ),
       ]);
     }
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -712,20 +717,21 @@ class _AdWidgetState extends State<AdWidget> {
         viewType: '${instanceManager.channel.name}/ad_widget',
         surfaceFactory:
             (BuildContext context, PlatformViewController controller) {
-          return AndroidViewSurface(
-            controller: controller as AndroidViewController,
-            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
-            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-          );
-        },
+              return AndroidViewSurface(
+                controller: controller as AndroidViewController,
+                gestureRecognizers:
+                    const <Factory<OneSequenceGestureRecognizer>>{},
+                hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+              );
+            },
         onCreatePlatformView: (PlatformViewCreationParams params) {
           return PlatformViewsService.initSurfaceAndroidView(
-            id: params.id,
-            viewType: '${instanceManager.channel.name}/ad_widget',
-            layoutDirection: TextDirection.ltr,
-            creationParams: instanceManager.adIdFor(widget.ad),
-            creationParamsCodec: StandardMessageCodec(),
-          )
+              id: params.id,
+              viewType: '${instanceManager.channel.name}/ad_widget',
+              layoutDirection: TextDirection.ltr,
+              creationParams: instanceManager.adIdFor(widget.ad),
+              creationParamsCodec: StandardMessageCodec(),
+            )
             ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
             ..create();
         },
@@ -746,7 +752,7 @@ class _AdWidgetState extends State<AdWidget> {
 class FluidAdWidget extends StatefulWidget {
   /// Constructs a [FluidAdWidget].
   const FluidAdWidget({Key? key, required this.ad, this.width})
-      : super(key: key);
+    : super(key: key);
 
   /// Ad to be displayed as a widget.
   final FluidAdManagerBannerAd ad;
@@ -792,18 +798,22 @@ class _FluidAdWidgetState extends State<FluidAdWidget> {
       throw FlutterError.fromParts(<DiagnosticsNode>[
         ErrorSummary('This AdWidget is already in the Widget tree'),
         ErrorHint(
-            'If you placed this AdWidget in a list, make sure you create a new instance '
-            'in the builder function with a unique ad object.'),
+          'If you placed this AdWidget in a list, make sure you create a new instance '
+          'in the builder function with a unique ad object.',
+        ),
         ErrorHint(
-            'Make sure you are not using the same ad object in more than one AdWidget.'),
+          'Make sure you are not using the same ad object in more than one AdWidget.',
+        ),
       ]);
     }
     if (_adLoadNotCalled) {
       throw FlutterError.fromParts(<DiagnosticsNode>[
         ErrorSummary(
-            'AdWidget requires Ad.load to be called before AdWidget is inserted into the tree'),
+          'AdWidget requires Ad.load to be called before AdWidget is inserted into the tree',
+        ),
         ErrorHint(
-            'Parameter ad is not loaded. Call Ad.load before AdWidget is inserted into the tree.'),
+          'Parameter ad is not loaded. Call Ad.load before AdWidget is inserted into the tree.',
+        ),
       ]);
     }
 
@@ -820,20 +830,21 @@ class _FluidAdWidgetState extends State<FluidAdWidget> {
         viewType: '${instanceManager.channel.name}/ad_widget',
         surfaceFactory:
             (BuildContext context, PlatformViewController controller) {
-          return AndroidViewSurface(
-            controller: controller as AndroidViewController,
-            gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
-            hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-          );
-        },
+              return AndroidViewSurface(
+                controller: controller as AndroidViewController,
+                gestureRecognizers:
+                    const <Factory<OneSequenceGestureRecognizer>>{},
+                hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+              );
+            },
         onCreatePlatformView: (PlatformViewCreationParams params) {
           return PlatformViewsService.initSurfaceAndroidView(
-            id: params.id,
-            viewType: '${instanceManager.channel.name}/ad_widget',
-            layoutDirection: TextDirection.ltr,
-            creationParams: instanceManager.adIdFor(widget.ad),
-            creationParamsCodec: StandardMessageCodec(),
-          )
+              id: params.id,
+              viewType: '${instanceManager.channel.name}/ad_widget',
+              layoutDirection: TextDirection.ltr,
+              creationParams: instanceManager.adIdFor(widget.ad),
+              creationParamsCodec: StandardMessageCodec(),
+            )
             ..addOnPlatformViewCreatedListener(params.onPlatformViewCreated)
             ..create();
         },
@@ -927,11 +938,11 @@ class FluidAdManagerBannerAd extends AdManagerBannerAd {
     required AdManagerAdRequest request,
     this.onFluidAdHeightChangedListener,
   }) : super(
-          sizes: [FluidAdSize()],
-          adUnitId: adUnitId,
-          listener: listener,
-          request: request,
-        );
+         sizes: [FluidAdSize()],
+         adUnitId: adUnitId,
+         listener: listener,
+         request: request,
+       );
 
   /// Listener for when the height of the ad changes.
   OnFluidAdHeightChangedListener? onFluidAdHeightChangedListener;
@@ -955,8 +966,8 @@ class AdManagerBannerAd extends AdWithView {
     required String adUnitId,
     required this.listener,
     required this.request,
-  })  : assert(sizes.isNotEmpty),
-        super(adUnitId: adUnitId, listener: listener);
+  }) : assert(sizes.isNotEmpty),
+       super(adUnitId: adUnitId, listener: listener);
 
   /// Targeting information used to fetch an [Ad].
   final AdManagerAdRequest request;
@@ -1023,10 +1034,10 @@ class NativeAd extends AdWithView {
     this.nativeAdOptions,
     this.customOptions,
     this.nativeTemplateStyle,
-  })  : adManagerRequest = null,
-        assert(request != null),
-        assert(nativeTemplateStyle != null || factoryId != null),
-        super(adUnitId: adUnitId, listener: listener);
+  }) : adManagerRequest = null,
+       assert(request != null),
+       assert(nativeTemplateStyle != null || factoryId != null),
+       super(adUnitId: adUnitId, listener: listener);
 
   /// Creates a [NativeAd] with Ad Manager.
   ///
@@ -1042,10 +1053,10 @@ class NativeAd extends AdWithView {
     this.nativeAdOptions,
     this.customOptions,
     this.nativeTemplateStyle,
-  })  : request = null,
-        assert(adManagerRequest != null),
-        assert(nativeTemplateStyle != null || factoryId != null),
-        super(adUnitId: adUnitId, listener: listener);
+  }) : request = null,
+       assert(adManagerRequest != null),
+       assert(nativeTemplateStyle != null || factoryId != null),
+       super(adUnitId: adUnitId, listener: listener);
 
   /// An identifier for the factory that creates the Platform view.
   final String? factoryId;
@@ -1109,7 +1120,10 @@ class InterstitialAd extends AdWithoutView {
     required InterstitialAdLoadCallback adLoadCallback,
   }) async {
     InterstitialAd ad = InterstitialAd._(
-        adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
+      adUnitId: adUnitId,
+      adLoadCallback: adLoadCallback,
+      request: request,
+    );
 
     await instanceManager.loadInterstitialAd(ad);
   }
@@ -1155,7 +1169,10 @@ class AdManagerInterstitialAd extends AdWithoutView {
     AppEventListener? appEventListener,
   }) async {
     AdManagerInterstitialAd ad = AdManagerInterstitialAd._(
-        adUnitId: adUnitId, adLoadCallback: adLoadCallback, request: request);
+      adUnitId: adUnitId,
+      adLoadCallback: adLoadCallback,
+      request: request,
+    );
 
     await instanceManager.loadAdManagerInterstitialAd(ad);
   }
@@ -1181,8 +1198,8 @@ class RewardedAd extends AdWithoutView {
     required String adUnitId,
     required this.rewardedAdLoadCallback,
     required this.request,
-  })  : adManagerRequest = null,
-        super(adUnitId: adUnitId);
+  }) : adManagerRequest = null,
+       super(adUnitId: adUnitId);
 
   /// Creates a [RewardedAd] with a [AdManagerAdRequest].
   ///
@@ -1191,8 +1208,8 @@ class RewardedAd extends AdWithoutView {
     required String adUnitId,
     required this.rewardedAdLoadCallback,
     required this.adManagerRequest,
-  })  : request = null,
-        super(adUnitId: adUnitId);
+  }) : request = null,
+       super(adUnitId: adUnitId);
 
   /// Targeting information used to fetch an [Ad].
   final AdRequest? request;
@@ -1216,9 +1233,10 @@ class RewardedAd extends AdWithoutView {
     required RewardedAdLoadCallback rewardedAdLoadCallback,
   }) async {
     RewardedAd rewardedAd = RewardedAd._(
-        adUnitId: adUnitId,
-        request: request,
-        rewardedAdLoadCallback: rewardedAdLoadCallback);
+      adUnitId: adUnitId,
+      request: request,
+      rewardedAdLoadCallback: rewardedAdLoadCallback,
+    );
 
     await instanceManager.loadRewardedAd(rewardedAd);
   }
@@ -1230,9 +1248,10 @@ class RewardedAd extends AdWithoutView {
     required RewardedAdLoadCallback rewardedAdLoadCallback,
   }) async {
     RewardedAd rewardedAd = RewardedAd._fromAdManagerRequest(
-        adUnitId: adUnitId,
-        adManagerRequest: adManagerRequest,
-        rewardedAdLoadCallback: rewardedAdLoadCallback);
+      adUnitId: adUnitId,
+      adManagerRequest: adManagerRequest,
+      rewardedAdLoadCallback: rewardedAdLoadCallback,
+    );
 
     await instanceManager.loadRewardedAd(rewardedAd);
   }
@@ -1270,8 +1289,8 @@ class RewardedInterstitialAd extends AdWithoutView {
     required String adUnitId,
     required this.rewardedInterstitialAdLoadCallback,
     required this.request,
-  })  : adManagerRequest = null,
-        super(adUnitId: adUnitId);
+  }) : adManagerRequest = null,
+       super(adUnitId: adUnitId);
 
   /// Creates a [RewardedInterstitialAd] with an [AdManagerAdRequest].
   ///
@@ -1280,8 +1299,8 @@ class RewardedInterstitialAd extends AdWithoutView {
     required String adUnitId,
     required this.rewardedInterstitialAdLoadCallback,
     required this.adManagerRequest,
-  })  : request = null,
-        super(adUnitId: adUnitId);
+  }) : request = null,
+       super(adUnitId: adUnitId);
 
   /// Targeting information used to fetch an [Ad].
   final AdRequest? request;
@@ -1303,12 +1322,13 @@ class RewardedInterstitialAd extends AdWithoutView {
     required String adUnitId,
     required AdRequest request,
     required RewardedInterstitialAdLoadCallback
-        rewardedInterstitialAdLoadCallback,
+    rewardedInterstitialAdLoadCallback,
   }) async {
     RewardedInterstitialAd rewardedInterstitialAd = RewardedInterstitialAd._(
-        adUnitId: adUnitId,
-        request: request,
-        rewardedInterstitialAdLoadCallback: rewardedInterstitialAdLoadCallback);
+      adUnitId: adUnitId,
+      request: request,
+      rewardedInterstitialAdLoadCallback: rewardedInterstitialAdLoadCallback,
+    );
 
     await instanceManager.loadRewardedInterstitialAd(rewardedInterstitialAd);
   }
@@ -1318,14 +1338,15 @@ class RewardedInterstitialAd extends AdWithoutView {
     required String adUnitId,
     required AdManagerAdRequest adManagerRequest,
     required RewardedInterstitialAdLoadCallback
-        rewardedInterstitialAdLoadCallback,
+    rewardedInterstitialAdLoadCallback,
   }) async {
     RewardedInterstitialAd rewardedInterstitialAd =
         RewardedInterstitialAd._fromAdManagerRequest(
-            adUnitId: adUnitId,
-            adManagerRequest: adManagerRequest,
-            rewardedInterstitialAdLoadCallback:
-                rewardedInterstitialAdLoadCallback);
+          adUnitId: adUnitId,
+          adManagerRequest: adManagerRequest,
+          rewardedInterstitialAdLoadCallback:
+              rewardedInterstitialAdLoadCallback,
+        );
 
     await instanceManager.loadRewardedInterstitialAd(rewardedInterstitialAd);
   }
@@ -1394,15 +1415,15 @@ class AppOpenAd extends AdWithoutView {
     required String adUnitId,
     required this.adLoadCallback,
     required this.request,
-  })  : adManagerAdRequest = null,
-        super(adUnitId: adUnitId);
+  }) : adManagerAdRequest = null,
+       super(adUnitId: adUnitId);
 
   AppOpenAd._fromAdManagerRequest({
     required String adUnitId,
     required this.adLoadCallback,
     required this.adManagerAdRequest,
-  })  : request = null,
-        super(adUnitId: adUnitId);
+  }) : request = null,
+       super(adUnitId: adUnitId);
 
   /// The [AdRequest] used to load the ad.
   final AdRequest? request;
@@ -1468,7 +1489,7 @@ enum MediaAspectRatio {
   portrait,
 
   /// Close to square media aspect ratio. This is not a strict 1:1 aspect ratio.
-  square
+  square,
 }
 
 /// Indicates preferred location of AdChoices icon.
@@ -1483,7 +1504,7 @@ enum AdChoicesPlacement {
   bottomRightCorner,
 
   /// Bottom left corner.
-  bottomLeftCorner
+  bottomLeftCorner,
 }
 
 /// Used to configure native ad requests.
@@ -1541,12 +1562,13 @@ class NativeAdOptions {
 
   @override
   int get hashCode => Object.hash(
-      adChoicesPlacement,
-      mediaAspectRatio,
-      videoOptions,
-      requestCustomMuteThisAd,
-      shouldRequestMultipleImages,
-      shouldReturnUrlsForImageAssets);
+    adChoicesPlacement,
+    mediaAspectRatio,
+    videoOptions,
+    requestCustomMuteThisAd,
+    shouldRequestMultipleImages,
+    shouldReturnUrlsForImageAssets,
+  );
 }
 
 /// Options for controlling video playback in supported ad formats.

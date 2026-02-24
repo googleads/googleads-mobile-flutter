@@ -14,11 +14,11 @@
 
 package io.flutter.plugins.googlemobileads.mediation.gma_mediation_ironsource
 
-import com.ironsource.mediationsdk.IronSource;
+import com.unity3d.mediation.LevelPlay
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 
 /** GmaMediationIronsourcePlugin manages IronSourcePrivacyApi and implements the needed methods. */
-class GmaMediationIronsourcePlugin: FlutterPlugin, IronSourcePrivacyApi {
+class GmaMediationIronsourcePlugin : FlutterPlugin, IronSourcePrivacyApi {
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     IronSourcePrivacyApi.setUp(flutterPluginBinding.binaryMessenger, this)
@@ -29,11 +29,11 @@ class GmaMediationIronsourcePlugin: FlutterPlugin, IronSourcePrivacyApi {
   }
 
   override fun setConsent(gdprConsent: Boolean) {
-    IronSource.setConsent(gdprConsent)
+    LevelPlay.setConsent(gdprConsent)
   }
 
   override fun setDoNotSell(doNotSell: Boolean) {
-    IronSource.setMetaData(IRONSOURCE_DONOTSELL_KEY, if (doNotSell) TRUE else FALSE)
+    LevelPlay.setMetaData(IRONSOURCE_DONOTSELL_KEY, if (doNotSell) TRUE else FALSE)
   }
 
   companion object {

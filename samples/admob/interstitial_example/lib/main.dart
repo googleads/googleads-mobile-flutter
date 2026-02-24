@@ -31,10 +31,9 @@ class InterstitialExampleState extends State<InterstitialExample> {
   late var _counter = _gameLength;
   Timer? _timer;
 
-  final String _adUnitId =
-      Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/1033173712'
-          : 'ca-app-pub-3940256099942544/4411468910';
+  final String _adUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/1033173712'
+      : 'ca-app-pub-3940256099942544/4411468910';
 
   @override
   void initState() {
@@ -141,16 +140,14 @@ class InterstitialExampleState extends State<InterstitialExample> {
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-        itemBuilder:
-            (context) =>
-                array
-                    .map(
-                      (item) => PopupMenuItem<AppBarItem>(
-                        value: item,
-                        child: Text(item.label),
-                      ),
-                    )
-                    .toList(),
+        itemBuilder: (context) => array
+            .map(
+              (item) => PopupMenuItem<AppBarItem>(
+                value: item,
+                child: Text(item.label),
+              ),
+            )
+            .toList(),
         onSelected: (item) {
           _pauseGame();
           switch (item.value) {
@@ -185,32 +182,43 @@ class InterstitialExampleState extends State<InterstitialExample> {
       adUnitId: _adUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
-        // Called when an ad is successfully received.
         onAdLoaded: (InterstitialAd ad) {
-          ad.fullScreenContentCallback = FullScreenContentCallback(
-            // Called when the ad showed the full screen content.
-            onAdShowedFullScreenContent: (ad) {},
-            // Called when an impression occurs on the ad.
-            onAdImpression: (ad) {},
-            // Called when the ad failed to show full screen content.
-            onAdFailedToShowFullScreenContent: (ad, err) {
-              ad.dispose();
-            },
-            // Called when the ad dismissed full screen content.
-            onAdDismissedFullScreenContent: (ad) {
-              ad.dispose();
-            },
-            // Called when a click is recorded for an ad.
-            onAdClicked: (ad) {},
-          );
-
+          // Called when an ad is successfully received.
+          debugPrint('Ad was loaded.');
           // Keep a reference to the ad so you can show it later.
           _interstitialAd = ad;
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdShowedFullScreenContent: (ad) {
+              // Called when the ad showed the full screen content.
+              debugPrint('Ad showed full screen content.');
+            },
+            onAdFailedToShowFullScreenContent: (ad, err) {
+              // Called when the ad failed to show full screen content.
+              debugPrint(
+                'Ad failed to show full screen content with error: $err',
+              );
+              // Dispose the ad here to free resources.
+              ad.dispose();
+            },
+            onAdDismissedFullScreenContent: (ad) {
+              // Called when the ad dismissed full screen content.
+              debugPrint('Ad was dismissed.');
+              // Dispose the ad here to free resources.
+              ad.dispose();
+            },
+            onAdImpression: (ad) {
+              // Called when an impression occurs on the ad.
+              debugPrint('Ad recorded an impression.');
+            },
+            onAdClicked: (ad) {
+              // Called when a click is recorded for an ad.
+              debugPrint('Ad was clicked.');
+            },
+          );
         },
-        // Called when an ad request failed.
         onAdFailedToLoad: (LoadAdError error) {
-          // ignore: avoid_print
-          print('InterstitialAd failed to load: $error');
+          // Called when an ad request failed.
+          debugPrint('Ad failed to load with error: $error');
         },
       ),
     );
@@ -219,20 +227,21 @@ class InterstitialExampleState extends State<InterstitialExample> {
   void _showAlert(BuildContext context) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Game Over'),
-            content: Text('You lasted $_gameLength seconds'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _interstitialAd?.show();
-                },
-                child: const Text('OK'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: const Text('Game Over'),
+        content: Text('You lasted $_gameLength seconds'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              // [START show_ad]
+              _interstitialAd?.show();
+              // [END show_ad]
+            },
+            child: const Text('OK'),
           ),
+        ],
+      ),
     );
   }
 

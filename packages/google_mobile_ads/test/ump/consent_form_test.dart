@@ -40,7 +40,8 @@ void main() {
       Completer<FormError?> formCompleter = Completer<FormError?>();
 
       await ConsentForm.showPrivacyOptionsForm(
-          (formError) => formCompleter.complete(formError));
+        (formError) => formCompleter.complete(formError),
+      );
 
       FormError? formError = await formCompleter.future;
       expect(formError, null);
@@ -48,12 +49,14 @@ void main() {
 
     test('showPrivacyOptionsForm failure', () async {
       FormError? testError = FormError(errorCode: 1, message: 'testErrorMsg');
-      when(mockChannel.showPrivacyOptionsForm())
-          .thenAnswer((realInvocation) => Future<FormError?>.value(testError));
+      when(
+        mockChannel.showPrivacyOptionsForm(),
+      ).thenAnswer((realInvocation) => Future<FormError?>.value(testError));
       Completer<FormError?> formCompleter = Completer<FormError?>();
 
       await ConsentForm.showPrivacyOptionsForm(
-          (formError) => formCompleter.complete(formError));
+        (formError) => formCompleter.complete(formError),
+      );
 
       FormError? formError = await formCompleter.future;
       expect(formError, testError);
@@ -63,14 +66,16 @@ void main() {
       ConsentForm form = ConsentFormImpl(2);
 
       when(mockChannel.loadConsentForm(any, any)).thenAnswer(
-          (realInvocation) => realInvocation.positionalArguments[0](form));
+        (realInvocation) => realInvocation.positionalArguments[0](form),
+      );
 
       Completer<ConsentForm> successCompleter = Completer<ConsentForm>();
       Completer<FormError> errorCompleter = Completer<FormError>();
 
       ConsentForm.loadConsentForm(
-          (consentForm) => successCompleter.complete(consentForm),
-          (formError) => errorCompleter.complete(formError));
+        (consentForm) => successCompleter.complete(consentForm),
+        (formError) => errorCompleter.complete(formError),
+      );
 
       ConsentForm responseForm = await successCompleter.future;
       expect(successCompleter.isCompleted, true);
@@ -82,14 +87,16 @@ void main() {
       FormError formError = FormError(errorCode: 1, message: 'message');
 
       when(mockChannel.loadConsentForm(any, any)).thenAnswer(
-          (realInvocation) => realInvocation.positionalArguments[1](formError));
+        (realInvocation) => realInvocation.positionalArguments[1](formError),
+      );
 
       Completer<ConsentForm> successCompleter = Completer<ConsentForm>();
       Completer<FormError> errorCompleter = Completer<FormError>();
 
       ConsentForm.loadConsentForm(
-          (consentForm) => successCompleter.complete(consentForm),
-          (formError) => errorCompleter.complete(formError));
+        (consentForm) => successCompleter.complete(consentForm),
+        (formError) => errorCompleter.complete(formError),
+      );
 
       FormError responseError = await errorCompleter.future;
       expect(formError, responseError);
@@ -101,7 +108,8 @@ void main() {
       Completer<FormError?> formCompleter = Completer<FormError?>();
 
       await ConsentForm.loadAndShowConsentFormIfRequired(
-          (formError) => formCompleter.complete(formError));
+        (formError) => formCompleter.complete(formError),
+      );
 
       FormError? formError = await formCompleter.future;
       expect(formError, null);
@@ -109,12 +117,14 @@ void main() {
 
     test('loadAndShowConsentFormIfRequired failure', () async {
       FormError? testError = FormError(errorCode: 1, message: 'testErrorMsg');
-      when(mockChannel.loadAndShowConsentFormIfRequired())
-          .thenAnswer((realInvocation) => Future<FormError?>.value(testError));
+      when(
+        mockChannel.loadAndShowConsentFormIfRequired(),
+      ).thenAnswer((realInvocation) => Future<FormError?>.value(testError));
       Completer<FormError?> formCompleter = Completer<FormError?>();
 
       await ConsentForm.loadAndShowConsentFormIfRequired(
-          (formError) => formCompleter.complete(formError));
+        (formError) => formCompleter.complete(formError),
+      );
 
       FormError? formError = await formCompleter.future;
       expect(formError, testError);

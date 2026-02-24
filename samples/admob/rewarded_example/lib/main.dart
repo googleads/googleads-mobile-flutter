@@ -31,10 +31,9 @@ class RewardedExampleState extends State<RewardedExample> {
   var _coins = 0;
   RewardedAd? _rewardedAd;
 
-  final String _adUnitId =
-      Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/5224354917'
-          : 'ca-app-pub-3940256099942544/1712485313';
+  final String _adUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/5224354917'
+      : 'ca-app-pub-3940256099942544/1712485313';
 
   @override
   void initState() {
@@ -143,17 +142,21 @@ class RewardedExampleState extends State<RewardedExample> {
                     child: TextButton(
                       onPressed: () {
                         setState(() => _showWatchVideoButton = false);
-
+                        // [START show_ad]
                         _rewardedAd?.show(
-                          onUserEarnedReward: (
-                            AdWithoutView ad,
-                            RewardItem rewardItem,
-                          ) {
-                            // ignore: avoid_print
-                            print('Reward amount: ${rewardItem.amount}');
-                            setState(() => _coins += rewardItem.amount.toInt());
-                          },
+                          onUserEarnedReward:
+                              (AdWithoutView ad, RewardItem rewardItem) {
+                                debugPrint(
+                                  'Reward amount: ${rewardItem.amount}',
+                                );
+                                // [START_EXCLUDE silent]
+                                setState(
+                                  () => _coins += rewardItem.amount.toInt(),
+                                );
+                                // [END_EXCLUDE]
+                              },
                         );
+                        // [END show_ad]
                       },
                       child: const Text('Watch video for additional 10 coins'),
                     ),
@@ -183,16 +186,14 @@ class RewardedExampleState extends State<RewardedExample> {
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-        itemBuilder:
-            (context) =>
-                array
-                    .map(
-                      (item) => PopupMenuItem<AppBarItem>(
-                        value: item,
-                        child: Text(item.label),
-                      ),
-                    )
-                    .toList(),
+        itemBuilder: (context) => array
+            .map(
+              (item) => PopupMenuItem<AppBarItem>(
+                value: item,
+                child: Text(item.label),
+              ),
+            )
+            .toList(),
         onSelected: (item) {
           _pauseGame();
           switch (item.value) {

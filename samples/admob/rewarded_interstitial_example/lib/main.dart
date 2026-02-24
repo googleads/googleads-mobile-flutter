@@ -33,10 +33,9 @@ class RewardedInterstitialExampleState
   var _isPrivacyOptionsRequired = false;
   RewardedInterstitialAd? _rewardedInterstitialAd;
 
-  final String _adUnitId =
-      Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/5354046379'
-          : 'ca-app-pub-3940256099942544/6978759866';
+  final String _adUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/5354046379'
+      : 'ca-app-pub-3940256099942544/6978759866';
 
   @override
   void initState() {
@@ -69,13 +68,12 @@ class RewardedInterstitialExampleState
         if (_countdownTimer.isComplete) {
           showDialog(
             context: context,
-            builder:
-                (context) => AdDialog(
-                  showAd: () {
-                    _gameOver = true;
-                    _showAdCallback();
-                  },
-                ),
+            builder: (context) => AdDialog(
+              showAd: () {
+                _gameOver = true;
+                _showAdCallback();
+              },
+            ),
           );
           _coins += 1;
         }
@@ -106,13 +104,16 @@ class RewardedInterstitialExampleState
   }
 
   void _showAdCallback() {
+    // [START show_ad]
     _rewardedInterstitialAd?.show(
       onUserEarnedReward: (AdWithoutView view, RewardItem rewardItem) {
-        // ignore: avoid_print
-        print('Reward amount: ${rewardItem.amount}');
+        debugPrint('Reward amount: ${rewardItem.amount}');
+        // [START_EXCLUDE silent]
         setState(() => _coins += rewardItem.amount.toInt());
+        // [END_EXCLUDE]
       },
     );
+    // [END show_ad]
   }
 
   @override
@@ -181,16 +182,14 @@ class RewardedInterstitialExampleState
 
     return <Widget>[
       PopupMenuButton<AppBarItem>(
-        itemBuilder:
-            (context) =>
-                array
-                    .map(
-                      (item) => PopupMenuItem<AppBarItem>(
-                        value: item,
-                        child: Text(item.label),
-                      ),
-                    )
-                    .toList(),
+        itemBuilder: (context) => array
+            .map(
+              (item) => PopupMenuItem<AppBarItem>(
+                value: item,
+                child: Text(item.label),
+              ),
+            )
+            .toList(),
         onSelected: (item) {
           _pauseGame();
           switch (item.value) {

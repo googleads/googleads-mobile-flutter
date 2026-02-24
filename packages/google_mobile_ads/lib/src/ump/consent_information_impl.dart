@@ -23,11 +23,15 @@ class ConsentInformationImpl extends ConsentInformation {
 
   @override
   void requestConsentInfoUpdate(
-      ConsentRequestParameters params,
-      OnConsentInfoUpdateSuccessListener successListener,
-      OnConsentInfoUpdateFailureListener failureListener) {
-    UserMessagingChannel.instance
-        .requestConsentInfoUpdate(params, successListener, failureListener);
+    ConsentRequestParameters params,
+    OnConsentInfoUpdateSuccessListener successListener,
+    OnConsentInfoUpdateFailureListener failureListener,
+  ) {
+    UserMessagingChannel.instance.requestConsentInfoUpdate(
+      params,
+      successListener,
+      failureListener,
+    );
   }
 
   @override

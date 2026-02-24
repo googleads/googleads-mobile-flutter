@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_meta'
-  s.version          = '1.2.0'
+  s.version          = '1.5.1'
   s.summary          = 'Google Mobile Ads Mediation of Meta Audience Network.'
   s.description      = <<-DESC
 Mediation Adapter for Meta Audience Network to use with Google Mobile Ads.
@@ -16,8 +16,8 @@ Mediation Adapter for Meta Audience Network to use with Google Mobile Ads.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationFacebook', '~> 6.17.1.0'
-  s.platform = :ios, '12.0'
+  s.dependency 'GoogleMobileAdsMediationFacebook', '~> 6.21.0.1'
+  s.platform = :ios, '13.0'
   s.static_framework = true
 
   # Flutter.framework does not contain a i386 slice.

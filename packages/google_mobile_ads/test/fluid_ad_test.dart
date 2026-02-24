@@ -30,21 +30,23 @@ void main() {
 
     setUp(() async {
       log.clear();
-      instanceManager =
-          AdInstanceManager('plugins.flutter.io/google_mobile_ads');
+      instanceManager = AdInstanceManager(
+        'plugins.flutter.io/google_mobile_ads',
+      );
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(instanceManager.channel,
-              (MethodCall methodCall) async {
-        log.add(methodCall);
-        switch (methodCall.method) {
-          case 'loadFluidAd':
-          case 'disposeAd':
-            return Future<void>.value();
-          default:
-            assert(false);
-            return null;
-        }
-      });
+          .setMockMethodCallHandler(instanceManager.channel, (
+            MethodCall methodCall,
+          ) async {
+            log.add(methodCall);
+            switch (methodCall.method) {
+              case 'loadFluidAd':
+              case 'disposeAd':
+                return Future<void>.value();
+              default:
+                assert(false);
+                return null;
+            }
+          });
     });
 
     test('load android with callbacks', () async {
@@ -84,12 +86,15 @@ void main() {
 
       await fluidAd.load();
       expect(log, <Matcher>[
-        isMethodCall('loadFluidAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'testId',
-          'sizes': <AdSize>[FluidAdSize()],
-          'request': AdManagerAdRequest(),
-        })
+        isMethodCall(
+          'loadFluidAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'testId',
+            'sizes': <AdSize>[FluidAdSize()],
+            'request': AdManagerAdRequest(),
+          },
+        ),
       ]);
 
       await TestUtil.sendAdEvent(0, 'onAdLoaded', instanceManager);
@@ -108,28 +113,46 @@ void main() {
 
       const heightChangedArgs = {'height': 25};
       await TestUtil.sendAdEvent(
-          0, 'onFluidAdHeightChanged', instanceManager, heightChangedArgs);
+        0,
+        'onFluidAdHeightChanged',
+        instanceManager,
+        heightChangedArgs,
+      );
       expect(await heightChangedCompleter.future, [fluidAd, 25]);
 
       LoadAdError error = LoadAdError(1, 'domain', 'message', null);
       var errorArgs = {'loadAdError': error};
       await TestUtil.sendAdEvent(
-          0, 'onAdFailedToLoad', instanceManager, errorArgs);
+        0,
+        'onAdFailedToLoad',
+        instanceManager,
+        errorArgs,
+      );
       List<dynamic> adAndError = await failedToLoadCompleter.future;
       expect(adAndError[0], loadedAd);
       expect(adAndError[1].toString(), error.toString());
 
       const appEventArgs = {'name': 'name', 'data': '1234'};
       await TestUtil.sendAdEvent(
-          0, 'onAppEvent', instanceManager, appEventArgs);
+        0,
+        'onAppEvent',
+        instanceManager,
+        appEventArgs,
+      );
       expect(await appEventCompleter.future, [fluidAd, 'name', '1234']);
 
       // will dismiss is iOS only event.
       var willDismissCompleted = false;
-      unawaited(willDismissCompleter.future
-          .whenComplete(() => willDismissCompleted = true));
+      unawaited(
+        willDismissCompleter.future.whenComplete(
+          () => willDismissCompleted = true,
+        ),
+      );
       await TestUtil.sendAdEvent(
-          0, 'onBannerWillDismissScreen', instanceManager);
+        0,
+        'onBannerWillDismissScreen',
+        instanceManager,
+      );
       expect(willDismissCompleted, false);
     });
 
@@ -170,12 +193,15 @@ void main() {
 
       await fluidAd.load();
       expect(log, <Matcher>[
-        isMethodCall('loadFluidAd', arguments: <String, dynamic>{
-          'adId': 0,
-          'adUnitId': 'testId',
-          'sizes': <AdSize>[FluidAdSize()],
-          'request': AdManagerAdRequest(),
-        })
+        isMethodCall(
+          'loadFluidAd',
+          arguments: <String, dynamic>{
+            'adId': 0,
+            'adUnitId': 'testId',
+            'sizes': <AdSize>[FluidAdSize()],
+            'request': AdManagerAdRequest(),
+          },
+        ),
       ]);
 
       await TestUtil.sendAdEvent(0, 'onAdLoaded', instanceManager);
@@ -187,34 +213,55 @@ void main() {
       expect(await impressionCompleter.future, loadedAd);
 
       await TestUtil.sendAdEvent(
-          0, 'onBannerWillPresentScreen', instanceManager);
+        0,
+        'onBannerWillPresentScreen',
+        instanceManager,
+      );
       expect(await openedCompleter.future, loadedAd);
 
       await TestUtil.sendAdEvent(
-          0, 'onBannerDidDismissScreen', instanceManager);
+        0,
+        'onBannerDidDismissScreen',
+        instanceManager,
+      );
       expect(await closedCompleter.future, loadedAd);
 
       const heightChangedArgs = {'height': 25};
       await TestUtil.sendAdEvent(
-          0, 'onFluidAdHeightChanged', instanceManager, heightChangedArgs);
+        0,
+        'onFluidAdHeightChanged',
+        instanceManager,
+        heightChangedArgs,
+      );
       expect(await heightChangedCompleter.future, [fluidAd, 25]);
 
       LoadAdError error = LoadAdError(1, 'domain', 'message', null);
       var errorArgs = {'loadAdError': error};
       await TestUtil.sendAdEvent(
-          0, 'onAdFailedToLoad', instanceManager, errorArgs);
+        0,
+        'onAdFailedToLoad',
+        instanceManager,
+        errorArgs,
+      );
       List<dynamic> adAndError = await failedToLoadCompleter.future;
       expect(adAndError[0], loadedAd);
       expect(adAndError[1].toString(), error.toString());
 
       const appEventArgs = {'name': 'name', 'data': '1234'};
       await TestUtil.sendAdEvent(
-          0, 'onAppEvent', instanceManager, appEventArgs);
+        0,
+        'onAppEvent',
+        instanceManager,
+        appEventArgs,
+      );
       expect(await appEventCompleter.future, [fluidAd, 'name', '1234']);
 
       // will dismiss is iOS only event.
       await TestUtil.sendAdEvent(
-          0, 'onBannerWillDismissScreen', instanceManager);
+        0,
+        'onBannerWillDismissScreen',
+        instanceManager,
+      );
       expect(await willDismissCompleter.future, fluidAd);
     });
   });

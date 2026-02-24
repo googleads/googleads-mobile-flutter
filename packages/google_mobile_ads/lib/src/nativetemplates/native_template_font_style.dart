@@ -24,5 +24,5 @@ enum NativeTemplateFontStyle {
   italic,
 
   /// Monospace
-  monospace
+  monospace,
 }

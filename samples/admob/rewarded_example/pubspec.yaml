@@ -1,15 +1,15 @@
 name: rewarded_example
-description: Example project for demoing rewarded ads.
+description: "Example project for demoing rewarded ads."
 publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.0 <4.0.0'
+  sdk: ^3.9.2
 
 dependencies:
   flutter:
     sdk: flutter
-  google_mobile_ads: ^6.0.0
+  google_mobile_ads: ^7.0.0
 
 dev_dependencies:
   flutter_test:

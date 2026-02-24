@@ -1,5 +1,59 @@
 ## Pangle Flutter Mediation Adapter Changelog
 
+#### Version 3.5.3 (In progress)
+
+#### Version 3.5.2
+- Updated minimum Flutter version to 3.35.1
+- Updated to support Google Mobile Ads Flutter Plugin version 7.0.0
+- Supports [Pangle Android adapter version 7.8.0.8.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pangle/CHANGELOG.md#version-78080).
+- Supports [Pangle iOS adapter version 7.8.0.6.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Pangle/CHANGELOG.md#version-78060).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 7.0.0.
+
+#### Version 3.5.1
+- Supports [Pangle Android adapter version 7.8.0.8.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pangle/CHANGELOG.md#version-78080).
+- Supports [Pangle iOS adapter version 7.8.0.5.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Pangle/CHANGELOG.md#version-78050).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 3.5.0
+- Supports [Pangle Android adapter version 7.8.0.7.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pangle/CHANGELOG.md#version-78070).
+- Supports [Pangle iOS adapter version 7.8.0.3.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Pangle/CHANGELOG.md#version-78030).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 3.4.0
+- Supports [Pangle Android adapter version 7.7.0.2.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pangle/CHANGELOG.md#version-77020).
+- Supports [Pangle iOS adapter version 7.7.0.5.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Pangle/CHANGELOG.md#version-77050).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 3.3.0
+- Supports [Pangle Android adapter version 7.6.0.4.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pangle/CHANGELOG.md#version-76040).
+- Supports [Pangle iOS adapter version 7.6.0.5.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Pangle/CHANGELOG.md#version-76050).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 3.2.1
+- Supports [Pangle Android adapter version 7.3.0.5.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pangle/CHANGELOG.md#version-73050).
+- Supports [Pangle iOS adapter version 7.4.1.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Pangle/CHANGELOG.md#version-74100).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 3.2.0
+- Supports [Pangle Android adapter version 7.3.0.4.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pangle/CHANGELOG.md#version-73040).
+- Supports [Pangle iOS adapter version 7.4.0.9.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Pangle/CHANGELOG.md#version-74090).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 3.1.1
+- Supports [Pangle Android adapter version 7.2.0.6.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pangle/CHANGELOG.md#version-72060).
+- Supports [Pangle iOS adapter version 7.2.0.5.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Pangle/CHANGELOG.md#version-72050).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 3.1.0
+- Supports [Pangle Android adapter version 7.2.0.4.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pangle/CHANGELOG.md#version-72040).
+- Supports [Pangle iOS adapter version 7.2.0.4.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Pangle/CHANGELOG.md#version-72040).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
+#### Version 3.0.0
+- Supports [Pangle Android adapter version 7.1.0.8.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pangle/CHANGELOG.md#version-71080).
+- Supports [Pangle iOS adapter version 7.1.1.1.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Pangle/CHANGELOG.md#version-71110).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 6.0.0.
+
 #### Version 2.2.0
 - Supports [Pangle Android adapter version 6.5.0.8.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pangle/CHANGELOG.md#version-65080).
 - Supports [Pangle iOS adapter version 6.5.0.9.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Pangle/CHANGELOG.md#version-65090).

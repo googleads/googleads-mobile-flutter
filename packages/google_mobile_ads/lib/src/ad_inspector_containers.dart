@@ -18,11 +18,7 @@ typedef OnAdInspectorClosedListener = void Function(AdInspectorError?);
 /// Error information about why the ad inspector failed.
 class AdInspectorError {
   /// Create an AdInspectorError with the given code, domain and message.
-  AdInspectorError({
-    this.code,
-    this.domain,
-    this.message,
-  });
+  AdInspectorError({this.code, this.domain, this.message});
 
   /// Code to identifier the error.
   final String? code;

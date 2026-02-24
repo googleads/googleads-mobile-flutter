@@ -29,8 +29,12 @@ class UserMessagingChannel {
   UserMessagingChannel(MethodChannel channel) : _methodChannel = channel;
 
   /// The shared [UserMessagingChannel] instance.
-  static UserMessagingChannel instance = UserMessagingChannel(MethodChannel(
-      _methodChannelName, StandardMethodCodec(UserMessagingCodec())));
+  static UserMessagingChannel instance = UserMessagingChannel(
+    MethodChannel(
+      _methodChannelName,
+      StandardMethodCodec(UserMessagingCodec()),
+    ),
+  );
 
   final MethodChannel _methodChannel;
 
@@ -39,15 +43,14 @@ class UserMessagingChannel {
   /// Invokes [successListener] or [failureListener] depending on if there was
   /// an error.
   void requestConsentInfoUpdate(
-      ConsentRequestParameters params,
-      OnConsentInfoUpdateSuccessListener successListener,
-      OnConsentInfoUpdateFailureListener failureListener) async {
+    ConsentRequestParameters params,
+    OnConsentInfoUpdateSuccessListener successListener,
+    OnConsentInfoUpdateFailureListener failureListener,
+  ) async {
     try {
       await _methodChannel.invokeMethod<void>(
         'ConsentInformation#requestConsentInfoUpdate',
-        <dynamic, dynamic>{
-          'params': params,
-        },
+        <dynamic, dynamic>{'params': params},
       );
       successListener();
     } on PlatformException catch (e) {
@@ -57,14 +60,16 @@ class UserMessagingChannel {
 
   /// Returns a future indicating whether a consent form is available.
   Future<bool> isConsentFormAvailable() async {
-    return (await _methodChannel
-        .invokeMethod<bool>('ConsentInformation#isConsentFormAvailable'))!;
+    return (await _methodChannel.invokeMethod<bool>(
+      'ConsentInformation#isConsentFormAvailable',
+    ))!;
   }
 
   /// Gets the consent status.
   Future<ConsentStatus> getConsentStatus() async {
-    int consentStatus = (await _methodChannel
-        .invokeMethod<int>('ConsentInformation#getConsentStatus'))!;
+    int consentStatus = (await _methodChannel.invokeMethod<int>(
+      'ConsentInformation#getConsentStatus',
+    ))!;
 
     if (defaultTargetPlatform == TargetPlatform.iOS) {
       switch (consentStatus) {
@@ -104,15 +109,17 @@ class UserMessagingChannel {
 
   /// Returns indicating whether it is ok to request ads.
   Future<bool> canRequestAds() async {
-    return (await _methodChannel
-        .invokeMethod<bool>('ConsentInformation#canRequestAds'))!;
+    return (await _methodChannel.invokeMethod<bool>(
+      'ConsentInformation#canRequestAds',
+    ))!;
   }
 
   /// Indicates the privacy options requirement status as a [PrivacyOptionsRequirementStatus].
   Future<PrivacyOptionsRequirementStatus>
-      getPrivacyOptionsRequirementStatus() async {
+  getPrivacyOptionsRequirementStatus() async {
     int? privacyOptionsStatusInt = (await _methodChannel.invokeMethod<int>(
-        'ConsentInformation#getPrivacyOptionsRequirementStatus'));
+      'ConsentInformation#getPrivacyOptionsRequirementStatus',
+    ));
     switch (privacyOptionsStatusInt) {
       case 0:
         return PrivacyOptionsRequirementStatus.notRequired;
@@ -124,11 +131,14 @@ class UserMessagingChannel {
   }
 
   /// Loads a consent form and calls the corresponding listener.
-  void loadConsentForm(OnConsentFormLoadSuccessListener successListener,
-      OnConsentFormLoadFailureListener failureListener) async {
+  void loadConsentForm(
+    OnConsentFormLoadSuccessListener successListener,
+    OnConsentFormLoadFailureListener failureListener,
+  ) async {
     try {
-      ConsentForm form = (await _methodChannel
-          .invokeMethod<ConsentForm>('UserMessagingPlatform#loadConsentForm'))!;
+      ConsentForm form = (await _methodChannel.invokeMethod<ConsentForm>(
+        'UserMessagingPlatform#loadConsentForm',
+      ))!;
       successListener(form);
     } on PlatformException catch (e) {
       failureListener(_formErrorFromPlatformException(e));
@@ -139,21 +149,22 @@ class UserMessagingChannel {
   Future<FormError?> loadAndShowConsentFormIfRequired() async {
     try {
       return await _methodChannel.invokeMethod<FormError?>(
-          'UserMessagingPlatform#loadAndShowConsentFormIfRequired');
+        'UserMessagingPlatform#loadAndShowConsentFormIfRequired',
+      );
     } on PlatformException catch (e) {
       return _formErrorFromPlatformException(e);
     }
   }
 
   /// Show the consent form.
-  void show(ConsentForm consentForm,
-      OnConsentFormDismissedListener onConsentFormDismissedListener) async {
+  void show(
+    ConsentForm consentForm,
+    OnConsentFormDismissedListener onConsentFormDismissedListener,
+  ) async {
     try {
       await _methodChannel.invokeMethod<FormError?>(
         'ConsentForm#show',
-        <dynamic, dynamic>{
-          'consentForm': consentForm,
-        },
+        <dynamic, dynamic>{'consentForm': consentForm},
       );
       onConsentFormDismissedListener(null);
     } on PlatformException catch (e) {
@@ -165,7 +176,8 @@ class UserMessagingChannel {
   Future<FormError?> showPrivacyOptionsForm() async {
     try {
       return await _methodChannel.invokeMethod<FormError?>(
-          'UserMessagingPlatform#showPrivacyOptionsForm');
+        'UserMessagingPlatform#showPrivacyOptionsForm',
+      );
     } on PlatformException catch (e) {
       return _formErrorFromPlatformException(e);
     }
@@ -173,16 +185,16 @@ class UserMessagingChannel {
 
   FormError _formErrorFromPlatformException(PlatformException e) {
     return FormError(
-        errorCode: int.tryParse(e.code) ?? -1, message: e.message ?? '');
+      errorCode: int.tryParse(e.code) ?? -1,
+      message: e.message ?? '',
+    );
   }
 
   /// Free platform resources associated with the [ConsentForm].
   Future<void> disposeConsentForm(ConsentForm consentForm) {
     return _methodChannel.invokeMethod<void>(
       'ConsentForm#dispose',
-      <dynamic, dynamic>{
-        'consentForm': consentForm,
-      },
+      <dynamic, dynamic>{'consentForm': consentForm},
     );
   }
 }
