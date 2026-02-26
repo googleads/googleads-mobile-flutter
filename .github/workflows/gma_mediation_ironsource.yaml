@@ -52,9 +52,6 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 40
     steps:
-      - uses: swift-actions/setup-swift@v2
-        with:
-          swift-version: "6.0.0"
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
