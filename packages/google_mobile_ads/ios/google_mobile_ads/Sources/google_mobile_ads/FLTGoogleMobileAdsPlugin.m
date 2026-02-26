@@ -17,7 +17,7 @@
 #import "FLTAppStateNotifier.h"
 #import "FLTConstants.h"
 #import "FLTNSString.h"
-#import "UserMessagingPlatform/FLTUserMessagingPlatformManager.h"
+#import "FLTUserMessagingPlatformManager.h"
 @import webview_flutter_wkwebview;
 
 @interface FLTGoogleMobileAdsPlugin ()
