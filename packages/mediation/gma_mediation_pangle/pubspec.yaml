@@ -1,6 +1,6 @@
 name: gma_mediation_pangle
 description: "Mediation Adapter that enables sending ad requests to the Pangle ad network using the google_mobile_ads plugin."
-version: 3.5.2
+version: 3.5.4
 repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/mediation/gma_mediation_pangle
 
 environment:

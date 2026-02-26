@@ -1,15 +1,15 @@
 group = "io.flutter.plugins.googlemobileads.mediation.gma_mediation_imobile"
-version = "1.0.2"
+version = "1.0.3"
 
 buildscript {
-    ext.kotlin_version = "1.8.22"
+    ext.kotlin_version = "2.2.21"
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.7.0")
+        classpath("com.android.tools.build:gradle:8.13.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
@@ -31,7 +31,7 @@ ext {
 android {
     namespace = "io.flutter.plugins.googlemobileads.mediation.gma_mediation_imobile"
 
-    compileSdk = 35
+    compileSdk = 36
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -54,7 +54,7 @@ android {
     dependencies {
         implementation("com.google.ads.mediation:imobile:$stringVersion")
         testImplementation("org.jetbrains.kotlin:kotlin-test")
-        testImplementation("org.mockito:mockito-core:5.0.0")
+        testImplementation("org.mockito:mockito-core:5.5.0")
     }
 
     testOptions {

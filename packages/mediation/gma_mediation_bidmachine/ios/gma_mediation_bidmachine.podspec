@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_bidmachine'
-  s.version = '1.3.1'
+  s.version = '1.3.2'
   s.summary = 'Google Mobile Ads Mediation of BidMachine.'
   s.description      = <<-DESC
   Mediation Adapter for BidMachine to use with Google Mobile Ads.
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationBidMachine', '~> 3.5.1.0'
+  s.dependency 'GoogleMobileAdsMediationBidMachine', '~> 3.5.1.2'
   s.platform = :ios, '13.0'
   s.static_framework = true
 

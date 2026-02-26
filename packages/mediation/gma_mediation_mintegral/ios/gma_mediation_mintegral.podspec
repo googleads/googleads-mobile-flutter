@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_mintegral'
-  s.version          = '2.0.2'
+  s.version          = '2.0.4'
   s.summary          = 'Google Mobile Ads Mediation of Mintegral.'
   s.description      = <<-DESC
 Mediation Adapter for Mintegral to use with Google Mobile Ads.
@@ -16,7 +16,7 @@ Mediation Adapter for Mintegral to use with Google Mobile Ads.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationMintegral', '~>8.0.4.0'
+  s.dependency 'GoogleMobileAdsMediationMintegral', '~>8.0.7.0'
   s.platform = :ios, '13.0'
   s.static_framework = true
 

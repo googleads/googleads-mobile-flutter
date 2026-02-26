@@ -1,15 +1,15 @@
 group = "io.flutter.plugins.googlemobileads.mediation.gma_mediation_pubmatic"
-version = "1.4.1"
+version = "1.6.0"
 
 buildscript {
-    ext.kotlin_version = "2.1.0"
+    ext.kotlin_version = "2.2.21"
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.7.3")
+        classpath("com.android.tools.build:gradle:8.13.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
@@ -25,13 +25,13 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 ext {
-    stringVersion = "4.10.0.1"
+    stringVersion = "4.12.0.0"
 }
 
 android {
     namespace = "io.flutter.plugins.googlemobileads.mediation.gma_mediation_pubmatic"
 
-    compileSdk = 35
+    compileSdk = 36
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -53,7 +53,7 @@ android {
 
     dependencies {
         implementation "com.google.ads.mediation:pubmatic:$stringVersion"
-        implementation 'com.google.android.gms:play-services-ads:24.4.0'
+        implementation 'com.google.android.gms:play-services-ads:24.9.0'
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.5.0")
     }

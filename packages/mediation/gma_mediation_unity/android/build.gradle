@@ -1,5 +1,5 @@
 group 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_unity'
-version = "1.6.4"
+version = "1.6.5"
 
 buildscript {
     ext.kotlin_version = '2.2.21'
@@ -25,7 +25,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 ext {
-    stringVersion = "4.16.5.0"
+    stringVersion = "4.16.6.0"
 }
 
 android {
