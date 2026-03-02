@@ -1,5 +1,7 @@
 ## BidMachine Flutter Mediation Adapter Changelog
 
+#### Version 1.3.3 (In progress)
+
 #### Version 1.3.2 (In progress)
 
 #### Version 1.3.1
