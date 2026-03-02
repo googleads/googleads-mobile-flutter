@@ -1,7 +1,7 @@
 name: gma_mediation_imobile
 description: 'Mediation Adapter that enables sending ad requests to the imobile
   ad network using the google_mobile_ads plugin.'
-version: 1.0.3
+version: 1.0.4
 environment:
   sdk: '>=3.9.0 <4.0.0'
   flutter: '>=3.35.1'
