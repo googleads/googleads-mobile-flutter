@@ -15,11 +15,11 @@
 #import "FLTGoogleMobileAdsReaderWriter_Internal.h"
 #import "FLTAdUtil.h"
 #import "FLTMediationExtras.h"
-#import "NativeTemplates/FLTNativeTemplateColor.h"
-#import "NativeTemplates/FLTNativeTemplateFontStyle.h"
-#import "NativeTemplates/FLTNativeTemplateStyle.h"
-#import "NativeTemplates/FLTNativeTemplateTextStyle.h"
-#import "NativeTemplates/FLTNativeTemplateType.h"
+#import "FLTNativeTemplateColor.h"
+#import "FLTNativeTemplateFontStyle.h"
+#import "FLTNativeTemplateStyle.h"
+#import "FLTNativeTemplateTextStyle.h"
+#import "FLTNativeTemplateType.h"
 
 // The type values below must be consistent for each platform.
 typedef NS_ENUM(NSInteger, FLTAdMobField) {
