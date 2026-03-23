@@ -1,5 +1,7 @@
 ## Meta Audience Network Flutter Mediation Adapter Changelog
 
+#### Version 1.5.2 (In progress)
+
 #### Version 1.5.1
 * Updated minimum Flutter version to 3.35.1
 * Updated to support Google Mobile Ads Flutter Plugin version 7.0.0
