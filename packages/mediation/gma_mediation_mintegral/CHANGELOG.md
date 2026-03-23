@@ -1,5 +1,7 @@
 ## Mintegral Flutter Mediation Adapter Changelog
 
+#### Version 2.0.5 (In progress)
+
 #### Version 2.0.4 (In progress)
 
 #### Version 2.0.3
