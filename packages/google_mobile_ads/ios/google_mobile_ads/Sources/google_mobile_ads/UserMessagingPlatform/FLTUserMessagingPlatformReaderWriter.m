@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #import "FLTUserMessagingPlatformReaderWriter.h"
-#import "../FLTAdUtil.h"
+#import "FLTAdUtil.h"
 #include <UserMessagingPlatform/UserMessagingPlatform.h>
 
 // The type values below must be consistent for each platform.

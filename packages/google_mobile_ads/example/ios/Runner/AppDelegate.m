@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+@import google_mobile_ads;
+
 #include "AppDelegate.h"
-#import "FLTGoogleMobileAdsPlugin.h"
 #include "GeneratedPluginRegistrant.h"
 
 @interface NativeAdFactoryExample : NSObject <FLTNativeAdFactory>
