@@ -504,6 +504,13 @@ class AdInstanceManager {
   /// Returns true if the [adId] is already mounted in a [WidgetAd].
   bool isWidgetAdIdMounted(int adId) => _mountedWidgetAdIds.contains(adId);
 
+  /// Returns true if banner loaded is collapsible
+  Future<bool> isCollapsible(Ad ad) async =>
+      (await instanceManager.channel.invokeMethod<bool>(
+        'isCollapsible',
+        <dynamic, dynamic>{'adId': adIdFor(ad)},
+      ))!;
+
   /// Indicates that [adId] is mounted in widget tree.
   void mountWidgetAdId(int adId) => _mountedWidgetAdIds.add(adId);
 

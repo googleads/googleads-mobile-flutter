@@ -120,4 +120,12 @@ class FlutterAdManagerBannerAd extends FlutterAd implements FlutterAdLoadedListe
     }
     return new FlutterAdSize(adView.getAdSize());
   }
+
+  boolean isCollapsible() {
+    if (adView == null) {
+      return false;
+    }
+
+    return adView.isCollapsible();
+  }
 }
