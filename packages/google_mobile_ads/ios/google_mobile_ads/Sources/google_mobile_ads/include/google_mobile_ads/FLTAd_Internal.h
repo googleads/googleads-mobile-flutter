@@ -181,6 +181,7 @@
                                      adId:(NSNumber *_Nonnull)adId;
 - (FLTAdSize *_Nullable)getAdSize;
 - (GADBannerView *_Nonnull)bannerView;
+- (BOOL)isCollapsible;
 @end
 
 /**
