@@ -16,7 +16,7 @@
 
 @implementation NSString (FLTNSStringExtension)
 
-- (instancetype _Nonnull)initWithInt:(NSInteger)integer {
+- (instancetype _Nonnull)gma_initWithInt:(NSInteger)integer {
   self = [self initWithFormat:@"%ld", (long)integer];
   return self;
 }
