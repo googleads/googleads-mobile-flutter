@@ -17,6 +17,6 @@
 /// Category extensions for NSString
 @interface NSString (FLTNSStringExtension)
 
-- (instancetype _Nonnull)initWithInt:(NSInteger)integer;
+- (instancetype _Nonnull)gma_initWithInt:(NSInteger)integer __attribute__((objc_method_family(init)));
 
 @end

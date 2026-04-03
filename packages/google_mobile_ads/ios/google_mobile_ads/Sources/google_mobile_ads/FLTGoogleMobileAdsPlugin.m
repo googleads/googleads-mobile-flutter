@@ -297,7 +297,7 @@
                              if (error) {
                                result([FlutterError
                                    errorWithCode:[[NSString alloc]
-                                                     initWithInt:error.code]
+                                                     gma_initWithInt:error.code]
                                          message:error.localizedDescription
                                          details:error.domain]);
                              } else {
