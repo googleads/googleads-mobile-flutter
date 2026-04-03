@@ -920,6 +920,11 @@ class BannerAd extends AdWithView {
     }
     return false;
   }
+
+  /// Returns true if banner loaded is collapsible
+  Future<bool> get isCollapsible async {
+    return await instanceManager.isCollapsible(this);
+  }
 }
 
 /// An 'AdManagerBannerAd' that has fluid ad size.

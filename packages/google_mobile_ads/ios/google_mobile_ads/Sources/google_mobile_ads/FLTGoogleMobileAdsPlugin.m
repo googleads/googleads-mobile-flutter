@@ -543,6 +543,18 @@
     } else {
       result(FlutterMethodNotImplemented);
     }
+  } else if ([call.method isEqualToString:@"isCollapsible"]) {
+      id<FLTAd> ad = [_manager adFor:call.arguments[@"adId"]];
+      if ([FLTAdUtil isNull:ad]) {
+        // Called on an ad that hasn't been loaded yet.
+        result(@NO);
+      }
+      if ([ad isKindOfClass:[FLTBannerAd class]]) {
+        FLTBannerAd *bannerAd = (FLTBannerAd *)ad;
+        result(@([bannerAd isCollapsible]));
+      } else {
+        result(FlutterMethodNotImplemented);
+      }
   } else if ([call.method
                  isEqualToString:@"setServerSideVerificationOptions"]) {
     id<FLTAd> ad = [_manager adFor:call.arguments[@"adId"]];

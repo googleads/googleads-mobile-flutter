@@ -632,6 +632,23 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
           }
           break;
         }
+      case "isCollapsible":
+        {
+          FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));
+          if (ad == null) {
+            result.success(false);
+          } else if (ad instanceof FlutterBannerAd) {
+            result.success(((FlutterBannerAd) ad).isCollapsible());
+          } else if (ad instanceof FlutterAdManagerBannerAd) {
+            result.success(((FlutterAdManagerBannerAd) ad).isCollapsible());
+          } else {
+            result.error(
+                Constants.ERROR_CODE_UNEXPECTED_AD_TYPE,
+                "Unexpected ad type for isCollapsible: " + ad,
+                null);
+          }
+          break;
+        }
       case "setServerSideVerificationOptions":
         {
           FlutterAd ad = instanceManager.adForId(call.<Integer>argument("adId"));

@@ -399,6 +399,13 @@
   return nil;
 }
 
+-(BOOL)isCollapsible {
+  if (self.bannerView) {
+    return self.bannerView.isCollapsible;
+  }
+  return false;
+}
+
 #pragma mark - GADBannerViewDelegate
 
 - (void)bannerViewDidReceiveAd:(GADBannerView *)bannerView {
