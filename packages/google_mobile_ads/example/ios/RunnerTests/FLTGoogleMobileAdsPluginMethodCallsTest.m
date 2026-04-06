@@ -518,7 +518,7 @@
   XCTAssertTrue(resultInvoked);
   XCTAssertEqual(
       [returnedResult doubleValue],
-      GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(23).size.height);
+      GADLargePortraitAnchoredAdaptiveBannerAdSizeWithWidth(23).size.height);
 
   methodCall = [FlutterMethodCall
       methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
@@ -538,7 +538,7 @@
   XCTAssertTrue(resultInvoked);
   XCTAssertEqual(
       [returnedResult doubleValue],
-      GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(34).size.height);
+      GADLargeLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(34).size.height);
 
   methodCall = [FlutterMethodCall
       methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
@@ -556,7 +556,7 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertEqual([returnedResult doubleValue],
-                 GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(45)
+                 GADLargeAnchoredAdaptiveBannerAdSizeWithWidth(45)
                      .size.height);
 }
 
