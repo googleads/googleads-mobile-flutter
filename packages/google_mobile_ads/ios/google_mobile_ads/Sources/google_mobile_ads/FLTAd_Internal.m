@@ -37,17 +37,17 @@
 @implementation FLTAdSizeFactory
 - (GADAdSize)portraitAnchoredAdaptiveBannerAdSizeWithWidth:
     (NSNumber *_Nonnull)width {
-  return GADPortraitAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
+  return GADLargePortraitAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
 }
 
 - (GADAdSize)landscapeAnchoredAdaptiveBannerAdSizeWithWidth:
     (NSNumber *_Nonnull)width {
-  return GADLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
+  return GADLargeLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
 }
 
 - (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:
     (NSNumber *_Nonnull)width {
-  return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(
+  return GADLargeAnchoredAdaptiveBannerAdSizeWithWidth(
       width.doubleValue);
 }
 

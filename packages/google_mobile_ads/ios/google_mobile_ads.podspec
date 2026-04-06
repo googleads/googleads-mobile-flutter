@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'google_mobile_ads'
-  s.version          = '7.0.0'
+  s.version          = '8.0.0'
   s.summary          = 'Google Mobile Ads plugin for Flutter.'
   s.description      = <<-DESC
 Google Mobile Ads plugin for Flutter.
@@ -15,7 +15,7 @@ Google Mobile Ads plugin for Flutter.
   s.source_files = 'google_mobile_ads/Sources/google_mobile_ads/**/*.{h,m}'
   s.public_header_files = 'google_mobile_ads/Sources/google_mobile_ads/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'Google-Mobile-Ads-SDK','~> 12.14.0'
+  s.dependency 'Google-Mobile-Ads-SDK','~> 13.2.0'
   s.dependency 'webview_flutter_wkwebview'
   s.ios.deployment_target = '13.0'
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS' => 'armv7 arm64 x86_64' }
