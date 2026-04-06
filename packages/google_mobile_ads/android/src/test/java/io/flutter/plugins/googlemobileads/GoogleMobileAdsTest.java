@@ -785,8 +785,8 @@ public class GoogleMobileAdsTest {
     verify(result).success(adSize.getHeight());
 
     adSize = AdSize.getLargePortraitAnchoredAdaptiveBannerAdSize(context, 23);
-    MethodCall methodCall = new MethodCall("AdSize#getLargeAnchoredAdaptiveBannerAdSize", arguments);
-    Result result = mock(Result.class);
+    methodCall = new MethodCall("AdSize#getLargeAnchoredAdaptiveBannerAdSize", arguments);
+    result = mock(Result.class);
     plugin.onMethodCall(methodCall, result);
 
     verify(result).success(adSize.getHeight());
