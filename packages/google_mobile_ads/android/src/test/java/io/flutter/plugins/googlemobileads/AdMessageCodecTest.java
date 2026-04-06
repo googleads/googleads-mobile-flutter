@@ -158,15 +158,15 @@ public class AdMessageCodecTest {
     AdSize mockAdSize = mock(AdSize.class);
     doReturn(mockAdSize)
         .when(mockAdSizeFactory)
-        .getPortraitAnchoredAdaptiveBannerAdSize(any(Context.class), anyInt());
+        .getLargePortraitAnchoredAdaptiveBannerAdSize(any(Context.class), anyInt());
 
     doReturn(mockAdSize)
         .when(mockAdSizeFactory)
-        .getLandscapeAnchoredAdaptiveBannerAdSize(any(Context.class), anyInt());
+        .getLargeLandscapeAnchoredAdaptiveBannerAdSize(any(Context.class), anyInt());
 
     doReturn(mockAdSize)
         .when(mockAdSizeFactory)
-        .getCurrentOrientationAnchoredAdaptiveBannerAdSize(any(Context.class), anyInt());
+        .getLargeAnchoredAdaptiveBannerAdSize(any(Context.class), anyInt());
 
     final AnchoredAdaptiveBannerAdSize portraitAnchoredAdaptiveAdSize =
         new AnchoredAdaptiveBannerAdSize(mock(Context.class), mockAdSizeFactory, "portrait", 23);

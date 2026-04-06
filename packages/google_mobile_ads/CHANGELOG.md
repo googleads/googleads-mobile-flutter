@@ -1,3 +1,8 @@
+## 8.0.0
+* Adds Swift Package Manager Support for the plugin
+* 
+* Updates GMA [Android](https://developers.google.com/admob/android/rel-notes) dependency to 25.1.0
+
 ## 7.0.0
 * Added character limits expected for Native Ad Templates. Issues [1243](https://github.com/googleads/googleads-mobile-flutter/issues/1243) and [1332](https://github.com/googleads/googleads-mobile-flutter/issues/1332)
 * Fixed padding for Native Ads small template. [Issue 1357](https://github.com/googleads/googleads-mobile-flutter/issues/1357)

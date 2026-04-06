@@ -27,16 +27,16 @@ class FlutterAdSize {
   /** Wrapper around static methods for {@link com.google.android.gms.ads.AdSize}. */
   static class AdSizeFactory {
 
-    AdSize getPortraitAnchoredAdaptiveBannerAdSize(Context context, int width) {
-      return AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
+    AdSize getLargePortraitAnchoredAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getLargePortraitAnchoredAdaptiveBannerAdSize(context, width);
     }
 
-    AdSize getLandscapeAnchoredAdaptiveBannerAdSize(Context context, int width) {
-      return AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
+    AdSize getLargeLandscapeAnchoredAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getLargeLandscapeAnchoredAdaptiveBannerAdSize(context, width);
     }
 
-    AdSize getCurrentOrientationAnchoredAdaptiveBannerAdSize(Context context, int width) {
-      return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width);
+    AdSize getLargeAnchoredAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getLargeAnchoredAdaptiveBannerAdSize(context, width);
     }
 
     AdSize getCurrentOrientationInlineAdaptiveBannerAdSize(Context context, int width) {
@@ -67,11 +67,11 @@ class FlutterAdSize {
         int width) {
       final AdSize adSize;
       if (orientation == null) {
-        adSize = factory.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width);
+        adSize = factory.getLargeAnchoredAdaptiveBannerAdSize(context, width);
       } else if (orientation.equals("portrait")) {
-        adSize = factory.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
+        adSize = factory.getLargePortraitAnchoredAdaptiveBannerAdSize(context, width);
       } else if (orientation.equals("landscape")) {
-        adSize = factory.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
+        adSize = factory.getLargeLandscapeAnchoredAdaptiveBannerAdSize(context, width);
       } else {
         throw new IllegalArgumentException("Unexpected value for orientation: " + orientation);
       }
