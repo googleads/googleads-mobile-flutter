@@ -463,10 +463,11 @@ class AdSize {
   ///
   /// Returns `null` if a proper height could not be found for the device or
   /// window.
-  static Future<AnchoredAdaptiveBannerAdSize?> getLargeAnchoredAdaptiveBannerAdSizeWithOrientation(
+  static Future<AnchoredAdaptiveBannerAdSize?>
+  getLargeAnchoredAdaptiveBannerAdSizeWithOrientation(
       Orientation orientation,
       int width,
-      ) async {
+  ) async {
     final num? height = await instanceManager.channel.invokeMethod<num?>(
       'AdSize#getLargeAnchoredAdaptiveBannerAdSize',
       <String, Object?>{'orientation': orientation.name, 'width': width},
