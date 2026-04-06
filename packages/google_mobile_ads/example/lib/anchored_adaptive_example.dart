@@ -51,7 +51,7 @@ class _AnchoredAdaptiveExampleState extends State<AnchoredAdaptiveExample> {
     });
 
     final AnchoredAdaptiveBannerAdSize? size =
-        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        await AdSize.getLargeAnchoredAdaptiveBannerAdSize(
           MediaQuery.of(context).size.width.truncate(),
         );
 

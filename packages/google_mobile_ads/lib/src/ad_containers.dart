@@ -438,6 +438,7 @@ class AdSize {
   ///
   /// Returns `null` if a proper height could not be found for the device or
   /// window.
+  @Deprecated('Use getLargeAnchoredAdaptiveBannerAdSizeWithOrientation instead')
   static Future<AnchoredAdaptiveBannerAdSize?> getAnchoredAdaptiveBannerAdSize(
     Orientation orientation,
     int width,
@@ -455,6 +456,52 @@ class AdSize {
     );
   }
 
+  /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
+  ///
+  /// Width of the current device can be found using:
+  /// `MediaQuery.of(context).size.width.truncate()`.
+  ///
+  /// Returns `null` if a proper height could not be found for the device or
+  /// window.
+  static Future<AnchoredAdaptiveBannerAdSize?> getLargeAnchoredAdaptiveBannerAdSizeWithOrientation(
+      Orientation orientation,
+      int width,
+      ) async {
+    final num? height = await instanceManager.channel.invokeMethod<num?>(
+      'AdSize#getLargeAnchoredAdaptiveBannerAdSize',
+      <String, Object?>{'orientation': orientation.name, 'width': width},
+    );
+
+    if (height == null) return null;
+    return AnchoredAdaptiveBannerAdSize(
+      orientation,
+      width: width,
+      height: height.truncate(),
+    );
+  }
+
+  /// Returns an AdSize with the given width and a Google-optimized height to create a banner ad.
+  ///
+  /// The size returned will have an aspect ratio similar to AdSize, suitable for anchoring near the top or bottom of your app.
+  /// The height will never be larger than 15% of the device's current orientation height and never smaller than 50px.
+  /// This function always returns the same height for any width / device combination.
+  /// For more details, visit: https://developers.google.com/android/reference/com/google/android/gms/ads/AdSize#getCurrentOrientationAnchoredAdaptiveBannerAdSize(android.content.Context,%20int)
+  @Deprecated('Use getLargeAnchoredAdaptiveBannerAdSize instead')
+  static Future<AnchoredAdaptiveBannerAdSize?>
+  getCurrentOrientationAnchoredAdaptiveBannerAdSize(int width) async {
+    final num? height = await instanceManager.channel.invokeMethod<num?>(
+      'AdSize#getAnchoredAdaptiveBannerAdSize',
+      <String, Object?>{'width': width},
+    );
+
+    if (height == null) return null;
+    return AnchoredAdaptiveBannerAdSize(
+      null,
+      width: width,
+      height: height.truncate(),
+    );
+  }
+
   /// Returns an AdSize with the given width and a Google-optimized height to create a banner ad.
   ///
   /// The size returned will have an aspect ratio similar to AdSize, suitable for anchoring near the top or bottom of your app.
@@ -462,9 +509,9 @@ class AdSize {
   /// This function always returns the same height for any width / device combination.
   /// For more details, visit: https://developers.google.com/android/reference/com/google/android/gms/ads/AdSize#getCurrentOrientationAnchoredAdaptiveBannerAdSize(android.content.Context,%20int)
   static Future<AnchoredAdaptiveBannerAdSize?>
-  getCurrentOrientationAnchoredAdaptiveBannerAdSize(int width) async {
+  getLargeAnchoredAdaptiveBannerAdSize(int width) async {
     final num? height = await instanceManager.channel.invokeMethod<num?>(
-      'AdSize#getAnchoredAdaptiveBannerAdSize',
+      'AdSize#getLargeAnchoredAdaptiveBannerAdSize',
       <String, Object?>{'width': width},
     );
 

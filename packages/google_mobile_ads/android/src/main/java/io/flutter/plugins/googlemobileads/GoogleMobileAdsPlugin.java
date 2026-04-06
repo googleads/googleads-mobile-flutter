@@ -582,11 +582,26 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 context,
                 new FlutterAdSize.AdSizeFactory(),
                 call.<String>argument("orientation"),
-                call.<Integer>argument("width"));
+                call.<Integer>argument("width"),
+                /* isLarge = */ false);
         if (AdSize.INVALID.equals(size.size)) {
           result.success(null);
         } else {
           result.success(size.height);
+        }
+        break;
+      case "AdSize#getLargeAnchoredAdaptiveBannerAdSize":
+        final FlutterAdSize.AnchoredAdaptiveBannerAdSize largeSize =
+            new FlutterAdSize.AnchoredAdaptiveBannerAdSize(
+                context,
+                new FlutterAdSize.AdSizeFactory(),
+                call.<String>argument("orientation"),
+                call.<Integer>argument("width"),
+                /* isLarge = */ true);
+        if (AdSize.INVALID.equals(largeSize.size)) {
+          result.success(null);
+        } else {
+          result.success(largeSize.height);
         }
         break;
       case "MobileAds#setAppMuted":
