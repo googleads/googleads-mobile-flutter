@@ -249,7 +249,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     NSNumber *width = [self readValueOfType:[self readByte]];
     return [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:_adSizeFactory
                                                       orientation:orientation
-                                                            width:width];
+                                                            width:width
+                                                          isLarge:false];
   }
   case FLTAdmobFieldSmartBannerAdSize:
     return [[FLTSmartBannerSize alloc]

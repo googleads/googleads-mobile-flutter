@@ -15,11 +15,11 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "FLTAdInstanceManager_Internal.h"
-#import "FLTAdUtil.h"
-#import "FLTGoogleMobileAdsPlugin.h"
-#import "FLTGoogleMobileAdsReaderWriter_Internal.h"
-#import "FLTMobileAds_Internal.h"
+#import "google_mobile_ads/FLTAdInstanceManager_Internal.h"
+#import "google_mobile_ads/FLTAdUtil.h"
+#import "google_mobile_ads/FLTGoogleMobileAdsPlugin.h"
+#import "google_mobile_ads/FLTGoogleMobileAdsReaderWriter_Internal.h"
+#import "google_mobile_ads/FLTMobileAds_Internal.h"
 
 @interface FLTGoogleMobileAdsPluginMethodCallsTest : XCTestCase
 @end
@@ -500,7 +500,7 @@
 
 - (void)testGetAnchoredAdaptiveBannerAdSize {
   FlutterMethodCall *methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
+      methodCallWithMethodName:@"AdSize#getLargeAnchoredAdaptiveBannerAdSize"
                      arguments:@{
                        @"orientation" : @"portrait",
                        @"width" : @23,
@@ -521,7 +521,7 @@
       GADLargePortraitAnchoredAdaptiveBannerAdSizeWithWidth(23).size.height);
 
   methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
+      methodCallWithMethodName:@"AdSize#getLargeAnchoredAdaptiveBannerAdSize"
                      arguments:@{
                        @"orientation" : @"landscape",
                        @"width" : @34,
@@ -541,7 +541,7 @@
       GADLargeLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(34).size.height);
 
   methodCall = [FlutterMethodCall
-      methodCallWithMethodName:@"AdSize#getAnchoredAdaptiveBannerAdSize"
+      methodCallWithMethodName:@"AdSize#getLargeAnchoredAdaptiveBannerAdSize"
                      arguments:@{
                        @"width" : @45,
                      }];
