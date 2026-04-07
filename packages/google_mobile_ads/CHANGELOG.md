@@ -2,6 +2,7 @@
 * Adds Swift Package Manager Support for the plugin. [PR 1395](https://github.com/googleads/googleads-mobile-flutter/pull/1395)
 * Adds `isCollapsible` API. [FR 1294](https://github.com/googleads/googleads-mobile-flutter/issues/1294)
 * Renamed method name to avoid possible name collision. [FR 1394](https://github.com/googleads/googleads-mobile-flutter/issues/1394)
+* Migrated to use UISceneDelegate protocol. [Issue 1391](https://github.com/googleads/googleads-mobile-flutter/issues/1391)
 * Updates GMA [Android](https://developers.google.com/admob/android/rel-notes) dependency to 25.1.0
 * Updates GMA [iOS](https://developers.google.com/admob/ios/rel-notes) dependency to 13.2.0
 * Uses latest UMP SDK:
