@@ -15,19 +15,19 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "FLTAdInstanceManager_Internal.h"
-#import "FLTAdUtil.h"
-#import "FLTAd_Internal.h"
-#import "FLTGoogleMobileAdsCollection_Internal.h"
-#import "FLTGoogleMobileAdsPlugin.h"
-#import "FLTGoogleMobileAdsReaderWriter_Internal.h"
-#import "FLTMediationExtras.h"
-#import "FLTMobileAds_Internal.h"
-#import "FLTNativeTemplateColor.h"
-#import "FLTNativeTemplateFontStyle.h"
-#import "FLTNativeTemplateStyle.h"
-#import "FLTNativeTemplateTextStyle.h"
-#import "FLTNativeTemplateType.h"
+#import "google_mobile_ads/FLTAdInstanceManager_Internal.h"
+#import "google_mobile_ads/FLTAdUtil.h"
+#import "google_mobile_ads/FLTAd_Internal.h"
+#import "google_mobile_ads/FLTGoogleMobileAdsCollection_Internal.h"
+#import "google_mobile_ads/FLTGoogleMobileAdsPlugin.h"
+#import "google_mobile_ads/FLTGoogleMobileAdsReaderWriter_Internal.h"
+#import "google_mobile_ads/FLTMediationExtras.h"
+#import "google_mobile_ads/FLTMobileAds_Internal.h"
+#import "google_mobile_ads/FLTNativeTemplateColor.h"
+#import "google_mobile_ads/FLTNativeTemplateFontStyle.h"
+#import "google_mobile_ads/FLTNativeTemplateStyle.h"
+#import "google_mobile_ads/FLTNativeTemplateTextStyle.h"
+#import "google_mobile_ads/FLTNativeTemplateType.h"
 
 @interface FLTGoogleMobileAdsReaderWriterTest : XCTestCase
 @end
@@ -190,7 +190,8 @@
   FLTAnchoredAdaptiveBannerSize *size =
       [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory
                                                  orientation:@"portrait"
-                                                       width:@(23)];
+                                                       width:@(23)
+                                                     isLarge:false];
   NSData *encodedMessage = [_messageCodec encode:size];
 
   FLTAnchoredAdaptiveBannerSize *decodedSize =
@@ -208,7 +209,8 @@
   FLTAnchoredAdaptiveBannerSize *size =
       [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory
                                                  orientation:@"landscape"
-                                                       width:@(34)];
+                                                       width:@(34)
+                                                     isLarge:false];
   NSData *encodedMessage = [_messageCodec encode:size];
 
   FLTAnchoredAdaptiveBannerSize *decodedSize =
@@ -227,7 +229,8 @@
   FLTAnchoredAdaptiveBannerSize *size =
       [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:factory
                                                  orientation:NULL
-                                                       width:@(45)];
+                                                       width:@(45)
+                                                     isLarge:false];
   NSData *encodedMessage = [_messageCodec encode:size];
 
   FLTAnchoredAdaptiveBannerSize *decodedSize =

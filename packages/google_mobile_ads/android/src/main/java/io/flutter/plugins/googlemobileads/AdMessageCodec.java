@@ -280,7 +280,7 @@ class AdMessageCodec extends StandardMessageCodec {
         final String orientation = (String) readValueOfType(buffer.get(), buffer);
         final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
         return new FlutterAdSize.AnchoredAdaptiveBannerAdSize(
-            context, adSizeFactory, orientation, width);
+            context, adSizeFactory, orientation, width, /* isLarge = */ false);
       case VALUE_SMART_BANNER_AD_SIZE:
         return new FlutterAdSize.SmartBannerAdSize();
       case VALUE_AD_SIZE:

@@ -38,7 +38,7 @@ class _BannerAdSnippets extends State<_BannerAdWidget> {
   // [START load_ad_ad_manager]
   void _loadAd() async {
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
-    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+    final size = await AdSize.getLargeAnchoredAdaptiveBannerAdSize(
       MediaQuery.sizeOf(context).width.truncate(),
     );
 

@@ -51,6 +51,22 @@
       width.doubleValue);
 }
 
+- (GADAdSize)largePortraitAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width {
+  return GADLargePortraitAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
+}
+
+- (GADAdSize)largeLandscapeAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width {
+  return GADLargeLandscapeAnchoredAdaptiveBannerAdSizeWithWidth(width.doubleValue);
+}
+
+- (GADAdSize)largeAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width {
+  return GADLargeAnchoredAdaptiveBannerAdSizeWithWidth(
+      width.doubleValue);
+}
+
 - (GADAdSize)currentOrientationInlineAdaptiveBannerSizeWithWidth:
     (NSNumber *_Nonnull)width {
   return GADCurrentOrientationInlineAdaptiveBannerAdSizeWithWidth(
@@ -78,15 +94,28 @@
 @implementation FLTAnchoredAdaptiveBannerSize
 - (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
                              orientation:(NSString *_Nullable)orientation
-                                   width:(NSNumber *_Nonnull)width {
+                                   width:(NSNumber *_Nonnull)width
+                                 isLarge:(Boolean)isLarge {
   GADAdSize size;
   if ([FLTAdUtil isNull:orientation]) {
-    size =
-        [factory currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:width];
+    if (isLarge) {
+      size = [factory largeAnchoredAdaptiveBannerAdSizeWithWidth:width];
+    } else {
+      size =
+      [factory currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:width];
+    }
   } else if ([orientation isEqualToString:@"portrait"]) {
-    size = [factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:width];
+    if (isLarge) {
+      size = [factory largePortraitAnchoredAdaptiveBannerAdSizeWithWidth:width];
+    } else {
+      size = [factory portraitAnchoredAdaptiveBannerAdSizeWithWidth:width];
+    }
   } else if ([orientation isEqualToString:@"landscape"]) {
-    size = [factory landscapeAnchoredAdaptiveBannerAdSizeWithWidth:width];
+    if (isLarge) {
+      size = [factory largeLandscapeAnchoredAdaptiveBannerAdSizeWithWidth:width];
+    } else {
+      size = [factory landscapeAnchoredAdaptiveBannerAdSizeWithWidth:width];
+    }
   } else {
     NSLog(@"Unexpected value for orientation: %@", orientation);
     return nil;

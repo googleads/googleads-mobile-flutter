@@ -784,6 +784,13 @@ public class GoogleMobileAdsTest {
 
     verify(result).success(adSize.getHeight());
 
+    adSize = AdSize.getLargePortraitAnchoredAdaptiveBannerAdSize(context, 23);
+    methodCall = new MethodCall("AdSize#getLargeAnchoredAdaptiveBannerAdSize", arguments);
+    result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(adSize.getHeight());
+
     // Test for landscape Banner AdSize.
     arguments = new HashMap<>();
     arguments.put("orientation", "landscape");
@@ -796,12 +803,26 @@ public class GoogleMobileAdsTest {
 
     verify(result).success(adSize.getHeight());
 
+    adSize = AdSize.getLargeLandscapeAnchoredAdaptiveBannerAdSize(context, 23);
+    methodCall = new MethodCall("AdSize#getLargeAnchoredAdaptiveBannerAdSize", arguments);
+    result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(adSize.getHeight());
+
     // Test for current orientation (inferred) Banner AdSize.
     arguments = new HashMap<>();
     arguments.put("width", 23);
 
     adSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, 23);
     methodCall = new MethodCall("AdSize#getAnchoredAdaptiveBannerAdSize", arguments);
+    result = mock(Result.class);
+    plugin.onMethodCall(methodCall, result);
+
+    verify(result).success(adSize.getHeight());
+
+    adSize = AdSize.getLargeAnchoredAdaptiveBannerAdSize(context, 23);
+    methodCall = new MethodCall("AdSize#getLargeAnchoredAdaptiveBannerAdSize", arguments);
     result = mock(Result.class);
     plugin.onMethodCall(methodCall, result);
 

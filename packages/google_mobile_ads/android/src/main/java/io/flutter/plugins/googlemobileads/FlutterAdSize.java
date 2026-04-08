@@ -27,16 +27,31 @@ class FlutterAdSize {
   /** Wrapper around static methods for {@link com.google.android.gms.ads.AdSize}. */
   static class AdSizeFactory {
 
+    @SuppressWarnings("deprecation")
     AdSize getPortraitAnchoredAdaptiveBannerAdSize(Context context, int width) {
       return AdSize.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
     }
 
+    @SuppressWarnings("deprecation")
     AdSize getLandscapeAnchoredAdaptiveBannerAdSize(Context context, int width) {
       return AdSize.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
     }
 
+    @SuppressWarnings("deprecation")
     AdSize getCurrentOrientationAnchoredAdaptiveBannerAdSize(Context context, int width) {
       return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width);
+    }
+
+    AdSize getLargePortraitAnchoredAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getLargePortraitAnchoredAdaptiveBannerAdSize(context, width);
+    }
+
+    AdSize getLargeLandscapeAnchoredAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getLargeLandscapeAnchoredAdaptiveBannerAdSize(context, width);
+    }
+
+    AdSize getLargeAnchoredAdaptiveBannerAdSize(Context context, int width) {
+      return AdSize.getLargeAnchoredAdaptiveBannerAdSize(context, width);
     }
 
     AdSize getCurrentOrientationInlineAdaptiveBannerAdSize(Context context, int width) {
@@ -64,26 +79,35 @@ class FlutterAdSize {
         @NonNull Context context,
         @NonNull AdSizeFactory factory,
         @Nullable String orientation,
-        int width) {
-      final AdSize adSize;
+        int width,
+        boolean isLarge) {
       if (orientation == null) {
-        adSize = factory.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width);
+        if (isLarge) {
+          return factory.getLargeAnchoredAdaptiveBannerAdSize(context, width);
+        }
+        return factory.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width);
       } else if (orientation.equals("portrait")) {
-        adSize = factory.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
+        if (isLarge) {
+          return factory.getLargePortraitAnchoredAdaptiveBannerAdSize(context, width);
+        }
+        return factory.getPortraitAnchoredAdaptiveBannerAdSize(context, width);
       } else if (orientation.equals("landscape")) {
-        adSize = factory.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
+        if (isLarge) {
+          return factory.getLargeLandscapeAnchoredAdaptiveBannerAdSize(context, width);
+        }
+        return factory.getLandscapeAnchoredAdaptiveBannerAdSize(context, width);
       } else {
         throw new IllegalArgumentException("Unexpected value for orientation: " + orientation);
       }
-      return adSize;
     }
 
     AnchoredAdaptiveBannerAdSize(
         @NonNull Context context,
         @NonNull AdSizeFactory factory,
         @Nullable String orientation,
-        int width) {
-      super(getAdSize(context, factory, orientation, width));
+        int width,
+        boolean isLarge) {
+      super(getAdSize(context, factory, orientation, width, isLarge));
       this.orientation = orientation;
     }
   }

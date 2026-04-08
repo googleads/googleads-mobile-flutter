@@ -525,7 +525,19 @@
     FLTAnchoredAdaptiveBannerSize *size = [[FLTAnchoredAdaptiveBannerSize alloc]
         initWithFactory:[[FLTAdSizeFactory alloc] init]
             orientation:call.arguments[@"orientation"]
-                  width:call.arguments[@"width"]];
+                  width:call.arguments[@"width"]
+                isLarge:false];
+    if (IsGADAdSizeValid(size.size)) {
+      result(size.height);
+    } else {
+      result(nil);
+    }
+  } else if ([call.method isEqualToString:@"AdSize#getLargeAnchoredAdaptiveBannerAdSize"]) {
+    FLTAnchoredAdaptiveBannerSize *size = [[FLTAnchoredAdaptiveBannerSize alloc]
+        initWithFactory:[[FLTAdSizeFactory alloc] init]
+            orientation:call.arguments[@"orientation"]
+                  width:call.arguments[@"width"]
+                isLarge:true];
     if (IsGADAdSizeValid(size.size)) {
       result(size.height);
     } else {
