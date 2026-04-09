@@ -71,7 +71,7 @@ class _WebViewExampleState extends State<WebViewExample> {
     }
     await MobileAds.instance.registerWebView(controller);
     await controller.loadRequest(
-      Uri.parse('https://webview-api-for-ads-test.glitch.me/'),
+      Uri.parse('https://google.github.io/webview-ads/test/#api-for-ads-tests'),
     );
   }
 }
