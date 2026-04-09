@@ -14,6 +14,10 @@
 
 #import "FLTNativeTemplateType.h"
 
+#ifndef SWIFTPM_MODULE_BUNDLE
+    #define SWIFTPM_MODULE_BUNDLE [NSBundle bundleForClass:[FLTGoogleMobileAdsPlugin class]]
+#endif
+
 @implementation FLTNativeTemplateType {
   int _intValue;
 }
@@ -39,12 +43,26 @@
 }
 
 - (GADTTemplateView *_Nonnull)templateView {
-  // Bundle file name is declared in podspec
-  id bundleURL = [NSBundle.mainBundle URLForResource:@"google_mobile_ads"
-                                       withExtension:@"bundle"];
-  NSBundle *bundle = [NSBundle bundleWithURL:bundleURL];
+  // Bundle file name is declared in Package.swift or podspec
+  NSBundle *adsBundle = nil;
+
+  NSURL *bundleURL = [[NSBundle mainBundle] URLForResource:@"google_mobile_ads"
+                                             withExtension:@"bundle"];
+  if (bundleURL) {
+    adsBundle = [NSBundle bundleWithURL:bundleURL];
+  } else {
+    #ifdef SWIFTPM_MODULE_BUNDLE
+      adsBundle = SWIFTPM_MODULE_BUNDLE;
+    #else
+      adsBundle = [NSBundle bundleForClass:[self class]];
+    #endif
+  }
+  if (!adsBundle) {
+    adsBundle = [NSBundle mainBundle];
+  }
+
   GADTTemplateView *templateView =
-      [bundle loadNibNamed:self.xibName owner:nil options:nil].firstObject;
+    [adsBundle loadNibNamed:self.xibName owner:nil options:nil].firstObject;
   return templateView;
 }
 
