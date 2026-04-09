@@ -1,4 +1,6 @@
 ## 8.0.0
+* Updates minimum Flutter SDK to 3.38.1
+* Updates Dart SDK low bound to 3.10.0.
 * Adds Swift Package Manager Support for the plugin. [PR 1395](https://github.com/googleads/googleads-mobile-flutter/pull/1395)
 * Adds `isCollapsible` API. [FR 1294](https://github.com/googleads/googleads-mobile-flutter/issues/1294)
 * Renamed method name to avoid possible name collision. [FR 1394](https://github.com/googleads/googleads-mobile-flutter/issues/1394)
