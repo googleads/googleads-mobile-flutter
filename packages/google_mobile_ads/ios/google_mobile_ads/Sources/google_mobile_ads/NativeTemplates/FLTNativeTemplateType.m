@@ -15,7 +15,7 @@
 #import "FLTNativeTemplateType.h"
 
 #ifndef SWIFTPM_MODULE_BUNDLE
-    #define SWIFTPM_MODULE_BUNDLE [NSBundle bundleForClass:[FLTGoogleMobileAdsPlugin class]]
+    #define SWIFTPM_MODULE_BUNDLE [NSBundle bundleForClass:[self class]]
 #endif
 
 @implementation FLTNativeTemplateType {
