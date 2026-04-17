@@ -1,5 +1,9 @@
 ## AppLovin Flutter Mediation Adapter Changelog
 
+#### Version 2.6.0 (In progress)
+- Updated minimum Flutter version to 3.38.1
+- Updated to support Google Mobile Ads Flutter Plugin version 8.0.0
+
 #### Version 2.5.2
 - Updated minimum Flutter version to 3.35.1
 - Updated to support Google Mobile Ads Flutter Plugin version 7.0.0
