@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_mobile_ads: ^8.0.0
+  meta: ^1.17.0
   plugin_platform_interface: ^2.1.8
 
 dev_dependencies:
