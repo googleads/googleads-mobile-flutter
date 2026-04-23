@@ -1,8 +1,8 @@
 group 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_inmobi'
-version = "2.0.2"
+version = "2.1.0"
 
 buildscript {
-    ext.kotlin_version = '2.2.21'
+    ext.kotlin_version = '2.3.0'
     repositories {
         google()
         mavenCentral()
@@ -25,7 +25,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 ext {
-    stringVersion = "11.1.0.1"
+    stringVersion = "11.2.0.0"
 }
 
 android {
@@ -50,11 +50,12 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 23
+        minSdkVersion 24
     }
 
     dependencies {
         implementation "com.google.ads.mediation:inmobi:$stringVersion"
+        implementation "com.google.android.gms:play-services-ads:25.1.0"
         testImplementation 'org.jetbrains.kotlin:kotlin-test'
         testImplementation 'org.mockito:mockito-core:5.5.0'
     }
