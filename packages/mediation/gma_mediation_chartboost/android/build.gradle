@@ -1,8 +1,8 @@
 group = "io.flutter.plugins.googlemobileads.mediation.gma_mediation_chartboost"
-version = "1.4.1"
+version = "1.4.2"
 
 buildscript {
-    ext.kotlin_version = "2.2.21"
+    ext.kotlin_version = "2.3.0"
     repositories {
         google()
         mavenCentral()
@@ -28,7 +28,7 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 ext {
-    stringVersion = "9.11.1.0"
+    stringVersion = "9.11.1.1"
 }
 
 android {
@@ -53,11 +53,12 @@ android {
     }
 
     defaultConfig {
-        minSdk = 23
+        minSdk = 24
     }
 
     dependencies {
         implementation("com.google.ads.mediation:chartboost:$stringVersion")
+        implementation("com.google.android.gms:play-services-ads:25.1.0")
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.5.0")
     }
