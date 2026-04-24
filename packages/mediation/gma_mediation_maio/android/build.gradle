@@ -2,7 +2,7 @@ group = "io.flutter.plugins.googlemobileads.mediation.gma_mediation_maio"
 version = "1.1.4"
 
 buildscript {
-    ext.kotlin_version = "2.2.21"
+    ext.kotlin_version = "2.3.0"
     repositories {
         google()
         mavenCentral()
@@ -25,7 +25,7 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 ext {
-    stringVersion = "2.0.8.1"
+    stringVersion = "2.0.8.2"
 }
 
 android {
@@ -53,6 +53,7 @@ android {
 
     dependencies {
         implementation("com.google.ads.mediation:maio:$stringVersion")
+        implementation("com.google.android.gms:play-services-ads:25.1.0")
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.5.0")
     }
