@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_line'
-  s.version = '2.0.2'
+  s.version = '2.1.0'
   s.summary = 'Google Mobile Ads Mediation of Line.'
   s.description      = <<-DESC
   Mediation Adapter for Line to use with Google Mobile Ads.
@@ -16,6 +16,6 @@ Pod::Spec.new do |s|
   s.static_framework = true
 
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
-  s.swift_version = '5.0'
+  s.swift_version = '6.0'
 
 end
