@@ -5,13 +5,13 @@ description: "Demonstrates how to use the gma_mediation_unity plugin."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: '>=3.9.0 <4.0.0'
+  sdk: '>=3.10.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
-  google_mobile_ads: ^7.0.0
+  google_mobile_ads: ^8.0.0
   gma_mediation_unity:
     path: ../
 

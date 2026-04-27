@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_unity'
-  s.version          = '1.6.5'
+  s.version          = '1.7.0'
   s.summary          = 'Google Mobile Ads Mediation of Unity Ads.'
   s.description      = <<-DESC
 Mediation Adapter for Unity Ads to use with Google Mobile Ads.
@@ -16,12 +16,12 @@ Mediation Adapter for Unity Ads to use with Google Mobile Ads.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationUnity', '~>4.16.6.0'
+  s.dependency 'GoogleMobileAdsMediationUnity', '~>4.17.0.0'
   s.platform = :ios, '13.0'
   s.static_framework = true
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
-  s.swift_version = '5.0'
+  s.swift_version = '6.0'
 
 end
