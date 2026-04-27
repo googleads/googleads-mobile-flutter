@@ -3,12 +3,12 @@ description: 'Mediation Adapter that enables sending ad requests to the Pubmatic
   ad network using the google_mobile_ads plugin.'
 version: 2.0.0
 environment:
-  sdk: '>=3.9.0 <4.0.0'
-  flutter: '>=3.35.1'
+  sdk: '>=3.10.0 <4.0.0'
+  flutter: '>=3.38.1'
 dependencies:
   flutter:
     sdk: flutter
-  google_mobile_ads: ^7.0.0
+  google_mobile_ads: ^8.0.0
   plugin_platform_interface: ^2.0.2
 dev_dependencies:
   flutter_test:
