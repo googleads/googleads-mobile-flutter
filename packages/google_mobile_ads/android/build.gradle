@@ -49,7 +49,7 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
-    android.sourceSets.getByName("main") {
+    sourceSets.named("main") {
         java.srcDirs("src/main/java")
         if (useAdsMobileSdk) {
             java.srcDirs("src/adsMobileSdk/java")
