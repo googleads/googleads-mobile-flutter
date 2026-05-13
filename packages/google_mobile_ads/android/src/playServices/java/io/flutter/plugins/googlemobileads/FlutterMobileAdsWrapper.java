@@ -15,7 +15,6 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 import android.webkit.WebView;
 import androidx.annotation.NonNull;
