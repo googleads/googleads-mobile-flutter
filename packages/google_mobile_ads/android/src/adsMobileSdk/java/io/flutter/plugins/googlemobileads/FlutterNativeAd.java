@@ -19,12 +19,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.ads.nativetemplates.TemplateView;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.admanager.AdManagerAdRequest;
-import com.google.android.gms.ads.nativead.NativeAd;
-import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
-import com.google.android.gms.ads.nativead.NativeAdView;
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdLoaderCallback;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdView;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
@@ -216,8 +215,7 @@ class FlutterNativeAd extends FlutterAd {
 
   @Override
   void load() {
-    final OnNativeAdLoadedListener loadedListener = new FlutterNativeAdLoadedListener(this);
-    final AdListener adListener = new FlutterNativeAdListener(adId, manager);
+    final NativeAdLoaderCallback loadedListener = new FlutterNativeAdLoadedListener(this);
     // Note we delegate loading the ad to FlutterAdLoader mainly for testing purposes.
     // As of 20.0.0 of GMA, mockito is unable to mock AdLoader.
     final NativeAdOptions options =
@@ -225,12 +223,9 @@ class FlutterNativeAd extends FlutterAd {
             ? new NativeAdOptions.Builder().build()
             : nativeAdOptions.asNativeAdOptions();
     if (request != null) {
-      flutterAdLoader.loadNativeAd(
-          adUnitId, loadedListener, options, adListener, request.asAdRequest(adUnitId));
+      flutterAdLoader.loadNativeAd(adUnitId, loadedListener, options);
     } else if (adManagerRequest != null) {
-      AdManagerAdRequest adManagerAdRequest = adManagerRequest.asAdManagerAdRequest(adUnitId);
-      flutterAdLoader.loadAdManagerNativeAd(
-          adUnitId, loadedListener, options, adListener, adManagerAdRequest);
+      flutterAdLoader.loadAdManagerNativeAd(adUnitId, loadedListener, options);
     } else {
       Log.e(TAG, "A null or invalid ad request was provided.");
     }
@@ -252,10 +247,15 @@ class FlutterNativeAd extends FlutterAd {
       templateView = nativeTemplateStyle.asTemplateView(context);
       templateView.setNativeAd(nativeAd);
     } else {
-      nativeAdView = adFactory.createNativeAd(nativeAd, customOptions);
+      // TODO: Fix Native template
+      // nativeAdView = adFactory.createNativeAd(nativeAd, customOptions);
     }
-    nativeAd.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
+    nativeAd.setAdEventCallback(new FlutterNativeAdListener(adId, manager));
     manager.onAdLoaded(adId, nativeAd.getResponseInfo());
+  }
+
+  void onNativeAdFailed(LoadAdError loadAdError) {
+    manager.onAdFailedToLoad(adId, new FlutterAd.FlutterLoadAdError(loadAdError));
   }
 
   @Override

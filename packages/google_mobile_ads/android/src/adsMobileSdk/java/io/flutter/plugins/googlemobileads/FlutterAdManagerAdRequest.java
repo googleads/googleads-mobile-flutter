@@ -16,14 +16,14 @@ package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.libraries.ads.mobile.sdk.common.AdRequest;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 /**
- * Instantiates and serializes {@link com.google.android.gms.ads.admanager.AdManagerAdRequest} for
+ * Instantiates and serializes {@link AdRequest} for
  * the Google Mobile Ads Plugin.
  */
 class FlutterAdManagerAdRequest extends FlutterAdRequest {
@@ -107,18 +107,18 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
     this.publisherProvidedId = publisherProvidedId;
   }
 
-  AdManagerAdRequest asAdManagerAdRequest(String adUnitId) {
-    final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
+  AdRequest asAdManagerAdRequest(String adUnitId) {
+    final AdRequest.Builder builder = new AdRequest.Builder(adUnitId);
     updateAdRequestBuilder(builder, adUnitId);
 
     if (customTargeting != null) {
       for (final Map.Entry<String, String> entry : customTargeting.entrySet()) {
-        builder.addCustomTargeting(entry.getKey(), entry.getValue());
+        builder.putCustomTargeting(entry.getKey(), entry.getValue());
       }
     }
     if (customTargetingLists != null) {
       for (final Map.Entry<String, List<String>> entry : customTargetingLists.entrySet()) {
-        builder.addCustomTargeting(entry.getKey(), entry.getValue());
+        builder.putCustomTargeting(entry.getKey(), entry.getValue());
       }
     }
     if (publisherProvidedId != null) {

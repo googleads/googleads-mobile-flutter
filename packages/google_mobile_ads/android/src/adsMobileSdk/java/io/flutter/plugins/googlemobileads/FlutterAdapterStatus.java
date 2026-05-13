@@ -14,7 +14,7 @@
 package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.NonNull;
-import com.google.android.gms.ads.initialization.AdapterStatus;
+import com.google.android.libraries.ads.mobile.sdk.initialization.AdapterStatus;
 
 /**
  * Wrapper around {@link com.google.android.gms.ads.initialization.AdapterStatus} for the Flutter
@@ -45,10 +45,13 @@ class FlutterAdapterStatus {
 
   FlutterAdapterStatus(@NonNull AdapterStatus status) {
     switch (status.getInitializationState()) {
-      case NOT_READY:
+      case NOT_STARTED:
+      case FAILED:
+      case INITIALIZING:
+      case TIMED_OUT:
         this.state = AdapterInitializationState.NOT_READY;
         break;
-      case READY:
+      case COMPLETE:
         this.state = AdapterInitializationState.READY;
         break;
       default:

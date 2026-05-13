@@ -17,10 +17,14 @@ package io.flutter.plugins.googlemobileads;
 import static com.google.android.gms.ads.RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_UNSPECIFIED;
 import static com.google.android.gms.ads.RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_UNSPECIFIED;
 
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.libraries.ads.mobile.sdk.MobileAds;
+import com.google.android.libraries.ads.mobile.sdk.common.RequestConfiguration;
+import com.google.android.libraries.ads.mobile.sdk.common.RequestConfiguration.MaxAdContentRating;
+import com.google.android.libraries.ads.mobile.sdk.common.RequestConfiguration.TagForChildDirectedTreatment;
+import com.google.android.libraries.ads.mobile.sdk.common.RequestConfiguration.TagForUnderAgeOfConsent;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.flutter.plugin.common.MethodCall;
 import java.util.List;
@@ -34,24 +38,65 @@ class FlutterRequestConfiguration {
   @Nullable private final List<String> testDeviceIds;
 
   public static void updateRequestConfiguration(@NonNull MethodCall call) {
-    RequestConfiguration.Builder builder = MobileAds.getRequestConfiguration().toBuilder();
+    RequestConfiguration currentRequestConfiguration = MobileAds.getRequestConfiguration();
+    RequestConfiguration.Builder builder =
+        new RequestConfiguration.Builder()
+            .setMaxAdContentRating(currentRequestConfiguration.getMaxAdContentRating())
+            .setTagForChildDirectedTreatment(
+                currentRequestConfiguration.getTagForChildDirectedTreatment())
+            .setTagForUnderAgeOfConsent(currentRequestConfiguration.getTagForUnderAgeOfConsent())
+            .setTestDeviceIds(currentRequestConfiguration.getTestDeviceIds());
+
     String maxAdContentRating = call.argument("maxAdContentRating");
     Integer tagForChildDirectedTreatment = call.argument("tagForChildDirectedTreatment");
     Integer tagForUnderAgeOfConsent = call.argument("tagForUnderAgeOfConsent");
     List<String> testDeviceIds = call.argument("testDeviceIds");
     if (maxAdContentRating != null) {
-      builder.setMaxAdContentRating(maxAdContentRating);
+      if (maxAdContentRating == MaxAdContentRating.MAX_AD_CONTENT_RATING_G.getValue()) {
+        builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_G);
+      } else if (maxAdContentRating == MaxAdContentRating.MAX_AD_CONTENT_RATING_PG.getValue()) {
+        builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_PG);
+      } else if (maxAdContentRating == MaxAdContentRating.MAX_AD_CONTENT_RATING_T.getValue()) {
+        builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_T);
+      } else if (maxAdContentRating == MaxAdContentRating.MAX_AD_CONTENT_RATING_MA.getValue()) {
+        builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_MA);
+      } else {
+        builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_UNSPECIFIED);
+      }
     }
     if (tagForChildDirectedTreatment != null) {
-      builder.setTagForChildDirectedTreatment(tagForChildDirectedTreatment);
+      if (tagForChildDirectedTreatment
+          == TagForChildDirectedTreatment.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE.getValue()) {
+        builder.setTagForChildDirectedTreatment(
+            TagForChildDirectedTreatment.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE);
+      } else if (tagForChildDirectedTreatment
+          == TagForChildDirectedTreatment.TAG_FOR_CHILD_DIRECTED_TREATMENT_FALSE.getValue()) {
+        builder.setTagForChildDirectedTreatment(
+            TagForChildDirectedTreatment.TAG_FOR_CHILD_DIRECTED_TREATMENT_FALSE);
+      } else {
+        builder.setTagForChildDirectedTreatment(
+            TagForChildDirectedTreatment.TAG_FOR_CHILD_DIRECTED_TREATMENT_UNSPECIFIED);
+      }
     }
     if (tagForUnderAgeOfConsent != null) {
-      builder.setTagForUnderAgeOfConsent(tagForUnderAgeOfConsent);
+      if (tagForUnderAgeOfConsent
+          == TagForUnderAgeOfConsent.TAG_FOR_UNDER_AGE_OF_CONSENT_TRUE.getValue()) {
+        builder.setTagForUnderAgeOfConsent(
+            TagForUnderAgeOfConsent.TAG_FOR_UNDER_AGE_OF_CONSENT_TRUE);
+      } else if (tagForUnderAgeOfConsent
+          == TagForUnderAgeOfConsent.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE.getValue()) {
+        builder.setTagForUnderAgeOfConsent(
+            TagForUnderAgeOfConsent.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE);
+      } else {
+        builder.setTagForUnderAgeOfConsent(
+            TagForUnderAgeOfConsent.TAG_FOR_UNDER_AGE_OF_CONSENT_UNSPECIFIED);
+      }
     }
     if (testDeviceIds != null) {
       builder.setTestDeviceIds(testDeviceIds);
     }
-    MobileAds.setRequestConfiguration(builder.build());
+    RequestConfiguration rc = builder.build();
+    MobileAds.setRequestConfiguration(rc);
   }
 
   protected static class Builder {
@@ -155,9 +200,6 @@ class FlutterRequestConfiguration {
   @Override
   public int hashCode() {
     return Objects.hash(
-        maxAdContentRating,
-        tagForChildDirectedTreatment,
-        tagForUnderAgeOfConsent,
-        testDeviceIds);
+        maxAdContentRating, tagForChildDirectedTreatment, tagForUnderAgeOfConsent, testDeviceIds);
   }
 }

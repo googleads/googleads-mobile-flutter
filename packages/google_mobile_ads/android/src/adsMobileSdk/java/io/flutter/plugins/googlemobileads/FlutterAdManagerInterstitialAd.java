@@ -14,27 +14,15 @@
 
 package io.flutter.plugins.googlemobileads;
 
-import android.util.Log;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
-import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
-import com.google.android.gms.ads.admanager.AppEventListener;
-import java.lang.ref.WeakReference;
 
 /**
  * Wrapper around {@link com.google.android.gms.ads.admanager.AdManagerInterstitialAd} for the
  * Google Mobile Ads Plugin.
  */
-class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
+class FlutterAdManagerInterstitialAd extends FlutterInterstitialAd {
   private static final String TAG = "FltGAMInterstitialAd";
 
-  @NonNull private final AdInstanceManager manager;
-  @NonNull private final String adUnitId;
-  @NonNull private final FlutterAdManagerAdRequest request;
-  @Nullable private AdManagerInterstitialAd ad;
-  @NonNull private final FlutterAdLoader flutterAdLoader;
 
   /**
    * Constructs a `FlutterAdManagerInterstitialAd`.
@@ -46,98 +34,12 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
       int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
-      @NonNull FlutterAdManagerAdRequest request,
+      @NonNull FlutterAdRequest request,
       @NonNull FlutterAdLoader flutterAdLoader) {
-    super(adId);
-    this.manager = manager;
-    this.adUnitId = adUnitId;
-    this.request = request;
-    this.flutterAdLoader = flutterAdLoader;
-  }
-
-  @Override
-  void load() {
-    flutterAdLoader.loadAdManagerInterstitial(
-        adUnitId,
-        request.asAdManagerAdRequest(adUnitId),
-        new DelegatingAdManagerInterstitialAdCallbacks(this));
-  }
-
-  void onAdLoaded(AdManagerInterstitialAd ad) {
-    this.ad = ad;
-    ad.setAppEventListener(new DelegatingAdManagerInterstitialAdCallbacks(this));
-    ad.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
-    manager.onAdLoaded(adId, ad.getResponseInfo());
-  }
-
-  void onAdFailedToLoad(LoadAdError loadAdError) {
-    manager.onAdFailedToLoad(adId, new FlutterLoadAdError(loadAdError));
+    super(adId, manager, adUnitId, request, flutterAdLoader);
   }
 
   void onAppEvent(@NonNull String name, @NonNull String data) {
     manager.onAppEvent(adId, name, data);
-  }
-
-  @Override
-  public void show() {
-    if (ad == null) {
-      Log.e(TAG, "The interstitial wasn't loaded yet.");
-      return;
-    }
-    if (manager.getActivity() == null) {
-      Log.e(TAG, "Tried to show interstitial before activity was bound to the plugin.");
-      return;
-    }
-    ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
-    ad.show(manager.getActivity());
-  }
-
-  @Override
-  public void setImmersiveMode(boolean immersiveModeEnabled) {
-    if (ad == null) {
-      Log.e(TAG, "The interstitial wasn't loaded yet.");
-      return;
-    }
-    ad.setImmersiveMode(immersiveModeEnabled);
-  }
-
-  @Override
-  void dispose() {
-    ad = null;
-  }
-
-  /**
-   * This class delegates various rewarded ad callbacks to FlutterAdManagerInterstitialAd. Maintains
-   * a weak reference to avoid memory leaks.
-   */
-  private static final class DelegatingAdManagerInterstitialAdCallbacks
-      extends AdManagerInterstitialAdLoadCallback implements AppEventListener {
-
-    private final WeakReference<FlutterAdManagerInterstitialAd> delegate;
-
-    DelegatingAdManagerInterstitialAdCallbacks(FlutterAdManagerInterstitialAd delegate) {
-      this.delegate = new WeakReference<>(delegate);
-    }
-
-    @Override
-    public void onAdLoaded(@NonNull AdManagerInterstitialAd interstitialAd) {
-      if (delegate.get() != null) {
-        delegate.get().onAdLoaded(interstitialAd);
-      }
-    }
-
-    @Override
-    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-      if (delegate.get() != null) {
-        delegate.get().onAdFailedToLoad(loadAdError);
-      }
-    }
-
-    @Override
-    public void onAppEvent(@NonNull String name, @NonNull String data) {
-      if (delegate.get() != null) {
-        delegate.get().onAppEvent(name, data);
-      }
-    }
   }
 }

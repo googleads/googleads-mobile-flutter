@@ -18,12 +18,12 @@ import android.os.Bundle;
 import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.ads.mediation.admob.AdMobAdapter;
-import com.google.android.gms.ads.AbstractAdRequestBuilder;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.mediation.MediationExtrasReceiver;
+import com.google.android.gms.ads.mediation.admob.AdMobAdapter;
+import com.google.android.libraries.ads.mobile.sdk.common.AdRequest;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -215,8 +215,8 @@ class FlutterAdRequest {
   }
 
   /** Adds network extras to the ad request builder, if any. */
-  private <T extends AbstractAdRequestBuilder<T>> void addNetworkExtras(
-      AbstractAdRequestBuilder<T> builder, String adUnitId) {
+  private void addNetworkExtras(
+      AdRequest.Builder builder, String adUnitId) {
     Map<Class<? extends MediationExtrasReceiver>, Bundle> networkExtras = new HashMap<>();
     if (mediationExtras != null) {
       for (FlutterMediationExtras flutterExtras : mediationExtras) {
@@ -248,14 +248,12 @@ class FlutterAdRequest {
     }
 
     for (Entry<Class<? extends MediationExtrasReceiver>, Bundle> entry : networkExtras.entrySet()) {
-      builder.addNetworkExtrasBundle(entry.getKey(), entry.getValue());
+      builder.putAdSourceExtrasBundle(entry.getKey(), entry.getValue());
     }
   }
 
   /** Updates the {@link AdRequest.Builder} with the properties in this {@link FlutterAdRequest}. */
-  protected <T extends AbstractAdRequestBuilder<T>>
-      AbstractAdRequestBuilder<T> updateAdRequestBuilder(
-          AbstractAdRequestBuilder<T> builder, String adUnitId) {
+  protected AdRequest.Builder updateAdRequestBuilder(AdRequest.Builder builder, String adUnitId) {
     if (keywords != null) {
       for (final String keyword : keywords) {
         builder.addKeyword(keyword);
@@ -266,17 +264,15 @@ class FlutterAdRequest {
     }
     addNetworkExtras(builder, adUnitId);
     if (neighboringContentUrls != null) {
-      builder.setNeighboringContentUrls(neighboringContentUrls);
-    }
-    if (httpTimeoutMillis != null) {
-      builder.setHttpTimeoutMillis(httpTimeoutMillis);
+      builder.setNeighboringContentUrls(new HashSet<String>(neighboringContentUrls));
     }
     builder.setRequestAgent(requestAgent);
     return builder;
   }
 
   AdRequest asAdRequest(String adUnitId) {
-    return ((AdRequest.Builder) updateAdRequestBuilder(new AdRequest.Builder(), adUnitId)).build();
+    return ((AdRequest.Builder) updateAdRequestBuilder(new AdRequest.Builder(adUnitId), adUnitId))
+        .build();
   }
 
   @Nullable

@@ -20,7 +20,7 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.ResponseInfo;
+import com.google.android.libraries.ads.mobile.sdk.common.ResponseInfo;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;

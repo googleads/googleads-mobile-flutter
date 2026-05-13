@@ -17,15 +17,16 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
+import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAd;
+import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAdEventCallback;
 import java.lang.ref.WeakReference;
 
 class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   private static final String TAG = "FlutterInterstitialAd";
 
-  @NonNull private final AdInstanceManager manager;
+  @NonNull protected final AdInstanceManager manager;
   @NonNull private final String adUnitId;
   @NonNull private final FlutterAdRequest request;
   @Nullable private InterstitialAd ad;
@@ -48,13 +49,12 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   void load() {
     if (manager != null && adUnitId != null && request != null) {
       flutterAdLoader.loadInterstitial(
-          adUnitId, request.asAdRequest(adUnitId), new DelegatingInterstitialAdLoadCallback(this));
+          request.asAdRequest(adUnitId), new DelegatingInterstitialAdLoadCallback(this));
     }
   }
 
   void onAdLoaded(InterstitialAd ad) {
     this.ad = ad;
-    ad.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
     manager.onAdLoaded(adId, ad.getResponseInfo());
   }
 
@@ -77,7 +77,7 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
       Log.e(TAG, "Tried to show interstitial before activity was bound to the plugin.");
       return;
     }
-    ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
+    ad.setAdEventCallback(new DelegatingInterstitialAdLoadCallback(this));
     ad.show(manager.getActivity());
   }
 
@@ -86,15 +86,16 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
     if (ad == null) {
       Log.e(
           TAG,
-          "Error setting immersive mode in interstitial ad - the interstitial ad wasn't loaded yet.");
+          "Error setting immersive mode in interstitial ad - the interstitial ad wasn't loaded"
+              + " yet.");
       return;
     }
     ad.setImmersiveMode(immersiveModeEnabled);
   }
 
-  /** An InterstitialAdLoadCallback that just forwards events to a delegate. */
+  /** An AdLoadCallback that just forwards events to a delegate. */
   private static final class DelegatingInterstitialAdLoadCallback
-      extends InterstitialAdLoadCallback {
+      implements AdLoadCallback<InterstitialAd>, InterstitialAdEventCallback {
 
     private final WeakReference<FlutterInterstitialAd> delegate;
 

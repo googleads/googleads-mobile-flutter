@@ -17,9 +17,10 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.appopen.AppOpenAd;
-import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.appopen.AppOpenAd;
+import com.google.android.libraries.ads.mobile.sdk.appopen.AppOpenAdEventCallback;
+import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
 import io.flutter.util.Preconditions;
 import java.lang.ref.WeakReference;
 
@@ -57,10 +58,9 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
   void load() {
     if (request != null) {
       flutterAdLoader.loadAppOpen(
-          adUnitId, request.asAdRequest(adUnitId), new DelegatingAppOpenAdLoadCallback(this));
+          request.asAdRequest(adUnitId), new DelegatingAppOpenAdLoadCallback(this));
     } else if (adManagerAdRequest != null) {
       flutterAdLoader.loadAdManagerAppOpen(
-          adUnitId,
           adManagerAdRequest.asAdManagerAdRequest(adUnitId),
           new DelegatingAppOpenAdLoadCallback(this));
     }
@@ -68,7 +68,6 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
 
   private void onAdLoaded(@NonNull AppOpenAd ad) {
     this.ad = ad;
-    ad.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
     manager.onAdLoaded(adId, ad.getResponseInfo());
   }
 
@@ -86,7 +85,7 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
       Log.e(TAG, "Tried to show app open ad before activity was bound to the plugin.");
       return;
     }
-    ad.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
+    ad.setAdEventCallback(new DelegatingAppOpenAdLoadCallback(this));
     ad.show(manager.getActivity());
   }
 
@@ -105,7 +104,8 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
   }
 
   /** An AppOpenAdLoadCallback that just forwards events to a delegate. */
-  private static final class DelegatingAppOpenAdLoadCallback extends AppOpenAdLoadCallback {
+  private static final class DelegatingAppOpenAdLoadCallback
+      implements AdLoadCallback<AppOpenAd>, AppOpenAdEventCallback {
 
     private final WeakReference<FlutterAppOpenAd> delegate;
 
