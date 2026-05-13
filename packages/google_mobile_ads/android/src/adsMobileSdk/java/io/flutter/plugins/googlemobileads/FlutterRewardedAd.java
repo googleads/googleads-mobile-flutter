@@ -17,12 +17,12 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.OnUserEarnedRewardListener;
-import com.google.android.gms.ads.rewarded.OnAdMetadataChangedListener;
-import com.google.android.gms.ads.rewarded.RewardItem;
-import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
+import com.google.android.libraries.ads.mobile.sdk.rewarded.OnUserEarnedRewardListener;
+import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardItem;
+import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAd;
+import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAdEventCallback;
 import java.lang.ref.WeakReference;
 
 /** A wrapper for {@link RewardedAd}. */
@@ -101,12 +101,12 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
   @Override
   void load() {
-    final RewardedAdLoadCallback adLoadCallback = new DelegatingRewardedCallback(this);
+    final AdLoadCallback adLoadCallback = new DelegatingRewardedCallback(this);
     if (request != null) {
-      flutterAdLoader.loadRewarded(adUnitId, request.asAdRequest(adUnitId), adLoadCallback);
+      flutterAdLoader.loadRewarded(request.asAdRequest(adUnitId), adLoadCallback);
     } else if (adManagerRequest != null) {
       flutterAdLoader.loadAdManagerRewarded(
-          adUnitId, adManagerRequest.asAdManagerAdRequest(adUnitId), adLoadCallback);
+          adManagerRequest.asAdManagerAdRequest(adUnitId), adLoadCallback);
     } else {
       Log.e(TAG, "A null or invalid ad request was provided.");
     }
@@ -114,7 +114,6 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
   void onAdLoaded(@NonNull RewardedAd rewardedAd) {
     FlutterRewardedAd.this.rewardedAd = rewardedAd;
-    rewardedAd.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
     manager.onAdLoaded(adId, rewardedAd.getResponseInfo());
   }
 
@@ -132,8 +131,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       Log.e(TAG, "Tried to show rewarded ad before activity was bound to the plugin.");
       return;
     }
-    rewardedAd.setFullScreenContentCallback(new FlutterFullScreenContentCallback(manager, adId));
-    rewardedAd.setOnAdMetadataChangedListener(new DelegatingRewardedCallback(this));
+    rewardedAd.setAdEventCallback(new DelegatingRewardedCallback(this));
     rewardedAd.show(manager.getActivity(), new DelegatingRewardedCallback(this));
   }
 
@@ -173,8 +171,10 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
    * This class delegates various rewarded ad callbacks to FlutterRewardedAd. Maintains a weak
    * reference to avoid memory leaks.
    */
-  private static final class DelegatingRewardedCallback extends RewardedAdLoadCallback
-      implements OnAdMetadataChangedListener, OnUserEarnedRewardListener {
+  private static final class DelegatingRewardedCallback
+      implements AdLoadCallback<RewardedAd>,
+          RewardedAdEventCallback,
+          OnUserEarnedRewardListener {
 
     private final WeakReference<FlutterRewardedAd> delegate;
 

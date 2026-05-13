@@ -1,41 +1,34 @@
 package io.flutter.plugins.googlemobileads;
 
+import android.text.TextUtils;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions;
+import com.google.android.libraries.ads.mobile.sdk.rewarded.ServerSideVerificationOptions;
 import java.util.Objects;
 
 /** A wrapper for {@link ServerSideVerificationOptions}. */
 class FlutterServerSideVerificationOptions {
 
-  @Nullable private final String userId;
-  @Nullable private final String customData;
+  private final String userId;
+  private final String customData;
 
   public FlutterServerSideVerificationOptions(
       @Nullable String userId, @Nullable String customData) {
-    this.userId = userId;
-    this.customData = customData;
+    this.userId = TextUtils.isEmpty(userId) ? "" : userId;
+    this.customData = TextUtils.isEmpty(customData) ? "" : customData;
   }
 
-  @Nullable
   public String getUserId() {
     return userId;
   }
 
-  @Nullable
   public String getCustomData() {
     return customData;
   }
 
   /** Gets an equivalent {@link ServerSideVerificationOptions}. */
   public ServerSideVerificationOptions asServerSideVerificationOptions() {
-    ServerSideVerificationOptions.Builder builder = new ServerSideVerificationOptions.Builder();
-    if (userId != null) {
-      builder.setUserId(userId);
-    }
-    if (customData != null) {
-      builder.setCustomData(customData);
-    }
-    return builder.build();
+    return new ServerSideVerificationOptions(userId, customData);
   }
 
   @Override

@@ -15,23 +15,21 @@
 package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
+import android.util.Log;
 import androidx.annotation.NonNull;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.admanager.AdManagerAdRequest;
-import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
-import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
-import com.google.android.gms.ads.appopen.AppOpenAd;
-import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.google.android.gms.ads.nativead.NativeAd.OnNativeAdLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
-import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.appopen.AppOpenAd;
+import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.common.AdRequest;
+import com.google.android.libraries.ads.mobile.sdk.common.VideoOptions;
+import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAd;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd.NativeAdType;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdLoader;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdLoaderCallback;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdRequest;
+import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAd;
+import com.google.android.libraries.ads.mobile.sdk.rewardedinterstitial.RewardedInterstitialAd;
+import java.util.List;
 
 /**
  * A wrapper around load methods in GMA. This exists mainly to make the Android code more testable.
@@ -46,95 +44,79 @@ public class FlutterAdLoader {
 
   /** Load an app open ad. */
   public void loadAppOpen(
-      @NonNull String adUnitId,
-      @NonNull AdRequest adRequest,
-      @NonNull AppOpenAdLoadCallback loadCallback) {
-    AppOpenAd.load(context, adUnitId, adRequest, loadCallback);
+      @NonNull AdRequest adRequest, @NonNull AdLoadCallback<AppOpenAd> loadCallback) {
+    AppOpenAd.load(adRequest, loadCallback);
   }
 
   /** Load an ad manager app open ad. */
   public void loadAdManagerAppOpen(
-      @NonNull String adUnitId,
-      @NonNull AdManagerAdRequest adRequest,
-      @NonNull AppOpenAdLoadCallback loadCallback) {
-    AppOpenAd.load(context, adUnitId, adRequest, loadCallback);
+      @NonNull AdRequest adRequest, @NonNull AdLoadCallback<AppOpenAd> loadCallback) {
+    loadAppOpen(adRequest, loadCallback);
   }
 
   /** Load an interstitial ad. */
   public void loadInterstitial(
-      @NonNull String adUnitId,
-      @NonNull AdRequest adRequest,
-      @NonNull InterstitialAdLoadCallback loadCallback) {
-    InterstitialAd.load(context, adUnitId, adRequest, loadCallback);
+      @NonNull AdRequest adRequest, @NonNull AdLoadCallback<InterstitialAd> loadCallback) {
+    InterstitialAd.load(adRequest, loadCallback);
   }
 
   /** Load an ad manager interstitial ad. */
   public void loadAdManagerInterstitial(
-      @NonNull String adUnitId,
-      @NonNull AdManagerAdRequest adRequest,
-      @NonNull AdManagerInterstitialAdLoadCallback loadCallback) {
-    AdManagerInterstitialAd.load(context, adUnitId, adRequest, loadCallback);
+      @NonNull AdRequest adRequest, @NonNull AdLoadCallback<InterstitialAd> loadCallback) {
+    loadInterstitial(adRequest, loadCallback);
   }
 
   /** Load a rewarded ad. */
   public void loadRewarded(
-      @NonNull String adUnitId,
-      @NonNull AdRequest adRequest,
-      @NonNull RewardedAdLoadCallback loadCallback) {
-    RewardedAd.load(context, adUnitId, adRequest, loadCallback);
+      @NonNull AdRequest adRequest, @NonNull AdLoadCallback<RewardedAd> loadCallback) {
+    RewardedAd.load(adRequest, loadCallback);
   }
 
   /** Load a rewarded interstitial ad. */
   public void loadRewardedInterstitial(
-      @NonNull String adUnitId,
-      @NonNull AdRequest adRequest,
-      @NonNull RewardedInterstitialAdLoadCallback loadCallback) {
-    RewardedInterstitialAd.load(context, adUnitId, adRequest, loadCallback);
+      @NonNull AdRequest adRequest, @NonNull AdLoadCallback<RewardedInterstitialAd> loadCallback) {
+    RewardedInterstitialAd.load(adRequest, loadCallback);
   }
 
   /** Load an ad manager rewarded ad. */
   public void loadAdManagerRewarded(
-      @NonNull String adUnitId,
-      @NonNull AdManagerAdRequest adRequest,
-      @NonNull RewardedAdLoadCallback loadCallback) {
-    RewardedAd.load(context, adUnitId, adRequest, loadCallback);
+      @NonNull AdRequest adRequest, @NonNull AdLoadCallback<RewardedAd> loadCallback) {
+    loadRewarded(adRequest, loadCallback);
   }
 
   /** Load an ad manager rewarded interstitial ad. */
   public void loadAdManagerRewardedInterstitial(
-      @NonNull String adUnitId,
-      @NonNull AdManagerAdRequest adRequest,
-      @NonNull RewardedInterstitialAdLoadCallback loadCallback) {
-    RewardedInterstitialAd.load(context, adUnitId, adRequest, loadCallback);
+      @NonNull AdRequest adRequest, @NonNull AdLoadCallback<RewardedInterstitialAd> loadCallback) {
+    loadRewardedInterstitial(adRequest, loadCallback);
   }
 
   /** Load a native ad. */
   public void loadNativeAd(
       @NonNull String adUnitId,
-      @NonNull OnNativeAdLoadedListener onNativeAdLoadedListener,
-      @NonNull NativeAdOptions nativeAdOptions,
-      @NonNull AdListener adListener,
-      @NonNull AdRequest adRequest) {
-    new AdLoader.Builder(context, adUnitId)
-        .forNativeAd(onNativeAdLoadedListener)
-        .withNativeAdOptions(nativeAdOptions)
-        .withAdListener(adListener)
-        .build()
-        .loadAd(adRequest);
+      @NonNull NativeAdLoaderCallback nativeAdLoaderCallback,
+      @NonNull NativeAdOptions nativeAdOptions) {
+    VideoOptions videoOptions =
+        nativeAdOptions.getVideoOptions() == null
+            ? new VideoOptions.Builder().build()
+            : new VideoOptions.Builder()
+                .setClickToExpandRequested(
+                    nativeAdOptions.getVideoOptions().getClickToExpandRequested())
+                .setCustomControlsRequested(
+                    nativeAdOptions.getVideoOptions().getCustomControlsRequested())
+                .setStartMuted(nativeAdOptions.getVideoOptions().getStartMuted())
+                .build();
+    NativeAdLoader.load(
+        new NativeAdRequest.Builder(adUnitId, List.of(NativeAdType.NATIVE))
+            .setVideoOptions(videoOptions)
+            .build(),
+        nativeAdLoaderCallback);
   }
 
   /** Load an ad manager native ad. */
   public void loadAdManagerNativeAd(
       @NonNull String adUnitId,
-      @NonNull OnNativeAdLoadedListener onNativeAdLoadedListener,
-      @NonNull NativeAdOptions nativeAdOptions,
-      @NonNull AdListener adListener,
-      @NonNull AdManagerAdRequest adManagerAdRequest) {
-    new AdLoader.Builder(context, adUnitId)
-        .forNativeAd(onNativeAdLoadedListener)
-        .withNativeAdOptions(nativeAdOptions)
-        .withAdListener(adListener)
-        .build()
-        .loadAd(adManagerAdRequest);
+      @NonNull NativeAdLoaderCallback nativeAdLoaderCallback,
+      @NonNull NativeAdOptions nativeAdOptions) {
+    loadNativeAd(adUnitId, nativeAdLoaderCallback, nativeAdOptions);
   }
 }

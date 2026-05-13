@@ -1,7 +1,7 @@
 package io.flutter.plugins.googlemobileads;
 
-import com.google.android.gms.ads.nativead.NativeAd;
-import com.google.android.gms.ads.nativead.NativeAdView;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdView;
 import java.util.Map;
 
 /**

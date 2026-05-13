@@ -16,8 +16,7 @@ package io.flutter.plugins.googlemobileads;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.admanager.AdManagerAdView;
+import com.google.android.libraries.ads.mobile.sdk.banner.AdView;
 
 /** Creates AdView and AdManagerAdViews for banner ads. */
 public class BannerAdCreator {
@@ -26,11 +25,6 @@ public class BannerAdCreator {
 
   public BannerAdCreator(@NonNull Context context) {
     this.context = context;
-  }
-
-  /** Create a new {@link AdManagerAdView}. */
-  public AdManagerAdView createAdManagerAdView() {
-    return new AdManagerAdView(context);
   }
 
   /** Create a new {@link AdView}. */

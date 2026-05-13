@@ -24,10 +24,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.ads.AdSize;
 import io.flutter.plugin.platform.PlatformView;
-import java.util.Collections;
 
 /** A subclass of {@link FlutterAdManagerBannerAd} specifically for fluid ad size. */
-final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
+final class FluidAdManagerBannerAd extends FlutterBannerAd {
 
   private static final String TAG = "FluidAdManagerBannerAd";
 
@@ -39,20 +38,20 @@ final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
       int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
-      @NonNull FlutterAdManagerAdRequest request,
+      @NonNull FlutterAdManagerAdRequest request, // Kept for compatibility
       @NonNull BannerAdCreator bannerAdCreator) {
     super(
         adId,
         manager,
         adUnitId,
-        Collections.singletonList(new FlutterAdSize(AdSize.FLUID)),
         request,
+        new FlutterAdSize(AdSize.FLUID),
         bannerAdCreator);
   }
 
   @Override
   public void onAdLoaded() {
-    if (adView != null) {
+    if (adView != null && bannerAd != null) {
       adView.addOnLayoutChangeListener(
           new OnLayoutChangeListener() {
             @Override
@@ -74,13 +73,13 @@ final class FluidAdManagerBannerAd extends FlutterAdManagerBannerAd {
               height = newHeight;
             }
           });
-      manager.onAdLoaded(adId, adView.getResponseInfo());
+      manager.onAdLoaded(adId, bannerAd.getResponseInfo());
     }
   }
 
   @Nullable
   @Override
-  PlatformView getPlatformView() {
+  public PlatformView getPlatformView() {
     if (adView == null) {
       return null;
     }

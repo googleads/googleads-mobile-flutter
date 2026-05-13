@@ -17,9 +17,10 @@ package io.flutter.plugins.googlemobileads;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.AdapterResponseInfo;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.ResponseInfo;
+import com.google.android.libraries.ads.mobile.sdk.common.AdSourceResponseInfo;
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
+import com.google.android.libraries.ads.mobile.sdk.common.MediationAdError;
+import com.google.android.libraries.ads.mobile.sdk.common.ResponseInfo;
 import io.flutter.plugin.platform.PlatformView;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,15 +58,15 @@ abstract class FlutterAd {
 
     FlutterResponseInfo(@NonNull ResponseInfo responseInfo) {
       this.responseId = responseInfo.getResponseId();
-      this.mediationAdapterClassName = responseInfo.getMediationAdapterClassName();
+      this.mediationAdapterClassName = responseInfo.getAdapterClassName();
       final List<FlutterAdapterResponseInfo> adapterResponseInfos = new ArrayList<>();
-      for (AdapterResponseInfo adapterInfo : responseInfo.getAdapterResponses()) {
+      for (AdSourceResponseInfo adapterInfo : responseInfo.getAdSourceResponses()) {
         adapterResponseInfos.add(new FlutterAdapterResponseInfo(adapterInfo));
       }
       this.adapterResponses = adapterResponseInfos;
-      if (responseInfo.getLoadedAdapterResponseInfo() != null) {
+      if (responseInfo.getLoadedAdSourceResponseInfo() != null) {
         this.loadedAdapterResponseInfo =
-            new FlutterAdapterResponseInfo(responseInfo.getLoadedAdapterResponseInfo());
+            new FlutterAdapterResponseInfo(responseInfo.getLoadedAdSourceResponseInfo());
       } else {
         this.loadedAdapterResponseInfo = null;
       }
@@ -153,7 +154,7 @@ abstract class FlutterAd {
     @NonNull private final String adSourceInstanceName;
     @NonNull private final String adSourceInstanceId;
 
-    FlutterAdapterResponseInfo(@NonNull AdapterResponseInfo responseInfo) {
+    FlutterAdapterResponseInfo(@NonNull AdSourceResponseInfo responseInfo) {
       this.adapterClassName = responseInfo.getAdapterClassName();
       this.latencyMillis = responseInfo.getLatencyMillis();
       this.description = responseInfo.toString();
@@ -168,10 +169,10 @@ abstract class FlutterAd {
       if (responseInfo.getAdError() != null) {
         this.error = new FlutterAdError(responseInfo.getAdError());
       }
-      adSourceName = responseInfo.getAdSourceName();
-      adSourceId = responseInfo.getAdSourceId();
-      adSourceInstanceName = responseInfo.getAdSourceInstanceName();
-      adSourceInstanceId = responseInfo.getAdSourceInstanceId();
+      adSourceName = responseInfo.getName();
+      adSourceId = responseInfo.getId();
+      adSourceInstanceName = responseInfo.getInstanceName();
+      adSourceInstanceId = responseInfo.getInstanceId();
     }
 
     FlutterAdapterResponseInfo(
@@ -285,6 +286,12 @@ abstract class FlutterAd {
       message = error.getMessage();
     }
 
+    FlutterAdError(@NonNull MediationAdError error) {
+      code = error.component1();
+      domain = error.getDomain();
+      message = error.getMessage();
+    }
+
     FlutterAdError(int code, @NonNull String domain, @NonNull String message) {
       this.code = code;
       this.domain = domain;
@@ -323,12 +330,14 @@ abstract class FlutterAd {
     @Nullable FlutterResponseInfo responseInfo;
 
     FlutterLoadAdError(@NonNull LoadAdError error) {
-      code = error.getCode();
-      domain = error.getDomain();
+      code = error.getCode().getValue();
       message = error.getMessage();
 
       if (error.getResponseInfo() != null) {
         responseInfo = new FlutterResponseInfo(error.getResponseInfo());
+        domain = responseInfo.getMediationAdapterClassName();
+      } else {
+        domain = "com.google.android.libraries.ads.mobile.sdk";
       }
     }
 

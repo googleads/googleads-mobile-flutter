@@ -28,9 +28,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import com.google.android.gms.ads.nativead.MediaView;
-import com.google.android.gms.ads.nativead.NativeAd;
-import com.google.android.gms.ads.nativead.NativeAdView;
+import com.google.android.libraries.ads.mobile.sdk.common.Image;
+import com.google.android.libraries.ads.mobile.sdk.nativead.MediaView;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdView;
 import io.flutter.plugins.googlemobileads.R;
 
 /** Base class for a template view. */
@@ -192,13 +193,13 @@ public final class TemplateView extends FrameLayout {
     String body = nativeAd.getBody();
     String cta = nativeAd.getCallToAction();
     Double starRating = nativeAd.getStarRating();
-    NativeAd.Image icon = nativeAd.getIcon();
+    Image icon = nativeAd.getIcon();
 
     String secondaryText;
 
     nativeAdView.setCallToActionView(callToActionView);
     nativeAdView.setHeadlineView(primaryView);
-    nativeAdView.setMediaView(mediaView);
+    // nativeAdView.setMediaView(mediaView);
     secondaryView.setVisibility(VISIBLE);
     if (adHasOnlyStore(nativeAd)) {
       nativeAdView.setStoreView(secondaryView);
@@ -238,7 +239,8 @@ public final class TemplateView extends FrameLayout {
       nativeAdView.setBodyView(tertiaryView);
     }
 
-    nativeAdView.setNativeAd(nativeAd);
+    nativeAdView.registerNativeAd(nativeAd, mediaView);
+    // nativeAdView.setNativeAd(nativeAd);
   }
 
   /**

@@ -14,89 +14,150 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.app.Activity;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.AdView;
+import com.google.android.libraries.ads.mobile.sdk.banner.AdSize;
+import com.google.android.libraries.ads.mobile.sdk.banner.AdView;
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAd;
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest;
+import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.util.Preconditions;
+import java.util.ArrayList;
+import java.util.List;
 
-/** A wrapper for {@link AdView}. */
+/**
+ * A wrapper for {@link AdView}.
+ */
 class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
 
-  @NonNull private final AdInstanceManager manager;
-  @NonNull private final String adUnitId;
-  @NonNull private final FlutterAdSize size;
-  @NonNull private final FlutterAdRequest request;
-  @NonNull private final BannerAdCreator bannerAdCreator;
-  @Nullable private AdView adView;
+  private static final String TAG = "FlutterBannerAd";
 
-  /** Constructs the FlutterBannerAd. */
+  @NonNull
+  protected final AdInstanceManager manager;
+  @NonNull
+  protected final String adUnitId;
+  @NonNull
+  private final List<FlutterAdSize> sizes;
+  @NonNull
+  protected final BannerAdCreator bannerAdCreator;
+  @Nullable
+  protected BannerAd bannerAd;
+  @Nullable
+  protected AdView adView;
+
+  /**
+   * Constructs the FlutterBannerAd.
+   */
   public FlutterBannerAd(
       int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
-      @NonNull FlutterAdRequest request,
+      FlutterAdRequest flutterAdRequest,  // Kept for compatibility
       @NonNull FlutterAdSize size,
+      @NonNull BannerAdCreator bannerAdCreator) {
+    this(adId, manager, adUnitId, List.of(size), bannerAdCreator);
+  }
+
+  public FlutterBannerAd(
+      int adId,
+      @NonNull AdInstanceManager manager,
+      @NonNull String adUnitId,
+      @NonNull List<FlutterAdSize> sizes,
       @NonNull BannerAdCreator bannerAdCreator) {
     super(adId);
     Preconditions.checkNotNull(manager);
     Preconditions.checkNotNull(adUnitId);
-    Preconditions.checkNotNull(request);
-    Preconditions.checkNotNull(size);
+    Preconditions.checkNotNull(sizes);
     this.manager = manager;
     this.adUnitId = adUnitId;
-    this.request = request;
-    this.size = size;
+    this.sizes = sizes;
     this.bannerAdCreator = bannerAdCreator;
   }
 
   @Override
   public void onAdLoaded() {
-    if (adView != null) {
-      manager.onAdLoaded(adId, adView.getResponseInfo());
+    if (bannerAd != null) {
+      manager.onAdLoaded(adId, bannerAd.getResponseInfo());
     }
   }
 
   @Override
   void load() {
     adView = bannerAdCreator.createAdView();
-    adView.setAdUnitId(adUnitId);
-    adView.setAdSize(size.getAdSize());
-    adView.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
-    adView.setAdListener(new FlutterBannerAdListener(adId, manager, this));
-    adView.loadAd(request.asAdRequest(adUnitId));
+    final List<AdSize> allSizes = new ArrayList<AdSize>();
+    for (int i = 0; i < sizes.size(); i++) {
+      FlutterAdSize flutterAdSize = sizes.get(i);
+      if (flutterAdSize.getAdSize().isFluid()) {
+        allSizes.add(AdSize.FLUID);
+        continue;
+      }
+      AdSize adSize =
+          new AdSize(flutterAdSize.getAdSize().getWidth(), flutterAdSize.getAdSize().getHeight());
+      allSizes.add(adSize);
+    }
+    BannerAdRequest adRequest = new BannerAdRequest.Builder(adUnitId, allSizes).build();
+    adView.loadAd(
+        adRequest,
+        new AdLoadCallback<BannerAd>() {
+          @Override
+          public void onAdLoaded(@NonNull BannerAd ad) {
+            Activity activity = manager.getActivity();
+            if (activity == null) {
+              Log.e(TAG, "Tried to load banner ad before plugin is attached to an activity.");
+              return;
+            }
+            bannerAd = ad;
+            bannerAd.setAdEventCallback(
+                new FlutterBannerAdListener(adId, manager, FlutterBannerAd.this));
+            adView.registerBannerAd(bannerAd, activity);
+            FlutterBannerAd.this.onAdLoaded();
+          }
+
+          @Override
+          public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+            bannerAd = null;
+          }
+        });
   }
 
   @Nullable
   @Override
   public PlatformView getPlatformView() {
+    Log.e("DECAGONproof", "Flutter Banner getPlatformView");
     if (adView == null) {
       return null;
     }
+    Log.e("DECAGONproof", "Flutter Banner getPlatformView bannerAd not null");
     return new FlutterPlatformView(adView);
   }
 
   @Override
   void dispose() {
+    if (bannerAd != null) {
+      bannerAd = null;
+    }
     if (adView != null) {
       adView.destroy();
-      adView = null;
     }
   }
 
   @Nullable
   FlutterAdSize getAdSize() {
-    if (adView == null || adView.getAdSize() == null) {
+    if (adView == null || adView.getBannerAd().getAdSize() == null) {
       return null;
     }
-    return new FlutterAdSize(adView.getAdSize());
+    return new FlutterAdSize(
+        adView.getBannerAd().getAdSize().getWidth(), adView.getBannerAd().getAdSize().getHeight());
   }
 
   boolean isCollapsible() {
     if (adView == null) {
       return false;
     }
-
     return adView.isCollapsible();
   }
 }

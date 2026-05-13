@@ -17,12 +17,12 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.OnUserEarnedRewardListener;
-import com.google.android.gms.ads.rewarded.OnAdMetadataChangedListener;
-import com.google.android.gms.ads.rewarded.RewardItem;
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd;
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
+import com.google.android.libraries.ads.mobile.sdk.rewarded.OnUserEarnedRewardListener;
+import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardItem;
+import com.google.android.libraries.ads.mobile.sdk.rewardedinterstitial.RewardedInterstitialAdEventCallback;
+import com.google.android.libraries.ads.mobile.sdk.rewardedinterstitial.RewardedInterstitialAd;
 import io.flutter.plugins.googlemobileads.FlutterRewardedAd.FlutterRewardItem;
 import java.lang.ref.WeakReference;
 
@@ -69,13 +69,12 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
 
   @Override
   void load() {
-    final RewardedInterstitialAdLoadCallback adLoadCallback = new DelegatingRewardedCallback(this);
+    final AdLoadCallback adLoadCallback = new DelegatingRewardedCallback(this);
     if (request != null) {
-      flutterAdLoader.loadRewardedInterstitial(
-          adUnitId, request.asAdRequest(adUnitId), adLoadCallback);
+      flutterAdLoader.loadRewardedInterstitial(request.asAdRequest(adUnitId), adLoadCallback);
     } else if (adManagerRequest != null) {
       flutterAdLoader.loadAdManagerRewardedInterstitial(
-          adUnitId, adManagerRequest.asAdManagerAdRequest(adUnitId), adLoadCallback);
+          adManagerRequest.asAdManagerAdRequest(adUnitId), adLoadCallback);
     } else {
       Log.e(TAG, "A null or invalid ad request was provided.");
     }
@@ -83,7 +82,6 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
 
   void onAdLoaded(@NonNull RewardedInterstitialAd rewardedInterstitialAd) {
     FlutterRewardedInterstitialAd.this.rewardedInterstitialAd = rewardedInterstitialAd;
-    rewardedInterstitialAd.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
     manager.onAdLoaded(adId, rewardedInterstitialAd.getResponseInfo());
   }
 
@@ -103,9 +101,7 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
       Log.e(TAG, "Tried to show rewarded interstitial ad before activity was bound to the plugin.");
       return;
     }
-    rewardedInterstitialAd.setFullScreenContentCallback(
-        new FlutterFullScreenContentCallback(manager, adId));
-    rewardedInterstitialAd.setOnAdMetadataChangedListener(new DelegatingRewardedCallback(this));
+    rewardedInterstitialAd.setAdEventCallback(new DelegatingRewardedCallback(this));
     rewardedInterstitialAd.show(manager.getActivity(), new DelegatingRewardedCallback(this));
   }
 
@@ -114,7 +110,8 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
     if (rewardedInterstitialAd == null) {
       Log.e(
           TAG,
-          "Error setting immersive mode in rewarded interstitial ad - the rewarded interstitial ad wasn't loaded yet.");
+          "Error setting immersive mode in rewarded interstitial ad - the rewarded interstitial ad"
+              + " wasn't loaded yet.");
       return;
     }
     rewardedInterstitialAd.setImmersiveMode(immersiveModeEnabled);
@@ -147,8 +144,10 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
    * This class delegates various rewarded interstitial ad callbacks to
    * FlutterRewardedInterstitialAd. Maintains a weak reference to avoid memory leaks.
    */
-  private static final class DelegatingRewardedCallback extends RewardedInterstitialAdLoadCallback
-      implements OnAdMetadataChangedListener, OnUserEarnedRewardListener {
+  private static final class DelegatingRewardedCallback
+      implements AdLoadCallback<RewardedInterstitialAd>,
+          RewardedInterstitialAdEventCallback,
+          OnUserEarnedRewardListener {
 
     private final WeakReference<FlutterRewardedInterstitialAd> delegate;
 

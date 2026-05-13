@@ -14,14 +14,20 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
 import androidx.annotation.NonNull;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.OnAdInspectorClosedListener;
-import com.google.android.gms.ads.RequestConfiguration;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import androidx.annotation.Nullable;
+import com.google.android.libraries.ads.mobile.sdk.MobileAds;
+import com.google.android.libraries.ads.mobile.sdk.common.OnAdInspectorClosedListener;
+import com.google.android.libraries.ads.mobile.sdk.common.RequestConfiguration;
+import com.google.android.libraries.ads.mobile.sdk.initialization.InitializationConfig;
+import com.google.android.libraries.ads.mobile.sdk.initialization.OnAdapterInitializationCompleteListener;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugins.webviewflutter.WebViewFlutterAndroidExternalApi;
 
@@ -29,17 +35,26 @@ import io.flutter.plugins.webviewflutter.WebViewFlutterAndroidExternalApi;
 public class FlutterMobileAdsWrapper {
 
   private static final String TAG = "FlutterMobileAdsWrapper";
+  private static final String APPLICATION_ID_KEY = "com.google.android.gms.ads.APPLICATION_ID";
 
   public FlutterMobileAdsWrapper() {}
 
   /** Initializes the sdk. */
   public void initialize(
-      @NonNull Context context, @NonNull OnInitializationCompleteListener listener) {
+      @NonNull Context context, @NonNull OnAdapterInitializationCompleteListener listener) {
+    final String appId = getApplicationMetaData(context, APPLICATION_ID_KEY);
+
+    if (appId == null) {
+      Log.e(TAG, "Application ID is null. Cannot initialize the Google Mobile Ads SDK.");
+      return;
+    }
+
+    InitializationConfig config = new InitializationConfig.Builder(appId).build();
     new Thread(
             new Runnable() {
               @Override
               public void run() {
-                MobileAds.initialize(context, listener);
+                MobileAds.initialize(context, config, listener);
               }
             })
         .start();
@@ -47,17 +62,20 @@ public class FlutterMobileAdsWrapper {
 
   /** Wrapper for setAppMuted. */
   public void setAppMuted(boolean muted) {
-    MobileAds.setAppMuted(muted);
+    MobileAds.setUserMutedApp(muted);
   }
 
   /** Wrapper for setAppVolume. */
   public void setAppVolume(double volume) {
-    MobileAds.setAppVolume((float) volume);
+    MobileAds.setUserControlledAppVolume((float) volume);
   }
 
   /** Wrapper for disableMediationInitialization. */
   public void disableMediationInitialization(@NonNull Context context) {
-    MobileAds.disableMediationAdapterInitialization(context);
+    Log.w(
+        TAG,
+        "Ignoring call to MobileAds.disableMediationAdapterInitialization, method no longer exists"
+            + " on Android GMA SDK");
   }
 
   /** Wrapper for getVersionString. */
@@ -72,12 +90,17 @@ public class FlutterMobileAdsWrapper {
 
   /** Wrapper for openDebugMenu. */
   public void openDebugMenu(Context context, String adUnitId) {
-    MobileAds.openDebugMenu(context, adUnitId);
+    if (!(context instanceof Activity)) {
+      Log.w(TAG, "Cannot openDebugMenu before GMA SDK is attached to a Flutter Activity");
+      return;
+    }
+    Activity activity = (Activity) context;
+    MobileAds.openDebugMenu(activity, adUnitId);
   }
 
   /** Open the ad inspector. */
   public void openAdInspector(Context context, OnAdInspectorClosedListener listener) {
-    MobileAds.openAdInspector(context, listener);
+    MobileAds.openAdInspector(listener);
   }
 
   /** Register the webView for monetization. */
@@ -88,5 +111,24 @@ public class FlutterMobileAdsWrapper {
     } else {
       MobileAds.registerWebView(webView);
     }
+  }
+
+  @Nullable
+  private String getApplicationMetaData(Context context, String key) {
+    try {
+      ApplicationInfo appInfo =
+          context
+              .getPackageManager()
+              .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
+      Bundle bundle = appInfo.metaData;
+      if (bundle != null && bundle.containsKey(key)) {
+        return bundle.getString(key);
+      } else {
+        Log.e(TAG, "Application ID not found in manifest!");
+      }
+    } catch (Exception e) {
+      Log.e(TAG, "Error reading application ID from manifest: " + e.getMessage());
+    }
+    return null;
   }
 }

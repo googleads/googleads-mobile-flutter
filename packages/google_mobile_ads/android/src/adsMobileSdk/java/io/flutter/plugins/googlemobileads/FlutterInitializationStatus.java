@@ -15,8 +15,8 @@
 package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.NonNull;
-import com.google.android.gms.ads.initialization.AdapterStatus;
-import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.libraries.ads.mobile.sdk.initialization.AdapterStatus;
+import com.google.android.libraries.ads.mobile.sdk.initialization.InitializationStatus;
 import java.util.HashMap;
 import java.util.Map;
 
