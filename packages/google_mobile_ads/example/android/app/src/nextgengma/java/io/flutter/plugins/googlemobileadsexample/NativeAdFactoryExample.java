@@ -52,7 +52,7 @@ class NativeAdFactoryExample implements NativeAdFactory {
 
     // The headline and mediaContent are guaranteed to be in every NativeAd.
     ((TextView) adView.getHeadlineView()).setText(nativeAd.getHeadline());
-    adView.getMediaView().setMediaContent(nativeAd.getMediaContent());
+    mediaView.setMediaContent(nativeAd.getMediaContent());
 
     // These assets aren't guaranteed to be in every NativeAd, so it's important to
     // check before trying to display them.

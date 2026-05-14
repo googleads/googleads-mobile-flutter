@@ -247,8 +247,7 @@ class FlutterNativeAd extends FlutterAd {
       templateView = nativeTemplateStyle.asTemplateView(context);
       templateView.setNativeAd(nativeAd);
     } else {
-      // TODO: Fix Native template
-      // nativeAdView = adFactory.createNativeAd(nativeAd, customOptions);
+      nativeAdView = adFactory.createNativeAd(nativeAd, customOptions);
     }
     nativeAd.setAdEventCallback(new FlutterNativeAdListener(adId, manager));
     manager.onAdLoaded(adId, nativeAd.getResponseInfo());

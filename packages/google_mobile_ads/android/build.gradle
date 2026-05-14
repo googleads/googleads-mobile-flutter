@@ -56,6 +56,13 @@ android {
         } else {
             java.srcDirs("src/playServices/java")
         }
+
+        res.srcDirs("src/main/res")
+        if (useAdsMobileSdk) {
+            res.srcDirs("src/adsMobileSdk/res")
+        } else {
+            res.srcDirs("src/playServices/res")
+        }
     }
     dependencies {
         if (useAdsMobileSdk) {

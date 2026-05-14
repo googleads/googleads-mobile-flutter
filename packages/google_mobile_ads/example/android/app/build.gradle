@@ -41,6 +41,12 @@ android {
         } else {
             java.srcDirs("src/playservices/java")
         }
+        res.srcDirs("src/main/res")
+        if (useAdsMobileSdk) {
+            res.srcDirs("src/nextgengma/res")
+        } else {
+            res.srcDirs("src/playservices/res")
+        }
     }
     compileSdk 36
 
