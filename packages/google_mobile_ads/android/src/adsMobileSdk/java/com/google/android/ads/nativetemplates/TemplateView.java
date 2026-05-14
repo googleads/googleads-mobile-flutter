@@ -199,7 +199,6 @@ public final class TemplateView extends FrameLayout {
 
     nativeAdView.setCallToActionView(callToActionView);
     nativeAdView.setHeadlineView(primaryView);
-    // nativeAdView.setMediaView(mediaView);
     secondaryView.setVisibility(VISIBLE);
     if (adHasOnlyStore(nativeAd)) {
       nativeAdView.setStoreView(secondaryView);
@@ -240,7 +239,6 @@ public final class TemplateView extends FrameLayout {
     }
 
     nativeAdView.registerNativeAd(nativeAd, mediaView);
-    // nativeAdView.setNativeAd(nativeAd);
   }
 
   /**
