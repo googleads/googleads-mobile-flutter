@@ -14,14 +14,12 @@ public final class FlutterInitializationListener implements OnInitializationComp
   private boolean isInitializationCompleted;
 
   FlutterInitializationListener(@NonNull final Result result) {
-    Log.i("DECAGONproof", "FlutterInitializationListener");
     this.result = result;
     isInitializationCompleted = false;
   }
 
   @Override
   public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
-    Log.i("DECAGONproof", "initialization Complete");
     // Make sure not to invoke this more than once, since Dart will throw an exception if success
     // is invoked more than once. See b/193418432.
     if (isInitializationCompleted) {

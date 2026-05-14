@@ -133,7 +133,7 @@ class _ReusableInlineExampleState extends State<ReusableInlineExample> {
     )..load();
 
     _adManagerBannerAd = AdManagerBannerAd(
-      adUnitId: '/6499/example/banner',
+      adUnitId: '/21775744923/example/adaptive-banner',
       request: AdManagerAdRequest(nonPersonalizedAds: true),
       sizes: <AdSize>[AdSize.largeBanner],
       listener: AdManagerBannerAdListener(

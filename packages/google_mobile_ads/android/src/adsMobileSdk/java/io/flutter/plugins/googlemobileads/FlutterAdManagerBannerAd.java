@@ -33,8 +33,8 @@ class FlutterAdManagerBannerAd extends FlutterBannerAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull List<FlutterAdSize> sizes,
-      FlutterAdRequest flutterAdRequest,  // Kept for compatibility
+      FlutterAdManagerAdRequest flutterAdRequest,
       @NonNull BannerAdCreator bannerAdCreator) {
-    super(adId, manager, adUnitId, sizes, bannerAdCreator);
+    super(adId, manager, adUnitId, flutterAdRequest, sizes, bannerAdCreator);
   }
 }
