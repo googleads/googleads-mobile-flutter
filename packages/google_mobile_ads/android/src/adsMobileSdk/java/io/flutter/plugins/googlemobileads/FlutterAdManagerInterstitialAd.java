@@ -34,7 +34,7 @@ class FlutterAdManagerInterstitialAd extends FlutterInterstitialAd {
       int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
-      @NonNull FlutterAdRequest request,
+      @NonNull FlutterAdManagerAdRequest request,
       @NonNull FlutterAdLoader flutterAdLoader) {
     super(adId, manager, adUnitId, request, flutterAdLoader);
   }

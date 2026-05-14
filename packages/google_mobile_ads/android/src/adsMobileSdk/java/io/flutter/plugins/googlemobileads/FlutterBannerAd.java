@@ -42,6 +42,7 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
   protected final String adUnitId;
   @NonNull
   private final List<FlutterAdSize> sizes;
+  @NonNull private final FlutterAdRequest request;
   @NonNull
   protected final BannerAdCreator bannerAdCreator;
   @Nullable
@@ -59,13 +60,14 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
       FlutterAdRequest flutterAdRequest,  // Kept for compatibility
       @NonNull FlutterAdSize size,
       @NonNull BannerAdCreator bannerAdCreator) {
-    this(adId, manager, adUnitId, List.of(size), bannerAdCreator);
+    this(adId, manager, adUnitId, flutterAdRequest, List.of(size), bannerAdCreator);
   }
 
   public FlutterBannerAd(
       int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
+      @NonNull FlutterAdRequest request,
       @NonNull List<FlutterAdSize> sizes,
       @NonNull BannerAdCreator bannerAdCreator) {
     super(adId);
@@ -74,6 +76,7 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
     Preconditions.checkNotNull(sizes);
     this.manager = manager;
     this.adUnitId = adUnitId;
+    this.request = Preconditions.checkNotNull(request);
     this.sizes = sizes;
     this.bannerAdCreator = bannerAdCreator;
   }
@@ -99,7 +102,7 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
           new AdSize(flutterAdSize.getAdSize().getWidth(), flutterAdSize.getAdSize().getHeight());
       allSizes.add(adSize);
     }
-    BannerAdRequest adRequest = new BannerAdRequest.Builder(adUnitId, allSizes).build();
+    BannerAdRequest adRequest = request.toBannerAdRequestBuilder(adUnitId, allSizes).build();
     adView.loadAd(
         adRequest,
         new AdLoadCallback<BannerAd>() {
@@ -127,11 +130,9 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
   @Nullable
   @Override
   public PlatformView getPlatformView() {
-    Log.e("DECAGONproof", "Flutter Banner getPlatformView");
     if (adView == null) {
       return null;
     }
-    Log.e("DECAGONproof", "Flutter Banner getPlatformView bannerAd not null");
     return new FlutterPlatformView(adView);
   }
 
@@ -155,9 +156,9 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
   }
 
   boolean isCollapsible() {
-    if (adView == null) {
+    if (bannerAd == null) {
       return false;
     }
-    return adView.isCollapsible();
+    return bannerAd.isCollapsible();
   }
 }

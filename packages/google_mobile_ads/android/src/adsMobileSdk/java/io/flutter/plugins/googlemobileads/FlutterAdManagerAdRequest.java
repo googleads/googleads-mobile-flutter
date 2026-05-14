@@ -16,6 +16,8 @@ package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.libraries.ads.mobile.sdk.banner.AdSize;
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest;
 import com.google.android.libraries.ads.mobile.sdk.common.AdRequest;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.List;
@@ -125,6 +127,26 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
       builder.setPublisherProvidedId(publisherProvidedId);
     }
     return builder.build();
+  }
+
+  @Override
+  protected BannerAdRequest.Builder toBannerAdRequestBuilder(String adUnitId,
+      List<AdSize> allSizes) {
+    BannerAdRequest.Builder builder = super.toBannerAdRequestBuilder(adUnitId, allSizes);
+    if (customTargeting != null) {
+      for (final Map.Entry<String, String> entry : customTargeting.entrySet()) {
+        builder.putCustomTargeting(entry.getKey(), entry.getValue());
+      }
+    }
+    if (customTargetingLists != null) {
+      for (final Map.Entry<String, List<String>> entry : customTargetingLists.entrySet()) {
+        builder.putCustomTargeting(entry.getKey(), entry.getValue());
+      }
+    }
+    if (publisherProvidedId != null) {
+      builder.setPublisherProvidedId(publisherProvidedId);
+    }
+    return builder;
   }
 
   @Nullable

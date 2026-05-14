@@ -20,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.mediation.MediationExtrasReceiver;
 import com.google.android.gms.ads.mediation.admob.AdMobAdapter;
+import com.google.android.libraries.ads.mobile.sdk.banner.AdSize;
+import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest;
 import com.google.android.libraries.ads.mobile.sdk.common.AdRequest;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.HashMap;
@@ -263,6 +265,58 @@ class FlutterAdRequest {
       builder.setContentUrl(contentUrl);
     }
     addNetworkExtras(builder, adUnitId);
+    if (neighboringContentUrls != null) {
+      builder.setNeighboringContentUrls(new HashSet<String>(neighboringContentUrls));
+    }
+    builder.setRequestAgent(requestAgent);
+    return builder;
+  }
+
+  protected BannerAdRequest.Builder toBannerAdRequestBuilder(String adUnitId, List<AdSize> allSizes) {
+    BannerAdRequest.Builder builder = new BannerAdRequest.Builder(adUnitId, allSizes);
+    if (keywords != null) {
+      for (final String keyword : keywords) {
+        builder.addKeyword(keyword);
+      }
+    }
+    if (contentUrl != null) {
+      builder.setContentUrl(contentUrl);
+    }
+
+    Map<Class<? extends MediationExtrasReceiver>, Bundle> networkExtras = new HashMap<>();
+    if (mediationExtras != null) {
+      for (FlutterMediationExtras flutterExtras : mediationExtras) {
+        Pair<Class<? extends MediationExtrasReceiver>, Bundle> pair =
+            flutterExtras.getMediationExtras();
+        networkExtras.put(pair.first, pair.second);
+      }
+    } else if (mediationNetworkExtrasProvider != null) {
+      Map<Class<? extends MediationExtrasReceiver>, Bundle> providedExtras =
+          mediationNetworkExtrasProvider.getMediationExtras(adUnitId, mediationExtrasIdentifier);
+      networkExtras.putAll(providedExtras);
+    }
+
+    if (adMobExtras != null && !adMobExtras.isEmpty()) {
+      Bundle adMobBundle = new Bundle();
+      for (Map.Entry<String, String> extra : adMobExtras.entrySet()) {
+        adMobBundle.putString(extra.getKey(), extra.getValue());
+      }
+      networkExtras.put(AdMobAdapter.class, adMobBundle);
+    }
+
+    if (nonPersonalizedAds != null && nonPersonalizedAds) {
+      Bundle adMobBundle = networkExtras.get(AdMobAdapter.class);
+      if (adMobBundle == null) {
+        adMobBundle = new Bundle();
+      }
+      adMobBundle.putString("npa", "1");
+      networkExtras.put(AdMobAdapter.class, adMobBundle);
+    }
+
+    for (Entry<Class<? extends MediationExtrasReceiver>, Bundle> entry : networkExtras.entrySet()) {
+      builder.putAdSourceExtrasBundle(entry.getKey(), entry.getValue());
+    }
+
     if (neighboringContentUrls != null) {
       builder.setNeighboringContentUrls(new HashSet<String>(neighboringContentUrls));
     }

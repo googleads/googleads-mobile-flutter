@@ -22,7 +22,7 @@ import android.widget.ScrollView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import com.google.android.gms.ads.AdSize;
+import com.google.android.libraries.ads.mobile.sdk.banner.AdSize;
 import io.flutter.plugin.platform.PlatformView;
 
 /** A subclass of {@link FlutterAdManagerBannerAd} specifically for fluid ad size. */
