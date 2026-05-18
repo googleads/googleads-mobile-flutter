@@ -1,5 +1,7 @@
 ## ironSource Flutter Mediation Adapter Changelog
 
+#### Version 2.4.1 (In progress)
+
 #### Version 2.4.0
 - Updated minimum Flutter version to 3.38.1
 - Updated to support Google Mobile Ads Flutter Plugin version 8.0.0
