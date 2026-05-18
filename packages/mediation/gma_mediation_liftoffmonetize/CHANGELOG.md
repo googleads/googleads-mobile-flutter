@@ -1,5 +1,7 @@
 ## Liftoff Monetize Flutter Mediation Adapter Changelog
 
+#### Version 1.5.1 (In progress)
+
 #### Version 1.5.0
 - Updated minimum Flutter version to 3.38.1.
 - Updated to support Google Mobile Ads Flutter Plugin version 8.0.0.
