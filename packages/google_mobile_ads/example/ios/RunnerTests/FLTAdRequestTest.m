@@ -15,8 +15,8 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "FLTAd_Internal.h"
-#import "FLTMediationNetworkExtrasProvider.h"
+#import "google_mobile_ads/FLTAd_Internal.h"
+#import "google_mobile_ads/FLTMediationNetworkExtrasProvider.h"
 
 @interface FLTAdRequestTest : XCTestCase
 @end

@@ -15,9 +15,9 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "FLTAdInstanceManager_Internal.h"
-#import "FLTAd_Internal.h"
-#import "FLTNativeTemplateStyle.h"
+#import "google_mobile_ads/FLTAdInstanceManager_Internal.h"
+#import "google_mobile_ads/FLTAd_Internal.h"
+#import "google_mobile_ads/FLTNativeTemplateStyle.h"
 
 @interface FLTNativeAdTest : XCTestCase
 @end

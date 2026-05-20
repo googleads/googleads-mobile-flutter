@@ -15,8 +15,8 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "FLTAdUtil.h"
-#import "FLTConstants.h"
+#import "google_mobile_ads/FLTAdUtil.h"
+#import "google_mobile_ads/FLTConstants.h"
 
 @interface FLTAdUtilTest : XCTestCase
 @end

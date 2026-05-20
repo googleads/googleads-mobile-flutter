@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "FLTNativeTemplateFontStyle.h"
+#import "google_mobile_ads/FLTNativeTemplateFontStyle.h"
 #import <XCTest/XCTest.h>
 
 @interface FLTNativeTemplateFontStyleTest : XCTestCase

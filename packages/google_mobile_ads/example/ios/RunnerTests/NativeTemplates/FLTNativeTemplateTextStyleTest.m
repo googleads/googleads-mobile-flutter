@@ -15,7 +15,7 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "FLTNativeTemplateTextStyle.h"
+#import "google_mobile_ads/FLTNativeTemplateTextStyle.h"
 
 @interface FLTNativeTemplateTextStyleTest : XCTestCase
 @end

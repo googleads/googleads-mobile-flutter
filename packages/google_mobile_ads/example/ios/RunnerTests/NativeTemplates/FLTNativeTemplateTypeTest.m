@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#import "FLTNativeTemplateType.h"
+#import "google_mobile_ads/FLTNativeTemplateType.h"
 #import <XCTest/XCTest.h>
 
 @interface FLTNativeTemplateTypeTest : XCTestCase
