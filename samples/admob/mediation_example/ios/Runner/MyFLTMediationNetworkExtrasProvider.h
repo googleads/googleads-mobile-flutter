@@ -17,7 +17,7 @@
 
 #endif /* MyFLTMediationNetworkExtrasProvider_h */
 
-#import <FLTMediationNetworkExtrasProvider.h>
+#import <google_mobile_ads/FLTMediationNetworkExtrasProvider.h>
 
 /** Provides network specific mediation extras for ad requests. */
 @interface MyFLTMediationNetworkExtrasProvider
