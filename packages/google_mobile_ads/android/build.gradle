@@ -35,7 +35,7 @@ android {
                 }
     }
 
-    def useAdsMobileSdk = dartEnvironmentVariables.USE_ADS_MOBILE_SDK ? dartEnvironmentVariables.USE_ADS_MOBILE_SDK : false
+    def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK ? dartEnvironmentVariables.USE_NEXT_GEN_SDK : false
 
     compileSdk 36
 
@@ -51,21 +51,21 @@ android {
     }
     sourceSets.named("main") {
         java.srcDirs("src/main/java")
-        if (useAdsMobileSdk) {
-            java.srcDirs("src/adsMobileSdk/java")
+        if (useNextGenSdk) {
+            java.srcDirs("src/adsNextGenSdk/java")
         } else {
             java.srcDirs("src/playServices/java")
         }
 
         res.srcDirs("src/main/res")
-        if (useAdsMobileSdk) {
-            res.srcDirs("src/adsMobileSdk/res")
+        if (useNextGenSdk) {
+            res.srcDirs("src/adsNextGenSdk/res")
         } else {
             res.srcDirs("src/playServices/res")
         }
     }
     dependencies {
-        if (useAdsMobileSdk) {
+        if (useNextGenSdk) {
             api 'com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.0.1'
         } else {
             api 'com.google.android.gms:play-services-ads:25.1.0'

@@ -33,16 +33,16 @@ if (project.hasProperty('dart-defines')) {
 }
 
 android {
-    def useAdsMobileSdk = dartEnvironmentVariables.USE_ADS_MOBILE_SDK ? dartEnvironmentVariables.USE_ADS_MOBILE_SDK : false
+    def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK ? dartEnvironmentVariables.USE_NEXT_GEN_SDK : false
     sourceSets.getByName("main") {
         java.srcDirs("src/main/java")
-        if (useAdsMobileSdk) {
+        if (useNextGenSdk) {
             java.srcDirs("src/nextgengma/java")
         } else {
             java.srcDirs("src/playservices/java")
         }
         res.srcDirs("src/main/res")
-        if (useAdsMobileSdk) {
+        if (useNextGenSdk) {
             res.srcDirs("src/nextgengma/res")
         } else {
             res.srcDirs("src/playservices/res")
