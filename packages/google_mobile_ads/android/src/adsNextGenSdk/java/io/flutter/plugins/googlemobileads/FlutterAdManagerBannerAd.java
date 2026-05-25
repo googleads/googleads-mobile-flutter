@@ -18,7 +18,7 @@ import androidx.annotation.NonNull;
 import java.util.List;
 
 /**
- * Wrapper around {@link com.google.android.gms.ads.admanager.AdManagerAdView} for the Google Mobile
+ * Wrapper around {@link com.google.android.libraries.ads.mobile.sdk.banner.AdView} for the Google Mobile
  * Ads Plugin.
  */
 class FlutterAdManagerBannerAd extends FlutterBannerAd {

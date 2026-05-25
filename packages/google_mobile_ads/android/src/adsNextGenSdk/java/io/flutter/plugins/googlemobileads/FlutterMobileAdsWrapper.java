@@ -36,6 +36,7 @@ public class FlutterMobileAdsWrapper {
 
   private static final String TAG = "FlutterMobileAdsWrapper";
   private static final String APPLICATION_ID_KEY = "com.google.android.gms.ads.APPLICATION_ID";
+  private static boolean disableMediationAdapterInitialization = false;
 
   public FlutterMobileAdsWrapper() {}
 
@@ -49,7 +50,11 @@ public class FlutterMobileAdsWrapper {
       return;
     }
 
-    InitializationConfig config = new InitializationConfig.Builder(appId).build();
+    InitializationConfig.Builder configBuilder = new InitializationConfig.Builder(appId);
+    if(disableMediationAdapterInitialization) {
+      configBuilder.disableMediationAdapterInitialization();
+    }
+    InitializationConfig config = configBuilder.build();
     new Thread(
             new Runnable() {
               @Override
@@ -72,10 +77,7 @@ public class FlutterMobileAdsWrapper {
 
   /** Wrapper for disableMediationInitialization. */
   public void disableMediationInitialization(@NonNull Context context) {
-    Log.w(
-        TAG,
-        "Ignoring call to MobileAds.disableMediationAdapterInitialization, method no longer exists"
-            + " on Android GMA SDK");
+    disableMediationAdapterInitialization = true;
   }
 
   /** Wrapper for getVersionString. */

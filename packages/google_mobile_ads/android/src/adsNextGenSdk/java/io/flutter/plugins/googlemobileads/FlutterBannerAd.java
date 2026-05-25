@@ -157,6 +157,7 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
 
   boolean isCollapsible() {
     if (bannerAd == null) {
+      Log.e(TAG, "Banner ad is not loaded or has been disposed.");
       return false;
     }
     return bannerAd.isCollapsible();
