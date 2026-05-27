@@ -25,6 +25,18 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
+    def dartEnvironmentVariables = []
+    if (project.hasProperty('dart-defines')) {
+        dartEnvironmentVariables = project.property('dart-defines')
+                .split(',')
+                .collectEntries { entry ->
+                    def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
+                    [(pair.first()): pair.last()]
+                }
+    }
+
+    def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK ? dartEnvironmentVariables.USE_NEXT_GEN_SDK : false
+
     compileSdk 36
 
     if (project.android.hasProperty('namespace')) {
@@ -37,8 +49,27 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+    sourceSets.named("main") {
+        java.srcDirs("src/main/java")
+        if (useNextGenSdk) {
+            java.srcDirs("src/adsNextGenSdk/java")
+        } else {
+            java.srcDirs("src/playServices/java")
+        }
+
+        res.srcDirs("src/main/res")
+        if (useNextGenSdk) {
+            res.srcDirs("src/adsNextGenSdk/res")
+        } else {
+            res.srcDirs("src/playServices/res")
+        }
+    }
     dependencies {
-        api 'com.google.android.gms:play-services-ads:25.1.0'
+        if (useNextGenSdk) {
+            api 'com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.0.1'
+        } else {
+            api 'com.google.android.gms:play-services-ads:25.1.0'
+        }
         implementation 'com.google.android.ump:user-messaging-platform:4.0.0'
         implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
         implementation 'androidx.lifecycle:lifecycle-process:2.10.0'

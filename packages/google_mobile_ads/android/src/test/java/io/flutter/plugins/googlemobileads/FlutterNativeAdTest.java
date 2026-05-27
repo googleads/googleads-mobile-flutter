@@ -46,7 +46,6 @@ import com.google.android.gms.ads.nativead.NativeAdView;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterLoadAdError;
-import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
 import java.util.Map;
 import org.junit.Before;
@@ -176,7 +175,7 @@ public class FlutterNativeAdTest {
     final AdRequest mockRequest = mock(AdRequest.class);
     when(mockFlutterRequest.asAdRequest(anyString())).thenReturn(mockRequest);
     FlutterAdLoader mockLoader = mock(FlutterAdLoader.class);
-    NativeAdFactory mockNativeAdFactory = mock(GoogleMobileAdsPlugin.NativeAdFactory.class);
+    NativeAdFactory mockNativeAdFactory = mock(NativeAdFactory.class);
     NativeAdView mockNativeAdView = mock(NativeAdView.class);
     doReturn(mockNativeAdView)
         .when(mockNativeAdFactory)
@@ -270,7 +269,7 @@ public class FlutterNativeAdTest {
     final AdRequest mockRequest = mock(AdRequest.class);
     when(mockFlutterRequest.asAdRequest(anyString())).thenReturn(mockRequest);
     FlutterAdLoader mockLoader = mock(FlutterAdLoader.class);
-    NativeAdFactory mockNativeAdFactory = mock(GoogleMobileAdsPlugin.NativeAdFactory.class);
+    NativeAdFactory mockNativeAdFactory = mock(NativeAdFactory.class);
     @SuppressWarnings("unchecked")
     Map<String, Object> mockOptions = mock(Map.class);
     FlutterNativeAdOptions mockFlutterNativeAdOptions = mock(FlutterNativeAdOptions.class);
@@ -339,7 +338,7 @@ public class FlutterNativeAdTest {
     new FlutterNativeAd.Builder(ApplicationProvider.getApplicationContext())
         .setManager(null)
         .setAdUnitId("testId")
-        .setAdFactory(mock(GoogleMobileAdsPlugin.NativeAdFactory.class))
+        .setAdFactory(mock(NativeAdFactory.class))
         .setRequest(request)
         .build();
   }
@@ -349,7 +348,7 @@ public class FlutterNativeAdTest {
     new FlutterNativeAd.Builder(ApplicationProvider.getApplicationContext())
         .setManager(testManager)
         .setAdUnitId(null)
-        .setAdFactory(mock(GoogleMobileAdsPlugin.NativeAdFactory.class))
+        .setAdFactory(mock(NativeAdFactory.class))
         .setRequest(request)
         .build();
   }
@@ -369,7 +368,7 @@ public class FlutterNativeAdTest {
     new FlutterNativeAd.Builder(ApplicationProvider.getApplicationContext())
         .setManager(testManager)
         .setAdUnitId("testId")
-        .setAdFactory(mock(GoogleMobileAdsPlugin.NativeAdFactory.class))
+        .setAdFactory(mock(NativeAdFactory.class))
         .build();
   }
 }

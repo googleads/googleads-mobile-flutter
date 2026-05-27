@@ -16,7 +16,7 @@
 #import <Flutter/Flutter.h>
 
 #import "AppDelegate.h"
-#import "FLTGoogleMobileAdsPlugin.h"
+#import "google_mobile_ads/FLTGoogleMobileAdsPlugin.h"
 #import "GeneratedPluginRegistrant.h"
 #import "MyFLTMediationNetworkExtrasProvider.h"
 

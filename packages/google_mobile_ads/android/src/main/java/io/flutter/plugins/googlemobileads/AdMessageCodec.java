@@ -22,7 +22,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import com.google.android.gms.ads.RequestConfiguration;
 import io.flutter.plugin.common.StandardMessageCodec;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdapterResponseInfo;
@@ -32,7 +31,6 @@ import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateF
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateTextStyle;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateType;
-import java.lang.reflect.InvocationTargetException;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
@@ -217,9 +215,9 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, options.requestCustomMuteThisAd);
       writeValue(stream, options.shouldRequestMultipleImages);
       writeValue(stream, options.shouldReturnUrlsForImageAssets);
-    } else if (value instanceof RequestConfiguration) {
+    } else if (value instanceof FlutterRequestConfiguration) {
       stream.write(VALUE_REQUEST_CONFIGURATION_PARAMS);
-      RequestConfiguration params = (RequestConfiguration) value;
+      FlutterRequestConfiguration params = (FlutterRequestConfiguration) value;
       writeValue(stream, params.getMaxAdContentRating());
       writeValue(stream, params.getTagForChildDirectedTreatment());
       writeValue(stream, params.getTagForUnderAgeOfConsent());
@@ -413,7 +411,7 @@ class AdMessageCodec extends StandardMessageCodec {
             (Boolean) readValueOfType(buffer.get(), buffer),
             (Boolean) readValueOfType(buffer.get(), buffer));
       case VALUE_REQUEST_CONFIGURATION_PARAMS:
-        RequestConfiguration.Builder rcb = new RequestConfiguration.Builder();
+        FlutterRequestConfiguration.Builder rcb = new FlutterRequestConfiguration.Builder();
         rcb.setMaxAdContentRating((String) readValueOfType(buffer.get(), buffer));
         rcb.setTagForChildDirectedTreatment((Integer) readValueOfType(buffer.get(), buffer));
         rcb.setTagForUnderAgeOfConsent((Integer) readValueOfType(buffer.get(), buffer));

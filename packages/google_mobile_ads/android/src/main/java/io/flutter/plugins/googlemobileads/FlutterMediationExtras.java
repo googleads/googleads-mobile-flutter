@@ -31,6 +31,7 @@ import java.util.Objects;
  */
 public abstract class FlutterMediationExtras {
   Map<String, Object> extras;
+
   /**
    * Called when the {@link FlutterAdRequest} is parsed into an {@link
    * com.google.android.gms.ads.AdRequest}.

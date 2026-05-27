@@ -22,7 +22,32 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def dartEnvironmentVariables = []
+if (project.hasProperty('dart-defines')) {
+    dartEnvironmentVariables = project.property('dart-defines')
+            .split(',')
+            .collectEntries { entry ->
+                def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
+                [(pair.first()): pair.last()]
+            }
+}
+
 android {
+    def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK ? dartEnvironmentVariables.USE_NEXT_GEN_SDK : false
+    sourceSets.getByName("main") {
+        java.srcDirs("src/main/java")
+        if (useNextGenSdk) {
+            java.srcDirs("src/nextgengma/java")
+        } else {
+            java.srcDirs("src/playservices/java")
+        }
+        res.srcDirs("src/main/res")
+        if (useNextGenSdk) {
+            res.srcDirs("src/nextgengma/res")
+        } else {
+            res.srcDirs("src/playservices/res")
+        }
+    }
     compileSdk 36
 
     namespace 'io.flutter.plugins.googlemobileadsexample'
@@ -32,9 +57,9 @@ android {
     }
 
     defaultConfig {
-        applicationId "io.flutter.plugins.googlemobileadsexample"
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion 34
+        applicationId 'io.flutter.plugins.googlemobileadsexample'
+        minSdk 24
+        targetSdk 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

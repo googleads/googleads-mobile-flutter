@@ -16,8 +16,8 @@
 #include <UserMessagingPlatform/UserMessagingPlatform.h>
 #import <XCTest/XCTest.h>
 
-#import "FLTUserMessagingPlatformManager.h"
-#import "FLTUserMessagingPlatformReaderWriter.h"
+#import "google_mobile_ads/FLTUserMessagingPlatformManager.h"
+#import "google_mobile_ads/FLTUserMessagingPlatformReaderWriter.h"
 
 @interface FLTUserMessagingPlatformManagerTest : XCTestCase
 @end

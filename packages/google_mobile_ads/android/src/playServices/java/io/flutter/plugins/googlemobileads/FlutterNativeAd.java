@@ -27,7 +27,6 @@ import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import io.flutter.plugin.platform.PlatformView;
-import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
 import io.flutter.plugins.googlemobileads.nativetemplates.FlutterNativeTemplateStyle;
 import java.util.Map;
 

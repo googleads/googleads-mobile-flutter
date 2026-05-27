@@ -15,10 +15,10 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
-#import "FLTNativeTemplateColor.h"
-#import "FLTNativeTemplateStyle.h"
-#import "FLTNativeTemplateTextStyle.h"
-#import "FLTNativeTemplateType.h"
+#import "google_mobile_ads/FLTNativeTemplateColor.h"
+#import "google_mobile_ads/FLTNativeTemplateStyle.h"
+#import "google_mobile_ads/FLTNativeTemplateTextStyle.h"
+#import "google_mobile_ads/FLTNativeTemplateType.h"
 
 @interface FLTNativeTemplateStyleTest : XCTestCase
 @end

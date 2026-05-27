@@ -17,7 +17,7 @@ package io.flutter.plugins.googlemobileadsexample;
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin;
-import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin.NativeAdFactory;
+import io.flutter.plugins.googlemobileads.NativeAdFactory;
 
 public class MainActivity extends FlutterActivity {
   @Override

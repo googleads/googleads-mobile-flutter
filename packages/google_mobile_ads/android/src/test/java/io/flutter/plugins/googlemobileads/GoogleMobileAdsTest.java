@@ -344,7 +344,7 @@ public class GoogleMobileAdsTest {
             .setAdUnitId("testId")
             .setRequest(request)
             .setAdFactory(
-                new GoogleMobileAdsPlugin.NativeAdFactory() {
+                new NativeAdFactory() {
                   @Override
                   public NativeAdView createNativeAd(
                       NativeAd nativeAd, Map<String, Object> customOptions) {
@@ -373,7 +373,7 @@ public class GoogleMobileAdsTest {
             .setAdUnitId("testId")
             .setRequest(request)
             .setAdFactory(
-                new GoogleMobileAdsPlugin.NativeAdFactory() {
+                new NativeAdFactory() {
                   @Override
                   public NativeAdView createNativeAd(
                       NativeAd nativeAd, Map<String, Object> customOptions) {
