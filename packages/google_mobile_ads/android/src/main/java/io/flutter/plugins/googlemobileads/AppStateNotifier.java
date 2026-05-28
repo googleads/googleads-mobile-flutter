@@ -64,9 +64,11 @@ final class AppStateNotifier implements LifecycleEventObserver, MethodCallHandle
     switch (call.method) {
       case "start":
         start();
+        result.success(null);
         break;
       case "stop":
         stop();
+        result.success(null);
         break;
       default:
         result.notImplemented();
