@@ -1,3 +1,13 @@
+## 9.0.0
+* Resolves pending start/stop method channel futures in AppStateNotifier Android. [PR 1438](https://github.com/googleads/googleads-mobile-flutter/pull/1438)
+* Updates GMA Android SDK dependencies:
+  * [Google Mobile Ads](https://developers.google.com/admob/android/quick-start) SDK version `25.3.0`.
+  * [Google Mobile Ads Next-Gen](https://developers.google.com/admob/android/next-gen/rel-notes) SDK version `1.1.0`.
+* Updates GMA [iOS](https://developers.google.com/admob/ios/rel-notes) dependency to `13.3.0`.
+* Uses latest UMP SDK:
+  * [Android](https://developers.google.com/admob/android/privacy/release-notes) UMP SDK version 4.0.0.
+  * [iOS](https://developers.google.com/admob/ios/privacy/download#release_notes) UMP SDK version 3.1.0.
+
 ## 8.0.0
 * Updates minimum Flutter SDK to 3.38.1
 * Updates Dart SDK low bound to 3.10.0.
