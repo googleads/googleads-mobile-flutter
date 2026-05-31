@@ -13,7 +13,7 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            url: "https://github.com/googleads/swift-package-manager-google-mobile-ads", from: "13.2.0"),
+            url: "https://github.com/googleads/swift-package-manager-google-mobile-ads", from: "13.3.0"),
         .package(name: "webview_flutter_wkwebview", path: "../webview_flutter_wkwebview"),
     ],
     targets: [
