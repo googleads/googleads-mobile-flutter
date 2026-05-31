@@ -35,8 +35,9 @@ class FlutterAdManagerInterstitialAd extends FlutterInterstitialAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdManagerAdRequest request,
-      @NonNull FlutterAdLoader flutterAdLoader) {
-    super(adId, manager, adUnitId, request, flutterAdLoader);
+      @NonNull FlutterAdLoader flutterAdLoader,
+      @Nullable String preloadId) {
+    super(adId, manager, adUnitId, request, flutterAdLoader, preloadId);
   }
 
   void onAppEvent(@NonNull String name, @NonNull String data) {

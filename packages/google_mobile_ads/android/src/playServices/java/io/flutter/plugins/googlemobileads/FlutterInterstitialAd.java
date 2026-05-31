@@ -17,9 +17,11 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.interstitial.InterstitialAdPreloader;
 import java.lang.ref.WeakReference;
 
 class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
@@ -30,22 +32,40 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @NonNull private final FlutterAdRequest request;
   @Nullable private InterstitialAd ad;
   @NonNull private final FlutterAdLoader flutterAdLoader;
+  @Nullable private final String preloadId;
 
   public FlutterInterstitialAd(
       int adId,
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdRequest request,
-      @NonNull FlutterAdLoader flutterAdLoader) {
+      @NonNull FlutterAdLoader flutterAdLoader,
+      @Nullable String preloadId) {
     super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.request = request;
     this.flutterAdLoader = flutterAdLoader;
+    this.preloadId = preloadId;
   }
 
   @Override
   void load() {
+    if (preloadId != null) {
+      InterstitialAd preloadedAd = InterstitialAdPreloader.pollAd(preloadId);
+      if (preloadedAd != null) {
+        onAdLoaded(preloadedAd);
+      } else {
+        LoadAdError error = new LoadAdError(
+            AdRequest.ERROR_CODE_INTERNAL_ERROR,
+            "Preloaded ad not found or already exhausted for preloadId: " + preloadId,
+            "com.google.android.gms.ads",
+            null,
+            null);
+        onAdFailedToLoad(error);
+      }
+      return;
+    }
     if (manager != null && adUnitId != null && request != null) {
       flutterAdLoader.loadInterstitial(
           adUnitId, request.asAdRequest(adUnitId), new DelegatingInterstitialAdLoadCallback(this));

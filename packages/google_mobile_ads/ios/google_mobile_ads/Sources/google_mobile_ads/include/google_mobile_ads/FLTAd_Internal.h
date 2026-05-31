@@ -20,6 +20,7 @@
 #import "FLTNativeTemplateStyle.h"
 #import "GADTTemplateView.h"
 #import <GoogleMobileAds/GoogleMobileAds.h>
+#import <GoogleMobileAds/GoogleMobileAds_Beta.h>
 #import <UIKit/UIKit.h>
 
 @class FLTAdInstanceManager;
@@ -214,9 +215,11 @@
 @end
 
 @interface FLTInterstitialAd : FLTFullScreenAd
+@property(nonatomic, readonly, copy, nullable) NSString *preloadId;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                                     adId:(NSNumber *_Nonnull)adId;
+                                     adId:(NSNumber *_Nonnull)adId
+                                preloadId:(NSString *_Nullable)preloadId;
 - (GADInterstitialAd *_Nullable)interstitial;
 - (NSString *_Nonnull)adUnitId;
 - (void)load;
@@ -226,7 +229,8 @@
 @interface FLTGAMInterstitialAd : FLTInterstitialAd <GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTGAMAdRequest *_Nonnull)request
-                                     adId:(NSNumber *_Nonnull)adId;
+                                     adId:(NSNumber *_Nonnull)adId
+                                preloadId:(NSString *_Nullable)preloadId;
 @end
 
 @interface FLTRewardedAd : FLTFullScreenAd

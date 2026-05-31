@@ -18,9 +18,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 import com.google.android.gms.ads.admanager.AppEventListener;
+import com.google.android.gms.ads.interstitial.InterstitialAdPreloader;
 import java.lang.ref.WeakReference;
 
 /**
@@ -35,6 +37,7 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
   @NonNull private final FlutterAdManagerAdRequest request;
   @Nullable private AdManagerInterstitialAd ad;
   @NonNull private final FlutterAdLoader flutterAdLoader;
+  @Nullable private final String preloadId;
 
   /**
    * Constructs a `FlutterAdManagerInterstitialAd`.
@@ -47,16 +50,33 @@ class FlutterAdManagerInterstitialAd extends FlutterAd.FlutterOverlayAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdManagerAdRequest request,
-      @NonNull FlutterAdLoader flutterAdLoader) {
+      @NonNull FlutterAdLoader flutterAdLoader,
+      @Nullable String preloadId) {
     super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.request = request;
     this.flutterAdLoader = flutterAdLoader;
+    this.preloadId = preloadId;
   }
 
   @Override
   void load() {
+    if (preloadId != null) {
+      AdManagerInterstitialAd preloadedAd = (AdManagerInterstitialAd) InterstitialAdPreloader.pollAd(preloadId);
+      if (preloadedAd != null) {
+        onAdLoaded(preloadedAd);
+      } else {
+        LoadAdError error = new LoadAdError(
+            AdManagerAdRequest.ERROR_CODE_INTERNAL_ERROR,
+            "Preloaded ad not found or already exhausted for preloadId: " + preloadId,
+            "com.google.android.gms.ads",
+            null,
+            null);
+        onAdFailedToLoad(error);
+      }
+      return;
+    }
     flutterAdLoader.loadAdManagerInterstitial(
         adUnitId,
         request.asAdManagerAdRequest(adUnitId),

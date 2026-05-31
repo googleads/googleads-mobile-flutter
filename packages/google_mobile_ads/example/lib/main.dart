@@ -27,6 +27,7 @@ import 'multi_adaptive_inline_with_recycle_example.dart';
 import 'native_template_example.dart';
 import 'reusable_inline_example.dart';
 import 'webview_example.dart';
+import 'interstitial_preloader_example.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,6 +62,7 @@ class _MyAppState extends State<MyApp> {
   static const anchoredAdaptiveButtonText = 'Anchored adaptive';
   static const nativeTemplateButtonText = 'Native template';
   static const webviewExampleButtonText = 'Register WebView';
+  static const interstitialAdPreloaderButtonText = 'Interstitial Ad Preloader';
   static const adInspectorButtonText = 'Ad Inspector';
 
   InterstitialAd? _interstitialAd;
@@ -317,6 +319,15 @@ class _MyAppState extends State<MyApp> {
                           ),
                         );
                         break;
+                      case interstitialAdPreloaderButtonText:
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                InterstitialAdPreloaderExample(),
+                          ),
+                        );
+                        break;
                       case adInspectorButtonText:
                         MobileAds.instance.openAdInspector(
                           (error) => log(
@@ -370,6 +381,10 @@ class _MyAppState extends State<MyApp> {
                         PopupMenuItem<String>(
                           value: webviewExampleButtonText,
                           child: Text(webviewExampleButtonText),
+                        ),
+                        PopupMenuItem<String>(
+                          value: interstitialAdPreloaderButtonText,
+                          child: Text(interstitialAdPreloaderButtonText),
                         ),
                         PopupMenuItem<String>(
                           value: adInspectorButtonText,

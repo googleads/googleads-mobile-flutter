@@ -1155,6 +1155,7 @@ class InterstitialAd extends AdWithoutView {
     required String adUnitId,
     required this.request,
     required this.adLoadCallback,
+    this.preloadId,
   }) : super(adUnitId: adUnitId);
 
   /// Targeting information used to fetch an [Ad].
@@ -1166,16 +1167,21 @@ class InterstitialAd extends AdWithoutView {
   /// Callbacks to be invoked when ads show and dismiss full screen content.
   FullScreenContentCallback<InterstitialAd>? fullScreenContentCallback;
 
+  /// The preload ID if loaded from preloader.
+  final String? preloadId;
+
   /// Loads an [InterstitialAd] with the given [adUnitId] and [request].
   static Future<void> load({
     required String adUnitId,
     required AdRequest request,
     required InterstitialAdLoadCallback adLoadCallback,
+    String? preloadId,
   }) async {
     InterstitialAd ad = InterstitialAd._(
       adUnitId: adUnitId,
       adLoadCallback: adLoadCallback,
       request: request,
+      preloadId: preloadId,
     );
 
     await instanceManager.loadInterstitialAd(ad);
@@ -1200,6 +1206,7 @@ class AdManagerInterstitialAd extends AdWithoutView {
     required String adUnitId,
     required this.request,
     required this.adLoadCallback,
+    this.preloadId,
   }) : super(adUnitId: adUnitId);
 
   /// Targeting information used to fetch an [Ad].
@@ -1214,17 +1221,22 @@ class AdManagerInterstitialAd extends AdWithoutView {
   /// An optional listener for app events.
   AppEventListener? appEventListener;
 
+  /// The preload ID if loaded from preloader.
+  final String? preloadId;
+
   /// Loads an [AdManagerInterstitialAd] with the given [adUnitId] and [request].
   static Future<void> load({
     required String adUnitId,
     required AdManagerAdRequest request,
     required AdManagerInterstitialAdLoadCallback adLoadCallback,
     AppEventListener? appEventListener,
+    String? preloadId,
   }) async {
     AdManagerInterstitialAd ad = AdManagerInterstitialAd._(
       adUnitId: adUnitId,
       adLoadCallback: adLoadCallback,
       request: request,
+      preloadId: preloadId,
     );
 
     await instanceManager.loadAdManagerInterstitialAd(ad);

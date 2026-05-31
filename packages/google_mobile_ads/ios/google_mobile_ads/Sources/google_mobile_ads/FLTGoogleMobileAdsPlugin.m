@@ -18,6 +18,7 @@
 #import "FLTConstants.h"
 #import "FLTNSString.h"
 #import "FLTUserMessagingPlatformManager.h"
+#import "FLTAdPreloader.h"
 @import webview_flutter_wkwebview;
 
 @interface FLTGoogleMobileAdsPlugin ()
@@ -73,6 +74,7 @@
   FLTAppStateNotifier *_appStateNotifier;
   FLTUserMessagingPlatformManager *_userMessagingPlatformManager;
   __weak FlutterAppDelegate *_appDelegate;
+  FLTAdPreloader *_flutterAdPreloader;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -92,6 +94,8 @@
             binaryMessenger:[registrar messenger]
                       codec:codec];
   [registrar addMethodCallDelegate:instance channel:channel];
+
+  instance->_flutterAdPreloader = [[FLTAdPreloader alloc] initWithChannel:channel];
 
   FLTNewGoogleMobileAdsViewFactory *viewFactory =
       [[FLTNewGoogleMobileAdsViewFactory alloc]
@@ -248,6 +252,18 @@
 - (void)handleMethodCall:(FlutterMethodCall *)call
                   result:(FlutterResult)result {
   UIViewController *rootController = self.rootController;
+
+  if ([call.method isEqualToString:@"MobileAds#startPreloading"] ||
+      [call.method isEqualToString:@"MobileAds#destroyPreloader"] ||
+      [call.method isEqualToString:@"MobileAds#destroyAllPreloaders"] ||
+      [call.method isEqualToString:@"MobileAds#isPreloadedAdAvailable"]) {
+    if (self->_flutterAdPreloader) {
+      [self->_flutterAdPreloader handleMethodCall:call result:result];
+    } else {
+      result([FlutterError errorWithCode:@"PreloadError" message:@"Preloader not initialized" details:nil]);
+    }
+    return;
+  }
 
   if ([call.method isEqualToString:@"MobileAds#initialize"]) {
     FLTInitializationHandler *handler =
@@ -445,14 +461,16 @@
     FLTInterstitialAd *ad =
         [[FLTInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                             request:call.arguments[@"request"]
-                                               adId:call.arguments[@"adId"]];
+                                               adId:call.arguments[@"adId"]
+                                          preloadId:call.arguments[@"preloadId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAdManagerInterstitialAd"]) {
     FLTGAMInterstitialAd *ad = [[FLTGAMInterstitialAd alloc]
         initWithAdUnitId:call.arguments[@"adUnitId"]
                  request:call.arguments[@"request"]
-                    adId:call.arguments[@"adId"]];
+                    adId:call.arguments[@"adId"]
+               preloadId:call.arguments[@"preloadId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedAd"]) {
