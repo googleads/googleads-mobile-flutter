@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_moloco'
-  s.version = '3.5.0'
+  s.version = '3.5.1'
   s.summary = 'Google Mobile Ads Mediation of Moloco.'
   s.description      = <<-DESC
   Mediation Adapter for Moloco to use with Google Mobile Ads.
