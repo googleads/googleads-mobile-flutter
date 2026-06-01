@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_chartboost'
-  s.version = '1.5.0'
+  s.version = '1.5.1'
   s.summary = 'Google Mobile Ads Mediation of Chartboost.'
   s.description      = <<-DESC
   Mediation Adapter for Chartboost to use with Google Mobile Ads.
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationChartboost', '~>9.12.0.0'
+  s.dependency 'GoogleMobileAdsMediationChartboost', '~>9.12.0.1'
   s.platform = :ios, '13.0'
   s.static_framework = true
 
