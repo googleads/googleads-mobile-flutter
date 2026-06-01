@@ -1,5 +1,7 @@
 ## i-mobile Flutter Mediation Adapter Changelog
 
+#### Version 1.0.4 (In progress)
+
 #### Version 1.0.3
 - Updated minimum Flutter version to 3.38.1
 - Updated to support Google Mobile Ads Flutter Plugin version 8.0.0
