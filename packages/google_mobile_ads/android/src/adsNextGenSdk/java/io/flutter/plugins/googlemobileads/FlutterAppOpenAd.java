@@ -19,7 +19,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.libraries.ads.mobile.sdk.appopen.AppOpenAd;
 import com.google.android.libraries.ads.mobile.sdk.appopen.AppOpenAdEventCallback;
+import com.google.android.gms.ads.AdError;
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.common.AdValue;
+import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError;
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
 import io.flutter.util.Preconditions;
 import java.lang.ref.WeakReference;
@@ -115,15 +118,72 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
 
     @Override
     public void onAdLoaded(@NonNull AppOpenAd appOpenAd) {
-      if (delegate.get() != null) {
-        delegate.get().onAdLoaded(appOpenAd);
+      FlutterAppOpenAd ad = delegate.get();
+      if (ad != null) {
+        ad.onAdLoaded(appOpenAd);
       }
     }
 
     @Override
     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-      if (delegate.get() != null) {
-        delegate.get().onAdFailedToLoad(loadAdError);
+      FlutterAppOpenAd ad = delegate.get();
+      if (ad != null) {
+        ad.onAdFailedToLoad(loadAdError);
+      }
+    }
+
+    @Override
+    public void onAdFailedToShowFullScreenContent(@NonNull FullScreenContentError adError) {
+      FlutterAppOpenAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onFailedToShowFullScreenContent(
+            ad.adId,
+            new AdError(
+                adError.getCode().getValue(),
+                adError.getMessage(),
+                AdInstanceManager.NEXT_GEN_DOMAIN));
+      }
+    }
+
+    @Override
+    public void onAdShowedFullScreenContent() {
+      FlutterAppOpenAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onAdShowedFullScreenContent(ad.adId);
+      }
+    }
+
+    @Override
+    public void onAdDismissedFullScreenContent() {
+      FlutterAppOpenAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onAdDismissedFullScreenContent(ad.adId);
+      }
+    }
+
+    @Override
+    public void onAdImpression() {
+      FlutterAppOpenAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onAdImpression(ad.adId);
+      }
+    }
+
+    @Override
+    public void onAdClicked() {
+      FlutterAppOpenAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onAdClicked(ad.adId);
+      }
+    }
+
+    @Override
+    public void onAdPaid(@NonNull AdValue adValue) {
+      FlutterAppOpenAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onPaidEvent(
+            ad,
+            AdInstanceManager.comAdValueToFlutterAdValue(adValue));
       }
     }
   }

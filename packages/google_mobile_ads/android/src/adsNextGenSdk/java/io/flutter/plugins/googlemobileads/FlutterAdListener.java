@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAd;
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdEventCallback;
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback;
+import com.google.android.libraries.ads.mobile.sdk.common.AdValue;
 import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError;
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
 import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAd;
@@ -74,6 +75,14 @@ class FlutterBannerAdListener extends FlutterAdListener<BannerAd> implements Ban
   public void onAdClicked() {
     manager.onAdClicked(adId);
   }
+
+  @Override
+  public void onAdPaid(@NonNull AdValue adValue) {
+    FlutterAd ad = manager.adForId(adId);
+    if (ad != null) {
+      manager.onPaidEvent(ad, AdInstanceManager.comAdValueToFlutterAdValue(adValue));
+    }
+  }
 }
 
 /** Listener for native ads. */
@@ -107,6 +116,14 @@ class FlutterNativeAdListener implements NativeAdEventCallback {
   @Override
   public void onAdClicked() {
     manager.onAdClicked(adId);
+  }
+
+  @Override
+  public void onAdPaid(@NonNull AdValue adValue) {
+    FlutterAd ad = manager.adForId(adId);
+    if (ad != null) {
+      manager.onPaidEvent(ad, AdInstanceManager.comAdValueToFlutterAdValue(adValue));
+    }
   }
 }
 
