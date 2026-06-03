@@ -95,7 +95,7 @@
                       codec:codec];
   [registrar addMethodCallDelegate:instance channel:channel];
 
-  instance->_flutterAdPreloader = [[FLTAdPreloader alloc] initWithChannel:channel];
+  instance->_flutterAdPreloader = [[FLTAdPreloader alloc] initWithChannel:channel manager:instance->_manager];
 
   FLTNewGoogleMobileAdsViewFactory *viewFactory =
       [[FLTNewGoogleMobileAdsViewFactory alloc]
@@ -256,7 +256,8 @@
   if ([call.method isEqualToString:@"MobileAds#startPreloading"] ||
       [call.method isEqualToString:@"MobileAds#destroyPreloader"] ||
       [call.method isEqualToString:@"MobileAds#destroyAllPreloaders"] ||
-      [call.method isEqualToString:@"MobileAds#isPreloadedAdAvailable"]) {
+      [call.method isEqualToString:@"MobileAds#isPreloadedAdAvailable"] ||
+      [call.method isEqualToString:@"MobileAds#pollAd"]) {
     if (self->_flutterAdPreloader) {
       [self->_flutterAdPreloader handleMethodCall:call result:result];
     } else {
@@ -490,7 +491,8 @@
     FLTRewardedAd *ad =
         [[FLTRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                         request:request
-                                           adId:call.arguments[@"adId"]];
+                                           adId:call.arguments[@"adId"]
+                                      preloadId:call.arguments[@"preloadId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedInterstitialAd"]) {
@@ -510,7 +512,8 @@
     FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc]
         initWithAdUnitId:call.arguments[@"adUnitId"]
                  request:request
-                    adId:call.arguments[@"adId"]];
+                    adId:call.arguments[@"adId"]
+               preloadId:call.arguments[@"preloadId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
@@ -529,7 +532,8 @@
     FLTAppOpenAd *ad =
         [[FLTAppOpenAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                        request:request
-                                          adId:call.arguments[@"adId"]];
+                                          adId:call.arguments[@"adId"]
+                                     preloadId:call.arguments[@"preloadId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"disposeAd"]) {

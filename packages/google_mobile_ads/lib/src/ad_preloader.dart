@@ -12,8 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'ad_instance_manager.dart';
+part of 'ad_containers.dart';
 
 /// Callback interface for ad preloading events.
 class PreloadCallback {
@@ -39,26 +38,86 @@ class PreloadConfiguration {
   /// The ad unit ID to preload ads for.
   final String adUnitId;
 
+  /// Targeting information used to fetch an [Ad].
+  final AdRequest request;
+
   /// The buffer size for the preloader.
-  final int? bufferSize;
+  final int bufferSize;
 
   /// Creates a [PreloadConfiguration].
   const PreloadConfiguration({
     required this.adUnitId,
-    this.bufferSize,
+    this.request = const AdRequest(),
+    this.bufferSize = 2,
   });
 }
 
-/// A class managing the preloading of interstitial ads.
-class InterstitialAdPreloader {
-  InterstitialAdPreloader._();
+/// A class managing the preloading of fullscreen ads.
+class AdPreloader {
+  AdPreloader._();
+
+  static final Map<String, AdWithoutView Function()> _preloadedAds =
+      <String, AdWithoutView Function()>{};
+
+  static AdWithoutView? _createAd<T extends AdWithoutView>(
+    PreloadConfiguration config,
+  ) {
+    if (T == InterstitialAd) {
+      return InterstitialAd._(
+        adUnitId: config.adUnitId,
+        request: config.request,
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (_) {},
+          onAdFailedToLoad: (_) {},
+        ),
+      );
+    } else if (T == AdManagerInterstitialAd) {
+      return AdManagerInterstitialAd._(
+        adUnitId: config.adUnitId,
+        request: config.request as AdManagerAdRequest,
+        adLoadCallback: AdManagerInterstitialAdLoadCallback(
+          onAdLoaded: (_) {},
+          onAdFailedToLoad: (_) {},
+        ),
+      );
+    } else if (T == RewardedAd) {
+      return RewardedAd._(
+        adUnitId: config.adUnitId,
+        request: config.request,
+        rewardedAdLoadCallback: RewardedAdLoadCallback(
+          onAdLoaded: (_) {},
+          onAdFailedToLoad: (_) {},
+        ),
+      );
+    } else if (T == RewardedInterstitialAd) {
+      return RewardedInterstitialAd._(
+        adUnitId: config.adUnitId,
+        request: config.request,
+        rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+          onAdLoaded: (_) {},
+          onAdFailedToLoad: (_) {},
+        ),
+      );
+    } else if (T == AppOpenAd) {
+      return AppOpenAd._(
+        adUnitId: config.adUnitId,
+        request: config.request,
+        adLoadCallback: AppOpenAdLoadCallback(
+          onAdLoaded: (_) {},
+          onAdFailedToLoad: (_) {},
+        ),
+      );
+    }
+    return null;
+  }
 
   /// Starts preloading ads for the given [preloadId] and [preloadConfiguration].
-  static Future<void> start({
+  static Future<void> start<T extends AdWithoutView>({
     required String preloadId,
     required PreloadConfiguration preloadConfiguration,
     required PreloadCallback callback,
   }) async {
+    _preloadedAds[preloadId] = () => _createAd<T>(preloadConfiguration)!;
     instanceManager.registerPreloadCallback(preloadId, callback);
     await instanceManager.channel.invokeMethod<void>(
       'MobileAds#startPreloading',
@@ -66,30 +125,70 @@ class InterstitialAdPreloader {
         'preloadId': preloadId,
         'adUnitId': preloadConfiguration.adUnitId,
         'bufferSize': preloadConfiguration.bufferSize,
+        'request': preloadConfiguration.request,
+        'className': T.toString(),
       },
     );
   }
 
+  /// Polls a preloaded ad for the given [preloadId].
+  static Future<T?> pollAd<T extends AdWithoutView>(String preloadId) async {
+    final int adId = instanceManager.nextAdId();
+    final Map<dynamic, dynamic>? res =
+        await instanceManager.channel.invokeMethod<Map<dynamic, dynamic>>(
+      'MobileAds#pollAd',
+      <String, dynamic>{
+        'preloadId': preloadId,
+        'className': T.toString(),
+        'adId': adId,
+      },
+    );
+
+    if (res != null) {
+      final String adUnitId = res['adUnitId'] as String? ?? '';
+      final T? ad = _preloadedAds[preloadId]?.call() as T? ??
+          _createAd<T>(PreloadConfiguration(adUnitId: adUnitId)) as T?;
+      if (ad != null) {
+        instanceManager.trackAd(ad, adId);
+        return ad;
+      }
+    }
+    return null;
+  }
+
   /// Destroys the preloader for the given [preloadId].
-  static Future<void> destroy(String preloadId) async {
+  static Future<void> destroy<T extends AdWithoutView>(String preloadId) async {
+    _preloadedAds.remove(preloadId);
     instanceManager.unregisterPreloadCallback(preloadId);
     await instanceManager.channel.invokeMethod<void>(
       'MobileAds#destroyPreloader',
-      <String, dynamic>{'preloadId': preloadId},
+      <String, dynamic>{
+        'preloadId': preloadId,
+        'className': T.toString(),
+      },
     );
   }
 
-  /// Destroys all preloaders.
-  static Future<void> destroyAll() async {
+  /// Destroys all preloaders for the given class type [T].
+  static Future<void> destroyAll<T extends AdWithoutView>() async {
+    _preloadedAds.removeWhere((String key, AdWithoutView Function() factory) => factory() is T);
     instanceManager.clearAllPreloadCallbacks();
-    await instanceManager.channel.invokeMethod<void>('MobileAds#destroyAllPreloaders');
+    await instanceManager.channel.invokeMethod<void>(
+      'MobileAds#destroyAllPreloaders',
+      <String, dynamic>{
+        'className': T.toString(),
+      },
+    );
   }
 
   /// Checks if an ad is available for the given [preloadId].
-  static Future<bool> isAdAvailable(String preloadId) async {
+  static Future<bool> isAdAvailable<T extends AdWithoutView>(String preloadId) async {
     final bool? available = await instanceManager.channel.invokeMethod<bool>(
       'MobileAds#isPreloadedAdAvailable',
-      <String, dynamic>{'preloadId': preloadId},
+      <String, dynamic>{
+        'preloadId': preloadId,
+        'className': T.toString(),
+      },
     );
     return available ?? false;
   }

@@ -317,7 +317,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     if (call.method.equals("MobileAds#startPreloading")
         || call.method.equals("MobileAds#destroyPreloader")
         || call.method.equals("MobileAds#destroyAllPreloaders")
-        || call.method.equals("MobileAds#isPreloadedAdAvailable")) {
+        || call.method.equals("MobileAds#isPreloadedAdAvailable")
+        || call.method.equals("MobileAds#pollAd")) {
       if (flutterAdPreloader != null) {
         flutterAdPreloader.onMethodCall(call, result);
       } else {
@@ -414,6 +415,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         final FlutterAdRequest rewardedAdRequest = call.argument("request");
         final FlutterAdManagerAdRequest rewardedAdManagerRequest =
             call.argument("adManagerRequest");
+        final String rewardedPreloadId = call.argument("preloadId");
 
         final FlutterRewardedAd rewardedAd;
         if (rewardedAdRequest != null) {
@@ -423,7 +425,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   rewardedAdUnitId,
                   rewardedAdRequest,
-                  new FlutterAdLoader(context));
+                  new FlutterAdLoader(context),
+                  rewardedPreloadId);
         } else if (rewardedAdManagerRequest != null) {
           rewardedAd =
               new FlutterRewardedAd(
@@ -431,7 +434,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   rewardedAdUnitId,
                   rewardedAdManagerRequest,
-                  new FlutterAdLoader(context));
+                  new FlutterAdLoader(context),
+                  rewardedPreloadId);
         } else {
           result.error("InvalidRequest", "A null or invalid ad request was provided.", null);
           break;
@@ -486,6 +490,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         final FlutterAdRequest rewardedInterstitialAdRequest = call.argument("request");
         final FlutterAdManagerAdRequest rewardedInterstitialAdManagerRequest =
             call.argument("adManagerRequest");
+        final String rewardedInterstitialPreloadId = call.argument("preloadId");
 
         final FlutterRewardedInterstitialAd rewardedInterstitialAd;
         if (rewardedInterstitialAdRequest != null) {
@@ -495,7 +500,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   rewardedInterstitialAdUnitId,
                   rewardedInterstitialAdRequest,
-                  new FlutterAdLoader(context));
+                  new FlutterAdLoader(context),
+                  rewardedInterstitialPreloadId);
         } else if (rewardedInterstitialAdManagerRequest != null) {
           rewardedInterstitialAd =
               new FlutterRewardedInterstitialAd(
@@ -503,7 +509,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                   requireNonNull(instanceManager),
                   rewardedInterstitialAdUnitId,
                   rewardedInterstitialAdManagerRequest,
-                  new FlutterAdLoader(context));
+                  new FlutterAdLoader(context),
+                  rewardedInterstitialPreloadId);
         } else {
           result.error("InvalidRequest", "A null or invalid ad request was provided.", null);
           break;
@@ -522,7 +529,8 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
                 requireNonNull(call.<String>argument("adUnitId")),
                 call.<FlutterAdRequest>argument("request"),
                 call.<FlutterAdManagerAdRequest>argument("adManagerRequest"),
-                new FlutterAdLoader(context));
+                new FlutterAdLoader(context),
+                call.<String>argument("preloadId"));
         instanceManager.trackAd(appOpenAd, call.<Integer>argument("adId"));
         appOpenAd.load();
         result.success(null);

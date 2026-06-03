@@ -37,7 +37,6 @@ import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 import 'ad_containers.dart';
-import 'ad_preloader.dart';
 import 'nativetemplates/native_template_font_style.dart';
 import 'nativetemplates/native_template_style.dart';
 import 'nativetemplates/native_template_text_style.dart';
@@ -592,7 +591,6 @@ class AdInstanceManager {
       'adId': adId,
       'adUnitId': ad.adUnitId,
       'request': ad.request,
-      'preloadId': ad.preloadId,
     });
   }
 
@@ -726,9 +724,16 @@ class AdInstanceManager {
         'adId': adId,
         'adUnitId': ad.adUnitId,
         'request': ad.request,
-        'preloadId': ad.preloadId,
       },
     );
+  }
+
+  /// Allocates a new ad ID.
+  int nextAdId() => _nextAdId++;
+
+  /// Tracks an ad under an adId.
+  void trackAd(Ad ad, int adId) {
+    _loadedAds[adId] = ad;
   }
 
   /// Free the plugin resources associated with this ad.

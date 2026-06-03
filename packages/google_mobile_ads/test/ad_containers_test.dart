@@ -62,6 +62,10 @@ void main() {
               case 'loadAdManagerBannerAd':
               case 'setServerSideVerificationOptions':
                 return Future<void>.value();
+              case 'MobileAds#pollAd':
+                return Future<dynamic>.value(<String, dynamic>{
+                  'adUnitId': 'test-ad-unit',
+                });
               case 'getAdSize':
                 return Future<dynamic>.value(AdSize.banner);
               default:
@@ -846,6 +850,22 @@ void main() {
       expect(responses.first.adError!.code, 1);
       expect(responses.first.adError!.message, 'error-message');
       expect(responses.first.adError!.domain, 'domain');
+    });
+
+    test('poll preloaded ads', () async {
+      final ad = await AdPreloader.pollAd<InterstitialAd>('preload-123');
+      expect(ad, isNotNull);
+      expect(ad!.adUnitId, 'test-ad-unit');
+      expect(log, <Matcher>[
+        isMethodCall(
+          'MobileAds#pollAd',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-123',
+            'className': 'InterstitialAd',
+            'adId': 0,
+          },
+        ),
+      ]);
     });
 
     test('onNativeAdImpression', () async {

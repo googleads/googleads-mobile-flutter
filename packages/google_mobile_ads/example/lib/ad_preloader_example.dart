@@ -18,14 +18,14 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-class InterstitialAdPreloaderExample extends StatefulWidget {
+class AdPreloaderExample extends StatefulWidget {
   @override
-  _InterstitialAdPreloaderExampleState createState() =>
-      _InterstitialAdPreloaderExampleState();
+  _AdPreloaderExampleState createState() => _AdPreloaderExampleState();
 }
 
-class _InterstitialAdPreloaderExampleState
-    extends State<InterstitialAdPreloaderExample> {
+class _AdPreloaderExampleState extends State<AdPreloaderExample> {
+  String _selectedFormat = 'Interstitial';
+
   late final TextEditingController _adUnitIdController;
   late final TextEditingController _preloadIdController;
   late final TextEditingController _bufferSizeController;
@@ -34,18 +34,66 @@ class _InterstitialAdPreloaderExampleState
   final ScrollController _scrollController = ScrollController();
 
   bool? _isAdAvailable;
-  InterstitialAd? _loadedAd;
+  AdWithoutView? _loadedAd;
+
+  final Map<String, Map<String, String>> _defaultAdUnits = {
+    'Interstitial': {
+      'android': 'ca-app-pub-3940256099942544/1033173712',
+      'ios': 'ca-app-pub-3940256099942544/4411468910',
+    },
+    'Rewarded': {
+      'android': 'ca-app-pub-3940256099942544/5224354917',
+      'ios': 'ca-app-pub-3940256099942544/1712485313',
+    },
+    'Rewarded Interstitial': {
+      'android': 'ca-app-pub-3940256099942544/5354046379',
+      'ios': 'ca-app-pub-3940256099942544/6978759866',
+    },
+    'App Open': {
+      'android': 'ca-app-pub-3940256099942544/9257395921',
+      'ios': 'ca-app-pub-3940256099942544/5662855259',
+    },
+  };
 
   @override
   void initState() {
     super.initState();
-    _adUnitIdController = TextEditingController(
-      text: Platform.isAndroid
-          ? 'ca-app-pub-3940256099942544/1033173712'
-          : 'ca-app-pub-3940256099942544/4411468910',
-    );
-    _preloadIdController = TextEditingController(text: 'test_preload_id');
+    _adUnitIdController = TextEditingController(text: _getAdUnitFor('Interstitial'));
+    _preloadIdController = TextEditingController(text: 'interstitial_preload_id');
     _bufferSizeController = TextEditingController(text: '2');
+  }
+
+  String _getAdUnitFor(String format) {
+    final platformKey = Platform.isAndroid ? 'android' : 'ios';
+    return _defaultAdUnits[format]?[platformKey] ?? '';
+  }
+
+  String _getDefaultPreloadIdFor(String format) {
+    switch (format) {
+      case 'Interstitial':
+        return 'interstitial_preload_id';
+      case 'Rewarded':
+        return 'rewarded_preload_id';
+      case 'Rewarded Interstitial':
+        return 'rewarded_interstitial_preload_id';
+      case 'App Open':
+        return 'app_open_preload_id';
+      default:
+        return 'preload_id';
+    }
+  }
+
+  void _onFormatChanged(String? newFormat) {
+    if (newFormat == null) return;
+    setState(() {
+      _selectedFormat = newFormat;
+      _adUnitIdController.text = _getAdUnitFor(newFormat);
+      _preloadIdController.text = _getDefaultPreloadIdFor(newFormat);
+      _isAdAvailable = null;
+      _loadedAd?.dispose();
+      _loadedAd = null;
+    });
+    _log('Switched format to: $newFormat');
   }
 
   @override
@@ -81,11 +129,25 @@ class _InterstitialAdPreloaderExampleState
       return;
     }
     try {
-      final available = await InterstitialAdPreloader.isAdAvailable(preloadId);
+      bool available = false;
+      switch (_selectedFormat) {
+        case 'Interstitial':
+          available = await AdPreloader.isAdAvailable<InterstitialAd>(preloadId);
+          break;
+        case 'Rewarded':
+          available = await AdPreloader.isAdAvailable<RewardedAd>(preloadId);
+          break;
+        case 'Rewarded Interstitial':
+          available = await AdPreloader.isAdAvailable<RewardedInterstitialAd>(preloadId);
+          break;
+        case 'App Open':
+          available = await AdPreloader.isAdAvailable<AppOpenAd>(preloadId);
+          break;
+      }
       setState(() {
         _isAdAvailable = available;
       });
-      _log('Ad availability for "$preloadId": $available');
+      _log('Ad availability for "$preloadId" ($_selectedFormat): $available');
     } catch (e) {
       _log('Error checking availability: $e');
     }
@@ -101,32 +163,60 @@ class _InterstitialAdPreloaderExampleState
       return;
     }
 
-    final bufferSize = int.tryParse(bufferSizeText);
+    final bufferSize = int.tryParse(bufferSizeText) ?? 2;
+    final config = PreloadConfiguration(
+      adUnitId: adUnitId,
+      request: const AdRequest(),
+      bufferSize: bufferSize,
+    );
+    final callback = PreloadCallback(
+      onAdPreloaded: (pId, responseInfo) {
+        _log('Callback: Ad preloaded successfully for ID "$pId"!');
+        _log('Response Info MEDIATION_ADAPTER: ${responseInfo.mediationAdapterClassName}');
+        _checkAdAvailability();
+      },
+      onAdsExhausted: (pId) {
+        _log('Callback: Ads exhausted for ID "$pId".');
+        _checkAdAvailability();
+      },
+      onAdFailedToPreload: (pId, error) {
+        _log('Callback: Ad failed to preload for ID "$pId": ${error.message}');
+        _checkAdAvailability();
+      },
+    );
 
-    _log('Starting preloader with ID: "$preloadId"');
+    _log('Starting $_selectedFormat preloader with ID: "$preloadId"');
     try {
-      await InterstitialAdPreloader.start(
-        preloadId: preloadId,
-        preloadConfiguration: PreloadConfiguration(
-          adUnitId: adUnitId,
-          bufferSize: bufferSize,
-        ),
-        callback: PreloadCallback(
-          onAdPreloaded: (pId, responseInfo) {
-            _log('Callback: Ad preloaded successfully for ID "$pId"!');
-            _log('Response Info: ${responseInfo.responseId}');
-            _checkAdAvailability();
-          },
-          onAdsExhausted: (pId) {
-            _log('Callback: Ads exhausted for ID "$pId".');
-            _checkAdAvailability();
-          },
-          onAdFailedToPreload: (pId, error) {
-            _log('Callback: Ad failed to preload for ID "$pId": ${error.message}');
-            _checkAdAvailability();
-          },
-        ),
-      );
+      switch (_selectedFormat) {
+        case 'Interstitial':
+          await AdPreloader.start<InterstitialAd>(
+            preloadId: preloadId,
+            preloadConfiguration: config,
+            callback: callback,
+          );
+          break;
+        case 'Rewarded':
+          await AdPreloader.start<RewardedAd>(
+            preloadId: preloadId,
+            preloadConfiguration: config,
+            callback: callback,
+          );
+          break;
+        case 'Rewarded Interstitial':
+          await AdPreloader.start<RewardedInterstitialAd>(
+            preloadId: preloadId,
+            preloadConfiguration: config,
+            callback: callback,
+          );
+          break;
+        case 'App Open':
+          await AdPreloader.start<AppOpenAd>(
+            preloadId: preloadId,
+            preloadConfiguration: config,
+            callback: callback,
+          );
+          break;
+      }
       _log('Preloader start command invoked successfully.');
     } catch (e) {
       _log('Error starting preloader: $e');
@@ -139,9 +229,22 @@ class _InterstitialAdPreloaderExampleState
       _log('Error: Preload ID cannot be empty.');
       return;
     }
-    _log('Destroying preloader with ID: "$preloadId"');
+    _log('Destroying $_selectedFormat preloader with ID: "$preloadId"');
     try {
-      await InterstitialAdPreloader.destroy(preloadId);
+      switch (_selectedFormat) {
+        case 'Interstitial':
+          await AdPreloader.destroy<InterstitialAd>(preloadId);
+          break;
+        case 'Rewarded':
+          await AdPreloader.destroy<RewardedAd>(preloadId);
+          break;
+        case 'Rewarded Interstitial':
+          await AdPreloader.destroy<RewardedInterstitialAd>(preloadId);
+          break;
+        case 'App Open':
+          await AdPreloader.destroy<AppOpenAd>(preloadId);
+          break;
+      }
       _log('Preloader "$preloadId" destroyed.');
       setState(() {
         _isAdAvailable = null;
@@ -152,15 +255,28 @@ class _InterstitialAdPreloaderExampleState
   }
 
   Future<void> _destroyAllPreloaders() async {
-    _log('Destroying all preloaders...');
+    _log('Destroying all $_selectedFormat preloaders...');
     try {
-      await InterstitialAdPreloader.destroyAll();
-      _log('All preloaders destroyed.');
+      switch (_selectedFormat) {
+        case 'Interstitial':
+          await AdPreloader.destroyAll<InterstitialAd>();
+          break;
+        case 'Rewarded':
+          await AdPreloader.destroyAll<RewardedAd>();
+          break;
+        case 'Rewarded Interstitial':
+          await AdPreloader.destroyAll<RewardedInterstitialAd>();
+          break;
+        case 'App Open':
+          await AdPreloader.destroyAll<AppOpenAd>();
+          break;
+      }
+      _log('All $_selectedFormat preloaders destroyed.');
       setState(() {
         _isAdAvailable = null;
       });
     } catch (e) {
-      _log('Error destroying all preloaders: $e');
+      _log('Error destroying preloaders: $e');
     }
   }
 
@@ -173,61 +289,172 @@ class _InterstitialAdPreloaderExampleState
       return;
     }
 
-    _log('Requesting/loading InterstitialAd from preloader (Preload ID: "$preloadId")...');
+    _log('Standard load call for $_selectedFormat (Preload ID: "$preloadId")...');
     try {
-      await InterstitialAd.load(
-        adUnitId: adUnitId,
-        preloadId: preloadId,
-        request: const AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
-          onAdLoaded: (InterstitialAd ad) {
-            _log('InterstitialAd loaded successfully from preloader!');
+      switch (_selectedFormat) {
+        case 'Interstitial':
+          final ad = await AdPreloader.pollAd<InterstitialAd>(preloadId);
+          if (ad != null) {
+            _log('Callback: InterstitialAd loaded successfully from preloader!');
             setState(() {
               _loadedAd = ad;
             });
-            _checkAdAvailability();
-          },
-          onAdFailedToLoad: (LoadAdError error) {
-            _log('Failed to load InterstitialAd from preloader: ${error.message}');
-            _checkAdAvailability();
-          },
-        ),
-      );
+          } else {
+            _log('Callback: InterstitialAd failed to load: Preloaded ad not available');
+          }
+          await _checkAdAvailability();
+          break;
+        case 'Rewarded':
+          final ad = await AdPreloader.pollAd<RewardedAd>(preloadId);
+          if (ad != null) {
+            _log('Callback: RewardedAd loaded successfully from preloader!');
+            setState(() {
+              _loadedAd = ad;
+            });
+          } else {
+            _log('Callback: RewardedAd failed to load: Preloaded ad not available');
+          }
+          await _checkAdAvailability();
+          break;
+        case 'Rewarded Interstitial':
+          final ad = await AdPreloader.pollAd<RewardedInterstitialAd>(preloadId);
+          if (ad != null) {
+            _log('Callback: RewardedInterstitialAd loaded successfully from preloader!');
+            setState(() {
+              _loadedAd = ad;
+            });
+          } else {
+            _log('Callback: RewardedInterstitialAd failed to load: Preloaded ad not available');
+          }
+          await _checkAdAvailability();
+          break;
+        case 'App Open':
+          final ad = await AdPreloader.pollAd<AppOpenAd>(preloadId);
+          if (ad != null) {
+            _log('Callback: AppOpenAd loaded successfully from preloader!');
+            setState(() {
+              _loadedAd = ad;
+            });
+          } else {
+            _log('Callback: AppOpenAd failed to load: Preloaded ad not available');
+          }
+          await _checkAdAvailability();
+          break;
+      }
+      _log('Load command requested.');
     } catch (e) {
-      _log('Error loading ad from preloader: $e');
+      _log('Error loading ad: $e');
     }
   }
 
   void _showAd() {
     if (_loadedAd == null) {
-      _log('Error: No loaded ad available to show. Load one first.');
+      _log('Error: No loaded ad available to show.');
       return;
     }
 
-    _log('Showing InterstitialAd...');
-    _loadedAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) {
-        _log('Ad event: onAdShowedFullScreenContent');
-      },
-      onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        _log('Ad event: onAdDismissedFullScreenContent');
-        ad.dispose();
-        setState(() {
-          _loadedAd = null;
-        });
-        _checkAdAvailability();
-      },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        _log('Ad event: onAdFailedToShowFullScreenContent: ${error.message}');
-        ad.dispose();
-        setState(() {
-          _loadedAd = null;
-        });
-        _checkAdAvailability();
-      },
-    );
-
-    _loadedAd!.show();
+    _log('Showing $_selectedFormat...');
+    if (_loadedAd is InterstitialAd) {
+      final ad = _loadedAd as InterstitialAd;
+      ad.fullScreenContentCallback = FullScreenContentCallback<InterstitialAd>(
+        onAdShowedFullScreenContent: (ad) {
+          _log('Ad event: onAdShowedFullScreenContent');
+        },
+        onAdDismissedFullScreenContent: (ad) {
+          _log('Ad event: onAdDismissedFullScreenContent');
+          ad.dispose();
+          setState(() {
+            _loadedAd = null;
+          });
+          _checkAdAvailability();
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          _log('Ad event: onAdFailedToShowFullScreenContent: ${error.message}');
+          ad.dispose();
+          setState(() {
+            _loadedAd = null;
+          });
+          _checkAdAvailability();
+        },
+      );
+      ad.show();
+    } else if (_loadedAd is RewardedAd) {
+      final ad = _loadedAd as RewardedAd;
+      ad.fullScreenContentCallback = FullScreenContentCallback<RewardedAd>(
+        onAdShowedFullScreenContent: (ad) {
+          _log('Ad event: onAdShowedFullScreenContent');
+        },
+        onAdDismissedFullScreenContent: (ad) {
+          _log('Ad event: onAdDismissedFullScreenContent');
+          ad.dispose();
+          setState(() {
+            _loadedAd = null;
+          });
+          _checkAdAvailability();
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          _log('Ad event: onAdFailedToShowFullScreenContent: ${error.message}');
+          ad.dispose();
+          setState(() {
+            _loadedAd = null;
+          });
+          _checkAdAvailability();
+        },
+      );
+      ad.show(onUserEarnedReward: (ad, reward) {
+        _log('User earned reward: ${reward.amount} ${reward.type}');
+      });
+    } else if (_loadedAd is RewardedInterstitialAd) {
+      final ad = _loadedAd as RewardedInterstitialAd;
+      ad.fullScreenContentCallback = FullScreenContentCallback<RewardedInterstitialAd>(
+        onAdShowedFullScreenContent: (ad) {
+          _log('Ad event: onAdShowedFullScreenContent');
+        },
+        onAdDismissedFullScreenContent: (ad) {
+          _log('Ad event: onAdDismissedFullScreenContent');
+          ad.dispose();
+          setState(() {
+            _loadedAd = null;
+          });
+          _checkAdAvailability();
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          _log('Ad event: onAdFailedToShowFullScreenContent: ${error.message}');
+          ad.dispose();
+          setState(() {
+            _loadedAd = null;
+          });
+          _checkAdAvailability();
+        },
+      );
+      ad.show(onUserEarnedReward: (ad, reward) {
+        _log('User earned reward: ${reward.amount} ${reward.type}');
+      });
+    } else if (_loadedAd is AppOpenAd) {
+      final ad = _loadedAd as AppOpenAd;
+      ad.fullScreenContentCallback = FullScreenContentCallback<AppOpenAd>(
+        onAdShowedFullScreenContent: (ad) {
+          _log('Ad event: onAdShowedFullScreenContent');
+        },
+        onAdDismissedFullScreenContent: (ad) {
+          _log('Ad event: onAdDismissedFullScreenContent');
+          ad.dispose();
+          setState(() {
+            _loadedAd = null;
+          });
+          _checkAdAvailability();
+        },
+        onAdFailedToShowFullScreenContent: (ad, error) {
+          _log('Ad event: onAdFailedToShowFullScreenContent: ${error.message}');
+          ad.dispose();
+          setState(() {
+            _loadedAd = null;
+          });
+          _checkAdAvailability();
+        },
+      );
+      ad.show();
+    }
   }
 
   @override
@@ -236,7 +463,7 @@ class _InterstitialAdPreloaderExampleState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Interstitial Ad Preloader'),
+        title: const Text('Fullscreen Ad Preloader'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -258,6 +485,30 @@ class _InterstitialAdPreloaderExampleState
                             fontWeight: FontWeight.bold,
                             color: colors.primary,
                           ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    DropdownButtonFormField<String>(
+                      initialValue: _selectedFormat,
+                      decoration: const InputDecoration(
+                        labelText: 'Fullscreen Ad Format',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                      ),
+                      items: <String>[
+                        'Interstitial',
+                        'Rewarded',
+                        'Rewarded Interstitial',
+                        'App Open',
+                      ].map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: _onFormatChanged,
                     ),
                     const SizedBox(height: 16.0),
                     TextField(
@@ -324,7 +575,7 @@ class _InterstitialAdPreloaderExampleState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Preloader Operations',
+                      'Preloader Operations ($_selectedFormat)',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: colors.primary,
@@ -391,9 +642,9 @@ class _InterstitialAdPreloaderExampleState
                     const SizedBox(height: 12.0),
                     Row(
                       children: [
-                        Text(
+                        const Text(
                           'Preload Available: ',
-                          style: const TextStyle(fontWeight: FontWeight.w600),
+                          style: TextStyle(fontWeight: FontWeight.w600),
                         ),
                         _buildAvailabilityStatus(),
                         const Spacer(),

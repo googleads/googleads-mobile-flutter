@@ -45,7 +45,8 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
       @NonNull String adUnitId,
       @Nullable FlutterAdRequest request,
       @Nullable FlutterAdManagerAdRequest adManagerAdRequest,
-      @NonNull FlutterAdLoader flutterAdLoader) {
+      @NonNull FlutterAdLoader flutterAdLoader,
+      @Nullable String preloadId) {
     super(adId);
     Preconditions.checkState(
         request != null || adManagerAdRequest != null,
@@ -69,12 +70,12 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
     }
   }
 
-  private void onAdLoaded(@NonNull AppOpenAd ad) {
+  void onAdLoaded(@NonNull AppOpenAd ad) {
     this.ad = ad;
     manager.onAdLoaded(adId, ad.getResponseInfo());
   }
 
-  private void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+  void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
     manager.onAdFailedToLoad(adId, new FlutterLoadAdError(loadAdError));
   }
 

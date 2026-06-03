@@ -20,8 +20,15 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.ResponseInfo;
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
+import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdPreloader;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdPreloader;
+import com.google.android.gms.ads.appopen.AppOpenAdPreloader;
 import com.google.android.gms.ads.preload.PreloadCallbackV2;
 import com.google.android.gms.ads.preload.PreloadConfiguration;
 import io.flutter.plugin.common.MethodCall;
@@ -47,14 +54,30 @@ class FlutterAdPreloader {
         String preloadId = call.argument("preloadId");
         String adUnitId = call.argument("adUnitId");
         Integer bufferSize = call.argument("bufferSize");
+        String className = call.argument("className");
+        FlutterAdRequest request = call.argument("request");
+
+        if (className == null) {
+          result.error("PreloadError", "Missing className argument.", null);
+          break;
+        }
 
         PreloadConfiguration.Builder builder = new PreloadConfiguration.Builder(adUnitId);
         if (bufferSize != null) {
           builder.setBufferSize(bufferSize);
         }
+        if (request != null) {
+          AdRequest adRequest;
+          if (request instanceof FlutterAdManagerAdRequest) {
+            adRequest = ((FlutterAdManagerAdRequest) request).asAdManagerAdRequest(adUnitId);
+          } else {
+            adRequest = request.asAdRequest(adUnitId);
+          }
+          builder.setAdRequest(adRequest);
+        }
         PreloadConfiguration config = builder.build();
 
-        InterstitialAdPreloader.start(preloadId, config, new PreloadCallbackV2() {
+        PreloadCallbackV2 callback = new PreloadCallbackV2() {
           @Override
           public void onAdPreloaded(@NonNull String id, @NonNull ResponseInfo responseInfo) {
             Map<Object, Object> arguments = new HashMap<>();
@@ -80,25 +103,173 @@ class FlutterAdPreloader {
             arguments.put("error", new FlutterAd.FlutterAdError(adError));
             invokeOnPreloadEvent(arguments);
           }
-        });
+        };
+
+        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+          InterstitialAdPreloader.start(preloadId, config, callback);
+        } else if (className.equals("RewardedAd") || className.equals("RewardedInterstitialAd")) {
+          RewardedAdPreloader.start(preloadId, config, callback);
+        } else if (className.equals("AppOpenAd")) {
+          AppOpenAdPreloader.start(preloadId, config, callback);
+        } else {
+          result.error("PreloadError", "Unsupported className: " + className, null);
+          break;
+        }
         result.success(null);
         break;
       }
       case "MobileAds#destroyPreloader": {
         String preloadId = call.argument("preloadId");
-        InterstitialAdPreloader.destroy(preloadId);
+        String className = call.argument("className");
+
+        if (className == null) {
+          result.error("PreloadError", "Missing className argument.", null);
+          break;
+        }
+
+        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+          InterstitialAdPreloader.destroy(preloadId);
+        } else if (className.equals("RewardedAd") || className.equals("RewardedInterstitialAd")) {
+          RewardedAdPreloader.destroy(preloadId);
+        } else if (className.equals("AppOpenAd")) {
+          AppOpenAdPreloader.destroy(preloadId);
+        } else {
+          result.error("PreloadError", "Unsupported className: " + className, null);
+          break;
+        }
         result.success(null);
         break;
       }
       case "MobileAds#destroyAllPreloaders": {
-        InterstitialAdPreloader.destroyAll();
+        String className = call.argument("className");
+
+        if (className == null) {
+          result.error("PreloadError", "Missing className argument.", null);
+          break;
+        }
+
+        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+          InterstitialAdPreloader.destroyAll();
+        } else if (className.equals("RewardedAd") || className.equals("RewardedInterstitialAd")) {
+          RewardedAdPreloader.destroyAll();
+        } else if (className.equals("AppOpenAd")) {
+          AppOpenAdPreloader.destroyAll();
+        } else {
+          result.error("PreloadError", "Unsupported className: " + className, null);
+          break;
+        }
         result.success(null);
         break;
       }
       case "MobileAds#isPreloadedAdAvailable": {
         String preloadId = call.argument("preloadId");
-        boolean available = InterstitialAdPreloader.isAdAvailable(preloadId);
+        String className = call.argument("className");
+
+        if (className == null) {
+          result.error("PreloadError", "Missing className argument.", null);
+          break;
+        }
+
+        boolean available = false;
+        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+          available = InterstitialAdPreloader.isAdAvailable(preloadId);
+        } else if (className.equals("RewardedAd") || className.equals("RewardedInterstitialAd")) {
+          available = RewardedAdPreloader.isAdAvailable(preloadId);
+        } else if (className.equals("AppOpenAd")) {
+          available = AppOpenAdPreloader.isAdAvailable(preloadId);
+        } else {
+          result.error("PreloadError", "Unsupported className: " + className, null);
+          break;
+        }
         result.success(available);
+        break;
+      }
+      case "MobileAds#pollAd": {
+        String preloadId = call.argument("preloadId");
+        String className = call.argument("className");
+        Integer adId = call.argument("adId");
+
+        if (preloadId == null || className == null || adId == null) {
+          result.error("PreloadError", "Missing arguments.", null);
+          break;
+        }
+
+        Map<String, Object> response = null;
+        if (className.equals("InterstitialAd")) {
+          InterstitialAd preloadedAd =
+              InterstitialAdPreloader.pollAd(preloadId);
+          if (preloadedAd != null) {
+            String adUnitId = preloadedAd.getAdUnitId();
+            FlutterInterstitialAd adWrapper =
+                new FlutterInterstitialAd(
+                    adId,
+                    instanceManager,
+                    adUnitId != null ? adUnitId : "",
+                    new FlutterAdRequest.Builder().build(),
+                    new FlutterAdLoader(context),
+                    null);
+            adWrapper.onAdLoaded(preloadedAd);
+            instanceManager.trackAd(adWrapper, adId);
+            response = new HashMap<>();
+            response.put("adUnitId", adUnitId != null ? adUnitId : "");
+          }
+        } else if (className.equals("AdManagerInterstitialAd")) {
+          AdManagerInterstitialAd preloadedAd = (AdManagerInterstitialAd)
+                  InterstitialAdPreloader.pollAd(preloadId);
+          if (preloadedAd != null) {
+            String adUnitId = preloadedAd.getAdUnitId();
+            FlutterAdManagerInterstitialAd adWrapper =
+                new FlutterAdManagerInterstitialAd(
+                    adId,
+                    instanceManager,
+                    adUnitId != null ? adUnitId : "",
+                    new FlutterAdManagerAdRequest.Builder().build(),
+                    new FlutterAdLoader(context),
+                    null);
+            adWrapper.onAdLoaded(preloadedAd);
+            instanceManager.trackAd(adWrapper, adId);
+            response = new HashMap<>();
+            response.put("adUnitId", adUnitId != null ? adUnitId : "");
+          }
+        } else if (className.equals("RewardedAd")) {
+          RewardedAd preloadedAd = RewardedAdPreloader.pollAd(preloadId);
+          if (preloadedAd != null) {
+            String adUnitId = preloadedAd.getAdUnitId();
+            FlutterRewardedAd adWrapper =
+                new FlutterRewardedAd(
+                    adId,
+                    instanceManager,
+                    adUnitId != null ? adUnitId : "",
+                    new FlutterAdRequest.Builder().build(),
+                    new FlutterAdLoader(context),
+                    null);
+            adWrapper.onAdLoaded(preloadedAd);
+            instanceManager.trackAd(adWrapper, adId);
+            response = new HashMap<>();
+            response.put("adUnitId", adUnitId != null ? adUnitId : "");
+          }
+        } else if (className.equals("RewardedInterstitialAd")) {
+          // Unsupported natively
+        } else if (className.equals("AppOpenAd")) {
+          AppOpenAd preloadedAd = AppOpenAdPreloader.pollAd(preloadId);
+          if (preloadedAd != null) {
+            String adUnitId = preloadedAd.getAdUnitId();
+            FlutterAppOpenAd adWrapper =
+                new FlutterAppOpenAd(
+                    adId,
+                    instanceManager,
+                    adUnitId != null ? adUnitId : "",
+                    new FlutterAdRequest.Builder().build(),
+                    null,
+                    new FlutterAdLoader(context),
+                    null);
+            adWrapper.onAdLoaded(preloadedAd);
+            instanceManager.trackAd(adWrapper, adId);
+            response = new HashMap<>();
+            response.put("adUnitId", adUnitId != null ? adUnitId : "");
+          }
+        }
+        result.success(response);
         break;
       }
       default:

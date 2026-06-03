@@ -926,16 +926,19 @@
   GADRewardedAd *_rewardedView;
   FLTAdRequest *_adRequest;
   NSString *_adUnitId;
+  NSString *_preloadId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
-                            adId:(NSNumber *_Nonnull)adId {
+                            adId:(NSNumber *_Nonnull)adId
+                       preloadId:(NSString *_Nullable)preloadId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _adUnitId = [adUnitId copy];
+    _preloadId = [preloadId copy];
   }
   return self;
 }
@@ -945,6 +948,33 @@
 }
 
 - (void)load {
+  if (_preloadId && _preloadId != (id)[NSNull null]) {
+    GADRewardedAd *preloadedAd = [[GADRewardedAdPreloader sharedInstance] adWithPreloadID:_preloadId];
+    if (preloadedAd) {
+      preloadedAd.fullScreenContentDelegate = self;
+      self->_rewardedView = preloadedAd;
+      __weak FLTRewardedAd *weakSelf = self;
+      preloadedAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+        if (weakSelf.manager == nil) {
+          return;
+        }
+        [weakSelf.manager
+            onPaidEvent:weakSelf
+                  value:[[FLTAdValue alloc]
+                            initWithValue:value.value
+                                precision:(NSInteger)value.precision
+                             currencyCode:value.currencyCode]];
+      };
+
+      [self.manager onAdLoaded:self responseInfo:preloadedAd.responseInfo];
+    } else {
+      NSError *error = [NSError errorWithDomain:@"com.google.android.gms.ads"
+                                           code:GADErrorInternalError
+                                       userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Preloaded ad not found or already exhausted for preloadId: %@", _preloadId]}];
+      [self.manager onAdFailedToLoad:self error:error];
+    }
+    return;
+  }
   GADRequest *request;
   if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
     FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
@@ -1018,16 +1048,19 @@
   GADRewardedInterstitialAd *_rewardedInterstitialView;
   FLTAdRequest *_adRequest;
   NSString *_adUnitId;
+  NSString *_preloadId;
 }
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
-                            adId:(NSNumber *_Nonnull)adId {
+                            adId:(NSNumber *_Nonnull)adId
+                       preloadId:(NSString *_Nullable)preloadId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _adUnitId = [adUnitId copy];
+    _preloadId = [preloadId copy];
   }
   return self;
 }
@@ -1037,6 +1070,13 @@
 }
 
 - (void)load {
+  if (_preloadId && _preloadId != (id)[NSNull null]) {
+    NSError *error = [NSError errorWithDomain:@"com.google.android.gms.ads"
+                                         code:GADErrorInternalError
+                                     userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Preloaded RewardedInterstitialAd is not supported natively in this SDK version."]}];
+    [self.manager onAdFailedToLoad:self error:error];
+    return;
+  }
   GADRequest *request;
   if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
     FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
@@ -1115,16 +1155,19 @@
   GADAppOpenAd *_appOpenAd;
   FLTAdRequest *_adRequest;
   NSString *_adUnitId;
+  NSString *_preloadId;
 }
 
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                                     adId:(NSNumber *_Nonnull)adId {
+                                     adId:(NSNumber *_Nonnull)adId
+                                preloadId:(NSString *_Nullable)preloadId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _adUnitId = [adUnitId copy];
+    _preloadId = [preloadId copy];
   }
   return self;
 }
@@ -1134,6 +1177,33 @@
 }
 
 - (void)load {
+  if (_preloadId && _preloadId != (id)[NSNull null]) {
+    GADAppOpenAd *preloadedAd = [[GADAppOpenAdPreloader sharedInstance] adWithPreloadID:_preloadId];
+    if (preloadedAd) {
+      preloadedAd.fullScreenContentDelegate = self;
+      self->_appOpenAd = preloadedAd;
+      __weak FLTAppOpenAd *weakSelf = self;
+      preloadedAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+        if (weakSelf.manager == nil) {
+          return;
+        }
+        [weakSelf.manager
+            onPaidEvent:weakSelf
+                  value:[[FLTAdValue alloc]
+                            initWithValue:value.value
+                                precision:(NSInteger)value.precision
+                             currencyCode:value.currencyCode]];
+      };
+
+      [self.manager onAdLoaded:self responseInfo:preloadedAd.responseInfo];
+    } else {
+      NSError *error = [NSError errorWithDomain:@"com.google.android.gms.ads"
+                                           code:GADErrorInternalError
+                                       userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Preloaded ad not found or already exhausted for preloadId: %@", _preloadId]}];
+      [self.manager onAdFailedToLoad:self error:error];
+    }
+    return;
+  }
   GADRequest *request;
   if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
     FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;

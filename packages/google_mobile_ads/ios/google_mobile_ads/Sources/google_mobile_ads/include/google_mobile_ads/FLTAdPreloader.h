@@ -19,7 +19,8 @@
 
 @interface FLTAdPreloader : NSObject
 
-- (instancetype _Nonnull)initWithChannel:(FlutterMethodChannel *_Nonnull)channel;
+- (instancetype _Nonnull)initWithChannel:(FlutterMethodChannel *_Nonnull)channel
+                                 manager:(id _Nonnull)manager;
 
 - (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call
                   result:(FlutterResult _Nonnull)result;

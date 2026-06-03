@@ -17,6 +17,7 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.appopen.AppOpenAd;
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback;
@@ -34,6 +35,7 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
   @Nullable private final FlutterAdManagerAdRequest adManagerAdRequest;
   @Nullable private AppOpenAd ad;
   @NonNull private final FlutterAdLoader flutterAdLoader;
+  @Nullable private final String preloadId;
 
   FlutterAppOpenAd(
       int adId,
@@ -41,7 +43,8 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
       @NonNull String adUnitId,
       @Nullable FlutterAdRequest request,
       @Nullable FlutterAdManagerAdRequest adManagerAdRequest,
-      @NonNull FlutterAdLoader flutterAdLoader) {
+      @NonNull FlutterAdLoader flutterAdLoader,
+      @Nullable String preloadId) {
     super(adId);
     Preconditions.checkState(
         request != null || adManagerAdRequest != null,
@@ -51,10 +54,26 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
     this.request = request;
     this.adManagerAdRequest = adManagerAdRequest;
     this.flutterAdLoader = flutterAdLoader;
+    this.preloadId = preloadId;
   }
 
   @Override
   void load() {
+    if (preloadId != null) {
+      AppOpenAd preloadedAd = com.google.android.gms.ads.appopen.AppOpenAdPreloader.pollAd(preloadId);
+      if (preloadedAd != null) {
+        onAdLoaded(preloadedAd);
+      } else {
+        LoadAdError error = new LoadAdError(
+            AdRequest.ERROR_CODE_INTERNAL_ERROR,
+                "Preloaded ad not found or already exhausted for preloadId: " + preloadId,
+            "com.google.android.gms.ads",
+            null,
+            null);
+        onAdFailedToLoad(error);
+      }
+      return;
+    }
     if (request != null) {
       flutterAdLoader.loadAppOpen(
           adUnitId, request.asAdRequest(adUnitId), new DelegatingAppOpenAdLoadCallback(this));
@@ -66,13 +85,13 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
     }
   }
 
-  private void onAdLoaded(@NonNull AppOpenAd ad) {
+  void onAdLoaded(@NonNull AppOpenAd ad) {
     this.ad = ad;
     ad.setOnPaidEventListener(new FlutterPaidEventListener(manager, this));
     manager.onAdLoaded(adId, ad.getResponseInfo());
   }
 
-  private void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+  void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
     manager.onAdFailedToLoad(adId, new FlutterLoadAdError(loadAdError));
   }
 
