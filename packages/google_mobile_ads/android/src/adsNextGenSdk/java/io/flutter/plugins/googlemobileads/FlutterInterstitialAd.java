@@ -17,6 +17,9 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.gms.ads.AdError;
+import com.google.android.libraries.ads.mobile.sdk.common.AdValue;
+import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError;
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
 import com.google.android.libraries.ads.mobile.sdk.common.AdLoadCallback;
 import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAd;
@@ -105,15 +108,80 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
 
     @Override
     public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-      if (delegate.get() != null) {
-        delegate.get().onAdLoaded(interstitialAd);
+      FlutterInterstitialAd ad = delegate.get();
+      if (ad != null) {
+        ad.onAdLoaded(interstitialAd);
       }
     }
 
     @Override
     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-      if (delegate.get() != null) {
-        delegate.get().onAdFailedToLoad(loadAdError);
+      FlutterInterstitialAd ad = delegate.get();
+      if (ad != null) {
+        ad.onAdFailedToLoad(loadAdError);
+      }
+    }
+
+    @Override
+    public void onAdFailedToShowFullScreenContent(@NonNull FullScreenContentError adError) {
+      FlutterInterstitialAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onFailedToShowFullScreenContent(
+            ad.adId,
+            new AdError(
+                adError.getCode().getValue(),
+                adError.getMessage(),
+                AdInstanceManager.NEXT_GEN_DOMAIN));
+      }
+    }
+
+    @Override
+    public void onAdShowedFullScreenContent() {
+      FlutterInterstitialAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onAdShowedFullScreenContent(ad.adId);
+      }
+    }
+
+    @Override
+    public void onAdDismissedFullScreenContent() {
+      FlutterInterstitialAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onAdDismissedFullScreenContent(ad.adId);
+      }
+    }
+
+    @Override
+    public void onAdImpression() {
+      FlutterInterstitialAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onAdImpression(ad.adId);
+      }
+    }
+
+    @Override
+    public void onAdClicked() {
+      FlutterInterstitialAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onAdClicked(ad.adId);
+      }
+    }
+
+    @Override
+    public void onAdPaid(@NonNull AdValue adValue) {
+      FlutterInterstitialAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onPaidEvent(
+            ad,
+            AdInstanceManager.comAdValueToFlutterAdValue(adValue));
+      }
+    }
+
+    @Override
+    public void onAppEvent(@NonNull String name, @NonNull String data) {
+      FlutterInterstitialAd ad = delegate.get();
+      if (ad != null) {
+        ad.manager.onAppEvent(ad.adId, name, data);
       }
     }
   }

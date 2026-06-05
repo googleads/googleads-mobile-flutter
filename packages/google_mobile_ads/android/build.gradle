@@ -66,7 +66,7 @@ android {
     }
     dependencies {
         if (useNextGenSdk) {
-            api 'com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.1.0'
+            api 'com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.1.1'
         } else {
             api 'com.google.android.gms:play-services-ads:25.3.0'
         }

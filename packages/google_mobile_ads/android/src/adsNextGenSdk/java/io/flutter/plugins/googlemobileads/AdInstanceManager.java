@@ -21,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
 import com.google.android.libraries.ads.mobile.sdk.common.ResponseInfo;
+import com.google.android.libraries.ads.mobile.sdk.common.AdValue;
+import com.google.android.libraries.ads.mobile.sdk.common.PrecisionType;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
@@ -39,6 +41,8 @@ class AdInstanceManager {
 
   @NonNull private final Map<Integer, FlutterAd> ads;
   @NonNull private final MethodChannel channel;
+
+  static final String NEXT_GEN_DOMAIN = "com.google.android.libraries.ads.mobile.sdk";
 
   /**
    * Initializes the ad instance manager. We only need a method channel to start loading ads, but an
@@ -181,6 +185,29 @@ class AdInstanceManager {
     arguments.put("precision", adValue.precisionType);
     arguments.put("currencyCode", adValue.currencyCode);
     invokeOnAdEvent(arguments);
+  }
+
+  static FlutterAdValue comAdValueToFlutterAdValue(@NonNull AdValue adValue) {
+    int precisionTypeInt = 0;
+    switch (adValue.getPrecisionType()) {
+      case ESTIMATED:
+        precisionTypeInt = 1;
+        break;
+      case PUBLISHER_PROVIDED:
+        precisionTypeInt = 2;
+        break;
+      case PRECISE:
+        precisionTypeInt = 3;
+        break;
+      case UNKNOWN:
+      default:
+        precisionTypeInt = 0;
+        break;
+    }
+    return new FlutterAdValue(
+        precisionTypeInt,
+        adValue.getCurrencyCode(),
+        adValue.getValueMicros());
   }
 
   void onFailedToShowFullScreenContent(int adId, @NonNull AdError error) {
