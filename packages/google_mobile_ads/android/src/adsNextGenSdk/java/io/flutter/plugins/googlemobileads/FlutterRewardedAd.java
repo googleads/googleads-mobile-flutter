@@ -78,8 +78,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdRequest request,
-      @NonNull FlutterAdLoader flutterAdLoader,
-      @Nullable String preloadId) {
+      @NonNull FlutterAdLoader flutterAdLoader) {
     super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
@@ -94,8 +93,7 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdManagerAdRequest adManagerRequest,
-      @NonNull FlutterAdLoader flutterAdLoader,
-      @Nullable String preloadId) {
+      @NonNull FlutterAdLoader flutterAdLoader) {
     super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;

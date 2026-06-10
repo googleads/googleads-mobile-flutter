@@ -80,7 +80,8 @@ class AdInstanceManager {
 
   int _nextAdId = 0;
   final _BiMap<int, Ad> _loadedAds = _BiMap<int, Ad>();
-  final Map<String, PreloadCallback> _preloadCallbacks = <String, PreloadCallback>{};
+  final Map<String, PreloadCallback> _preloadCallbacks =
+      <String, PreloadCallback>{};
 
   void registerPreloadCallback(String preloadId, PreloadCallback callback) {
     _preloadCallbacks[preloadId] = callback;
@@ -94,7 +95,11 @@ class AdInstanceManager {
     _preloadCallbacks.clear();
   }
 
-  void _handlePreloadEvent(String preloadId, String eventName, Map<dynamic, dynamic> arguments) {
+  void _handlePreloadEvent(
+    String preloadId,
+    String eventName,
+    Map<dynamic, dynamic> arguments,
+  ) {
     final PreloadCallback? callback = _preloadCallbacks[preloadId];
     if (callback == null) {
       return;
@@ -102,7 +107,8 @@ class AdInstanceManager {
     switch (eventName) {
       case 'onAdPreloaded':
         if (callback.onAdPreloaded != null) {
-          final ResponseInfo responseInfo = arguments['responseInfo'] as ResponseInfo;
+          final ResponseInfo responseInfo =
+              arguments['responseInfo'] as ResponseInfo;
           callback.onAdPreloaded!(preloadId, responseInfo);
         }
         break;

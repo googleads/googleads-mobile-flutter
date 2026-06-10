@@ -215,30 +215,27 @@
 @end
 
 @interface FLTInterstitialAd : FLTFullScreenAd
-@property(nonatomic, readonly, copy, nullable) NSString *preloadId;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                                     adId:(NSNumber *_Nonnull)adId
-                                preloadId:(NSString *_Nullable)preloadId;
+                                     adId:(NSNumber *_Nonnull)adId;
 - (GADInterstitialAd *_Nullable)interstitial;
 - (NSString *_Nonnull)adUnitId;
 - (void)load;
+- (void)onAdLoaded:(GADInterstitialAd *_Nonnull)ad;
 
 @end
 
 @interface FLTGAMInterstitialAd : FLTInterstitialAd <GADAppEventDelegate>
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTGAMAdRequest *_Nonnull)request
-                                     adId:(NSNumber *_Nonnull)adId
-                                preloadId:(NSString *_Nullable)preloadId;
+                                     adId:(NSNumber *_Nonnull)adId;
+- (void)onAdLoaded:(GADInterstitialAd *_Nonnull)ad;
 @end
 
 @interface FLTRewardedAd : FLTFullScreenAd
-@property(nonatomic, readonly, copy, nullable) NSString *preloadId;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                                     adId:(NSNumber *_Nonnull)adId
-                                preloadId:(NSString *_Nullable)preloadId;
+                                     adId:(NSNumber *_Nonnull)adId;
 - (GADRewardedAd *_Nullable)rewardedAd;
 - (void)setServerSideVerificationOptions:
     (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
@@ -246,22 +243,18 @@
 @end
 
 @interface FLTRewardedInterstitialAd : FLTFullScreenAd
-@property(nonatomic, readonly, copy, nullable) NSString *preloadId;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                                     adId:(NSNumber *_Nonnull)adId
-                                preloadId:(NSString *_Nullable)preloadId;
+                                     adId:(NSNumber *_Nonnull)adId;
 - (GADRewardedInterstitialAd *_Nullable)rewardedInterstitialAd;
 - (void)setServerSideVerificationOptions:
     (FLTServerSideVerificationOptions *_Nullable)serverSideVerificationOptions;
 @end
 
 @interface FLTAppOpenAd : FLTFullScreenAd
-@property(nonatomic, readonly, copy, nullable) NSString *preloadId;
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                                     adId:(NSNumber *_Nonnull)adId
-                                preloadId:(NSString *_Nullable)preloadId;
+                                     adId:(NSNumber *_Nonnull)adId;
 - (GADAppOpenAd *_Nullable)appOpenAd;
 - (void)onAdLoaded:(GADAppOpenAd *_Nonnull)ad;
 @end

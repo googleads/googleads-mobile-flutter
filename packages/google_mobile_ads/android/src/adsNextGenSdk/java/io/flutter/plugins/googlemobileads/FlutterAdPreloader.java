@@ -30,8 +30,6 @@ import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAd;
 import com.google.android.libraries.ads.mobile.sdk.interstitial.InterstitialAdPreloader;
 import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAd;
 import com.google.android.libraries.ads.mobile.sdk.rewarded.RewardedAdPreloader;
-import com.google.android.libraries.ads.mobile.sdk.rewardedinterstitial.RewardedInterstitialAd;
-import com.google.android.libraries.ads.mobile.sdk.rewardedinterstitial.RewardedInterstitialAdPreloader;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import java.util.HashMap;
@@ -42,6 +40,7 @@ class FlutterAdPreloader {
   private final Context context;
   private final AdInstanceManager instanceManager;
   private final MethodChannel channel;
+  private final Map<String, String> preloadIdToAdUnitId = new HashMap<>();
 
   FlutterAdPreloader(
       @NonNull Context context,
@@ -113,14 +112,13 @@ class FlutterAdPreloader {
           InterstitialAdPreloader.start(preloadId, config, callback);
         } else if (className.equals("RewardedAd")) {
           RewardedAdPreloader.start(preloadId, config, callback);
-        } else if (className.equals("RewardedInterstitialAd")) {
-          RewardedInterstitialAdPreloader.start(preloadId, config, callback);
         } else if (className.equals("AppOpenAd")) {
           AppOpenAdPreloader.start(preloadId, config, callback);
         } else {
           result.error("PreloadError", "Unsupported className: " + className, null);
           break;
         }
+        preloadIdToAdUnitId.put(preloadId, adUnitId);
         result.success(null);
         break;
       }
@@ -137,14 +135,13 @@ class FlutterAdPreloader {
           InterstitialAdPreloader.destroy(preloadId);
         } else if (className.equals("RewardedAd")) {
           RewardedAdPreloader.destroy(preloadId);
-        } else if (className.equals("RewardedInterstitialAd")) {
-          RewardedInterstitialAdPreloader.destroy(preloadId);
         } else if (className.equals("AppOpenAd")) {
           AppOpenAdPreloader.destroy(preloadId);
         } else {
           result.error("PreloadError", "Unsupported className: " + className, null);
           break;
         }
+        preloadIdToAdUnitId.remove(preloadId);
         result.success(null);
         break;
       }
@@ -160,14 +157,13 @@ class FlutterAdPreloader {
           InterstitialAdPreloader.destroyAll();
         } else if (className.equals("RewardedAd")) {
           RewardedAdPreloader.destroyAll();
-        } else if (className.equals("RewardedInterstitialAd")) {
-          RewardedInterstitialAdPreloader.destroyAll();
         } else if (className.equals("AppOpenAd")) {
           AppOpenAdPreloader.destroyAll();
         } else {
           result.error("PreloadError", "Unsupported className: " + className, null);
           break;
         }
+        preloadIdToAdUnitId.clear();
         result.success(null);
         break;
       }
@@ -185,8 +181,6 @@ class FlutterAdPreloader {
           available = InterstitialAdPreloader.isAdAvailable(preloadId);
         } else if (className.equals("RewardedAd")) {
           available = RewardedAdPreloader.isAdAvailable(preloadId);
-        } else if (className.equals("RewardedInterstitialAd")) {
-          available = RewardedInterstitialAdPreloader.isAdAvailable(preloadId);
         } else if (className.equals("AppOpenAd")) {
           available = AppOpenAdPreloader.isAdAvailable(preloadId);
         } else {
@@ -194,6 +188,81 @@ class FlutterAdPreloader {
           break;
         }
         result.success(available);
+        break;
+      }
+      case "MobileAds#getNumAdsAvailable": {
+        String preloadId = call.argument("preloadId");
+        String className = call.argument("className");
+
+        if (className == null || preloadId == null) {
+          result.error("PreloadError", "Missing required argument.", null);
+          break;
+        }
+
+        int count = 0;
+        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+          count = InterstitialAdPreloader.getNumAdsAvailable(preloadId);
+        } else if (className.equals("RewardedAd")) {
+          count = RewardedAdPreloader.getNumAdsAvailable(preloadId);
+        } else if (className.equals("AppOpenAd")) {
+          count = AppOpenAdPreloader.getNumAdsAvailable(preloadId);
+        } else {
+          result.error("PreloadError", "Unsupported className: " + className, null);
+          break;
+        }
+        result.success(count);
+        break;
+      }
+      case "MobileAds#getPreloadConfiguration": {
+        String preloadId = call.argument("preloadId");
+        String className = call.argument("className");
+
+        if (className == null || preloadId == null) {
+          result.error("PreloadError", "Missing required argument.", null);
+          break;
+        }
+
+        PreloadConfiguration config = null;
+        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+          config = InterstitialAdPreloader.getConfiguration(preloadId);
+        } else if (className.equals("RewardedAd")) {
+          config = RewardedAdPreloader.getConfiguration(preloadId);
+        } else if (className.equals("AppOpenAd")) {
+          config = AppOpenAdPreloader.getConfiguration(preloadId);
+        } else {
+          result.error("PreloadError", "Unsupported className: " + className, null);
+          break;
+        }
+        result.success(serializeConfig(preloadId, config));
+        break;
+      }
+      case "MobileAds#getPreloadConfigurations": {
+        String className = call.argument("className");
+
+        if (className == null) {
+          result.error("PreloadError", "Missing required argument.", null);
+          break;
+        }
+
+        Map<String, PreloadConfiguration> configs = null;
+        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+          configs = InterstitialAdPreloader.getConfigurations();
+        } else if (className.equals("RewardedAd")) {
+          configs = RewardedAdPreloader.getConfigurations();
+        } else if (className.equals("AppOpenAd")) {
+          configs = AppOpenAdPreloader.getConfigurations();
+        } else {
+          result.error("PreloadError", "Unsupported className: " + className, null);
+          break;
+        }
+
+        Map<String, Map<String, Object>> response = new HashMap<>();
+        if (configs != null) {
+          for (Map.Entry<String, PreloadConfiguration> entry : configs.entrySet()) {
+            response.put(entry.getKey(), serializeConfig(entry.getKey(), entry.getValue()));
+          }
+        }
+        result.success(response);
         break;
       }
       case "MobileAds#pollAd": {
@@ -217,8 +286,7 @@ class FlutterAdPreloader {
                 instanceManager,
                 adUnitId != null ? adUnitId : "",
                 new FlutterAdRequest.Builder().build(),
-                new FlutterAdLoader(context),
-                preloadId);
+                new FlutterAdLoader(context));
             adWrapper.onAdLoaded(preloadedAd);
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
@@ -234,8 +302,7 @@ class FlutterAdPreloader {
                 instanceManager,
                 adUnitId != null ? adUnitId : "",
                 new FlutterAdManagerAdRequest.Builder().build(),
-                new FlutterAdLoader(context),
-                preloadId);
+                new FlutterAdLoader(context));
             adWrapper.onAdLoaded(preloadedAd);
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
@@ -251,25 +318,7 @@ class FlutterAdPreloader {
                 instanceManager,
                 adUnitId != null ? adUnitId : "",
                 new FlutterAdRequest.Builder().build(),
-                new FlutterAdLoader(context),
-                preloadId);
-            adWrapper.onAdLoaded(preloadedAd);
-            instanceManager.trackAd(adWrapper, adId);
-            response = new HashMap<>();
-            response.put("adUnitId", adUnitId != null ? adUnitId : "");
-          }
-        } else if (className.equals("RewardedInterstitialAd")) {
-          RewardedInterstitialAd preloadedAd = RewardedInterstitialAdPreloader.pollAd(preloadId);
-          if (preloadedAd != null) {
-            PreloadConfiguration config = RewardedInterstitialAdPreloader.getConfiguration(preloadId);
-            String adUnitId = config != null && config.getRequest() != null ? config.getRequest().getAdUnitId() : "";
-            FlutterRewardedInterstitialAd adWrapper = new FlutterRewardedInterstitialAd(
-                adId,
-                instanceManager,
-                adUnitId != null ? adUnitId : "",
-                new FlutterAdRequest.Builder().build(),
-                new FlutterAdLoader(context),
-                preloadId);
+                new FlutterAdLoader(context));
             adWrapper.onAdLoaded(preloadedAd);
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
@@ -286,8 +335,7 @@ class FlutterAdPreloader {
                 adUnitId != null ? adUnitId : "",
                 new FlutterAdRequest.Builder().build(),
                 null,
-                new FlutterAdLoader(context),
-                preloadId);
+                new FlutterAdLoader(context));
             adWrapper.onAdLoaded(preloadedAd);
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
@@ -311,5 +359,16 @@ class FlutterAdPreloader {
                 channel.invokeMethod("onPreloadEvent", arguments);
               }
             });
+  }
+
+  private Map<String, Object> serializeConfig(String preloadId, PreloadConfiguration config) {
+    if (config == null) {
+      return null;
+    }
+    Map<String, Object> map = new HashMap<>();
+    String adUnitId = preloadIdToAdUnitId.get(preloadId);
+    map.put("adUnitId", adUnitId != null ? adUnitId : "");
+    map.put("bufferSize", config.getBufferSize());
+    return map;
   }
 }

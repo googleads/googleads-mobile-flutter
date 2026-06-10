@@ -34,6 +34,7 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
   final ScrollController _scrollController = ScrollController();
 
   bool? _isAdAvailable;
+  int? _numAdsAvailable;
   AdWithoutView? _loadedAd;
 
   final Map<String, Map<String, String>> _defaultAdUnits = {
@@ -45,22 +46,27 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
       'android': 'ca-app-pub-3940256099942544/5224354917',
       'ios': 'ca-app-pub-3940256099942544/1712485313',
     },
-    'Rewarded Interstitial': {
-      'android': 'ca-app-pub-3940256099942544/5354046379',
-      'ios': 'ca-app-pub-3940256099942544/6978759866',
-    },
     'App Open': {
       'android': 'ca-app-pub-3940256099942544/9257395921',
-      'ios': 'ca-app-pub-3940256099942544/5662855259',
+      'ios': 'ca-app-pub-3940256099942544/5575463023',
     },
   };
 
   @override
   void initState() {
     super.initState();
-    _adUnitIdController = TextEditingController(text: _getAdUnitFor('Interstitial'));
-    _preloadIdController = TextEditingController(text: 'interstitial_preload_id');
+    _adUnitIdController = TextEditingController(
+      text: _getAdUnitFor('Interstitial'),
+    );
+    _preloadIdController = TextEditingController(
+      text: 'interstitial_preload_id',
+    );
     _bufferSizeController = TextEditingController(text: '2');
+    _preloadIdController.addListener(_onPreloadIdChanged);
+  }
+
+  void _onPreloadIdChanged() {
+    setState(() {});
   }
 
   String _getAdUnitFor(String format) {
@@ -74,8 +80,6 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
         return 'interstitial_preload_id';
       case 'Rewarded':
         return 'rewarded_preload_id';
-      case 'Rewarded Interstitial':
-        return 'rewarded_interstitial_preload_id';
       case 'App Open':
         return 'app_open_preload_id';
       default:
@@ -98,6 +102,7 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
 
   @override
   void dispose() {
+    _preloadIdController.removeListener(_onPreloadIdChanged);
     _adUnitIdController.dispose();
     _preloadIdController.dispose();
     _bufferSizeController.dispose();
@@ -130,26 +135,89 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
     }
     try {
       bool available = false;
+      int count = 0;
       switch (_selectedFormat) {
         case 'Interstitial':
-          available = await AdPreloader.isAdAvailable<InterstitialAd>(preloadId);
+          available = await InterstitialAdPreloader.isAdAvailable(preloadId);
+          count = await InterstitialAdPreloader.getNumAdsAvailable(preloadId);
           break;
         case 'Rewarded':
-          available = await AdPreloader.isAdAvailable<RewardedAd>(preloadId);
-          break;
-        case 'Rewarded Interstitial':
-          available = await AdPreloader.isAdAvailable<RewardedInterstitialAd>(preloadId);
+          available = await RewardedAdPreloader.isAdAvailable(preloadId);
+          count = await RewardedAdPreloader.getNumAdsAvailable(preloadId);
           break;
         case 'App Open':
-          available = await AdPreloader.isAdAvailable<AppOpenAd>(preloadId);
+          available = await AppOpenAdPreloader.isAdAvailable(preloadId);
+          count = await AppOpenAdPreloader.getNumAdsAvailable(preloadId);
           break;
       }
       setState(() {
         _isAdAvailable = available;
+        _numAdsAvailable = count;
       });
-      _log('Ad availability for "$preloadId" ($_selectedFormat): $available');
+      _log(
+        'Ad availability for "$preloadId" ($_selectedFormat): $available, count: $count',
+      );
     } catch (e) {
       _log('Error checking availability: $e');
+    }
+  }
+
+  Future<void> _findConfiguration() async {
+    final preloadId = _preloadIdController.text.trim();
+    try {
+      if (preloadId.isNotEmpty) {
+        PreloadConfiguration? config;
+        switch (_selectedFormat) {
+          case 'Interstitial':
+            config = await InterstitialAdPreloader.getConfiguration(preloadId);
+            break;
+          case 'Rewarded':
+            config = await RewardedAdPreloader.getConfiguration(preloadId);
+            break;
+          case 'App Open':
+            config = await AppOpenAdPreloader.getConfiguration(preloadId);
+            break;
+        }
+        if (config != null) {
+          setState(() {
+            _adUnitIdController.text = config!.adUnitId;
+            _bufferSizeController.text = config.bufferSize.toString();
+          });
+          _log(
+            'Found configuration for "$preloadId": Ad Unit ID: ${config.adUnitId}, Buffer Size: ${config.bufferSize}',
+          );
+        } else {
+          _log('No configuration found for preload ID: "$preloadId"');
+        }
+      } else {
+        Map<String, PreloadConfiguration> configs = {};
+        switch (_selectedFormat) {
+          case 'Interstitial':
+            configs = await InterstitialAdPreloader.getConfigurations();
+            break;
+          case 'Rewarded':
+            configs = await RewardedAdPreloader.getConfigurations();
+            break;
+          case 'App Open':
+            configs = await AppOpenAdPreloader.getConfigurations();
+            break;
+        }
+        if (configs.isNotEmpty) {
+          final entry = configs.entries.first;
+          setState(() {
+            _preloadIdController.text = entry.key;
+            _adUnitIdController.text = entry.value.adUnitId;
+            _bufferSizeController.text = entry.value.bufferSize.toString();
+          });
+          _log(
+            'Found ${configs.length} active configurations. Populated with "${entry.key}": Ad Unit ID: ${entry.value.adUnitId}, Buffer Size: ${entry.value.bufferSize}',
+          );
+        } else {
+          _log('No active configurations found for $_selectedFormat format.');
+        }
+      }
+    } catch (e) {
+      _log('Error finding configuration: $e');
     }
   }
 
@@ -172,7 +240,9 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
     final callback = PreloadCallback(
       onAdPreloaded: (pId, responseInfo) {
         _log('Callback: Ad preloaded successfully for ID "$pId"!');
-        _log('Response Info MEDIATION_ADAPTER: ${responseInfo.mediationAdapterClassName}');
+        _log(
+          'Response Info MEDIATION_ADAPTER: ${responseInfo.mediationAdapterClassName}',
+        );
         _checkAdAvailability();
       },
       onAdsExhausted: (pId) {
@@ -189,28 +259,21 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
     try {
       switch (_selectedFormat) {
         case 'Interstitial':
-          await AdPreloader.start<InterstitialAd>(
+          await InterstitialAdPreloader.start(
             preloadId: preloadId,
             preloadConfiguration: config,
             callback: callback,
           );
           break;
         case 'Rewarded':
-          await AdPreloader.start<RewardedAd>(
-            preloadId: preloadId,
-            preloadConfiguration: config,
-            callback: callback,
-          );
-          break;
-        case 'Rewarded Interstitial':
-          await AdPreloader.start<RewardedInterstitialAd>(
+          await RewardedAdPreloader.start(
             preloadId: preloadId,
             preloadConfiguration: config,
             callback: callback,
           );
           break;
         case 'App Open':
-          await AdPreloader.start<AppOpenAd>(
+          await AppOpenAdPreloader.start(
             preloadId: preloadId,
             preloadConfiguration: config,
             callback: callback,
@@ -233,21 +296,19 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
     try {
       switch (_selectedFormat) {
         case 'Interstitial':
-          await AdPreloader.destroy<InterstitialAd>(preloadId);
+          await InterstitialAdPreloader.destroy(preloadId);
           break;
         case 'Rewarded':
-          await AdPreloader.destroy<RewardedAd>(preloadId);
-          break;
-        case 'Rewarded Interstitial':
-          await AdPreloader.destroy<RewardedInterstitialAd>(preloadId);
+          await RewardedAdPreloader.destroy(preloadId);
           break;
         case 'App Open':
-          await AdPreloader.destroy<AppOpenAd>(preloadId);
+          await AppOpenAdPreloader.destroy(preloadId);
           break;
       }
       _log('Preloader "$preloadId" destroyed.');
       setState(() {
         _isAdAvailable = null;
+        _numAdsAvailable = null;
       });
     } catch (e) {
       _log('Error destroying preloader: $e');
@@ -259,28 +320,26 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
     try {
       switch (_selectedFormat) {
         case 'Interstitial':
-          await AdPreloader.destroyAll<InterstitialAd>();
+          await InterstitialAdPreloader.destroyAll();
           break;
         case 'Rewarded':
-          await AdPreloader.destroyAll<RewardedAd>();
-          break;
-        case 'Rewarded Interstitial':
-          await AdPreloader.destroyAll<RewardedInterstitialAd>();
+          await RewardedAdPreloader.destroyAll();
           break;
         case 'App Open':
-          await AdPreloader.destroyAll<AppOpenAd>();
+          await AppOpenAdPreloader.destroyAll();
           break;
       }
       _log('All $_selectedFormat preloaders destroyed.');
       setState(() {
         _isAdAvailable = null;
+        _numAdsAvailable = null;
       });
     } catch (e) {
       _log('Error destroying preloaders: $e');
     }
   }
 
-  Future<void> _loadAdFromPreloader() async {
+  Future<void> _requestAndShowAd() async {
     final preloadId = _preloadIdController.text.trim();
     final adUnitId = _adUnitIdController.text.trim();
 
@@ -289,61 +348,37 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
       return;
     }
 
-    _log('Standard load call for $_selectedFormat (Preload ID: "$preloadId")...');
+    _log(
+      'Requesting and Showing $_selectedFormat (Preload ID: "$preloadId")...',
+    );
     try {
+      AdWithoutView? loadedAd;
       switch (_selectedFormat) {
         case 'Interstitial':
-          final ad = await AdPreloader.pollAd<InterstitialAd>(preloadId);
-          if (ad != null) {
-            _log('Callback: InterstitialAd loaded successfully from preloader!');
-            setState(() {
-              _loadedAd = ad;
-            });
-          } else {
-            _log('Callback: InterstitialAd failed to load: Preloaded ad not available');
-          }
-          await _checkAdAvailability();
+          loadedAd = await InterstitialAdPreloader.pollAd(preloadId);
           break;
         case 'Rewarded':
-          final ad = await AdPreloader.pollAd<RewardedAd>(preloadId);
-          if (ad != null) {
-            _log('Callback: RewardedAd loaded successfully from preloader!');
-            setState(() {
-              _loadedAd = ad;
-            });
-          } else {
-            _log('Callback: RewardedAd failed to load: Preloaded ad not available');
-          }
-          await _checkAdAvailability();
-          break;
-        case 'Rewarded Interstitial':
-          final ad = await AdPreloader.pollAd<RewardedInterstitialAd>(preloadId);
-          if (ad != null) {
-            _log('Callback: RewardedInterstitialAd loaded successfully from preloader!');
-            setState(() {
-              _loadedAd = ad;
-            });
-          } else {
-            _log('Callback: RewardedInterstitialAd failed to load: Preloaded ad not available');
-          }
-          await _checkAdAvailability();
+          loadedAd = await RewardedAdPreloader.pollAd(preloadId);
           break;
         case 'App Open':
-          final ad = await AdPreloader.pollAd<AppOpenAd>(preloadId);
-          if (ad != null) {
-            _log('Callback: AppOpenAd loaded successfully from preloader!');
-            setState(() {
-              _loadedAd = ad;
-            });
-          } else {
-            _log('Callback: AppOpenAd failed to load: Preloaded ad not available');
-          }
-          await _checkAdAvailability();
+          loadedAd = await AppOpenAdPreloader.pollAd(preloadId);
           break;
       }
-      _log('Load command requested.');
+
+      if (loadedAd != null) {
+        _log('Callback: $_selectedFormat loaded successfully from preloader!');
+        setState(() {
+          _loadedAd = loadedAd;
+        });
+        _showAd();
+      } else {
+        _log(
+          'Callback: $_selectedFormat failed to load: Preloaded ad not available',
+        );
+      }
+      await _checkAdAvailability();
     } catch (e) {
-      _log('Error loading ad: $e');
+      _log('Error requesting/showing ad: $e');
     }
   }
 
@@ -401,35 +436,11 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
           _checkAdAvailability();
         },
       );
-      ad.show(onUserEarnedReward: (ad, reward) {
-        _log('User earned reward: ${reward.amount} ${reward.type}');
-      });
-    } else if (_loadedAd is RewardedInterstitialAd) {
-      final ad = _loadedAd as RewardedInterstitialAd;
-      ad.fullScreenContentCallback = FullScreenContentCallback<RewardedInterstitialAd>(
-        onAdShowedFullScreenContent: (ad) {
-          _log('Ad event: onAdShowedFullScreenContent');
-        },
-        onAdDismissedFullScreenContent: (ad) {
-          _log('Ad event: onAdDismissedFullScreenContent');
-          ad.dispose();
-          setState(() {
-            _loadedAd = null;
-          });
-          _checkAdAvailability();
-        },
-        onAdFailedToShowFullScreenContent: (ad, error) {
-          _log('Ad event: onAdFailedToShowFullScreenContent: ${error.message}');
-          ad.dispose();
-          setState(() {
-            _loadedAd = null;
-          });
-          _checkAdAvailability();
+      ad.show(
+        onUserEarnedReward: (ad, reward) {
+          _log('User earned reward: ${reward.amount} ${reward.type}');
         },
       );
-      ad.show(onUserEarnedReward: (ad, reward) {
-        _log('User earned reward: ${reward.amount} ${reward.type}');
-      });
     } else if (_loadedAd is AppOpenAd) {
       final ad = _loadedAd as AppOpenAd;
       ad.fullScreenContentCallback = FullScreenContentCallback<AppOpenAd>(
@@ -462,9 +473,7 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
     final ColorScheme colors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Fullscreen Ad Preloader'),
-      ),
+      appBar: AppBar(title: const Text('Fullscreen Ad Preloader')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -482,9 +491,37 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
                     Text(
                       'Configuration',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: colors.primary,
+                        fontWeight: FontWeight.bold,
+                        color: colors.primary,
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _preloadIdController,
+                            decoration: const InputDecoration(
+                              labelText: 'Preload ID',
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                            ),
+                            style: const TextStyle(fontSize: 13.0),
                           ),
+                        ),
+                        const SizedBox(width: 12.0),
+                        ElevatedButton(
+                          onPressed: _findConfiguration,
+                          child: Text(
+                            _preloadIdController.text.trim().isEmpty
+                                ? 'Find (any)'
+                                : 'Find',
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 16.0),
                     DropdownButtonFormField<String>(
@@ -497,41 +534,25 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
                           vertical: 8,
                         ),
                       ),
-                      items: <String>[
-                        'Interstitial',
-                        'Rewarded',
-                        'Rewarded Interstitial',
-                        'App Open',
-                      ].map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                      items: <String>['Interstitial', 'Rewarded', 'App Open']
+                          .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          })
+                          .toList(),
                       onChanged: _onFormatChanged,
                     ),
                     const SizedBox(height: 16.0),
-                    TextField(
-                      controller: _adUnitIdController,
-                      decoration: const InputDecoration(
-                        labelText: 'Ad Unit ID',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                      ),
-                      style: const TextStyle(fontSize: 13.0),
-                    ),
-                    const SizedBox(height: 12.0),
                     Row(
                       children: [
                         Expanded(
-                          flex: 2,
+                          flex: 3,
                           child: TextField(
-                            controller: _preloadIdController,
+                            controller: _adUnitIdController,
                             decoration: const InputDecoration(
-                              labelText: 'Preload ID',
+                              labelText: 'Ad Unit ID',
                               border: OutlineInputBorder(),
                               contentPadding: EdgeInsets.symmetric(
                                 horizontal: 12,
@@ -577,9 +598,9 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
                     Text(
                       'Preloader Operations ($_selectedFormat)',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: colors.primary,
-                          ),
+                        fontWeight: FontWeight.bold,
+                        color: colors.primary,
+                      ),
                     ),
                     const SizedBox(height: 12.0),
                     Row(
@@ -630,14 +651,14 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
                       'Ad Request & Showcase',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: colors.primary,
-                          ),
+                        fontWeight: FontWeight.bold,
+                        color: colors.primary,
+                      ),
                     ),
                     const SizedBox(height: 12.0),
                     Row(
@@ -648,6 +669,18 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
                         ),
                         _buildAvailabilityStatus(),
                         const Spacer(),
+                        if (_numAdsAvailable != null)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Text(
+                              'Count: $_numAdsAvailable',
+                              style: const TextStyle(
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                          ),
                         IconButton(
                           icon: const Icon(Icons.refresh),
                           onPressed: _checkAdAvailability,
@@ -656,30 +689,19 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
                       ],
                     ),
                     const Divider(height: 24.0),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: _loadAdFromPreloader,
-                            icon: const Icon(Icons.cloud_download),
-                            label: const Text('Request Ad'),
-                          ),
+                    ElevatedButton.icon(
+                      onPressed: _requestAndShowAd,
+                      icon: const Icon(Icons.play_arrow),
+                      label: const Text('Show Ad'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green[700],
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        textStyle: const TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(width: 12.0),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: _loadedAd != null ? _showAd : null,
-                            icon: const Icon(Icons.play_arrow),
-                            label: const Text('Show Ad'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green[700],
-                              foregroundColor: Colors.white,
-                              disabledBackgroundColor: Colors.grey[300],
-                              disabledForegroundColor: Colors.grey[600],
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ],
                 ),
@@ -699,11 +721,11 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
                       children: [
                         Text(
                           'Console Logs',
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: colors.primary,
-                                  ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: colors.primary,
+                              ),
                         ),
                         TextButton.icon(
                           onPressed: () => setState(() => _logs.clear()),
@@ -736,9 +758,10 @@ class _AdPreloaderExampleState extends State<AdPreloaderExample> {
                               itemCount: _logs.length,
                               itemBuilder: (context, index) {
                                 return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 2.0),
-                                  child: Text(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 2.0,
+                                  ),
+                                  child: SelectableText(
                                     _logs[index],
                                     style: const TextStyle(
                                       color: Colors.lightGreenAccent,

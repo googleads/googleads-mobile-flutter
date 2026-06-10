@@ -36,7 +36,6 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   @Nullable private final FlutterAdRequest request;
   @Nullable private final FlutterAdManagerAdRequest adManagerRequest;
   @Nullable RewardedAd rewardedAd;
-  @Nullable private final String preloadId;
 
   /** A wrapper for {@link RewardItem}. */
   static class FlutterRewardItem {
@@ -77,15 +76,13 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdRequest request,
-      @NonNull FlutterAdLoader flutterAdLoader,
-      @Nullable String preloadId) {
+      @NonNull FlutterAdLoader flutterAdLoader) {
     super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.request = request;
     this.adManagerRequest = null;
     this.flutterAdLoader = flutterAdLoader;
-    this.preloadId = preloadId;
   }
 
   /** Constructor for Ad Manager Ad request. */
@@ -94,34 +91,17 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
       @NonNull AdInstanceManager manager,
       @NonNull String adUnitId,
       @NonNull FlutterAdManagerAdRequest adManagerRequest,
-      @NonNull FlutterAdLoader flutterAdLoader,
-      @Nullable String preloadId) {
+      @NonNull FlutterAdLoader flutterAdLoader) {
     super(adId);
     this.manager = manager;
     this.adUnitId = adUnitId;
     this.adManagerRequest = adManagerRequest;
     this.request = null;
     this.flutterAdLoader = flutterAdLoader;
-    this.preloadId = preloadId;
   }
 
   @Override
   void load() {
-    if (preloadId != null) {
-      RewardedAd preloadedAd = com.google.android.gms.ads.rewarded.RewardedAdPreloader.pollAd(preloadId);
-      if (preloadedAd != null) {
-        onAdLoaded(preloadedAd);
-      } else {
-        LoadAdError error = new LoadAdError(
-            AdRequest.ERROR_CODE_INTERNAL_ERROR,
-                "Preloaded ad not found or already exhausted for preloadId: " + preloadId,
-            "com.google.android.gms.ads",
-            null,
-            null);
-        onAdFailedToLoad(error);
-      }
-      return;
-    }
     final RewardedAdLoadCallback adLoadCallback = new DelegatingRewardedCallback(this);
     if (request != null) {
       flutterAdLoader.loadRewarded(adUnitId, request.asAdRequest(adUnitId), adLoadCallback);

@@ -323,8 +323,7 @@ class _MyAppState extends State<MyApp> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                AdPreloaderExample(),
+                            builder: (context) => AdPreloaderExample(),
                           ),
                         );
                         break;

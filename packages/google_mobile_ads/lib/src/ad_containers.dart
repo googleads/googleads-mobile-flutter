@@ -1147,8 +1147,11 @@ class NativeAd extends AdWithView {
   }
 }
 
+/// An abstract interface for fullscreen ads that support preloading (excluding RewardedInterstitialAd).
+abstract class PreloadableAd implements AdWithoutView {}
+
 /// A full-screen interstitial ad for the Google Mobile Ads Plugin.
-class InterstitialAd extends AdWithoutView {
+class InterstitialAd extends AdWithoutView implements PreloadableAd {
   /// Creates an [InterstitialAd].
   ///
   /// A valid [adUnitId] from the AdMob dashboard, a nonnull [listener], and a
@@ -1193,7 +1196,7 @@ class InterstitialAd extends AdWithoutView {
 }
 
 /// A full-screen interstitial ad for use with Ad Manager.
-class AdManagerInterstitialAd extends AdWithoutView {
+class AdManagerInterstitialAd extends AdWithoutView implements PreloadableAd {
   /// Creates an [AdManagerInterstitialAd].
   ///
   /// A valid [adUnitId] from the Ad Manager dashboard, a nonnull [listener],
@@ -1245,7 +1248,7 @@ class AdManagerInterstitialAd extends AdWithoutView {
 ///
 /// Because the video assets are so large, it's a good idea to start loading an
 /// ad well in advance of when it's likely to be needed.
-class RewardedAd extends AdWithoutView {
+class RewardedAd extends AdWithoutView implements PreloadableAd {
   /// Creates a [RewardedAd] with an [AdRequest].
   ///
   /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
@@ -1465,7 +1468,7 @@ class ServerSideVerificationOptions {
 }
 
 /// A full-screen app open ad for the Google Mobile Ads Plugin.
-class AppOpenAd extends AdWithoutView {
+class AppOpenAd extends AdWithoutView implements PreloadableAd {
   AppOpenAd._({
     required String adUnitId,
     required this.adLoadCallback,

@@ -852,8 +852,149 @@ void main() {
       expect(responses.first.adError!.domain, 'domain');
     });
 
-    test('poll preloaded ads', () async {
-      final ad = await AdPreloader.pollAd<InterstitialAd>('preload-123');
+    test('getNumAdsAvailable tests', () async {
+      log.clear();
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(instanceManager.channel, (
+            MethodCall methodCall,
+          ) async {
+            log.add(methodCall);
+            if (methodCall.method == 'MobileAds#getNumAdsAvailable') {
+              return 3;
+            }
+            return null;
+          });
+
+      final count1 = await InterstitialAdPreloader.getNumAdsAvailable(
+        'preload-int',
+      );
+      expect(count1, 3);
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#getNumAdsAvailable',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-int',
+            'className': 'InterstitialAd',
+          },
+        ),
+      );
+
+      final count2 = await RewardedAdPreloader.getNumAdsAvailable(
+        'preload-rew',
+      );
+      expect(count2, 3);
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#getNumAdsAvailable',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-rew',
+            'className': 'RewardedAd',
+          },
+        ),
+      );
+
+      final count3 = await AppOpenAdPreloader.getNumAdsAvailable(
+        'preload-open',
+      );
+      expect(count3, 3);
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#getNumAdsAvailable',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-open',
+            'className': 'AppOpenAd',
+          },
+        ),
+      );
+
+      // Reset mock handler to standard test handler
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(instanceManager.channel, (
+            MethodCall methodCall,
+          ) async {
+            log.add(methodCall);
+            if (methodCall.method == 'MobileAds#pollAd') {
+              return <dynamic, dynamic>{'adUnitId': 'test-ad-unit'};
+            }
+            return null;
+          });
+    });
+
+    test('getConfiguration and getConfigurations tests', () async {
+      log.clear();
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(instanceManager.channel, (
+            MethodCall methodCall,
+          ) async {
+            log.add(methodCall);
+            if (methodCall.method == 'MobileAds#getPreloadConfiguration') {
+              return <dynamic, dynamic>{
+                'adUnitId': 'test-ad-unit-123',
+                'bufferSize': 5,
+              };
+            } else if (methodCall.method ==
+                'MobileAds#getPreloadConfigurations') {
+              return <dynamic, dynamic>{
+                'preload-id-1': <dynamic, dynamic>{
+                  'adUnitId': 'ad-unit-1',
+                  'bufferSize': 3,
+                },
+                'preload-id-2': <dynamic, dynamic>{
+                  'adUnitId': 'ad-unit-2',
+                  'bufferSize': 4,
+                },
+              };
+            }
+            return null;
+          });
+
+      final config = await InterstitialAdPreloader.getConfiguration('id-1');
+      expect(config, isNotNull);
+      expect(config!.adUnitId, 'test-ad-unit-123');
+      expect(config.bufferSize, 5);
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#getPreloadConfiguration',
+          arguments: <String, dynamic>{
+            'preloadId': 'id-1',
+            'className': 'InterstitialAd',
+          },
+        ),
+      );
+
+      final configs = await RewardedAdPreloader.getConfigurations();
+      expect(configs.length, 2);
+      expect(configs['preload-id-1']!.adUnitId, 'ad-unit-1');
+      expect(configs['preload-id-1']!.bufferSize, 3);
+      expect(configs['preload-id-2']!.adUnitId, 'ad-unit-2');
+      expect(configs['preload-id-2']!.bufferSize, 4);
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#getPreloadConfigurations',
+          arguments: <String, dynamic>{'className': 'RewardedAd'},
+        ),
+      );
+
+      // Reset mock handler to standard test handler
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(instanceManager.channel, (
+            MethodCall methodCall,
+          ) async {
+            log.add(methodCall);
+            if (methodCall.method == 'MobileAds#pollAd') {
+              return <dynamic, dynamic>{'adUnitId': 'test-ad-unit'};
+            }
+            return null;
+          });
+    });
+
+    test('poll InterstitialAdPreloader', () async {
+      final ad = await InterstitialAdPreloader.pollAd('preload-123');
       expect(ad, isNotNull);
       expect(ad!.adUnitId, 'test-ad-unit');
       expect(log, <Matcher>[
@@ -862,6 +1003,40 @@ void main() {
           arguments: <String, dynamic>{
             'preloadId': 'preload-123',
             'className': 'InterstitialAd',
+            'adId': 0,
+          },
+        ),
+      ]);
+    });
+
+    test('poll RewardedAdPreloader', () async {
+      log.clear();
+      final ad = await RewardedAdPreloader.pollAd('preload-rewarded');
+      expect(ad, isNotNull);
+      expect(ad!.adUnitId, 'test-ad-unit');
+      expect(log, <Matcher>[
+        isMethodCall(
+          'MobileAds#pollAd',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-rewarded',
+            'className': 'RewardedAd',
+            'adId': 0,
+          },
+        ),
+      ]);
+    });
+
+    test('poll AppOpenAdPreloader', () async {
+      log.clear();
+      final ad = await AppOpenAdPreloader.pollAd('preload-app-open');
+      expect(ad, isNotNull);
+      expect(ad!.adUnitId, 'test-ad-unit');
+      expect(log, <Matcher>[
+        isMethodCall(
+          'MobileAds#pollAd',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-app-open',
+            'className': 'AppOpenAd',
             'adId': 0,
           },
         ),

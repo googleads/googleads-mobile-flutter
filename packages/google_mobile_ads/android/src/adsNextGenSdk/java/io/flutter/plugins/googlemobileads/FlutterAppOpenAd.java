@@ -45,8 +45,7 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
       @NonNull String adUnitId,
       @Nullable FlutterAdRequest request,
       @Nullable FlutterAdManagerAdRequest adManagerAdRequest,
-      @NonNull FlutterAdLoader flutterAdLoader,
-      @Nullable String preloadId) {
+      @NonNull FlutterAdLoader flutterAdLoader) {
     super(adId);
     Preconditions.checkState(
         request != null || adManagerAdRequest != null,

@@ -17,6 +17,16 @@
 #import "FLTAdUtil.h"
 #import "FLTAdInstanceManager_Internal.h"
 
+static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
+  if (!config) {
+    return nil;
+  }
+  return @{
+    @"adUnitId" : config.adUnitID != nil ? config.adUnitID : @"",
+    @"bufferSize" : @(config.bufferSize)
+  };
+}
+
 @implementation FLTAdPreloader {
   FlutterMethodChannel *_channel;
   FLTAdInstanceManager *_manager;
@@ -94,7 +104,7 @@
       [[GADInterstitialAdPreloader sharedInstance] preloadForPreloadID:preloadId
                                                  configuration:config
                                                               delegate:self];
-    } else if ([className isEqualToString:@"RewardedAd"] || [className isEqualToString:@"RewardedInterstitialAd"]) {
+    } else if ([className isEqualToString:@"RewardedAd"]) {
       [[GADRewardedAdPreloader sharedInstance] preloadForPreloadID:preloadId
                                                  configuration:config
                                                               delegate:self];
@@ -118,7 +128,7 @@
 
     if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
       [[GADInterstitialAdPreloader sharedInstance] stopPreloadingAndRemoveAdsForPreloadID:preloadId];
-    } else if ([className isEqualToString:@"RewardedAd"] || [className isEqualToString:@"RewardedInterstitialAd"]) {
+    } else if ([className isEqualToString:@"RewardedAd"]) {
       [[GADRewardedAdPreloader sharedInstance] stopPreloadingAndRemoveAdsForPreloadID:preloadId];
     } else if ([className isEqualToString:@"AppOpenAd"]) {
       [[GADAppOpenAdPreloader sharedInstance] stopPreloadingAndRemoveAdsForPreloadID:preloadId];
@@ -137,7 +147,7 @@
 
     if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
       [[GADInterstitialAdPreloader sharedInstance] stopPreloadingAndRemoveAllAds];
-    } else if ([className isEqualToString:@"RewardedAd"] || [className isEqualToString:@"RewardedInterstitialAd"]) {
+    } else if ([className isEqualToString:@"RewardedAd"]) {
       [[GADRewardedAdPreloader sharedInstance] stopPreloadingAndRemoveAllAds];
     } else if ([className isEqualToString:@"AppOpenAd"]) {
       [[GADAppOpenAdPreloader sharedInstance] stopPreloadingAndRemoveAllAds];
@@ -158,7 +168,7 @@
     BOOL available = NO;
     if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
       available = [[GADInterstitialAdPreloader sharedInstance] isAdAvailableWithPreloadID:preloadId];
-    } else if ([className isEqualToString:@"RewardedAd"] || [className isEqualToString:@"RewardedInterstitialAd"]) {
+    } else if ([className isEqualToString:@"RewardedAd"]) {
       available = [[GADRewardedAdPreloader sharedInstance] isAdAvailableWithPreloadID:preloadId];
     } else if ([className isEqualToString:@"AppOpenAd"]) {
       available = [[GADAppOpenAdPreloader sharedInstance] isAdAvailableWithPreloadID:preloadId];
@@ -167,6 +177,75 @@
       return;
     }
     result(@(available));
+  } else if ([call.method isEqualToString:@"MobileAds#getNumAdsAvailable"]) {
+    NSString *preloadId = call.arguments[@"preloadId"];
+    NSString *className = call.arguments[@"className"];
+
+    if (!className || className == (id)[NSNull null] || !preloadId || preloadId == (id)[NSNull null]) {
+      result([FlutterError errorWithCode:@"PreloadError" message:@"Missing required argument." details:nil]);
+      return;
+    }
+
+    NSInteger count = 0;
+    if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
+      count = [[GADInterstitialAdPreloader sharedInstance] numberOfAdsAvailableWithPreloadID:preloadId];
+    } else if ([className isEqualToString:@"RewardedAd"]) {
+      count = [[GADRewardedAdPreloader sharedInstance] numberOfAdsAvailableWithPreloadID:preloadId];
+    } else if ([className isEqualToString:@"AppOpenAd"]) {
+      count = [[GADAppOpenAdPreloader sharedInstance] numberOfAdsAvailableWithPreloadID:preloadId];
+    } else {
+      result([FlutterError errorWithCode:@"PreloadError" message:[NSString stringWithFormat:@"Unsupported className: %@", className] details:nil]);
+      return;
+    }
+    result(@(count));
+  } else if ([call.method isEqualToString:@"MobileAds#getPreloadConfiguration"]) {
+    NSString *preloadId = call.arguments[@"preloadId"];
+    NSString *className = call.arguments[@"className"];
+
+    if (!className || className == (id)[NSNull null] || !preloadId || preloadId == (id)[NSNull null]) {
+      result([FlutterError errorWithCode:@"PreloadError" message:@"Missing required argument." details:nil]);
+      return;
+    }
+
+    GADPreloadConfigurationV2 *config = nil;
+    if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
+      config = [[GADInterstitialAdPreloader sharedInstance] configurationWithPreloadID:preloadId];
+    } else if ([className isEqualToString:@"RewardedAd"]) {
+      config = [[GADRewardedAdPreloader sharedInstance] configurationWithPreloadID:preloadId];
+    } else if ([className isEqualToString:@"AppOpenAd"]) {
+      config = [[GADAppOpenAdPreloader sharedInstance] configurationWithPreloadID:preloadId];
+    } else {
+      result([FlutterError errorWithCode:@"PreloadError" message:[NSString stringWithFormat:@"Unsupported className: %@", className] details:nil]);
+      return;
+    }
+    result(serializeConfig(config));
+  } else if ([call.method isEqualToString:@"MobileAds#getPreloadConfigurations"]) {
+    NSString *className = call.arguments[@"className"];
+
+    if (!className || className == (id)[NSNull null]) {
+      result([FlutterError errorWithCode:@"PreloadError" message:@"Missing required argument." details:nil]);
+      return;
+    }
+
+    NSDictionary<NSString *, GADPreloadConfigurationV2 *> *configs = nil;
+    if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
+      configs = [[GADInterstitialAdPreloader sharedInstance] configurations];
+    } else if ([className isEqualToString:@"RewardedAd"]) {
+      configs = [[GADRewardedAdPreloader sharedInstance] configurations];
+    } else if ([className isEqualToString:@"AppOpenAd"]) {
+      configs = [[GADAppOpenAdPreloader sharedInstance] configurations];
+    } else {
+      result([FlutterError errorWithCode:@"PreloadError" message:[NSString stringWithFormat:@"Unsupported className: %@", className] details:nil]);
+      return;
+    }
+
+    NSMutableDictionary *response = [NSMutableDictionary dictionary];
+    if (configs) {
+      for (NSString *key in configs) {
+        response[key] = serializeConfig(configs[key]);
+      }
+    }
+    result(response);
   } else if ([call.method isEqualToString:@"MobileAds#pollAd"]) {
     NSString *preloadId = call.arguments[@"preloadId"];
     NSString *className = call.arguments[@"className"];
@@ -185,9 +264,9 @@
         FLTInterstitialAd *adWrapper =
             [[FLTInterstitialAd alloc] initWithAdUnitId:adUnitId != nil ? adUnitId : @""
                                                 request:[[FLTAdRequest alloc] init]
-                                                   adId:adId
-                                              preloadId:preloadId];
-        [_manager loadAd:adWrapper];
+                                                   adId:adId];
+        [_manager storeAd:adWrapper];
+        [adWrapper onAdLoaded:preloadedAd];
         response = @{@"adUnitId" : adUnitId != nil ? adUnitId : @""};
       }
     } else if ([className isEqualToString:@"AdManagerInterstitialAd"]) {
@@ -197,9 +276,9 @@
         FLTGAMInterstitialAd *adWrapper =
             [[FLTGAMInterstitialAd alloc] initWithAdUnitId:adUnitId != nil ? adUnitId : @""
                                                    request:[[FLTGAMAdRequest alloc] init]
-                                                      adId:adId
-                                                 preloadId:preloadId];
-        [_manager loadAd:adWrapper];
+                                                       adId:adId];
+        [_manager storeAd:adWrapper];
+        [adWrapper onAdLoaded:preloadedAd];
         response = @{@"adUnitId" : adUnitId != nil ? adUnitId : @""};
       }
     } else if ([className isEqualToString:@"RewardedAd"]) {
@@ -209,9 +288,9 @@
         FLTRewardedAd *adWrapper =
             [[FLTRewardedAd alloc] initWithAdUnitId:adUnitId != nil ? adUnitId : @""
                                             request:[[FLTAdRequest alloc] init]
-                                               adId:adId
-                                              preloadId:preloadId];
-        [_manager loadAd:adWrapper];
+                                               adId:adId];
+        [_manager storeAd:adWrapper];
+        [adWrapper onAdLoaded:preloadedAd];
         response = @{@"adUnitId" : adUnitId != nil ? adUnitId : @""};
       }
     } else if ([className isEqualToString:@"AppOpenAd"]) {
@@ -221,9 +300,9 @@
         FLTAppOpenAd *adWrapper =
             [[FLTAppOpenAd alloc] initWithAdUnitId:adUnitId != nil ? adUnitId : @""
                                            request:[[FLTAdRequest alloc] init]
-                                              adId:adId
-                                             preloadId:preloadId];
-        [_manager loadAd:adWrapper];
+                                              adId:adId];
+        [_manager storeAd:adWrapper];
+        [adWrapper onAdLoaded:preloadedAd];
         response = @{@"adUnitId" : adUnitId != nil ? adUnitId : @""};
       }
     }

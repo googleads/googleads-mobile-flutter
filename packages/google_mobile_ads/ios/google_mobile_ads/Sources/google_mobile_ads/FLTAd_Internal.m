@@ -715,14 +715,12 @@
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
-                            adId:(NSNumber *_Nonnull)adId
-                       preloadId:(NSString *_Nullable)preloadId {
+                            adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _adUnitId = [adUnitId copy];
-    _preloadId = [preloadId copy];
   }
   return self;
 }
@@ -736,33 +734,6 @@
 }
 
 - (void)load {
-  if (_preloadId && _preloadId != (id)[NSNull null]) {
-    GADInterstitialAd *preloadedAd = [[GADInterstitialAdPreloader sharedInstance] adWithPreloadID:_preloadId];
-    if (preloadedAd) {
-      preloadedAd.fullScreenContentDelegate = self;
-      self->_interstitialView = preloadedAd;
-      __weak FLTInterstitialAd *weakSelf = self;
-      preloadedAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-        if (weakSelf.manager == nil) {
-          return;
-        }
-        [weakSelf.manager
-            onPaidEvent:weakSelf
-                  value:[[FLTAdValue alloc]
-                            initWithValue:value.value
-                                precision:(NSInteger)value.precision
-                             currencyCode:value.currencyCode]];
-      };
-
-      [self.manager onAdLoaded:self responseInfo:preloadedAd.responseInfo];
-    } else {
-      NSError *error = [NSError errorWithDomain:@"com.google.android.gms.ads"
-                                           code:GADErrorInternalError
-                                       userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Preloaded ad not found or already exhausted for preloadId: %@", _preloadId]}];
-      [self.manager onAdFailedToLoad:self error:error];
-    }
-    return;
-  }
 
   [GADInterstitialAd
        loadWithAdUnitID:_adUnitId
@@ -800,6 +771,25 @@
   }
 }
 
+- (void)onAdLoaded:(GADInterstitialAd *_Nonnull)ad {
+  ad.fullScreenContentDelegate = self;
+  self->_interstitialView = ad;
+  __weak FLTInterstitialAd *weakSelf = self;
+  ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+    if (weakSelf.manager == nil) {
+      return;
+    }
+    [weakSelf.manager
+        onPaidEvent:weakSelf
+              value:[[FLTAdValue alloc]
+                        initWithValue:value.value
+                            precision:(NSInteger)value.precision
+                         currencyCode:value.currencyCode]];
+  };
+
+  [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+}
+
 @end
 
 #pragma mark - FLTGAMInterstitialAd
@@ -812,9 +802,8 @@
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTGAMAdRequest *_Nonnull)request
-                            adId:(NSNumber *_Nonnull)adId
-                       preloadId:(NSString *_Nullable)preloadId {
-  self = [super initWithAdUnitId:adUnitId request:request adId:adId preloadId:preloadId];
+                            adId:(NSNumber *_Nonnull)adId {
+  self = [super initWithAdUnitId:adUnitId request:request adId:adId];
   if (self) {
     self.adId = adId;
     _adRequest = request;
@@ -828,52 +817,6 @@
 }
 
 - (void)load {
-  if (self.preloadId && self.preloadId != (id)[NSNull null]) {
-    GADInterstitialAd *preloadedAd = [[GADInterstitialAdPreloader sharedInstance] adWithPreloadID:self.preloadId];
-    if ([preloadedAd isKindOfClass:[GAMInterstitialAd class]]) {
-      GAMInterstitialAd *gamAd = (GAMInterstitialAd *)preloadedAd;
-      gamAd.fullScreenContentDelegate = self;
-      gamAd.appEventDelegate = self;
-      self->_insterstitial = gamAd;
-      __weak FLTGAMInterstitialAd *weakSelf = self;
-      gamAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-        if (weakSelf.manager == nil) {
-          return;
-        }
-        [weakSelf.manager
-            onPaidEvent:weakSelf
-                  value:[[FLTAdValue alloc]
-                            initWithValue:value.value
-                                precision:(NSInteger)value.precision
-                             currencyCode:value.currencyCode]];
-      };
-
-      [self.manager onAdLoaded:self responseInfo:gamAd.responseInfo];
-    } else if (preloadedAd) {
-      preloadedAd.fullScreenContentDelegate = self;
-      self->_insterstitial = (GAMInterstitialAd *)preloadedAd;
-      __weak FLTGAMInterstitialAd *weakSelf = self;
-      preloadedAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-        if (weakSelf.manager == nil) {
-          return;
-        }
-        [weakSelf.manager
-            onPaidEvent:weakSelf
-                  value:[[FLTAdValue alloc]
-                            initWithValue:value.value
-                                precision:(NSInteger)value.precision
-                             currencyCode:value.currencyCode]];
-      };
-
-      [self.manager onAdLoaded:self responseInfo:preloadedAd.responseInfo];
-    } else {
-      NSError *error = [NSError errorWithDomain:@"com.google.android.gms.ads"
-                                           code:GADErrorInternalError
-                                       userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Preloaded ad not found or already exhausted for preloadId: %@", self.preloadId]}];
-      [self.manager onAdFailedToLoad:self error:error];
-    }
-    return;
-  }
 
   [GAMInterstitialAd
       loadWithAdManagerAdUnitID:_adUnitId
@@ -901,6 +844,46 @@
 
                 self->_insterstitial = ad;
               }];
+}
+
+- (void)onAdLoaded:(GADInterstitialAd *_Nonnull)ad {
+  if ([ad isKindOfClass:[GAMInterstitialAd class]]) {
+    GAMInterstitialAd *gamAd = (GAMInterstitialAd *)ad;
+    gamAd.fullScreenContentDelegate = self;
+    gamAd.appEventDelegate = self;
+    self->_insterstitial = gamAd;
+    __weak FLTGAMInterstitialAd *weakSelf = self;
+    gamAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+      if (weakSelf.manager == nil) {
+        return;
+      }
+      [weakSelf.manager
+          onPaidEvent:weakSelf
+                value:[[FLTAdValue alloc]
+                          initWithValue:value.value
+                              precision:(NSInteger)value.precision
+                           currencyCode:value.currencyCode]];
+    };
+
+    [self.manager onAdLoaded:self responseInfo:gamAd.responseInfo];
+  } else {
+    ad.fullScreenContentDelegate = self;
+    self->_insterstitial = (GAMInterstitialAd *)ad;
+    __weak FLTGAMInterstitialAd *weakSelf = self;
+    ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+      if (weakSelf.manager == nil) {
+        return;
+      }
+      [weakSelf.manager
+          onPaidEvent:weakSelf
+                value:[[FLTAdValue alloc]
+                          initWithValue:value.value
+                              precision:(NSInteger)value.precision
+                           currencyCode:value.currencyCode]];
+    };
+
+    [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+  }
 }
 
 - (void)show {
@@ -931,14 +914,12 @@
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
-                            adId:(NSNumber *_Nonnull)adId
-                       preloadId:(NSString *_Nullable)preloadId {
+                            adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _adUnitId = [adUnitId copy];
-    _preloadId = [preloadId copy];
   }
   return self;
 }
@@ -948,33 +929,6 @@
 }
 
 - (void)load {
-  if (_preloadId && _preloadId != (id)[NSNull null]) {
-    GADRewardedAd *preloadedAd = [[GADRewardedAdPreloader sharedInstance] adWithPreloadID:_preloadId];
-    if (preloadedAd) {
-      preloadedAd.fullScreenContentDelegate = self;
-      self->_rewardedView = preloadedAd;
-      __weak FLTRewardedAd *weakSelf = self;
-      preloadedAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-        if (weakSelf.manager == nil) {
-          return;
-        }
-        [weakSelf.manager
-            onPaidEvent:weakSelf
-                  value:[[FLTAdValue alloc]
-                            initWithValue:value.value
-                                precision:(NSInteger)value.precision
-                             currencyCode:value.currencyCode]];
-      };
-
-      [self.manager onAdLoaded:self responseInfo:preloadedAd.responseInfo];
-    } else {
-      NSError *error = [NSError errorWithDomain:@"com.google.android.gms.ads"
-                                           code:GADErrorInternalError
-                                       userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Preloaded ad not found or already exhausted for preloadId: %@", _preloadId]}];
-      [self.manager onAdFailedToLoad:self error:error];
-    }
-    return;
-  }
   GADRequest *request;
   if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
     FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
@@ -1041,6 +995,25 @@
   }
 }
 
+- (void)onAdLoaded:(GADRewardedAd *_Nonnull)ad {
+  ad.fullScreenContentDelegate = self;
+  self->_rewardedView = ad;
+  __weak FLTRewardedAd *weakSelf = self;
+  ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+    if (weakSelf.manager == nil) {
+      return;
+    }
+    [weakSelf.manager
+        onPaidEvent:weakSelf
+              value:[[FLTAdValue alloc]
+                        initWithValue:value.value
+                            precision:(NSInteger)value.precision
+                         currencyCode:value.currencyCode]];
+  };
+
+  [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
+}
+
 @end
 
 #pragma mark - FLTRewardedInterstitialAd
@@ -1053,14 +1026,12 @@
 
 - (instancetype)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                          request:(FLTAdRequest *_Nonnull)request
-                            adId:(NSNumber *_Nonnull)adId
-                       preloadId:(NSString *_Nullable)preloadId {
+                            adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _adUnitId = [adUnitId copy];
-    _preloadId = [preloadId copy];
   }
   return self;
 }
@@ -1070,13 +1041,6 @@
 }
 
 - (void)load {
-  if (_preloadId && _preloadId != (id)[NSNull null]) {
-    NSError *error = [NSError errorWithDomain:@"com.google.android.gms.ads"
-                                         code:GADErrorInternalError
-                                     userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Preloaded RewardedInterstitialAd is not supported natively in this SDK version."]}];
-    [self.manager onAdFailedToLoad:self error:error];
-    return;
-  }
   GADRequest *request;
   if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
     FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
@@ -1160,14 +1124,12 @@
 
 - (instancetype _Nonnull)initWithAdUnitId:(NSString *_Nonnull)adUnitId
                                   request:(FLTAdRequest *_Nonnull)request
-                                     adId:(NSNumber *_Nonnull)adId
-                                preloadId:(NSString *_Nullable)preloadId {
+                                     adId:(NSNumber *_Nonnull)adId {
   self = [super init];
   if (self) {
     self.adId = adId;
     _adRequest = request;
     _adUnitId = [adUnitId copy];
-    _preloadId = [preloadId copy];
   }
   return self;
 }
@@ -1177,33 +1139,6 @@
 }
 
 - (void)load {
-  if (_preloadId && _preloadId != (id)[NSNull null]) {
-    GADAppOpenAd *preloadedAd = [[GADAppOpenAdPreloader sharedInstance] adWithPreloadID:_preloadId];
-    if (preloadedAd) {
-      preloadedAd.fullScreenContentDelegate = self;
-      self->_appOpenAd = preloadedAd;
-      __weak FLTAppOpenAd *weakSelf = self;
-      preloadedAd.paidEventHandler = ^(GADAdValue *_Nonnull value) {
-        if (weakSelf.manager == nil) {
-          return;
-        }
-        [weakSelf.manager
-            onPaidEvent:weakSelf
-                  value:[[FLTAdValue alloc]
-                            initWithValue:value.value
-                                precision:(NSInteger)value.precision
-                             currencyCode:value.currencyCode]];
-      };
-
-      [self.manager onAdLoaded:self responseInfo:preloadedAd.responseInfo];
-    } else {
-      NSError *error = [NSError errorWithDomain:@"com.google.android.gms.ads"
-                                           code:GADErrorInternalError
-                                       userInfo:@{NSLocalizedDescriptionKey : [NSString stringWithFormat:@"Preloaded ad not found or already exhausted for preloadId: %@", _preloadId]}];
-      [self.manager onAdFailedToLoad:self error:error];
-    }
-    return;
-  }
   GADRequest *request;
   if ([_adRequest isKindOfClass:[FLTGAMAdRequest class]]) {
     FLTGAMAdRequest *gamRequest = (FLTGAMAdRequest *)_adRequest;
@@ -1249,6 +1184,25 @@
   } else {
     NSLog(@"AppOpenAd failed to show because the ad was not ready.");
   }
+}
+
+- (void)onAdLoaded:(GADAppOpenAd *_Nonnull)ad {
+  ad.fullScreenContentDelegate = self;
+  self->_appOpenAd = ad;
+  __weak FLTAppOpenAd *weakSelf = self;
+  ad.paidEventHandler = ^(GADAdValue *_Nonnull value) {
+    if (weakSelf.manager == nil) {
+      return;
+    }
+    [weakSelf.manager
+        onPaidEvent:weakSelf
+              value:[[FLTAdValue alloc]
+                        initWithValue:value.value
+                            precision:(NSInteger)value.precision
+                         currencyCode:value.currencyCode]];
+  };
+
+  [self.manager onAdLoaded:self responseInfo:ad.responseInfo];
 }
 
 @end

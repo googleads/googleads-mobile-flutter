@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs, unused_field, unused_element
 
 import 'dart:async';
 import 'dart:io';

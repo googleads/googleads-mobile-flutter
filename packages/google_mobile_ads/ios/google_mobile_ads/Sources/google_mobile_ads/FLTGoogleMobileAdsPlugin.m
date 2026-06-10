@@ -257,6 +257,9 @@
       [call.method isEqualToString:@"MobileAds#destroyPreloader"] ||
       [call.method isEqualToString:@"MobileAds#destroyAllPreloaders"] ||
       [call.method isEqualToString:@"MobileAds#isPreloadedAdAvailable"] ||
+      [call.method isEqualToString:@"MobileAds#getNumAdsAvailable"] ||
+      [call.method isEqualToString:@"MobileAds#getPreloadConfiguration"] ||
+      [call.method isEqualToString:@"MobileAds#getPreloadConfigurations"] ||
       [call.method isEqualToString:@"MobileAds#pollAd"]) {
     if (self->_flutterAdPreloader) {
       [self->_flutterAdPreloader handleMethodCall:call result:result];
@@ -462,16 +465,14 @@
     FLTInterstitialAd *ad =
         [[FLTInterstitialAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                             request:call.arguments[@"request"]
-                                               adId:call.arguments[@"adId"]
-                                          preloadId:call.arguments[@"preloadId"]];
+                                               adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAdManagerInterstitialAd"]) {
     FLTGAMInterstitialAd *ad = [[FLTGAMInterstitialAd alloc]
         initWithAdUnitId:call.arguments[@"adUnitId"]
                  request:call.arguments[@"request"]
-                    adId:call.arguments[@"adId"]
-               preloadId:call.arguments[@"preloadId"]];
+                    adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedAd"]) {
@@ -491,8 +492,7 @@
     FLTRewardedAd *ad =
         [[FLTRewardedAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                         request:request
-                                           adId:call.arguments[@"adId"]
-                                      preloadId:call.arguments[@"preloadId"]];
+                                           adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadRewardedInterstitialAd"]) {
@@ -512,8 +512,7 @@
     FLTRewardedInterstitialAd *ad = [[FLTRewardedInterstitialAd alloc]
         initWithAdUnitId:call.arguments[@"adUnitId"]
                  request:request
-                    adId:call.arguments[@"adId"]
-               preloadId:call.arguments[@"preloadId"]];
+                    adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"loadAppOpenAd"]) {
@@ -532,8 +531,7 @@
     FLTAppOpenAd *ad =
         [[FLTAppOpenAd alloc] initWithAdUnitId:call.arguments[@"adUnitId"]
                                        request:request
-                                          adId:call.arguments[@"adId"]
-                                     preloadId:call.arguments[@"preloadId"]];
+                                          adId:call.arguments[@"adId"]];
     [_manager loadAd:ad];
     result(nil);
   } else if ([call.method isEqualToString:@"disposeAd"]) {
