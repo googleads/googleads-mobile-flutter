@@ -665,6 +665,20 @@ abstract class AdWithView extends Ad {
   Future<void> load();
 }
 
+/// Mixin that exposes [isMounted] getter to check if an inline view ad
+/// is currently mounted in a widget.
+mixin AdWithViewMounted on AdWithView {
+  /// Returns true if the ad Id is already mounted in a WidgetAd managed
+  /// by the instanceManager.
+  bool get isMounted {
+    final int? id = instanceManager.adIdFor(this);
+    if (id != null) {
+      return instanceManager.isWidgetAdIdMounted(id);
+    }
+    return false;
+  }
+}
+
 /// An [Ad] that is overlaid on top of the UI.
 abstract class AdWithoutView extends Ad {
   /// Default constructor used by subclasses.
@@ -920,7 +934,7 @@ class _FluidAdWidgetState extends State<FluidAdWidget> {
 /// This ad can either be overlaid on top of all flutter widgets as a static
 /// view or displayed as a typical Flutter widget. To display as a widget,
 /// instantiate an [AdWidget] with this as a parameter.
-class BannerAd extends AdWithView {
+class BannerAd extends AdWithView with AdWithViewMounted {
   /// Creates a [BannerAd].
   ///
   /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
@@ -957,16 +971,6 @@ class BannerAd extends AdWithView {
   /// The future will resolve to null if [load] has not been called yet.
   Future<AdSize?> getPlatformAdSize() async {
     return await instanceManager.getAdSize(this);
-  }
-
-  /// Returns true if the ad Id is already mounted in a WidgetAd managed
-  /// by the instanceManager.
-  bool get isMounted {
-    final int? id = instanceManager.adIdFor(this);
-    if (id != null) {
-      return instanceManager.isWidgetAdIdMounted(id);
-    }
-    return false;
   }
 
   /// Returns true if banner loaded is collapsible
@@ -1010,7 +1014,7 @@ class FluidAdManagerBannerAd extends AdManagerBannerAd {
 ///
 /// This ad can either be overlaid on top of all flutter widgets by passing this
 /// to an [AdWidget] after calling [load].
-class AdManagerBannerAd extends AdWithView {
+class AdManagerBannerAd extends AdWithView with AdWithViewMounted {
   /// Default constructor for [AdManagerBannerAd].
   ///
   /// [sizes], [adUnitId], [listener], and [request] are all required values.
