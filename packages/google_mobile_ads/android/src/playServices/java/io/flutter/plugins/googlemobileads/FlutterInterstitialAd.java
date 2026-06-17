@@ -17,11 +17,9 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.google.android.gms.ads.interstitial.InterstitialAdPreloader;
 import java.lang.ref.WeakReference;
 
 class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {

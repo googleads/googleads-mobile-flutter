@@ -100,7 +100,7 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
       }
     }
 
-    if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
+    if ([className isEqualToString:@"InterstitialAd"]) {
       [[GADInterstitialAdPreloader sharedInstance] preloadForPreloadID:preloadId
                                                  configuration:config
                                                               delegate:self];
@@ -126,7 +126,7 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
       return;
     }
 
-    if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
+    if ([className isEqualToString:@"InterstitialAd"]) {
       [[GADInterstitialAdPreloader sharedInstance] stopPreloadingAndRemoveAdsForPreloadID:preloadId];
     } else if ([className isEqualToString:@"RewardedAd"]) {
       [[GADRewardedAdPreloader sharedInstance] stopPreloadingAndRemoveAdsForPreloadID:preloadId];
@@ -145,7 +145,7 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
       return;
     }
 
-    if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
+    if ([className isEqualToString:@"InterstitialAd"]) {
       [[GADInterstitialAdPreloader sharedInstance] stopPreloadingAndRemoveAllAds];
     } else if ([className isEqualToString:@"RewardedAd"]) {
       [[GADRewardedAdPreloader sharedInstance] stopPreloadingAndRemoveAllAds];
@@ -166,7 +166,7 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
     }
 
     BOOL available = NO;
-    if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
+    if ([className isEqualToString:@"InterstitialAd"]) {
       available = [[GADInterstitialAdPreloader sharedInstance] isAdAvailableWithPreloadID:preloadId];
     } else if ([className isEqualToString:@"RewardedAd"]) {
       available = [[GADRewardedAdPreloader sharedInstance] isAdAvailableWithPreloadID:preloadId];
@@ -187,7 +187,7 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
     }
 
     NSInteger count = 0;
-    if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
+    if ([className isEqualToString:@"InterstitialAd"]) {
       count = [[GADInterstitialAdPreloader sharedInstance] numberOfAdsAvailableWithPreloadID:preloadId];
     } else if ([className isEqualToString:@"RewardedAd"]) {
       count = [[GADRewardedAdPreloader sharedInstance] numberOfAdsAvailableWithPreloadID:preloadId];
@@ -208,7 +208,7 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
     }
 
     GADPreloadConfigurationV2 *config = nil;
-    if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
+    if ([className isEqualToString:@"InterstitialAd"]) {
       config = [[GADInterstitialAdPreloader sharedInstance] configurationWithPreloadID:preloadId];
     } else if ([className isEqualToString:@"RewardedAd"]) {
       config = [[GADRewardedAdPreloader sharedInstance] configurationWithPreloadID:preloadId];
@@ -228,7 +228,7 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
     }
 
     NSDictionary<NSString *, GADPreloadConfigurationV2 *> *configs = nil;
-    if ([className isEqualToString:@"InterstitialAd"] || [className isEqualToString:@"AdManagerInterstitialAd"]) {
+    if ([className isEqualToString:@"InterstitialAd"]) {
       configs = [[GADInterstitialAdPreloader sharedInstance] configurations];
     } else if ([className isEqualToString:@"RewardedAd"]) {
       configs = [[GADRewardedAdPreloader sharedInstance] configurations];
@@ -265,18 +265,6 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
             [[FLTInterstitialAd alloc] initWithAdUnitId:adUnitId != nil ? adUnitId : @""
                                                 request:[[FLTAdRequest alloc] init]
                                                    adId:adId];
-        [_manager storeAd:adWrapper];
-        [adWrapper onAdLoaded:preloadedAd];
-        response = @{@"adUnitId" : adUnitId != nil ? adUnitId : @""};
-      }
-    } else if ([className isEqualToString:@"AdManagerInterstitialAd"]) {
-      id preloadedAd = [[GADInterstitialAdPreloader sharedInstance] adWithPreloadID:preloadId];
-      if (preloadedAd) {
-        NSString *adUnitId = [preloadedAd respondsToSelector:@selector(adUnitID)] ? [preloadedAd performSelector:@selector(adUnitID)] : @"";
-        FLTGAMInterstitialAd *adWrapper =
-            [[FLTGAMInterstitialAd alloc] initWithAdUnitId:adUnitId != nil ? adUnitId : @""
-                                                   request:[[FLTGAMAdRequest alloc] init]
-                                                       adId:adId];
         [_manager storeAd:adWrapper];
         [adWrapper onAdLoaded:preloadedAd];
         response = @{@"adUnitId" : adUnitId != nil ? adUnitId : @""};

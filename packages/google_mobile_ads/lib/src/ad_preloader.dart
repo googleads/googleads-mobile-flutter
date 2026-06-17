@@ -70,15 +70,6 @@ abstract class _AdPreloader {
           onAdFailedToLoad: (_) {},
         ),
       );
-    } else if (T == AdManagerInterstitialAd) {
-      return AdManagerInterstitialAd._(
-        adUnitId: config.adUnitId,
-        request: config.request as AdManagerAdRequest,
-        adLoadCallback: AdManagerInterstitialAdLoadCallback(
-          onAdLoaded: (_) {},
-          onAdFailedToLoad: (_) {},
-        ),
-      );
     } else if (T == RewardedAd) {
       return RewardedAd._(
         adUnitId: config.adUnitId,
@@ -282,57 +273,6 @@ abstract class InterstitialAdPreloader extends _AdPreloader {
   /// Returns all active configurations.
   static Future<Map<String, PreloadConfiguration>> getConfigurations() {
     return _AdPreloader.getConfigurations<InterstitialAd>();
-  }
-}
-
-/// A preloader for [AdManagerInterstitialAd]s.
-abstract class AdManagerInterstitialAdPreloader extends _AdPreloader {
-  /// Starts preloading ads for the given [preloadId] and [preloadConfiguration].
-  static Future<void> start({
-    required String preloadId,
-    required PreloadConfiguration preloadConfiguration,
-    required PreloadCallback callback,
-  }) {
-    return _AdPreloader.start<AdManagerInterstitialAd>(
-      preloadId: preloadId,
-      preloadConfiguration: preloadConfiguration,
-      callback: callback,
-    );
-  }
-
-  /// Polls a preloaded ad for the given [preloadId].
-  static Future<AdManagerInterstitialAd?> pollAd(String preloadId) {
-    return _AdPreloader.pollAd<AdManagerInterstitialAd>(preloadId);
-  }
-
-  /// Destroys the preloader for the given [preloadId].
-  static Future<void> destroy(String preloadId) {
-    return _AdPreloader.destroy<AdManagerInterstitialAd>(preloadId);
-  }
-
-  /// Destroys all preloaders of this format.
-  static Future<void> destroyAll() {
-    return _AdPreloader.destroyAll<AdManagerInterstitialAd>();
-  }
-
-  /// Checks if an ad is available for the given [preloadId].
-  static Future<bool> isAdAvailable(String preloadId) {
-    return _AdPreloader.isAdAvailable<AdManagerInterstitialAd>(preloadId);
-  }
-
-  /// Returns the number of preloaded ads available for the given [preloadId].
-  static Future<int> getNumAdsAvailable(String preloadId) {
-    return _AdPreloader.getNumAdsAvailable<AdManagerInterstitialAd>(preloadId);
-  }
-
-  /// Returns the configuration for the given [preloadId].
-  static Future<PreloadConfiguration?> getConfiguration(String preloadId) {
-    return _AdPreloader.getConfiguration<AdManagerInterstitialAd>(preloadId);
-  }
-
-  /// Returns all active configurations.
-  static Future<Map<String, PreloadConfiguration>> getConfigurations() {
-    return _AdPreloader.getConfigurations<AdManagerInterstitialAd>();
   }
 }
 

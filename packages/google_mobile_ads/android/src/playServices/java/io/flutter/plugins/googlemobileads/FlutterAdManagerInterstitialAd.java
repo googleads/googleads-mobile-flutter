@@ -18,11 +18,9 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 import com.google.android.gms.ads.admanager.AppEventListener;
-import com.google.android.gms.ads.interstitial.InterstitialAdPreloader;
 import java.lang.ref.WeakReference;
 
 /**

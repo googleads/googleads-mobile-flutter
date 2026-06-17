@@ -15,7 +15,6 @@
 package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * Wrapper around {@link com.google.android.gms.ads.admanager.AdManagerInterstitialAd} for the

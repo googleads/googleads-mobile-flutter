@@ -22,7 +22,6 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.ResponseInfo;
-import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.appopen.AppOpenAd;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdPreloader;
@@ -105,7 +104,7 @@ class FlutterAdPreloader {
           }
         };
 
-        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+        if (className.equals("InterstitialAd")) {
           InterstitialAdPreloader.start(preloadId, config, callback);
         } else if (className.equals("RewardedAd")) {
           RewardedAdPreloader.start(preloadId, config, callback);
@@ -127,7 +126,7 @@ class FlutterAdPreloader {
           break;
         }
 
-        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+        if (className.equals("InterstitialAd")) {
           InterstitialAdPreloader.destroy(preloadId);
         } else if (className.equals("RewardedAd")) {
           RewardedAdPreloader.destroy(preloadId);
@@ -148,7 +147,7 @@ class FlutterAdPreloader {
           break;
         }
 
-        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+        if (className.equals("InterstitialAd")) {
           InterstitialAdPreloader.destroyAll();
         } else if (className.equals("RewardedAd")) {
           RewardedAdPreloader.destroyAll();
@@ -171,7 +170,7 @@ class FlutterAdPreloader {
         }
 
         boolean available = false;
-        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+        if (className.equals("InterstitialAd")) {
           available = InterstitialAdPreloader.isAdAvailable(preloadId);
         } else if (className.equals("RewardedAd")) {
           available = RewardedAdPreloader.isAdAvailable(preloadId);
@@ -194,7 +193,7 @@ class FlutterAdPreloader {
         }
 
         int count = 0;
-        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+        if (className.equals("InterstitialAd")) {
           count = InterstitialAdPreloader.getNumAdsAvailable(preloadId);
         } else if (className.equals("RewardedAd")) {
           count = RewardedAdPreloader.getNumAdsAvailable(preloadId);
@@ -217,7 +216,7 @@ class FlutterAdPreloader {
         }
 
         PreloadConfiguration config = null;
-        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+        if (className.equals("InterstitialAd")) {
           config = InterstitialAdPreloader.getConfiguration(preloadId);
         } else if (className.equals("RewardedAd")) {
           config = RewardedAdPreloader.getConfiguration(preloadId);
@@ -239,7 +238,7 @@ class FlutterAdPreloader {
         }
 
         Map<String, PreloadConfiguration> configs = null;
-        if (className.equals("InterstitialAd") || className.equals("AdManagerInterstitialAd")) {
+        if (className.equals("InterstitialAd")) {
           configs = InterstitialAdPreloader.getConfigurations();
         } else if (className.equals("RewardedAd")) {
           configs = RewardedAdPreloader.getConfigurations();
@@ -281,23 +280,6 @@ class FlutterAdPreloader {
                     instanceManager,
                     adUnitId != null ? adUnitId : "",
                     new FlutterAdRequest.Builder().build(),
-                    new FlutterAdLoader(context));
-            adWrapper.onAdLoaded(preloadedAd);
-            instanceManager.trackAd(adWrapper, adId);
-            response = new HashMap<>();
-            response.put("adUnitId", adUnitId != null ? adUnitId : "");
-          }
-        } else if (className.equals("AdManagerInterstitialAd")) {
-          AdManagerInterstitialAd preloadedAd = (AdManagerInterstitialAd)
-                  InterstitialAdPreloader.pollAd(preloadId);
-          if (preloadedAd != null) {
-            String adUnitId = preloadedAd.getAdUnitId();
-            FlutterAdManagerInterstitialAd adWrapper =
-                new FlutterAdManagerInterstitialAd(
-                    adId,
-                    instanceManager,
-                    adUnitId != null ? adUnitId : "",
-                    new FlutterAdManagerAdRequest.Builder().build(),
                     new FlutterAdLoader(context));
             adWrapper.onAdLoaded(preloadedAd);
             instanceManager.trackAd(adWrapper, adId);

@@ -61,15 +61,22 @@ void main() {
               case 'loadAdManagerInterstitialAd':
               case 'loadAdManagerBannerAd':
               case 'setServerSideVerificationOptions':
+              case 'MobileAds#startPreloading':
+              case 'MobileAds#destroyPreloader':
+              case 'MobileAds#destroyAllPreloaders':
                 return Future<void>.value();
               case 'MobileAds#pollAd':
                 return Future<dynamic>.value(<String, dynamic>{
                   'adUnitId': 'test-ad-unit',
                 });
+              case 'MobileAds#isPreloadedAdAvailable':
+                return Future<dynamic>.value(true);
+              case 'MobileAds#getNumAdsAvailable':
+                return Future<dynamic>.value(0);
               case 'getAdSize':
                 return Future<dynamic>.value(AdSize.banner);
               default:
-                assert(false);
+                assert(false, 'Unhandled method: ${methodCall.method}');
                 return null;
             }
           });
@@ -1041,6 +1048,207 @@ void main() {
           },
         ),
       ]);
+    });
+
+    test('start preloading tests', () async {
+      log.clear();
+      final preloadConfig = PreloadConfiguration(
+        adUnitId: 'test-unit-id',
+        bufferSize: 3,
+      );
+      final callback = PreloadCallback(
+        onAdPreloaded: (id, info) {},
+        onAdsExhausted: (id) {},
+        onAdFailedToPreload: (id, error) {},
+      );
+
+      await InterstitialAdPreloader.start(
+        preloadId: 'preload-1',
+        preloadConfiguration: preloadConfig,
+        callback: callback,
+      );
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#startPreloading',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-1',
+            'adUnitId': 'test-unit-id',
+            'bufferSize': 3,
+            'request': preloadConfig.request,
+            'className': 'InterstitialAd',
+          },
+        ),
+      );
+
+      await RewardedAdPreloader.start(
+        preloadId: 'preload-3',
+        preloadConfiguration: preloadConfig,
+        callback: callback,
+      );
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#startPreloading',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-3',
+            'adUnitId': 'test-unit-id',
+            'bufferSize': 3,
+            'request': preloadConfig.request,
+            'className': 'RewardedAd',
+          },
+        ),
+      );
+
+      await AppOpenAdPreloader.start(
+        preloadId: 'preload-4',
+        preloadConfiguration: preloadConfig,
+        callback: callback,
+      );
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#startPreloading',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-4',
+            'adUnitId': 'test-unit-id',
+            'bufferSize': 3,
+            'request': preloadConfig.request,
+            'className': 'AppOpenAd',
+          },
+        ),
+      );
+    });
+
+    test('destroy and destroyAll preloading tests', () async {
+      log.clear();
+      await InterstitialAdPreloader.destroy('preload-1');
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#destroyPreloader',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-1',
+            'className': 'InterstitialAd',
+          },
+        ),
+      );
+
+      await InterstitialAdPreloader.destroyAll();
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#destroyAllPreloaders',
+          arguments: <String, dynamic>{'className': 'InterstitialAd'},
+        ),
+      );
+    });
+
+    test('isAdAvailable tests', () async {
+      log.clear();
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(instanceManager.channel, (
+            MethodCall methodCall,
+          ) async {
+            log.add(methodCall);
+            if (methodCall.method == 'MobileAds#isPreloadedAdAvailable') {
+              return true;
+            }
+            return null;
+          });
+
+      final available = await InterstitialAdPreloader.isAdAvailable(
+        'preload-1',
+      );
+      expect(available, isTrue);
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#isPreloadedAdAvailable',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-1',
+            'className': 'InterstitialAd',
+          },
+        ),
+      );
+
+      // Reset mock handler to standard test handler
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(instanceManager.channel, (
+            MethodCall methodCall,
+          ) async {
+            log.add(methodCall);
+            if (methodCall.method == 'MobileAds#pollAd') {
+              return <dynamic, dynamic>{'adUnitId': 'test-ad-unit'};
+            }
+            return null;
+          });
+    });
+
+    test('onPreloadEvent callbacks tests', () async {
+      log.clear();
+      final preloadedCompleter = Completer<ResponseInfo>();
+      final exhaustedCompleter = Completer<String>();
+      final failedCompleter = Completer<AdError>();
+
+      final callback = PreloadCallback(
+        onAdPreloaded: (id, info) => preloadedCompleter.complete(info),
+        onAdsExhausted: (id) => exhaustedCompleter.complete(id),
+        onAdFailedToPreload: (id, error) => failedCompleter.complete(error),
+      );
+
+      await InterstitialAdPreloader.start(
+        preloadId: 'preload-cb',
+        preloadConfiguration: PreloadConfiguration(adUnitId: 'test-unit'),
+        callback: callback,
+      );
+
+      // 1. Test onAdPreloaded
+      final responseInfo = ResponseInfo(
+        responseId: 'res-id',
+        mediationAdapterClassName: 'adapter',
+        adapterResponses: [],
+        responseExtras: {},
+      );
+      final ByteData preloadedData = instanceManager.channel.codec
+          .encodeMethodCall(
+            MethodCall('onPreloadEvent', <dynamic, dynamic>{
+              'preloadId': 'preload-cb',
+              'eventName': 'onAdPreloaded',
+              'responseInfo': responseInfo,
+            }),
+          );
+      await handlePlatformMessage(preloadedData);
+      final receivedInfo = await preloadedCompleter.future;
+      expect(receivedInfo.responseId, responseInfo.responseId);
+
+      // 2. Test onAdsExhausted
+      final ByteData exhaustedData = instanceManager.channel.codec
+          .encodeMethodCall(
+            MethodCall('onPreloadEvent', <dynamic, dynamic>{
+              'preloadId': 'preload-cb',
+              'eventName': 'onAdsExhausted',
+            }),
+          );
+      await handlePlatformMessage(exhaustedData);
+      final receivedExhaustedId = await exhaustedCompleter.future;
+      expect(receivedExhaustedId, 'preload-cb');
+
+      // 3. Test onAdFailedToPreload
+      final adError = AdError(1, 'domain', 'message');
+      final ByteData failedData = instanceManager.channel.codec
+          .encodeMethodCall(
+            MethodCall('onPreloadEvent', <dynamic, dynamic>{
+              'preloadId': 'preload-cb',
+              'eventName': 'onAdFailedToPreload',
+              'error': adError,
+            }),
+          );
+      await handlePlatformMessage(failedData);
+      final receivedError = await failedCompleter.future;
+      expect(receivedError.code, adError.code);
+      expect(receivedError.domain, adError.domain);
+      expect(receivedError.message, adError.message);
     });
 
     test('onNativeAdImpression', () async {

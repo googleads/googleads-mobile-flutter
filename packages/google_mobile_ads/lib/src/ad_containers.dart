@@ -1147,7 +1147,7 @@ class NativeAd extends AdWithView {
   }
 }
 
-/// An abstract interface for fullscreen ads that support preloading (excluding RewardedInterstitialAd).
+/// An abstract interface for fullscreen ads that support preloading (excluding [RewardedInterstitialAd]).
 abstract class PreloadableAd implements AdWithoutView {}
 
 /// A full-screen interstitial ad for the Google Mobile Ads Plugin.
@@ -1196,7 +1196,7 @@ class InterstitialAd extends AdWithoutView implements PreloadableAd {
 }
 
 /// A full-screen interstitial ad for use with Ad Manager.
-class AdManagerInterstitialAd extends AdWithoutView implements PreloadableAd {
+class AdManagerInterstitialAd extends AdWithoutView {
   /// Creates an [AdManagerInterstitialAd].
   ///
   /// A valid [adUnitId] from the Ad Manager dashboard, a nonnull [listener],
