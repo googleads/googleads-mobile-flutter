@@ -1,5 +1,5 @@
 group 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_ironsource'
-version = "2.4.1"
+version = "2.4.2"
 
 buildscript {
     ext.kotlin_version = '2.3.0'
