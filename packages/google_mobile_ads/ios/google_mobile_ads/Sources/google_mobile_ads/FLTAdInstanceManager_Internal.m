@@ -53,6 +53,11 @@
   return nil;
 }
 
+- (void)storeAd:(id<FLTAd> _Nonnull)ad {
+  [_ads setObject:ad forKey:ad.adId];
+  ad.manager = self;
+}
+
 - (void)loadAd:(id<FLTAd> _Nonnull)ad {
   [_ads setObject:ad forKey:ad.adId];
   ad.manager = self;

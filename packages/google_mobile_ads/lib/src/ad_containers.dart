@@ -26,6 +26,8 @@ import 'ad_listeners.dart';
 import 'mediation_extras.dart';
 import 'nativetemplates/native_template_style.dart';
 
+part 'ad_preloader.dart';
+
 /// Error information about why an ad operation failed.
 class AdError {
   /// Creates an [AdError] with the given [code], [domain] and [message].
@@ -1149,8 +1151,11 @@ class NativeAd extends AdWithView {
   }
 }
 
+/// An abstract interface for fullscreen ads that support preloading (excluding [RewardedInterstitialAd]).
+abstract class PreloadableAd implements AdWithoutView {}
+
 /// A full-screen interstitial ad for the Google Mobile Ads Plugin.
-class InterstitialAd extends AdWithoutView {
+class InterstitialAd extends AdWithoutView implements PreloadableAd {
   /// Creates an [InterstitialAd].
   ///
   /// A valid [adUnitId] from the AdMob dashboard, a nonnull [listener], and a
@@ -1247,7 +1252,7 @@ class AdManagerInterstitialAd extends AdWithoutView {
 ///
 /// Because the video assets are so large, it's a good idea to start loading an
 /// ad well in advance of when it's likely to be needed.
-class RewardedAd extends AdWithoutView {
+class RewardedAd extends AdWithoutView implements PreloadableAd {
   /// Creates a [RewardedAd] with an [AdRequest].
   ///
   /// A valid [adUnitId], nonnull [listener], and nonnull request is required.
@@ -1467,7 +1472,7 @@ class ServerSideVerificationOptions {
 }
 
 /// A full-screen app open ad for the Google Mobile Ads Plugin.
-class AppOpenAd extends AdWithoutView {
+class AppOpenAd extends AdWithoutView implements PreloadableAd {
   AppOpenAd._({
     required String adUnitId,
     required this.adLoadCallback,
