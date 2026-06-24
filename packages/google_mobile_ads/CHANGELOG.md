@@ -1,3 +1,10 @@
+## 9.1.0
+* Adding Ad Preloading APIs. [PR 1445](https://github.com/googleads/googleads-mobile-flutter/pull/1445)
+* Support `AdManagerBannerAd` recycling by exposing `isMounted`. [PR 1443](https://github.com/googleads/googleads-mobile-flutter/pull/1443)
+* Uses latest UMP SDK:
+  * [Android](https://developers.google.com/admob/android/privacy/release-notes) UMP SDK version 4.0.0.
+  * [iOS](https://developers.google.com/admob/ios/privacy/download#release_notes) UMP SDK version 3.1.0.
+
 ## 9.0.0
 * Resolves pending start/stop method channel futures in AppStateNotifier Android. [PR 1438](https://github.com/googleads/googleads-mobile-flutter/pull/1438)
 * Updates GMA Android SDK dependencies:
