@@ -19,6 +19,8 @@ import static com.google.android.gms.ads.RequestConfiguration.TAG_FOR_UNDER_AGE_
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.util.Log;
+import com.google.android.gms.ads.AgeRestrictedTreatment;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -32,6 +34,7 @@ class FlutterRequestConfiguration {
   private final Integer tagForChildDirectedTreatment;
   private final Integer tagForUnderAgeOfConsent;
   @Nullable private final List<String> testDeviceIds;
+  @Nullable private final Integer ageRestrictedTreatment;
 
   public static void updateRequestConfiguration(@NonNull MethodCall call) {
     RequestConfiguration.Builder builder = MobileAds.getRequestConfiguration().toBuilder();
@@ -39,6 +42,8 @@ class FlutterRequestConfiguration {
     Integer tagForChildDirectedTreatment = call.argument("tagForChildDirectedTreatment");
     Integer tagForUnderAgeOfConsent = call.argument("tagForUnderAgeOfConsent");
     List<String> testDeviceIds = call.argument("testDeviceIds");
+    Integer ageRestrictedTreatmentIndex = call.argument("ageRestrictedTreatment");
+
     if (maxAdContentRating != null) {
       builder.setMaxAdContentRating(maxAdContentRating);
     }
@@ -51,6 +56,9 @@ class FlutterRequestConfiguration {
     if (testDeviceIds != null) {
       builder.setTestDeviceIds(testDeviceIds);
     }
+    if (ageRestrictedTreatmentIndex != null) {
+      builder.setAgeRestrictedTreatment(AgeRestrictedTreatment.values()[ageRestrictedTreatmentIndex]);
+    }
     MobileAds.setRequestConfiguration(builder.build());
   }
 
@@ -59,6 +67,7 @@ class FlutterRequestConfiguration {
     private Integer tagForChildDirectedTreatment = TAG_FOR_CHILD_DIRECTED_TREATMENT_UNSPECIFIED;
     private Integer tagForUnderAgeOfConsent = TAG_FOR_UNDER_AGE_OF_CONSENT_UNSPECIFIED;
     @Nullable private List<String> testDeviceIds;
+    @Nullable private Integer ageRestrictedTreatment;
 
     @CanIgnoreReturnValue
     Builder setMaxAdContentRating(String maxAdContentRating) {
@@ -84,6 +93,12 @@ class FlutterRequestConfiguration {
       return this;
     }
 
+    @CanIgnoreReturnValue
+    Builder setAgeRestrictedTreatment(@Nullable Integer ageRestrictedTreatment) {
+      this.ageRestrictedTreatment = ageRestrictedTreatment;
+      return this;
+    }
+
     @Nullable
     protected String getMaxAdContentRating() {
       return maxAdContentRating;
@@ -102,9 +117,18 @@ class FlutterRequestConfiguration {
       return testDeviceIds;
     }
 
+    @Nullable
+    protected Integer getAgeRestrictedTreatment() {
+      return ageRestrictedTreatment;
+    }
+
     FlutterRequestConfiguration build() {
       return new FlutterRequestConfiguration(
-          maxAdContentRating, tagForChildDirectedTreatment, tagForUnderAgeOfConsent, testDeviceIds);
+          maxAdContentRating,
+          tagForChildDirectedTreatment,
+          tagForUnderAgeOfConsent,
+          testDeviceIds,
+          ageRestrictedTreatment);
     }
   }
 
@@ -112,11 +136,13 @@ class FlutterRequestConfiguration {
       @Nullable String maxAdContentRating,
       Integer tagForChildDirectedTreatment,
       Integer tagForUnderAgeOfConsent,
-      @Nullable List<String> testDeviceIds) {
+      @Nullable List<String> testDeviceIds,
+      @Nullable Integer ageRestrictedTreatment) {
     this.maxAdContentRating = maxAdContentRating;
     this.tagForChildDirectedTreatment = tagForChildDirectedTreatment;
     this.tagForUnderAgeOfConsent = tagForUnderAgeOfConsent;
     this.testDeviceIds = testDeviceIds;
+    this.ageRestrictedTreatment = ageRestrictedTreatment;
   }
 
   @Nullable
@@ -137,6 +163,11 @@ class FlutterRequestConfiguration {
     return testDeviceIds;
   }
 
+  @Nullable
+  protected Integer getAgeRestrictedTreatment() {
+    return ageRestrictedTreatment;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -149,7 +180,8 @@ class FlutterRequestConfiguration {
     return Objects.equals(maxAdContentRating, config.maxAdContentRating)
         && Objects.equals(tagForChildDirectedTreatment, config.tagForChildDirectedTreatment)
         && Objects.equals(tagForUnderAgeOfConsent, config.tagForUnderAgeOfConsent)
-        && Objects.equals(testDeviceIds, config.testDeviceIds);
+        && Objects.equals(testDeviceIds, config.testDeviceIds)
+        && Objects.equals(ageRestrictedTreatment, config.ageRestrictedTreatment);
   }
 
   @Override
@@ -158,6 +190,7 @@ class FlutterRequestConfiguration {
         maxAdContentRating,
         tagForChildDirectedTreatment,
         tagForUnderAgeOfConsent,
-        testDeviceIds);
+        testDeviceIds,
+        ageRestrictedTreatment);
   }
 }

@@ -788,6 +788,8 @@ class AdInstanceManager {
             requestConfiguration.tagForChildDirectedTreatment,
         'testDeviceIds': requestConfiguration.testDeviceIds,
         'tagForUnderAgeOfConsent': requestConfiguration.tagForUnderAgeOfConsent,
+        'ageRestrictedTreatment':
+            requestConfiguration.ageRestrictedTreatment?.index,
       },
     );
   }
@@ -1045,6 +1047,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.tagForChildDirectedTreatment);
       writeValue(buffer, value.tagForUnderAgeOfConsent);
       writeValue(buffer, value.testDeviceIds);
+      writeValue(buffer, value.ageRestrictedTreatment?.index);
     } else if (value is NativeTemplateStyle) {
       buffer.putUint8(_valueNativeTemplateStyle);
       writeValue(buffer, value.templateType);
@@ -1295,17 +1298,36 @@ class AdMessageCodec extends StandardMessageCodec {
           startMuted: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueRequestConfigurationParams:
+        final String? maxAdContentRating = readValueOfType(
+          buffer.getUint8(),
+          buffer,
+        );
+        final int? tagForChildDirectedTreatment = readValueOfType(
+          buffer.getUint8(),
+          buffer,
+        );
+        final int? tagForUnderAgeOfConsent = readValueOfType(
+          buffer.getUint8(),
+          buffer,
+        );
+        final List<String>? testDeviceIds = readValueOfType(
+          buffer.getUint8(),
+          buffer,
+        )?.cast<String>();
+        final int? ageRestrictedTreatmentIndex = readValueOfType(
+          buffer.getUint8(),
+          buffer,
+        );
+        final AgeRestrictedTreatment? ageRestrictedTreatment =
+            ageRestrictedTreatmentIndex != null
+            ? AgeRestrictedTreatment.values[ageRestrictedTreatmentIndex]
+            : null;
         return RequestConfiguration(
-          maxAdContentRating: readValueOfType(buffer.getUint8(), buffer),
-          tagForChildDirectedTreatment: readValueOfType(
-            buffer.getUint8(),
-            buffer,
-          ),
-          tagForUnderAgeOfConsent: readValueOfType(buffer.getUint8(), buffer),
-          testDeviceIds: readValueOfType(
-            buffer.getUint8(),
-            buffer,
-          ).cast<String>(),
+          maxAdContentRating: maxAdContentRating,
+          tagForChildDirectedTreatment: tagForChildDirectedTreatment,
+          tagForUnderAgeOfConsent: tagForUnderAgeOfConsent,
+          testDeviceIds: testDeviceIds,
+          ageRestrictedTreatment: ageRestrictedTreatment,
         );
       case _valueNativeTemplateStyle:
         return NativeTemplateStyle(
