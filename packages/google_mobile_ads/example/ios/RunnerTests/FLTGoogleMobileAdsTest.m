@@ -21,6 +21,7 @@
 #import "google_mobile_ads/FLTGoogleMobileAdsPlugin.h"
 #import "google_mobile_ads/FLTGoogleMobileAdsReaderWriter_Internal.h"
 #import "google_mobile_ads/FLTMobileAds_Internal.h"
+#import "google_mobile_ads/FLTAdPreloader.h"
 
 @interface FLTGoogleMobileAdsTest : XCTestCase
 @end
@@ -467,6 +468,153 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   [_manager adDidRecordClick:rewardedInterstitialAd];
   NSData *impressionData = [self getDataForEvent:@"adDidRecordClick" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:impressionData]));
+}
+
+- (void)testPreloaderStartPreloading_interstitial {
+  id interstitialPreloaderClassMock = OCMClassMock([GADInterstitialAdPreloader class]);
+  OCMStub([interstitialPreloaderClassMock sharedInstance]).andReturn(interstitialPreloaderClassMock);
+
+  FlutterMethodChannel *mockChannel = OCMClassMock([FlutterMethodChannel class]);
+  FLTAdPreloader *preloader = [[FLTAdPreloader alloc] initWithChannel:mockChannel manager:_manager];
+
+  FlutterMethodCall *call = [FlutterMethodCall
+      methodCallWithMethodName:@"MobileAds#startPreloading"
+                     arguments:@{
+                       @"preloadId" : @"preload-id-1",
+                       @"adUnitId" : @"unit-id",
+                       @"bufferSize" : @3,
+                       @"className" : @"InterstitialAd",
+                       @"request" : [NSNull null]
+                     }];
+
+  __block BOOL resultCalled = NO;
+  FlutterResult result = ^(id _Nullable resultValue) {
+    XCTAssertNil(resultValue);
+    resultCalled = YES;
+  };
+
+  OCMExpect([interstitialPreloaderClassMock preloadForPreloadID:@"preload-id-1"
+                                                configuration:[OCMArg any]
+                                                     delegate:preloader]);
+
+  [preloader handleMethodCall:call result:result];
+
+  OCMVerifyAll(interstitialPreloaderClassMock);
+  XCTAssertTrue(resultCalled);
+  [interstitialPreloaderClassMock stopMocking];
+}
+
+- (void)testPreloaderDestroyPreloader_interstitial {
+  id interstitialPreloaderClassMock = OCMClassMock([GADInterstitialAdPreloader class]);
+  OCMStub([interstitialPreloaderClassMock sharedInstance]).andReturn(interstitialPreloaderClassMock);
+
+  FlutterMethodChannel *mockChannel = OCMClassMock([FlutterMethodChannel class]);
+  FLTAdPreloader *preloader = [[FLTAdPreloader alloc] initWithChannel:mockChannel manager:_manager];
+
+  FlutterMethodCall *call = [FlutterMethodCall
+      methodCallWithMethodName:@"MobileAds#destroyPreloader"
+                     arguments:@{
+                       @"preloadId" : @"preload-id-1",
+                       @"className" : @"InterstitialAd"
+                     }];
+
+  __block BOOL resultCalled = NO;
+  FlutterResult result = ^(id _Nullable resultValue) {
+    XCTAssertNil(resultValue);
+    resultCalled = YES;
+  };
+
+  OCMExpect([interstitialPreloaderClassMock stopPreloadingAndRemoveAdsForPreloadID:@"preload-id-1"]);
+
+  [preloader handleMethodCall:call result:result];
+
+  OCMVerifyAll(interstitialPreloaderClassMock);
+  XCTAssertTrue(resultCalled);
+  [interstitialPreloaderClassMock stopMocking];
+}
+
+- (void)testPreloaderDestroyAllPreloaders_interstitial {
+  id interstitialPreloaderClassMock = OCMClassMock([GADInterstitialAdPreloader class]);
+  OCMStub([interstitialPreloaderClassMock sharedInstance]).andReturn(interstitialPreloaderClassMock);
+
+  FlutterMethodChannel *mockChannel = OCMClassMock([FlutterMethodChannel class]);
+  FLTAdPreloader *preloader = [[FLTAdPreloader alloc] initWithChannel:mockChannel manager:_manager];
+
+  FlutterMethodCall *call = [FlutterMethodCall
+      methodCallWithMethodName:@"MobileAds#destroyAllPreloaders"
+                     arguments:@{
+                       @"className" : @"InterstitialAd"
+                     }];
+
+  __block BOOL resultCalled = NO;
+  FlutterResult result = ^(id _Nullable resultValue) {
+    XCTAssertNil(resultValue);
+    resultCalled = YES;
+  };
+
+  OCMExpect([interstitialPreloaderClassMock stopPreloadingAndRemoveAllAds]);
+
+  [preloader handleMethodCall:call result:result];
+
+  OCMVerifyAll(interstitialPreloaderClassMock);
+  XCTAssertTrue(resultCalled);
+  [interstitialPreloaderClassMock stopMocking];
+}
+
+- (void)testPreloaderIsPreloadedAdAvailable_interstitial {
+  id interstitialPreloaderClassMock = OCMClassMock([GADInterstitialAdPreloader class]);
+  OCMStub([interstitialPreloaderClassMock sharedInstance]).andReturn(interstitialPreloaderClassMock);
+
+  FlutterMethodChannel *mockChannel = OCMClassMock([FlutterMethodChannel class]);
+  FLTAdPreloader *preloader = [[FLTAdPreloader alloc] initWithChannel:mockChannel manager:_manager];
+
+  FlutterMethodCall *call = [FlutterMethodCall
+      methodCallWithMethodName:@"MobileAds#isPreloadedAdAvailable"
+                     arguments:@{
+                       @"preloadId" : @"preload-id-1",
+                       @"className" : @"InterstitialAd"
+                     }];
+
+  OCMStub([interstitialPreloaderClassMock isAdAvailableWithPreloadID:@"preload-id-1"]).andReturn(YES);
+
+  __block BOOL resultCalled = NO;
+  FlutterResult result = ^(id _Nullable resultValue) {
+    XCTAssertEqualObjects(resultValue, @YES);
+    resultCalled = YES;
+  };
+
+  [preloader handleMethodCall:call result:result];
+
+  XCTAssertTrue(resultCalled);
+  [interstitialPreloaderClassMock stopMocking];
+}
+
+- (void)testPreloaderGetNumAdsAvailable_interstitial {
+  id interstitialPreloaderClassMock = OCMClassMock([GADInterstitialAdPreloader class]);
+  OCMStub([interstitialPreloaderClassMock sharedInstance]).andReturn(interstitialPreloaderClassMock);
+
+  FlutterMethodChannel *mockChannel = OCMClassMock([FlutterMethodChannel class]);
+  FLTAdPreloader *preloader = [[FLTAdPreloader alloc] initWithChannel:mockChannel manager:_manager];
+
+  FlutterMethodCall *call = [FlutterMethodCall
+      methodCallWithMethodName:@"MobileAds#getNumAdsAvailable"
+                     arguments:@{
+                       @"preloadId" : @"preload-id-1",
+                       @"className" : @"InterstitialAd"
+                     }];
+
+  OCMStub([interstitialPreloaderClassMock numberOfAdsAvailableWithPreloadID:@"preload-id-1"]).andReturn(5);
+
+  __block BOOL resultCalled = NO;
+  FlutterResult result = ^(id _Nullable resultValue) {
+    XCTAssertEqualObjects(resultValue, @5);
+    resultCalled = YES;
+  };
+
+  [preloader handleMethodCall:call result:result];
+
+  XCTAssertTrue(resultCalled);
+  [interstitialPreloaderClassMock stopMocking];
 }
 
 @end

@@ -58,6 +58,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   @Nullable private AdMessageCodec adMessageCodec;
   @Nullable private AppStateNotifier appStateNotifier;
   @Nullable private UserMessagingPlatformManager userMessagingPlatformManager;
+  @Nullable private FlutterAdPreloader flutterAdPreloader;
   private final Map<String, NativeAdFactory> nativeAdFactories = new HashMap<>();
 
   @SuppressWarnings("deprecation") // Keeping for compatibility
@@ -237,6 +238,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     userMessagingPlatformManager =
         new UserMessagingPlatformManager(
             binding.getBinaryMessenger(), binding.getApplicationContext());
+    flutterAdPreloader =
+        new FlutterAdPreloader(
+            binding.getApplicationContext(), instanceManager, channel);
   }
 
   @Override
@@ -244,6 +248,9 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     if (appStateNotifier != null) {
       appStateNotifier.stop();
       appStateNotifier = null;
+    }
+    if (flutterAdPreloader != null) {
+      flutterAdPreloader = null;
     }
   }
 
@@ -305,6 +312,21 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
   public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
     if (instanceManager == null || pluginBinding == null) {
       Log.e(TAG, "method call received before instanceManager initialized: " + call.method);
+      return;
+    }
+    if (call.method.equals("MobileAds#startPreloading")
+        || call.method.equals("MobileAds#destroyPreloader")
+        || call.method.equals("MobileAds#destroyAllPreloaders")
+        || call.method.equals("MobileAds#isPreloadedAdAvailable")
+        || call.method.equals("MobileAds#getNumAdsAvailable")
+        || call.method.equals("MobileAds#getPreloadConfiguration")
+        || call.method.equals("MobileAds#getPreloadConfigurations")
+        || call.method.equals("MobileAds#pollAd")) {
+      if (flutterAdPreloader != null) {
+        flutterAdPreloader.onMethodCall(call, result);
+      } else {
+        result.error("PreloadError", "Preloader not initialized", null);
+      }
       return;
     }
     // Use activity as context if available.

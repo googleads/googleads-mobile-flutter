@@ -356,5 +356,28 @@ void main() {
       expect(instanceManager.adFor(0), isNull);
       expect(instanceManager.adIdFor(banner), isNull);
     });
+
+    test('isMounted returns correct value', () {
+      final AdManagerBannerAd banner = AdManagerBannerAd(
+        adUnitId: 'test-ad-unit',
+        sizes: [AdSize.banner],
+        listener: AdManagerBannerAdListener(),
+        request: AdManagerAdRequest(),
+      );
+
+      expect(instanceManager.adIdFor(banner), isNull);
+      expect(banner.isMounted, isFalse);
+
+      banner.load();
+      final int? adId = instanceManager.adIdFor(banner);
+      expect(adId, isNotNull);
+      expect(banner.isMounted, isFalse);
+
+      instanceManager.mountWidgetAdId(adId!);
+      expect(banner.isMounted, isTrue);
+
+      instanceManager.unmountWidgetAdId(adId);
+      expect(banner.isMounted, isFalse);
+    });
   });
 }

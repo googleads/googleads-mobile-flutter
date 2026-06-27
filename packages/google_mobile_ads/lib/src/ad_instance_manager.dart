@@ -58,6 +58,12 @@ class AdInstanceManager {
          StandardMethodCodec(AdMessageCodec()),
        ) {
     channel.setMethodCallHandler((MethodCall call) async {
+      if (call.method == 'onPreloadEvent') {
+        final String preloadId = call.arguments['preloadId'];
+        final String eventName = call.arguments['eventName'];
+        _handlePreloadEvent(preloadId, eventName, call.arguments);
+        return;
+      }
       assert(call.method == 'onAdEvent');
 
       final int adId = call.arguments['adId'];
@@ -74,6 +80,51 @@ class AdInstanceManager {
 
   int _nextAdId = 0;
   final _BiMap<int, Ad> _loadedAds = _BiMap<int, Ad>();
+  final Map<String, PreloadCallback> _preloadCallbacks =
+      <String, PreloadCallback>{};
+
+  void registerPreloadCallback(String preloadId, PreloadCallback callback) {
+    _preloadCallbacks[preloadId] = callback;
+  }
+
+  void unregisterPreloadCallback(String preloadId) {
+    _preloadCallbacks.remove(preloadId);
+  }
+
+  void clearAllPreloadCallbacks() {
+    _preloadCallbacks.clear();
+  }
+
+  void _handlePreloadEvent(
+    String preloadId,
+    String eventName,
+    Map<dynamic, dynamic> arguments,
+  ) {
+    final PreloadCallback? callback = _preloadCallbacks[preloadId];
+    if (callback == null) {
+      return;
+    }
+    switch (eventName) {
+      case 'onAdPreloaded':
+        if (callback.onAdPreloaded != null) {
+          final ResponseInfo responseInfo =
+              arguments['responseInfo'] as ResponseInfo;
+          callback.onAdPreloaded!(preloadId, responseInfo);
+        }
+        break;
+      case 'onAdsExhausted':
+        if (callback.onAdsExhausted != null) {
+          callback.onAdsExhausted!(preloadId);
+        }
+        break;
+      case 'onAdFailedToPreload':
+        if (callback.onAdFailedToPreload != null) {
+          final AdError error = arguments['error'] as AdError;
+          callback.onAdFailedToPreload!(preloadId, error);
+        }
+        break;
+    }
+  }
 
   /// Invokes load and dispose calls.
   final MethodChannel channel;
@@ -681,6 +732,14 @@ class AdInstanceManager {
         'request': ad.request,
       },
     );
+  }
+
+  /// Allocates a new ad ID.
+  int nextAdId() => _nextAdId++;
+
+  /// Tracks an ad under an adId.
+  void trackAd(Ad ad, int adId) {
+    _loadedAds[adId] = ad;
   }
 
   /// Free the plugin resources associated with this ad.

@@ -69,12 +69,12 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
     }
   }
 
-  private void onAdLoaded(@NonNull AppOpenAd ad) {
+  void onAdLoaded(@NonNull AppOpenAd ad) {
     this.ad = ad;
     manager.onAdLoaded(adId, ad.getResponseInfo());
   }
 
-  private void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+  void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
     manager.onAdFailedToLoad(adId, new FlutterLoadAdError(loadAdError));
   }
 
