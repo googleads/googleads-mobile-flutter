@@ -1,6 +1,10 @@
 ## Pubmatic Flutter Mediation Adapter Changelog
 
-#### Version 2.1.0 (In progress)
+#### Version 2.1.0
+- Updated to support Google Mobile Ads Flutter Plugin version 9.0.0
+- Supports [PubMatic Android adapter version 5.1.2.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pubmatic/CHANGELOG.md#version-5120).
+- Supports [PubMatic iOS adapter version 5.1.1.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/PubMatic/CHANGELOG.md#version-5110).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 9.0.0.
 
 #### Version 2.0.0
 - Updated minimum Flutter version to 3.38.1
