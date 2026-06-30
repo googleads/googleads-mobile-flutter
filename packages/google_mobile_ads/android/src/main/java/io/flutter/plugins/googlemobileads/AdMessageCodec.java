@@ -222,6 +222,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, params.getTagForChildDirectedTreatment());
       writeValue(stream, params.getTagForUnderAgeOfConsent());
       writeValue(stream, params.getTestDeviceIds());
+      writeValue(stream, params.getAgeRestrictedTreatment());
     } else if (value instanceof FlutterVideoOptions) {
       stream.write(VALUE_VIDEO_OPTIONS);
       FlutterVideoOptions options = (FlutterVideoOptions) value;
@@ -416,6 +417,7 @@ class AdMessageCodec extends StandardMessageCodec {
         rcb.setTagForChildDirectedTreatment((Integer) readValueOfType(buffer.get(), buffer));
         rcb.setTagForUnderAgeOfConsent((Integer) readValueOfType(buffer.get(), buffer));
         rcb.setTestDeviceIds((List<String>) readValueOfType(buffer.get(), buffer));
+        rcb.setAgeRestrictedTreatment((Integer) readValueOfType(buffer.get(), buffer));
         return rcb.build();
       case VALUE_NATIVE_TEMPLATE_STYLE:
         return new FlutterNativeTemplateStyle(

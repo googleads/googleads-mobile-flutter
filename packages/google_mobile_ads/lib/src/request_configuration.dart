@@ -29,12 +29,16 @@ class RequestConfiguration {
   /// List of test device ids to set.
   final List<String>? testDeviceIds;
 
+  /// Controls the age-restricted treatment.
+  final AgeRestrictedTreatment? ageRestrictedTreatment;
+
   /// Creates a [RequestConfiguration].
   RequestConfiguration({
     this.maxAdContentRating,
     this.tagForChildDirectedTreatment,
     this.tagForUnderAgeOfConsent,
     this.testDeviceIds,
+    this.ageRestrictedTreatment,
   });
 }
 
@@ -102,4 +106,16 @@ class TagForChildDirectedTreatment {
   /// should receive treatment for users in the European Economic Area (EEA)
   /// under the age of consent.
   static final int unspecified = -1;
+}
+
+/// Values for [RequestConfiguration.ageRestrictedTreatment].
+enum AgeRestrictedTreatment {
+  /// No specified age-restricted treatment.
+  unspecified,
+
+  /// Tag for age-restricted treatment as child.
+  child,
+
+  /// Tag for age-restricted treatment as teen.
+  teen,
 }

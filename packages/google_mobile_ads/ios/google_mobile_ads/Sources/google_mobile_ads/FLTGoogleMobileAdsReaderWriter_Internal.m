@@ -279,6 +279,11 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
         [self readValueOfType:[self readByte]];
     GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers =
         [self readValueOfType:[self readByte]];
+    NSNumber *ageRestricted = [self readValueOfType:[self readByte]];
+    if ([FLTAdUtil isNotNull:ageRestricted]) {
+      GADMobileAds.sharedInstance.requestConfiguration.ageRestrictedTreatment =
+          [ageRestricted intValue];
+    }
     return GADMobileAds.sharedInstance.requestConfiguration;
   }
   case FLTAdmobFieldInlineAdaptiveAdSize: {
@@ -493,6 +498,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:params.tagForChildDirectedTreatment];
     [self writeValue:params.tagForUnderAgeOfConsent];
     [self writeValue:params.testDeviceIdentifiers];
+    [self writeValue:@(params.ageRestrictedTreatment)];
   } else if ([value isKindOfClass:[FLTNativeTemplateType class]]) {
     [self writeByte:FLTAdmobFieldNativeTemplateType];
     FLTNativeTemplateType *templateType = value;
