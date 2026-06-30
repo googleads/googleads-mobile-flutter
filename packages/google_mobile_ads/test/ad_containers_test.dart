@@ -1590,6 +1590,41 @@ void main() {
       expect(error.responseInfo?.adapterResponses, null);
     });
 
+    // Regression: mediation adapters (e.g. InMobi) can deliver a LoadAdError
+    // whose domain/message is null. The encode path can't produce that (the
+    // ctor requires non-null String), so craft the wire bytes by hand. The
+    // decoder must coalesce to '' rather than throw "type 'Null' is not a
+    // subtype of type 'String'".
+    test('decode $LoadAdError with null domain/message coalesces to ""', () {
+      final WriteBuffer buffer = WriteBuffer();
+      buffer.putUint8(133); // _valueLoadAdError
+      codec.writeValue(buffer, 7); // code
+      codec.writeValue(buffer, null); // domain (null from native)
+      codec.writeValue(buffer, null); // message (null from native)
+      codec.writeValue(buffer, null); // responseInfo
+      final ByteData data = buffer.done();
+
+      final LoadAdError error = codec.decodeMessage(data);
+      expect(error.code, 7);
+      expect(error.domain, '');
+      expect(error.message, '');
+      expect(error.responseInfo, null);
+    });
+
+    test('decode $AdError with null domain/message coalesces to ""', () {
+      final WriteBuffer buffer = WriteBuffer();
+      buffer.putUint8(139); // _valueAdError
+      codec.writeValue(buffer, 3); // code
+      codec.writeValue(buffer, null); // domain
+      codec.writeValue(buffer, null); // message
+      final ByteData data = buffer.done();
+
+      final AdError error = codec.decodeMessage(data);
+      expect(error.code, 3);
+      expect(error.domain, '');
+      expect(error.message, '');
+    });
+
     test('encode/decode $RewardItem', () async {
       final ByteData byteData = codec.encodeMessage(RewardItem(1, 'type'))!;
 

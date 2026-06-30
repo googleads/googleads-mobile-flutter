@@ -1194,17 +1194,21 @@ class AdMessageCodec extends StandardMessageCodec {
           adSourceInstanceId: _safeReadString(buffer),
         );
       case _valueLoadAdError:
+        // Mediation adapters (e.g. InMobi) can send a null domain/message on
+        // load failure. domain/message are non-nullable String, so reading
+        // them raw binds null -> "Null is not a subtype of String" and crashes
+        // the isolate from inside the platform-channel handler. Coalesce to ''.
         return LoadAdError(
           readValueOfType(buffer.getUint8(), buffer),
-          readValueOfType(buffer.getUint8(), buffer),
-          readValueOfType(buffer.getUint8(), buffer),
+          _safeReadString(buffer),
+          _safeReadString(buffer),
           readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueAdError:
         return AdError(
           readValueOfType(buffer.getUint8(), buffer),
-          readValueOfType(buffer.getUint8(), buffer),
-          readValueOfType(buffer.getUint8(), buffer),
+          _safeReadString(buffer),
+          _safeReadString(buffer),
         );
       case _valueAdManagerAdRequest:
         return AdManagerAdRequest(
