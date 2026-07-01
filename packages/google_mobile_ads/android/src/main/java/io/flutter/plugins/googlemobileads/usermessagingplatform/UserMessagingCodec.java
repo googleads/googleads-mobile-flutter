@@ -47,6 +47,7 @@ public class UserMessagingCodec extends StandardMessageCodec {
       ConsentRequestParametersWrapper params = (ConsentRequestParametersWrapper) value;
       writeValue(stream, params.getTfuac());
       writeValue(stream, params.getDebugSettings());
+      writeValue(stream, params.getConsentSyncId());
     } else if (value instanceof ConsentDebugSettingsWrapper) {
       stream.write(VALUE_CONSENT_DEBUG_SETTINGS);
       ConsentDebugSettingsWrapper debugSettings = (ConsentDebugSettingsWrapper) value;
@@ -90,7 +91,8 @@ public class UserMessagingCodec extends StandardMessageCodec {
           Boolean tfuac = (Boolean) readValueOfType(buffer.get(), buffer);
           ConsentDebugSettingsWrapper debugSettings =
               (ConsentDebugSettingsWrapper) readValueOfType(buffer.get(), buffer);
-          return new ConsentRequestParametersWrapper(tfuac, debugSettings);
+          String consentSyncId = (String) readValueOfType(buffer.get(), buffer);
+          return new ConsentRequestParametersWrapper(tfuac, debugSettings, consentSyncId);
         }
       case VALUE_CONSENT_DEBUG_SETTINGS:
         {
