@@ -25,7 +25,7 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 ext {
-    stringVersion = "2.3.2.3"
+    stringVersion = "2.3.2.4"
 }
 
 android {
