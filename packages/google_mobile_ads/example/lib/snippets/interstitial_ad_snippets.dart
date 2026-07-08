@@ -129,7 +129,6 @@ class _InterstitialAdSnippets {
     // [END set_callback]
   }
 
-
   // [START poll_ad]
   void _pollAd() async {
     final InterstitialAd? ad = await InterstitialAdPreloader.pollAd(_adUnitId);
@@ -163,9 +162,6 @@ class _InterstitialAdSnippets {
   }
   // [END stop_preloading]
 
-
-
-
   // ===================================================================
   // Ad Manager snippets
   // ===================================================================
@@ -194,4 +190,3 @@ class _InterstitialAdSnippets {
     // [END load_ad_ad_manager]
   }
 }
-
