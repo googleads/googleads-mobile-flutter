@@ -86,9 +86,7 @@ class _InterstitialAdSnippets {
     // [START start_preload]
     InterstitialAdPreloader.start(
       preloadId: _adUnitId,
-      preloadConfiguration: PreloadConfiguration(
-        adUnitId: _adUnitId,
-      ),
+      preloadConfiguration: PreloadConfiguration(adUnitId: _adUnitId),
       callback: const PreloadCallback(),
     );
     // [END start_preload]
@@ -111,9 +109,7 @@ class _InterstitialAdSnippets {
     // [START set_callback]
     InterstitialAdPreloader.start(
       preloadId: _adUnitId,
-      preloadConfiguration: PreloadConfiguration(
-        adUnitId: _adUnitId,
-      ),
+      preloadConfiguration: PreloadConfiguration(adUnitId: _adUnitId),
       callback: PreloadCallback(
         onAdPreloaded: (preloadId, responseInfo) {
           debugPrint('Ad preloaded for ID: $preloadId');
@@ -150,8 +146,9 @@ class _InterstitialAdSnippets {
 
   // [START isAdAvailable]
   void _checkAdAvailability() async {
-    final bool isAvailable =
-        await InterstitialAdPreloader.isAdAvailable(_adUnitId);
+    final bool isAvailable = await InterstitialAdPreloader.isAdAvailable(
+      _adUnitId,
+    );
     debugPrint('Is ad available: $isAvailable');
   }
   // [END isAdAvailable]
