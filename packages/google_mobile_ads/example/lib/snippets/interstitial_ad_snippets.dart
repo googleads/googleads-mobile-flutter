@@ -82,6 +82,90 @@ class _InterstitialAdSnippets {
     // [END ad_events]
   }
 
+  void _startPreloading() {
+    // [START start_preload]
+    InterstitialAdPreloader.start(
+      preloadId: _adUnitId,
+      preloadConfiguration: PreloadConfiguration(
+        adUnitId: _adUnitId,
+      ),
+      callback: const PreloadCallback(),
+    );
+    // [END start_preload]
+  }
+
+  void _setBufferSize() {
+    // [START set_buffer_size]
+    InterstitialAdPreloader.start(
+      preloadId: _adUnitId,
+      preloadConfiguration: PreloadConfiguration(
+        adUnitId: _adUnitId,
+        bufferSize: 3,
+      ),
+      callback: const PreloadCallback(),
+    );
+    // [END set_buffer_size]
+  }
+
+  void _startPreloadingWithCallback() {
+    // [START set_callback]
+    InterstitialAdPreloader.start(
+      preloadId: _adUnitId,
+      preloadConfiguration: PreloadConfiguration(
+        adUnitId: _adUnitId,
+      ),
+      callback: PreloadCallback(
+        onAdPreloaded: (preloadId, responseInfo) {
+          debugPrint('Ad preloaded for ID: $preloadId');
+        },
+        onAdFailedToPreload: (preloadId, error) {
+          debugPrint('Ad failed to preload for ID: $preloadId. Error: $error');
+        },
+        onAdsExhausted: (preloadId) {
+          debugPrint('All preloaded ads exhausted for ID: $preloadId');
+        },
+      ),
+    );
+    // [END set_callback]
+  }
+
+
+  // [START poll_ad]
+  void _pollAd() async {
+    final InterstitialAd? ad = await InterstitialAdPreloader.pollAd(_adUnitId);
+    _interstitialAd = ad;
+  }
+  // [END poll_ad]
+
+  // [START pollAndShowAd]
+  void _pollAndShowAd() async {
+    final InterstitialAd? ad = await InterstitialAdPreloader.pollAd(_adUnitId);
+    if (ad != null) {
+      _interstitialAd = ad;
+      _setFullScreenContentCallback(ad);
+      // Show the ad.
+      await ad.show();
+    }
+  }
+  // [END pollAndShowAd]
+
+  // [START isAdAvailable]
+  void _checkAdAvailability() async {
+    final bool isAvailable =
+        await InterstitialAdPreloader.isAdAvailable(_adUnitId);
+    debugPrint('Is ad available: $isAvailable');
+  }
+  // [END isAdAvailable]
+
+  // [START stop_preloading]
+  void _stopPreloading() async {
+    await InterstitialAdPreloader.destroy(_adUnitId);
+  }
+  // [END stop_preloading]
+
+
+
+
   // ===================================================================
   // Ad Manager snippets
   // ===================================================================
@@ -110,3 +194,4 @@ class _InterstitialAdSnippets {
     // [END load_ad_ad_manager]
   }
 }
+
