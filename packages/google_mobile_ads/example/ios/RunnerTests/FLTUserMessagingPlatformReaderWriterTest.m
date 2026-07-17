@@ -57,6 +57,15 @@
                  requestParameters.debugSettings.testDeviceIdentifiers);
 }
 
+- (void)testRequestParams_withConsentSyncID {
+  UMPRequestParameters *requestParameters = [[UMPRequestParameters alloc] init];
+  requestParameters.consentSyncID = @"syncId123";
+  NSData *encodedMessage = [messageCodec encode:requestParameters];
+
+  UMPRequestParameters *decoded = [messageCodec decode:encodedMessage];
+  XCTAssertEqualObjects(decoded.consentSyncID, requestParameters.consentSyncID);
+}
+
 - (void)testConsentDebugSettings_default {
   UMPDebugSettings *debugSettings = [[UMPDebugSettings alloc] init];
   NSData *encodedMessage = [messageCodec encode:debugSettings];
