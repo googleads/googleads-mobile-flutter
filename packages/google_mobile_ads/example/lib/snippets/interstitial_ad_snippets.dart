@@ -137,7 +137,16 @@ class _InterstitialAdSnippets {
     final InterstitialAd? ad = await InterstitialAdPreloader.pollAd(_adUnitId);
     if (ad != null) {
       _interstitialAd = ad;
-      _setFullScreenContentCallback(ad);
+      ad.fullScreenContentCallback = FullScreenContentCallback(
+        onAdImpression: (ad) {
+          // Called when an impression occurs on the ad.
+          debugPrint('Ad recorded an impression.');
+        },
+      );
+      ad.onPaidEvent = (ad, valueMicros, precision, currencyCode) {
+        // Called when an ad is estimated to have earned money.
+        debugPrint('Ad paid: $valueMicros $currencyCode.');
+      };
       // Show the ad.
       await ad.show();
     }
