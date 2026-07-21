@@ -228,7 +228,7 @@ class NativeAdListener extends AdWithViewListener {
 }
 
 /// Callback events for for full screen ads, such as Rewarded and Interstitial.
-class FullScreenContentCallback<Ad> {
+class FullScreenContentCallback<T extends Ad> {
   /// Construct a new [FullScreenContentCallback].
   ///
   /// [Ad.dispose] should be called from [onAdFailedToShowFullScreenContent]
@@ -243,22 +243,22 @@ class FullScreenContentCallback<Ad> {
   });
 
   /// Called when an ad shows full screen content.
-  final GenericAdEventCallback<Ad>? onAdShowedFullScreenContent;
+  final GenericAdEventCallback<T>? onAdShowedFullScreenContent;
 
   /// Called when an ad dismisses full screen content.
-  final GenericAdEventCallback<Ad>? onAdDismissedFullScreenContent;
+  final GenericAdEventCallback<T>? onAdDismissedFullScreenContent;
 
   /// For iOS only. Called before dismissing a full screen view.
-  final GenericAdEventCallback<Ad>? onAdWillDismissFullScreenContent;
+  final GenericAdEventCallback<T>? onAdWillDismissFullScreenContent;
 
   /// Called when an ad impression occurs.
-  final GenericAdEventCallback<Ad>? onAdImpression;
+  final GenericAdEventCallback<T>? onAdImpression;
 
   /// Called when an ad is clicked.
-  final GenericAdEventCallback<Ad>? onAdClicked;
+  final GenericAdEventCallback<T>? onAdClicked;
 
   /// Called when ad fails to show full screen content.
-  final void Function(Ad ad, AdError error)? onAdFailedToShowFullScreenContent;
+  final void Function(T ad, AdError error)? onAdFailedToShowFullScreenContent;
 }
 
 /// Generic parent class for ad load callbacks.
