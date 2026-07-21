@@ -1,10 +1,14 @@
 ## Meta Audience Network Flutter Mediation Adapter Changelog
 
-#### Version 1.5.3 (In progress)
+#### Version 1.5.3
+* Updated to support Google Mobile Ads Flutter Plugin version 9.0.0
+* Supports [Meta Audience Network Android adapter version 6.21.0.3](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/meta/CHANGELOG.md#version-62103).
+* Supports [Meta Audience Network iOS adapter version 6.21.1.1](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Meta/CHANGELOG.md#version-62111).
+* Built and tested with the Google Mobile Ads Flutter Plugin version 9.0.0.
 
 #### Version 1.5.2
-- Updated minimum Flutter version to 3.38.1
-- Updated to support Google Mobile Ads Flutter Plugin version 8.0.0
+* Updated minimum Flutter version to 3.38.1
+* Updated to support Google Mobile Ads Flutter Plugin version 8.0.0
 * Supports [Meta Audience Network Android adapter version 6.21.0.2](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/meta/CHANGELOG.md#version-62102).
 * Supports [Meta Audience Network iOS adapter version 6.21.1.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Meta/CHANGELOG.md#version-62110).
 * Built and tested with the Google Mobile Ads Flutter Plugin version 8.0.0.
