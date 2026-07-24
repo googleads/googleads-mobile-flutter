@@ -106,6 +106,7 @@ public class FlutterAdManagerBannerAdTest {
     verify(mockAdView).loadAd(eq(mockAdRequest));
     verify(mockAdView).setAdListener(any(AdListener.class));
     verify(mockAdView).setAppEventListener(any(AppEventListener.class));
+    verify(mockAdView).setOnPaidEventListener(any(FlutterPaidEventListener.class));
     verify(mockAdView).setAdUnitId(eq("testId"));
     verify(mockAdView).setAdSizes(adSize);
     FlutterLoadAdError expectedError = new FlutterLoadAdError(loadError);
