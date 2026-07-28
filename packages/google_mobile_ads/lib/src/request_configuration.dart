@@ -29,7 +29,16 @@ class RequestConfiguration {
   /// List of test device ids to set.
   final List<String>? testDeviceIds;
 
-  /// Controls the age-restricted treatment.
+  /// The age treatment to apply to ad requests. Consult your own legal
+  /// counsel to determine the age treatment settings for your users based
+  /// on your legal and regulatory requirements. For more information on this
+  /// setting, review
+  /// https://developers.google.com/admob/flutter/targeting#set_the_age_treatment
+  ///
+  /// By setting this property, you certify that this notification is accurate
+  /// and you are authorized to act on behalf of the owner of the app. You
+  /// understand that abuse of this setting may result in termination of your
+  /// Google account.
   final AgeRestrictedTreatment? ageRestrictedTreatment;
 
   /// Creates a [RequestConfiguration].
@@ -110,12 +119,12 @@ class TagForChildDirectedTreatment {
 
 /// Values for [RequestConfiguration.ageRestrictedTreatment].
 enum AgeRestrictedTreatment {
-  /// No specified age-restricted treatment.
+  /// Indicates that no specific age restricted treatment signal applies to the ad request.
   unspecified,
 
-  /// Tag for age-restricted treatment as child.
+  /// Indicates that ad requests should receive child age treatment.
   child,
 
-  /// Tag for age-restricted treatment as teen.
+  /// Indicates that ad requests should receive teen age treatment.
   teen,
 }
