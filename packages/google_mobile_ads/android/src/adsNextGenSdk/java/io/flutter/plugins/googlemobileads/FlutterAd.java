@@ -335,7 +335,10 @@ abstract class FlutterAd {
 
       if (error.getResponseInfo() != null) {
         responseInfo = new FlutterResponseInfo(error.getResponseInfo());
-        domain = responseInfo.getMediationAdapterClassName();
+        String adapterClassName = responseInfo.getMediationAdapterClassName();
+        domain = adapterClassName != null
+            ? adapterClassName
+            : "com.google.android.libraries.ads.mobile.sdk";
       } else {
         domain = "com.google.android.libraries.ads.mobile.sdk";
       }
