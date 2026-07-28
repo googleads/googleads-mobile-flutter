@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_pangle'
-  s.version          = '4.0.0'
+  s.version          = '4.0.1'
   s.summary          = 'Google Mobile Ads Mediation of Pangle.'
   s.description      = <<-DESC
   Mediation Adapter for Pangle to use with Google Mobile Ads.
