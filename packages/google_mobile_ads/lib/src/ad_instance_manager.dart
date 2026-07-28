@@ -1163,8 +1163,8 @@ class AdMessageCodec extends StandardMessageCodec {
         );
       case _valueRewardItem:
         return RewardItem(
-          readValueOfType(buffer.getUint8(), buffer),
-          readValueOfType(buffer.getUint8(), buffer),
+          readValueOfType(buffer.getUint8(), buffer) ?? 0,
+          _safeReadString(buffer),
         );
       case _valueResponseInfo:
         return ResponseInfo(
@@ -1249,7 +1249,7 @@ class AdMessageCodec extends StandardMessageCodec {
           buffer.getUint8(),
           buffer,
         );
-        final String description = readValueOfType(buffer.getUint8(), buffer);
+        final String description = _safeReadString(buffer);
 
         double latency = readValueOfType(buffer.getUint8(), buffer).toDouble();
         // Android provides this value as an int in milliseconds while iOS
