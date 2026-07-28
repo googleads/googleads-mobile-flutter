@@ -26,10 +26,15 @@ class ConsentRequestParametersWrapper {
 
   @Nullable private final ConsentDebugSettingsWrapper debugSettings;
 
+  @Nullable private final String consentSyncId;
+
   ConsentRequestParametersWrapper(
-      @Nullable Boolean tfuac, @Nullable ConsentDebugSettingsWrapper debugSettings) {
+      @Nullable Boolean tfuac,
+      @Nullable ConsentDebugSettingsWrapper debugSettings,
+      @Nullable String consentSyncId) {
     this.tfuac = tfuac;
     this.debugSettings = debugSettings;
+    this.consentSyncId = consentSyncId;
   }
 
   @Nullable
@@ -42,6 +47,11 @@ class ConsentRequestParametersWrapper {
     return debugSettings;
   }
 
+  @Nullable
+  String getConsentSyncId() {
+    return consentSyncId;
+  }
+
   /** Get as {@link ConsentRequestParameters}. */
   ConsentRequestParameters getAsConsentRequestParameters(Context context) {
     ConsentRequestParameters.Builder builder = new ConsentRequestParameters.Builder();
@@ -50,6 +60,9 @@ class ConsentRequestParametersWrapper {
     }
     if (debugSettings != null) {
       builder.setConsentDebugSettings(debugSettings.getAsConsentDebugSettings(context));
+    }
+    if (consentSyncId != null) {
+      builder.setConsentSyncId(consentSyncId);
     }
     return builder.build();
   }
@@ -64,11 +77,12 @@ class ConsentRequestParametersWrapper {
 
     ConsentRequestParametersWrapper other = (ConsentRequestParametersWrapper) obj;
     return Objects.equals(tfuac, other.getTfuac())
-        && Objects.equals(debugSettings, other.getDebugSettings());
+        && Objects.equals(debugSettings, other.getDebugSettings())
+        && Objects.equals(consentSyncId, other.getConsentSyncId());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(tfuac, debugSettings);
+    return Objects.hash(tfuac, debugSettings, consentSyncId);
   }
 }

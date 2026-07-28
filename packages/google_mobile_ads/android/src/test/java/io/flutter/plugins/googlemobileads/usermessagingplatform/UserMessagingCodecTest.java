@@ -41,7 +41,7 @@ public class UserMessagingCodecTest {
 
   @Test
   public void testConsentRequestParameters_null() {
-    ConsentRequestParametersWrapper params = new ConsentRequestParametersWrapper(null, null);
+    ConsentRequestParametersWrapper params = new ConsentRequestParametersWrapper(null, null, null);
     final ByteBuffer message = codec.encodeMessage(params);
     ConsentRequestParametersWrapper decoded =
         (ConsentRequestParametersWrapper) codec.decodeMessage((ByteBuffer) message.position(0));
@@ -52,7 +52,7 @@ public class UserMessagingCodecTest {
   public void testConsentRequestParameters_tfuacNull_debugSettingsDefined() {
     ConsentDebugSettingsWrapper debugSettings = new ConsentDebugSettingsWrapper(null, null);
     ConsentRequestParametersWrapper params =
-        new ConsentRequestParametersWrapper(null, debugSettings);
+        new ConsentRequestParametersWrapper(null, debugSettings, null);
     final ByteBuffer message = codec.encodeMessage(params);
     ConsentRequestParametersWrapper decoded =
         (ConsentRequestParametersWrapper) codec.decodeMessage((ByteBuffer) message.position(0));
@@ -61,7 +61,7 @@ public class UserMessagingCodecTest {
 
   @Test
   public void testConsentRequestParameters_tfuacDefined_debugSettingsNull() {
-    ConsentRequestParametersWrapper params = new ConsentRequestParametersWrapper(true, null);
+    ConsentRequestParametersWrapper params = new ConsentRequestParametersWrapper(true, null, null);
     final ByteBuffer message = codec.encodeMessage(params);
     ConsentRequestParametersWrapper decoded =
         (ConsentRequestParametersWrapper) codec.decodeMessage((ByteBuffer) message.position(0));
@@ -72,7 +72,17 @@ public class UserMessagingCodecTest {
   public void testConsentRequestParameters_tfuacDefined_debugSettingsDefined() {
     ConsentDebugSettingsWrapper debugSettings = new ConsentDebugSettingsWrapper(null, null);
     ConsentRequestParametersWrapper params =
-        new ConsentRequestParametersWrapper(true, debugSettings);
+        new ConsentRequestParametersWrapper(true, debugSettings, null);
+    final ByteBuffer message = codec.encodeMessage(params);
+    ConsentRequestParametersWrapper decoded =
+        (ConsentRequestParametersWrapper) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(params, decoded);
+  }
+
+  @Test
+  public void testConsentRequestParameters_consentSyncIdDefined() {
+    ConsentRequestParametersWrapper params =
+        new ConsentRequestParametersWrapper(null, null, "syncId");
     final ByteBuffer message = codec.encodeMessage(params);
     ConsentRequestParametersWrapper decoded =
         (ConsentRequestParametersWrapper) codec.decodeMessage((ByteBuffer) message.position(0));

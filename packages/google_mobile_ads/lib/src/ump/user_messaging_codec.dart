@@ -31,6 +31,7 @@ class UserMessagingCodec extends StandardMessageCodec {
       buffer.putUint8(_valueConsentRequestParameters);
       writeValue(buffer, value.tagForUnderAgeOfConsent);
       writeValue(buffer, value.consentDebugSettings);
+      writeValue(buffer, value.consentSyncId);
     } else if (value is ConsentDebugSettings) {
       buffer.putUint8(_valueConsentDebugSettings);
       writeValue(buffer, value.debugGeography?.index);
@@ -56,9 +57,11 @@ class UserMessagingCodec extends StandardMessageCodec {
           buffer.getUint8(),
           buffer,
         );
+        String? consentSyncId = readValueOfType(buffer.getUint8(), buffer);
         return ConsentRequestParameters(
           tagForUnderAgeOfConsent: tfuac,
           consentDebugSettings: debugSettings,
+          consentSyncId: consentSyncId,
         );
       case _valueConsentDebugSettings:
         int? debugGeographyInt = readValueOfType(buffer.getUint8(), buffer);

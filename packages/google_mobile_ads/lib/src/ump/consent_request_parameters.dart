@@ -20,6 +20,7 @@ class ConsentRequestParameters {
   ConsentRequestParameters({
     this.tagForUnderAgeOfConsent,
     this.consentDebugSettings,
+    this.consentSyncId,
   });
 
   /// Tag for underage of consent.
@@ -30,16 +31,20 @@ class ConsentRequestParameters {
   /// Debug settings to hardcode in test requests.
   ConsentDebugSettings? consentDebugSettings;
 
+  /// An identifier used to sync consent state across different screens/applications.
+  String? consentSyncId;
+
   @override
   bool operator ==(Object other) {
     return other is ConsentRequestParameters &&
         tagForUnderAgeOfConsent == other.tagForUnderAgeOfConsent &&
-        consentDebugSettings == other.consentDebugSettings;
+        consentDebugSettings == other.consentDebugSettings &&
+        consentSyncId == other.consentSyncId;
   }
 
   @override
   int get hashCode =>
-      Object.hash(tagForUnderAgeOfConsent, consentDebugSettings);
+      Object.hash(tagForUnderAgeOfConsent, consentDebugSettings, consentSyncId);
 }
 
 /// Debug settings to hardcode in test requests.

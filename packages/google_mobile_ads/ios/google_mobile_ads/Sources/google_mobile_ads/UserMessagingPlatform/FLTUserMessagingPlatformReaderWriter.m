@@ -86,6 +86,7 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
     [self writeValue:[[NSNumber alloc]
                          initWithBool:params.tagForUnderAgeOfConsent]];
     [self writeValue:params.debugSettings];
+    [self writeValue:params.consentSyncID];
   } else if ([value isKindOfClass:[UMPDebugSettings class]]) {
     UMPDebugSettings *debugSettings = (UMPDebugSettings *)value;
     [self writeByte:FLTValueConsentDebugSettings];
@@ -111,6 +112,8 @@ typedef NS_ENUM(NSInteger, FLTUserMessagingPlatformField) {
     parameters.tagForUnderAgeOfConsent = tfuac.boolValue;
     UMPDebugSettings *debugSettings = [self readValueOfType:[self readByte]];
     parameters.debugSettings = debugSettings;
+    NSString *consentSyncId = [self readValueOfType:[self readByte]];
+    parameters.consentSyncID = consentSyncId;
     return parameters;
   }
   case FLTValueConsentDebugSettings: {

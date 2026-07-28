@@ -32,6 +32,18 @@ void main() {
       expect(params, decodedParams);
     });
 
+    test(
+      'encode and decode ConsentRequestParameters with consentSyncId',
+      () async {
+        ConsentRequestParameters params = ConsentRequestParameters(
+          consentSyncId: 'test-sync-id',
+        );
+        final ByteData? byteData = codec.encodeMessage(params);
+        ConsentRequestParameters decodedParams = codec.decodeMessage(byteData);
+        expect(params, decodedParams);
+      },
+    );
+
     test('encode and decode empty ConsentDebugSettings', () async {
       ConsentDebugSettings debugSettings = ConsentDebugSettings();
       ByteData? byteData = codec.encodeMessage(debugSettings);
