@@ -21,9 +21,11 @@ class RequestConfiguration {
   final String? maxAdContentRating;
 
   /// Whether to tag as child directed.
+  @Deprecated('Use ageRestrictedTreatment instead.')
   final int? tagForChildDirectedTreatment;
 
   /// Whether to tag as under age of consent.
+  @Deprecated('Use ageRestrictedTreatment instead.')
   final int? tagForUnderAgeOfConsent;
 
   /// List of test device ids to set.
@@ -44,7 +46,9 @@ class RequestConfiguration {
   /// Creates a [RequestConfiguration].
   RequestConfiguration({
     this.maxAdContentRating,
+    @Deprecated('Use ageRestrictedTreatment instead.')
     this.tagForChildDirectedTreatment,
+    @Deprecated('Use ageRestrictedTreatment instead.')
     this.tagForUnderAgeOfConsent,
     this.testDeviceIds,
     this.ageRestrictedTreatment,
@@ -70,6 +74,7 @@ class MaxAdContentRating {
 }
 
 /// Values for [RequestConfiguration.tagForUnderAgeOfConsent].
+@Deprecated('Use AgeRestrictedTreatment instead.')
 class TagForUnderAgeOfConsent {
   /// Tag as under age of consent.
   ///
@@ -94,6 +99,7 @@ class TagForUnderAgeOfConsent {
 }
 
 /// Values for [RequestConfiguration.tagForChildDirectedTreatment].
+@Deprecated('Use AgeRestrictedTreatment instead.')
 class TagForChildDirectedTreatment {
   /// Tag for child directed treatment.
   ///
