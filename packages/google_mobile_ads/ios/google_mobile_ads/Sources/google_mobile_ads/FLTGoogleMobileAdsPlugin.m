@@ -354,6 +354,7 @@
     NSNumber *tagForUnderAgeOfConsent =
         call.arguments[@"tagForUnderAgeOfConsent"];
     NSArray<NSString *> *testDeviceIds = call.arguments[@"testDeviceIds"];
+    NSNumber *ageRestrictedTreatment = call.arguments[@"ageRestrictedTreatment"];
 
     if (maxAdContentRating != NULL && maxAdContentRating != (id)[NSNull null]) {
       if ([maxAdContentRating isEqualToString:@"G"]) {
@@ -399,6 +400,11 @@
     if (testDeviceIds != NULL && testDeviceIds != (id)[NSNull null]) {
       GADMobileAds.sharedInstance.requestConfiguration.testDeviceIdentifiers =
           testDeviceIds;
+    }
+    if (ageRestrictedTreatment != NULL &&
+        ageRestrictedTreatment != (id)[NSNull null]) {
+      GADMobileAds.sharedInstance.requestConfiguration.ageRestrictedTreatment =
+          [ageRestrictedTreatment intValue];
     }
     result(nil);
   } else if ([call.method isEqualToString:@"loadBannerAd"]) {

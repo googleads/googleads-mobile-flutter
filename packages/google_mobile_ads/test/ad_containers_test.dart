@@ -98,6 +98,7 @@ void main() {
             'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
             'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.yes,
             'testDeviceIds': <String>['test-device-id'],
+            'ageRestrictedTreatment': null,
           },
         ),
       ]);
