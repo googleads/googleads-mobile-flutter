@@ -6,8 +6,8 @@
 * Null-safe return values across the plugin. [PR 1461](https://github.com/googleads/googleads-mobile-flutter/pull/1461)
 * Updates GMA Android SDK dependencies:
   * [Google Mobile Ads](https://developers.google.com/admob/android/quick-start) SDK version `25.4.0`.
-  * [Google Mobile Ads Next-Gen](https://developers.google.com/admob/android/next-gen/rel-notes) SDK version `1.2.1`.
-* Updates GMA [iOS](https://developers.google.com/admob/ios/rel-notes) dependency to `13.6.0`.
+  * [Google Mobile Ads Next-Gen](https://developers.google.com/admob/android/next-gen/rel-notes) SDK version `1.3.1`.
+* Updates GMA [iOS](https://developers.google.com/admob/ios/rel-notes) dependency to `13.7.0`.
 * Uses latest UMP SDK:
   * [Android](https://developers.google.com/admob/android/privacy/release-notes) UMP SDK version 4.0.0.
   * [iOS](https://developers.google.com/admob/ios/privacy/download#release_notes) UMP SDK version 3.1.0.
