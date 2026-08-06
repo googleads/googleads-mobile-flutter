@@ -13,8 +13,7 @@ Mediation Adapter for Meta Audience Network to use with Google Mobile Ads.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Google LLC' => 'mediation-support@google.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.source_files = 'gma_mediation_meta/Sources/gma_mediation_meta/**/*'
   s.dependency 'Flutter'
   s.dependency 'GoogleMobileAdsMediationFacebook', '~> 6.21.1.1'
   s.platform = :ios, '13.0'
