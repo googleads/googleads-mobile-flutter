@@ -23,7 +23,7 @@ class _UmpSnippets {
     // [START set_consent_sync_id]
     // Create a ConsentRequestParameters object with a consent sync ID.
     final ConsentRequestParameters params = ConsentRequestParameters(
-      consentSyncId: 'SAMPLE_CONSENT_SYNC_ID',
+      consentSyncId: 'CONSENT_SYNC_ID',
     );
     // [END set_consent_sync_id]
 
