@@ -513,29 +513,25 @@ public class AdMessageCodecTest {
     assertNull(result.orientation);
   }
 
-  public void encodeRequestConfiguration() {
-    RequestConfiguration.Builder requestConfigurationBuilder = new RequestConfiguration.Builder();
-    requestConfigurationBuilder.setMaxAdContentRating(
-        RequestConfiguration.MAX_AD_CONTENT_RATING_MA);
-    requestConfigurationBuilder.setTagForChildDirectedTreatment(
-        RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE);
-    requestConfigurationBuilder.setTagForUnderAgeOfConsent(
-        RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE);
-    requestConfigurationBuilder.setTestDeviceIds(Arrays.asList("test-device-id"));
-    RequestConfiguration requestConfiguration = requestConfigurationBuilder.build();
+  @Test
+  public void encodeFlutterRequestConfiguration() {
+    FlutterRequestConfiguration.Builder rcb = new FlutterRequestConfiguration.Builder();
+    rcb.setMaxAdContentRating("MA");
+    rcb.setTagForChildDirectedTreatment(1);
+    rcb.setTagForUnderAgeOfConsent(0);
+    rcb.setTestDeviceIds(Arrays.asList("test-device-id"));
+    rcb.setAgeRestrictedTreatment(2); // TEEN
+    FlutterRequestConfiguration requestConfiguration = rcb.build();
 
     final ByteBuffer data = codec.encodeMessage(requestConfiguration);
-    final RequestConfiguration result =
-        (RequestConfiguration) codec.decodeMessage((ByteBuffer) data.position(0));
+    final FlutterRequestConfiguration result =
+        (FlutterRequestConfiguration) codec.decodeMessage((ByteBuffer) data.position(0));
 
-    assertEquals(result.getMaxAdContentRating(), RequestConfiguration.MAX_AD_CONTENT_RATING_MA);
-    assertEquals(
-        result.getTagForChildDirectedTreatment(),
-        RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE);
-    assertEquals(
-        result.getTagForUnderAgeOfConsent(),
-        RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE);
+    assertEquals(result.getMaxAdContentRating(), "MA");
+    assertEquals(result.getTagForChildDirectedTreatment(), Integer.valueOf(1));
+    assertEquals(result.getTagForUnderAgeOfConsent(), Integer.valueOf(0));
     assertEquals(result.getTestDeviceIds(), Arrays.asList("test-device-id"));
+    assertEquals(result.getAgeRestrictedTreatment(), Integer.valueOf(2));
   }
 }
 

@@ -21,20 +21,37 @@ class RequestConfiguration {
   final String? maxAdContentRating;
 
   /// Whether to tag as child directed.
+  @Deprecated('Use ageRestrictedTreatment instead.')
   final int? tagForChildDirectedTreatment;
 
   /// Whether to tag as under age of consent.
+  @Deprecated('Use ageRestrictedTreatment instead.')
   final int? tagForUnderAgeOfConsent;
 
   /// List of test device ids to set.
   final List<String>? testDeviceIds;
 
+  /// The age treatment to apply to ad requests. Consult your own legal
+  /// counsel to determine the age treatment settings for your users based
+  /// on your legal and regulatory requirements. For more information on this
+  /// setting, review
+  /// https://developers.google.com/admob/flutter/targeting#set_the_age_treatment
+  ///
+  /// By setting this property, you certify that this notification is accurate
+  /// and you are authorized to act on behalf of the owner of the app. You
+  /// understand that abuse of this setting may result in termination of your
+  /// Google account.
+  final AgeRestrictedTreatment? ageRestrictedTreatment;
+
   /// Creates a [RequestConfiguration].
   RequestConfiguration({
     this.maxAdContentRating,
+    @Deprecated('Use ageRestrictedTreatment instead.')
     this.tagForChildDirectedTreatment,
+    @Deprecated('Use ageRestrictedTreatment instead.')
     this.tagForUnderAgeOfConsent,
     this.testDeviceIds,
+    this.ageRestrictedTreatment,
   });
 }
 
@@ -57,6 +74,7 @@ class MaxAdContentRating {
 }
 
 /// Values for [RequestConfiguration.tagForUnderAgeOfConsent].
+@Deprecated('Use AgeRestrictedTreatment instead.')
 class TagForUnderAgeOfConsent {
   /// Tag as under age of consent.
   ///
@@ -81,6 +99,7 @@ class TagForUnderAgeOfConsent {
 }
 
 /// Values for [RequestConfiguration.tagForChildDirectedTreatment].
+@Deprecated('Use AgeRestrictedTreatment instead.')
 class TagForChildDirectedTreatment {
   /// Tag for child directed treatment.
   ///
@@ -102,4 +121,16 @@ class TagForChildDirectedTreatment {
   /// should receive treatment for users in the European Economic Area (EEA)
   /// under the age of consent.
   static final int unspecified = -1;
+}
+
+/// Values for [RequestConfiguration.ageRestrictedTreatment].
+enum AgeRestrictedTreatment {
+  /// Indicates that no specific age restricted treatment signal applies to the ad request.
+  unspecified,
+
+  /// Indicates that ad requests should receive child age treatment.
+  child,
+
+  /// Indicates that ad requests should receive teen age treatment.
+  teen,
 }
