@@ -1,5 +1,7 @@
 ## Chartboost Flutter Mediation Adapter Changelog
 
+#### Version 1.7.0 (In progress)
+
 #### Version 1.6.0
 - Supports [Chartboost Android adapter version 9.12.1.1](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/chartboost/CHANGELOG.md#version-91211).
 - Supports [Chartboost iOS adapter version 9.13.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Chartboost/CHANGELOG.md#version-91300).
