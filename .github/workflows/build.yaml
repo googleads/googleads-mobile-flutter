@@ -20,14 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         regex:
-        - "samples/admob/app_open_example"
-        - "samples/admob/banner_example"
-        - "samples/admob/interstitial_example"
-        - "samples/admob/mediation_example"
-        - "samples/admob/native_platform_example"
-        - "samples/admob/native_template_example"
-        - "samples/admob/rewarded_example"
-        - "samples/admob/rewarded_interstitial_example"   
+        - "samples/admob/api_demo"
+        - "samples/admob/mediation_example"   
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
@@ -51,14 +45,8 @@ jobs:
       fail-fast: false
       matrix:
         regex:
-        - "samples/admob/app_open_example"
-        - "samples/admob/banner_example"
-        - "samples/admob/interstitial_example"
-        - "samples/admob/mediation_example"
-        - "samples/admob/native_platform_example"
-        - "samples/admob/native_template_example"
-        - "samples/admob/rewarded_example"
-        - "samples/admob/rewarded_interstitial_example" 
+        - "samples/admob/api_demo"
+        - "samples/admob/mediation_example" 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
@@ -85,14 +73,8 @@ jobs:
       fail-fast: false
       matrix:
         regex:
-        - "samples/admob/app_open_example"
-        - "samples/admob/banner_example"
-        - "samples/admob/interstitial_example"
-        - "samples/admob/mediation_example"
-        - "samples/admob/native_platform_example"
-        - "samples/admob/native_template_example"
-        - "samples/admob/rewarded_example"
-        - "samples/admob/rewarded_interstitial_example" 
+        - "samples/admob/api_demo"
+        - "samples/admob/mediation_example" 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
