@@ -2,14 +2,20 @@ name: Build Status
 
 # Step 1: Build on pull-requests or pushes to main
 on:
-  push:
-    branches:
-      - "packages/google_mobile_ads/**"
-      - "{{ matrix.regex }}/**"
-      - ".github/workflows/build.yaml"
   pull_request:
     branches:
-    - "**"
+      - "**"
+    paths:
+      - "packages/google_mobile_ads/**"
+      - "samples/admob/**"
+      - ".github/workflows/build.yaml"
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/google_mobile_ads/**"
+      - "samples/admob/**"
+      - ".github/workflows/build.yaml"
  
 jobs:
 # Step 2: Build Android
@@ -31,11 +37,11 @@ jobs:
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
         env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}     
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.regex }}     
       - name: "Build Android Example"
         run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
         env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}   
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.regex }}   
 
 # Step 2: Build iOS
   iOS:
@@ -58,11 +64,11 @@ jobs:
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
         env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.regex }}
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
         env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}   
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.regex }}   
           
 # Step 3: Build Flutter
   flutter:
@@ -84,7 +90,7 @@ jobs:
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
         env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }}        
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.regex }}        
       - name: "Flutter Analyze"
         run: |
           cd $GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE
@@ -92,7 +98,7 @@ jobs:
           flutter pub get
           flutter analyze
         env:
-          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.REGEX }} 
+          GOOGLEMOBILEADS_PLUGIN_SCOPE_EXAMPLE: ${{ matrix.regex }} 
       - name: "Flutter Format"
         run: |
           dart format --version
