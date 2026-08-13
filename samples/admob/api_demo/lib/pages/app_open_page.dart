@@ -216,7 +216,9 @@ class _AppOpenPageState extends State<AppOpenPage> {
               const SizedBox(height: 20),
               SwitchListTile(
                 title: const Text('Show ad on foreground resume'),
-                subtitle: const Text('Triggers when returning from another app'),
+                subtitle: const Text(
+                  'Triggers when returning from another app',
+                ),
                 value: _listenToForegroundEvents,
                 onChanged: (value) {
                   setState(() {

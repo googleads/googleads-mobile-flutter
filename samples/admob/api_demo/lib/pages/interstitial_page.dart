@@ -113,9 +113,7 @@ class _InterstitialPageState extends State<InterstitialPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  _counter > 0
-                      ? '$_counter seconds left!'
-                      : 'Game Over!',
+                  _counter > 0 ? '$_counter seconds left!' : 'Game Over!',
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w600,
@@ -193,9 +191,7 @@ class _InterstitialPageState extends State<InterstitialPage> {
             onAdShowedFullScreenContent: (ad) =>
                 debugPrint('InterstitialAd showed full screen content.'),
             onAdFailedToShowFullScreenContent: (ad, err) {
-              debugPrint(
-                'InterstitialAd failed to show with error: $err',
-              );
+              debugPrint('InterstitialAd failed to show with error: $err');
               ad.dispose();
               _interstitialAd = null;
             },

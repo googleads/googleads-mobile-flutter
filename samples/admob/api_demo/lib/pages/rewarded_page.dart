@@ -134,13 +134,15 @@ class _RewardedPageState extends State<RewardedPage> {
                         _rewardedAd?.show(
                           onUserEarnedReward:
                               (AdWithoutView ad, RewardItem rewardItem) {
-                            debugPrint('Reward amount: ${rewardItem.amount}');
-                            if (mounted) {
-                              setState(() {
-                                _coins += rewardItem.amount.toInt();
-                              });
-                            }
-                          },
+                                debugPrint(
+                                  'Reward amount: ${rewardItem.amount}',
+                                );
+                                if (mounted) {
+                                  setState(() {
+                                    _coins += rewardItem.amount.toInt();
+                                  });
+                                }
+                              },
                         );
                       } else {
                         debugPrint('Rewarded ad was not ready.');

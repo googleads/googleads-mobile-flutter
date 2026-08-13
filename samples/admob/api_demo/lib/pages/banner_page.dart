@@ -34,10 +34,7 @@ class _BannerPageState extends State<BannerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Banner Ad'),
-        actions: _appBarActions(),
-      ),
+      appBar: AppBar(title: const Text('Banner Ad'), actions: _appBarActions()),
       body: OrientationBuilder(
         builder: (context, orientation) {
           if (_currentOrientation != orientation) {

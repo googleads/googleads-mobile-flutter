@@ -282,8 +282,7 @@ class _RewardedInterstitialPageState extends State<RewardedInterstitialPage> {
               ad.dispose();
               _rewardedInterstitialAd = null;
             },
-            onAdClicked: (ad) =>
-                debugPrint('RewardedInterstitialAd clicked.'),
+            onAdClicked: (ad) => debugPrint('RewardedInterstitialAd clicked.'),
           );
         },
         onAdFailedToLoad: (LoadAdError error) {

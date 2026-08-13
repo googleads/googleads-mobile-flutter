@@ -25,10 +25,7 @@ class ApiDemoApp extends StatelessWidget {
     return MaterialApp(
       title: 'Google Mobile Ads API Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorSchemeSeed: Colors.indigo,
-        useMaterial3: true,
-      ),
+      theme: ThemeData(colorSchemeSeed: Colors.indigo, useMaterial3: true),
       home: const LandingPage(),
     );
   }
@@ -74,7 +71,8 @@ class _LandingPageState extends State<LandingPage> {
     ),
     _AdFormatItem(
       title: 'Interstitial Ad',
-      description: 'Full-screen overlay ads shown at natural transition points.',
+      description:
+          'Full-screen overlay ads shown at natural transition points.',
       builder: (context) => const InterstitialPage(),
     ),
     _AdFormatItem(
@@ -84,17 +82,20 @@ class _LandingPageState extends State<LandingPage> {
     ),
     _AdFormatItem(
       title: 'Native Template Ad',
-      description: 'Native ads styled directly in Flutter using NativeTemplateStyle.',
+      description:
+          'Native ads styled directly in Flutter using NativeTemplateStyle.',
       builder: (context) => const NativeTemplatePage(),
     ),
     _AdFormatItem(
       title: 'Rewarded Ad',
-      description: 'Full-screen video ads where users opt in to earn in-app rewards.',
+      description:
+          'Full-screen video ads where users opt in to earn in-app rewards.',
       builder: (context) => const RewardedPage(),
     ),
     _AdFormatItem(
       title: 'Rewarded Interstitial Ad',
-      description: 'Full-screen rewarded ads with an introductory countdown dialog.',
+      description:
+          'Full-screen rewarded ads with an introductory countdown dialog.',
       builder: (context) => const RewardedInterstitialPage(),
     ),
   ];
