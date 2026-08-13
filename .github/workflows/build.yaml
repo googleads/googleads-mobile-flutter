@@ -1,5 +1,8 @@
 name: Build Status
 
+permissions:
+  contents: read
+
 # Step 1: Build on pull-requests or pushes to main
 on:
   pull_request:
