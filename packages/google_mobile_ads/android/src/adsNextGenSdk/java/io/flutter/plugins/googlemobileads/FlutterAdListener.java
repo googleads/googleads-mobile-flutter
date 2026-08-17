@@ -14,6 +14,8 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.NonNull;
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAd;
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdEventCallback;
@@ -130,6 +132,7 @@ class FlutterNativeAdListener implements NativeAdEventCallback {
 /** {@link NativeAdLoaderCallback} for native ads. */
 class FlutterNativeAdLoadedListener implements NativeAdLoaderCallback {
 
+  @NonNull private final Handler mainHandler = new Handler(Looper.getMainLooper());
   private final WeakReference<FlutterNativeAd> nativeAdWeakReference;
 
   FlutterNativeAdLoadedListener(FlutterNativeAd flutterNativeAd) {
@@ -138,15 +141,31 @@ class FlutterNativeAdLoadedListener implements NativeAdLoaderCallback {
 
   @Override
   public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
-    if (nativeAdWeakReference.get() != null) {
-      nativeAdWeakReference.get().onNativeAdLoaded(nativeAd);
-    }
+    runOnMainThread(
+        () -> {
+          FlutterNativeAd flutterNativeAd = nativeAdWeakReference.get();
+          if (flutterNativeAd != null) {
+            flutterNativeAd.onNativeAdLoaded(nativeAd);
+          }
+        });
   }
 
   @Override
   public void onAdFailedToLoad(LoadAdError loadAdError) {
-    if (nativeAdWeakReference.get() != null) {
-      nativeAdWeakReference.get().onNativeAdFailed(loadAdError);
+    runOnMainThread(
+        () -> {
+          FlutterNativeAd flutterNativeAd = nativeAdWeakReference.get();
+          if (flutterNativeAd != null) {
+            flutterNativeAd.onNativeAdFailed(loadAdError);
+          }
+        });
+  }
+
+  private void runOnMainThread(@NonNull Runnable callback) {
+    if (Looper.myLooper() == Looper.getMainLooper()) {
+      callback.run();
+    } else {
+      mainHandler.post(callback);
     }
   }
 }
