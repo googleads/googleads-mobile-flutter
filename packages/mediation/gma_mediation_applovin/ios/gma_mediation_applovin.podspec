@@ -13,8 +13,7 @@ Mediation Adapter for AppLovin to use with Google Mobile Ads.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Google LLC' => 'mediation-support@google.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.source_files = 'gma_mediation_applovin/Sources/gma_mediation_applovin/**/*'
   s.dependency 'Flutter'
   s.dependency 'GoogleMobileAdsMediationAppLovin', '~> 13.6.3.0'
   s.platform = :ios, '13.0'
