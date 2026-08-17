@@ -26,7 +26,7 @@ let package = Package(
       dependencies: [
         .product(name: "FlutterFramework", package: "FlutterFramework"),
         .product(
-          name: "GoogleMobileAdsMediationAppLovin",
+          name: "AppLovinAdapterTarget",
           package: "googleads-mobile-ios-mediation-applovin"),
       ],
       path: "Sources/gma_mediation_applovin"
