@@ -168,16 +168,18 @@ class _AdPreloadingPageState extends State<AdPreloadingPage> {
   /// Checks whether an ad is currently available in the preloader cache buffer.
   Future<bool> _checkAvailability(PreloadAdFormat format) async {
     final state = _formatStates[format]!;
-    final available = switch (format) {
-      PreloadAdFormat.interstitial =>
-        await InterstitialAdPreloader.isAdAvailable(format.adUnitId),
-      PreloadAdFormat.rewarded => await RewardedAdPreloader.isAdAvailable(
-        format.adUnitId,
-      ),
-      PreloadAdFormat.appOpen => await AppOpenAdPreloader.isAdAvailable(
-        format.adUnitId,
-      ),
-    };
+    bool available = false;
+
+    switch (format) {
+      case PreloadAdFormat.interstitial:
+        available = await InterstitialAdPreloader.isAdAvailable(
+          format.adUnitId,
+        );
+      case PreloadAdFormat.rewarded:
+        available = await RewardedAdPreloader.isAdAvailable(format.adUnitId);
+      case PreloadAdFormat.appOpen:
+        available = await AppOpenAdPreloader.isAdAvailable(format.adUnitId);
+    }
 
     if (mounted) {
       setState(() => state.isAdAvailable = available);
