@@ -372,9 +372,8 @@ class _AdPreloadingPageState extends State<AdPreloadingPage> {
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? Theme.of(
-                            context,
-                          ).colorScheme.primaryContainer.withAlpha(80)
+                        ? Theme.of(context).colorScheme.primaryContainer
+                              .withAlpha(80)
                         : Colors.grey.shade50,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
