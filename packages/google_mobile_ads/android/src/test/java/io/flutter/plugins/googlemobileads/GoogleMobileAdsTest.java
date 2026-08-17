@@ -609,12 +609,13 @@ public class GoogleMobileAdsTest {
     FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
     GoogleMobileAdsPlugin plugin =
         new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
-    RequestConfiguration.Builder rcb = new RequestConfiguration.Builder();
-    rcb.setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_MA);
-    rcb.setTagForChildDirectedTreatment(RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE);
-    rcb.setTagForUnderAgeOfConsent(RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_TRUE);
+    FlutterRequestConfiguration.Builder rcb = new FlutterRequestConfiguration.Builder();
+    rcb.setMaxAdContentRating("MA");
+    rcb.setTagForChildDirectedTreatment(1);
+    rcb.setTagForUnderAgeOfConsent(1);
     rcb.setTestDeviceIds(new ArrayList<String>(Arrays.asList("id1", "id2")));
-    RequestConfiguration rc = rcb.build();
+    rcb.setAgeRestrictedTreatment(null);
+    FlutterRequestConfiguration rc = rcb.build();
     doReturn(rc).when(mockMobileAds).getRequestConfiguration();
 
     MethodCall methodCall = new MethodCall("MobileAds#getRequestConfiguration", null);

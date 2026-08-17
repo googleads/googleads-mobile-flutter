@@ -66,8 +66,15 @@ public class FlutterMobileAdsWrapper {
   }
 
   /** Wrapper for getRequestConfiguration. */
-  public RequestConfiguration getRequestConfiguration() {
-    return MobileAds.getRequestConfiguration();
+  public FlutterRequestConfiguration getRequestConfiguration() {
+    RequestConfiguration rc = MobileAds.getRequestConfiguration();
+    return new FlutterRequestConfiguration.Builder()
+        .setMaxAdContentRating(rc.getMaxAdContentRating())
+        .setTagForChildDirectedTreatment(rc.getTagForChildDirectedTreatment())
+        .setTagForUnderAgeOfConsent(rc.getTagForUnderAgeOfConsent())
+        .setTestDeviceIds(rc.getTestDeviceIds())
+        .setAgeRestrictedTreatment(rc.getAgeRestrictedTreatment() != null ? rc.getAgeRestrictedTreatment().ordinal() : null)
+        .build();
   }
 
   /** Wrapper for openDebugMenu. */

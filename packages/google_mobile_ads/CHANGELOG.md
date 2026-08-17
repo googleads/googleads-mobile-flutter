@@ -1,3 +1,17 @@
+## 9.1.0
+* Adding Ad Preloading APIs. [PR 1445](https://github.com/googleads/googleads-mobile-flutter/pull/1445)
+* Support `AdManagerBannerAd` recycling by exposing `isMounted`. [PR 1443](https://github.com/googleads/googleads-mobile-flutter/pull/1443)
+* Added `setConsentSyncId()` on `ConsentRequestParameters`. [PR 1452](https://github.com/googleads/googleads-mobile-flutter/pull/1452)
+* Introduces `ageRestrictedTreatment` property to `RequestConfiguration`. [PR 1455](https://github.com/googleads/googleads-mobile-flutter/pull/1455)
+* Null-safe return values across the plugin. [PR 1461](https://github.com/googleads/googleads-mobile-flutter/pull/1461)
+* Updates GMA Android SDK dependencies:
+  * [Google Mobile Ads](https://developers.google.com/admob/android/quick-start) SDK version `25.4.0`.
+  * [Google Mobile Ads Next-Gen](https://developers.google.com/admob/android/next-gen/rel-notes) SDK version `1.3.1`.
+* Updates GMA [iOS](https://developers.google.com/admob/ios/rel-notes) dependency to `13.7.0`.
+* Uses latest UMP SDK:
+  * [Android](https://developers.google.com/admob/android/privacy/release-notes) UMP SDK version 4.0.0.
+  * [iOS](https://developers.google.com/admob/ios/privacy/download#release_notes) UMP SDK version 3.1.0.
+
 ## 9.0.0
 * Resolves pending start/stop method channel futures in AppStateNotifier Android. [PR 1438](https://github.com/googleads/googleads-mobile-flutter/pull/1438)
 * Updates GMA Android SDK dependencies:

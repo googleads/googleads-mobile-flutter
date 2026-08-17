@@ -1,5 +1,5 @@
 group 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_meta'
-version = "1.5.3"
+version = "1.6.0"
 
 buildscript {
     ext.kotlin_version = '2.3.0'
@@ -30,7 +30,7 @@ if (!builtInKotlinEnabled) {
 }
 
 ext {
-    stringVersion = "6.21.0.3"
+    stringVersion = "6.22.0.0"
 }
 
 android {

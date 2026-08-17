@@ -98,6 +98,7 @@ void main() {
             'tagForChildDirectedTreatment': TagForChildDirectedTreatment.yes,
             'tagForUnderAgeOfConsent': TagForUnderAgeOfConsent.yes,
             'testDeviceIds': <String>['test-device-id'],
+            'ageRestrictedTreatment': null,
           },
         ),
       ]);
@@ -1596,6 +1597,31 @@ void main() {
       final RewardItem result = codec.decodeMessage(byteData);
       expect(result.amount, 1);
       expect(result.type, 'type');
+    });
+
+    test('encode/decode $RewardItem with null values', () async {
+      final WriteBuffer buffer = WriteBuffer();
+      buffer.putUint8(132);
+      codec.writeValue(buffer, null);
+      codec.writeValue(buffer, null);
+
+      final RewardItem result = codec.decodeMessage(buffer.done());
+      expect(result.amount, 0);
+      expect(result.type, '');
+    });
+
+    test('encode/decode $AdapterStatus with null description', () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final WriteBuffer buffer = WriteBuffer();
+      buffer.putUint8(136);
+      codec.writeValue(buffer, AdapterInitializationState.ready);
+      codec.writeValue(buffer, null);
+      codec.writeValue(buffer, 1000);
+
+      final AdapterStatus result = codec.decodeMessage(buffer.done());
+      expect(result.state, AdapterInitializationState.ready);
+      expect(result.description, '');
+      expect(result.latency, 1.0);
     });
 
     test('encode/decode $InlineAdaptiveSize', () async {
