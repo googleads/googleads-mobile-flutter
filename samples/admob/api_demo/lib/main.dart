@@ -3,6 +3,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'common/app_bar_item.dart';
 import 'common/consent_manager.dart';
+import 'pages/ad_preloading_page.dart';
 import 'pages/app_open_page.dart';
 import 'pages/banner_page.dart';
 import 'pages/interstitial_page.dart';
@@ -97,6 +98,11 @@ class _LandingPageState extends State<LandingPage> {
       description:
           'Full-screen rewarded ads with an introductory countdown dialog.',
       builder: (context) => const RewardedInterstitialPage(),
+    ),
+    _AdFormatItem(
+      title: 'Ad Preloader',
+      description: 'Preloads ads into a cache buffer with automatic background replenishment.',
+      builder: (context) => const AdPreloadingPage(),
     ),
   ];
 
