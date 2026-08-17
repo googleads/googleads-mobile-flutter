@@ -21,8 +21,13 @@ allprojects {
     }
 }
 
+def builtInKotlinEnabled = (project.findProperty('android.builtInKotlin') ?: 'false').toString().toBoolean()
+
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+//agp 9 ships built-in kotlin and rejects this plugin; keep applying it while the consumer opts out
+if (!builtInKotlinEnabled) {
+    apply plugin: 'kotlin-android'
+}
 
 ext {
     stringVersion = "6.22.0.0"
@@ -38,10 +43,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
     sourceSets {
