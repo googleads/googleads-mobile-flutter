@@ -171,10 +171,12 @@ class _AdPreloadingPageState extends State<AdPreloadingPage> {
     final available = switch (format) {
       PreloadAdFormat.interstitial =>
         await InterstitialAdPreloader.isAdAvailable(format.adUnitId),
-      PreloadAdFormat.rewarded =>
-        await RewardedAdPreloader.isAdAvailable(format.adUnitId),
-      PreloadAdFormat.appOpen =>
-        await AppOpenAdPreloader.isAdAvailable(format.adUnitId),
+      PreloadAdFormat.rewarded => await RewardedAdPreloader.isAdAvailable(
+        format.adUnitId,
+      ),
+      PreloadAdFormat.appOpen => await AppOpenAdPreloader.isAdAvailable(
+        format.adUnitId,
+      ),
     };
 
     if (mounted) {
