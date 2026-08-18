@@ -18,18 +18,15 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/chartboost_sdk_api.g.dart',
     dartOptions: DartOptions(),
-    kotlinOut:
-        'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_chartboost/ChartboostSDKApi.g.kt',
+    kotlinOut: 'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_chartboost/ChartboostSDKApi.g.kt',
     kotlinOptions: KotlinOptions(
-      package:
-          "io.flutter.plugins.googlemobileads.mediation.gma_mediation_chartboost",
+      package: "io.flutter.plugins.googlemobileads.mediation.gma_mediation_chartboost",
     ),
-    swiftOut: 'ios/Classes/ChartboostSDKApi.g.swift',
+    swiftOut: 'ios/gma_mediation_chartboost/Sources/gma_mediation_chartboost/ChartboostSDKApi.g.swift',
     swiftOptions: SwiftOptions(),
     dartPackageName: 'gma_mediation_chartboost',
   ),
 )
 @HostApi()
-
 /// The generated classes set the channels to call the methods in the corresponding kotlin ChartboostSDKApi interface and swift ChartboostSDKApi protocol from the dart layer.
 abstract class ChartboostSDKApi {}

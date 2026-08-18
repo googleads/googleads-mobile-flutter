@@ -15,7 +15,7 @@
 import Flutter
 import UIKit
 
-/** Required to link the iOS dependency of the Chartboost Adapter. */
+/// Required to link the iOS dependency of the Chartboost Adapter.
 public class GmaMediationChartboostPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) { }
+  public static func register(with registrar: FlutterPluginRegistrar) {}
 }
