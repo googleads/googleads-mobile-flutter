@@ -18,19 +18,16 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/dtexchange_privacy_api.g.dart',
     dartOptions: DartOptions(),
-    kotlinOut:
-        'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_dtexchange/DTExchangePrivacyApi.g.kt',
+    kotlinOut: 'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_dtexchange/DTExchangePrivacyApi.g.kt',
     kotlinOptions: KotlinOptions(
-      package:
-          'io.flutter.plugins.googlemobileads.mediation.gma_mediation_dtexchange',
+      package: 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_dtexchange',
     ),
-    swiftOut: 'ios/Classes/DTExchangePrivacyApi.g.swift',
+    swiftOut: 'ios/gma_mediation_dtexchange/Sources/gma_mediation_dtexchange/DTExchangePrivacyApi.g.swift',
     swiftOptions: SwiftOptions(),
     dartPackageName: 'gma_mediation_dtexchange',
   ),
 )
 @HostApi()
-
 /// The generated classes set the channels to call the methods in the corresponding kotlin DTExchangePrivacyApi interface and swift DTExchangePrivacyApi protocol from the dart layer.
 abstract class DTExchangePrivacyApi {
   /// Used to configure LGDP on the Android or iOS DTExchange SDK.

@@ -6,17 +6,18 @@ import UIKit
 public class GmaMediationDTExchangePlugin: NSObject, FlutterPlugin, DTExchangePrivacyApi {
   let dtExchangeApi: DTExchangePrivacyProtocol
 
-  init (dtExchangeApi: DTExchangePrivacyProtocol) {
+  init(dtExchangeApi: DTExchangePrivacyProtocol) {
     self.dtExchangeApi = dtExchangeApi
   }
 
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let messenger : FlutterBinaryMessenger = registrar.messenger()
-    let api : DTExchangePrivacyApi&NSObjectProtocol=GmaMediationDTExchangePlugin.init(dtExchangeApi: DTExchangePrivacyImpl())
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
+    let api: DTExchangePrivacyApi & NSObjectProtocol = GmaMediationDTExchangePlugin.init(
+      dtExchangeApi: DTExchangePrivacyImpl())
     DTExchangePrivacyApiSetup.setUp(binaryMessenger: messenger, api: api)
   }
   public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-    let messenger : FlutterBinaryMessenger = registrar.messenger()
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
     DTExchangePrivacyApiSetup.setUp(binaryMessenger: messenger, api: nil)
   }
 
@@ -47,11 +48,12 @@ protocol DTExchangePrivacyProtocol {
   func clearUSPrivacyString()
 }
 
-class DTExchangePrivacyImpl : DTExchangePrivacyProtocol {
+class DTExchangePrivacyImpl: DTExchangePrivacyProtocol {
   func setLgpdConsent(wasConsentGiven: Bool) {
-    IASDKCore.sharedInstance().lgpdConsent = wasConsentGiven ? IALGPDConsentType.given : IALGPDConsentType.denied
+    IASDKCore.sharedInstance().lgpdConsent =
+      wasConsentGiven ? IALGPDConsentType.given : IALGPDConsentType.denied
   }
-  
+
   func clearLgpdConsentData() {
     IASDKCore.sharedInstance().clearLGPDConsentData()
   }
