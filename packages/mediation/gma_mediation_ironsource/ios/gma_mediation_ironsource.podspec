@@ -13,8 +13,7 @@ Mediation Adapter for ironSource to use with Google Mobile Ads.
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Google LLC' => 'mediation-support@google.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.source_files = 'gma_mediation_ironsource/Sources/gma_mediation_ironsource/**/*'
   s.dependency 'Flutter'
   s.dependency 'GoogleMobileAdsMediationIronSource', '~>9.5.0.0.0'
   s.platform = :ios, '13.0'

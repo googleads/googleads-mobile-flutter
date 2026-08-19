@@ -18,20 +18,17 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/ironsource_privacy_api.g.dart',
     dartOptions: DartOptions(),
-    kotlinOut:
-        'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_ironsource/IronSourcePrivacyApi.g.kt',
+    kotlinOut: 'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_ironsource/IronSourcePrivacyApi.g.kt',
     kotlinOptions: KotlinOptions(
-      package:
-          'io.flutter.plugins.googlemobileads.mediation.gma_mediation_ironsource',
+      package: 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_ironsource',
       errorClassName: 'IronSourcePrivacyError',
     ),
-    swiftOut: 'ios/Classes/IronSourcePrivacyApi.g.swift',
+    swiftOut: 'ios/gma_mediation_ironsource/Sources/gma_mediation_ironsource/IronSourcePrivacyApi.g.swift',
     swiftOptions: SwiftOptions(),
     dartPackageName: 'gma_mediation_ironsource',
   ),
 )
 @HostApi()
-
 /// The generated classes set the channels to call the methods in the corresponding kotlin IronSourcePrivacyApi interface and swift IronSourcePrivacyApi protocol from the dart layer.
 abstract class IronSourcePrivacyApi {
   // Used to configure GDPR consent on the Android or iOS ironSource SDK
