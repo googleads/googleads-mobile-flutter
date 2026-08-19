@@ -82,6 +82,16 @@ class _RewardedAdSnippets {
     // [END ad_events]
   }
 
+  void _showRewardedAd() {
+    // [START show_ad]
+    _rewardedAd?.show(
+      onUserEarnedReward: (AdWithoutView ad, RewardItem rewardItem) {
+        debugPrint('Reward amount: ${rewardItem.amount}');
+      },
+    );
+    // [END show_ad]
+  }
+
   void _validateServerSideVerification() {
     // [START validate_server_side_verification]
     RewardedAd.load(

@@ -82,6 +82,12 @@ class _InterstitialAdSnippets {
     // [END ad_events]
   }
 
+  void _showInterstitialAd() {
+    // [START show_ad]
+    _interstitialAd?.show();
+    // [END show_ad]
+  }
+
   void _startPreloading() {
     // [START start_preload]
     InterstitialAdPreloader.start(

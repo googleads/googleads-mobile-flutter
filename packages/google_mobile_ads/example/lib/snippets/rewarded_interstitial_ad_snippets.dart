@@ -83,6 +83,16 @@ class _RewardedInterstitialAdSnippets {
     // [END ad_events]
   }
 
+  void _showRewardedInterstitialAd() {
+    // [START show_ad]
+    _rewardedInterstitialAd?.show(
+      onUserEarnedReward: (AdWithoutView ad, RewardItem rewardItem) {
+        debugPrint('Reward amount: ${rewardItem.amount}');
+      },
+    );
+    // [END show_ad]
+  }
+
   void _validateServerSideVerification() {
     // [START validate_server_side_verification]
     RewardedInterstitialAd.load(
