@@ -13,8 +13,7 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Google LLC' => 'mediation-support@google.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.source_files = 'gma_mediation_pangle/Sources/gma_mediation_pangle/**/*'
   s.dependency 'Flutter'
   s.dependency 'GoogleMobileAdsMediationPangle', '~> 8.2.0.8.0'
   s.platform = :ios, '13.0'

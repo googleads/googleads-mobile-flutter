@@ -15,7 +15,7 @@
 import Flutter
 import UIKit
 
-/** Required to link the iOS dependency of the Pangle Adapter. */
+/// Required to link the iOS dependency of the Pangle Adapter.
 public class GmaMediationPanglePlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) { }
+  public static func register(with registrar: FlutterPluginRegistrar) {}
 }
