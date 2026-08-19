@@ -18,13 +18,12 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/moloco_sdk_api.g.dart',
     dartOptions: DartOptions(),
-    kotlinOut:
-        'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_moloco/MolocoSDKApi.g.kt',
+    kotlinOut: 'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_moloco/MolocoSDKApi.g.kt',
     kotlinOptions: KotlinOptions(
       package:
           "io.flutter.plugins.googlemobileads.mediation.gma_mediation_moloco",
     ),
-    swiftOut: 'ios/Classes/MolocoSDKApi.g.swift',
+    swiftOut: 'ios/gma_mediation_moloco/Sources/gma_mediation_moloco/MolocoSDKApi.g.swift',
     swiftOptions: SwiftOptions(),
     dartPackageName: 'gma_mediation_moloco',
   ),
