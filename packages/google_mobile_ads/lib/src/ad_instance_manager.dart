@@ -691,7 +691,7 @@ class AdInstanceManager {
           'sizes': ad.sizes,
           'adUnitId': ad.adUnitId,
           'request': ad.request,
-      });
+        });
   }
 
   /// Starts loading the ad if not previously loaded.
