@@ -20,18 +20,19 @@ import VungleAdsSDK
 public class GmaMediationLiftoffmonetizePlugin: NSObject, FlutterPlugin, LiftoffPrivacyApi {
   let liftoffPrivacy: LiftoffPrivacyProtocol
 
-  init (liftoffPrivacy: LiftoffPrivacyProtocol) {
+  init(liftoffPrivacy: LiftoffPrivacyProtocol) {
     self.liftoffPrivacy = liftoffPrivacy
   }
 
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let messenger : FlutterBinaryMessenger = registrar.messenger()
-    let api : LiftoffPrivacyApi& NSObjectProtocol = GmaMediationLiftoffmonetizePlugin.init(liftoffPrivacy: LiftoffPrivacyImpl())
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
+    let api: LiftoffPrivacyApi & NSObjectProtocol = GmaMediationLiftoffmonetizePlugin.init(
+      liftoffPrivacy: LiftoffPrivacyImpl())
     LiftoffPrivacyApiSetup.setUp(binaryMessenger: messenger, api: api)
   }
 
   public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-    let messenger : FlutterBinaryMessenger = registrar.messenger()
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
     LiftoffPrivacyApiSetup.setUp(binaryMessenger: messenger, api: nil)
   }
 
@@ -53,7 +54,7 @@ protocol LiftoffPrivacyProtocol {
   func setCCPAStatus(optedIn: Bool)
 }
 
-class LiftoffPrivacyImpl : LiftoffPrivacyProtocol {
+class LiftoffPrivacyImpl: LiftoffPrivacyProtocol {
   func setGDPRStatus(optedIn: Bool) {
     VunglePrivacySettings.setGDPRStatus(optedIn)
   }

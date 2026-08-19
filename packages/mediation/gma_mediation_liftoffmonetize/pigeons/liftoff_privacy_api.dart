@@ -18,19 +18,16 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/liftoff_privacy_api.g.dart',
     dartOptions: DartOptions(),
-    kotlinOut:
-        'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_liftoffmonetize/LiftoffPrivacyApi.g.kt',
+    kotlinOut: 'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_liftoffmonetize/LiftoffPrivacyApi.g.kt',
     kotlinOptions: KotlinOptions(
-      package:
-          'io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmonetize',
+      package: 'io.flutter.plugins.googlemobileads.mediation.gma_mediation_liftoffmonetize',
     ),
-    swiftOut: 'ios/Classes/LiftoffPrivacyApi.g.swift',
+    swiftOut: 'ios/gma_mediation_liftoffmonetize/Sources/gma_mediation_liftoffmonetize/LiftoffPrivacyApi.g.swift',
     swiftOptions: SwiftOptions(),
     dartPackageName: 'gma_mediation_liftoffmonetize',
   ),
 )
 @HostApi()
-
 /// The generated classes set the channels to call the methods in the corresponding kotlin LiftoffPrivacyApi interface and swift LiftoffPrivacyApi protocol from the dart layer.
 abstract class LiftoffPrivacyApi {
   /// Used to configure GDPR status on the Android or iOS Liftoff Monetize SDK
