@@ -18,13 +18,12 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/mytarget_sdk_api.g.dart',
     dartOptions: DartOptions(),
-    kotlinOut:
-        'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_mytarget/mytargetSDKApi.g.kt',
+    kotlinOut: 'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_mytarget/mytargetSDKApi.g.kt',
     kotlinOptions: KotlinOptions(
       package:
           "io.flutter.plugins.googlemobileads.mediation.gma_mediation_mytarget",
     ),
-    swiftOut: 'ios/Classes/mytargetSDKApi.g.swift',
+    swiftOut: 'ios/gma_mediation_mytarget/Sources/gma_mediation_mytarget/mytargetSDKApi.g.swift',
     swiftOptions: SwiftOptions(),
     dartPackageName: 'gma_mediation_mytarget',
   ),
