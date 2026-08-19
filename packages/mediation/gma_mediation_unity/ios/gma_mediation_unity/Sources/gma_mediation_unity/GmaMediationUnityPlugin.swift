@@ -20,17 +20,18 @@ import UnityAds
 public class GmaMediationUnityPlugin: NSObject, FlutterPlugin, UnityPrivacyApi {
   let uadsMedatada: UnityMetaDataProtocol
 
-  init (unityMetaData: UnityMetaDataProtocol) {
+  init(unityMetaData: UnityMetaDataProtocol) {
     self.uadsMedatada = unityMetaData
   }
 
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let messenger : FlutterBinaryMessenger = registrar.messenger()
-    let api : UnityPrivacyApi & NSObjectProtocol = GmaMediationUnityPlugin.init(unityMetaData: UnityMetaDataImpl())
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
+    let api: UnityPrivacyApi & NSObjectProtocol = GmaMediationUnityPlugin.init(
+      unityMetaData: UnityMetaDataImpl())
     UnityPrivacyApiSetup.setUp(binaryMessenger: messenger, api: api)
   }
   public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
-    let messenger : FlutterBinaryMessenger = registrar.messenger()
+    let messenger: FlutterBinaryMessenger = registrar.messenger()
     UnityPrivacyApiSetup.setUp(binaryMessenger: messenger, api: nil)
   }
   func setGDPRConsent(gdprConsent: Bool) {
@@ -50,7 +51,7 @@ protocol UnityMetaDataProtocol {
   func commit()
 }
 
-class UnityMetaDataImpl : UnityMetaDataProtocol {
+class UnityMetaDataImpl: UnityMetaDataProtocol {
   let instance: UADSMetaData
   init() {
     self.instance = UADSMetaData()

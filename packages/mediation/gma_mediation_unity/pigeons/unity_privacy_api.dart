@@ -18,19 +18,17 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/unity_privacy_api.g.dart',
     dartOptions: DartOptions(),
-    kotlinOut:
-        'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_unity/UnityPrivacyApi.g.kt',
+    kotlinOut: 'android/src/main/kotlin/io/flutter/plugins/googlemobileads/mediation/gma_mediation_unity/UnityPrivacyApi.g.kt',
     kotlinOptions: KotlinOptions(
       package:
           "io.flutter.plugins.googlemobileads.mediation.gma_mediation_unity",
     ),
-    swiftOut: 'ios/Classes/UnityPrivacyApi.g.swift',
+    swiftOut: 'ios/gma_mediation_unity/Sources/gma_mediation_unity/UnityPrivacyApi.g.swift',
     swiftOptions: SwiftOptions(),
     dartPackageName: 'gma_mediation_unity',
   ),
 )
 @HostApi()
-
 /// The generated classes set the channels to call the methods in the corresponding kotlin UnityPrivacyApi interface and swift UnityPrivacyApi protocol from the dart layer.
 abstract class UnityPrivacyApi {
   /// Used to configure GDPR consent on the Android or iOS Unity SDK
