@@ -1,6 +1,8 @@
 ## BidMachine Flutter Mediation Adapter Changelog
 
 #### Version 1.4.2 (In progress)
+- Updated to support Google Mobile Ads Flutter Plugin version 9.1.0.
+- Add Swift Package Manager support.
 
 #### Version 1.4.1
 - Supports [BidMachine Android adapter version 3.7.1.1](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/bidmachine/CHANGELOG.md#version-3711).
