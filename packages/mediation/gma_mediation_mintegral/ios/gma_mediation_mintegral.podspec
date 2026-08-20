@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_mintegral'
-  s.version          = '2.1.2'
+  s.version          = '2.1.3'
   s.summary          = 'Google Mobile Ads Mediation of Mintegral.'
   s.description      = <<-DESC
 Mediation Adapter for Mintegral to use with Google Mobile Ads.
