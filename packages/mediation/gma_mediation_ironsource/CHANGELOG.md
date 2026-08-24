@@ -1,8 +1,11 @@
 ## ironSource Flutter Mediation Adapter Changelog
 
-#### Version 2.5.1 (In progress)
-* Updated to support Google Mobile Ads Flutter Plugin version 9.1.0.
-* Add Swift Package Manager support.
+#### Version 2.5.1
+- Updated to support Google Mobile Ads Flutter Plugin version 9.1.0.
+- Add Swift Package Manager support.
+- Supports [ironSource Android adapter version 9.5.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/ironsource/CHANGELOG.md#version-9500).
+- Supports [ironSource iOS adapter version 9.5.0.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/IronSource/CHANGELOG.md#version-95000).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 9.1.0.
 
 #### Version 2.5.0
 - Updated to support Google Mobile Ads Flutter Plugin version 9.0.0.
