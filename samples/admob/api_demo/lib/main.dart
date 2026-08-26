@@ -63,20 +63,17 @@ class _LandingPageState extends State<LandingPage> {
   final List<_AdFormatItem> _formats = [
     _AdFormatItem(
       title: 'App Open Ad',
-      description:
-          'Full-screen ads shown on app open or when returning from foreground.',
+      description: 'Full-screen ads shown on app open or when returning from foreground.',
       builder: (context) => const AppOpenPage(),
     ),
     _AdFormatItem(
       title: 'Banner Ad',
-      description:
-          'Anchored adaptive banner resizing automatically with screen orientation.',
+      description: 'Anchored adaptive banner resizing automatically with screen orientation.',
       builder: (context) => const BannerPage(),
     ),
     _AdFormatItem(
       title: 'Banner Recycling',
-      description:
-          'Inline adaptive banner recycling in scrollable feeds for optimal memory performance.',
+      description: 'Inline adaptive banner recycling in scrollable feeds for optimal memory performance.',
       builder: (context) => const BannerRecyclingPage(),
     ),
     _AdFormatItem(
@@ -87,8 +84,7 @@ class _LandingPageState extends State<LandingPage> {
     ),
     _AdFormatItem(
       title: 'Native Platform Ad',
-      description:
-          'Custom native ad layouts using platform-specific Android XML / iOS XIB.',
+      description: 'Custom native ad layouts using platform-specific Android XML / iOS XIB.',
       builder: (context) => const NativePlatformPage(),
     ),
     _AdFormatItem(
@@ -111,8 +107,7 @@ class _LandingPageState extends State<LandingPage> {
     ),
     _AdFormatItem(
       title: 'Ad Preloader',
-      description:
-          'Preloads ads into a cache buffer with automatic background replenishment.',
+      description: 'Preloads ads into a cache buffer with automatic background replenishment.',
       builder: (context) => const AdPreloadingPage(),
     ),
   ];

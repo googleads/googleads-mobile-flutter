@@ -145,7 +145,7 @@ When the `ListView` requests an ad for a given `bannerPosition`:
 
 ### 4. Rendering in `ListView.builder`
 
-Render the ad inside the `ListView.builder`, providing a placeholder while the ad size resolves:
+Render the ad inside the `ListView.builder`, showing a banner ad every 6 rows (`index % 6 == 0`) and providing a placeholder while the ad size resolves:
 
 ```dart
   @override
@@ -195,13 +195,7 @@ Render the ad inside the `ListView.builder`, providing a placeholder while the a
 
 ## Performance Benchmark
 
-In profiling benchmarks on iOS devices using Apple Instruments:
-
-* **WebPageProxy inter-process messaging overhead**: ~4.7% CPU reduction
-* **Dispatch worker release queues (`_dispatch_call_block_and_release`)**: ~11.1% CPU reduction
-* **Network socket and SSL session churn (`CFNetwork`)**: ~7.8% CPU reduction
-* **Total CPU Reduction**: **~23.6%+**
-* **Memory**: Memory remains flat and bounded regardless of feed scroll depth.
+In profiling benchmarks, reusing off-screen banner ad views results in an approximate **23.6% CPU usage improvement** while keeping memory consumption flat and bounded regardless of feed scroll depth.
 
 ---
 
