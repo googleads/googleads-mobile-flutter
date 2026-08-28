@@ -1,4 +1,4 @@
-// Copyright 2021 Google LLC
+// Copyright 2026 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,9 +33,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 ///
 /// ### Safe View Recycling with `isMounted`
 /// All mobile ad classes rendering platform views implement [AdWithView] and expose
-/// the [AdWithView.isMounted] getter:
-/// - `isMounted == true`: The ad's platform view is currently attached to an active [AdWidget].
-/// - `isMounted == false`: The ad's platform view is detached and safe to reuse.
+/// the [AdWithView.isMounted] getter to safely check whether an ad's platform view
+/// is currently attached to an active [AdWidget]:
+/// https://pub.dev/documentation/google_mobile_ads/latest/google_mobile_ads/AdWithViewMounted/isMounted.html
 class MultiInlineAdaptiveWithRecycleExample extends StatefulWidget {
   const MultiInlineAdaptiveWithRecycleExample({super.key});
 
