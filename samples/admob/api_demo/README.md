@@ -6,12 +6,11 @@ A comprehensive Flutter demo application that showcases all primary Google Mobil
 
 1. **App Open Ad** (`AppOpenPage`) - Full-screen ads designed for app open and foreground transition events.
 2. **Banner Ad** (`BannerPage`) - Anchored adaptive banners that adjust dynamically to device width and orientation changes.
-3. **Banner Recycling** (`BannerRecyclingPage`) - Inline adaptive banner view recycling in scrollable feeds to optimize memory and frame rate.
-4. **Interstitial Ad** (`InterstitialPage`) - Full-screen interstitial ads shown at game over / natural transition breakpoints.
-5. **Native Platform Ad** (`NativePlatformPage`) - Custom native ad layout rendered via platform-specific code (Android XML layout and iOS XIB layout) with `NativeAdFactory`.
-6. **Native Template Ad** (`NativeTemplatePage`) - Native ads styled and rendered directly in Flutter using `NativeTemplateStyle`.
-7. **Rewarded Ad** (`RewardedPage`) - Rewarded video ads rewarding users with in-app currency upon completion.
-8. **Rewarded Interstitial Ad** (`RewardedInterstitialPage`) - Rewarded ads with a pre-roll countdown prompt before ad display.
+3. **Interstitial Ad** (`InterstitialPage`) - Full-screen interstitial ads shown at game over / natural transition breakpoints.
+4. **Native Platform Ad** (`NativePlatformPage`) - Custom native ad layout rendered via platform-specific code (Android XML layout and iOS XIB layout) with `NativeAdFactory`.
+5. **Native Template Ad** (`NativeTemplatePage`) - Native ads styled and rendered directly in Flutter using `NativeTemplateStyle`.
+6. **Rewarded Ad** (`RewardedPage`) - Rewarded video ads rewarding users with in-app currency upon completion.
+7. **Rewarded Interstitial Ad** (`RewardedInterstitialPage`) - Rewarded ads with a pre-roll countdown prompt before ad display.
 
 ## Features
 

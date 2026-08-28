@@ -12,9 +12,6 @@ For instructions on how to use the plugin, please refer to the developer guides
 for [AdMob](https://developers.google.com/admob/flutter/quick-start) and
 [Ad Manager](https://developers.google.com/ad-manager/mobile-ads-sdk/flutter/quick-start).
 
-For guidelines on optimizing memory and performance in scrollable feeds, see the
-[Inline Banner Ad Recycling Guide](doc/banner_recycling.md).
-
 ## Downloads
 
 See [pub.dev](https://pub.dev/packages/google_mobile_ads/versions) for the

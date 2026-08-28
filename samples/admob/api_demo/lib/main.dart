@@ -6,7 +6,6 @@ import 'common/consent_manager.dart';
 import 'pages/ad_preloading_page.dart';
 import 'pages/app_open_page.dart';
 import 'pages/banner_page.dart';
-import 'pages/banner_recycling_page.dart';
 import 'pages/interstitial_page.dart';
 import 'pages/native_platform_page.dart';
 import 'pages/native_template_page.dart';
@@ -70,11 +69,6 @@ class _LandingPageState extends State<LandingPage> {
       title: 'Banner Ad',
       description: 'Anchored adaptive banner resizing automatically with screen orientation.',
       builder: (context) => const BannerPage(),
-    ),
-    _AdFormatItem(
-      title: 'Banner Recycling',
-      description: 'Inline adaptive banner recycling in scrollable feeds for optimal memory performance.',
-      builder: (context) => const BannerRecyclingPage(),
     ),
     _AdFormatItem(
       title: 'Interstitial Ad',
