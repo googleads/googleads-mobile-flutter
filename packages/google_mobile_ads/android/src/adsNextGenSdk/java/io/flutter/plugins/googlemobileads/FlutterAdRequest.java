@@ -23,6 +23,7 @@ import com.google.android.gms.ads.mediation.admob.AdMobAdapter;
 import com.google.android.libraries.ads.mobile.sdk.banner.AdSize;
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest;
 import com.google.android.libraries.ads.mobile.sdk.common.AdRequest;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdRequest;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -317,6 +318,24 @@ class FlutterAdRequest {
       builder.putAdSourceExtrasBundle(entry.getKey(), entry.getValue());
     }
 
+    if (neighboringContentUrls != null) {
+      builder.setNeighboringContentUrls(new HashSet<String>(neighboringContentUrls));
+    }
+    builder.setRequestAgent(requestAgent);
+    return builder;
+  }
+
+  /** Applies the common request properties onto a next-gen {@link NativeAdRequest.Builder}. */
+  protected NativeAdRequest.Builder configureNativeAdRequestBuilder(
+      NativeAdRequest.Builder builder, String adUnitId) {
+    if (keywords != null) {
+      for (final String keyword : keywords) {
+        builder.addKeyword(keyword);
+      }
+    }
+    if (contentUrl != null) {
+      builder.setContentUrl(contentUrl);
+    }
     if (neighboringContentUrls != null) {
       builder.setNeighboringContentUrls(new HashSet<String>(neighboringContentUrls));
     }

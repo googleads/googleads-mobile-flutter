@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import com.google.android.libraries.ads.mobile.sdk.banner.AdSize;
 import com.google.android.libraries.ads.mobile.sdk.banner.BannerAdRequest;
 import com.google.android.libraries.ads.mobile.sdk.common.AdRequest;
+import com.google.android.libraries.ads.mobile.sdk.nativead.NativeAdRequest;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.List;
 import java.util.Map;
@@ -133,6 +134,26 @@ class FlutterAdManagerAdRequest extends FlutterAdRequest {
   protected BannerAdRequest.Builder toBannerAdRequestBuilder(String adUnitId,
       List<AdSize> allSizes) {
     BannerAdRequest.Builder builder = super.toBannerAdRequestBuilder(adUnitId, allSizes);
+    if (customTargeting != null) {
+      for (final Map.Entry<String, String> entry : customTargeting.entrySet()) {
+        builder.putCustomTargeting(entry.getKey(), entry.getValue());
+      }
+    }
+    if (customTargetingLists != null) {
+      for (final Map.Entry<String, List<String>> entry : customTargetingLists.entrySet()) {
+        builder.putCustomTargeting(entry.getKey(), entry.getValue());
+      }
+    }
+    if (publisherProvidedId != null) {
+      builder.setPublisherProvidedId(publisherProvidedId);
+    }
+    return builder;
+  }
+
+  @Override
+  protected NativeAdRequest.Builder configureNativeAdRequestBuilder(
+      NativeAdRequest.Builder builder, String adUnitId) {
+    super.configureNativeAdRequestBuilder(builder, adUnitId);
     if (customTargeting != null) {
       for (final Map.Entry<String, String> entry : customTargeting.entrySet()) {
         builder.putCustomTargeting(entry.getKey(), entry.getValue());
