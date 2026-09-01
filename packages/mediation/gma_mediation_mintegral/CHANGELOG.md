@@ -1,14 +1,16 @@
 ## Mintegral Flutter Mediation Adapter Changelog
 
-#### Version 2.1.3 (In progress)
-* Updated to support Google Mobile Ads Flutter Plugin version 9.1.0.
-* Add Swift Package Manager support.
+#### Version 2.1.3
+- Updated to support Google Mobile Ads Flutter Plugin version 9.1.0.
+- Add Swift Package Manager support.
+- Supports [Mintegral Android adapter version 17.1.71.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/mintegral/CHANGELOG.md#version-171710).
+- Supports [Mintegral iOS adapter version 8.1.6.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Mintegral/CHANGELOG.md#version-8160).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 9.1.0.
 
 #### Version 2.1.2
 - Supports [Mintegral Android adapter version 17.1.71.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/mintegral/CHANGELOG.md#version-171710).
 - Supports [Mintegral iOS adapter version 8.1.6.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Mintegral/CHANGELOG.md#version-8160).
 - Built and tested with the Google Mobile Ads Flutter Plugin version 9.0.0.
-
 
 #### Version 2.1.1
 - Supports [Mintegral Android adapter version 17.1.61.1](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/mintegral/CHANGELOG.md#version-171611).
