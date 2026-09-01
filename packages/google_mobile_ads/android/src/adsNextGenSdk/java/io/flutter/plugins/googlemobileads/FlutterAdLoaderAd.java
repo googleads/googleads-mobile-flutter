@@ -218,10 +218,10 @@ class FlutterAdLoaderAd extends FlutterAd implements FlutterAdLoadedListener, Na
     // As of 20.0.0 of GMA, mockito is unable to mock AdLoader.
     if (request != null) {
       adLoader.loadAdLoaderAd(
-          adUnitId, loadedListener, bannerParameters, customParameters, nativeParameters);
+          adUnitId, request, loadedListener, bannerParameters, customParameters, nativeParameters);
     } else if (adManagerRequest != null) {
       adLoader.loadAdManagerAdLoaderAd(
-          adUnitId, loadedListener, bannerParameters, customParameters, nativeParameters);
+          adUnitId, adManagerRequest, loadedListener, bannerParameters, customParameters, nativeParameters);
     } else {
       Log.e(TAG, "A null or invalid ad request was provided.");
     }

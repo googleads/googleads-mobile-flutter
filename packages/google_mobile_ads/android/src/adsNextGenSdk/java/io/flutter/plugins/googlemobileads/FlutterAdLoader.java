@@ -127,6 +127,7 @@ public class FlutterAdLoader {
   /** Load an ad loader ad. */
   public void loadAdLoaderAd(
       @NonNull String adUnitId,
+      @NonNull FlutterAdRequest request,
       @NonNull NativeAdLoaderCallback adLoaderAdLoaderCallback,
       @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters,
       @Nullable FlutterAdLoaderAd.CustomParameters customParameters,
@@ -167,6 +168,8 @@ public class FlutterAdLoader {
       }
     }
 
+    request.configureNativeAdRequestBuilder(builder, adUnitId);
+
     NativeAdLoader.load(
         builder.build(),
         adLoaderAdLoaderCallback);
@@ -175,11 +178,12 @@ public class FlutterAdLoader {
   /** Load an ad manager ad loader ad. */
   public void loadAdManagerAdLoaderAd(
       @NonNull String adUnitId,
+      @NonNull FlutterAdManagerAdRequest adManagerRequest,
       @NonNull NativeAdLoaderCallback adLoaderAdLoaderCallback,
       @Nullable FlutterAdLoaderAd.BannerParameters bannerParameters,
       @Nullable FlutterAdLoaderAd.CustomParameters customParameters,
       @Nullable FlutterAdLoaderAd.NativeParameters nativeParameters) {
-    loadAdLoaderAd(adUnitId, adLoaderAdLoaderCallback, bannerParameters, customParameters, nativeParameters);
+    loadAdLoaderAd(adUnitId, adManagerRequest, adLoaderAdLoaderCallback, bannerParameters, customParameters, nativeParameters);
   }
 
   static AdChoicesPlacement convertAdChoicesPlacement(int adChoicesPlacement) {
