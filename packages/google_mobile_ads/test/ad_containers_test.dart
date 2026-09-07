@@ -1681,12 +1681,14 @@ void main() {
       expect(resultPortrait.orientation, Orientation.portrait);
       expect(resultPortrait.width, 23);
       expect(resultPortrait.height, -1);
+      expect(resultPortrait.isLarge, false);
 
       final ByteData byteDataLandscape = codec.encodeMessage(
         AnchoredAdaptiveBannerAdSize(
           Orientation.landscape,
           width: 34,
           height: 23,
+          isLarge: true,
         ),
       )!;
 
@@ -1696,15 +1698,17 @@ void main() {
       expect(resultLandscape.orientation, Orientation.landscape);
       expect(resultLandscape.width, 34);
       expect(resultLandscape.height, -1);
+      expect(resultLandscape.isLarge, true);
 
       final ByteData byteData = codec.encodeMessage(
-        AnchoredAdaptiveBannerAdSize(null, width: 45, height: 34),
+        AnchoredAdaptiveBannerAdSize(null, width: 45, height: 34, isLarge: true),
       )!;
 
       final AnchoredAdaptiveBannerAdSize result = codec.decodeMessage(byteData);
       expect(result.orientation, null);
       expect(result.width, 45);
       expect(result.height, -1);
+      expect(result.isLarge, true);
     });
 
     test('encode/decode $SmartBannerAdSize', () async {

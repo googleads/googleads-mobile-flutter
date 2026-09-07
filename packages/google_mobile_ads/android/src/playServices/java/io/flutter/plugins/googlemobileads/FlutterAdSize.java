@@ -73,6 +73,7 @@ class FlutterAdSize {
 
   static class AnchoredAdaptiveBannerAdSize extends FlutterAdSize {
     final String orientation;
+    final boolean isLarge;
 
     @NonNull
     private static AdSize getAdSize(
@@ -109,6 +110,7 @@ class FlutterAdSize {
         boolean isLarge) {
       super(getAdSize(context, factory, orientation, width, isLarge));
       this.orientation = orientation;
+      this.isLarge = isLarge;
     }
   }
 

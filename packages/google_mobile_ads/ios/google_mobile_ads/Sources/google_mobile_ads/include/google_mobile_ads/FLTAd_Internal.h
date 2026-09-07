@@ -60,7 +60,8 @@
 @end
 
 @interface FLTAnchoredAdaptiveBannerSize : FLTAdSize
-@property(readonly) NSString *_Nonnull orientation;
+@property(readonly) NSString *_Nullable orientation;
+@property(readonly) BOOL isLarge;
 - (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
                              orientation:(NSString *_Nullable)orientation
                                    width:(NSNumber *_Nonnull)width
