@@ -685,15 +685,13 @@ class AdInstanceManager {
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    return channel.invokeMethod<void>(
-      'loadAdManagerBannerAd',
-      <dynamic, dynamic>{
-        'adId': adId,
-        'sizes': ad.sizes,
-        'adUnitId': ad.adUnitId,
-        'request': ad.request,
-      },
-    );
+    return channel
+        .invokeMethod<void>('loadAdManagerBannerAd', <dynamic, dynamic>{
+          'adId': adId,
+          'sizes': ad.sizes,
+          'adUnitId': ad.adUnitId,
+          'request': ad.request,
+        });
   }
 
   /// Starts loading the ad if not previously loaded.
