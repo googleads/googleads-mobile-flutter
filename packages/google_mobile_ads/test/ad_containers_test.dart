@@ -1701,7 +1701,12 @@ void main() {
       expect(resultLandscape.isLarge, true);
 
       final ByteData byteData = codec.encodeMessage(
-        AnchoredAdaptiveBannerAdSize(null, width: 45, height: 34, isLarge: true),
+        AnchoredAdaptiveBannerAdSize(
+          null,
+          width: 45,
+          height: 34,
+          isLarge: true,
+        ),
       )!;
 
       final AnchoredAdaptiveBannerAdSize result = codec.decodeMessage(byteData);
