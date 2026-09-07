@@ -46,6 +46,12 @@
     (NSNumber *_Nonnull)width;
 - (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:
     (NSNumber *_Nonnull)width;
+- (GADAdSize)largePortraitAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width;
+- (GADAdSize)largeLandscapeAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width;
+- (GADAdSize)largeAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *_Nonnull)width;
 - (GADAdSize)currentOrientationInlineAdaptiveBannerSizeWithWidth:
     (NSNumber *_Nonnull)width;
 - (GADAdSize)portraitOrientationInlineAdaptiveBannerSizeWithWidth:
