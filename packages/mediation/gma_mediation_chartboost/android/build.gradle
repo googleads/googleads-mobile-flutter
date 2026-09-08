@@ -1,5 +1,5 @@
 group = "io.flutter.plugins.googlemobileads.mediation.gma_mediation_chartboost"
-version = "1.7.1"
+version = "1.8.0"
 
 buildscript {
     ext.kotlin_version = "2.3.0"
@@ -28,7 +28,7 @@ apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 ext {
-    stringVersion = "9.13.0.0"
+    stringVersion = "9.14.0.0"
 }
 
 android {
