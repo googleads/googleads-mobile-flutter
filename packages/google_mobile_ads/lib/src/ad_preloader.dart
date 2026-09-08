@@ -58,6 +58,17 @@ abstract class _AdPreloader {
   static final Map<String, PreloadableAd Function()> _preloadedAds =
       <String, PreloadableAd Function()>{};
 
+  static String _getClassName<T extends PreloadableAd>() {
+    if (T == InterstitialAd) {
+      return 'InterstitialAd';
+    } else if (T == RewardedAd) {
+      return 'RewardedAd';
+    } else if (T == AppOpenAd) {
+      return 'AppOpenAd';
+    }
+    throw ArgumentError('Unsupported PreloadableAd type: $T');
+  }
+
   static PreloadableAd? _createAd<T extends PreloadableAd>(
     PreloadConfiguration config,
   ) {
@@ -106,7 +117,7 @@ abstract class _AdPreloader {
           'adUnitId': preloadConfiguration.adUnitId,
           'bufferSize': preloadConfiguration.bufferSize,
           'request': preloadConfiguration.request,
-          'className': T.toString(),
+          'className': _getClassName<T>(),
         });
   }
 
@@ -118,7 +129,7 @@ abstract class _AdPreloader {
           'MobileAds#pollAd',
           <String, dynamic>{
             'preloadId': preloadId,
-            'className': T.toString(),
+            'className': _getClassName<T>(),
             'adId': adId,
           },
         );
@@ -142,7 +153,10 @@ abstract class _AdPreloader {
     instanceManager.unregisterPreloadCallback(preloadId);
     await instanceManager.channel.invokeMethod<void>(
       'MobileAds#destroyPreloader',
-      <String, dynamic>{'preloadId': preloadId, 'className': T.toString()},
+      <String, dynamic>{
+        'preloadId': preloadId,
+        'className': _getClassName<T>(),
+      },
     );
   }
 
@@ -154,7 +168,7 @@ abstract class _AdPreloader {
     instanceManager.clearAllPreloadCallbacks();
     await instanceManager.channel.invokeMethod<void>(
       'MobileAds#destroyAllPreloaders',
-      <String, dynamic>{'className': T.toString()},
+      <String, dynamic>{'className': _getClassName<T>()},
     );
   }
 
@@ -164,7 +178,10 @@ abstract class _AdPreloader {
   ) async {
     final bool? available = await instanceManager.channel.invokeMethod<bool>(
       'MobileAds#isPreloadedAdAvailable',
-      <String, dynamic>{'preloadId': preloadId, 'className': T.toString()},
+      <String, dynamic>{
+        'preloadId': preloadId,
+        'className': _getClassName<T>(),
+      },
     );
     return available ?? false;
   }
@@ -175,7 +192,10 @@ abstract class _AdPreloader {
   ) async {
     final int? count = await instanceManager.channel.invokeMethod<int>(
       'MobileAds#getNumAdsAvailable',
-      <String, dynamic>{'preloadId': preloadId, 'className': T.toString()},
+      <String, dynamic>{
+        'preloadId': preloadId,
+        'className': _getClassName<T>(),
+      },
     );
     return count ?? 0;
   }
@@ -186,7 +206,10 @@ abstract class _AdPreloader {
     final Map<dynamic, dynamic>? map = await instanceManager.channel
         .invokeMethod<Map<dynamic, dynamic>>(
           'MobileAds#getPreloadConfiguration',
-          <String, dynamic>{'preloadId': preloadId, 'className': T.toString()},
+          <String, dynamic>{
+            'preloadId': preloadId,
+            'className': _getClassName<T>(),
+          },
         );
     if (map == null) {
       return null;
@@ -204,7 +227,7 @@ abstract class _AdPreloader {
     final Map<dynamic, dynamic>? map = await instanceManager.channel
         .invokeMethod<Map<dynamic, dynamic>>(
           'MobileAds#getPreloadConfigurations',
-          <String, dynamic>{'className': T.toString()},
+          <String, dynamic>{'className': _getClassName<T>()},
         );
     if (map == null) {
       return <String, PreloadConfiguration>{};

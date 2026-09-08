@@ -959,10 +959,10 @@ void main() {
             return null;
           });
 
-      final config = await InterstitialAdPreloader.getConfiguration('id-1');
-      expect(config, isNotNull);
-      expect(config!.adUnitId, 'test-ad-unit-123');
-      expect(config.bufferSize, 5);
+      final config1 = await InterstitialAdPreloader.getConfiguration('id-1');
+      expect(config1, isNotNull);
+      expect(config1!.adUnitId, 'test-ad-unit-123');
+      expect(config1.bufferSize, 5);
       expect(
         log.last,
         isMethodCall(
@@ -974,17 +974,67 @@ void main() {
         ),
       );
 
-      final configs = await RewardedAdPreloader.getConfigurations();
-      expect(configs.length, 2);
-      expect(configs['preload-id-1']!.adUnitId, 'ad-unit-1');
-      expect(configs['preload-id-1']!.bufferSize, 3);
-      expect(configs['preload-id-2']!.adUnitId, 'ad-unit-2');
-      expect(configs['preload-id-2']!.bufferSize, 4);
+      final config2 = await RewardedAdPreloader.getConfiguration('id-2');
+      expect(config2, isNotNull);
+      expect(config2!.adUnitId, 'test-ad-unit-123');
+      expect(config2.bufferSize, 5);
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#getPreloadConfiguration',
+          arguments: <String, dynamic>{
+            'preloadId': 'id-2',
+            'className': 'RewardedAd',
+          },
+        ),
+      );
+
+      final config3 = await AppOpenAdPreloader.getConfiguration('id-3');
+      expect(config3, isNotNull);
+      expect(config3!.adUnitId, 'test-ad-unit-123');
+      expect(config3.bufferSize, 5);
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#getPreloadConfiguration',
+          arguments: <String, dynamic>{
+            'preloadId': 'id-3',
+            'className': 'AppOpenAd',
+          },
+        ),
+      );
+
+      final configs1 = await InterstitialAdPreloader.getConfigurations();
+      expect(configs1.length, 2);
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#getPreloadConfigurations',
+          arguments: <String, dynamic>{'className': 'InterstitialAd'},
+        ),
+      );
+
+      final configs2 = await RewardedAdPreloader.getConfigurations();
+      expect(configs2.length, 2);
+      expect(configs2['preload-id-1']!.adUnitId, 'ad-unit-1');
+      expect(configs2['preload-id-1']!.bufferSize, 3);
+      expect(configs2['preload-id-2']!.adUnitId, 'ad-unit-2');
+      expect(configs2['preload-id-2']!.bufferSize, 4);
       expect(
         log.last,
         isMethodCall(
           'MobileAds#getPreloadConfigurations',
           arguments: <String, dynamic>{'className': 'RewardedAd'},
+        ),
+      );
+
+      final configs3 = await AppOpenAdPreloader.getConfigurations();
+      expect(configs3.length, 2);
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#getPreloadConfigurations',
+          arguments: <String, dynamic>{'className': 'AppOpenAd'},
         ),
       );
 
@@ -1143,6 +1193,48 @@ void main() {
           arguments: <String, dynamic>{'className': 'InterstitialAd'},
         ),
       );
+
+      await RewardedAdPreloader.destroy('preload-2');
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#destroyPreloader',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-2',
+            'className': 'RewardedAd',
+          },
+        ),
+      );
+
+      await RewardedAdPreloader.destroyAll();
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#destroyAllPreloaders',
+          arguments: <String, dynamic>{'className': 'RewardedAd'},
+        ),
+      );
+
+      await AppOpenAdPreloader.destroy('preload-3');
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#destroyPreloader',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-3',
+            'className': 'AppOpenAd',
+          },
+        ),
+      );
+
+      await AppOpenAdPreloader.destroyAll();
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#destroyAllPreloaders',
+          arguments: <String, dynamic>{'className': 'AppOpenAd'},
+        ),
+      );
     });
 
     test('isAdAvailable tests', () async {
@@ -1158,10 +1250,10 @@ void main() {
             return null;
           });
 
-      final available = await InterstitialAdPreloader.isAdAvailable(
+      final available1 = await InterstitialAdPreloader.isAdAvailable(
         'preload-1',
       );
-      expect(available, isTrue);
+      expect(available1, isTrue);
       expect(
         log.last,
         isMethodCall(
@@ -1169,6 +1261,32 @@ void main() {
           arguments: <String, dynamic>{
             'preloadId': 'preload-1',
             'className': 'InterstitialAd',
+          },
+        ),
+      );
+
+      final available2 = await RewardedAdPreloader.isAdAvailable('preload-2');
+      expect(available2, isTrue);
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#isPreloadedAdAvailable',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-2',
+            'className': 'RewardedAd',
+          },
+        ),
+      );
+
+      final available3 = await AppOpenAdPreloader.isAdAvailable('preload-3');
+      expect(available3, isTrue);
+      expect(
+        log.last,
+        isMethodCall(
+          'MobileAds#isPreloadedAdAvailable',
+          arguments: <String, dynamic>{
+            'preloadId': 'preload-3',
+            'className': 'AppOpenAd',
           },
         ),
       );
