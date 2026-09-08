@@ -1,5 +1,7 @@
 ## AppLovin Flutter Mediation Adapter Changelog
 
+#### Version 2.6.4 (In progress)
+
 #### Version 2.6.3
 - Updated to support Google Mobile Ads Flutter Plugin version 9.1.0.
 - Add Swift Package Manager support.
