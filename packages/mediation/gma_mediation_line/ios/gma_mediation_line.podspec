@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_line'
-  s.version = '2.1.3'
+  s.version = '2.2.0'
   s.summary = 'Google Mobile Ads Mediation of Line.'
   s.description      = <<-DESC
   Mediation Adapter for Line to use with Google Mobile Ads.
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files = 'gma_mediation_line/Sources/gma_mediation_line/**/*'
   s.dependency 'Flutter'
-  s.dependency 'GoogleMobileAdsMediationLine', '~>3.0.1.2'
+  s.dependency 'GoogleMobileAdsMediationLine', '~>3.1.0.0'
   s.platform = :ios, '13.0'
   s.static_framework = true
 
