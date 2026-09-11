@@ -28,6 +28,7 @@ import io.flutter.plugins.googlemobileads.FlutterAd.FlutterAdError;
 import io.flutter.plugins.googlemobileads.FlutterAd.FlutterResponseInfo;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Maintains reference to ad instances for the {@link
@@ -50,7 +51,7 @@ class AdInstanceManager {
    */
   AdInstanceManager(@NonNull MethodChannel channel) {
     this.channel = channel;
-    this.ads = new HashMap<>();
+    this.ads = new ConcurrentHashMap<>();
   }
 
   void setActivity(@Nullable Activity activity) {
@@ -69,31 +70,30 @@ class AdInstanceManager {
 
   @Nullable
   Integer adIdFor(@NonNull FlutterAd ad) {
-    for (Integer adId : ads.keySet()) {
-      if (ads.get(adId) == ad) {
-        return adId;
+    Integer adId = ad.adId;
+    if (ads.get(adId) == ad) {
+      return adId;
+    }
+    for (Map.Entry<Integer, FlutterAd> entry : ads.entrySet()) {
+      if (entry.getValue() == ad) {
+        return entry.getKey();
       }
     }
     return null;
   }
 
   void trackAd(@NonNull FlutterAd ad, int adId) {
-    if (ads.get(adId) != null) {
+    if (ads.putIfAbsent(adId, ad) != null) {
       throw new IllegalArgumentException(
           String.format("Ad for following adId already exists: %d", adId));
     }
-    ads.put(adId, ad);
   }
 
   void disposeAd(int adId) {
-    if (!ads.containsKey(adId)) {
-      return;
-    }
-    FlutterAd ad = ads.get(adId);
+    FlutterAd ad = ads.remove(adId);
     if (ad != null) {
       ad.dispose();
     }
-    ads.remove(adId);
   }
 
   void disposeAllAds() {

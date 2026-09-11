@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -62,6 +63,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
@@ -647,6 +655,129 @@ public class GoogleMobileAdsTest {
     assertEquals(args.get("valueMicros"), 1L);
     assertEquals(args.get("precision"), 1);
     assertEquals(args.get("currencyCode"), "code");
+  }
+
+  private static class TestFlutterAd extends FlutterAd {
+    TestFlutterAd(int adId) {
+      super(adId);
+    }
+
+    @Override
+    void load() {}
+
+    @Override
+    void dispose() {}
+  }
+
+  @Test
+  public void adIdFor_returnsDirectAdIdFastPath() {
+    final TestFlutterAd ad = new TestFlutterAd(42);
+    testManager.trackAd(ad, 42);
+
+    assertEquals(Integer.valueOf(42), testManager.adIdFor(ad));
+    assertEquals(ad, testManager.adForId(42));
+  }
+
+  @Test
+  public void adIdFor_returnsCorrectAdIdWhenKeyDiffersFromAdId() {
+    final TestFlutterAd ad = new TestFlutterAd(10);
+    testManager.trackAd(ad, 99);
+
+    assertEquals(Integer.valueOf(99), testManager.adIdFor(ad));
+    assertEquals(ad, testManager.adForId(99));
+  }
+
+  @Test
+  public void adIdFor_returnsNullForUntrackedOrDisposedAd() {
+    final TestFlutterAd ad = new TestFlutterAd(100);
+    assertNull(testManager.adIdFor(ad));
+
+    testManager.trackAd(ad, 100);
+    assertEquals(Integer.valueOf(100), testManager.adIdFor(ad));
+
+    testManager.disposeAd(100);
+    assertNull(testManager.adIdFor(ad));
+    assertNull(testManager.adForId(100));
+  }
+
+  @Test
+  public void adIdFor_concurrentModification_doesNotThrow() throws Exception {
+    final int numWriterThreads = 2;
+    final int numReaderThreads = 4;
+    final int iterations = 500;
+    final ExecutorService executor =
+        Executors.newFixedThreadPool(numWriterThreads + numReaderThreads);
+    final CountDownLatch startLatch = new CountDownLatch(1);
+    final AtomicBoolean running = new AtomicBoolean(true);
+    final AtomicReference<Throwable> errorRef = new AtomicReference<>();
+
+    // Pre-populate some ads in the manager
+    final List<TestFlutterAd> staticAds = new ArrayList<>();
+    for (int i = 0; i < 20; i++) {
+      TestFlutterAd ad = new TestFlutterAd(i);
+      staticAds.add(ad);
+      testManager.trackAd(ad, i);
+    }
+
+    final List<Future<?>> futures = new ArrayList<>();
+
+    // Writer threads: dynamically tracking and disposing ads concurrently (mimicking UI thread operations)
+    for (int i = 0; i < numWriterThreads; i++) {
+      final int threadId = i;
+      futures.add(
+          executor.submit(
+              () -> {
+                try {
+                  startLatch.await();
+                  for (int j = 0; j < iterations && running.get(); j++) {
+                    int adId = 1000 + (threadId * iterations) + j;
+                    TestFlutterAd ad = new TestFlutterAd(adId);
+                    testManager.trackAd(ad, adId);
+                    testManager.disposeAd(adId);
+                  }
+                } catch (Throwable t) {
+                  errorRef.compareAndSet(null, t);
+                  running.set(false);
+                }
+              }));
+    }
+
+    // Reader threads: simulating background threads calling adIdFor concurrently while map is mutated
+    for (int i = 0; i < numReaderThreads; i++) {
+      futures.add(
+          executor.submit(
+              () -> {
+                try {
+                  startLatch.await();
+                  for (int j = 0; j < iterations && running.get(); j++) {
+                    for (TestFlutterAd ad : staticAds) {
+                      Integer foundId = testManager.adIdFor(ad);
+                      assertNotNull(foundId);
+                      assertEquals(Integer.valueOf(ad.adId), foundId);
+                    }
+                  }
+                } catch (Throwable t) {
+                  errorRef.compareAndSet(null, t);
+                  running.set(false);
+                }
+              }));
+    }
+
+    startLatch.countDown();
+    executor.shutdown();
+    assertTrue(
+        "Executor should terminate in time",
+        executor.awaitTermination(5, TimeUnit.SECONDS));
+
+    for (Future<?> future : futures) {
+      future.get();
+    }
+
+    if (errorRef.get() != null) {
+      throw new AssertionError(
+          "Concurrent modification exception occurred in background thread",
+          errorRef.get());
+    }
   }
 
   @Test
