@@ -49,6 +49,22 @@ final class GoogleMobileAdsViewFactory extends PlatformViewFactory {
     public void dispose() {}
   }
 
+  private static class EmptyPlatformView implements PlatformView {
+    private final View view;
+
+    private EmptyPlatformView(Context context) {
+      view = new View(context);
+    }
+
+    @Override
+    public View getView() {
+      return view;
+    }
+
+    @Override
+    public void dispose() {}
+  }
+
   public GoogleMobileAdsViewFactory(@NonNull AdInstanceManager manager) {
     super(StandardMessageCodec.INSTANCE);
     this.manager = manager;
@@ -83,17 +99,7 @@ final class GoogleMobileAdsViewFactory extends PlatformViewFactory {
       return new ErrorTextView(context, message);
     } else {
       Log.e(GoogleMobileAdsViewFactory.class.getSimpleName(), message);
-      return new PlatformView() {
-        @Override
-        public View getView() {
-          return new View(context);
-        }
-
-        @Override
-        public void dispose() {
-          // Do nothing.
-        }
-      };
+      return new EmptyPlatformView(context);
     }
   }
 }
