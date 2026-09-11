@@ -116,7 +116,9 @@
     return;
   }
   _applicationInBackground = NO;
-  _events(@"foreground");
+  if (_events) {
+    _events(@"foreground");
+  }
 }
 
 - (void)handleDidEnterBackground {
@@ -124,7 +126,9 @@
     return;
   }
   _applicationInBackground = YES;
-  _events(@"background");
+  if (_events) {
+    _events(@"background");
+  }
 }
 
 - (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
