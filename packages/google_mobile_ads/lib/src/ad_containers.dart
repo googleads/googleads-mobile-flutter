@@ -341,10 +341,14 @@ class AnchoredAdaptiveBannerAdSize extends AdSize {
     this.orientation, {
     required int width,
     required int height,
+    this.isLarge = false,
   }) : super(width: width, height: height);
 
   /// Orientation of the device used by the SDK to automatically find the correct height.
   final Orientation? orientation;
+
+  /// Whether this is a large anchored adaptive banner size.
+  final bool isLarge;
 }
 
 /// Ad units that render screen-width banner ads on any screen size across different devices in either [Orientation].
@@ -455,6 +459,7 @@ class AdSize {
       orientation,
       width: width,
       height: height.truncate(),
+      isLarge: false,
     );
   }
 
@@ -480,6 +485,7 @@ class AdSize {
       orientation,
       width: width,
       height: height.truncate(),
+      isLarge: true,
     );
   }
 
@@ -502,6 +508,7 @@ class AdSize {
       null,
       width: width,
       height: height.truncate(),
+      isLarge: false,
     );
   }
 
@@ -523,6 +530,7 @@ class AdSize {
       null,
       width: width,
       height: height.truncate(),
+      isLarge: true,
     );
   }
 
