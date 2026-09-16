@@ -247,10 +247,11 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
   case FLTAdmobFieldAnchoredAdaptiveBannerAdSize: {
     NSString *orientation = [self readValueOfType:[self readByte]];
     NSNumber *width = [self readValueOfType:[self readByte]];
+    NSNumber *isLarge = [self readValueOfType:[self readByte]];
     return [[FLTAnchoredAdaptiveBannerSize alloc] initWithFactory:_adSizeFactory
                                                       orientation:orientation
                                                             width:width
-                                                          isLarge:false];
+                                                          isLarge:[isLarge boolValue]];
   }
   case FLTAdmobFieldSmartBannerAdSize:
     return [[FLTSmartBannerSize alloc]
@@ -366,6 +367,7 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
         (FLTAnchoredAdaptiveBannerSize *)value;
     [self writeValue:size.orientation];
     [self writeValue:size.width];
+    [self writeValue:@(size.isLarge)];
   } else if ([value isKindOfClass:[FLTSmartBannerSize class]]) {
     [self writeByte:FLTAdmobFieldSmartBannerAdSize];
     FLTSmartBannerSize *size = (FLTSmartBannerSize *)value;

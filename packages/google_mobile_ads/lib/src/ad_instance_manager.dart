@@ -1108,6 +1108,8 @@ class AdMessageCodec extends StandardMessageCodec {
           buffer,
         );
         final num width = readValueOfType(buffer.getUint8(), buffer);
+        final bool isLarge =
+            readValueOfType(buffer.getUint8(), buffer) ?? false;
         Orientation? orientation;
         if (orientationStr != null) {
           orientation = Orientation.values.firstWhere(
@@ -1118,6 +1120,7 @@ class AdMessageCodec extends StandardMessageCodec {
           orientation,
           width: width.truncate(),
           height: -1, // Unused value
+          isLarge: isLarge,
         );
       case _valueSmartBannerAdSize:
         final String orientationStr = readValueOfType(
@@ -1410,6 +1413,7 @@ class AdMessageCodec extends StandardMessageCodec {
       }
       writeValue(buffer, orientationValue);
       writeValue(buffer, value.width);
+      writeValue(buffer, value.isLarge);
     } else if (value is SmartBannerAdSize) {
       buffer.putUint8(_valueSmartBannerAdSize);
       if (defaultTargetPlatform == TargetPlatform.iOS) {

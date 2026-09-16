@@ -83,6 +83,7 @@ void main() {
                     testDeviceIds: <String>['test-device-id'],
                   );
                 case 'AdSize#getAnchoredAdaptiveBannerAdSize':
+                case 'AdSize#getLargeAnchoredAdaptiveBannerAdSize':
                   return null;
                 default:
                   assert(false);
@@ -451,6 +452,53 @@ void main() {
         ),
         isMethodCall(
           'AdSize#getAnchoredAdaptiveBannerAdSize',
+          arguments: {'width': 45},
+        ),
+      ]);
+    });
+
+    test('$AdSize.getLargeAnchoredAdaptiveBannerAdSize', () async {
+      await AdSize.getLargeAnchoredAdaptiveBannerAdSizeWithOrientation(
+        Orientation.portrait,
+        23,
+      );
+
+      expect(log, <Matcher>[
+        isMethodCall(
+          'AdSize#getLargeAnchoredAdaptiveBannerAdSize',
+          arguments: {'orientation': 'portrait', 'width': 23},
+        ),
+      ]);
+
+      await AdSize.getLargeAnchoredAdaptiveBannerAdSizeWithOrientation(
+        Orientation.landscape,
+        34,
+      );
+
+      expect(log, <Matcher>[
+        isMethodCall(
+          'AdSize#getLargeAnchoredAdaptiveBannerAdSize',
+          arguments: {'orientation': 'portrait', 'width': 23},
+        ),
+        isMethodCall(
+          'AdSize#getLargeAnchoredAdaptiveBannerAdSize',
+          arguments: {'orientation': 'landscape', 'width': 34},
+        ),
+      ]);
+
+      await AdSize.getLargeAnchoredAdaptiveBannerAdSize(45);
+
+      expect(log, <Matcher>[
+        isMethodCall(
+          'AdSize#getLargeAnchoredAdaptiveBannerAdSize',
+          arguments: {'orientation': 'portrait', 'width': 23},
+        ),
+        isMethodCall(
+          'AdSize#getLargeAnchoredAdaptiveBannerAdSize',
+          arguments: {'orientation': 'landscape', 'width': 34},
+        ),
+        isMethodCall(
+          'AdSize#getLargeAnchoredAdaptiveBannerAdSize',
           arguments: {'width': 45},
         ),
       ]);

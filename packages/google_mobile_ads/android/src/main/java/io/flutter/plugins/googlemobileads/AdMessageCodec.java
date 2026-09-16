@@ -278,8 +278,13 @@ class AdMessageCodec extends StandardMessageCodec {
       case VALUE_ANCHORED_ADAPTIVE_BANNER_AD_SIZE:
         final String orientation = (String) readValueOfType(buffer.get(), buffer);
         final Integer width = (Integer) readValueOfType(buffer.get(), buffer);
+        final Boolean isLarge = booleanValueOf(readValueOfType(buffer.get(), buffer));
         return new FlutterAdSize.AnchoredAdaptiveBannerAdSize(
-            context, adSizeFactory, orientation, width, /* isLarge = */ false);
+            context,
+            adSizeFactory,
+            orientation,
+            width,
+            isLarge != null ? isLarge : false);
       case VALUE_SMART_BANNER_AD_SIZE:
         return new FlutterAdSize.SmartBannerAdSize();
       case VALUE_AD_SIZE:
@@ -463,6 +468,7 @@ class AdMessageCodec extends StandardMessageCodec {
           (FlutterAdSize.AnchoredAdaptiveBannerAdSize) value;
       writeValue(stream, size.orientation);
       writeValue(stream, size.width);
+      writeValue(stream, size.isLarge);
     } else if (value instanceof FlutterAdSize.SmartBannerAdSize) {
       stream.write(VALUE_SMART_BANNER_AD_SIZE);
     } else if (value instanceof FlutterAdSize.FluidAdSize) {

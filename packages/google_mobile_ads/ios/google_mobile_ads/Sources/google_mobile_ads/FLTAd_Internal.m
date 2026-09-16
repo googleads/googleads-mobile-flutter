@@ -124,6 +124,7 @@
   self = [self initWithAdSize:size];
   if (self) {
     _orientation = orientation;
+    _isLarge = isLarge;
   }
   return self;
 }
