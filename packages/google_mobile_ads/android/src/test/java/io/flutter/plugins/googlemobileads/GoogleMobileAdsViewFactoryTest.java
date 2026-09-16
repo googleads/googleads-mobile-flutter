@@ -92,4 +92,16 @@ public class GoogleMobileAdsViewFactoryTest {
     PlatformView result = factory.create(context, 1, 123);
     assertSame(mockPlatformView, result);
   }
+
+  @Test
+  public void emptyPlatformView_returnsConsistentView() {
+    GoogleMobileAdsViewFactory.EmptyPlatformView emptyPlatformView =
+        new GoogleMobileAdsViewFactory.EmptyPlatformView(context);
+    assertNotNull(emptyPlatformView);
+
+    View view1 = emptyPlatformView.getView();
+    View view2 = emptyPlatformView.getView();
+    assertNotNull(view1);
+    assertSame(view1, view2);
+  }
 }

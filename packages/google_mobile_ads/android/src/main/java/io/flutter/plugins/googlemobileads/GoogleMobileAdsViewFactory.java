@@ -49,10 +49,10 @@ final class GoogleMobileAdsViewFactory extends PlatformViewFactory {
     public void dispose() {}
   }
 
-  private static class EmptyPlatformView implements PlatformView {
+  static class EmptyPlatformView implements PlatformView {
     private final View view;
 
-    private EmptyPlatformView(Context context) {
+    EmptyPlatformView(Context context) {
       view = new View(context);
     }
 
