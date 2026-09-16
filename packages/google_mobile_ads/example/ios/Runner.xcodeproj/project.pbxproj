@@ -20,6 +20,7 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		9E61AA2029BBE58400801A83 /* FLTAdRequestTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E61AA1F29BBE58400801A83 /* FLTAdRequestTest.m */; };
+		9E61AA3D29BBE66900801A83 /* FLTAppStateNotifierTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E61AA3E29BBE66900801A83 /* FLTAppStateNotifierTest.m */; };
 		9E61AA2F29BBE66900801A83 /* FLTGoogleMobileAdsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E61AA2129BBE66900801A83 /* FLTGoogleMobileAdsTest.m */; };
 		9E61AA3029BBE66900801A83 /* FLTBannerAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E61AA2229BBE66900801A83 /* FLTBannerAdTest.m */; };
 		9E61AA3129BBE66900801A83 /* FLTRewardedInterstitialAdTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E61AA2329BBE66900801A83 /* FLTRewardedInterstitialAdTest.m */; };
@@ -88,6 +89,7 @@
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9E61AA1629BBE51900801A83 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E61AA1F29BBE58400801A83 /* FLTAdRequestTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTAdRequestTest.m; sourceTree = "<group>"; };
+		9E61AA3E29BBE66900801A83 /* FLTAppStateNotifierTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTAppStateNotifierTest.m; sourceTree = "<group>"; };
 		9E61AA2129BBE66900801A83 /* FLTGoogleMobileAdsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTGoogleMobileAdsTest.m; sourceTree = "<group>"; };
 		9E61AA2229BBE66900801A83 /* FLTBannerAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTBannerAdTest.m; sourceTree = "<group>"; };
 		9E61AA2329BBE66900801A83 /* FLTRewardedInterstitialAdTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLTRewardedInterstitialAdTest.m; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 				9E61AA2B29BBE66900801A83 /* FLTRewardedAdTest.m */,
 				9E61AA2329BBE66900801A83 /* FLTRewardedInterstitialAdTest.m */,
 				9E61AA1F29BBE58400801A83 /* FLTAdRequestTest.m */,
+				9E61AA3E29BBE66900801A83 /* FLTAppStateNotifierTest.m */,
 			);
 			path = RunnerTests;
 			sourceTree = "<group>";
@@ -509,6 +512,7 @@
 				9E61AA6129BBE8FD00801A83 /* FLTNativeTemplateFontStyleTest.m in Sources */,
 				9E61AA3629BBE66900801A83 /* FLTNativeAdTest.m in Sources */,
 				9E61AA2029BBE58400801A83 /* FLTAdRequestTest.m in Sources */,
+				9E61AA3D29BBE66900801A83 /* FLTAppStateNotifierTest.m in Sources */,
 				9E61AA3A29BBE66900801A83 /* FLTGAMBannerAdTest.m in Sources */,
 				9E61AA3029BBE66900801A83 /* FLTBannerAdTest.m in Sources */,
 				9E61AA3129BBE66900801A83 /* FLTRewardedInterstitialAdTest.m in Sources */,
