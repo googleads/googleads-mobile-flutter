@@ -18,7 +18,7 @@ let package = Package(
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
     .package(
       url: "https://github.com/googleads/googleads-mobile-ios-mediation-applovin.git",
-      from: "13.6.300"),
+      from: "13.6.400"),
   ],
   targets: [
     .target(
