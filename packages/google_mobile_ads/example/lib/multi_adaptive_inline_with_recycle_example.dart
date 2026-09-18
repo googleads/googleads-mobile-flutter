@@ -47,13 +47,14 @@ class MultiInlineAdaptiveWithRecycleExample extends StatefulWidget {
 class _MultiInlineAdaptiveWithRecycleExampleState
     extends State<MultiInlineAdaptiveWithRecycleExample> {
   // 1. Cache & State Tracking
-  // Maximum number of banner ad instances kept in the recycling pool.
+  // Maximum number of banner ad instances kept in the cache.
   static const int _cacheSize = 8;
 
-  // Spacing between banner ads (e.g. index 0, 6, 12, etc. will display ads).
+  // Spacing between banner ads. For example, index 0, 6, 12, and so on
+  // display ads.
   static const int _adInterval = 6;
 
-  // The pool of allocated BannerAd instances.
+  // The cache of allocated BannerAd instances.
   final List<BannerAd> _banners = [];
 
   // Maps each BannerAd instance to its currently assigned list item position.
@@ -110,7 +111,7 @@ class _MultiInlineAdaptiveWithRecycleExampleState
   /// 3. Safe Recycling Algorithm
   /// Retrieves a reusable banner ad from the cache or allocates a new one if below cache limit.
   BannerAd _getRecycledBannerAd(BuildContext context, int bannerPosition) {
-    // Step 3a: If an ad is already mapped to this exact position, return it.
+    // 1. If an ad is already mapped to this position, reuse it.
     final BannerAd? existingBanner = _bannerPositions.entries
         .firstWhereOrNull((entry) => entry.value == bannerPosition)
         ?.key;
@@ -122,7 +123,7 @@ class _MultiInlineAdaptiveWithRecycleExampleState
       return existingBanner;
     }
 
-    // Step 3b: If the cache pool is not yet full, allocate a new ad instance.
+    // 2. If the cache is not full, allocate a new ad instance.
     if (_banners.length < _cacheSize) {
       final BannerAd newBanner = _createBannerAd(context);
       _banners.add(newBanner);
@@ -130,16 +131,15 @@ class _MultiInlineAdaptiveWithRecycleExampleState
       return newBanner;
     }
 
-    // Step 3c: The cache is full. Select an existing ad to recycle using modulo arithmetic.
+    // 3. Select an existing ad from the cache using modulo arithmetic.
     final BannerAd targetBanner = _banners[bannerPosition % _cacheSize];
 
-    // Step 3d: Check if the target ad is currently mounted on screen.
-    // If the user scrolled very quickly, the target ad might still be rendering on-screen.
+    // 4. Verify the ad is detached from the screen before recycling.
     if (targetBanner.isMounted) {
-      // Create a temporary instance to avoid view collision crashes.
+      // If still on screen during fast scrolls, allocate a temporary instance.
       return _createBannerAd(context);
     } else {
-      // Safely reassign the off-screen unmounted banner to the new position.
+      // Safe to reuse: reassign to the new position.
       _bannerPositions[targetBanner] = bannerPosition;
       if (_failedBanners.contains(targetBanner)) {
         targetBanner.load();
