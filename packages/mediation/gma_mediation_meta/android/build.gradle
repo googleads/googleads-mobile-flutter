@@ -21,8 +21,13 @@ allprojects {
     }
 }
 
+def builtInKotlinEnabled = (project.findProperty('android.builtInKotlin') ?: 'false').toString().toBoolean()
+
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+// AGP 9 ships built-in Kotlin and rejects this plugin, so only apply it while the consumer opts out.
+if (!builtInKotlinEnabled) {
+    apply plugin: 'kotlin-android'
+}
 
 ext {
     stringVersion = "6.22.0.0"
@@ -40,8 +45,11 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+    // `kotlinOptions` is contributed by the Kotlin Gradle plugin; built-in Kotlin has no such accessor.
+    if (!builtInKotlinEnabled) {
+        kotlinOptions {
+            jvmTarget = JavaVersion.VERSION_11.toString()
+        }
     }
 
     sourceSets {
