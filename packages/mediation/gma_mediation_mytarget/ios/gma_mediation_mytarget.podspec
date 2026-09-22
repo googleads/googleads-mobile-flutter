@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_mytarget'
-  s.version = '1.14.0'
+  s.version = '1.14.1'
   s.summary = 'Google Mobile Ads Mediation of mytarget.'
   s.description      = <<-DESC
   Mediation Adapter for mytarget to use with Google Mobile Ads.
