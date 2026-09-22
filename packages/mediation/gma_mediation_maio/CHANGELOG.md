@@ -1,5 +1,7 @@
 ## maio Flutter Mediation Adapter Changelog
 
+#### Version 1.1.8 (In progress)
+
 #### Version 1.1.7
 - Updated to support Google Mobile Ads Flutter Plugin version 9.1.0.
 - Add Swift Package Manager support.
