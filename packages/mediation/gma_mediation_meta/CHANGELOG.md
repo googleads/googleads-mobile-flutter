@@ -1,5 +1,7 @@
 ## Meta Audience Network Flutter Mediation Adapter Changelog
 
+#### Version 1.7.1 (In progress)
+
 #### Version 1.7.0
 - Updated to support Google Mobile Ads Flutter Plugin version 9.1.0.
 - Added Swift Package Manager support.
