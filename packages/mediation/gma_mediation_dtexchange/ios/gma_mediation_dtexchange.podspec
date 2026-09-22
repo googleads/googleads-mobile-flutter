@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_dtexchange'
-  s.version          = '1.3.6'
+  s.version          = '1.3.7'
   s.summary          = 'Google Mobile Ads Mediation of DT Exchange.'
   s.description      = <<-DESC
 Mediation Adapter for DT Exchange to use with Google Mobile Ads.
