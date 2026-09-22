@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_imobile'
-  s.version = '1.0.5'
+  s.version = '1.0.6'
   s.summary = 'Google Mobile Ads Mediation of imobile.'
   s.description      = <<-DESC
   Mediation Adapter for imobile to use with Google Mobile Ads.
