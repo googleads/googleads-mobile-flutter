@@ -19,7 +19,20 @@
 #include <UserMessagingPlatform/UserMessagingPlatform.h>
 
 @implementation FLTUserMessagingPlatformManager {
+  NSObject<FlutterPluginRegistrar> *_registrar;
   FlutterMethodChannel *_methodChannel;
+}
+
+- (instancetype _Nonnull)initWithRegistrar:
+        (NSObject<FlutterPluginRegistrar> *_Nonnull)registrar
+                            binaryMessenger:
+                                (NSObject<FlutterBinaryMessenger> *_Nonnull)
+                                    binaryMessenger {
+  self = [self initWithBinaryMessenger:binaryMessenger];
+  if (self) {
+    _registrar = registrar;
+  }
+  return self;
 }
 
 - (instancetype _Nonnull)initWithBinaryMessenger:
@@ -44,7 +57,31 @@
 }
 
 - (UIViewController *)rootController {
-  return UIApplication.sharedApplication.delegate.window.rootViewController;
+  UIViewController *root = _registrar.viewController;
+  if ([FLTAdUtil isNull:root]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    root = UIApplication.sharedApplication.keyWindow.rootViewController;
+#pragma clang diagnostic pop
+  }
+
+  UIViewController *presentedViewController = root;
+  while (presentedViewController.presentedViewController &&
+         ![presentedViewController.presentedViewController isBeingDismissed]) {
+    if ([presentedViewController isKindOfClass:[UITabBarController class]]) {
+      UITabBarController *tabBarController =
+          (UITabBarController *)presentedViewController;
+      presentedViewController = tabBarController.selectedViewController;
+    } else if ([presentedViewController
+                   isKindOfClass:[UINavigationController class]]) {
+      UINavigationController *navigationController =
+          (UINavigationController *)presentedViewController;
+      presentedViewController = navigationController.visibleViewController;
+    } else {
+      presentedViewController = presentedViewController.presentedViewController;
+    }
+  }
+  return presentedViewController;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call
