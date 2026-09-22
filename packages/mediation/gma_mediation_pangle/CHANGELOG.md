@@ -1,5 +1,7 @@
 ## Pangle Flutter Mediation Adapter Changelog
 
+#### Version 4.2.0 (In progress)
+
 #### Version 4.1.2
 - Supports [Pangle Android adapter version 8.2.0.4.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/pangle/CHANGELOG.md#version-82040).
 - Supports [Pangle iOS adapter version 8.2.1.0.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Pangle/CHANGELOG.md#version-82100).
