@@ -44,7 +44,7 @@ public class GoogleMobileAdsViewFactoryTest {
   }
 
   @Test
-  public void create_withNullArgs_returnsConsistentView() {
+  public void create_withNullArgs_returnsEmptyView() {
     PlatformView platformView = factory.create(context, 1, null);
     assertNotNull(platformView);
 
@@ -55,7 +55,7 @@ public class GoogleMobileAdsViewFactoryTest {
   }
 
   @Test
-  public void create_withUnknownAdId_returnsConsistentView() {
+  public void create_withUnknownAdId_returnsEmptyView() {
     when(mockManager.adForId(999)).thenReturn(null);
 
     PlatformView platformView = factory.create(context, 1, 999);
@@ -68,7 +68,7 @@ public class GoogleMobileAdsViewFactoryTest {
   }
 
   @Test
-  public void create_withAdHavingNullPlatformView_returnsConsistentView() {
+  public void create_withAdHavingNullPlatformView_returnsEmptyView() {
     FlutterAd mockAd = mock(FlutterAd.class);
     when(mockAd.getPlatformView()).thenReturn(null);
     when(mockManager.adForId(123)).thenReturn(mockAd);
@@ -94,7 +94,7 @@ public class GoogleMobileAdsViewFactoryTest {
   }
 
   @Test
-  public void emptyPlatformView_returnsConsistentView() {
+  public void emptyPlatformView_returnsEmptyPlatformView() {
     GoogleMobileAdsViewFactory.EmptyPlatformView emptyPlatformView =
         new GoogleMobileAdsViewFactory.EmptyPlatformView(context);
     assertNotNull(emptyPlatformView);
