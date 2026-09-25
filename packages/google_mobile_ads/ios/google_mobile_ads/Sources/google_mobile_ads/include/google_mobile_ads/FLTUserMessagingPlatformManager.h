@@ -20,8 +20,16 @@
 
 @property FLTUserMessagingPlatformReaderWriter *_Nonnull readerWriter;
 
+- (instancetype _Nonnull)initWithRegistrar:
+        (NSObject<FlutterPluginRegistrar> *_Nonnull)registrar
+                            binaryMessenger:
+                                (NSObject<FlutterBinaryMessenger> *_Nonnull)
+                                    binaryMessenger;
+
 - (instancetype _Nonnull)initWithBinaryMessenger:
     (NSObject<FlutterBinaryMessenger> *_Nonnull)binaryMessenger;
+
+- (UIViewController *_Nullable)rootController;
 
 - (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call
                   result:(FlutterResult _Nonnull)result;
