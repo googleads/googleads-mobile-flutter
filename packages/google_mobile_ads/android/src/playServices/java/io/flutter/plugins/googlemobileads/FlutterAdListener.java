@@ -13,6 +13,8 @@
 // limitations under the License.
 package io.flutter.plugins.googlemobileads;
 
+import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.NonNull;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.LoadAdError;
@@ -104,9 +106,17 @@ class FlutterNativeAdLoadedListener implements OnNativeAdLoadedListener {
   }
 
   @Override
-  public void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
-    if (nativeAdWeakReference.get() != null) {
-      nativeAdWeakReference.get().onNativeAdLoaded(nativeAd);
-    }
+  public void onNativeAdLoaded(@NonNull final NativeAd nativeAd) {
+    new Handler(Looper.getMainLooper())
+        .post(
+            new Runnable() {
+              @Override
+              public void run() {
+                FlutterNativeAd flutterNativeAd = nativeAdWeakReference.get();
+                if (flutterNativeAd != null) {
+                  flutterNativeAd.onNativeAdLoaded(nativeAd);
+                }
+              }
+            });
   }
 }
