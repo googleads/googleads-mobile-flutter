@@ -1,4 +1,5 @@
 ## Line Flutter Mediation Adapter Changelog
+#### Version 2.2.1 (In progress)
 
 #### Version 2.2.0
 - Supports [Line Android adapter version 3.1.1.1](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/line/CHANGELOG.md#version-3111).
