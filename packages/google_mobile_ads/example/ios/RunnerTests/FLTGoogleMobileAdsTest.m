@@ -23,6 +23,10 @@
 #import "google_mobile_ads/FLTMobileAds_Internal.h"
 #import "google_mobile_ads/FLTAdPreloader.h"
 
+@interface FLTAdPreloader (Testing)
+- (void)adsExhaustedForPreloadID:(NSString *)preloadID;
+@end
+
 @interface FLTGoogleMobileAdsTest : XCTestCase
 @end
 
@@ -446,6 +450,37 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
 
   NSData *impressionData = [self getDataForEvent:@"onBannerImpression" adId:@1];
   OCMVerify(([_mockMessenger sendOnChannel:channel message:impressionData]));
+}
+
+- (void)testNoAdEventSentAfterDetach {
+  FLTNativeAd *ad = [[FLTNativeAd alloc]
+         initWithAdUnitId:@"testAdUnitId"
+                  request:[[FLTAdRequest alloc] init]
+          nativeAdFactory:OCMProtocolMock(@protocol(FLTNativeAdFactory))
+            customOptions:nil
+       rootViewController:OCMClassMock([UIViewController class])
+                     adId:@1
+          nativeAdOptions:nil
+      nativeTemplateStyle:nil];
+  [_manager loadAd:ad];
+  [_manager detach];
+
+  OCMReject([_mockMessenger sendOnChannel:channel message:[OCMArg any]]);
+  [_manager onAdLoaded:ad
+          responseInfo:OCMClassMock([GADResponseInfo class])];
+  [_manager adDidRecordImpression:ad];
+  OCMVerifyAll((id)_mockMessenger);
+}
+
+- (void)testNoPreloadEventSentAfterDetach {
+  FlutterMethodChannel *mockChannel = OCMClassMock([FlutterMethodChannel class]);
+  FLTAdPreloader *preloader =
+      [[FLTAdPreloader alloc] initWithChannel:mockChannel manager:_manager];
+  [preloader detach];
+
+  OCMReject([mockChannel invokeMethod:[OCMArg any] arguments:[OCMArg any]]);
+  [preloader adsExhaustedForPreloadID:@"preloadId"];
+  OCMVerifyAll((id)mockChannel);
 }
 
 // Helper method to create encoded data for an event and ad id.
