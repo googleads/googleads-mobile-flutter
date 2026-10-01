@@ -1,6 +1,9 @@
 ## i-mobile Flutter Mediation Adapter Changelog
 
-#### Version 1.0.6 (In progress)
+#### Version 1.0.6
+- Supports [i-mobile Android adapter version 2.3.2.5](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/imobile/CHANGELOG.md#version-2325).
+- Supports [i-mobile iOS adapter version 2.3.4.8](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/I-Mobile/CHANGELOG.md#version-2348).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 9.1.0.
 
 #### Version 1.0.5
 - Updated to support Google Mobile Ads Flutter Plugin version 9.1.0.
