@@ -55,7 +55,7 @@ android {
     }
 
     dependencies {
-        implementation 'com.unity3d.ads:unity-ads:4.17.0'
+        implementation 'com.unity3d.ads:unity-ads:4.20.1'
         implementation "com.google.ads.mediation:unity:$stringVersion"
         implementation 'com.google.android.gms:play-services-ads:25.1.0'
         testImplementation 'junit:junit:4.13.2'
