@@ -55,6 +55,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.shadows.ShadowLooper;
 
 /** Tests for {@link FlutterNativeAd}. */
 @RunWith(RobolectricTestRunner.class)
@@ -144,6 +145,7 @@ public class FlutterNativeAdTest {
         .setOnPaidEventListener(any(FlutterPaidEventListener.class));
 
     nativeAd.load();
+    ShadowLooper.idleMainLooper();
     verify(mockLoader)
         .loadAdManagerNativeAd(
             eq("testId"),
@@ -233,6 +235,7 @@ public class FlutterNativeAdTest {
             eq(mockRequest));
 
     nativeAd.load();
+    ShadowLooper.idleMainLooper();
     verify(mockLoader)
         .loadNativeAd(
             eq("testId"),
@@ -316,6 +319,7 @@ public class FlutterNativeAdTest {
             eq(mockRequest));
 
     nativeAd.load();
+    ShadowLooper.idleMainLooper();
     verify(mockLoader)
         .loadNativeAd(
             eq("testId"),
