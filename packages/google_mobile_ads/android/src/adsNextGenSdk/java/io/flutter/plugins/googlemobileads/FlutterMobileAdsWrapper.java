@@ -54,6 +54,9 @@ public class FlutterMobileAdsWrapper {
     if(disableMediationAdapterInitialization) {
       configBuilder.disableMediationAdapterInitialization();
     }
+    configBuilder.setRequestConfiguration(
+        FlutterRequestConfiguration.getCurrentRequestConfiguration());
+    FlutterRequestConfiguration.clearPendingRequestConfiguration();
     InitializationConfig config = configBuilder.build();
     new Thread(
             new Runnable() {
@@ -87,7 +90,7 @@ public class FlutterMobileAdsWrapper {
 
   /** Wrapper for getRequestConfiguration. */
   public FlutterRequestConfiguration getRequestConfiguration() {
-    RequestConfiguration rc = MobileAds.getRequestConfiguration();
+    RequestConfiguration rc = FlutterRequestConfiguration.getCurrentRequestConfiguration();
     return new FlutterRequestConfiguration.Builder()
         .setMaxAdContentRating(rc.getMaxAdContentRating() != null ? rc.getMaxAdContentRating().getValue() : null)
         .setTagForChildDirectedTreatment(rc.getTagForChildDirectedTreatment() != null ? rc.getTagForChildDirectedTreatment().getValue() : null)
