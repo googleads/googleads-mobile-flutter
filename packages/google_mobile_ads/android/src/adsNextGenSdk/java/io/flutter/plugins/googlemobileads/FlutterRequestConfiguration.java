@@ -38,9 +38,27 @@ class FlutterRequestConfiguration {
   private final Integer tagForUnderAgeOfConsent;
   @Nullable private final List<String> testDeviceIds;
   @Nullable private final Integer ageRestrictedTreatment;
+  @Nullable
+  private static RequestConfiguration pendingRequestConfiguration = null;
+
+  public static void clearPendingRequestConfiguration() {
+    pendingRequestConfiguration = null;
+  }
+
+  @NonNull
+  public static RequestConfiguration getCurrentRequestConfiguration() {
+    if (pendingRequestConfiguration != null) {
+      return pendingRequestConfiguration;
+    }
+    try {
+      return MobileAds.getRequestConfiguration();
+    } catch (IllegalStateException e) {
+      return new RequestConfiguration.Builder().build();
+    }
+  }
 
   public static void updateRequestConfiguration(@NonNull MethodCall call) {
-    RequestConfiguration currentRequestConfiguration = MobileAds.getRequestConfiguration();
+    RequestConfiguration currentRequestConfiguration = getCurrentRequestConfiguration();
     RequestConfiguration.Builder builder =
         new RequestConfiguration.Builder()
             .setMaxAdContentRating(currentRequestConfiguration.getMaxAdContentRating())
@@ -104,7 +122,12 @@ class FlutterRequestConfiguration {
       builder.setAgeRestrictedTreatment(AgeRestrictedTreatment.values()[ageRestrictedTreatmentIndex]);
     }
     RequestConfiguration rc = builder.build();
-    MobileAds.setRequestConfiguration(rc);
+    try {
+      MobileAds.setRequestConfiguration(rc);
+      clearPendingRequestConfiguration();
+    } catch (IllegalStateException e) {
+      pendingRequestConfiguration = rc;
+    }
   }
 
   protected static class Builder {
