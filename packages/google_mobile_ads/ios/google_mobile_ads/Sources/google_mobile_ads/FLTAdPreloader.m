@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #import "FLTAdPreloader.h"
+#import <GoogleMobileAds/GoogleMobileAds_Beta.h>
 #import "FLTAd_Internal.h"
 #import "FLTAdUtil.h"
 #import "FLTAdInstanceManager_Internal.h"
