@@ -57,31 +57,7 @@
 }
 
 - (UIViewController *)rootController {
-  UIViewController *root = _registrar.viewController;
-  if ([FLTAdUtil isNull:root]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    root = UIApplication.sharedApplication.keyWindow.rootViewController;
-#pragma clang diagnostic pop
-  }
-
-  UIViewController *presentedViewController = root;
-  while (presentedViewController.presentedViewController &&
-         ![presentedViewController.presentedViewController isBeingDismissed]) {
-    if ([presentedViewController isKindOfClass:[UITabBarController class]]) {
-      UITabBarController *tabBarController =
-          (UITabBarController *)presentedViewController;
-      presentedViewController = tabBarController.selectedViewController;
-    } else if ([presentedViewController
-                   isKindOfClass:[UINavigationController class]]) {
-      UINavigationController *navigationController =
-          (UINavigationController *)presentedViewController;
-      presentedViewController = navigationController.visibleViewController;
-    } else {
-      presentedViewController = presentedViewController.presentedViewController;
-    }
-  }
-  return presentedViewController;
+  return [FLTAdUtil rootViewControllerFromRegistrar:_registrar];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call

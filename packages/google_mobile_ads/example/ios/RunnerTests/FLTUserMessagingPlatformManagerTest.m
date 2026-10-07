@@ -28,6 +28,7 @@
 
 @implementation FLTUserMessagingPlatformManagerTest {
   FLTUserMessagingPlatformManager *umpManager;
+  NSObject<FlutterPluginRegistrar> *registrar;
   NSObject<FlutterBinaryMessenger> *binaryMessenger;
   UMPConsentInformation *mockUmpConsentInformation;
   FlutterResult flutterResult;
@@ -36,9 +37,11 @@
 }
 
 - (void)setUp {
+  registrar = OCMProtocolMock(@protocol(FlutterPluginRegistrar));
   binaryMessenger = OCMProtocolMock(@protocol(FlutterBinaryMessenger));
   umpManager = [[FLTUserMessagingPlatformManager alloc]
-      initWithBinaryMessenger:binaryMessenger];
+      initWithRegistrar:registrar
+        binaryMessenger:binaryMessenger];
   id umpInfoClassMock = OCMClassMock([UMPConsentInformation class]);
   OCMStub(ClassMethod([umpInfoClassMock sharedInstance]))
       .andReturn(umpInfoClassMock);
