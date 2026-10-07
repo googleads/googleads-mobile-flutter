@@ -37,7 +37,7 @@ android {
 
     def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK ? dartEnvironmentVariables.USE_NEXT_GEN_SDK : false
 
-    compileSdk 36
+    compileSdk 37
 
     if (project.android.hasProperty('namespace')) {
         namespace 'io.flutter.plugins.googlemobileads'
