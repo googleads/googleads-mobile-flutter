@@ -75,13 +75,13 @@ class FlutterRequestConfiguration {
     Integer ageRestrictedTreatmentIndex = call.argument("ageRestrictedTreatment");
 
     if (maxAdContentRating != null) {
-      if (maxAdContentRating.equals(MaxAdContentRating.MAX_AD_CONTENT_RATING_G.getValue())) {
+      if (maxAdContentRating == MaxAdContentRating.MAX_AD_CONTENT_RATING_G.getValue()) {
         builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_G);
-      } else if (maxAdContentRating.equals(MaxAdContentRating.MAX_AD_CONTENT_RATING_PG.getValue())) {
+      } else if (maxAdContentRating == MaxAdContentRating.MAX_AD_CONTENT_RATING_PG.getValue()) {
         builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_PG);
-      } else if (maxAdContentRating.equals(MaxAdContentRating.MAX_AD_CONTENT_RATING_T.getValue())) {
+      } else if (maxAdContentRating == MaxAdContentRating.MAX_AD_CONTENT_RATING_T.getValue()) {
         builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_T);
-      } else if (maxAdContentRating.equals(MaxAdContentRating.MAX_AD_CONTENT_RATING_MA.getValue())) {
+      } else if (maxAdContentRating == MaxAdContentRating.MAX_AD_CONTENT_RATING_MA.getValue()) {
         builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_MA);
       } else {
         builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_UNSPECIFIED);
