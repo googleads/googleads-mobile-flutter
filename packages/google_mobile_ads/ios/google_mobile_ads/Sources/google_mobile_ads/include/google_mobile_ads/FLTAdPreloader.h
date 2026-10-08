@@ -15,7 +15,6 @@
 #import <Flutter/Flutter.h>
 #import <Foundation/Foundation.h>
 #import <GoogleMobileAds/GoogleMobileAds.h>
-#import <GoogleMobileAds/GoogleMobileAds_Beta.h>
 
 @interface FLTAdPreloader : NSObject
 

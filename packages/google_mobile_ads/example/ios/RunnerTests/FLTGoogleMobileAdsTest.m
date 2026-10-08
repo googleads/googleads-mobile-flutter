@@ -15,6 +15,7 @@
 #import <OCMock/OCMock.h>
 #import <XCTest/XCTest.h>
 
+#import <GoogleMobileAds/GoogleMobileAds_Beta.h>
 #import "google_mobile_ads/FLTAdInstanceManager_Internal.h"
 #import "google_mobile_ads/FLTAd_Internal.h"
 #import "google_mobile_ads/FLTGoogleMobileAdsCollection_Internal.h"
