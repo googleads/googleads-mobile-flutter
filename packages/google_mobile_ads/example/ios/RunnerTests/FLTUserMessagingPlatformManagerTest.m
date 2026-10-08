@@ -55,6 +55,10 @@
   };
 }
 
+- (void)tearDown {
+  [(id)mockUmpConsentInformation stopMocking];
+}
+
 - (void)testReset {
   FlutterMethodCall *methodCall =
       [FlutterMethodCall methodCallWithMethodName:@"ConsentInformation#reset"
