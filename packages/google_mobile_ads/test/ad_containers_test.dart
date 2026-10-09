@@ -68,6 +68,12 @@ void main() {
               case 'MobileAds#pollAd':
                 return Future<dynamic>.value(<String, dynamic>{
                   'adUnitId': 'test-ad-unit',
+                  'responseInfo': const ResponseInfo(
+                    responseId: 'test-response-id',
+                    mediationAdapterClassName: 'adapter-class',
+                    adapterResponses: <AdapterResponseInfo>[],
+                    responseExtras: <String, dynamic>{},
+                  ),
                 });
               case 'MobileAds#isPreloadedAdAvailable':
                 return Future<dynamic>.value(true);
@@ -1045,7 +1051,15 @@ void main() {
           ) async {
             log.add(methodCall);
             if (methodCall.method == 'MobileAds#pollAd') {
-              return <dynamic, dynamic>{'adUnitId': 'test-ad-unit'};
+              return <dynamic, dynamic>{
+                'adUnitId': 'test-ad-unit',
+                'responseInfo': const ResponseInfo(
+                  responseId: 'test-response-id',
+                  mediationAdapterClassName: 'adapter-class',
+                  adapterResponses: <AdapterResponseInfo>[],
+                  responseExtras: <String, dynamic>{},
+                ),
+              };
             }
             return null;
           });
@@ -1055,6 +1069,7 @@ void main() {
       final ad = await InterstitialAdPreloader.pollAd('preload-123');
       expect(ad, isNotNull);
       expect(ad!.adUnitId, 'test-ad-unit');
+      expect(ad.responseInfo?.responseId, 'test-response-id');
       expect(log, <Matcher>[
         isMethodCall(
           'MobileAds#pollAd',
@@ -1072,6 +1087,7 @@ void main() {
       final ad = await RewardedAdPreloader.pollAd('preload-rewarded');
       expect(ad, isNotNull);
       expect(ad!.adUnitId, 'test-ad-unit');
+      expect(ad.responseInfo?.responseId, 'test-response-id');
       expect(log, <Matcher>[
         isMethodCall(
           'MobileAds#pollAd',
@@ -1089,6 +1105,7 @@ void main() {
       final ad = await AppOpenAdPreloader.pollAd('preload-app-open');
       expect(ad, isNotNull);
       expect(ad!.adUnitId, 'test-ad-unit');
+      expect(ad.responseInfo?.responseId, 'test-response-id');
       expect(log, <Matcher>[
         isMethodCall(
           'MobileAds#pollAd',

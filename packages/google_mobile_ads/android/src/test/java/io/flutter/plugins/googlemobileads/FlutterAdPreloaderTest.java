@@ -22,10 +22,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
+import com.google.android.gms.ads.ResponseInfo;
+import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdPreloader;
+import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdPreloader;
 import com.google.android.gms.ads.appopen.AppOpenAdPreloader;
 import com.google.android.gms.ads.preload.PreloadCallbackV2;
@@ -157,5 +162,80 @@ public class FlutterAdPreloaderTest {
     preloader.onMethodCall(methodCall, mockResult);
 
     verify(mockResult).success(5);
+  }
+
+  @Test
+  public void testPollAd_interstitial() {
+    InterstitialAd mockAd = mock(InterstitialAd.class);
+    ResponseInfo mockResponseInfo = mock(ResponseInfo.class);
+    when(mockAd.getAdUnitId()).thenReturn("unit-id");
+    when(mockAd.getResponseInfo()).thenReturn(mockResponseInfo);
+    mockedInterstitialPreloader.when(() -> InterstitialAdPreloader.pollAd("preload-id-1"))
+        .thenReturn(mockAd);
+
+    Map<String, Object> args = new HashMap<>();
+    args.put("preloadId", "preload-id-1");
+    args.put("className", "InterstitialAd");
+    args.put("adId", 1);
+
+    MethodCall methodCall = new MethodCall("MobileAds#pollAd", args);
+    Result mockResult = mock(Result.class);
+
+    preloader.onMethodCall(methodCall, mockResult);
+
+    Map<String, Object> expectedResponse = new HashMap<>();
+    expectedResponse.put("adUnitId", "unit-id");
+    expectedResponse.put("responseInfo", new FlutterAd.FlutterResponseInfo(mockResponseInfo));
+    verify(mockResult).success(expectedResponse);
+  }
+
+  @Test
+  public void testPollAd_rewarded() {
+    RewardedAd mockAd = mock(RewardedAd.class);
+    ResponseInfo mockResponseInfo = mock(ResponseInfo.class);
+    when(mockAd.getAdUnitId()).thenReturn("unit-id");
+    when(mockAd.getResponseInfo()).thenReturn(mockResponseInfo);
+    mockedRewardedPreloader.when(() -> RewardedAdPreloader.pollAd("preload-id-1"))
+        .thenReturn(mockAd);
+
+    Map<String, Object> args = new HashMap<>();
+    args.put("preloadId", "preload-id-1");
+    args.put("className", "RewardedAd");
+    args.put("adId", 2);
+
+    MethodCall methodCall = new MethodCall("MobileAds#pollAd", args);
+    Result mockResult = mock(Result.class);
+
+    preloader.onMethodCall(methodCall, mockResult);
+
+    Map<String, Object> expectedResponse = new HashMap<>();
+    expectedResponse.put("adUnitId", "unit-id");
+    expectedResponse.put("responseInfo", new FlutterAd.FlutterResponseInfo(mockResponseInfo));
+    verify(mockResult).success(expectedResponse);
+  }
+
+  @Test
+  public void testPollAd_appOpen() {
+    AppOpenAd mockAd = mock(AppOpenAd.class);
+    ResponseInfo mockResponseInfo = mock(ResponseInfo.class);
+    when(mockAd.getAdUnitId()).thenReturn("unit-id");
+    when(mockAd.getResponseInfo()).thenReturn(mockResponseInfo);
+    mockedAppOpenPreloader.when(() -> AppOpenAdPreloader.pollAd("preload-id-1"))
+        .thenReturn(mockAd);
+
+    Map<String, Object> args = new HashMap<>();
+    args.put("preloadId", "preload-id-1");
+    args.put("className", "AppOpenAd");
+    args.put("adId", 3);
+
+    MethodCall methodCall = new MethodCall("MobileAds#pollAd", args);
+    Result mockResult = mock(Result.class);
+
+    preloader.onMethodCall(methodCall, mockResult);
+
+    Map<String, Object> expectedResponse = new HashMap<>();
+    expectedResponse.put("adUnitId", "unit-id");
+    expectedResponse.put("responseInfo", new FlutterAd.FlutterResponseInfo(mockResponseInfo));
+    verify(mockResult).success(expectedResponse);
   }
 }
