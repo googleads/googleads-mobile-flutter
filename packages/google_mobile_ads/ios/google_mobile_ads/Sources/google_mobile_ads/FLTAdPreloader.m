@@ -267,7 +267,15 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
                                                    adId:adId];
         [_manager storeAd:adWrapper];
         [adWrapper onAdLoaded:preloadedAd];
-        response = @{@"adUnitId" : adUnitId != nil ? adUnitId : @""};
+        GADResponseInfo *adResponseInfo = [preloadedAd respondsToSelector:@selector(responseInfo)]
+                                              ? [preloadedAd performSelector:@selector(responseInfo)]
+                                              : nil;
+        response = @{
+          @"adUnitId" : adUnitId != nil ? adUnitId : @"",
+          @"responseInfo" : adResponseInfo
+              ? [[FLTGADResponseInfo alloc] initWithResponseInfo:adResponseInfo]
+              : [NSNull null]
+        };
       }
     } else if ([className isEqualToString:@"RewardedAd"]) {
       id preloadedAd = [[GADRewardedAdPreloader sharedInstance] adWithPreloadID:preloadId];
@@ -279,7 +287,15 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
                                                adId:adId];
         [_manager storeAd:adWrapper];
         [adWrapper onAdLoaded:preloadedAd];
-        response = @{@"adUnitId" : adUnitId != nil ? adUnitId : @""};
+        GADResponseInfo *adResponseInfo = [preloadedAd respondsToSelector:@selector(responseInfo)]
+                                              ? [preloadedAd performSelector:@selector(responseInfo)]
+                                              : nil;
+        response = @{
+          @"adUnitId" : adUnitId != nil ? adUnitId : @"",
+          @"responseInfo" : adResponseInfo
+              ? [[FLTGADResponseInfo alloc] initWithResponseInfo:adResponseInfo]
+              : [NSNull null]
+        };
       }
     } else if ([className isEqualToString:@"AppOpenAd"]) {
       id preloadedAd = [[GADAppOpenAdPreloader sharedInstance] adWithPreloadID:preloadId];
@@ -291,7 +307,15 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
                                               adId:adId];
         [_manager storeAd:adWrapper];
         [adWrapper onAdLoaded:preloadedAd];
-        response = @{@"adUnitId" : adUnitId != nil ? adUnitId : @""};
+        GADResponseInfo *adResponseInfo = [preloadedAd respondsToSelector:@selector(responseInfo)]
+                                              ? [preloadedAd performSelector:@selector(responseInfo)]
+                                              : nil;
+        response = @{
+          @"adUnitId" : adUnitId != nil ? adUnitId : @"",
+          @"responseInfo" : adResponseInfo
+              ? [[FLTGADResponseInfo alloc] initWithResponseInfo:adResponseInfo]
+              : [NSNull null]
+        };
       }
     }
     result(response);
