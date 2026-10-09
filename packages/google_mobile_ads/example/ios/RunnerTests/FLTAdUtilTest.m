@@ -31,6 +31,10 @@
   _mockMainBundle = mockBundle;
 }
 
+- (void)tearDown {
+  [(id)_mockMainBundle stopMocking];
+}
+
 - (void)testRequestAgent_noTemplateMetadata {
   OCMStub(
       [_mockMainBundle

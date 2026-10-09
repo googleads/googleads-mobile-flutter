@@ -55,4 +55,37 @@ static NSString *_requestAgent;
         withPluginRegistry:flutterPluginRegistry];
 }
 
++ (UIViewController *)rootViewControllerFromRegistrar:
+    (NSObject<FlutterPluginRegistrar> *)registrar {
+  UIViewController *root = registrar.viewController;
+  if ([FLTAdUtil isNull:root]) {
+// UIApplication.sharedApplication.delegate.window is not guaranteed to be
+// set. Use the keyWindow in this case.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    root = UIApplication.sharedApplication.keyWindow.rootViewController;
+#pragma clang diagnostic pop
+  }
+
+  // Get the presented view controller. This fixes an issue in the add to app
+  // case: https://github.com/googleads/googleads-mobile-flutter/issues/700
+  UIViewController *presentedViewController = root;
+  while (presentedViewController.presentedViewController &&
+         ![presentedViewController.presentedViewController isBeingDismissed]) {
+    if ([presentedViewController isKindOfClass:[UITabBarController class]]) {
+      UITabBarController *tabBarController =
+          (UITabBarController *)presentedViewController;
+      presentedViewController = tabBarController.selectedViewController;
+    } else if ([presentedViewController
+                   isKindOfClass:[UINavigationController class]]) {
+      UINavigationController *navigationController =
+          (UINavigationController *)presentedViewController;
+      presentedViewController = navigationController.visibleViewController;
+    } else {
+      presentedViewController = presentedViewController.presentedViewController;
+    }
+  }
+  return presentedViewController;
+}
+
 @end
