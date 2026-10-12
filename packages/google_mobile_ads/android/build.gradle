@@ -1,9 +1,9 @@
 group 'io.flutter.plugins.googlemobileads'
-version '9.1.0'
+version '9.2.0'
 
 buildscript {
     ext {
-        agp_version = '8.13.1'
+        agp_version = '9.1.1'
     }
     repositories {
         google()
@@ -37,7 +37,7 @@ android {
 
     def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK ? dartEnvironmentVariables.USE_NEXT_GEN_SDK : false
 
-    compileSdk 36
+    compileSdk 37
 
     if (project.android.hasProperty('namespace')) {
         namespace 'io.flutter.plugins.googlemobileads'
@@ -77,12 +77,27 @@ android {
         testImplementation 'junit:junit:4.13.2'
         testImplementation 'org.hamcrest:hamcrest:3.0'
         testImplementation 'org.mockito:mockito-core:5.23.0'
-        testImplementation 'org.robolectric:robolectric:4.16.1'
+        testImplementation 'org.robolectric:robolectric:4.17'
         testImplementation 'androidx.test:core:1.7.0'
     }
     testOptions {
         unitTests {
             includeAndroidResources = true
+            all {
+                // Recommended flag set starting Robolectric 4.17 for JDK 17+, see
+                // https://robolectric.org/getting-started/#running-with-java-17-and-higher
+                jvmArgs(
+                        '--add-opens=java.base/java.lang=ALL-UNNAMED',
+                        '--add-opens=java.base/java.util=ALL-UNNAMED',
+                        '--add-opens=java.base/java.io=ALL-UNNAMED',
+                        '--add-opens=java.base/java.net=ALL-UNNAMED',
+                        '--add-opens=java.base/java.security=ALL-UNNAMED',
+                        '--add-opens=java.base/java.text=ALL-UNNAMED',
+                        '--add-opens=java.base/jdk.internal.access=ALL-UNNAMED',
+                        '--add-opens=java.desktop/java.awt.font=ALL-UNNAMED',
+                        '--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED',
+                )
+            }
         }
     }
 }

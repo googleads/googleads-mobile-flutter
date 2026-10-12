@@ -1,3 +1,7 @@
+## 9.2.0
+* Updates Android `compileSdk` to 37. Apps using this plugin must also compile against Android API 37 or later.
+* Updates Android Gradle Plugin to 9.1.1 and Gradle to 9.3.1 for the plugin and example app.
+
 ## 9.1.0
 * Adding Ad Preloading APIs. [PR 1445](https://github.com/googleads/googleads-mobile-flutter/pull/1445)
 * Support `AdManagerBannerAd` recycling by exposing `isMounted`. [PR 1443](https://github.com/googleads/googleads-mobile-flutter/pull/1443)
