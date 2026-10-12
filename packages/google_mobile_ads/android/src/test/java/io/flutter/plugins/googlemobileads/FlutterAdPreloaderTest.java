@@ -14,14 +14,10 @@
 
 package io.flutter.plugins.googlemobileads;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import android.content.Context;
@@ -176,6 +172,7 @@ public class FlutterAdPreloaderTest {
     Map<String, Object> expectedResponse = new HashMap<>();
     expectedResponse.put("adUnitId", "unit-id");
     expectedResponse.put("responseInfo", new FlutterAd.FlutterResponseInfo(mockResponseInfo));
+    verify(mockManager).trackAd(any(FlutterAd.class), eq(adId));
     verify(mockResult).success(expectedResponse);
   }
 
