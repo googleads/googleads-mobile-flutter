@@ -6,7 +6,7 @@
 * Fixes `AdPreloader` for obfuscated classes. [PR 1496](https://github.com/googleads/googleads-mobile-flutter/pull/1496)
 * `onNativeAdLoaded` to use UI thread. [PR 1502](https://github.com/googleads/googleads-mobile-flutter/pull/1502)
 * Support `RequestConfiguration` before `initialize()` on Next-Gen SDK on Android. [PR 1513](https://github.com/googleads/googleads-mobile-flutter/pull/1513)
-* Adds Empty Error View from Release builds on Android. [PR 1494](https://github.com/googleads/googleads-mobile-flutter/pull/1494)
+* Adds Empty Error View for Release builds on Android. [PR 1494](https://github.com/googleads/googleads-mobile-flutter/pull/1494)
 * Use `equals` for `maxAdContentRating` comparison in Next-Gen SDK on Android. [PR 1514](https://github.com/googleads/googleads-mobile-flutter/pull/1514)
 * Fixed Beta headers. [PR 1516](https://github.com/googleads/googleads-mobile-flutter/pull/1516)
 * Use registrar `viewController` for UMP consent presentation to support `UIScene`. [PR 1499](https://github.com/googleads/googleads-mobile-flutter/pull/1499)
