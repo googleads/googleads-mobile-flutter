@@ -164,29 +164,32 @@ public class FlutterAdPreloaderTest {
     verify(mockResult).success(5);
   }
 
+  private void verifyPollAd(String className, int adId, ResponseInfo mockResponseInfo) {
+    Map<String, Object> args = new HashMap<>();
+    args.put("preloadId", "preload-id-1");
+    args.put("className", className);
+    args.put("adId", adId);
+
+    Result mockResult = mock(Result.class);
+    preloader.onMethodCall(new MethodCall("MobileAds#pollAd", args), mockResult);
+
+    Map<String, Object> expectedResponse = new HashMap<>();
+    expectedResponse.put("adUnitId", "unit-id");
+    expectedResponse.put("responseInfo", new FlutterAd.FlutterResponseInfo(mockResponseInfo));
+    verify(mockResult).success(expectedResponse);
+  }
+
   @Test
   public void testPollAd_interstitial() {
     InterstitialAd mockAd = mock(InterstitialAd.class);
     ResponseInfo mockResponseInfo = mock(ResponseInfo.class);
     when(mockAd.getAdUnitId()).thenReturn("unit-id");
     when(mockAd.getResponseInfo()).thenReturn(mockResponseInfo);
-    mockedInterstitialPreloader.when(() -> InterstitialAdPreloader.pollAd("preload-id-1"))
+    mockedInterstitialPreloader
+        .when(() -> InterstitialAdPreloader.pollAd("preload-id-1"))
         .thenReturn(mockAd);
 
-    Map<String, Object> args = new HashMap<>();
-    args.put("preloadId", "preload-id-1");
-    args.put("className", "InterstitialAd");
-    args.put("adId", 1);
-
-    MethodCall methodCall = new MethodCall("MobileAds#pollAd", args);
-    Result mockResult = mock(Result.class);
-
-    preloader.onMethodCall(methodCall, mockResult);
-
-    Map<String, Object> expectedResponse = new HashMap<>();
-    expectedResponse.put("adUnitId", "unit-id");
-    expectedResponse.put("responseInfo", new FlutterAd.FlutterResponseInfo(mockResponseInfo));
-    verify(mockResult).success(expectedResponse);
+    verifyPollAd("InterstitialAd", 1, mockResponseInfo);
   }
 
   @Test
@@ -195,23 +198,11 @@ public class FlutterAdPreloaderTest {
     ResponseInfo mockResponseInfo = mock(ResponseInfo.class);
     when(mockAd.getAdUnitId()).thenReturn("unit-id");
     when(mockAd.getResponseInfo()).thenReturn(mockResponseInfo);
-    mockedRewardedPreloader.when(() -> RewardedAdPreloader.pollAd("preload-id-1"))
+    mockedRewardedPreloader
+        .when(() -> RewardedAdPreloader.pollAd("preload-id-1"))
         .thenReturn(mockAd);
 
-    Map<String, Object> args = new HashMap<>();
-    args.put("preloadId", "preload-id-1");
-    args.put("className", "RewardedAd");
-    args.put("adId", 2);
-
-    MethodCall methodCall = new MethodCall("MobileAds#pollAd", args);
-    Result mockResult = mock(Result.class);
-
-    preloader.onMethodCall(methodCall, mockResult);
-
-    Map<String, Object> expectedResponse = new HashMap<>();
-    expectedResponse.put("adUnitId", "unit-id");
-    expectedResponse.put("responseInfo", new FlutterAd.FlutterResponseInfo(mockResponseInfo));
-    verify(mockResult).success(expectedResponse);
+    verifyPollAd("RewardedAd", 2, mockResponseInfo);
   }
 
   @Test
@@ -220,22 +211,10 @@ public class FlutterAdPreloaderTest {
     ResponseInfo mockResponseInfo = mock(ResponseInfo.class);
     when(mockAd.getAdUnitId()).thenReturn("unit-id");
     when(mockAd.getResponseInfo()).thenReturn(mockResponseInfo);
-    mockedAppOpenPreloader.when(() -> AppOpenAdPreloader.pollAd("preload-id-1"))
+    mockedAppOpenPreloader
+        .when(() -> AppOpenAdPreloader.pollAd("preload-id-1"))
         .thenReturn(mockAd);
 
-    Map<String, Object> args = new HashMap<>();
-    args.put("preloadId", "preload-id-1");
-    args.put("className", "AppOpenAd");
-    args.put("adId", 3);
-
-    MethodCall methodCall = new MethodCall("MobileAds#pollAd", args);
-    Result mockResult = mock(Result.class);
-
-    preloader.onMethodCall(methodCall, mockResult);
-
-    Map<String, Object> expectedResponse = new HashMap<>();
-    expectedResponse.put("adUnitId", "unit-id");
-    expectedResponse.put("responseInfo", new FlutterAd.FlutterResponseInfo(mockResponseInfo));
-    verify(mockResult).success(expectedResponse);
+    verifyPollAd("AppOpenAd", 3, mockResponseInfo);
   }
 }

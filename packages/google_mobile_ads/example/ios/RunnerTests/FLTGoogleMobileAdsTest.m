@@ -617,4 +617,62 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   [interstitialPreloaderClassMock stopMocking];
 }
 
+- (void)verifyPollAdWithClassName:(NSString *)className
+                   preloaderClass:(Class)preloaderClass
+                          adClass:(Class)adClass
+                             adId:(NSNumber *)adId {
+  id preloaderMock = OCMClassMock(preloaderClass);
+  OCMStub([preloaderMock sharedInstance]).andReturn(preloaderMock);
+
+  id mockAd = OCMClassMock(adClass);
+  GADResponseInfo *mockResponseInfo = OCMClassMock([GADResponseInfo class]);
+  OCMStub([mockResponseInfo responseIdentifier]).andReturn(@"test-response-id");
+  OCMStub([mockAd adUnitID]).andReturn(@"unit-id");
+  OCMStub([mockAd responseInfo]).andReturn(mockResponseInfo);
+  OCMStub([preloaderMock adWithPreloadID:@"preload-id-1"]).andReturn(mockAd);
+
+  FlutterMethodChannel *mockChannel = OCMClassMock([FlutterMethodChannel class]);
+  FLTAdPreloader *preloader = [[FLTAdPreloader alloc] initWithChannel:mockChannel manager:_manager];
+  FlutterMethodCall *call = [FlutterMethodCall
+      methodCallWithMethodName:@"MobileAds#pollAd"
+                     arguments:@{
+                       @"preloadId" : @"preload-id-1",
+                       @"className" : className,
+                       @"adId" : adId
+                     }];
+
+  __block NSDictionary *response;
+  [preloader handleMethodCall:call
+                       result:^(id _Nullable resultValue) {
+                         response = resultValue;
+                       }];
+
+  XCTAssertEqualObjects(response[@"adUnitId"], @"unit-id");
+  FLTGADResponseInfo *responseInfo = response[@"responseInfo"];
+  XCTAssertEqualObjects(responseInfo.responseIdentifier, @"test-response-id");
+  XCTAssertNotNil([_manager adFor:adId]);
+  [preloaderMock stopMocking];
+}
+
+- (void)testPreloaderPollAd_interstitial {
+  [self verifyPollAdWithClassName:@"InterstitialAd"
+                   preloaderClass:[GADInterstitialAdPreloader class]
+                          adClass:[GADInterstitialAd class]
+                             adId:@1];
+}
+
+- (void)testPreloaderPollAd_rewarded {
+  [self verifyPollAdWithClassName:@"RewardedAd"
+                   preloaderClass:[GADRewardedAdPreloader class]
+                          adClass:[GADRewardedAd class]
+                             adId:@2];
+}
+
+- (void)testPreloaderPollAd_appOpen {
+  [self verifyPollAdWithClassName:@"AppOpenAd"
+                   preloaderClass:[GADAppOpenAdPreloader class]
+                          adClass:[GADAppOpenAd class]
+                             adId:@3];
+}
+
 @end

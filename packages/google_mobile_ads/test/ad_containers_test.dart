@@ -923,18 +923,6 @@ void main() {
           },
         ),
       );
-
-      // Reset mock handler to standard test handler
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(instanceManager.channel, (
-            MethodCall methodCall,
-          ) async {
-            log.add(methodCall);
-            if (methodCall.method == 'MobileAds#pollAd') {
-              return <dynamic, dynamic>{'adUnitId': 'test-ad-unit'};
-            }
-            return null;
-          });
     });
 
     test('getConfiguration and getConfigurations tests', () async {
@@ -1043,26 +1031,6 @@ void main() {
           arguments: <String, dynamic>{'className': 'AppOpenAd'},
         ),
       );
-
-      // Reset mock handler to standard test handler
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(instanceManager.channel, (
-            MethodCall methodCall,
-          ) async {
-            log.add(methodCall);
-            if (methodCall.method == 'MobileAds#pollAd') {
-              return <dynamic, dynamic>{
-                'adUnitId': 'test-ad-unit',
-                'responseInfo': const ResponseInfo(
-                  responseId: 'test-response-id',
-                  mediationAdapterClassName: 'adapter-class',
-                  adapterResponses: <AdapterResponseInfo>[],
-                  responseExtras: <String, dynamic>{},
-                ),
-              };
-            }
-            return null;
-          });
     });
 
     test('poll InterstitialAdPreloader', () async {
@@ -1307,18 +1275,6 @@ void main() {
           },
         ),
       );
-
-      // Reset mock handler to standard test handler
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(instanceManager.channel, (
-            MethodCall methodCall,
-          ) async {
-            log.add(methodCall);
-            if (methodCall.method == 'MobileAds#pollAd') {
-              return <dynamic, dynamic>{'adUnitId': 'test-ad-unit'};
-            }
-            return null;
-          });
     });
 
     test('onPreloadEvent callbacks tests', () async {
