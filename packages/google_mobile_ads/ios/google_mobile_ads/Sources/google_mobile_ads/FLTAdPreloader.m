@@ -257,43 +257,41 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
       return;
     }
 
-    NSDictionary *response = nil;
+    id preloadedAd = nil;
     if ([className isEqualToString:@"InterstitialAd"]) {
-      id preloadedAd = [[GADInterstitialAdPreloader sharedInstance] adWithPreloadID:preloadId];
-      if (preloadedAd) {
-        NSString *adUnitId = [preloadedAd respondsToSelector:@selector(adUnitID)] ? [preloadedAd performSelector:@selector(adUnitID)] : @"";
-        FLTInterstitialAd *adWrapper =
-            [[FLTInterstitialAd alloc] initWithAdUnitId:adUnitId != nil ? adUnitId : @""
-                                                request:[[FLTAdRequest alloc] init]
-                                                   adId:adId];
-        [_manager storeAd:adWrapper];
-        [adWrapper onAdLoaded:preloadedAd];
-        response = @{@"adUnitId" : adUnitId != nil ? adUnitId : @""};
-      }
+      preloadedAd = [[GADInterstitialAdPreloader sharedInstance] adWithPreloadID:preloadId];
     } else if ([className isEqualToString:@"RewardedAd"]) {
-      id preloadedAd = [[GADRewardedAdPreloader sharedInstance] adWithPreloadID:preloadId];
-      if (preloadedAd) {
-        NSString *adUnitId = [preloadedAd respondsToSelector:@selector(adUnitID)] ? [preloadedAd performSelector:@selector(adUnitID)] : @"";
-        FLTRewardedAd *adWrapper =
-            [[FLTRewardedAd alloc] initWithAdUnitId:adUnitId != nil ? adUnitId : @""
-                                            request:[[FLTAdRequest alloc] init]
-                                               adId:adId];
-        [_manager storeAd:adWrapper];
-        [adWrapper onAdLoaded:preloadedAd];
-        response = @{@"adUnitId" : adUnitId != nil ? adUnitId : @""};
-      }
+      preloadedAd = [[GADRewardedAdPreloader sharedInstance] adWithPreloadID:preloadId];
     } else if ([className isEqualToString:@"AppOpenAd"]) {
-      id preloadedAd = [[GADAppOpenAdPreloader sharedInstance] adWithPreloadID:preloadId];
-      if (preloadedAd) {
-        NSString *adUnitId = [preloadedAd respondsToSelector:@selector(adUnitID)] ? [preloadedAd performSelector:@selector(adUnitID)] : @"";
-        FLTAppOpenAd *adWrapper =
-            [[FLTAppOpenAd alloc] initWithAdUnitId:adUnitId != nil ? adUnitId : @""
-                                           request:[[FLTAdRequest alloc] init]
-                                              adId:adId];
-        [_manager storeAd:adWrapper];
-        [adWrapper onAdLoaded:preloadedAd];
-        response = @{@"adUnitId" : adUnitId != nil ? adUnitId : @""};
+      preloadedAd = [[GADAppOpenAdPreloader sharedInstance] adWithPreloadID:preloadId];
+    }
+
+    NSDictionary *response = nil;
+    if (preloadedAd) {
+      NSString *adUnitId = [preloadedAd respondsToSelector:@selector(adUnitID)]
+                               ? ([preloadedAd performSelector:@selector(adUnitID)] ?: @"")
+                               : @"";
+      FLTAdRequest *request = [[FLTAdRequest alloc] init];
+      id adWrapper = nil;
+      if ([className isEqualToString:@"InterstitialAd"]) {
+        adWrapper = [[FLTInterstitialAd alloc] initWithAdUnitId:adUnitId request:request adId:adId];
+      } else if ([className isEqualToString:@"RewardedAd"]) {
+        adWrapper = [[FLTRewardedAd alloc] initWithAdUnitId:adUnitId request:request adId:adId];
+      } else if ([className isEqualToString:@"AppOpenAd"]) {
+        adWrapper = [[FLTAppOpenAd alloc] initWithAdUnitId:adUnitId request:request adId:adId];
       }
+      [_manager storeAd:adWrapper];
+      [adWrapper onAdLoaded:preloadedAd];
+
+      GADResponseInfo *adResponseInfo = [preloadedAd respondsToSelector:@selector(responseInfo)]
+                                            ? [preloadedAd performSelector:@selector(responseInfo)]
+                                            : nil;
+      response = @{
+        @"adUnitId" : adUnitId,
+        @"responseInfo" : adResponseInfo
+            ? [[FLTGADResponseInfo alloc] initWithResponseInfo:adResponseInfo]
+            : [NSNull null]
+      };
     }
     result(response);
   } else {
