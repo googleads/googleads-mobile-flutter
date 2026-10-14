@@ -357,15 +357,21 @@ class FlutterAdPreloader {
             response.put("adUnitId", adUnitId != null ? adUnitId : "");
           }
         } else if (className.equals("AdManagerBannerAd")) {
+          String adUnitIdArg = call.argument("adUnitId");
+          FlutterAdManagerAdRequest adManagerRequest = call.argument("request");
+          List<FlutterAdSize> sizes = call.argument("sizes");
+          if (adUnitIdArg == null || adManagerRequest == null || sizes == null) {
+            result.error("PreloadError", "Missing banner poll arguments.", null);
+            break;
+          }
+          // Banners can only be registered with an Activity. Without one, leave
+          // the ad in the buffer and report "no ad" so the caller can fall back.
+          if (instanceManager.getActivity() == null) {
+            result.success(null);
+            break;
+          }
           BannerAd preloadedAd = BannerAdPreloader.pollAd(preloadId);
           if (preloadedAd != null) {
-            String adUnitIdArg = call.argument("adUnitId");
-            FlutterAdManagerAdRequest adManagerRequest = call.argument("request");
-            List<FlutterAdSize> sizes = call.argument("sizes");
-            if (adUnitIdArg == null || adManagerRequest == null || sizes == null) {
-              result.error("PreloadError", "Missing banner poll arguments.", null);
-              break;
-            }
             FlutterAdManagerBannerAd adWrapper =
                 new FlutterAdManagerBannerAd(
                     adId,
