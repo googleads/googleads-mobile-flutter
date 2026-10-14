@@ -1237,6 +1237,137 @@ void main() {
       );
     });
 
+    test('start AdManagerBannerAdPreloader', () async {
+      const AdManagerAdRequest request = AdManagerAdRequest(
+        keywords: <String>['banner'],
+      );
+      final List<AdSize> sizes = <AdSize>[AdSize.banner, AdSize.fluid];
+
+      await AdManagerBannerAdPreloader.start(
+        preloadId: 'banner-preload',
+        preloadConfiguration: AdManagerBannerPreloadConfiguration(
+          adUnitId: 'test-unit-id',
+          request: request,
+          sizes: sizes,
+          bufferSize: 3,
+        ),
+      );
+
+      expect(log, <Matcher>[
+        isMethodCall(
+          'MobileAds#startPreloading',
+          arguments: <String, dynamic>{
+            'preloadId': 'banner-preload',
+            'adUnitId': 'test-unit-id',
+            'bufferSize': 3,
+            'request': request,
+            'sizes': sizes,
+            'className': 'AdManagerBannerAd',
+          },
+        ),
+      ]);
+    });
+
+    test('poll AdManagerBannerAdPreloader', () async {
+      final AdManagerBannerAd banner = AdManagerBannerAd(
+        adUnitId: 'test-ad-unit',
+        sizes: <AdSize>[AdSize.banner],
+        request: const AdManagerAdRequest(),
+        listener: AdManagerBannerAdListener(),
+      );
+
+      final AdManagerBannerAd? polled = await AdManagerBannerAdPreloader.pollAd(
+        'banner-preload',
+        banner,
+      );
+
+      expect(polled, same(banner));
+      expect(instanceManager.adIdFor(banner), 0);
+      expect(log, <Matcher>[
+        isMethodCall(
+          'MobileAds#pollAd',
+          arguments: <String, dynamic>{
+            'preloadId': 'banner-preload',
+            'className': 'AdManagerBannerAd',
+            'adId': 0,
+            'adUnitId': 'test-ad-unit',
+            'request': banner.request,
+            'sizes': banner.sizes,
+          },
+        ),
+      ]);
+
+      log.clear();
+      expect(
+        await AdManagerBannerAdPreloader.pollAd('banner-preload', banner),
+        same(banner),
+      );
+      expect(log, isEmpty);
+    });
+
+    test('poll AdManagerBannerAdPreloader with empty buffer', () async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(instanceManager.channel, (
+            MethodCall methodCall,
+          ) async {
+            log.add(methodCall);
+            return null;
+          });
+      final AdManagerBannerAd banner = AdManagerBannerAd(
+        adUnitId: 'test-ad-unit',
+        sizes: <AdSize>[AdSize.banner],
+        request: const AdManagerAdRequest(),
+        listener: AdManagerBannerAdListener(),
+      );
+
+      expect(
+        await AdManagerBannerAdPreloader.pollAd('banner-preload', banner),
+        isNull,
+      );
+      expect(instanceManager.adIdFor(banner), isNull);
+    });
+
+    test('AdManagerBannerAdPreloader methods use className', () async {
+      await AdManagerBannerAdPreloader.destroy('banner-preload');
+      await AdManagerBannerAdPreloader.destroyAll();
+      expect(
+        await AdManagerBannerAdPreloader.isAdAvailable('banner-preload'),
+        isTrue,
+      );
+      expect(
+        await AdManagerBannerAdPreloader.getNumAdsAvailable('banner-preload'),
+        0,
+      );
+
+      expect(log, <Matcher>[
+        isMethodCall(
+          'MobileAds#destroyPreloader',
+          arguments: <String, dynamic>{
+            'preloadId': 'banner-preload',
+            'className': 'AdManagerBannerAd',
+          },
+        ),
+        isMethodCall(
+          'MobileAds#destroyAllPreloaders',
+          arguments: <String, dynamic>{'className': 'AdManagerBannerAd'},
+        ),
+        isMethodCall(
+          'MobileAds#isPreloadedAdAvailable',
+          arguments: <String, dynamic>{
+            'preloadId': 'banner-preload',
+            'className': 'AdManagerBannerAd',
+          },
+        ),
+        isMethodCall(
+          'MobileAds#getNumAdsAvailable',
+          arguments: <String, dynamic>{
+            'preloadId': 'banner-preload',
+            'className': 'AdManagerBannerAd',
+          },
+        ),
+      ]);
+    });
+
     test('isAdAvailable tests', () async {
       log.clear();
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

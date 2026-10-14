@@ -61,6 +61,15 @@ class FlutterAdPreloader {
           break;
         }
 
+        if (className.equals("AdManagerBannerAd")) {
+          result.error(
+              "PreloadError",
+              "AdManagerBannerAd preloading requires the Android Next Gen SDK"
+                  + " (USE_NEXT_GEN_SDK=true).",
+              null);
+          break;
+        }
+
         PreloadConfiguration.Builder builder = new PreloadConfiguration.Builder(adUnitId);
         if (bufferSize != null) {
           builder.setBufferSize(bufferSize);

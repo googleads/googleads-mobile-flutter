@@ -18,7 +18,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.doReturn;
@@ -92,6 +94,22 @@ public class FlutterAdPreloaderTest {
         InterstitialAdPreloader.start(eq("preload-id-1"), any(PreloadConfiguration.class), any(PreloadCallbackV2.class))
     );
     verify(mockResult).success(null);
+  }
+
+  @Test
+  public void testStartPreloading_adManagerBannerUnsupported() {
+    Map<String, Object> args = new HashMap<>();
+    args.put("preloadId", "preload-id-1");
+    args.put("adUnitId", "unit-id");
+    args.put("className", "AdManagerBannerAd");
+
+    MethodCall methodCall = new MethodCall("MobileAds#startPreloading", args);
+    Result mockResult = mock(Result.class);
+
+    preloader.onMethodCall(methodCall, mockResult);
+
+    verify(mockResult).error(eq("PreloadError"), any(String.class), isNull());
+    verify(mockResult, never()).success(any());
   }
 
   @Test

@@ -400,3 +400,122 @@ abstract class AppOpenAdPreloader extends _AdPreloader {
     return _AdPreloader.getConfigurations<AppOpenAd>();
   }
 }
+
+/// Configuration for preloading [AdManagerBannerAd]s with
+/// [AdManagerBannerAdPreloader].
+class AdManagerBannerPreloadConfiguration {
+  /// Creates an [AdManagerBannerPreloadConfiguration].
+  const AdManagerBannerPreloadConfiguration({
+    required this.adUnitId,
+    required this.request,
+    required this.sizes,
+    this.bufferSize = 1,
+  });
+
+  /// The ad unit ID to preload ads for.
+  final String adUnitId;
+
+  /// Ad Manager targeting for preload requests.
+  final AdManagerAdRequest request;
+
+  /// Banner sizes passed to the preloader (same as [AdManagerBannerAd.sizes]).
+  final List<AdSize> sizes;
+
+  /// Number of ads to keep in the preload buffer.
+  final int bufferSize;
+}
+
+/// A preloader for [AdManagerBannerAd]s.
+///
+/// Only supported on Android with the Next Gen SDK (`USE_NEXT_GEN_SDK=true`).
+/// Other platforms complete with a [PlatformException].
+abstract class AdManagerBannerAdPreloader {
+  static const String _className = 'AdManagerBannerAd';
+
+  /// Starts preloading banners for [preloadId].
+  static Future<void> start({
+    required String preloadId,
+    required AdManagerBannerPreloadConfiguration preloadConfiguration,
+    PreloadCallback callback = const PreloadCallback(),
+  }) async {
+    instanceManager.registerPreloadCallback(preloadId, callback);
+    await instanceManager.channel
+        .invokeMethod<void>('MobileAds#startPreloading', <String, dynamic>{
+          'preloadId': preloadId,
+          'adUnitId': preloadConfiguration.adUnitId,
+          'bufferSize': preloadConfiguration.bufferSize,
+          'request': preloadConfiguration.request,
+          'sizes': preloadConfiguration.sizes,
+          'className': _className,
+        });
+  }
+
+  /// Attaches a preloaded banner to [ad] if one is available.
+  ///
+  /// Use this instead of [AdManagerBannerAd.load]. On success
+  /// [BannerAdListener.onAdLoaded] is invoked for [ad] and [ad] is returned.
+  /// Returns null when no preloaded ad is available. If [ad] has already been
+  /// loaded or polled, it is returned unchanged.
+  static Future<AdManagerBannerAd?> pollAd(
+    String preloadId,
+    AdManagerBannerAd ad,
+  ) async {
+    if (instanceManager.adIdFor(ad) != null) {
+      return ad;
+    }
+    final int adId = instanceManager.nextAdId();
+    final Map<dynamic, dynamic>? res = await instanceManager.channel
+        .invokeMethod<Map<dynamic, dynamic>>(
+          'MobileAds#pollAd',
+          <String, dynamic>{
+            'preloadId': preloadId,
+            'className': _className,
+            'adId': adId,
+            'adUnitId': ad.adUnitId,
+            'request': ad.request,
+            'sizes': ad.sizes,
+          },
+        );
+    if (res != null) {
+      instanceManager.trackAd(ad, adId);
+      return ad;
+    }
+    return null;
+  }
+
+  /// Destroys the preloader for [preloadId].
+  static Future<void> destroy(String preloadId) async {
+    instanceManager.unregisterPreloadCallback(preloadId);
+    await instanceManager.channel.invokeMethod<void>(
+      'MobileAds#destroyPreloader',
+      <String, dynamic>{'preloadId': preloadId, 'className': _className},
+    );
+  }
+
+  /// Destroys all Ad Manager banner preloaders.
+  static Future<void> destroyAll() async {
+    instanceManager.clearAllPreloadCallbacks();
+    await instanceManager.channel.invokeMethod<void>(
+      'MobileAds#destroyAllPreloaders',
+      <String, dynamic>{'className': _className},
+    );
+  }
+
+  /// Whether a preloaded banner is ready for [preloadId].
+  static Future<bool> isAdAvailable(String preloadId) async {
+    final bool? available = await instanceManager.channel.invokeMethod<bool>(
+      'MobileAds#isPreloadedAdAvailable',
+      <String, dynamic>{'preloadId': preloadId, 'className': _className},
+    );
+    return available ?? false;
+  }
+
+  /// Number of preloaded banners available for [preloadId].
+  static Future<int> getNumAdsAvailable(String preloadId) async {
+    final int? count = await instanceManager.channel.invokeMethod<int>(
+      'MobileAds#getNumAdsAvailable',
+      <String, dynamic>{'preloadId': preloadId, 'className': _className},
+    );
+    return count ?? 0;
+  }
+}

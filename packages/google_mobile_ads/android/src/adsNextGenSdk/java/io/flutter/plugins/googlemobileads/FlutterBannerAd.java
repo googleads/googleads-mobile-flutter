@@ -88,9 +88,18 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
     }
   }
 
-  @Override
-  void load() {
+  /**
+   * Attaches a {@link BannerAd} from {@link
+   * com.google.android.libraries.ads.mobile.sdk.banner.BannerAdPreloader} without a network load.
+   */
+  void attachPreloadedBannerAd(@NonNull BannerAd ad) {
     adView = bannerAdCreator.createAdView();
+    registerBannerAd(ad);
+  }
+
+  /** Converts Flutter ad sizes to Next Gen SDK {@link AdSize}s. */
+  @NonNull
+  static List<AdSize> toAdSizes(@NonNull List<FlutterAdSize> sizes) {
     final List<AdSize> allSizes = new ArrayList<AdSize>();
     for (int i = 0; i < sizes.size(); i++) {
       FlutterAdSize flutterAdSize = sizes.get(i);
@@ -102,22 +111,32 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
           new AdSize(flutterAdSize.getAdSize().getWidth(), flutterAdSize.getAdSize().getHeight());
       allSizes.add(adSize);
     }
-    BannerAdRequest adRequest = request.toBannerAdRequestBuilder(adUnitId, allSizes).build();
+    return allSizes;
+  }
+
+  private void registerBannerAd(@NonNull BannerAd ad) {
+    Activity activity = manager.getActivity();
+    if (activity == null) {
+      Log.e(TAG, "Tried to load banner ad before plugin is attached to an activity.");
+      return;
+    }
+    bannerAd = ad;
+    bannerAd.setAdEventCallback(new FlutterBannerAdListener(adId, manager, FlutterBannerAd.this));
+    adView.registerBannerAd(bannerAd, activity);
+    onAdLoaded();
+  }
+
+  @Override
+  void load() {
+    adView = bannerAdCreator.createAdView();
+    BannerAdRequest adRequest =
+        request.toBannerAdRequestBuilder(adUnitId, toAdSizes(sizes)).build();
     adView.loadAd(
         adRequest,
         new AdLoadCallback<BannerAd>() {
           @Override
           public void onAdLoaded(@NonNull BannerAd ad) {
-            Activity activity = manager.getActivity();
-            if (activity == null) {
-              Log.e(TAG, "Tried to load banner ad before plugin is attached to an activity.");
-              return;
-            }
-            bannerAd = ad;
-            bannerAd.setAdEventCallback(
-                new FlutterBannerAdListener(adId, manager, FlutterBannerAd.this));
-            adView.registerBannerAd(bannerAd, activity);
-            FlutterBannerAd.this.onAdLoaded();
+            registerBannerAd(ad);
           }
 
           @Override
