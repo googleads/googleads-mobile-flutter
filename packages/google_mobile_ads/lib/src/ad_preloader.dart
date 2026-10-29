@@ -140,6 +140,7 @@ abstract class _AdPreloader {
           _preloadedAds[preloadId]?.call() as T? ??
           _createAd<T>(PreloadConfiguration(adUnitId: adUnitId)) as T?;
       if (ad != null) {
+        ad.responseInfo = res['responseInfo'] as ResponseInfo?;
         instanceManager.trackAd(ad, adId);
         return ad;
       }

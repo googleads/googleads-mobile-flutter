@@ -285,6 +285,10 @@ class FlutterAdPreloader {
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
             response.put("adUnitId", adUnitId != null ? adUnitId : "");
+            ResponseInfo responseInfo = preloadedAd.getResponseInfo();
+            if (responseInfo != null) {
+              response.put("responseInfo", new FlutterAd.FlutterResponseInfo(responseInfo));
+            }
           }
         } else if (className.equals("RewardedAd")) {
           RewardedAd preloadedAd = RewardedAdPreloader.pollAd(preloadId);
@@ -301,6 +305,10 @@ class FlutterAdPreloader {
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
             response.put("adUnitId", adUnitId != null ? adUnitId : "");
+            ResponseInfo responseInfo = preloadedAd.getResponseInfo();
+            if (responseInfo != null) {
+              response.put("responseInfo", new FlutterAd.FlutterResponseInfo(responseInfo));
+            }
           }
         } else if (className.equals("AppOpenAd")) {
           AppOpenAd preloadedAd = AppOpenAdPreloader.pollAd(preloadId);
@@ -318,6 +326,10 @@ class FlutterAdPreloader {
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
             response.put("adUnitId", adUnitId != null ? adUnitId : "");
+            ResponseInfo responseInfo = preloadedAd.getResponseInfo();
+            if (responseInfo != null) {
+              response.put("responseInfo", new FlutterAd.FlutterResponseInfo(responseInfo));
+            }
           }
         }
         result.success(response);
