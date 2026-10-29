@@ -85,6 +85,11 @@ class FlutterBannerAdListener extends FlutterAdListener<BannerAd> implements Ban
       manager.onPaidEvent(ad, AdInstanceManager.comAdValueToFlutterAdValue(adValue));
     }
   }
+
+  @Override
+  public void onAppEvent(@NonNull String name, @NonNull String data) {
+    manager.onAppEvent(adId, name, data);
+  }
 }
 
 /** Listener for native ads. */
