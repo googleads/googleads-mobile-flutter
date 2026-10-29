@@ -285,10 +285,9 @@ class FlutterAdPreloader {
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
             response.put("adUnitId", adUnitId != null ? adUnitId : "");
-            if (preloadedAd.getResponseInfo() != null) {
-              response.put(
-                  "responseInfo",
-                  new FlutterAd.FlutterResponseInfo(preloadedAd.getResponseInfo()));
+            ResponseInfo responseInfo = preloadedAd.getResponseInfo();
+            if (responseInfo != null) {
+              response.put("responseInfo", new FlutterAd.FlutterResponseInfo(responseInfo));
             }
           }
         } else if (className.equals("RewardedAd")) {
@@ -306,10 +305,9 @@ class FlutterAdPreloader {
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
             response.put("adUnitId", adUnitId != null ? adUnitId : "");
-            if (preloadedAd.getResponseInfo() != null) {
-              response.put(
-                  "responseInfo",
-                  new FlutterAd.FlutterResponseInfo(preloadedAd.getResponseInfo()));
+            ResponseInfo responseInfo = preloadedAd.getResponseInfo();
+            if (responseInfo != null) {
+              response.put("responseInfo", new FlutterAd.FlutterResponseInfo(responseInfo));
             }
           }
         } else if (className.equals("AppOpenAd")) {
@@ -328,10 +326,9 @@ class FlutterAdPreloader {
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
             response.put("adUnitId", adUnitId != null ? adUnitId : "");
-            if (preloadedAd.getResponseInfo() != null) {
-              response.put(
-                  "responseInfo",
-                  new FlutterAd.FlutterResponseInfo(preloadedAd.getResponseInfo()));
+            ResponseInfo responseInfo = preloadedAd.getResponseInfo();
+            if (responseInfo != null) {
+              response.put("responseInfo", new FlutterAd.FlutterResponseInfo(responseInfo));
             }
           }
         }

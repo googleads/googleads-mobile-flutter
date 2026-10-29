@@ -34,6 +34,7 @@ import com.google.android.gms.ads.preload.PreloadConfiguration;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.After;
@@ -160,7 +161,7 @@ public class FlutterAdPreloaderTest {
     verify(mockResult).success(5);
   }
 
-  private void verifyPollAd(String className, int adId, ResponseInfo mockResponseInfo) {
+  private void verifyPollAd(String className, int adId) {
     Map<String, Object> args = new HashMap<>();
     args.put("preloadId", "preload-id-1");
     args.put("className", className);
@@ -171,7 +172,14 @@ public class FlutterAdPreloaderTest {
 
     Map<String, Object> expectedResponse = new HashMap<>();
     expectedResponse.put("adUnitId", "unit-id");
-    expectedResponse.put("responseInfo", new FlutterAd.FlutterResponseInfo(mockResponseInfo));
+    expectedResponse.put(
+        "responseInfo",
+        new FlutterAd.FlutterResponseInfo(
+            "test-response-id",
+            /* mediationAdapterClassName= */ null,
+            Collections.emptyList(),
+            /* loadedAdapterResponseInfo= */ null,
+            Collections.emptyMap()));
     verify(mockManager).trackAd(any(FlutterAd.class), eq(adId));
     verify(mockResult).success(expectedResponse);
   }
@@ -181,12 +189,13 @@ public class FlutterAdPreloaderTest {
     InterstitialAd mockAd = mock(InterstitialAd.class);
     ResponseInfo mockResponseInfo = mock(ResponseInfo.class);
     when(mockAd.getAdUnitId()).thenReturn("unit-id");
+    when(mockResponseInfo.getResponseId()).thenReturn("test-response-id");
     when(mockAd.getResponseInfo()).thenReturn(mockResponseInfo);
     mockedInterstitialPreloader
         .when(() -> InterstitialAdPreloader.pollAd("preload-id-1"))
         .thenReturn(mockAd);
 
-    verifyPollAd("InterstitialAd", 1, mockResponseInfo);
+    verifyPollAd(/* className= */ "InterstitialAd", /* adId= */ 1);
   }
 
   @Test
@@ -194,12 +203,13 @@ public class FlutterAdPreloaderTest {
     RewardedAd mockAd = mock(RewardedAd.class);
     ResponseInfo mockResponseInfo = mock(ResponseInfo.class);
     when(mockAd.getAdUnitId()).thenReturn("unit-id");
+    when(mockResponseInfo.getResponseId()).thenReturn("test-response-id");
     when(mockAd.getResponseInfo()).thenReturn(mockResponseInfo);
     mockedRewardedPreloader
         .when(() -> RewardedAdPreloader.pollAd("preload-id-1"))
         .thenReturn(mockAd);
 
-    verifyPollAd("RewardedAd", 2, mockResponseInfo);
+    verifyPollAd(/* className= */ "RewardedAd", /* adId= */ 2);
   }
 
   @Test
@@ -207,11 +217,12 @@ public class FlutterAdPreloaderTest {
     AppOpenAd mockAd = mock(AppOpenAd.class);
     ResponseInfo mockResponseInfo = mock(ResponseInfo.class);
     when(mockAd.getAdUnitId()).thenReturn("unit-id");
+    when(mockResponseInfo.getResponseId()).thenReturn("test-response-id");
     when(mockAd.getResponseInfo()).thenReturn(mockResponseInfo);
     mockedAppOpenPreloader
         .when(() -> AppOpenAdPreloader.pollAd("preload-id-1"))
         .thenReturn(mockAd);
 
-    verifyPollAd("AppOpenAd", 3, mockResponseInfo);
+    verifyPollAd(/* className= */ "AppOpenAd", /* adId= */ 3);
   }
 }

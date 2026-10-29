@@ -256,35 +256,49 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
       return;
     }
 
-    id preloadedAd = nil;
+    FLTAdRequest *request = [[FLTAdRequest alloc] init];
+    id<FLTAd> adWrapper = nil;
+    NSString *adUnitId = nil;
+    GADResponseInfo *adResponseInfo = nil;
+
     if ([className isEqualToString:@"InterstitialAd"]) {
-      preloadedAd = [[GADInterstitialAdPreloader sharedInstance] adWithPreloadID:preloadId];
+      GADInterstitialAd *ad =
+          [[GADInterstitialAdPreloader sharedInstance] adWithPreloadID:preloadId];
+      if (ad) {
+        adUnitId = ad.adUnitID ?: @"";
+        adResponseInfo = ad.responseInfo;
+        FLTInterstitialAd *wrapper =
+            [[FLTInterstitialAd alloc] initWithAdUnitId:adUnitId request:request adId:adId];
+        [_manager storeAd:wrapper];
+        [wrapper onAdLoaded:ad];
+        adWrapper = wrapper;
+      }
     } else if ([className isEqualToString:@"RewardedAd"]) {
-      preloadedAd = [[GADRewardedAdPreloader sharedInstance] adWithPreloadID:preloadId];
+      GADRewardedAd *ad = [[GADRewardedAdPreloader sharedInstance] adWithPreloadID:preloadId];
+      if (ad) {
+        adUnitId = ad.adUnitID ?: @"";
+        adResponseInfo = ad.responseInfo;
+        FLTRewardedAd *wrapper =
+            [[FLTRewardedAd alloc] initWithAdUnitId:adUnitId request:request adId:adId];
+        [_manager storeAd:wrapper];
+        [wrapper onAdLoaded:ad];
+        adWrapper = wrapper;
+      }
     } else if ([className isEqualToString:@"AppOpenAd"]) {
-      preloadedAd = [[GADAppOpenAdPreloader sharedInstance] adWithPreloadID:preloadId];
+      GADAppOpenAd *ad = [[GADAppOpenAdPreloader sharedInstance] adWithPreloadID:preloadId];
+      if (ad) {
+        adUnitId = ad.adUnitID ?: @"";
+        adResponseInfo = ad.responseInfo;
+        FLTAppOpenAd *wrapper =
+            [[FLTAppOpenAd alloc] initWithAdUnitId:adUnitId request:request adId:adId];
+        [_manager storeAd:wrapper];
+        [wrapper onAdLoaded:ad];
+        adWrapper = wrapper;
+      }
     }
 
     NSDictionary *response = nil;
-    if (preloadedAd) {
-      NSString *adUnitId = [preloadedAd respondsToSelector:@selector(adUnitID)]
-                               ? ([preloadedAd performSelector:@selector(adUnitID)] ?: @"")
-                               : @"";
-      FLTAdRequest *request = [[FLTAdRequest alloc] init];
-      id adWrapper = nil;
-      if ([className isEqualToString:@"InterstitialAd"]) {
-        adWrapper = [[FLTInterstitialAd alloc] initWithAdUnitId:adUnitId request:request adId:adId];
-      } else if ([className isEqualToString:@"RewardedAd"]) {
-        adWrapper = [[FLTRewardedAd alloc] initWithAdUnitId:adUnitId request:request adId:adId];
-      } else if ([className isEqualToString:@"AppOpenAd"]) {
-        adWrapper = [[FLTAppOpenAd alloc] initWithAdUnitId:adUnitId request:request adId:adId];
-      }
-      [_manager storeAd:adWrapper];
-      [adWrapper onAdLoaded:preloadedAd];
-
-      GADResponseInfo *adResponseInfo = [preloadedAd respondsToSelector:@selector(responseInfo)]
-                                            ? [preloadedAd performSelector:@selector(responseInfo)]
-                                            : nil;
+    if (adWrapper) {
       response = @{
         @"adUnitId" : adUnitId,
         @"responseInfo" : adResponseInfo
