@@ -29,7 +29,10 @@ let package = Package(
           name: "DTExchangeAdapterTarget",
           package: "googleads-mobile-ios-mediation-dtexchange"),
       ],
-      path: "Sources/gma_mediation_dtexchange"
+      path: "Sources/gma_mediation_dtexchange",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

@@ -29,7 +29,10 @@ let package = Package(
           name: "InMobiAdapterTarget",
           package: "googleads-mobile-ios-mediation-inmobi"),
       ],
-      path: "Sources/gma_mediation_inmobi"
+      path: "Sources/gma_mediation_inmobi",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

@@ -29,7 +29,10 @@ let package = Package(
           name: "MolocoAdapterTarget",
           package: "googleads-mobile-ios-mediation-moloco"),
       ],
-      path: "Sources/gma_mediation_moloco"
+      path: "Sources/gma_mediation_moloco",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

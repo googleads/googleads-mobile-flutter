@@ -29,7 +29,10 @@ let package = Package(
           name: "LiftoffMonetizeAdapterTarget",
           package: "googleads-mobile-ios-mediation-liftoffmonetize"),
       ],
-      path: "Sources/gma_mediation_liftoffmonetize"
+      path: "Sources/gma_mediation_liftoffmonetize",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

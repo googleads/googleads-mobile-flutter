@@ -29,7 +29,10 @@ let package = Package(
           name: "MaioAdapterTarget",
           package: "googleads-mobile-ios-mediation-maio"),
       ],
-      path: "Sources/gma_mediation_maio"
+      path: "Sources/gma_mediation_maio",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

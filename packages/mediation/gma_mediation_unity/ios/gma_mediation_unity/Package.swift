@@ -29,7 +29,10 @@ let package = Package(
           name: "UnityAdapterTarget",
           package: "googleads-mobile-ios-mediation-unity"),
       ],
-      path: "Sources/gma_mediation_unity"
+      path: "Sources/gma_mediation_unity",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

@@ -29,7 +29,10 @@ let package = Package(
           name: "BidMachineAdapterTarget",
           package: "googleads-mobile-ios-mediation-bidmachine"),
       ],
-      path: "Sources/gma_mediation_bidmachine"
+      path: "Sources/gma_mediation_bidmachine",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

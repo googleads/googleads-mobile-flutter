@@ -29,7 +29,10 @@ let package = Package(
           name: "IronSourceAdapterTarget",
           package: "googleads-mobile-ios-mediation-ironsource"),
       ],
-      path: "Sources/gma_mediation_ironsource"
+      path: "Sources/gma_mediation_ironsource",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

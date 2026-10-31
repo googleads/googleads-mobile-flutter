@@ -29,7 +29,10 @@ let package = Package(
           name: "ChartboostAdapterTarget",
           package: "googleads-mobile-ios-mediation-chartboost"),
       ],
-      path: "Sources/gma_mediation_chartboost"
+      path: "Sources/gma_mediation_chartboost",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )
