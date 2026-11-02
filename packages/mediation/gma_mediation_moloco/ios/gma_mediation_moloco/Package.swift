@@ -18,7 +18,7 @@ let package = Package(
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
     .package(
       url: "https://github.com/googleads/googleads-mobile-ios-mediation-moloco.git",
-      from: "4.10.000"),
+      from: "4.11.100"),
   ],
   targets: [
     .target(
@@ -29,7 +29,10 @@ let package = Package(
           name: "MolocoAdapterTarget",
           package: "googleads-mobile-ios-mediation-moloco"),
       ],
-      path: "Sources/gma_mediation_moloco"
+      path: "Sources/gma_mediation_moloco",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

@@ -18,7 +18,7 @@ let package = Package(
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
     .package(
       url: "https://github.com/googleads/googleads-mobile-ios-mediation-pubmatic.git",
-      from: "5.4.000"),
+      from: "5.4.100"),
   ],
   targets: [
     .target(
@@ -29,7 +29,10 @@ let package = Package(
           name: "PubMaticAdapterTarget",
           package: "googleads-mobile-ios-mediation-pubmatic"),
       ],
-      path: "Sources/gma_mediation_pubmatic"
+      path: "Sources/gma_mediation_pubmatic",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

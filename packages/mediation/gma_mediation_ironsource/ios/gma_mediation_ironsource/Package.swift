@@ -18,7 +18,7 @@ let package = Package(
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
     .package(
       url: "https://github.com/googleads/googleads-mobile-ios-mediation-ironsource.git",
-      from: "9.6.00000"),
+      from: "9.6.10000"),
   ],
   targets: [
     .target(
@@ -29,7 +29,10 @@ let package = Package(
           name: "IronSourceAdapterTarget",
           package: "googleads-mobile-ios-mediation-ironsource"),
       ],
-      path: "Sources/gma_mediation_ironsource"
+      path: "Sources/gma_mediation_ironsource",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

@@ -200,6 +200,8 @@
 
   XCTAssertTrue(resultInvoked);
   XCTAssertNil(returnedResult);
+  [fltAdUtilMock stopMocking];
+  [gadMobileAdsClassMock stopMocking];
 }
 
 - (void)testSetSameAppKeyEnabledNo {

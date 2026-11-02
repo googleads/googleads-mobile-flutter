@@ -29,7 +29,10 @@ let package = Package(
           name: "MintegralAdapterTarget",
           package: "googleads-mobile-ios-mediation-mintegral"),
       ],
-      path: "Sources/gma_mediation_mintegral"
+      path: "Sources/gma_mediation_mintegral",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

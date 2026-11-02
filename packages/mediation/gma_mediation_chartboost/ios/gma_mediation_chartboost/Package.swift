@@ -18,7 +18,7 @@ let package = Package(
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
     .package(
       url: "https://github.com/googleads/googleads-mobile-ios-mediation-chartboost.git",
-      from: "9.14.000"),
+      from: "9.14.200"),
   ],
   targets: [
     .target(
@@ -29,7 +29,10 @@ let package = Package(
           name: "ChartboostAdapterTarget",
           package: "googleads-mobile-ios-mediation-chartboost"),
       ],
-      path: "Sources/gma_mediation_chartboost"
+      path: "Sources/gma_mediation_chartboost",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

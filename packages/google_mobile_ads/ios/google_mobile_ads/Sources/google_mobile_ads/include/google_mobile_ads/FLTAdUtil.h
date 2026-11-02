@@ -26,6 +26,9 @@
              flutterPluginRegistry:
                  (id<FlutterPluginRegistry> _Nonnull)flutterPluginRegistry;
 
++ (UIViewController *_Nullable)rootViewControllerFromRegistrar:
+    (NSObject<FlutterPluginRegistrar> *_Nullable)registrar;
+
 @property(readonly, class) NSString *_Nonnull requestAgent;
 
 @end

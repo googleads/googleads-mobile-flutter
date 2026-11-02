@@ -1,3 +1,23 @@
+## 9.2.0
+* Fixes Large Anchored Banner Size. [PR 1495](https://github.com/googleads/googleads-mobile-flutter/pull/1495)
+* iOS `AppStateNotifier` Fix and tests. [PR 1492](https://github.com/googleads/googleads-mobile-flutter/pull/1492)
+* Fixes Interface Builder warnings on iOS Fullscreen Native Ad Template. [PR 1491](https://github.com/googleads/googleads-mobile-flutter/pull/1491)
+* Make Android `AdInstanceManager` ads map thread-safe and optimize `adId` lookup. [PR 1469](https://github.com/googleads/googleads-mobile-flutter/pull/1469)
+* Fixes `AdPreloader` for obfuscated classes. [PR 1496](https://github.com/googleads/googleads-mobile-flutter/pull/1496)
+* `onNativeAdLoaded` to use UI thread. [PR 1502](https://github.com/googleads/googleads-mobile-flutter/pull/1502)
+* Support `RequestConfiguration` before `initialize()` on Next-Gen SDK on Android. [PR 1513](https://github.com/googleads/googleads-mobile-flutter/pull/1513)
+* Adds Empty Error View for Release builds on Android. [PR 1494](https://github.com/googleads/googleads-mobile-flutter/pull/1494)
+* Use `equals` for `maxAdContentRating` comparison in Next-Gen SDK on Android. [PR 1514](https://github.com/googleads/googleads-mobile-flutter/pull/1514)
+* Fixed Beta headers. [PR 1516](https://github.com/googleads/googleads-mobile-flutter/pull/1516)
+* Use registrar `viewController` for UMP consent presentation to support `UIScene`. [PR 1499](https://github.com/googleads/googleads-mobile-flutter/pull/1499)
+* Updates GMA Android SDK dependencies:
+  * [Google Mobile Ads](https://developers.google.com/admob/android/quick-start) SDK version `25.5.0`.
+  * [Google Mobile Ads Next-Gen](https://developers.google.com/admob/android/next-gen/rel-notes) SDK version `1.5.0`.
+* Updates GMA [iOS](https://developers.google.com/admob/ios/rel-notes) dependency to `13.11.0`.
+* Uses latest UMP SDK:
+  * [Android](https://developers.google.com/admob/android/privacy/release-notes) UMP SDK version 4.0.0.
+  * [iOS](https://developers.google.com/admob/ios/privacy/download#release_notes) UMP SDK version 3.1.0.
+
 ## 9.1.0
 * Adding Ad Preloading APIs. [PR 1445](https://github.com/googleads/googleads-mobile-flutter/pull/1445)
 * Support `AdManagerBannerAd` recycling by exposing `isMounted`. [PR 1443](https://github.com/googleads/googleads-mobile-flutter/pull/1443)
