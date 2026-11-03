@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
   name: "gma_mediation_line",
   platforms: [
-    .iOS("13.0")
+    .iOS("15.0")
   ],
   products: [
     .library(
@@ -29,7 +29,10 @@ let package = Package(
           name: "LineAdapterTarget",
           package: "googleads-mobile-ios-mediation-line"),
       ],
-      path: "Sources/gma_mediation_line"
+      path: "Sources/gma_mediation_line",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

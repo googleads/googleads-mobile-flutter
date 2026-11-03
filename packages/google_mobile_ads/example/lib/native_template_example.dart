@@ -70,7 +70,7 @@ class _NativeTemplateExampleExampleState extends State<NativeTemplateExample> {
     super.didChangeDependencies();
     // Create the ad objects and load ads.
     _nativeAd = NativeAd(
-      adUnitId: '/6499/example/native',
+      adUnitId: '/21775744923/example/native',
       request: AdRequest(),
       listener: NativeAdListener(
         onAdLoaded: (Ad ad) {

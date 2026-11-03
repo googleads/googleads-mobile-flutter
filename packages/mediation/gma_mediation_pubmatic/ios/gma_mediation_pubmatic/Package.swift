@@ -29,7 +29,10 @@ let package = Package(
           name: "PubMaticAdapterTarget",
           package: "googleads-mobile-ios-mediation-pubmatic"),
       ],
-      path: "Sources/gma_mediation_pubmatic"
+      path: "Sources/gma_mediation_pubmatic",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

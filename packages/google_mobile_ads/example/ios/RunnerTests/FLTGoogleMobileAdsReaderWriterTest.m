@@ -42,16 +42,21 @@
 @implementation FLTGoogleMobileAdsReaderWriterTest {
   FlutterStandardMessageCodec *_messageCodec;
   FLTGoogleMobileAdsReaderWriter *_readerWriter;
+  id _fltAdUtilMock;
 }
 
 - (void)setUp {
-  id fltAdUtilMock = OCMClassMock([FLTAdUtil class]);
-  OCMStub(ClassMethod([fltAdUtilMock requestAgent]))
+  _fltAdUtilMock = OCMClassMock([FLTAdUtil class]);
+  OCMStub(ClassMethod([_fltAdUtilMock requestAgent]))
       .andReturn(@"request-agent");
   _readerWriter = [[FLTGoogleMobileAdsReaderWriter alloc]
       initWithFactory:[[FLTTestAdSizeFactory alloc] init]];
   _messageCodec =
       [FlutterStandardMessageCodec codecWithReaderWriter:_readerWriter];
+}
+
+- (void)tearDown {
+  [_fltAdUtilMock stopMocking];
 }
 
 - (void)testEncodeDecodeAdSize {
@@ -862,6 +867,20 @@
 
 - (GADAdSize)currentOrientationAnchoredAdaptiveBannerAdSizeWithWidth:
     (NSNumber *)width {
+  return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
+}
+
+- (GADAdSize)largePortraitAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *)width {
+  return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
+}
+
+- (GADAdSize)largeLandscapeAnchoredAdaptiveBannerAdSizeWithWidth:
+    (NSNumber *)width {
+  return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
+}
+
+- (GADAdSize)largeAnchoredAdaptiveBannerAdSizeWithWidth:(NSNumber *)width {
   return GADAdSizeFromCGSize(CGSizeMake(width.doubleValue, 0));
 }
 @end

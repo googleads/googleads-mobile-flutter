@@ -14,4 +14,21 @@
 
 package io.flutter.plugins.googlemobileads.mediation.gma_mediation_moloco
 
-internal class GmaMediationMolocoPluginTest {}
+import io.flutter.embedding.engine.plugins.FlutterPlugin
+import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verifyNoInteractions
+
+internal class GmaMediationMolocoPluginTest {
+  private val mockFlutterPluginBinding = mock<FlutterPlugin.FlutterPluginBinding>()
+
+  @Test
+  fun attachAndDetach_doNotUseTheBinding() {
+    val plugin = GmaMediationMolocoPlugin()
+
+    plugin.onAttachedToEngine(mockFlutterPluginBinding)
+    plugin.onDetachedFromEngine(mockFlutterPluginBinding)
+
+    verifyNoInteractions(mockFlutterPluginBinding)
+  }
+}

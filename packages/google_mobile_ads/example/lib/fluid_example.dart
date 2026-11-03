@@ -78,7 +78,7 @@ class _FluidExampleExampleState extends State<FluidExample> {
     super.didChangeDependencies();
     // Create the ad objects and load ads.
     _fluidAd = FluidAdManagerBannerAd(
-      adUnitId: '/6499/example/APIDemo/Fluid',
+      adUnitId: '/6355419/Travel',
       request: AdManagerAdRequest(nonPersonalizedAds: true),
       listener: AdManagerBannerAdListener(
         onAdLoaded: (Ad ad) {

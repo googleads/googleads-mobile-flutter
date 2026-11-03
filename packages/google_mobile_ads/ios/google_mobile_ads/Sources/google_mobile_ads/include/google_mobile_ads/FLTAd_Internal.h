@@ -20,7 +20,6 @@
 #import "FLTNativeTemplateStyle.h"
 #import "GADTTemplateView.h"
 #import <GoogleMobileAds/GoogleMobileAds.h>
-#import <GoogleMobileAds/GoogleMobileAds_Beta.h>
 #import <UIKit/UIKit.h>
 
 @class FLTAdInstanceManager;

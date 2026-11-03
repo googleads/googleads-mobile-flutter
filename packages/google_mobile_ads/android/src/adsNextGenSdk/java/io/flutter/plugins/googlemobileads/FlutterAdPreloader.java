@@ -284,13 +284,17 @@ class FlutterAdPreloader {
             FlutterInterstitialAd adWrapper = new FlutterInterstitialAd(
                 adId,
                 instanceManager,
-                adUnitId != null ? adUnitId : "",
+                adUnitId,
                 new FlutterAdRequest.Builder().build(),
                 new FlutterAdLoader(context));
             adWrapper.onAdLoaded(preloadedAd);
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
-            response.put("adUnitId", adUnitId != null ? adUnitId : "");
+            response.put("adUnitId", adUnitId);
+            ResponseInfo responseInfo = preloadedAd.getResponseInfo();
+            if (responseInfo != null) {
+              response.put("responseInfo", new FlutterAd.FlutterResponseInfo(responseInfo));
+            }
           }
         } else if (className.equals("RewardedAd")) {
           RewardedAd preloadedAd = RewardedAdPreloader.pollAd(preloadId);
@@ -300,13 +304,17 @@ class FlutterAdPreloader {
             FlutterRewardedAd adWrapper = new FlutterRewardedAd(
                 adId,
                 instanceManager,
-                adUnitId != null ? adUnitId : "",
+                adUnitId,
                 new FlutterAdRequest.Builder().build(),
                 new FlutterAdLoader(context));
             adWrapper.onAdLoaded(preloadedAd);
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
-            response.put("adUnitId", adUnitId != null ? adUnitId : "");
+            response.put("adUnitId", adUnitId);
+            ResponseInfo responseInfo = preloadedAd.getResponseInfo();
+            if (responseInfo != null) {
+              response.put("responseInfo", new FlutterAd.FlutterResponseInfo(responseInfo));
+            }
           }
         } else if (className.equals("AppOpenAd")) {
           AppOpenAd preloadedAd = AppOpenAdPreloader.pollAd(preloadId);
@@ -316,14 +324,18 @@ class FlutterAdPreloader {
             FlutterAppOpenAd adWrapper = new FlutterAppOpenAd(
                 adId,
                 instanceManager,
-                adUnitId != null ? adUnitId : "",
+                adUnitId,
                 new FlutterAdRequest.Builder().build(),
                 null,
                 new FlutterAdLoader(context));
             adWrapper.onAdLoaded(preloadedAd);
             instanceManager.trackAd(adWrapper, adId);
             response = new HashMap<>();
-            response.put("adUnitId", adUnitId != null ? adUnitId : "");
+            response.put("adUnitId", adUnitId);
+            ResponseInfo responseInfo = preloadedAd.getResponseInfo();
+            if (responseInfo != null) {
+              response.put("responseInfo", new FlutterAd.FlutterResponseInfo(responseInfo));
+            }
           }
         }
         result.success(response);

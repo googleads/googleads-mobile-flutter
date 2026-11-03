@@ -38,9 +38,27 @@ class FlutterRequestConfiguration {
   private final Integer tagForUnderAgeOfConsent;
   @Nullable private final List<String> testDeviceIds;
   @Nullable private final Integer ageRestrictedTreatment;
+  @Nullable
+  private static RequestConfiguration pendingRequestConfiguration = null;
+
+  public static void clearPendingRequestConfiguration() {
+    pendingRequestConfiguration = null;
+  }
+
+  @NonNull
+  public static RequestConfiguration getCurrentRequestConfiguration() {
+    if (pendingRequestConfiguration != null) {
+      return pendingRequestConfiguration;
+    }
+    try {
+      return MobileAds.getRequestConfiguration();
+    } catch (IllegalStateException e) {
+      return new RequestConfiguration.Builder().build();
+    }
+  }
 
   public static void updateRequestConfiguration(@NonNull MethodCall call) {
-    RequestConfiguration currentRequestConfiguration = MobileAds.getRequestConfiguration();
+    RequestConfiguration currentRequestConfiguration = getCurrentRequestConfiguration();
     RequestConfiguration.Builder builder =
         new RequestConfiguration.Builder()
             .setMaxAdContentRating(currentRequestConfiguration.getMaxAdContentRating())
@@ -57,13 +75,13 @@ class FlutterRequestConfiguration {
     Integer ageRestrictedTreatmentIndex = call.argument("ageRestrictedTreatment");
 
     if (maxAdContentRating != null) {
-      if (maxAdContentRating == MaxAdContentRating.MAX_AD_CONTENT_RATING_G.getValue()) {
+      if (maxAdContentRating.equals(MaxAdContentRating.MAX_AD_CONTENT_RATING_G.getValue())) {
         builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_G);
-      } else if (maxAdContentRating == MaxAdContentRating.MAX_AD_CONTENT_RATING_PG.getValue()) {
+      } else if (maxAdContentRating.equals(MaxAdContentRating.MAX_AD_CONTENT_RATING_PG.getValue())) {
         builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_PG);
-      } else if (maxAdContentRating == MaxAdContentRating.MAX_AD_CONTENT_RATING_T.getValue()) {
+      } else if (maxAdContentRating.equals(MaxAdContentRating.MAX_AD_CONTENT_RATING_T.getValue())) {
         builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_T);
-      } else if (maxAdContentRating == MaxAdContentRating.MAX_AD_CONTENT_RATING_MA.getValue()) {
+      } else if (maxAdContentRating.equals(MaxAdContentRating.MAX_AD_CONTENT_RATING_MA.getValue())) {
         builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_MA);
       } else {
         builder.setMaxAdContentRating(MaxAdContentRating.MAX_AD_CONTENT_RATING_UNSPECIFIED);
@@ -104,7 +122,12 @@ class FlutterRequestConfiguration {
       builder.setAgeRestrictedTreatment(AgeRestrictedTreatment.values()[ageRestrictedTreatmentIndex]);
     }
     RequestConfiguration rc = builder.build();
-    MobileAds.setRequestConfiguration(rc);
+    try {
+      MobileAds.setRequestConfiguration(rc);
+      clearPendingRequestConfiguration();
+    } catch (IllegalStateException e) {
+      pendingRequestConfiguration = rc;
+    }
   }
 
   protected static class Builder {

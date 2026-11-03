@@ -19,7 +19,20 @@
 #include <UserMessagingPlatform/UserMessagingPlatform.h>
 
 @implementation FLTUserMessagingPlatformManager {
+  NSObject<FlutterPluginRegistrar> *_registrar;
   FlutterMethodChannel *_methodChannel;
+}
+
+- (instancetype _Nonnull)initWithRegistrar:
+        (NSObject<FlutterPluginRegistrar> *_Nonnull)registrar
+                            binaryMessenger:
+                                (NSObject<FlutterBinaryMessenger> *_Nonnull)
+                                    binaryMessenger {
+  self = [self initWithBinaryMessenger:binaryMessenger];
+  if (self) {
+    _registrar = registrar;
+  }
+  return self;
 }
 
 - (instancetype _Nonnull)initWithBinaryMessenger:
@@ -44,7 +57,7 @@
 }
 
 - (UIViewController *)rootController {
-  return UIApplication.sharedApplication.delegate.window.rootViewController;
+  return [FLTAdUtil rootViewControllerFromRegistrar:_registrar];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call

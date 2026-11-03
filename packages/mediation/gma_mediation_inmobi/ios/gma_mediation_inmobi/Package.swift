@@ -18,7 +18,7 @@ let package = Package(
     .package(name: "FlutterFramework", path: "../FlutterFramework"),
     .package(
       url: "https://github.com/googleads/googleads-mobile-ios-mediation-inmobi.git",
-      from: "11.4.100"),
+      from: "11.5.000"),
   ],
   targets: [
     .target(
@@ -29,7 +29,10 @@ let package = Package(
           name: "InMobiAdapterTarget",
           package: "googleads-mobile-ios-mediation-inmobi"),
       ],
-      path: "Sources/gma_mediation_inmobi"
+      path: "Sources/gma_mediation_inmobi",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

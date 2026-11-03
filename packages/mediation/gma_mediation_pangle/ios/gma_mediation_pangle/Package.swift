@@ -29,7 +29,10 @@ let package = Package(
           name: "PangleAdapterTarget",
           package: "googleads-mobile-ios-mediation-pangle"),
       ],
-      path: "Sources/gma_mediation_pangle"
+      path: "Sources/gma_mediation_pangle",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )

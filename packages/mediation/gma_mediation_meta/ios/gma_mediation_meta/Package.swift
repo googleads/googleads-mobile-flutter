@@ -29,7 +29,10 @@ let package = Package(
           name: "MetaAdapterTarget",
           package: "googleads-mobile-ios-mediation-meta"),
       ],
-      path: "Sources/gma_mediation_meta"
+      path: "Sources/gma_mediation_meta",
+      linkerSettings: [
+        .unsafeFlags(["-ObjC"])
+      ]
     )
   ]
 )
