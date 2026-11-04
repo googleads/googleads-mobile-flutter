@@ -28,6 +28,9 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
   };
 }
 
+@interface FLTAdPreloader () <GADPreloadDelegate>
+@end
+
 @implementation FLTAdPreloader {
   FlutterMethodChannel *_channel;
   FLTAdInstanceManager *_manager;
