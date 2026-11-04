@@ -95,7 +95,7 @@
 - (instancetype _Nonnull)initWithFactory:(FLTAdSizeFactory *_Nonnull)factory
                              orientation:(NSString *_Nullable)orientation
                                    width:(NSNumber *_Nonnull)width
-                                 isLarge:(Boolean)isLarge {
+                                 isLarge:(BOOL)isLarge {
   GADAdSize size;
   if ([FLTAdUtil isNull:orientation]) {
     if (isLarge) {
