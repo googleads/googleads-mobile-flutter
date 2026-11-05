@@ -2,6 +2,7 @@
 
 #### Version 2.2.2 (In progress)
 - Now requires minimum iOS version 15.0.
+- Fixed an iOS crash when passing `LineMediationExtras`.
 
 #### Version 2.2.1
 - Supports [Line Android adapter version 3.1.1.2](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/line/CHANGELOG.md#version-3112).

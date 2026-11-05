@@ -20,7 +20,7 @@ import LineAdapter
   func getMediationExtras() -> AdNetworkExtras
 }
 
-@objc(GADFLineFlutterMediationExtras)
+@objc(LineFlutterMediationExtras)
 class LineFlutterMediationExtras: NSObject, FLTMediationExtras {
   var extras: NSMutableDictionary = [:]
 
