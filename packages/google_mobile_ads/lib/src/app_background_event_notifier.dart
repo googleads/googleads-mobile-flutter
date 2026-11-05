@@ -38,7 +38,7 @@ class AppStateEventNotifier {
       'plugins.flutter.io/google_mobile_ads/app_state_event';
   static const _methodChannelName =
       'plugins.flutter.io/google_mobile_ads/app_state_method';
-  static const EventChannel _eventChannel = EventChannel(_eventChannelName);
+  static const   EventChannel _eventChannel=EventChannel( _eventChannelName );
   static const MethodChannel _methodChannel = MethodChannel(_methodChannelName);
 
   /// Subscribe to this to get notified of changes in [AppState].
