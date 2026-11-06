@@ -66,7 +66,8 @@ public class FlutterBannerAdTest {
   }
 
   private FlutterBannerAd createBannerAd(FlutterAdSize size) {
-    return new FlutterBannerAd(1, manager, "testId", request, size, mockBannerAdCreator);
+    return new FlutterBannerAd(
+        /* adId= */ 1, manager, "testId", request, size, mockBannerAdCreator);
   }
 
   @SuppressWarnings("unchecked")
@@ -82,7 +83,11 @@ public class FlutterBannerAdTest {
   public void load_inlineAdaptiveSize_keepsInlineAdaptiveFlag() {
     FlutterAdSize size =
         new FlutterAdSize.InlineAdaptiveBannerAdSize(
-            new FlutterAdSize.AdSizeFactory(), context, 328, null, 320);
+            new FlutterAdSize.AdSizeFactory(),
+            context,
+            /* width= */ 328,
+            /* orientation= */ null,
+            /* maxHeight= */ 320);
 
     List<AdSize> requested = loadAndCaptureRequestedSizes(createBannerAd(size));
 
@@ -96,7 +101,11 @@ public class FlutterBannerAdTest {
   public void load_anchoredAdaptiveSize_keepsAnchoredAdaptiveFlag() {
     FlutterAdSize size =
         new FlutterAdSize.AnchoredAdaptiveBannerAdSize(
-            context, new FlutterAdSize.AdSizeFactory(), "portrait", 344, false);
+            context,
+            new FlutterAdSize.AdSizeFactory(),
+            /* orientation= */ "portrait",
+            /* width= */ 344,
+            /* isLarge= */ false);
 
     List<AdSize> requested = loadAndCaptureRequestedSizes(createBannerAd(size));
 
@@ -109,7 +118,11 @@ public class FlutterBannerAdTest {
   public void load_largeAnchoredAdaptiveSize_keepsLargeAnchoredAdaptiveFlag() {
     FlutterAdSize size =
         new FlutterAdSize.AnchoredAdaptiveBannerAdSize(
-            context, new FlutterAdSize.AdSizeFactory(), null, 344, true);
+            context,
+            new FlutterAdSize.AdSizeFactory(),
+            /* orientation= */ null,
+            /* width= */ 344,
+            /* isLarge= */ true);
 
     List<AdSize> requested = loadAndCaptureRequestedSizes(createBannerAd(size));
 
@@ -123,10 +136,14 @@ public class FlutterBannerAdTest {
     FlutterAdSize fluid = new FlutterAdSize.FluidAdSize();
     FlutterAdSize inline =
         new FlutterAdSize.InlineAdaptiveBannerAdSize(
-            new FlutterAdSize.AdSizeFactory(), context, 328, null, 320);
+            new FlutterAdSize.AdSizeFactory(),
+            context,
+            /* width= */ 328,
+            /* orientation= */ null,
+            /* maxHeight= */ 320);
     FlutterBannerAd bannerAd =
         new FlutterBannerAd(
-            1,
+            /* adId= */ 1,
             manager,
             "testId",
             request,
