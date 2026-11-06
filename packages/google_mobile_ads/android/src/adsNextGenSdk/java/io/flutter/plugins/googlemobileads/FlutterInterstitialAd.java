@@ -67,7 +67,10 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
 
   @Override
   void dispose() {
-    ad = null;
+    if (ad != null) {
+      ad.destroy();
+      ad = null;
+    }
   }
 
   @Override
