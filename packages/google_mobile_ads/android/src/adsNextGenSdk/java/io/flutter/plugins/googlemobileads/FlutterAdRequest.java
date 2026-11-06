@@ -250,7 +250,13 @@ class FlutterAdRequest {
     }
 
     for (Entry<Class<? extends MediationExtrasReceiver>, Bundle> entry : networkExtras.entrySet()) {
-      builder.putAdSourceExtrasBundle(entry.getKey(), entry.getValue());
+      if (entry.getKey() == AdMobAdapter.class) {
+        // Next-Gen reads Google's own extras (collapsible, npa, ...) from the Google extras
+        // bundle; an ad source bundle keyed by AdMobAdapter is ignored.
+        builder.setGoogleExtrasBundle(entry.getValue());
+      } else {
+        builder.putAdSourceExtrasBundle(entry.getKey(), entry.getValue());
+      }
     }
   }
 
@@ -314,7 +320,13 @@ class FlutterAdRequest {
     }
 
     for (Entry<Class<? extends MediationExtrasReceiver>, Bundle> entry : networkExtras.entrySet()) {
-      builder.putAdSourceExtrasBundle(entry.getKey(), entry.getValue());
+      if (entry.getKey() == AdMobAdapter.class) {
+        // Next-Gen reads Google's own extras (collapsible, npa, ...) from the Google extras
+        // bundle; an ad source bundle keyed by AdMobAdapter is ignored.
+        builder.setGoogleExtrasBundle(entry.getValue());
+      } else {
+        builder.putAdSourceExtrasBundle(entry.getKey(), entry.getValue());
+      }
     }
 
     if (neighboringContentUrls != null) {
