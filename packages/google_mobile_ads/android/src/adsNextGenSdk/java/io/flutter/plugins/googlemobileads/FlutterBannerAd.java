@@ -156,8 +156,7 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
     if (loadedAd == null || loadedAd.getAdSize() == null) {
       return null;
     }
-    final AdSize loadedSize = loadedAd.getAdSize();
-    return new FlutterAdSize(loadedSize.getWidth(), loadedSize.getHeight());
+    return new FlutterAdSize(loadedAd.getAdSize());
   }
 
   boolean isCollapsible() {

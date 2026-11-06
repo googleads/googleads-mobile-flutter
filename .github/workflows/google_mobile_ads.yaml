@@ -51,6 +51,7 @@ jobs:
         run: |
           cd packages/google_mobile_ads/example/android
           ./gradlew :google_mobile_ads:testDebugUnitTest
+          ./gradlew :google_mobile_ads:testDebugUnitTest -Pdart-defines=VVNFX05FWFRfR0VOX1NESz10cnVl
 
   iOS:
     runs-on: macos-latest

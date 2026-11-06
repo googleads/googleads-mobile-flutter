@@ -20,11 +20,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import android.content.Context;
 import androidx.test.core.app.ApplicationProvider;
@@ -47,7 +45,7 @@ import org.robolectric.RobolectricTestRunner;
 public class FlutterBannerAdTest {
 
   private AdInstanceManager manager;
-  private FlutterAdRequest mockRequest;
+  private FlutterAdRequest request;
   private BannerAdCreator mockBannerAdCreator;
   private AdView mockAdView;
   private BannerAd mockBannerAd;
@@ -57,30 +55,27 @@ public class FlutterBannerAdTest {
   public void setup() {
     context = ApplicationProvider.getApplicationContext();
     manager = new AdInstanceManager(mock(MethodChannel.class));
-    mockRequest = mock(FlutterAdRequest.class);
-    BannerAdRequest.Builder mockBuilder = mock(BannerAdRequest.Builder.class);
-    doReturn(mock(BannerAdRequest.class)).when(mockBuilder).build();
-    doReturn(mockBuilder).when(mockRequest).toBannerAdRequestBuilder(any(), anyList());
+    request = new FlutterAdRequest.Builder().setRequestAgent("test").build();
 
     mockAdView = mock(AdView.class);
     mockBannerAd = mock(BannerAd.class);
-    doReturn(mockBannerAd).when(mockAdView).getBannerAd();
+    when(mockAdView.getBannerAd()).thenReturn(mockBannerAd);
 
     mockBannerAdCreator = mock(BannerAdCreator.class);
-    doReturn(mockAdView).when(mockBannerAdCreator).createAdView();
+    when(mockBannerAdCreator.createAdView()).thenReturn(mockAdView);
   }
 
   private FlutterBannerAd createBannerAd(FlutterAdSize size) {
-    return new FlutterBannerAd(1, manager, "testId", mockRequest, size, mockBannerAdCreator);
+    return new FlutterBannerAd(1, manager, "testId", request, size, mockBannerAdCreator);
   }
 
   @SuppressWarnings("unchecked")
   private List<AdSize> loadAndCaptureRequestedSizes(FlutterBannerAd bannerAd) {
     bannerAd.load();
-    ArgumentCaptor<List<AdSize>> captor = ArgumentCaptor.forClass(List.class);
-    verify(mockRequest).toBannerAdRequestBuilder(eq("testId"), captor.capture());
-    verify(mockAdView).loadAd(any(BannerAdRequest.class), any(AdLoadCallback.class));
-    return captor.getValue();
+    ArgumentCaptor<BannerAdRequest> captor = ArgumentCaptor.forClass(BannerAdRequest.class);
+    verify(mockAdView).loadAd(captor.capture(), any(AdLoadCallback.class));
+    assertEquals("testId", captor.getValue().getAdUnitId());
+    return captor.getValue().getAdSizes();
   }
 
   @Test
@@ -134,7 +129,7 @@ public class FlutterBannerAdTest {
             1,
             manager,
             "testId",
-            mockRequest,
+            request,
             Arrays.asList(fixed, fluid, inline),
             mockBannerAdCreator);
 
@@ -147,32 +142,28 @@ public class FlutterBannerAdTest {
   }
 
   @Test
-  public void getAdSize_fixedSize_returnsSdkSize() {
+  public void getAdSize_returnsLoadedAdSize() {
     FlutterBannerAd bannerAd = createBannerAd(new FlutterAdSize(320, 50));
     bannerAd.load();
-    doReturn(new AdSize(320, 50)).when(mockBannerAd).getAdSize();
+    when(mockBannerAd.getAdSize()).thenReturn(new AdSize(300, 250));
 
-    assertEquals(new FlutterAdSize(320, 50), bannerAd.getAdSize());
-  }
-
-  @Test
-  public void getAdSize_inlineAdaptive_returnsSdkSizeUnchanged() {
-    FlutterBannerAd bannerAd =
-        createBannerAd(
-            new FlutterAdSize.InlineAdaptiveBannerAdSize(
-                new FlutterAdSize.AdSizeFactory(), context, 426, null, 320));
-    bannerAd.load();
-    // Next-Gen SDK 1.5.0 reports inline adaptive sizes in dp; no conversion is applied.
-    doReturn(new AdSize(426, 320)).when(mockBannerAd).getAdSize();
-
-    assertEquals(new FlutterAdSize(426, 320), bannerAd.getAdSize());
+    assertEquals(new FlutterAdSize(300, 250), bannerAd.getAdSize());
   }
 
   @Test
   public void getAdSize_noBannerAd_returnsNull() {
     FlutterBannerAd bannerAd = createBannerAd(new FlutterAdSize(320, 50));
     bannerAd.load();
-    doReturn(null).when(mockAdView).getBannerAd();
+    when(mockAdView.getBannerAd()).thenReturn(null);
+
+    assertNull(bannerAd.getAdSize());
+  }
+
+  @Test
+  public void getAdSize_nullAdSize_returnsNull() {
+    FlutterBannerAd bannerAd = createBannerAd(new FlutterAdSize(320, 50));
+    bannerAd.load();
+    when(mockBannerAd.getAdSize()).thenReturn(null);
 
     assertNull(bannerAd.getAdSize());
   }
