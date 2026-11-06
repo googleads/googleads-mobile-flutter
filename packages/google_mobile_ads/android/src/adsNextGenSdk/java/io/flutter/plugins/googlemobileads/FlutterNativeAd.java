@@ -44,6 +44,7 @@ class FlutterNativeAd extends FlutterAd {
   @Nullable private final FlutterNativeAdOptions nativeAdOptions;
   @Nullable private final FlutterNativeTemplateStyle nativeTemplateStyle;
   @Nullable private TemplateView templateView;
+  @Nullable private NativeAd nativeAd;
   @NonNull private final Context context;
 
   static class Builder {
@@ -243,6 +244,7 @@ class FlutterNativeAd extends FlutterAd {
   }
 
   void onNativeAdLoaded(@NonNull NativeAd nativeAd) {
+    this.nativeAd = nativeAd;
     if (nativeTemplateStyle != null) {
       templateView = nativeTemplateStyle.asTemplateView(context);
       templateView.setNativeAd(nativeAd);
@@ -264,8 +266,12 @@ class FlutterNativeAd extends FlutterAd {
       nativeAdView = null;
     }
     if (templateView != null) {
+      // Destroys the NativeAd too.
       templateView.destroyNativeAd();
       templateView = null;
+    } else if (nativeAd != null) {
+      nativeAd.destroy();
     }
+    nativeAd = null;
   }
 }
