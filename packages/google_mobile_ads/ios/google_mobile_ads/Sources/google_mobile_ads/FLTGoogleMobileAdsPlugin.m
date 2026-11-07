@@ -117,6 +117,25 @@
   return YES;
 }
 
+- (void)applicationWillTerminate:(UIApplication *)application {
+  [self stopSendingToDart];
+}
+
+- (void)detachFromEngineForRegistrar:
+    (NSObject<FlutterPluginRegistrar> *)registrar {
+  [self stopSendingToDart];
+}
+
+/// An ad can finish loading after the engine has stopped (the app quitting, or
+/// the engine being torn down), and a message sent then raises
+/// NSInternalInconsistencyException ("Sending a message before the
+/// FlutterEngine has been run"). Nothing is listening at that point, so the
+/// events are dropped.
+- (void)stopSendingToDart {
+  [_manager detach];
+  [_flutterAdPreloader detach];
+}
+
 - (instancetype)initWithRegistrar: (NSObject<FlutterPluginRegistrar>*)registrar
                   binaryMessenger: (id<FlutterBinaryMessenger>)binaryMessenger {
   self = [self init];

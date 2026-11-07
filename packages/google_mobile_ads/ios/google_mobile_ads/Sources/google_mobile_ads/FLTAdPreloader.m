@@ -34,6 +34,7 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
 @implementation FLTAdPreloader {
   FlutterMethodChannel *_channel;
   FLTAdInstanceManager *_manager;
+  BOOL _detached;
 }
 
 - (instancetype)initWithChannel:(FlutterMethodChannel *)channel
@@ -44,6 +45,19 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
     _manager = manager;
   }
   return self;
+}
+
+- (void)detach {
+  _detached = YES;
+}
+
+/// Sends `onPreloadEvent` unless the preloader has been detached from its
+/// engine. See -[FLTAdInstanceManager detach].
+- (void)invokeOnPreloadEvent:(NSDictionary *_Nonnull)arguments {
+  if (_detached) {
+    return;
+  }
+  [_channel invokeMethod:@"onPreloadEvent" arguments:arguments];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
@@ -334,12 +348,11 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
   }
 
   FLTGADResponseInfo *responseInfo = [[FLTGADResponseInfo alloc] initWithResponseInfo:adResponseInfo];
-  [_channel invokeMethod:@"onPreloadEvent"
-               arguments:@{
-                 @"preloadId" : preloadId,
-                 @"eventName" : @"onAdPreloaded",
-                 @"responseInfo" : responseInfo
-               }];
+  [self invokeOnPreloadEvent:@{
+    @"preloadId" : preloadId,
+    @"eventName" : @"onAdPreloaded",
+    @"responseInfo" : responseInfo
+  }];
 }
 
 - (void)preloader:(id)preloader didFailToPreloadAdWithError:(NSError *)error {
@@ -355,12 +368,11 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
   }
 
   FLTLoadAdError *loadAdError = [[FLTLoadAdError alloc] initWithError:error];
-  [_channel invokeMethod:@"onPreloadEvent"
-               arguments:@{
-                 @"preloadId" : preloadId,
-                 @"eventName" : @"onAdFailedToPreload",
-                 @"error" : loadAdError
-               }];
+  [self invokeOnPreloadEvent:@{
+    @"preloadId" : preloadId,
+    @"eventName" : @"onAdFailedToPreload",
+    @"error" : loadAdError
+  }];
 }
 
 - (void)preloaderDidExhaustPreloadedAds:(id)preloader {
@@ -375,33 +387,30 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
     return;
   }
 
-  [_channel invokeMethod:@"onPreloadEvent"
-               arguments:@{
-                 @"preloadId" : preloadId,
-                 @"eventName" : @"onAdsExhausted"
-               }];
+  [self invokeOnPreloadEvent:@{
+    @"preloadId" : preloadId,
+    @"eventName" : @"onAdsExhausted"
+  }];
 }
 
 - (void)adAvailableForPreloadID:(NSString *)preloadID
                    responseInfo:(GADResponseInfo *)responseInfo {
   FLTGADResponseInfo *fltResponseInfo =
       [[FLTGADResponseInfo alloc] initWithResponseInfo:responseInfo];
-  [_channel invokeMethod:@"onPreloadEvent"
-               arguments:@{
-                 @"preloadId" : preloadID != nil ? preloadID : @"",
-                 @"eventName" : @"onAdPreloaded",
-                 @"responseInfo" : fltResponseInfo
-               }];
+  [self invokeOnPreloadEvent:@{
+    @"preloadId" : preloadID != nil ? preloadID : @"",
+    @"eventName" : @"onAdPreloaded",
+    @"responseInfo" : fltResponseInfo
+  }];
 }
 
 - (void)failedToPreloadForPreloadID:(NSString *)preloadID error:(NSError *)error {
   FLTLoadAdError *loadAdError = [[FLTLoadAdError alloc] initWithError:error];
-  [_channel invokeMethod:@"onPreloadEvent"
-               arguments:@{
-                 @"preloadId" : preloadID != nil ? preloadID : @"",
-                 @"eventName" : @"onAdFailedToPreload",
-                 @"error" : loadAdError
-               }];
+  [self invokeOnPreloadEvent:@{
+    @"preloadId" : preloadID != nil ? preloadID : @"",
+    @"eventName" : @"onAdFailedToPreload",
+    @"error" : loadAdError
+  }];
 }
 
 - (void)adFailedToPreloadForPreloadID:(NSString *)preloadID error:(NSError *)error {
@@ -409,11 +418,10 @@ static NSDictionary *serializeConfig(GADPreloadConfigurationV2 *config) {
 }
 
 - (void)adsExhaustedForPreloadID:(NSString *)preloadID {
-  [_channel invokeMethod:@"onPreloadEvent"
-               arguments:@{
-                 @"preloadId" : preloadID != nil ? preloadID : @"",
-                 @"eventName" : @"onAdsExhausted"
-               }];
+  [self invokeOnPreloadEvent:@{
+    @"preloadId" : preloadID != nil ? preloadID : @"",
+    @"eventName" : @"onAdsExhausted"
+  }];
 }
 
 - (void)preloaderDidExhaustAdsForPreloadID:(NSString *)preloadID {
