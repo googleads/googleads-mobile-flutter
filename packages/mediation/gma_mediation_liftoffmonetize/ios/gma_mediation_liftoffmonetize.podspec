@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_liftoffmonetize'
-  s.version          = '1.5.6'
+  s.version          = '1.5.7'
   s.summary          = 'Google Mobile Ads Mediation of Liftoff Monetize.'
   s.description      = <<-DESC
 Mediation Adapter for Liftoff Monetize to use with Google Mobile Ads.
