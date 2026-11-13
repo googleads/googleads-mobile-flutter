@@ -17,6 +17,7 @@
 @implementation FLTAdInstanceManager {
   FLTGoogleMobileAdsCollection<NSNumber *, id<FLTAd>> *_ads;
   FlutterMethodChannel *_channel;
+  BOOL _detached;
 }
 
 - (instancetype _Nonnull)initWithBinaryMessenger:
@@ -85,34 +86,31 @@
 
 - (void)onAdLoaded:(id<FLTAd> _Nonnull)ad
       responseInfo:(GADResponseInfo *_Nonnull)responseInfo {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{
-                 @"adId" : ad.adId,
-                 @"eventName" : @"onAdLoaded",
-                 @"responseInfo" : [[FLTGADResponseInfo alloc]
-                     initWithResponseInfo:responseInfo]
-               }];
+  [self invokeOnAdEvent:@{
+    @"adId" : ad.adId,
+    @"eventName" : @"onAdLoaded",
+    @"responseInfo" : [[FLTGADResponseInfo alloc]
+        initWithResponseInfo:responseInfo]
+  }];
 }
 
 - (void)onAdFailedToLoad:(id<FLTAd> _Nonnull)ad error:(NSError *_Nonnull)error {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{
-                 @"adId" : ad.adId,
-                 @"eventName" : @"onAdFailedToLoad",
-                 @"loadAdError" : [[FLTLoadAdError alloc] initWithError:error]
-               }];
+  [self invokeOnAdEvent:@{
+    @"adId" : ad.adId,
+    @"eventName" : @"onAdFailedToLoad",
+    @"loadAdError" : [[FLTLoadAdError alloc] initWithError:error]
+  }];
 }
 
 - (void)onAppEvent:(id<FLTAd> _Nonnull)ad
               name:(NSString *)name
               data:(NSString *)data {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{
-                 @"adId" : ad.adId,
-                 @"eventName" : @"onAppEvent",
-                 @"name" : name,
-                 @"data" : data
-               }];
+  [self invokeOnAdEvent:@{
+    @"adId" : ad.adId,
+    @"eventName" : @"onAppEvent",
+    @"name" : name,
+    @"data" : data
+  }];
 }
 
 - (void)onNativeAdImpression:(FLTNativeAd *_Nonnull)ad {
@@ -133,35 +131,32 @@
 
 - (void)onRewardedAdUserEarnedReward:(FLTRewardedAd *_Nonnull)ad
                               reward:(FLTRewardItem *_Nonnull)reward {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{
-                 @"adId" : ad.adId,
-                 @"eventName" : @"onRewardedAdUserEarnedReward",
-                 @"rewardItem" : reward,
-               }];
+  [self invokeOnAdEvent:@{
+    @"adId" : ad.adId,
+    @"eventName" : @"onRewardedAdUserEarnedReward",
+    @"rewardItem" : reward,
+  }];
 }
 
 - (void)onRewardedInterstitialAdUserEarnedReward:
             (FLTRewardedInterstitialAd *_Nonnull)ad
                                           reward:
                                               (FLTRewardItem *_Nonnull)reward {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{
-                 @"adId" : ad.adId,
-                 @"eventName" : @"onRewardedInterstitialAdUserEarnedReward",
-                 @"rewardItem" : reward,
-               }];
+  [self invokeOnAdEvent:@{
+    @"adId" : ad.adId,
+    @"eventName" : @"onRewardedInterstitialAdUserEarnedReward",
+    @"rewardItem" : reward,
+  }];
 }
 
 - (void)onPaidEvent:(id<FLTAd> _Nonnull)ad value:(FLTAdValue *_Nonnull)adValue {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{
-                 @"adId" : ad.adId,
-                 @"eventName" : @"onPaidEvent",
-                 @"valueMicros" : adValue.valueMicros,
-                 @"precision" : [NSNumber numberWithInteger:adValue.precision],
-                 @"currencyCode" : adValue.currencyCode
-               }];
+  [self invokeOnAdEvent:@{
+    @"adId" : ad.adId,
+    @"eventName" : @"onPaidEvent",
+    @"valueMicros" : adValue.valueMicros,
+    @"precision" : [NSNumber numberWithInteger:adValue.precision],
+    @"currencyCode" : adValue.currencyCode
+  }];
 }
 
 - (void)onBannerImpression:(FLTBannerAd *_Nonnull)ad {
@@ -202,30 +197,43 @@
 
 - (void)didFailToPresentFullScreenContentWithError:(id<FLTAd> _Nonnull)ad
                                              error:(NSError *_Nonnull)error {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{
-                 @"adId" : ad.adId,
-                 @"eventName" : @"didFailToPresentFullScreenContentWithError",
-                 @"error" : error
-               }];
+  [self invokeOnAdEvent:@{
+    @"adId" : ad.adId,
+    @"eventName" : @"didFailToPresentFullScreenContentWithError",
+    @"error" : error
+  }];
 }
 
 - (void)onFluidAdHeightChanged:(id<FLTAd> _Nonnull)ad height:(CGFloat)height {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{
-                 @"adId" : ad.adId,
-                 @"eventName" : @"onFluidAdHeightChanged",
-                 @"height" : [[NSNumber alloc] initWithFloat:height]
-               }];
+  [self invokeOnAdEvent:@{
+    @"adId" : ad.adId,
+    @"eventName" : @"onFluidAdHeightChanged",
+    @"height" : [[NSNumber alloc] initWithFloat:height]
+  }];
+}
+
+/// Stops sending events to Dart. Called once the engine is detached or the
+/// app is terminating: a load that completes after that point must not reach
+/// the channel, because messaging an engine that is no longer running raises
+/// NSInternalInconsistencyException.
+- (void)detach {
+  _detached = YES;
+}
+
+/// Sends `onAdEvent` unless the manager has been detached from its engine.
+- (void)invokeOnAdEvent:(NSDictionary *_Nonnull)arguments {
+  if (_detached) {
+    return;
+  }
+  [_channel invokeMethod:@"onAdEvent" arguments:arguments];
 }
 
 /// Sends an ad event with the provided name.
 - (void)sendAdEvent:(NSString *_Nonnull)eventName ad:(id<FLTAd>)ad {
-  [_channel invokeMethod:@"onAdEvent"
-               arguments:@{
-                 @"adId" : ad.adId,
-                 @"eventName" : eventName,
-               }];
+  [self invokeOnAdEvent:@{
+    @"adId" : ad.adId,
+    @"eventName" : eventName,
+  }];
 }
 
 @end

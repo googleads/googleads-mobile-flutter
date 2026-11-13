@@ -24,4 +24,7 @@
 - (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call
                   result:(FlutterResult _Nonnull)result;
 
+/// Stops sending events to Dart once the engine is detached.
+- (void)detach;
+
 @end
