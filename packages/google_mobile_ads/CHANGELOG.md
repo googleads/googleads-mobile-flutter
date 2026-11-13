@@ -1,3 +1,7 @@
+## Next Version
+* Updates minimum supported SDK version to Flutter 3.50/Dart 3.14.
+* Updates Android `compileSdk` to 37. Apps using this plugin must also compile against Android API 37 or later.
+* Updates Android Gradle Plugin to 9.1.1 and Gradle to 9.3.1 for the plugin and example app.
 ## 9.2.0
 * Fixes Large Anchored Banner Size. [PR 1495](https://github.com/googleads/googleads-mobile-flutter/pull/1495)
 * iOS `AppStateNotifier` Fix and tests. [PR 1492](https://github.com/googleads/googleads-mobile-flutter/pull/1492)
