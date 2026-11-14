@@ -35,7 +35,7 @@ android {
                 }
     }
 
-    def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK ? dartEnvironmentVariables.USE_NEXT_GEN_SDK : false
+    def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK ? dartEnvironmentVariables.USE_NEXT_GEN_SDK.toBoolean() : false
 
     compileSdk 36
 
@@ -67,6 +67,12 @@ android {
     // The existing unit tests target the Play Services variant. Next-Gen SDK unit tests live in a
     // separate directory and run when building with --dart-define=USE_NEXT_GEN_SDK=true.
     if (useNextGenSdk) {
+        rootProject.allprojects {
+            configurations.configureEach {
+                exclude group: "com.google.android.gms", module: "play-services-ads"
+                exclude group: "com.google.android.gms", module: "play-services-ads-lite"
+            }
+        }
         sourceSets.named("test") {
             java.srcDirs = ["src/testAdsNextGenSdk/java"]
         }
