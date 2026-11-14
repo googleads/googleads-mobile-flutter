@@ -1,8 +1,11 @@
 ## Line Flutter Mediation Adapter Changelog
 
-#### Version 2.2.2 (In progress)
-- Now requires minimum iOS version 15.0.
+#### Version 2.2.2
+- Now requires minimum iOS version `15.0`.
 - Fixed an iOS crash when passing `LineMediationExtras`.
+- Supports [Line Android adapter version 3.1.1.2](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/line/CHANGELOG.md#version-3112).
+- Supports [Line iOS adapter version 3.1.1.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/Line/CHANGELOG.md#version-3110).
+- Built and tested with the Google Mobile Ads Flutter Plugin version 9.1.0.
 
 #### Version 2.2.1
 - Supports [Line Android adapter version 3.1.1.2](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/line/CHANGELOG.md#version-3112).
