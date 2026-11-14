@@ -131,7 +131,10 @@ class FlutterRewardedInterstitialAd extends FlutterAd.FlutterOverlayAd {
 
   @Override
   void dispose() {
-    rewardedInterstitialAd = null;
+    if (rewardedInterstitialAd != null) {
+      rewardedInterstitialAd.destroy();
+      rewardedInterstitialAd = null;
+    }
   }
 
   public void setServerSideVerificationOptions(FlutterServerSideVerificationOptions options) {
