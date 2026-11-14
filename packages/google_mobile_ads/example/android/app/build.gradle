@@ -33,7 +33,7 @@ if (project.hasProperty('dart-defines')) {
 }
 
 android {
-    def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK ? dartEnvironmentVariables.USE_NEXT_GEN_SDK : false
+    def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK ? dartEnvironmentVariables.USE_NEXT_GEN_SDK.toBoolean() : false
     sourceSets.getByName("main") {
         java.srcDirs("src/main/java")
         if (useNextGenSdk) {
