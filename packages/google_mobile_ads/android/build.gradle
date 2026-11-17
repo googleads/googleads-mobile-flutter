@@ -64,6 +64,13 @@ android {
             res.srcDirs("src/playServices/res")
         }
     }
+    // The existing unit tests target the Play Services variant. Next-Gen SDK unit tests live in a
+    // separate directory and run when building with --dart-define=USE_NEXT_GEN_SDK=true.
+    if (useNextGenSdk) {
+        sourceSets.named("test") {
+            java.srcDirs = ["src/testAdsNextGenSdk/java"]
+        }
+    }
     dependencies {
         if (useNextGenSdk) {
             api 'com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:1.5.0'
