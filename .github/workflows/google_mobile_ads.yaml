@@ -113,8 +113,6 @@ jobs:
           dart format packages/google_mobile_ads/
           ./.github/workflows/scripts/validate-formatting.sh
 
-  # Single required check that summarizes this workflow (used by the internal
-  # export). Add every new job to `needs`.
   all-checks-passed:
     runs-on: ubuntu-latest
     if: always()
