@@ -117,7 +117,6 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs: [android, iOS, flutter]
-    timeout-minutes: 5
     steps:
       - name: "Check results of required jobs"
         env:
