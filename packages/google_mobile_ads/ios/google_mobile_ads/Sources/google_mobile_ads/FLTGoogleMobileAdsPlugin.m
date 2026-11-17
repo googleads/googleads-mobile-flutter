@@ -249,6 +249,7 @@
         startWithCompletionHandler:^(GADInitializationStatus *_Nonnull status) {
           [handler handleInitializationComplete:status];
         }];
+    [_manager onSdkInitialized];
   } else if ([call.method isEqualToString:@"_init"]) {
     [_manager disposeAllAds];
     result(nil);

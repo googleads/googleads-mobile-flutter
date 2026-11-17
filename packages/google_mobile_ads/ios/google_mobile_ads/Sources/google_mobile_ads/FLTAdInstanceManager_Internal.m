@@ -83,6 +83,10 @@
   [ad show];
 }
 
+- (void)onSdkInitialized {
+  [_channel invokeMethod:@"onSdkInitialized" arguments:nil];
+}
+
 - (void)onAdLoaded:(id<FLTAd> _Nonnull)ad
       responseInfo:(GADResponseInfo *_Nonnull)responseInfo {
   [_channel invokeMethod:@"onAdEvent"

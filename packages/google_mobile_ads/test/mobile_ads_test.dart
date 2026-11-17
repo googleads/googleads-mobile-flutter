@@ -169,6 +169,64 @@ void main() {
       expect(status.latency, 0);
     });
 
+    test(
+      '$MobileAds.initialize invokes onSdkInitialized before Future completes',
+      () async {
+        final Completer<InitializationStatus> initCompleter =
+            Completer<InitializationStatus>();
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+              MethodChannel(
+                'plugins.flutter.io/google_mobile_ads',
+                StandardMethodCodec(AdMessageCodec()),
+              ),
+              (MethodCall methodCall) async {
+                log.add(methodCall);
+                if (methodCall.method == 'MobileAds#initialize') {
+                  return initCompleter.future;
+                }
+                return null;
+              },
+            );
+
+        bool sdkInitializedCalled = false;
+        bool futureCompleted = false;
+        final Future<InitializationStatus> future = MobileAds.instance
+            .initialize(
+              onSdkInitialized: () {
+                expect(futureCompleted, isFalse);
+                sdkInitializedCalled = true;
+              },
+            )
+            .then((InitializationStatus status) {
+              futureCompleted = true;
+              return status;
+            });
+
+        // Simulate native firing onSdkInitialized before adapter init finishes.
+        final ByteData? callBytes = const StandardMethodCodec()
+            .encodeMethodCall(const MethodCall('onSdkInitialized'));
+        await TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(
+              'plugins.flutter.io/google_mobile_ads',
+              callBytes,
+              (ByteData? data) {},
+            );
+
+        expect(sdkInitializedCalled, isTrue);
+        expect(futureCompleted, isFalse);
+
+        initCompleter.complete(
+          InitializationStatus(<String, AdapterStatus>{
+            'aName': AdapterStatus(AdapterInitializationState.ready, 'desc', 0),
+          }),
+        );
+        final InitializationStatus result = await future;
+        expect(futureCompleted, isTrue);
+        expect(result.adapterStatuses, hasLength(1));
+      },
+    );
+
     test('$MobileAds.registerWebView', () async {
       instanceManager = MockAdInstanceManager();
       final webView = MockWebViewController();

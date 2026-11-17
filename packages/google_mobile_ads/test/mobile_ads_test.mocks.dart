@@ -442,13 +442,19 @@ class MockAdInstanceManager extends _i1.Mock implements _i12.AdInstanceManager {
           as _i5.WebViewControllerUtil);
 
   @override
-  _i9.Future<_i6.InitializationStatus> initialize() =>
+  _i9.Future<_i6.InitializationStatus> initialize({
+    _i3.VoidCallback? onSdkInitialized,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#initialize, []),
+            Invocation.method(#initialize, [], {
+              #onSdkInitialized: onSdkInitialized,
+            }),
             returnValue: _i9.Future<_i6.InitializationStatus>.value(
               _FakeInitializationStatus_5(
                 this,
-                Invocation.method(#initialize, []),
+                Invocation.method(#initialize, [], {
+                  #onSdkInitialized: onSdkInitialized,
+                }),
               ),
             ),
           )

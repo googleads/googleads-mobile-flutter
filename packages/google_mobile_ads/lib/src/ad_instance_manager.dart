@@ -64,6 +64,10 @@ class AdInstanceManager {
         _handlePreloadEvent(preloadId, eventName, call.arguments);
         return;
       }
+      if (call.method == 'onSdkInitialized') {
+        _handleSdkInitialized();
+        return;
+      }
       assert(call.method == 'onAdEvent');
 
       final int adId = call.arguments['adId'];
@@ -82,6 +86,17 @@ class AdInstanceManager {
   final _BiMap<int, Ad> _loadedAds = _BiMap<int, Ad>();
   final Map<String, PreloadCallback> _preloadCallbacks =
       <String, PreloadCallback>{};
+  final List<VoidCallback> _onSdkInitializedCallbacks = <VoidCallback>[];
+
+  void _handleSdkInitialized() {
+    final List<VoidCallback> callbacks = List<VoidCallback>.of(
+      _onSdkInitializedCallbacks,
+    );
+    _onSdkInitializedCallbacks.clear();
+    for (final VoidCallback callback in callbacks) {
+      callback();
+    }
+  }
 
   void registerPreloadCallback(String preloadId, PreloadCallback callback) {
     _preloadCallbacks[preloadId] = callback;
@@ -532,10 +547,22 @@ class AdInstanceManager {
     }
   }
 
-  Future<InitializationStatus> initialize() async {
-    return (await instanceManager.channel.invokeMethod<InitializationStatus>(
-      'MobileAds#initialize',
-    ))!;
+  Future<InitializationStatus> initialize({
+    VoidCallback? onSdkInitialized,
+  }) async {
+    if (onSdkInitialized != null) {
+      _onSdkInitializedCallbacks.add(onSdkInitialized);
+    }
+    try {
+      return (await instanceManager.channel.invokeMethod<InitializationStatus>(
+        'MobileAds#initialize',
+      ))!;
+    } catch (e) {
+      if (onSdkInitialized != null) {
+        _onSdkInitializedCallbacks.remove(onSdkInitialized);
+      }
+      rethrow;
+    }
   }
 
   Future<AdSize?> getAdSize(Ad ad) =>
@@ -685,13 +712,15 @@ class AdInstanceManager {
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    return channel
-        .invokeMethod<void>('loadAdManagerBannerAd', <dynamic, dynamic>{
-          'adId': adId,
-          'sizes': ad.sizes,
-          'adUnitId': ad.adUnitId,
-          'request': ad.request,
-        });
+    return channel.invokeMethod<void>(
+      'loadAdManagerBannerAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'sizes': ad.sizes,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+      },
+    );
   }
 
   /// Starts loading the ad if not previously loaded.

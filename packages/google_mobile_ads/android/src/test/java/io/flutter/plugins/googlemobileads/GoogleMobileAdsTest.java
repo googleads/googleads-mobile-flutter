@@ -507,6 +507,7 @@ public class GoogleMobileAdsTest {
     plugin.onMethodCall(methodCall, result);
 
     verify(result).success(ArgumentMatchers.any(FlutterInitializationStatus.class));
+    verify(testManagerSpy).onSdkInitialized();
   }
 
   @Test

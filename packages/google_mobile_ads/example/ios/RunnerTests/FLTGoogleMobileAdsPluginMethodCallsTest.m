@@ -144,6 +144,7 @@
   XCTAssertEqual(resultInvokedCount, 1);
   XCTAssertEqual(
       [((FLTInitializationStatus *)returnedResult) adapterStatuses].count, 0);
+  OCMVerify([_mockAdInstanceManager onSdkInitialized]);
 }
 
 - (void)testSetSameAppKeyEnabledYes {

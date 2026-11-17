@@ -232,6 +232,18 @@ class AdInstanceManager {
   }
 
   /** Invoke the method channel using the UI thread. Otherwise the message gets silently dropped. */
+  void onSdkInitialized() {
+    new Handler(Looper.getMainLooper())
+        .post(
+            new Runnable() {
+              @Override
+              public void run() {
+                channel.invokeMethod("onSdkInitialized", null);
+              }
+            });
+  }
+
+  /** Invoke the method channel using the UI thread. Otherwise the message gets silently dropped. */
   private void invokeOnAdEvent(final Map<Object, Object> arguments) {
     new Handler(Looper.getMainLooper())
         .post(
