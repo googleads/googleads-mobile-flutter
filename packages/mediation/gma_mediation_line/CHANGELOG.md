@@ -1,5 +1,7 @@
 ## Line Flutter Mediation Adapter Changelog
 
+#### Version 2.3.0 (In progress)
+
 #### Version 2.2.2
 - Now requires minimum iOS version `15.0`.
 - Fixed an iOS crash when passing `LineMediationExtras`.
