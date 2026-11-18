@@ -48,7 +48,7 @@ android {
             res.srcDirs("src/playservices/res")
         }
     }
-    compileSdk 36
+    compileSdk 37
 
     namespace 'io.flutter.plugins.googlemobileadsexample'
 
