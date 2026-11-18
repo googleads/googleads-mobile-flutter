@@ -86,16 +86,12 @@ class AdInstanceManager {
   final _BiMap<int, Ad> _loadedAds = _BiMap<int, Ad>();
   final Map<String, PreloadCallback> _preloadCallbacks =
       <String, PreloadCallback>{};
-  final List<VoidCallback> _onSdkInitializedCallbacks = <VoidCallback>[];
+  VoidCallback? _onSdkInitialized;
 
   void _handleSdkInitialized() {
-    final List<VoidCallback> callbacks = List<VoidCallback>.of(
-      _onSdkInitializedCallbacks,
-    );
-    _onSdkInitializedCallbacks.clear();
-    for (final VoidCallback callback in callbacks) {
-      callback();
-    }
+    final VoidCallback? callback = _onSdkInitialized;
+    _onSdkInitialized = null;
+    callback?.call();
   }
 
   void registerPreloadCallback(String preloadId, PreloadCallback callback) {
@@ -550,19 +546,10 @@ class AdInstanceManager {
   Future<InitializationStatus> initialize({
     VoidCallback? onSdkInitialized,
   }) async {
-    if (onSdkInitialized != null) {
-      _onSdkInitializedCallbacks.add(onSdkInitialized);
-    }
-    try {
-      return (await instanceManager.channel.invokeMethod<InitializationStatus>(
-        'MobileAds#initialize',
-      ))!;
-    } catch (e) {
-      if (onSdkInitialized != null) {
-        _onSdkInitializedCallbacks.remove(onSdkInitialized);
-      }
-      rethrow;
-    }
+    _onSdkInitialized = onSdkInitialized;
+    return (await instanceManager.channel.invokeMethod<InitializationStatus>(
+      'MobileAds#initialize',
+    ))!;
   }
 
   Future<AdSize?> getAdSize(Ad ad) =>
