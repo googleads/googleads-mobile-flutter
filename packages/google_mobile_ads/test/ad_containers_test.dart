@@ -15,7 +15,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -355,20 +355,15 @@ void main() {
       await native.load();
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Material(
-            child: SingleChildScrollView(
-              child: Column(
-                key: UniqueKey(),
-                children: [
-                  SizedBox.fromSize(size: Size(200, 1000)),
-                  Container(
-                    height: 200,
-                    width: 200,
-                    child: AdWidget(ad: native),
-                  ),
-                ],
-              ),
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: SingleChildScrollView(
+            child: Column(
+              key: UniqueKey(),
+              children: [
+                SizedBox.fromSize(size: Size(200, 1000)),
+                Container(height: 200, width: 200, child: AdWidget(ad: native)),
+              ],
             ),
           ),
         ),
