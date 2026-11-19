@@ -169,6 +169,68 @@ void main() {
       expect(status.latency, 0);
     });
 
+    group('$MobileAds.initialize onSdkInitialized', () {
+      late Completer<InitializationStatus> adaptersReady;
+
+      // Simulates the native side sending the SDK-ready event.
+      Future<void> sendSdkInitializedEvent() {
+        return TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .handlePlatformMessage(
+              'plugins.flutter.io/google_mobile_ads',
+              const StandardMethodCodec().encodeMethodCall(
+                const MethodCall('onSdkInitialized'),
+              ),
+              (ByteData? data) {},
+            );
+      }
+
+      setUp(() {
+        // Keep MobileAds#initialize pending until the test completes it, to
+        // model mediation adapters finishing after the SDK itself.
+        adaptersReady = Completer<InitializationStatus>();
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+              MethodChannel(
+                'plugins.flutter.io/google_mobile_ads',
+                StandardMethodCodec(AdMessageCodec()),
+              ),
+              (MethodCall methodCall) async {
+                if (methodCall.method == 'MobileAds#initialize') {
+                  return adaptersReady.future;
+                }
+                return null;
+              },
+            );
+      });
+
+      test('fires on SDK ready, before the Future completes', () async {
+        final List<String> events = <String>[];
+        final Future<void> future = MobileAds.instance
+            .initialize(onSdkInitialized: () => events.add('sdk'))
+            .then((_) => events.add('adapters'));
+
+        await sendSdkInitializedEvent();
+        expect(events, <String>['sdk']);
+
+        adaptersReady.complete(InitializationStatus(<String, AdapterStatus>{}));
+        await future;
+        expect(events, <String>['sdk', 'adapters']);
+      });
+
+      test('fires at most once, and is optional', () async {
+        int calls = 0;
+        MobileAds.instance.initialize(onSdkInitialized: () => calls++);
+        await sendSdkInitializedEvent();
+        await sendSdkInitializedEvent();
+        expect(calls, 1);
+
+        // Without a callback, the event is a harmless no-op.
+        MobileAds.instance.initialize();
+        await expectLater(sendSdkInitializedEvent(), completes);
+        expect(calls, 1);
+      });
+    });
+
     test('$MobileAds.registerWebView', () async {
       instanceManager = MockAdInstanceManager();
       final webView = MockWebViewController();

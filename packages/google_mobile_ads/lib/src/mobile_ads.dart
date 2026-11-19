@@ -49,8 +49,13 @@ class MobileAds {
   ///
   /// If this method is not called, the first ad request automatically
   /// initializes the Google Mobile Ads SDK.
-  Future<InitializationStatus> initialize() {
-    return instanceManager.initialize();
+  ///
+  /// If [onSdkInitialized] is provided, it will be called as soon as the
+  /// Google Mobile Ads SDK itself has finished initializing, without waiting
+  /// for mediation adapters. The returned [Future] completes once both the
+  /// SDK and mediation adapters have finished initializing.
+  Future<InitializationStatus> initialize({VoidCallback? onSdkInitialized}) {
+    return instanceManager.initialize(onSdkInitialized: onSdkInitialized);
   }
 
   /// Get the current [RequestConfiguration].

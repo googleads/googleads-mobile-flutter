@@ -64,6 +64,10 @@ class AdInstanceManager {
         _handlePreloadEvent(preloadId, eventName, call.arguments);
         return;
       }
+      if (call.method == 'onSdkInitialized') {
+        _handleSdkInitialized();
+        return;
+      }
       assert(call.method == 'onAdEvent');
 
       final int adId = call.arguments['adId'];
@@ -82,6 +86,13 @@ class AdInstanceManager {
   final _BiMap<int, Ad> _loadedAds = _BiMap<int, Ad>();
   final Map<String, PreloadCallback> _preloadCallbacks =
       <String, PreloadCallback>{};
+  VoidCallback? _onSdkInitialized;
+
+  void _handleSdkInitialized() {
+    final VoidCallback? callback = _onSdkInitialized;
+    _onSdkInitialized = null;
+    callback?.call();
+  }
 
   void registerPreloadCallback(String preloadId, PreloadCallback callback) {
     _preloadCallbacks[preloadId] = callback;
@@ -532,7 +543,10 @@ class AdInstanceManager {
     }
   }
 
-  Future<InitializationStatus> initialize() async {
+  Future<InitializationStatus> initialize({
+    VoidCallback? onSdkInitialized,
+  }) async {
+    _onSdkInitialized = onSdkInitialized;
     return (await instanceManager.channel.invokeMethod<InitializationStatus>(
       'MobileAds#initialize',
     ))!;
@@ -685,13 +699,15 @@ class AdInstanceManager {
 
     final int adId = _nextAdId++;
     _loadedAds[adId] = ad;
-    return channel
-        .invokeMethod<void>('loadAdManagerBannerAd', <dynamic, dynamic>{
-          'adId': adId,
-          'sizes': ad.sizes,
-          'adUnitId': ad.adUnitId,
-          'request': ad.request,
-        });
+    return channel.invokeMethod<void>(
+      'loadAdManagerBannerAd',
+      <dynamic, dynamic>{
+        'adId': adId,
+        'sizes': ad.sizes,
+        'adUnitId': ad.adUnitId,
+        'request': ad.request,
+      },
+    );
   }
 
   /// Starts loading the ad if not previously loaded.

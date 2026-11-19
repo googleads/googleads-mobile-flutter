@@ -15,10 +15,12 @@
 package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.libraries.ads.mobile.sdk.initialization.InitializationStatus;
 import com.google.android.libraries.ads.mobile.sdk.initialization.OnAdapterInitializationCompleteListener;
 import io.flutter.plugin.common.MethodChannel.Result;
 import java.lang.reflect.Method;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * An {@link OnAdapterInitializationCompleteListener} that invokes result.success() at most once.
@@ -27,11 +29,21 @@ public final class FlutterInitializationListener
     implements OnAdapterInitializationCompleteListener {
 
   private final Result result;
+  @Nullable private final AdInstanceManager instanceManager;
   private boolean isInitializationCompleted;
+  private final AtomicBoolean isSdkInitializedNotified = new AtomicBoolean(false);
 
-  FlutterInitializationListener(@NonNull final Result result) {
+  FlutterInitializationListener(
+      @NonNull final Result result, @Nullable final AdInstanceManager instanceManager) {
     this.result = result;
+    this.instanceManager = instanceManager;
     isInitializationCompleted = false;
+  }
+
+  void onSdkInitialized() {
+    if (isSdkInitializedNotified.compareAndSet(false, true) && instanceManager != null) {
+      instanceManager.onSdkInitialized();
+    }
   }
 
   @Override
@@ -41,6 +53,7 @@ public final class FlutterInitializationListener
     if (isInitializationCompleted) {
       return;
     }
+    onSdkInitialized();
     try {
       Class<?> clazz = Class.forName("com.google.android.gms.ads.MobileAds");
       Method method = clazz.getDeclaredMethod("setPlugin", String.class);

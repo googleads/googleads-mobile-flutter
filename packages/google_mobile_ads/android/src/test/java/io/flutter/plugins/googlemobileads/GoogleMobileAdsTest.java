@@ -507,6 +507,46 @@ public class GoogleMobileAdsTest {
     plugin.onMethodCall(methodCall, result);
 
     verify(result).success(ArgumentMatchers.any(FlutterInitializationStatus.class));
+    verify(testManagerSpy).onSdkInitialized();
+  }
+
+  @Test
+  public void onSdkInitialized_sendsChannelEvent() {
+    testManager.onSdkInitialized();
+
+    MethodCall call = getLastMethodCall();
+    assertEquals("onSdkInitialized", call.method);
+    assertNull(call.arguments);
+  }
+
+  @Test
+  public void initialize_notifiesSdkReadyOnceBeforeAdaptersComplete() {
+    AdInstanceManager testManagerSpy = spy(testManager);
+    FlutterMobileAdsWrapper mockMobileAds = mock(FlutterMobileAdsWrapper.class);
+    GoogleMobileAdsPlugin plugin =
+        new GoogleMobileAdsPlugin(mockFlutterPluginBinding, testManagerSpy, mockMobileAds);
+    final AtomicReference<FlutterInitializationListener> listener = new AtomicReference<>();
+    doAnswer(
+            invocation -> {
+              listener.set(invocation.getArgument(1));
+              return null;
+            })
+        .when(mockMobileAds)
+        .initialize(
+            ArgumentMatchers.any(Context.class),
+            ArgumentMatchers.any(OnInitializationCompleteListener.class));
+    Result result = mock(Result.class);
+    plugin.onMethodCall(new MethodCall("MobileAds#initialize", null), result);
+
+    // The SDK is ready (MobileAds.initialize returned), adapters still pending.
+    listener.get().onSdkInitialized();
+    verify(testManagerSpy).onSdkInitialized();
+    verifyNoInteractions(result);
+
+    // Adapters finish: the Future resolves, SDK-ready is not sent again.
+    listener.get().onInitializationComplete(mock(InitializationStatus.class));
+    verify(result).success(ArgumentMatchers.any(FlutterInitializationStatus.class));
+    verify(testManagerSpy).onSdkInitialized();
   }
 
   @Test

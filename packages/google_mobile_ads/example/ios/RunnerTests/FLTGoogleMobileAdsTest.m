@@ -213,6 +213,16 @@ static NSString *channel = @"plugins.flutter.io/google_mobile_ads";
   OCMVerify([mockMethodChannel invokeMethod:@"onAdEvent" arguments:arguments]);
 }
 
+- (void)testOnSdkInitialized {
+  FlutterMethodChannel *mockMethodChannel =
+      OCMClassMock([FlutterMethodChannel class]);
+  [_manager setValue:mockMethodChannel forKey:@"_channel"];
+
+  [_manager onSdkInitialized];
+
+  OCMVerify([mockMethodChannel invokeMethod:@"onSdkInitialized" arguments:nil]);
+}
+
 - (void)testAdInstanceManagerOnNativeAdEvents {
   FLTNativeAd *ad = [[FLTNativeAd alloc]
          initWithAdUnitId:@"testAdUnitId"

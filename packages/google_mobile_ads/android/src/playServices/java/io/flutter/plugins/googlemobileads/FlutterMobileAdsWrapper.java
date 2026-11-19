@@ -40,6 +40,9 @@ public class FlutterMobileAdsWrapper {
               @Override
               public void run() {
                 MobileAds.initialize(context, listener);
+                if (listener instanceof FlutterInitializationListener) {
+                  ((FlutterInitializationListener) listener).onSdkInitialized();
+                }
               }
             })
         .start();
