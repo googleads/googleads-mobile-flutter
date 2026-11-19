@@ -1,11 +1,11 @@
 name: gma_mediation_meta
 description: "Mediation Adapter that enables sending ad requests to the Meta Audience Network ad network using the google_mobile_ads plugin."
-version: 1.7.2
+version: 1.7.3
 repository: https://github.com/googleads/googleads-mobile-flutter/tree/main/packages/mediation/gma_mediation_meta
 
 environment:
-  sdk: '>=3.10.0 <4.0.0'
-  flutter: '>=3.38.1'
+  sdk: '>=3.12.0 <4.0.0'
+  flutter: '>=3.44.0'
 
 dependencies:
   flutter:
