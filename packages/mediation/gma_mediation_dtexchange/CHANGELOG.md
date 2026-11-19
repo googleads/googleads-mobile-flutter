@@ -1,6 +1,9 @@
 ## DT Exchange Flutter Mediation Adapter Changelog
 
-#### Version 1.4.2 (In progress)
+#### Version 1.4.2
+* Supports [DT Exchange Android adapter version 8.5.1.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/dtexchange/CHANGELOG.md#version-8510).
+* Supports [DT Exchange iOS adapter version 8.5.2.0](https://github.com/googleads/googleads-mobile-ios-mediation/blob/main/adapters/DTExchange/CHANGELOG.md#version-8520).
+* Built and tested with the Google Mobile Ads Flutter Plugin version 9.1.0.
 
 #### Version 1.4.1
 * Supports [DT Exchange Android adapter version 8.5.0.0](https://github.com/googleads/googleads-mobile-android-mediation/blob/main/ThirdPartyAdapters/dtexchange/CHANGELOG.md#version-8500).
