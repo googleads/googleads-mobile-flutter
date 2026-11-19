@@ -153,6 +153,9 @@ class FlutterNativeAdLoadedListener implements NativeAdLoaderCallback {
                 FlutterNativeAd flutterNativeAd = nativeAdWeakReference.get();
                 if (flutterNativeAd != null) {
                   flutterNativeAd.onNativeAdLoaded(nativeAd);
+                } else {
+                  // The FlutterNativeAd was disposed and collected while this ad was loading.
+                  nativeAd.destroy();
                 }
               }
             });

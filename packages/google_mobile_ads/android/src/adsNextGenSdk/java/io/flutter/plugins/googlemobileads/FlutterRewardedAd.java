@@ -159,7 +159,10 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
 
   @Override
   void dispose() {
-    rewardedAd = null;
+    if (rewardedAd != null) {
+      rewardedAd.destroy();
+      rewardedAd = null;
+    }
   }
 
   public void setServerSideVerificationOptions(FlutterServerSideVerificationOptions options) {
