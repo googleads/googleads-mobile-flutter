@@ -1677,6 +1677,44 @@ void main() {
       expect(error.responseInfo?.adapterResponses, null);
     });
 
+    test('encode/decode $AdError without mediationError', () async {
+      final ByteData byteData = codec.encodeMessage(
+        AdError(1, 'domain', 'message'),
+      )!;
+      final AdError error = codec.decodeMessage(byteData);
+      expect(error.code, 1);
+      expect(error.domain, 'domain');
+      expect(error.message, 'message');
+      expect(error.mediationError, isNull);
+    });
+
+    test('encode/decode $AdError with mediationError', () async {
+      final ByteData byteData = codec.encodeMessage(
+        AdError(
+          4,
+          'com.google.android.libraries.ads.mobile.sdk',
+          'Error occurred to show a mediation Ad.',
+          mediationError: AdError(
+            3900,
+            'com.mbridge.msdk',
+            "can't show because load is failed",
+          ),
+        ),
+      )!;
+      final AdError error = codec.decodeMessage(byteData);
+      expect(error.code, 4);
+      expect(error.domain, 'com.google.android.libraries.ads.mobile.sdk');
+      expect(error.message, 'Error occurred to show a mediation Ad.');
+      expect(error.mediationError, isNotNull);
+      expect(error.mediationError!.code, 3900);
+      expect(error.mediationError!.domain, 'com.mbridge.msdk');
+      expect(
+        error.mediationError!.message,
+        "can't show because load is failed",
+      );
+      expect(error.mediationError!.mediationError, isNull);
+    });
+
     test('encode/decode $RewardItem', () async {
       final ByteData byteData = codec.encodeMessage(RewardItem(1, 'type'))!;
 

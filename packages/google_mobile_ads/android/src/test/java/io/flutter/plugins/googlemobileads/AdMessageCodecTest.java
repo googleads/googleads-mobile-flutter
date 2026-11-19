@@ -542,6 +542,38 @@ public class AdMessageCodecTest {
     assertEquals(error.responseInfo, info);
   }
 
+  @Test
+  public void encodeFlutterAdError() {
+    final ByteBuffer message =
+        codec.encodeMessage(new FlutterAd.FlutterAdError(1, "domain", "message"));
+
+    final FlutterAd.FlutterAdError error =
+        (FlutterAd.FlutterAdError) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertNotNull(error);
+    assertEquals(1, error.code);
+    assertEquals("domain", error.domain);
+    assertEquals("message", error.message);
+    assertNull(error.mediationError);
+  }
+
+  @Test
+  public void encodeFlutterAdErrorWithMediationError() {
+    final FlutterAd.FlutterAdError mediationError =
+        new FlutterAd.FlutterAdError(3900, "com.mbridge.msdk", "can't show because load is failed");
+    final FlutterAd.FlutterAdError original =
+        new FlutterAd.FlutterAdError(
+            4,
+            "com.google.android.libraries.ads.mobile.sdk",
+            "Error occurred to show a mediation Ad.",
+            mediationError);
+    final ByteBuffer message = codec.encodeMessage(original);
+
+    final FlutterAd.FlutterAdError error =
+        (FlutterAd.FlutterAdError) codec.decodeMessage((ByteBuffer) message.position(0));
+    assertEquals(original, error);
+    assertEquals(mediationError, error.mediationError);
+  }
+
   public void encodeInlineAdaptiveBanner() {
     AdSize adSize = new AdSize(100, 101);
     doReturn(adSize)
