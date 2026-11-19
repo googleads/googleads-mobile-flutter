@@ -12,4 +12,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
 include: ../../../analysis_options.yaml

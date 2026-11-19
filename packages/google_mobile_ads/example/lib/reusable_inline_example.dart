@@ -14,7 +14,7 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'constants.dart';
 import 'dart:io' show Platform;

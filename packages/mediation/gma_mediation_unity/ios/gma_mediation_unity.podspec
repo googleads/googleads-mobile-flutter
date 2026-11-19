@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'gma_mediation_unity'
-  s.version          = '1.12.0'
+  s.version          = '1.12.1'
   s.summary          = 'Google Mobile Ads Mediation of Unity Ads.'
   s.description      = <<-DESC
 Mediation Adapter for Unity Ads to use with Google Mobile Ads.
