@@ -1,5 +1,8 @@
 import 'dart:io';
 
+// TODO: Replace with `package:material_ui/material_ui.dart` once the minimum
+// supported Flutter version is 3.44+.
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 

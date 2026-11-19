@@ -14,7 +14,7 @@
 
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:google_mobile_ads/src/ad_inspector_containers.dart';
 import 'package:google_mobile_ads/src/ad_instance_manager.dart';
@@ -617,8 +617,8 @@ void main() {
 
     test('encode/decode non-empty native text style', () {
       final textStyle = NativeTemplateTextStyle(
-        textColor: Colors.red.shade900,
-        backgroundColor: Colors.blue.withAlpha(50),
+        textColor: Color.fromARGB(255, 183, 28, 28),
+        backgroundColor: Color.fromARGB(50, 33, 150, 243),
         style: NativeTemplateFontStyle.normal,
         size: 20,
       );
@@ -642,14 +642,14 @@ void main() {
         templateType: TemplateType.medium,
         callToActionTextStyle: NativeTemplateTextStyle(),
         primaryTextStyle: NativeTemplateTextStyle(
-          textColor: Colors.blue.shade900,
+          textColor: Color.fromARGB(255, 13, 71, 161),
         ),
         secondaryTextStyle: NativeTemplateTextStyle(
-          backgroundColor: Colors.green.shade900,
+          backgroundColor: Color.fromARGB(255, 27, 94, 32),
           style: NativeTemplateFontStyle.italic,
         ),
         tertiaryTextStyle: NativeTemplateTextStyle(size: 15),
-        mainBackgroundColor: Colors.cyan.shade900,
+        mainBackgroundColor: Color.fromARGB(255, 0, 96, 100),
         cornerRadius: 12,
       );
       final byteData = codec.encodeMessage(templateStyle);
@@ -663,10 +663,10 @@ void main() {
         templateType: TemplateType.medium,
         callToActionTextStyle: NativeTemplateTextStyle(),
         primaryTextStyle: NativeTemplateTextStyle(
-          textColor: Colors.blue.shade900,
+          textColor: Color.fromARGB(255, 13, 71, 161),
         ),
         secondaryTextStyle: NativeTemplateTextStyle(
-          backgroundColor: Colors.green.shade900,
+          backgroundColor: Color.fromARGB(255, 27, 94, 32),
           style: NativeTemplateFontStyle.italic,
         ),
         tertiaryTextStyle: NativeTemplateTextStyle(size: 15),
