@@ -32,7 +32,7 @@ part 'ad_preloader.dart';
 class AdError {
   /// Creates an [AdError] with the given [code], [domain] and [message].
   @protected
-  AdError(this.code, this.domain, this.message);
+  AdError(this.code, this.domain, this.message, {this.mediationError});
 
   /// Unique code to identify the error.
   ///
@@ -53,9 +53,17 @@ class AdError {
   /// common errors.
   final String message;
 
+  /// The error reported by the mediation adapter that caused this error, if
+  /// any.
+  final AdError? mediationError;
+
   @override
   String toString() {
-    return '$runtimeType(code: $code, domain: $domain, message: $message)';
+    final String mediationErrorString = mediationError == null
+        ? ''
+        : ', mediationError: $mediationError';
+    return '$runtimeType(code: $code, domain: $domain, message: $message'
+        '$mediationErrorString)';
   }
 }
 

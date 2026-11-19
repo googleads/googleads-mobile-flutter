@@ -17,7 +17,6 @@ package io.flutter.plugins.googlemobileads;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.AdError;
 import com.google.android.libraries.ads.mobile.sdk.common.AdValue;
 import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError;
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
@@ -126,12 +125,7 @@ class FlutterInterstitialAd extends FlutterAd.FlutterOverlayAd {
     public void onAdFailedToShowFullScreenContent(@NonNull FullScreenContentError adError) {
       FlutterInterstitialAd ad = delegate.get();
       if (ad != null) {
-        ad.manager.onFailedToShowFullScreenContent(
-            ad.adId,
-            new AdError(
-                adError.getCode().getValue(),
-                adError.getMessage(),
-                AdInstanceManager.NEXT_GEN_DOMAIN));
+        ad.manager.onFailedToShowFullScreenContent(ad.adId, new FlutterAd.FlutterAdError(adError));
       }
     }
 

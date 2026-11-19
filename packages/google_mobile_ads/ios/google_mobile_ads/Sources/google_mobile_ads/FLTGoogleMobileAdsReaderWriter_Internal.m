@@ -192,6 +192,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     NSNumber *code = [self readValueOfType:[self readByte]];
     NSString *domain = [self readValueOfType:[self readByte]];
     NSString *message = [self readValueOfType:[self readByte]];
+    // mediationError
+    [self readValueOfType:[self readByte]];
     return [NSError errorWithDomain:domain
                                code:code.longValue
                            userInfo:@{NSLocalizedDescriptionKey : message}];
@@ -450,6 +452,8 @@ typedef NS_ENUM(NSInteger, FLTAdMobField) {
     [self writeValue:@(error.code)];
     [self writeValue:error.domain];
     [self writeValue:error.localizedDescription];
+    // mediationError
+    [self writeValue:[NSNull null]];
   } else if ([value isKindOfClass:[FLTAdapterStatus class]]) {
     [self writeByte:FLTAdMobFieldAdapterStatus];
     FLTAdapterStatus *status = value;
