@@ -112,3 +112,20 @@ jobs:
         run: |
           dart format packages/google_mobile_ads/
           ./.github/workflows/scripts/validate-formatting.sh
+
+  all-checks-passed:
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [android, iOS, flutter]
+    steps:
+      - name: "Check results of required jobs"
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Job results: $RESULTS"
+          for result in $RESULTS; do
+            if [ "$result" = "failure" ] || [ "$result" = "cancelled" ]; then
+              echo "A required job finished with result: $result"
+              exit 1
+            fi
+          done
