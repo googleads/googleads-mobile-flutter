@@ -43,7 +43,7 @@ jobs:
       - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           distribution: 'temurin' 
-          java-version: '17'
+          java-version: '21'
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
@@ -78,9 +78,6 @@ jobs:
       - name: "Unit Tests"
         run: |
           cd packages/google_mobile_ads/example/ios
-          flutter clean
-          flutter pub get
-          pod install
           xcodebuild -configuration Debug -resultBundlePath TestResults VERBOSE_SCRIPT_LOGGING=YES -workspace Runner.xcworkspace -scheme Runner -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2' test  
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: failure()
@@ -115,3 +112,20 @@ jobs:
         run: |
           dart format packages/google_mobile_ads/
           ./.github/workflows/scripts/validate-formatting.sh
+
+  all-checks-passed:
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [android, iOS, flutter]
+    steps:
+      - name: "Check results of required jobs"
+        env:
+          RESULTS: ${{ join(needs.*.result, ' ') }}
+        run: |
+          echo "Job results: $RESULTS"
+          for result in $RESULTS; do
+            if [ "$result" = "failure" ] || [ "$result" = "cancelled" ]; then
+              echo "A required job finished with result: $result"
+              exit 1
+            fi
+          done
