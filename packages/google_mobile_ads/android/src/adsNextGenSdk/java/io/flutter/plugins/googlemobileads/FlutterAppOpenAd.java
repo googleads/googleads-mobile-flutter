@@ -103,7 +103,10 @@ class FlutterAppOpenAd extends FlutterAd.FlutterOverlayAd {
 
   @Override
   void dispose() {
-    ad = null;
+    if (ad != null) {
+      ad.destroy();
+      ad = null;
+    }
   }
 
   /** An AppOpenAdLoadCallback that just forwards events to a delegate. */
