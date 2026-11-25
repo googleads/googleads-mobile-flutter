@@ -223,9 +223,10 @@ class FlutterNativeAd extends FlutterAd {
             ? new NativeAdOptions.Builder().build()
             : nativeAdOptions.asNativeAdOptions();
     if (request != null) {
-      flutterAdLoader.loadNativeAd(adUnitId, loadedListener, options);
+      flutterAdLoader.loadNativeAd(adUnitId, loadedListener, options, request.getRequestAgent());
     } else if (adManagerRequest != null) {
-      flutterAdLoader.loadAdManagerNativeAd(adUnitId, loadedListener, options);
+      flutterAdLoader.loadAdManagerNativeAd(
+          adUnitId, loadedListener, options, adManagerRequest.getRequestAgent());
     } else {
       Log.e(TAG, "A null or invalid ad request was provided.");
     }

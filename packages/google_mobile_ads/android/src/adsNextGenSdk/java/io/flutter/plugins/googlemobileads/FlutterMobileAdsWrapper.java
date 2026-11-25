@@ -23,6 +23,7 @@ import android.util.Log;
 import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import com.google.android.libraries.ads.mobile.sdk.MobileAds;
 import com.google.android.libraries.ads.mobile.sdk.common.OnAdInspectorClosedListener;
 import com.google.android.libraries.ads.mobile.sdk.common.RequestConfiguration;
@@ -30,6 +31,7 @@ import com.google.android.libraries.ads.mobile.sdk.initialization.Initialization
 import com.google.android.libraries.ads.mobile.sdk.initialization.OnAdapterInitializationCompleteListener;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugins.webviewflutter.WebViewFlutterAndroidExternalApi;
+import java.lang.reflect.Method;
 
 /** A wrapper around static methods in {@link com.google.android.gms.ads.MobileAds}. */
 public class FlutterMobileAdsWrapper {
@@ -57,6 +59,7 @@ public class FlutterMobileAdsWrapper {
     configBuilder.setRequestConfiguration(
         FlutterRequestConfiguration.getCurrentRequestConfiguration());
     FlutterRequestConfiguration.clearPendingRequestConfiguration();
+    setPlugin(configBuilder);
     InitializationConfig config = configBuilder.build();
     new Thread(
             new Runnable() {
@@ -66,6 +69,18 @@ public class FlutterMobileAdsWrapper {
               }
             })
         .start();
+  }
+
+  @VisibleForTesting
+  static void setPlugin(@NonNull InitializationConfig.Builder configBuilder) {
+    try {
+      Method setPluginMethod =
+          InitializationConfig.Builder.class.getDeclaredMethod("setPlugin", String.class);
+      setPluginMethod.setAccessible(true);
+      setPluginMethod.invoke(configBuilder, Constants.REQUEST_AGENT_PREFIX_VERSIONED);
+    } catch (Exception e) {
+      Log.w(TAG, "Failed to set plugin on InitializationConfig.Builder.", e);
+    }
   }
 
   /** Wrapper for setAppMuted. */

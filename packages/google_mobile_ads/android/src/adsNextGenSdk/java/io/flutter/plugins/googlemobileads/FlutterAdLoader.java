@@ -94,7 +94,8 @@ public class FlutterAdLoader {
   public void loadNativeAd(
       @NonNull String adUnitId,
       @NonNull NativeAdLoaderCallback nativeAdLoaderCallback,
-      @NonNull NativeAdOptions nativeAdOptions) {
+      @NonNull NativeAdOptions nativeAdOptions,
+      @NonNull String requestAgent) {
     VideoOptions videoOptions =
         nativeAdOptions.getVideoOptions() == null
             ? new VideoOptions.Builder().build()
@@ -108,6 +109,7 @@ public class FlutterAdLoader {
     NativeAdLoader.load(
         new NativeAdRequest.Builder(adUnitId, List.of(NativeAdType.NATIVE))
             .setVideoOptions(videoOptions)
+            .setRequestAgent(requestAgent)
             .build(),
         nativeAdLoaderCallback);
   }
@@ -116,7 +118,8 @@ public class FlutterAdLoader {
   public void loadAdManagerNativeAd(
       @NonNull String adUnitId,
       @NonNull NativeAdLoaderCallback nativeAdLoaderCallback,
-      @NonNull NativeAdOptions nativeAdOptions) {
-    loadNativeAd(adUnitId, nativeAdLoaderCallback, nativeAdOptions);
+      @NonNull NativeAdOptions nativeAdOptions,
+      @NonNull String requestAgent) {
+    loadNativeAd(adUnitId, nativeAdLoaderCallback, nativeAdOptions, requestAgent);
   }
 }

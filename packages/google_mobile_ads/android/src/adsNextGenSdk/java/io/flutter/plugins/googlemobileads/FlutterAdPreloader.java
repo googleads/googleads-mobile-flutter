@@ -69,7 +69,11 @@ class FlutterAdPreloader {
         if (request != null) {
           adRequest = request.asAdRequest(adUnitId);
         } else {
-          adRequest = new FlutterAdRequest.Builder().build().asAdRequest(adUnitId);
+          adRequest =
+              new FlutterAdRequest.Builder()
+                  .setRequestAgent(new FlutterRequestAgentProvider(context).getRequestAgent())
+                  .build()
+                  .asAdRequest(adUnitId);
         }
 
         PreloadConfiguration config = bufferSize != null
