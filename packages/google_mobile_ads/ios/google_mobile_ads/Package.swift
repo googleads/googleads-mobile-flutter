@@ -12,6 +12,7 @@ let package = Package(
         .library(name: "google-mobile-ads", targets: ["google_mobile_ads"])
     ],
     dependencies: [
+        .package(name: "FlutterFramework", path: "../FlutterFramework"),
         .package(
             url: "https://github.com/googleads/swift-package-manager-google-mobile-ads", from: "13.11.0"),
         .package(name: "webview_flutter_wkwebview", path: "../webview_flutter_wkwebview"),
@@ -20,6 +21,7 @@ let package = Package(
         .target(
             name: "google_mobile_ads",
             dependencies: [
+              .product(name: "FlutterFramework", package: "FlutterFramework"),
               .product(name: "GoogleMobileAds", package: "swift-package-manager-google-mobile-ads"),
               .product(name: "webview-flutter-wkwebview", package: "webview_flutter_wkwebview"),
             ],
