@@ -313,7 +313,6 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
         || method.equals("MobileAds#initialize")
         || method.equals("MobileAds#disableMediationInitialization")
         || method.equals("MobileAds#getVersionString")
-        || method.equals("MobileAds#getRequestConfiguration")
         || method.startsWith("AdSize#");
   }
 

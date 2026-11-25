@@ -17,6 +17,7 @@ package io.flutter.plugins.googlemobileads;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
@@ -41,6 +42,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.MockedStatic;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
@@ -153,6 +155,33 @@ public class GoogleMobileAdsPluginTest {
       completeBackgroundInit();
 
       verify(muteResult).error(eq("InitializationError"), eq("sdk not initialized"), isNull());
+    }
+  }
+
+  @Test
+  public void onMethodCall_getRequestConfigurationDuringInit_runsAfterQueuedUpdate() {
+    try (MockedStatic<MobileAds> mobileAds = mockStatic(MobileAds.class)) {
+      stubMobileAdsInit(mobileAds);
+
+      plugin.onMethodCall(new MethodCall("MobileAds#initialize", null), mock(Result.class));
+
+      Result updateResult = mock(Result.class);
+      plugin.onMethodCall(
+          new MethodCall(
+              "MobileAds#updateRequestConfiguration",
+              Collections.singletonMap("testDeviceIds", Collections.singletonList("device-x"))),
+          updateResult);
+      Result getResult = mock(Result.class);
+      plugin.onMethodCall(new MethodCall("MobileAds#getRequestConfiguration", null), getResult);
+
+      verify(updateResult, never()).success(any());
+      verify(getResult, never()).success(any());
+
+      completeBackgroundInit();
+
+      InOrder inOrder = inOrder(updateResult, getResult);
+      inOrder.verify(updateResult).success(null);
+      inOrder.verify(getResult).success(any(FlutterRequestConfiguration.class));
     }
   }
 
