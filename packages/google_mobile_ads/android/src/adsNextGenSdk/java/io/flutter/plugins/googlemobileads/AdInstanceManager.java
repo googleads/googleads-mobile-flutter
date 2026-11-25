@@ -19,7 +19,6 @@ import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.AdError;
 import com.google.android.libraries.ads.mobile.sdk.common.ResponseInfo;
 import com.google.android.libraries.ads.mobile.sdk.common.AdValue;
 import com.google.android.libraries.ads.mobile.sdk.common.PrecisionType;
@@ -210,11 +209,11 @@ class AdInstanceManager {
         adValue.getValueMicros());
   }
 
-  void onFailedToShowFullScreenContent(int adId, @NonNull AdError error) {
+  void onFailedToShowFullScreenContent(int adId, @NonNull FlutterAdError error) {
     final Map<Object, Object> arguments = new HashMap<>();
     arguments.put("adId", adId);
     arguments.put("eventName", "onFailedToShowFullScreenContent");
-    arguments.put("error", new FlutterAdError(error));
+    arguments.put("error", error);
     invokeOnAdEvent(arguments);
   }
 

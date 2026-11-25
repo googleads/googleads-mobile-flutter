@@ -15,7 +15,6 @@
 package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.NonNull;
-import com.google.android.gms.ads.AdError;
 import com.google.android.libraries.ads.mobile.sdk.common.AdEventCallback;
 import com.google.android.libraries.ads.mobile.sdk.common.AdValue;
 import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError;
@@ -37,12 +36,7 @@ class FlutterFullScreenContentCallback implements AdEventCallback {
 
   @Override
   public void onAdFailedToShowFullScreenContent(@NonNull FullScreenContentError adError) {
-    manager.onFailedToShowFullScreenContent(
-        adId,
-        new AdError(
-            adError.getCode().getValue(),
-            adError.getMessage(),
-            "com.google.android.libraries.ads.mobile.sdk"));
+    manager.onFailedToShowFullScreenContent(adId, new FlutterAd.FlutterAdError(adError));
   }
 
   @Override

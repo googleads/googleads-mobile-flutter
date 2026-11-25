@@ -1011,6 +1011,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(buffer, value.code);
       writeValue(buffer, value.domain);
       writeValue(buffer, value.message);
+      writeValue(buffer, value.mediationError);
     } else if (value is AdapterInitializationState) {
       buffer.putUint8(_valueInitializationState);
       writeValue(buffer, value.name);
@@ -1209,6 +1210,7 @@ class AdMessageCodec extends StandardMessageCodec {
           readValueOfType(buffer.getUint8(), buffer),
           readValueOfType(buffer.getUint8(), buffer),
           readValueOfType(buffer.getUint8(), buffer),
+          mediationError: readValueOfType(buffer.getUint8(), buffer),
         );
       case _valueAdManagerAdRequest:
         return AdManagerAdRequest(

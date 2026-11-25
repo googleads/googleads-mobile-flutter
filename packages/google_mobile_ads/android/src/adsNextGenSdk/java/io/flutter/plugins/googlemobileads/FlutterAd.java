@@ -16,8 +16,8 @@ package io.flutter.plugins.googlemobileads;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.AdError;
 import com.google.android.libraries.ads.mobile.sdk.common.AdSourceResponseInfo;
+import com.google.android.libraries.ads.mobile.sdk.common.FullScreenContentError;
 import com.google.android.libraries.ads.mobile.sdk.common.LoadAdError;
 import com.google.android.libraries.ads.mobile.sdk.common.MediationAdError;
 import com.google.android.libraries.ads.mobile.sdk.common.ResponseInfo;
@@ -274,28 +274,50 @@ abstract class FlutterAd {
     }
   }
 
-  /** Wrapper for {@link AdError}. */
+  /** Wrapper for {@link FullScreenContentError} and {@link MediationAdError}. */
   static class FlutterAdError {
     final int code;
     @NonNull final String domain;
     @NonNull final String message;
 
-    FlutterAdError(@NonNull AdError error) {
-      code = error.getCode();
-      domain = error.getDomain();
-      message = error.getMessage();
-    }
+    /**
+     * The error reported by the mediation adapter that caused this error, serialized to Dart as
+     * {@code AdError.mediationError}. Populated from {@link
+     * FullScreenContentError#getMediationAdError()}.
+     */
+    @Nullable final FlutterAdError mediationError;
 
     FlutterAdError(@NonNull MediationAdError error) {
-      code = error.component1();
-      domain = error.getDomain();
-      message = error.getMessage();
+      this(error.getCode(), error.getDomain(), error.getMessage(), null);
+    }
+
+    /**
+     * Converts a Next-Gen {@link FullScreenContentError}, exposing the mediation adapter's error,
+     * when present, as {@link #mediationError}.
+     */
+    FlutterAdError(@NonNull FullScreenContentError error) {
+      this(
+          error.getCode().getValue(),
+          AdInstanceManager.NEXT_GEN_DOMAIN,
+          error.getMessage(),
+          error.getMediationAdError() != null
+              ? new FlutterAdError(error.getMediationAdError())
+              : null);
     }
 
     FlutterAdError(int code, @NonNull String domain, @NonNull String message) {
+      this(code, domain, message, null);
+    }
+
+    FlutterAdError(
+        int code,
+        @NonNull String domain,
+        @NonNull String message,
+        @Nullable FlutterAdError mediationError) {
       this.code = code;
       this.domain = domain;
       this.message = message;
+      this.mediationError = mediationError;
     }
 
     @Override
@@ -307,18 +329,15 @@ abstract class FlutterAd {
       }
 
       final FlutterAdError that = (FlutterAdError) object;
-
-      if (code != that.code) {
-        return false;
-      } else if (!domain.equals(that.domain)) {
-        return false;
-      }
-      return message.equals(that.message);
+      return code == that.code
+          && domain.equals(that.domain)
+          && message.equals(that.message)
+          && Objects.equals(mediationError, that.mediationError);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(code, domain, message);
+      return Objects.hash(code, domain, message, mediationError);
     }
   }
 

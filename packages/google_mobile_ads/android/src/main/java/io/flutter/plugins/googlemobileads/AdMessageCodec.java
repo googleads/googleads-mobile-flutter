@@ -177,6 +177,7 @@ class AdMessageCodec extends StandardMessageCodec {
       writeValue(stream, error.code);
       writeValue(stream, error.domain);
       writeValue(stream, error.message);
+      writeValue(stream, error.mediationError);
     } else if (value instanceof FlutterAdapterStatus.AdapterInitializationState) {
       stream.write(VALUE_INITIALIZATION_STATE);
       final FlutterAdapterStatus.AdapterInitializationState state =
@@ -361,7 +362,8 @@ class AdMessageCodec extends StandardMessageCodec {
         return new FlutterAdError(
             (Integer) readValueOfType(buffer.get(), buffer),
             (String) readValueOfType(buffer.get(), buffer),
-            (String) readValueOfType(buffer.get(), buffer));
+            (String) readValueOfType(buffer.get(), buffer),
+            (FlutterAdError) readValueOfType(buffer.get(), buffer));
       case VALUE_ADMANAGER_AD_REQUEST:
         FlutterAdManagerAdRequest.Builder builder = new FlutterAdManagerAdRequest.Builder();
         builder.setKeywords((List<String>) readValueOfType(buffer.get(), buffer));
