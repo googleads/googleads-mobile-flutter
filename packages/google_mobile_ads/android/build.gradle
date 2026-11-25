@@ -35,7 +35,7 @@ android {
                 }
     }
 
-    def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK ? dartEnvironmentVariables.USE_NEXT_GEN_SDK.toBoolean() : false
+    def useNextGenSdk = dartEnvironmentVariables.USE_NEXT_GEN_SDK?.toBoolean() ?: false
 
     compileSdk 36
 
