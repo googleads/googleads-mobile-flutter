@@ -14,10 +14,14 @@
 
 package io.flutter.plugins.googlemobileads;
 
+import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.libraries.ads.mobile.sdk.initialization.InitializationStatus;
 import com.google.android.libraries.ads.mobile.sdk.initialization.OnAdapterInitializationCompleteListener;
 import io.flutter.plugin.common.MethodChannel.Result;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * An {@link OnAdapterInitializationCompleteListener} that invokes result.success() at most once.
@@ -26,21 +30,28 @@ public final class FlutterInitializationListener
     implements OnAdapterInitializationCompleteListener {
 
   private final Result result;
-  private boolean isInitializationCompleted;
+  private final AtomicBoolean isInitializationCompleted = new AtomicBoolean(false);
+  private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
   FlutterInitializationListener(@NonNull final Result result) {
     this.result = result;
-    isInitializationCompleted = false;
   }
 
   @Override
   public void onAdapterInitializationComplete(@NonNull InitializationStatus initializationStatus) {
     // Make sure not to invoke this more than once, since Dart will throw an exception if success
     // is invoked more than once. See b/193418432.
-    if (isInitializationCompleted) {
+    if (!isInitializationCompleted.compareAndSet(false, true)) {
       return;
     }
-    result.success(new FlutterInitializationStatus(initializationStatus));
-    isInitializationCompleted = true;
+    FlutterInitializationStatus status = new FlutterInitializationStatus(initializationStatus);
+    mainHandler.post(() -> result.success(status));
+  }
+
+  void onInitializationFailed(@NonNull String errorCode, @Nullable String errorMessage) {
+    if (!isInitializationCompleted.compareAndSet(false, true)) {
+      return;
+    }
+    mainHandler.post(() -> result.error(errorCode, errorMessage, null));
   }
 }

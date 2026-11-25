@@ -19,8 +19,11 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.webkit.WebView;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -32,6 +35,10 @@ import com.google.android.libraries.ads.mobile.sdk.initialization.OnAdapterIniti
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugins.webviewflutter.WebViewFlutterAndroidExternalApi;
 import java.lang.reflect.Method;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.concurrent.Executor;
+import java.util.function.Consumer;
 
 /** A wrapper around static methods in {@link com.google.android.gms.ads.MobileAds}. */
 public class FlutterMobileAdsWrapper {
@@ -39,8 +46,72 @@ public class FlutterMobileAdsWrapper {
   private static final String TAG = "FlutterMobileAdsWrapper";
   private static final String APPLICATION_ID_KEY = "com.google.android.gms.ads.APPLICATION_ID";
   private static boolean disableMediationAdapterInitialization = false;
+  private static boolean initInProgress = false;
+  private static final Deque<PendingCall> pendingCalls = new ArrayDeque<>();
 
-  public FlutterMobileAdsWrapper() {}
+  private static final class PendingCall {
+    final Object owner;
+    final Runnable task;
+
+    PendingCall(@NonNull Object owner, @NonNull Runnable task) {
+      this.owner = owner;
+      this.task = task;
+    }
+  }
+
+  private final Executor sdkExecutor;
+  private final Handler mainHandler;
+
+  public FlutterMobileAdsWrapper() {
+    this(command -> new Thread(command).start(), new Handler(Looper.getMainLooper()));
+  }
+
+  @VisibleForTesting
+  FlutterMobileAdsWrapper(@NonNull Executor sdkExecutor, @NonNull Handler mainHandler) {
+    this.sdkExecutor = sdkExecutor;
+    this.mainHandler = mainHandler;
+  }
+
+  @VisibleForTesting
+  static void resetForTesting() {
+    initInProgress = false;
+    pendingCalls.clear();
+    disableMediationAdapterInitialization = false;
+  }
+
+  @MainThread
+  boolean enqueueIfInitializing(
+      @NonNull Object owner,
+      @NonNull Runnable task,
+      @NonNull Consumer<RuntimeException> onDeferredFailure) {
+    if (!initInProgress) {
+      return false;
+    }
+    pendingCalls.add(
+        new PendingCall(
+            owner,
+            () -> {
+              try {
+                task.run();
+              } catch (RuntimeException e) {
+                onDeferredFailure.accept(e);
+              }
+            }));
+    return true;
+  }
+
+  @MainThread
+  void clearPendingCalls(@NonNull Object owner) {
+    pendingCalls.removeIf(call -> call.owner == owner);
+  }
+
+  @MainThread
+  private static void onInitializationFinished() {
+    initInProgress = false;
+    while (!initInProgress && !pendingCalls.isEmpty()) {
+      pendingCalls.poll().task.run();
+    }
+  }
 
   /** Initializes the sdk. */
   public void initialize(
@@ -48,12 +119,18 @@ public class FlutterMobileAdsWrapper {
     final String appId = getApplicationMetaData(context, APPLICATION_ID_KEY);
 
     if (appId == null) {
-      Log.e(TAG, "Application ID is null. Cannot initialize the Google Mobile Ads SDK.");
+      String message = "Application ID is null. Cannot initialize the Google Mobile Ads SDK.";
+      Log.e(TAG, message);
+      if (listener instanceof FlutterInitializationListener) {
+        ((FlutterInitializationListener) listener)
+            .onInitializationFailed("InitializationError", message);
+      }
       return;
     }
 
+    initInProgress = true;
     InitializationConfig.Builder configBuilder = new InitializationConfig.Builder(appId);
-    if(disableMediationAdapterInitialization) {
+    if (disableMediationAdapterInitialization) {
       configBuilder.disableMediationAdapterInitialization();
     }
     configBuilder.setRequestConfiguration(
@@ -61,14 +138,22 @@ public class FlutterMobileAdsWrapper {
     FlutterRequestConfiguration.clearPendingRequestConfiguration();
     setPlugin(configBuilder);
     InitializationConfig config = configBuilder.build();
-    new Thread(
-            new Runnable() {
-              @Override
-              public void run() {
-                MobileAds.initialize(context, config, listener);
-              }
-            })
-        .start();
+    sdkExecutor.execute(
+        () -> {
+          try {
+            MobileAds.initialize(context, config, listener);
+          } catch (Throwable t) {
+            Log.e(TAG, "Error initializing the Google Mobile Ads SDK.", t);
+            if (listener instanceof FlutterInitializationListener) {
+              ((FlutterInitializationListener) listener)
+                  .onInitializationFailed(
+                      "InitializationError",
+                      t.getMessage() != null ? t.getMessage() : t.toString());
+            }
+          } finally {
+            mainHandler.post(FlutterMobileAdsWrapper::onInitializationFinished);
+          }
+        });
   }
 
   @VisibleForTesting

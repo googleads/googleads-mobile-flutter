@@ -245,6 +245,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
 
   @Override
   public void onDetachedFromEngine(FlutterPluginBinding binding) {
+    flutterMobileAds.clearPendingCalls(this);
     if (appStateNotifier != null) {
       appStateNotifier.stop();
       appStateNotifier = null;
@@ -307,11 +308,30 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     }
   }
 
+  private static boolean isUngatedMethod(@NonNull String method) {
+    return method.equals("_init")
+        || method.equals("MobileAds#initialize")
+        || method.equals("MobileAds#disableMediationInitialization")
+        || method.equals("MobileAds#getVersionString")
+        || method.startsWith("AdSize#");
+  }
+
   @SuppressWarnings("deprecation")
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
     if (instanceManager == null || pluginBinding == null) {
       Log.e(TAG, "method call received before instanceManager initialized: " + call.method);
+      return;
+    }
+    if (!isUngatedMethod(call.method)
+        && flutterMobileAds.enqueueIfInitializing(
+            this,
+            () -> onMethodCall(call, result),
+            e ->
+                result.error(
+                    "InitializationError",
+                    e.getMessage() != null ? e.getMessage() : e.toString(),
+                    null))) {
       return;
     }
     if (call.method.equals("MobileAds#startPreloading")
@@ -337,6 +357,7 @@ public class GoogleMobileAdsPlugin implements FlutterPlugin, ActivityAware, Meth
     switch (call.method) {
       case "_init":
         // Internal init. This is necessary to cleanup state on hot restart.
+        flutterMobileAds.clearPendingCalls(this);
         instanceManager.disposeAllAds();
         result.success(null);
         break;
