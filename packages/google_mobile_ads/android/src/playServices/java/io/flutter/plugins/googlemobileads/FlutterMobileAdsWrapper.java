@@ -24,6 +24,7 @@ import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugins.webviewflutter.WebViewFlutterAndroidExternalApi;
+import java.util.function.Consumer;
 
 /** A wrapper around static methods in {@link com.google.android.gms.ads.MobileAds}. */
 public class FlutterMobileAdsWrapper {
@@ -31,6 +32,15 @@ public class FlutterMobileAdsWrapper {
   private static final String TAG = "FlutterMobileAdsWrapper";
 
   public FlutterMobileAdsWrapper() {}
+
+  boolean enqueueIfInitializing(
+      @NonNull Object owner,
+      @NonNull Runnable task,
+      @NonNull Consumer<RuntimeException> onDeferredFailure) {
+    return false;
+  }
+
+  void clearPendingCalls(@NonNull Object owner) {}
 
   /** Initializes the sdk. */
   public void initialize(
