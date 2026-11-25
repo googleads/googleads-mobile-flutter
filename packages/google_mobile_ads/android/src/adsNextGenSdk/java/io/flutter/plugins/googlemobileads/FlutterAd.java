@@ -381,7 +381,39 @@ abstract class FlutterAd {
     }
   }
 
-  abstract void load();
+  void load() {
+    boolean wasTracked = isStillTracked();
+    FlutterMobileAdsWrapper.runWhenSdkReady(
+        () -> {
+          if (!wasTracked || isStillTracked()) {
+            loadInternal();
+          }
+        },
+        e -> {
+          if (!wasTracked || isStillTracked()) {
+            onDeferredLoadFailure(e);
+          }
+        });
+  }
+
+  abstract void loadInternal();
+
+  abstract AdInstanceManager getManager();
+
+  private boolean isStillTracked() {
+    AdInstanceManager manager = getManager();
+    return manager != null && manager.adForId(adId) == this;
+  }
+
+  private void onDeferredLoadFailure(@NonNull RuntimeException e) {
+    AdInstanceManager manager = getManager();
+    if (manager == null) {
+      return;
+    }
+    String message = e.getMessage() != null ? e.getMessage() : e.toString();
+    manager.onAdFailedToLoad(
+        adId, new FlutterLoadAdError(0, AdInstanceManager.NEXT_GEN_DOMAIN, message, null));
+  }
 
   /**
    * Gets the PlatformView for the ad. Default behavior is to return null. Should be overridden by

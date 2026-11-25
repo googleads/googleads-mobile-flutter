@@ -89,7 +89,12 @@ class FlutterBannerAd extends FlutterAd implements FlutterAdLoadedListener {
   }
 
   @Override
-  void load() {
+  AdInstanceManager getManager() {
+    return manager;
+  }
+
+  @Override
+  void loadInternal() {
     adView = bannerAdCreator.createAdView();
     final List<AdSize> allSizes = new ArrayList<AdSize>();
     for (int i = 0; i < sizes.size(); i++) {

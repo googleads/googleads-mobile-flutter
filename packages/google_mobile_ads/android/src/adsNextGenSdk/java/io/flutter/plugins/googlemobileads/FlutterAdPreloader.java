@@ -52,6 +52,16 @@ class FlutterAdPreloader {
   }
 
   void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+    FlutterMobileAdsWrapper.runWhenSdkReady(
+        () -> handleMethodCall(call, result),
+        e ->
+            result.error(
+                "PreloadError",
+                e.getMessage() != null ? e.getMessage() : e.toString(),
+                null));
+  }
+
+  private void handleMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
     switch (call.method) {
       case "MobileAds#startPreloading": {
         String preloadId = call.argument("preloadId");

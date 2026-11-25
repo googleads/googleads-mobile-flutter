@@ -20,18 +20,25 @@ import io.flutter.plugin.common.MethodChannel.Result;
 public final class FlutterAdInspector {
   public static void openAdInspector(
       Context context, FlutterMobileAdsWrapper flutterMobileAds, Result result) {
-    flutterMobileAds.openAdInspector(
-        context,
-        adInspectorError -> {
-          if (adInspectorError != null) {
-            String errorCode = Integer.toString(adInspectorError.getCode().getValue());
+    FlutterMobileAdsWrapper.runWhenSdkReady(
+        () ->
+            flutterMobileAds.openAdInspector(
+                context,
+                adInspectorError -> {
+                  if (adInspectorError != null) {
+                    String errorCode = Integer.toString(adInspectorError.getCode().getValue());
+                    result.error(
+                        errorCode,
+                        adInspectorError.getMessage(),
+                        AdInstanceManager.NEXT_GEN_DOMAIN);
+                  } else {
+                    result.success(null);
+                  }
+                }),
+        e ->
             result.error(
-                errorCode,
-                adInspectorError.getMessage(),
-                "com.google.android.libraries.ads.mobile.sdk");
-          } else {
-            result.success(null);
-          }
-        });
+                "0",
+                e.getMessage() != null ? e.getMessage() : e.toString(),
+                AdInstanceManager.NEXT_GEN_DOMAIN));
   }
 }

@@ -33,6 +33,8 @@ import java.util.Objects;
 
 class FlutterRequestConfiguration {
 
+  private static final String TAG = "FlutterRequestConfiguration";
+
   @Nullable private final String maxAdContentRating;
   private final Integer tagForChildDirectedTreatment;
   private final Integer tagForUnderAgeOfConsent;
@@ -58,6 +60,12 @@ class FlutterRequestConfiguration {
   }
 
   public static void updateRequestConfiguration(@NonNull MethodCall call) {
+    FlutterMobileAdsWrapper.runWhenSdkReady(
+        () -> updateRequestConfigurationInternal(call),
+        e -> Log.e(TAG, "Failed to update request configuration.", e));
+  }
+
+  private static void updateRequestConfigurationInternal(@NonNull MethodCall call) {
     RequestConfiguration currentRequestConfiguration = getCurrentRequestConfiguration();
     RequestConfiguration.Builder builder =
         new RequestConfiguration.Builder()

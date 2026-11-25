@@ -97,6 +97,7 @@ class AdInstanceManager {
   }
 
   void disposeAllAds() {
+    FlutterMobileAdsWrapper.clearPendingCalls();
     for (Map.Entry<Integer, FlutterAd> entry : ads.entrySet()) {
       if (entry.getValue() != null) {
         entry.getValue().dispose();

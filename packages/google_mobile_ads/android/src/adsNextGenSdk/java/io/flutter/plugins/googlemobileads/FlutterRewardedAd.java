@@ -103,7 +103,12 @@ class FlutterRewardedAd extends FlutterAd.FlutterOverlayAd {
   }
 
   @Override
-  void load() {
+  AdInstanceManager getManager() {
+    return manager;
+  }
+
+  @Override
+  void loadInternal() {
     final AdLoadCallback adLoadCallback = new DelegatingRewardedCallback(this);
     if (request != null) {
       flutterAdLoader.loadRewarded(request.asAdRequest(adUnitId), adLoadCallback);
