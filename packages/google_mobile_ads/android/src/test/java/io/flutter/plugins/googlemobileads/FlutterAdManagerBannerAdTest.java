@@ -17,6 +17,7 @@ package io.flutter.plugins.googlemobileads;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentCaptor.forClass;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.when;
 import android.app.Activity;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdValue;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.ResponseInfo;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
@@ -43,6 +45,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.robolectric.RobolectricTestRunner;
@@ -162,6 +165,34 @@ public class FlutterAdManagerBannerAdTest {
     flutterBannerAd.load();
 
     verify(mockManager).onAppEvent(eq(1), eq("appEvent"), eq("data"));
+  }
+
+  @Test
+  public void paidEventListener() {
+    final AdValue adValue = mock(AdValue.class);
+    doReturn(1).when(adValue).getPrecisionType();
+    doReturn("USD").when(adValue).getCurrencyCode();
+    doReturn(7100L).when(adValue).getValueMicros();
+    doAnswer(
+            new Answer() {
+              @Override
+              public Object answer(InvocationOnMock invocation) {
+                FlutterPaidEventListener listener = invocation.getArgument(0);
+                listener.onPaidEvent(adValue);
+                return null;
+              }
+            })
+        .when(mockAdView)
+        .setOnPaidEventListener(any(FlutterPaidEventListener.class));
+
+    flutterBannerAd.load();
+
+    verify(mockAdView).setOnPaidEventListener(any(FlutterPaidEventListener.class));
+    final ArgumentCaptor<FlutterAdValue> adValueCaptor = forClass(FlutterAdValue.class);
+    verify(mockManager).onPaidEvent(eq(flutterBannerAd), adValueCaptor.capture());
+    assertEquals(adValueCaptor.getValue().currencyCode, "USD");
+    assertEquals(adValueCaptor.getValue().precisionType, 1);
+    assertEquals(adValueCaptor.getValue().valueMicros, 7100L);
   }
 
   @Test
